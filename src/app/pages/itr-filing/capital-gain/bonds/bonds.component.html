@@ -6,7 +6,8 @@
                 <b>Bonds or debentures (other than capital indexed bonds issued by Government) </b>
             </div>
             <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
-                <button class="tbd-btn-small" style="text-align: right;" (click)="addEditBondsRow('ADD','BONDS', bondsData)">Add
+                <button class="tbd-btn-small" style="text-align: right;"
+                    (click)="addEditBondsRow('ADD','BONDS', bondsData)">Add
                     More&nbsp;&nbsp;
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </button>
@@ -31,7 +32,7 @@
                     matTooltipClass="tab-tooltip" matTooltipPosition="above" data-action-type="redirectUrl"></i>
             </div>
             <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                <mat-radio-group [(ngModel)]="deduction" (change)="updateColumn()">
+                <mat-radio-group [(ngModel)]="deduction" [disabled]="isDisable" (change)="onDeductionChanged()">
                     <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
                     </mat-radio-button>
                     <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
@@ -54,7 +55,8 @@
                 <b>Zero coupon bonds </b>
             </div>
             <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
-                <button class="tbd-btn-small" style="text-align: right;" (click)="addEditZeroBondsRow('ADD','BONDS', bondsData)">Add
+                <button class="tbd-btn-small" style="text-align: right;"
+                    (click)="addEditZeroBondsRow('ADD','BONDS', bondsData)">Add
                     More&nbsp;&nbsp;
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </button>
@@ -63,7 +65,7 @@
         <div class="card__col-xs-12 card__col-sm-12">
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
                 <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
-                    [gridOptions]="zeroBondsGridOptions"  [frameworkComponents]="frameworkComponents"
+                    [gridOptions]="zeroBondsGridOptions" [frameworkComponents]="frameworkComponents"
                     (rowClicked)="onZeroBondsRowClicked($event)">
                 </ag-grid-angular>
             </div>
@@ -79,17 +81,17 @@
                     matTooltipClass="tab-tooltip" matTooltipPosition="above" data-action-type="redirectUrl"></i>
             </div>
             <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                <mat-radio-group [(ngModel)]="deduction" (change)="updateColumn()">
+                <mat-radio-group [(ngModel)]="zeroDeduction" [disabled]="isZeroDisable" (change)="onZeroDeductionChanged()">
                     <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
                     </mat-radio-button>
                     <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
                 </mat-radio-group>
             </div>
         </div>
-        <div class="card__col-xs-12 card__col-sm-12" *ngIf="deduction">
+        <div class="card__col-xs-12 card__col-sm-12" *ngIf="zeroDeduction">
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
                 <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
-                    [gridOptions]="zeroDeductionGridOptions"   [frameworkComponents]="frameworkComponents"
+                    [gridOptions]="zeroDeductionGridOptions" [frameworkComponents]="frameworkComponents"
                     (rowClicked)="onZeroDeductionRowClicked($event)">
                 </ag-grid-angular>
             </div>
@@ -99,6 +101,6 @@
 </div>
 <div class="btn-cfl">
     <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
-      &nbsp;&nbsp;Back</button>
-    <button class="tbd-btn" (click)="continue()">&nbsp;&nbsp;Continue </button>
-  </div>
+        &nbsp;&nbsp;Back</button>
+    <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Continue </button>
+</div>

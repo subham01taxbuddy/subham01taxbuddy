@@ -18,6 +18,7 @@ export class BondsComponent implements OnInit {
   public zeroBondsGridOptions: GridOptions;
   public zeroDeductionGridOptions: GridOptions;
   deduction = true;
+  zeroDeduction = true;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -48,7 +49,7 @@ export class BondsComponent implements OnInit {
     fmvAsOn31Jan2018: null
   }
   bondsDeductionData: Deduction = {
-    srn: null,
+    srn: 1,
     underSection: 'Deduction 54F',
     purchaseDate: null,
     costOfNewAssets: null,
@@ -59,13 +60,15 @@ export class BondsComponent implements OnInit {
     purchaseDatePlantMachine: null,
     costOfPlantMachinary: null
   }
+  isDisable: boolean;
+  isZeroDisable: boolean;
 
 
   constructor(
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
-    private itrMsService:ItrMsService
+    private itrMsService: ItrMsService
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -95,7 +98,7 @@ export class BondsComponent implements OnInit {
     };
   }
 
-  
+
   getZeroBondsTableData(rowsData) {
     this.zeroBondsGridOptions = <GridOptions>{
       rowData: rowsData,
@@ -174,6 +177,13 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (result.capitalGain == 0) {
+        this.deduction = false;
+        this.isDisable = true;
+        this.onDeductionChanged();
+      } else {
+        this.isDisable = false;
+      }
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
@@ -207,6 +217,13 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (result.capitalGain == 0) {
+        this.zeroDeduction = false;
+        this.isZeroDisable = true;
+      } else {
+        this.isZeroDisable = false;
+      }
+      this.onZeroDeductionChanged();
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
@@ -483,7 +500,7 @@ export class BondsComponent implements OnInit {
         suppressMovable: true,
         editable: false,
         width: 210
-       
+
       },
       {
         headerName: 'Purchase date of new asset *',
@@ -547,6 +564,8 @@ export class BondsComponent implements OnInit {
   }
 
   onContinue() {
+    const bondIndex = this.ITR_JSON.capitalGain.findIndex(element => element.assetType === 'BONDS')
+    const zeroBondIndex = this.ITR_JSON.capitalGain.findIndex(element => element.assetType === 'ZERO_COUPON_BONDS')
     const bondImprovement = [];
     this.bondsGridOptions.rowData.forEach(element => {
       bondImprovement.push({
@@ -582,14 +601,22 @@ export class BondsComponent implements OnInit {
       "assesseeType": "",
       "residentialStatus": "",
       "assetType": "ZERO_COUPON_BONDS",
-      "deduction":  this.zeroDeductionGridOptions.rowData,
+      "deduction": this.zeroDeductionGridOptions.rowData,
       "improvement": zeroBondImprovement,
       "buyersDetails": [],
       "assetDetails": this.zeroBondsGridOptions.rowData
     }
     console.log(zeroBondData);
-    this.Copy_ITR_JSON.capitalGain.push(bondData)
-    this.Copy_ITR_JSON.capitalGain.push(zeroBondData)
+    if (bondIndex >= 0) {
+      this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+    } else {
+      this.Copy_ITR_JSON.capitalGain.push(bondData);
+    }
+    if (zeroBondIndex >= 0) {
+      this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+    } else {
+      this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+    }
     console.log(this.Copy_ITR_JSON);
 
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
@@ -606,4 +633,19 @@ export class BondsComponent implements OnInit {
     });
   }
 
+  onDeductionChanged() {
+    if (this.deduction) {
+      this.deductionGridOptions.api.setRowData([this.bondsDeductionData]);
+    } else {
+      this.deductionGridOptions.api.setRowData([]);
+    }
+  }
+
+  onZeroDeductionChanged() {
+    if (this.zeroDeduction) {
+      this.zeroDeductionGridOptions.api.setRowData([this.bondsDeductionData]);
+    } else {
+      this.zeroDeductionGridOptions.api.setRowData([]);
+    }
+  }
 }

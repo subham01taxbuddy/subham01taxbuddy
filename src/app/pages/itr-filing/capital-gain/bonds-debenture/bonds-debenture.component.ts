@@ -131,7 +131,7 @@ export class BondsDebentureComponent implements OnInit {
       panOfEligibleCompany: [obj.panOfEligibleCompany || null],
       purchaseDatePlantMachine: [obj.purchaseDatePlantMachine || null],
       purchaseDate: [obj.purchaseDate || null, Validators.required],
-      costOfNewAssets: [obj.costOfNewAssets || null , Validators.required],
+      costOfNewAssets: [obj.costOfNewAssets || null, Validators.required],
       investmentInCGAccount: [obj.investmentInCGAccount || null, Validators.required],
       totalDeductionClaimed: [obj.totalDeductionClaimed || null],
       costOfPlantMachinary: [obj.costOfPlantMachinary || null],
@@ -172,7 +172,11 @@ export class BondsDebentureComponent implements OnInit {
           ],
         }
         this.itrMsService.postMethod(param, request).subscribe((res: any) => {
-          this.bondsForm.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
+          if (res.assetDetails[0].capitalGain) {
+            this.bondsForm.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
+          } else {
+            this.bondsForm.controls['capitalGain'].setValue(0);
+          }
           this.dialogRef.close(this.bondsForm.value)
         }, error => {
           this.toastMsgService.alert("error", "Something went wrong please try again.")
