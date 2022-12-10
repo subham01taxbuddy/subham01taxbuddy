@@ -635,7 +635,11 @@ export class BondsComponent implements OnInit {
 
   onDeductionChanged() {
     if (this.deduction) {
-      this.deductionGridOptions.api.setRowData([this.bondsDeductionData]);
+      if (!this.deductionGridOptions.api) {
+        this.getDeductionTableData([this.bondsDeductionData]);
+      } else {
+        this.deductionGridOptions.api.setRowData([this.bondsDeductionData]);
+      }
     } else {
       this.deductionGridOptions.api.setRowData([]);
     }
@@ -643,7 +647,11 @@ export class BondsComponent implements OnInit {
 
   onZeroDeductionChanged() {
     if (this.zeroDeduction) {
-      this.zeroDeductionGridOptions.api.setRowData([this.bondsDeductionData]);
+      if (!this.zeroDeductionGridOptions.api) {
+        this.getZeroDeductionTableData([this.bondsDeductionData]);
+      } else {
+        this.zeroDeductionGridOptions.api.setRowData([this.bondsDeductionData]);
+      }
     } else {
       this.zeroDeductionGridOptions.api.setRowData([]);
     }
