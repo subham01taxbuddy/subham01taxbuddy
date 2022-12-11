@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { GridOptions, IsColumnFuncParams } from 'ag-grid-community';
+import { GridOptions, IsColumnFuncParams, ValueSetterParams } from 'ag-grid-community';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { CustomDateComponent } from 'src/app/modules/shared/date.component';
+import * as moment from 'moment';
 
 
 @Component({
@@ -55,6 +57,13 @@ export class MoreInfoComponent implements OnInit {
         field: 'dateofFilling',
         editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
         suppressMovable: true,
+        cellEditor: 'agDateInput',
+        valueFormatter: (data) => data.value ? moment(data.value).format('DD/MM/YYYY') : null,
+        cellClassRules: {
+          'filing-date': function (param) {
+            return true
+          }
+        },
         cellStyle: function (params) {
           if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
             return { backgroundColor: '#cecec8bd' };
@@ -73,7 +82,15 @@ export class MoreInfoComponent implements OnInit {
             return { backgroundColor: '#cecec8bd' };
           }
           return null;
-        }
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.housePropertyLoss !== newValInt;
+          if (valueChanged) {
+            params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
 
       },
 
@@ -91,7 +108,15 @@ export class MoreInfoComponent implements OnInit {
                 return { backgroundColor: '#cecec8bd' };
               }
               return null;
-            }
+            },
+            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+              var newValInt = parseInt(params.newValue);
+              var valueChanged = params.data.broughtForwordBusinessLoss !== newValInt;
+              if (valueChanged) {
+                params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
+              }
+              return valueChanged;
+            },
 
           },
           {
@@ -105,7 +130,15 @@ export class MoreInfoComponent implements OnInit {
                 return { backgroundColor: '#cecec8bd' };
               }
               return null;
-            }
+            },
+            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+              var newValInt = parseInt(params.newValue);
+              var valueChanged = params.data.adjustedAmount !== newValInt;
+              if (valueChanged) {
+                params.data.adjustedAmount = newValInt ? newValInt : params.oldValue;
+              }
+              return valueChanged;
+            },
 
           },
 
@@ -120,7 +153,15 @@ export class MoreInfoComponent implements OnInit {
                 return { backgroundColor: '#cecec8bd' };
               }
               return null;
-            }
+            },
+            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+              var newValInt = parseInt(params.newValue);
+              var valueChanged = params.data.setOffDuringTheYear !== newValInt;
+              if (valueChanged) {
+                params.data.setOffDuringTheYear = newValInt ? newValInt : params.oldValue;
+              }
+              return valueChanged;
+            },
 
           }
         ],
@@ -136,7 +177,15 @@ export class MoreInfoComponent implements OnInit {
             return { backgroundColor: '#cecec8bd' };
           }
           return null;
-        }
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.STCGLoss !== newValInt;
+          if (valueChanged) {
+            params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
 
       },
       {
@@ -149,7 +198,15 @@ export class MoreInfoComponent implements OnInit {
             return { backgroundColor: '#cecec8bd' };
           }
           return null;
-        }
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.LTCGLoss !== newValInt;
+          if (valueChanged) {
+            params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
 
       },
       {
@@ -162,7 +219,15 @@ export class MoreInfoComponent implements OnInit {
             return { backgroundColor: '#cecec8bd' };
           }
           return null;
-        }
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
+          if (valueChanged) {
+            params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
 
 
       },
@@ -213,6 +278,9 @@ export class MoreInfoComponent implements OnInit {
       defaultColDef: {
         resizable: true,
         editable: false
+      },
+      frameworkComponents: {
+        agDateInput: CustomDateComponent,
       },
       suppressRowTransform: true
     };

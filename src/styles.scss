@@ -282,3 +282,25 @@ body {
     overflow: hidden !important;
   }
 }
+
+.filing-date {
+  &.ag-cell-value {
+    .mat-form-field {
+      .mat-form-field-wrapper {
+        .mat-form-field-flex {
+          .mat-form-field-suffix {
+            .mat-datepicker-toggle {
+              .mat-focus-indicator {
+                .mat-button-wrapper {
+                  .mat-datepicker-toggle-default-icon {
+                    padding-bottom: 12px !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
