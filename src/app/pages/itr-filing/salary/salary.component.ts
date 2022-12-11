@@ -174,7 +174,7 @@ export class SalaryComponent implements OnInit {
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
-      professionalTax: [null, {validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change'}],
+      professionalTax: [null, { validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change' }],
     });
   }
 
@@ -628,22 +628,26 @@ export class SalaryComponent implements OnInit {
     // this.employerCallInConstructor();
 
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
-      if (!this.utilsService.isNonEmpty(result)) {
-        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
-        return
-      }
-      this.ITR_JSON = result;
-      this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
-      this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      if (this.utilsService.isNonEmpty(result)) {
+        debugger
+        this.ITR_JSON = result;
+        this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
+        this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
 
-      // this.utilsService.disposable.unsubscribe();
-      this.utilsService.showSnackBar('Salary updated successfully.');
-      this.utilsService.smoothScrollToTop();
-      this.salaryView = 'TABLE';
-      this.employerCallInConstructor();
-      this.loading = false;
+        // this.utilsService.disposable.unsubscribe();
+        this.utilsService.showSnackBar('Salary updated successfully.');
+        this.utilsService.smoothScrollToTop();
+        this.salaryView = 'TABLE';
+        this.employerCallInConstructor();
+        this.loading = false;
+        return
+      } else {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
+      }
+
     }, error => {
       this.loading = false;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
