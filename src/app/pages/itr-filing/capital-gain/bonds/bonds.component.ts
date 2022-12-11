@@ -177,7 +177,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.capitalGain == 0) {
+      if (result?.capitalGain == 0) {
         this.deduction = false;
         this.isDisable = true;
         this.onDeductionChanged();
@@ -217,7 +217,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.capitalGain == 0) {
+      if (result?.capitalGain == 0) {
         this.zeroDeduction = false;
         this.isZeroDisable = true;
       } else {
