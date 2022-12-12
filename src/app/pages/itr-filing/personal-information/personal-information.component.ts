@@ -361,12 +361,12 @@ export class PersonalInformationComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      gender: [''],
-      dateOfBirth: [''],
+      // gender: [''],
+      // dateOfBirth: [''],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      // aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
-      residentialStatus: ['RESIDENT'],
+      // residentialStatus: ['RESIDENT'],
       regime: ['', Validators.required],
       previousYearRegime: ['', Validators.required],
       address: this.fb.group({
@@ -563,6 +563,8 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   async saveProfile(ref) {
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.findAssesseeType();
     if (this.customerProfileForm.controls['regime'].value === 'NEW') {
       this.removeOldRegimeData();
@@ -590,7 +592,7 @@ export class PersonalInformationComponent implements OnInit {
     });
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
+      const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -599,10 +601,10 @@ export class PersonalInformationComponent implements OnInit {
           lName: this.customerProfileForm.controls['lastName'].value,
           fatherName: this.customerProfileForm.controls['fatherName'].value,
           age: ageCalculated,
-          gender: this.customerProfileForm.controls['gender'].value,
+          gender: this.ITR_JSON.family[0]['gender'],
           relationShipCode: 'SELF',
           relationType: 'SELF',
-          dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
+          dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth']
         }
       ];
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
