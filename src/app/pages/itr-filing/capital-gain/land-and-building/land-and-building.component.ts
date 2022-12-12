@@ -77,21 +77,21 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
     for (let i = 0; labData && i < labData[0]?.assetDetails?.length; i++) {
       let assetDetails = labData[0].assetDetails[i];
-      let buyerDetails = labData[0].buyersDetails.filter(buyer => (buyer.srn === assetDetails.srn))[0];
+      let buyerDetails = labData[0].buyersDetails?.filter(buyer => (buyer.srn === assetDetails.srn))[0];
       // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
       //   cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
       // }
 
       let costOfImprovement = 0;
-      let improvements = labData[0].improvement.filter(imp => (imp.srn == assetDetails.srn));
+      let improvements = labData[0].improvement?.filter(imp => (imp.srn == assetDetails.srn));
       for (let j = 0; j < improvements.length; j++) {
         costOfImprovement = costOfImprovement + improvements[j].costOfImprovement;
       }
       console.log('cost', improvements.length, costOfImprovement);
 
       let totalDeductions = 0;
-      let deductions = labData[0].deduction.filter(ded => (parseInt(ded.srn) == assetDetails.srn));
-      for (let j = 0; j < deductions.length; j++) {
+      let deductions = labData[0].deduction?.filter(ded => (parseInt(ded.srn) == assetDetails.srn));
+      for (let j = 0; j < deductions?.length; j++) {
         totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
       }
       
