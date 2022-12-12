@@ -30,6 +30,11 @@ export class OtherAssetsComponent implements OnInit {
     let listedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'GOLD');
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
+      this.goldCg.improvement.forEach(imp => {
+        if(imp.dateOfImprovement == null){
+          this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
+        }
+      });
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -95,10 +100,6 @@ export class OtherAssetsComponent implements OnInit {
   }
 
   otherAssetsCreateRowData() {
-    this.totalCg = 0;
-    this.goldCg.assetDetails.forEach(item => {
-      this.totalCg += item.capitalGain;
-    });
     return this.goldCg.assetDetails;
   }
 
@@ -226,8 +227,14 @@ export class OtherAssetsComponent implements OnInit {
   }
 
   deleteAsset(i) {
+    //delete improvement for asset
+    this.goldCg.improvement.forEach(imp => {
+      if(imp.srn == this.goldCg.assetDetails[i].srn){
+        this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
+      }
+    });
     this.goldCg.assetDetails.splice(i, 1);
-    this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails)
+    this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
   }
 
 
@@ -557,9 +564,27 @@ export class OtherAssetsComponent implements OnInit {
       residentialStatus: "RESIDENT",
       assetType: 'GOLD',
       assetDetails: this.goldCg.assetDetails,
-      improvement: this.goldCg.improvement,
+      improvement: [],
       deduction: this.goldCg.deduction,
     }
+    this.goldCg.assetDetails.forEach(asset => {
+      //find improvement
+      let improvements = this.goldCg.improvement.filter(imp => (imp.srn == asset.srn))
+      if(!improvements || improvements.length == 0){
+        let improvement = {
+          indexCostOfImprovement: 0,
+          id: asset.srn,
+          dateOfImprovement:" ",
+          costOfImprovement:0,
+          financialYearOfImprovement:null,
+          srn:asset.srn
+        }
+        request.improvement.push(improvement);
+      } else {
+        request.improvement = request.improvement.concat(improvements);
+      }
+    });
+    
 
     this.itrMsService.postMethod(param, request).subscribe((res: any) => {
       this.loading = false;
@@ -568,6 +593,10 @@ export class OtherAssetsComponent implements OnInit {
       this.goldCg.improvement = res.improvement;
       this.goldCg.deduction = res.deduction;
       this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
+      this.totalCg = 0;
+      this.goldCg.assetDetails.forEach(item => {
+        this.totalCg += item.capitalGain;
+      });
     }, error => {
       this.loading = false;
     })
