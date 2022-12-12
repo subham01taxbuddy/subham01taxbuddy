@@ -100,7 +100,7 @@ export class HousePropertyComponent implements OnInit {
       // isEligibleFor80EEA: [false],
       loans: this.fb.array([this.fb.group({
         loanType: ['HOUSING'],
-        principalAmount: [null, Validators.pattern(AppConstants.numericRegex)],
+        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         interestAmount: [0, [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
       })]),
       coOwners: this.fb.array([]),
@@ -430,6 +430,10 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EE = false;
         hp.isEligibleFor80EEA = false;
       }
+      hp.loans.forEach(element=>{
+        element.principalAmount=parseFloat(element.principalAmount);
+        element.interestAmount=parseFloat(element.interestAmount)
+      })
       if (this.mode === 'ADD') {
         this.Copy_ITR_JSON.houseProperties.push(hp);
       } else {
