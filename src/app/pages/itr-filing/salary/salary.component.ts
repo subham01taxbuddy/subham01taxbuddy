@@ -580,6 +580,9 @@ export class SalaryComponent implements OnInit {
     this.loading = true;
     if (this.employerMode === 'ADD') {
       const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+      if(this.Copy_ITR_JSON.employers == null || this.Copy_ITR_JSON.employers.length == 0){
+        this.Copy_ITR_JSON.employers = [];
+      }
       this.Copy_ITR_JSON.employers.push(myEmp);
     } else if (this.employerMode === 'UPDATE') {
       const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
