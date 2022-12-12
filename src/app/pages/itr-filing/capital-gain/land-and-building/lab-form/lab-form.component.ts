@@ -410,6 +410,7 @@ export class LabFormComponent implements OnInit {
   createBuyersDetailsForm(obj?: BuyersDetails): FormGroup {
     console.log('buyer form', obj);
     return this.fb.group({
+      srn: [obj?.srn || this.currentCgIndex.toString()],
       id: [obj?.id || this.currentCgIndex.toString()],
       name: [obj?.name || '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       pan: [obj?.pan || null, [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)]],
@@ -526,22 +527,41 @@ export class LabFormComponent implements OnInit {
       this.cgArrayElement.assetDetails[this.currentCgIndex].srn = this.currentCgIndex; 
       this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm = 'cgProperty';
 
-      if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
-        //add empty improvement object
-        this.cgArrayElement.improvement = [];
-        let improvement = {
-          indexCostOfImprovement: 0,
-          id: this.currentCgIndex,
-          dateOfImprovement:" ",
-          costOfImprovement:0,
-          financialYearOfImprovement:null,
-          srn:this.currentCgIndex
+      // if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
+      //   //add empty improvement object
+      //   this.cgArrayElement.improvement = [];
+      //   let improvement = {
+      //     indexCostOfImprovement: 0,
+      //     id: this.currentCgIndex,
+      //     dateOfImprovement:" ",
+      //     costOfImprovement:0,
+      //     financialYearOfImprovement:null,
+      //     srn:this.currentCgIndex
+      //   }
+      //   this.cgArrayElement.improvement.push(improvement);
+      // }else {
+      //   //merge all improvements
+      //   this.mergeImprovements();
+      // }
+      let tempImprovements = [];
+      this.cgArrayElement.assetDetails.forEach(asset => {
+        //find improvement
+        let improvements = this.cgArrayElement.improvement.filter(imp => (imp.srn == asset.srn))
+        if(!improvements || improvements.length == 0){
+          let improvement = {
+            indexCostOfImprovement: 0,
+            id: asset.srn,
+            dateOfImprovement:" ",
+            costOfImprovement:0,
+            financialYearOfImprovement:null,
+            srn:asset.srn
+          }
+          tempImprovements.push(improvement);
+        } else {
+          tempImprovements = tempImprovements.concat(improvements);
         }
-        this.cgArrayElement.improvement.push(improvement);
-      }else {
-        //merge all improvements
-        this.mergeImprovements();
-      }
+      });
+      this.cgArrayElement.improvement = tempImprovements;
       if(this.cgArrayElement.deduction?.length == 0) {
         this.cgArrayElement.deduction = null;
       }
@@ -724,33 +744,41 @@ export class LabFormComponent implements OnInit {
       if (this.utilsService.isNonEmpty(this.cgOutput)) {
         console.log('cgOutput is non empty');
         let formValue = formGroupName.getRawValue();
-        if(this.cgArrayElement.buyersDetails[this.currentCgIndex]){
-          Object.assign(this.cgArrayElement.buyersDetails[this.currentCgIndex], formValue.buyersDetails);
-        } else{
-          this.cgArrayElement.buyersDetails = formValue.buyersDetails;
-        }
+        // if(this.cgArrayElement.buyersDetails[this.currentCgIndex]){
+        //   Object.assign(this.cgArrayElement.buyersDetails[this.currentCgIndex], formValue.buyersDetails);
+        // } else{
+        //   this.cgArrayElement.buyersDetails = this.cgArrayElement.buyersDetails.concat(formValue.buyersDetails);
+        // }
+
+        //remove old buyers if any matching srn, keep non matching as is
+        let otherBuyers = this.cgArrayElement.buyersDetails.filter(buyer => (buyer.srn != this.currentCgIndex));
+        //add all buyers from form & update object
+        this.cgArrayElement.buyersDetails = otherBuyers.concat(formValue.buyersDetails);
+
         // Object.assign(this.cgArrayElement, formGroupName.getRawValue());
         this.cgArrayElement.assetType = this.assetType.value;
         this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm = 'cgProperty';//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
         this.cgArrayElement.assetDetails[this.currentCgIndex].hasIndexation = false;//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
-        // this.cgArrayElement.assetDetails[0].cgOutput = this.cgOutput;
-        if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
-          //add empty improvement object
-          this.cgArrayElement.improvement = [];
-          let improvement = {
-            indexCostOfImprovement: 0,
-            id: 0,
-            dateOfImprovement:" ",
-            costOfImprovement:0,
-            financialYearOfImprovement:null,
-            srn:this.currentCgIndex
-          }
-          this.cgArrayElement.improvement.push(improvement);
-        }
+        
+        // if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
+        //   //add empty improvement object
+        //   this.cgArrayElement.improvement = [];
+        //   let improvement = {
+        //     indexCostOfImprovement: 0,
+        //     id: 0,
+        //     dateOfImprovement:" ",
+        //     costOfImprovement:0,
+        //     financialYearOfImprovement:null,
+        //     srn:this.currentCgIndex
+        //   }
+        //   this.cgArrayElement.improvement.push(improvement);
+        // }
+
         if (this.data.mode === 'ADD') {
           let labData = this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0];
           if(labData) {
-            this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
+            this.Copy_ITR_JSON.capitalGain.splice(this.Copy_ITR_JSON.capitalGain.indexOf(labData), 1, this.cgArrayElement);
+            //this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
           } else{
             this.Copy_ITR_JSON.capitalGain.push(this.cgArrayElement);
           }
