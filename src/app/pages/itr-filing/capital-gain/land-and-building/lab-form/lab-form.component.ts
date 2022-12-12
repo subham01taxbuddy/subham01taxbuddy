@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { NewCapitalGain, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, GridApi } from 'ag-grid-community';
 import { AddInvestmentDialogComponent } from '../add-investment-dialog/add-investment-dialog.component';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
@@ -46,6 +46,7 @@ export class LabFormComponent implements OnInit {
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
   public investmentGridOptions: GridOptions;
+  investmentGridApi: GridApi;
 
   constructor(private fb: FormBuilder,
     private itrMsService: ItrMsService, public utilsService: UtilsService,
@@ -300,9 +301,9 @@ export class LabFormComponent implements OnInit {
       purchaseCost: [obj?.purchaseCost, Validators.required],
       isinCode: [''],
       nameOfTheUnits: [''],
-      fmvAsOn31Jan2018: [null],
-      stampDutyValue: 0,
-      capitalGain: 0,
+      fmvAsOn31Jan2018: [obj?.fmvAsOn31Jan2018],
+      stampDutyValue: [obj?.stampDutyValue],
+      capitalGain: [obj?.capitalGain],
     });
   }
 
@@ -519,7 +520,7 @@ export class LabFormComponent implements OnInit {
     if (formGroupName.controls['assetDetails'].controls[0].controls['sellDate'].valid /* && formGroupName.controls['sellValue'].valid */ && /* formGroupName.controls['stampDutyValue'].valid
     && formGroupName.controls['valueInConsideration'].valid && */ 
     formGroupName.controls['assetDetails'].controls[0].controls['sellExpense'].valid && formGroupName.controls['assetDetails'].controls[0].controls['purchaseDate'].valid
-      && formGroupName.controls['assetDetails'].controls[0].controls['purchaseCost'].valid && formGroupName.controls['improvement'].valid) {
+      && formGroupName.controls['assetDetails'].controls[0].controls['purchaseCost'].valid) {
       Object.assign(this.cgArrayElement.assetDetails[this.currentCgIndex], formGroupName.getRawValue().assetDetails[0]);
       this.cgArrayElement.assetType = this.assetType.value;
       this.cgArrayElement.assetDetails[this.currentCgIndex].srn = this.currentCgIndex; 
@@ -803,7 +804,7 @@ export class LabFormComponent implements OnInit {
       rowIndex: rowIndex,
       investment: investment,
       gainType: this.cgArrayElement.assetDetails[this.currentCgIndex].gainType,
-      capitalGain: (assetDetails.controls[0] as FormGroup).getRawValue().capitalGain,
+      capitalGain: this.cgArrayElement.assetDetails[this.currentCgIndex].capitalGain,//(assetDetails.controls[0] as FormGroup).getRawValue().capitalGain,
       assetClassName: 'Plot of Land'//name.length > 0 ? name[0].assetName : assetSelected.assetType
     };
     const dialogRef = this.matDialog.open(AddInvestmentDialogComponent, {
@@ -823,6 +824,9 @@ export class LabFormComponent implements OnInit {
             this.cgArrayElement.deduction = [];
           }
           this.cgArrayElement.deduction.push(result);
+          this.investmentGridOptions.rowData.push(result);
+          this.investmentGridApi.setRowData(this.investmentGridOptions.rowData);
+          // this.investmentGridOptions.api?.setRowData(this.investmentsCreateRowData());
         } else if (mode === 'EDIT') {
           let deductions = this.cgArrayElement.deduction.filter(deduction => (deduction.srn == this.data.assetSelected.srn));
           deductions.splice(result.rowIndex, 1, result.deduction);//add correct index here
@@ -831,9 +835,9 @@ export class LabFormComponent implements OnInit {
             otherDeductions = [];
           }
           this.cgArrayElement.deduction = otherDeductions.concat(deductions);
+          gridApi.setRowData(this.investmentsCreateRowData());
         }
-        gridApi.setRowData(this.investmentsCreateRowData());
-        // this.investmentGridOptions.api?.setRowData(this.investmentsCreateRowData());
+        
         this.calculateCapitalGain(this.immovableForm, '', this.currentCgIndex);
       }
     });
@@ -864,7 +868,7 @@ export class LabFormComponent implements OnInit {
         suppressMovable: true,
         editable: false,
         valueGetter: function nameFromCode(params) {
-          return params.data.costOfNewAssets ? params.data.costOfNewAssets.toLocaleString('en-IN') : params.data.costOfNewAssets;
+          return params.data.costOfNewAssets ? params.data.costOfNewAssets.toLocaleString('en-IN') : 0;
         },
       },
 
@@ -874,7 +878,7 @@ export class LabFormComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.investmentInCGAccount ? params.data.investmentInCGAccount.toLocaleString('en-IN') : params.data.investmentInCGAccount;
+          return params.data.investmentInCGAccount ? params.data.investmentInCGAccount.toLocaleString('en-IN') : 0;
         },
       },
       {
@@ -883,7 +887,7 @@ export class LabFormComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.totalDeductionClaimed ? params.data.totalDeductionClaimed.toLocaleString('en-IN') : params.data.totalDeductionClaimed;
+          return params.data.totalDeductionClaimed ? params.data.totalDeductionClaimed.toLocaleString('en-IN') : 0;
         },
       },
 
@@ -937,13 +941,16 @@ export class LabFormComponent implements OnInit {
     ];
   }
 
+  onGridReady(params) {
+    this.investmentGridApi = params.api;
+    console.log('Ashwini');
+    this.investmentGridOptions.api.sizeColumnsToFit();
+  }
+
   investmentsCallInConstructor(assestTypesDropdown) {
     this.investmentGridOptions = <GridOptions>{
       rowData: this.investmentsCreateRowData(),
       columnDefs: this.investmentsCreateColoumnDef(assestTypesDropdown),
-      onGridReady: () => {
-        this.investmentGridOptions.api.sizeColumnsToFit();
-      },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       defaultColDef: {
@@ -956,9 +963,9 @@ export class LabFormComponent implements OnInit {
 
   investmentsCreateRowData() {
     //return this.cgArrayElement.deduction;
-    let deductions = this.cgArrayElement.deduction?.filter(deduction => (deduction.srn == this.data.assetSelected?.srn));
+    let deductions = this.cgArrayElement.deduction?.filter(deduction => (parseInt(deduction.srn) == this.cgArrayElement.assetDetails[this.currentCgIndex].srn));
     if(deductions)
-      return this.cgArrayElement.deduction?.filter(deduction => (deduction.srn == this.data.assetSelected?.srn));
+      return this.cgArrayElement.deduction?.filter(deduction => (parseInt(deduction.srn) == this.cgArrayElement.assetDetails[this.currentCgIndex].srn));
     else
       return [];
   }

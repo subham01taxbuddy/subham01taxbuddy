@@ -89,6 +89,13 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       }
       console.log('cost', improvements.length, costOfImprovement);
 
+      let totalDeductions = 0;
+      let deductions = labData[0].deduction.filter(ded => (parseInt(ded.srn) == assetDetails.srn));
+      for (let j = 0; j < deductions.length; j++) {
+        totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
+      }
+      
+
       data.push({
         id: i + 1,
         assetType: labData[0].assetType,
@@ -98,7 +105,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         // totalCost: tCost,
         gainType: assetDetails.gainType,
         cgIncome: assetDetails.capitalGain,
-        deductions: 0,//TODO
+        deductions: totalDeductions,//TODO
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
         address: buyerDetails?.address,
@@ -205,11 +212,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-          if (params.data.isExemptionApplied) {
-            return params.data.gainType === 'LONG' ? 'Long Term **' : 'Short Term';
-          } else {
-            return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-          }
         },
       },
       {
@@ -242,7 +244,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.totalCost ? params.data.totalCost.toLocaleString('en-IN') : params.data.totalCost;
+          return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
         },
       },
       // {
