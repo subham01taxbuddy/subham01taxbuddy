@@ -57,13 +57,8 @@ export class EquityMfComponent implements OnInit {
       }
     }
 
-<<<<<<< HEAD
-    let unlistedData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-    if (unlistedData.length > 0) {
-=======
     let unlistedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
     if (unlistedData?.length > 0) {
->>>>>>> staging
       this.unlistedCg = unlistedData[0];
     } else {
       this.unlistedCg = {

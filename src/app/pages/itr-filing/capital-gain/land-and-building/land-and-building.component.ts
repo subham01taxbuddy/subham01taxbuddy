@@ -105,11 +105,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         // totalCost: tCost,
         gainType: assetDetails.gainType,
         cgIncome: assetDetails.capitalGain,
-<<<<<<< HEAD
-        deductions: 0,//TODO
-=======
         deductions: totalDeductions,//TODO
->>>>>>> staging
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
         address: buyerDetails?.address,
@@ -135,11 +131,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       this.assestTypesDropdown = result;
       this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
       this.capitalGainGridOptions.api?.setColumnDefs(this.cgCreateColoumnDef(this.assestTypesDropdown));
-<<<<<<< HEAD
-      if (this.ITR_JSON.capitalGain.length > 0) {
-=======
       if (this.ITR_JSON.capitalGain?.length > 0) {
->>>>>>> staging
         //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
         // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
       }
@@ -220,14 +212,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-<<<<<<< HEAD
-          if (params.data.isExemptionApplied) {
-            return params.data.gainType === 'LONG' ? 'Long Term **' : 'Short Term';
-          } else {
-            return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-          }
-=======
->>>>>>> staging
         },
       },
       {
@@ -260,11 +244,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-<<<<<<< HEAD
-          return params.data.totalCost ? params.data.totalCost.toLocaleString('en-IN') : params.data.totalCost;
-=======
           return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
->>>>>>> staging
         },
       },
       // {
