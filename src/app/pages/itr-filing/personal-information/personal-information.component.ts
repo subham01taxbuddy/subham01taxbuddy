@@ -586,13 +586,14 @@ export class PersonalInformationComponent implements OnInit {
       const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
-          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+            controlErrors[keyError]);
         });
       }
     });
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
+      // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -600,7 +601,7 @@ export class PersonalInformationComponent implements OnInit {
           mName: this.customerProfileForm.controls['middleName'].value,
           lName: this.customerProfileForm.controls['lastName'].value,
           fatherName: this.customerProfileForm.controls['fatherName'].value,
-          age: ageCalculated,
+          age: this.ITR_JSON.family[0]['age'],
           gender: this.ITR_JSON.family[0]['gender'],
           relationShipCode: 'SELF',
           relationType: 'SELF',
@@ -684,13 +685,13 @@ export class PersonalInformationComponent implements OnInit {
     return true;
   }
 
-  calAge(dob) {
-    const birthday: any = new Date(dob);
-    const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
-    const today: any = new Date(currentYear, 2, 31);
-    const timeDiff: any = ((today - birthday) / (31557600000));
-    return Math.floor(timeDiff);
-  }
+  // calAge(dob) {
+  //   const birthday: any = new Date(dob);
+  //   const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
+  //   const today: any = new Date(currentYear, 2, 31);
+  //   const timeDiff: any = ((today - birthday) / (31557600000));
+  //   return Math.floor(timeDiff);
+  // }
 
   documents = []
   getDocuments() {
