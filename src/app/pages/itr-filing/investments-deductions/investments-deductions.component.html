@@ -66,7 +66,7 @@
                 </mat-form-field>
             </div>
 
-            <div class="card__col-lg-4" *ngIf="!ITR_JSON.systemFlags.hraAvailed && ITR_JSON.regime === 'OLD'">
+            <div class="card__col-lg-4" *ngIf="!ITR_JSON.systemFlags?.hraAvailed && ITR_JSON.regime === 'OLD'">
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80GG</mat-label>
                     <input matInput placeholder="Under section 80GG" maxlength="8" formControlName="us80gg"
@@ -183,7 +183,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-lg-4" *ngIf="ITR_JSON.systemFlags.hasParentOverSixty">
+                <div class="card__col-lg-4" *ngIf="ITR_JSON.systemFlags?.hasParentOverSixty">
                     <mat-form-field appearance="outline">
                         <mat-label>Medical Expenditure for Senior Citizen</mat-label>
                         <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"

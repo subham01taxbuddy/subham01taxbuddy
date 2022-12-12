@@ -51,8 +51,8 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let labData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND');
-    if (labData.length > 0) {
+    let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    if (labData?.length > 0) {
       this.labView = 'TABLE'
     }
   }
@@ -74,8 +74,8 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     this.isExmptAvail = false;
     const data = [];
     const dataToReturn = [];
-    let labData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND');
-    for (let i = 0; i < labData[0]?.assetDetails.length; i++) {
+    let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    for (let i = 0; labData && i < labData[0]?.assetDetails?.length; i++) {
       let assetDetails = labData[0].assetDetails[i];
       let buyerDetails = labData[0].buyersDetails.filter(buyer => (buyer.srn === assetDetails.srn))[0];
       // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
@@ -89,6 +89,13 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       }
       console.log('cost', improvements.length, costOfImprovement);
 
+      let totalDeductions = 0;
+      let deductions = labData[0].deduction.filter(ded => (parseInt(ded.srn) == assetDetails.srn));
+      for (let j = 0; j < deductions.length; j++) {
+        totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
+      }
+      
+
       data.push({
         id: i + 1,
         assetType: labData[0].assetType,
@@ -98,7 +105,11 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         // totalCost: tCost,
         gainType: assetDetails.gainType,
         cgIncome: assetDetails.capitalGain,
+<<<<<<< HEAD
         deductions: 0,//TODO
+=======
+        deductions: totalDeductions,//TODO
+>>>>>>> staging
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
         address: buyerDetails?.address,
@@ -124,7 +135,11 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       this.assestTypesDropdown = result;
       this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
       this.capitalGainGridOptions.api?.setColumnDefs(this.cgCreateColoumnDef(this.assestTypesDropdown));
+<<<<<<< HEAD
       if (this.ITR_JSON.capitalGain.length > 0) {
+=======
+      if (this.ITR_JSON.capitalGain?.length > 0) {
+>>>>>>> staging
         //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
         // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
       }
@@ -205,11 +220,14 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
+<<<<<<< HEAD
           if (params.data.isExemptionApplied) {
             return params.data.gainType === 'LONG' ? 'Long Term **' : 'Short Term';
           } else {
             return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
           }
+=======
+>>>>>>> staging
         },
       },
       {
@@ -242,7 +260,11 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
+<<<<<<< HEAD
           return params.data.totalCost ? params.data.totalCost.toLocaleString('en-IN') : params.data.totalCost;
+=======
+          return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
+>>>>>>> staging
         },
       },
       // {

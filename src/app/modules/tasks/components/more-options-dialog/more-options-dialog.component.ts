@@ -1,7 +1,7 @@
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
-import { Component, Inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions } from 'ag-grid-community';
@@ -21,7 +21,9 @@ export class MoreOptionsDialogComponent implements OnInit {
   myItrsGridOptions: GridOptions;
   initialData = {};
   statusList = [];
-  constructor(public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
+  // isDisable = true;
+  constructor(
+    public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
     private userMsService: UserMsService,
@@ -33,7 +35,6 @@ export class MoreOptionsDialogComponent implements OnInit {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
-        // params.api.sizeColumnsToFit();
       },
       sortable: true,
       filter: true,
@@ -42,8 +43,44 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data)
+    // this.getStatus();
   }
+
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
+  // getStatus() {
+  //   const param = `/user-status?userId=` + this.data.userId + `&currentStatus=OPEN`;
+  //   this.userMsService.getMethod(param).subscribe((res: any) => {
+  //     if (res.success) {
+  //       this.isDisable = false;
+  //     } else {
+  //       this.isDisable = true;
+  //     }
+  //   }, error => {
+  //     this.utilsService.showSnackBar(error.message);
+  //   })
+  // }
+
+  deleteUser() {
+    // this.isDisable = true;
+    const param = `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
+    this.userMsService.deleteMethod(param).subscribe((res: any) => {
+      if (res.success) {
+        this.utilsService.showSnackBar(`User deleted successfully!`);
+        // this.isDisable = true;
+        this.dialogRef.close(true);
+      } else {
+        this.utilsService.showSnackBar(res.message);
+        // this.isDisable = false;
+      }
+    }, error => {
+      // this.isDisable = false;
+      this.utilsService.showSnackBar(error.message);
+    })
+  }
+
   goToInvoice() {
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: this.data.userId } });
     this.dialogRef.close();

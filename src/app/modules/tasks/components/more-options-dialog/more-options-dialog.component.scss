@@ -4,9 +4,16 @@ td {
     border: 1px solid black;
     border-collapse: collapse;
     padding: 10px;
-
 }
 
 th {
     font-weight: bold;
+}
+
+.delete-user {
+    background-color: red !important;
+}
+
+.mt-5 {
+    margin:5px;
 }

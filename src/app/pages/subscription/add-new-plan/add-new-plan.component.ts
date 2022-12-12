@@ -155,7 +155,6 @@ export class AddNewPlanComponent implements OnInit {
         this.serviceType = this.userSubscription.smeSelectedPlan.servicesType;
         this.noOfMonths.setValue(Math.round(this.userSubscription.smeSelectedPlan.validForDays / 30));
         this.getAllPlanInfo(this.userSubscription.smeSelectedPlan.servicesType);
-        console.log('this.maxEndDate:', this.maxEndDate);
       } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.userSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
@@ -383,17 +382,6 @@ export class AddNewPlanComponent implements OnInit {
     this.updateSubscription('CLEAR_PLAN');
   }
 
-  /* activateSubscription() {
-    if (this.subStartDate.valid && this.subEndDate.valid) {
-      this.userSubscription.startDate = this.subStartDate.value;
-      this.userSubscription.endDate = this.subEndDate.value;
-      this.userSubscription.subscriptionAssigneeId = this.subscriptionAssigneeId.value;
-      this.userSubscription.isActive = true;
-      this.updateSubscription('');
-    } else {
-      this.toastMessage.alert("error", "Select Start date and End date")
-    }
-  } */
 
   saveSubscription(val) {
     if (this.serviceType !== 'GST') {
@@ -407,6 +395,7 @@ export class AddNewPlanComponent implements OnInit {
       this.userSubscription.isActive = true;
       this.updateSubscription(val);
     } else {
+      debugger
       this.toastMessage.alert("error", "Select Start date and End date")
     }
   }

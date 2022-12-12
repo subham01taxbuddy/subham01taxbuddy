@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-ack-success',
@@ -14,7 +15,10 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
   emailString: String = '';
   userName: String = '';
   DIRECT_UPLOAD_RES: any;
-  constructor(public utilsService: UtilsService, private router: Router) { }
+  constructor(public utilsService: UtilsService, private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
+    private dialogRef:MatDialogRef<AckSuccessComponent>,
+    ) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -43,4 +47,14 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
     // TODO
     this.router.navigate(['/pages/itr-filing/users']);
   }
+
+  
+  closeDialog(){
+    this.dialogRef.close();
+    this.router.navigate(['/tasks/filings']);
+  }
+}
+
+export interface ConfirmModel {
+  acknowledgementNo: any;
 }

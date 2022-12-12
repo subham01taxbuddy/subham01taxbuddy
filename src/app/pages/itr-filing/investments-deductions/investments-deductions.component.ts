@@ -552,6 +552,29 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     if (self instanceof Array && self.length > 0) {
       this.userAge = self[0].age
     }
+    if(!this.ITR_JSON.systemFlags?.hasParentOverSixty) {
+      if(this.ITR_JSON.systemFlags) {
+        this.ITR_JSON.systemFlags.hasParentOverSixty = false;
+      } else {
+        this.ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false
+        }
+      }
+    }
   }
 
   ngOnInit() {
@@ -1061,7 +1084,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   isParentOverSixty() {
-    if (!this.ITR_JSON.systemFlags.hasParentOverSixty) {
+    if (!this.ITR_JSON?.systemFlags?.hasParentOverSixty) {
       console.log('clear parent related values');
       // this.investmentDeductionForm.controls['premium'].setValue(null);
       // this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);

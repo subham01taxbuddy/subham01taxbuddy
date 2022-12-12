@@ -27,8 +27,8 @@ export class OtherAssetsComponent implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let listedData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'GOLD');
-    if (listedData.length > 0) {
+    let listedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'GOLD');
+    if (listedData?.length > 0) {
       this.goldCg = listedData[0];
     } else {
       this.goldCg = {
