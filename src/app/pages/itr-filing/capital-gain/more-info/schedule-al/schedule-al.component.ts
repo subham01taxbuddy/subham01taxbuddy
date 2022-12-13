@@ -82,16 +82,16 @@ export class ScheduleALComponent implements OnInit {
   }
 
   createMovableAssetsForm() {
-    this.movableAssetsForm = new FormGroup({
-      jwelleryAmount: new FormControl(),
-      artWorkAmount:new FormControl(),
-      vehicleAmount:new FormControl(),
-      bankAmount:new FormControl(),
-      shareAmount:new FormControl(),
-      insuranceAmount:new FormControl(),
-      loanAmount:new FormControl(),
-      cashInHand:new FormControl(),
-      assetLiability: new FormControl()
+    this.movableAssetsForm = this.fb.group({
+      jwelleryAmount: [this.movableAssets?.jwelleryAmount],
+      artWorkAmount: [this.movableAssets?.artWorkAmount],
+      vehicleAmount: [this.movableAssets?.vehicleAmount],
+      bankAmount: [this.movableAssets?.bankAmount],
+      shareAmount: [this.movableAssets?.shareAmount],
+      insuranceAmount: [this.movableAssets?.insuranceAmount],
+      loanAmount: [this.movableAssets?.loanAmount],
+      cashInHand: [this.movableAssets.cashInHand],
+      assetLiability: [this.movableAssets?.assetLiability]
     });
   }
 
