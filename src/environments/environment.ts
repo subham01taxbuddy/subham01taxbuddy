@@ -1,7 +1,7 @@
 export const environment = {
 	production: false,
-	portal_url: 'https://dev-admin.taxbuddy.com/',
-	url: "https://dev-api.taxbuddy.com",
+	portal_url: 'https://uat-admin.taxbuddy.com/',
+	url: "https://uat-api.taxbuddy.com",
 	eri_url: "https://api.taxbuddy.com",
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
@@ -24,25 +24,25 @@ export const environment = {
 	}, */
 	AMPLIFY_CONFIG: {
 		aws_project_region: 'ap-south-1',
-		aws_cognito_identity_pool_id: 'ap-south-1:7a42574d-ac52-44b8-81d8-93a724392687',
+		aws_cognito_identity_pool_id: 'ap-south-1:f7280802-a172-4b2a-a3b2-adf642b67b38',
 		aws_cognito_region: 'ap-south-1',
-		aws_user_pools_id: 'ap-south-1_V5sO3dcUV',
-		aws_user_pools_web_client_id: '49ca0bjp4rorgdpivb1k9lbv65',
+		aws_user_pools_id: 'ap-south-1_7GHESh9rb',
+		aws_user_pools_web_client_id: 'pdtpeogn8a2viimond1u0debi',
 		oauth: {},
 		federationTarget: 'COGNITO_IDENTITY_POOLS',
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
-
 	externalScripts: {
 		matomo: `var _paq = window._paq = window._paq || [];
-		  _paq.push(['trackPageView']);
-		  _paq.push(['enableLinkTracking']);
-		  (function() {
-			var u="//matomo.taxbuddy.com/";
-			_paq.push(['setTrackerUrl', u+'matomo.php']);
-			_paq.push(['setSiteId', '5']);
-			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-			g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-		  })();`
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function() {
+		  var u="//matomo.taxbuddy.com/";
+		  _paq.push(['setTrackerUrl', u+'matomo.php']);
+		  _paq.push(['setSiteId', '4']);
+		  var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+		  g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+		})();`
 	}
 };
