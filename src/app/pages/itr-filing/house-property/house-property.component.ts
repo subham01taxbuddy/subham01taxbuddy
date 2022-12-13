@@ -336,7 +336,6 @@ export class HousePropertyComponent implements OnInit {
 
   changePropType(type) {
     console.log(type)
-    debugger
     if (type === 'SOP') {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators(null);
@@ -399,7 +398,6 @@ export class HousePropertyComponent implements OnInit {
     if (this.housePropertyForm.valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */) {
         this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
-
       // if (this.isCoOwners.value) {
       //   let sum = 0;
       //   for (let i = 0; i < hp.coOwners.length; i++) {
