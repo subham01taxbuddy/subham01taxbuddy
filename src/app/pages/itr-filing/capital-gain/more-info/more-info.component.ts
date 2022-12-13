@@ -50,7 +50,7 @@ export class MoreInfoComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         pinned: 'left',
-        width: 150,
+        width: 120,
       },
       {
         headerName: 'Date of Filing',
@@ -95,11 +95,19 @@ export class MoreInfoComponent implements OnInit {
       },
 
       {
-        headerName: 'Loss from business other than loss from speculative business and specified business',
+        headerName: 'Business & Speculative income',
+        cellStyle: { textAlign: 'center' },
+        // cellStyle: function (params: any) {
+        //   return {
+        //     'textAlign': 'center !important;',//, display: 'flex',
+        //     // 'align-items': 'center',
+        //     'justify-content': 'center !important;'
+        //   }
+        // },
         editable: false,
         children: [
           {
-            headerName: 'a. Brought Forward Business Loss',
+            headerName: 'Brought Forward Business Loss',
             field: 'broughtForwordBusinessLoss',
             editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
@@ -120,10 +128,42 @@ export class MoreInfoComponent implements OnInit {
 
           },
           {
-            headerName: 'b. Amount as adjusted on account of opting for taxation u/s 115BAC',
-            field: 'adjustedAmount',
+            headerName: 'Loss from Speculative Business',
+            field: 'speculativeBusinessLoss',
+            editable: (params: IsColumnFuncParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
+            suppressMovable: true,
+            cellStyle: function (params) {
+              if ((params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') || (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11')) {
+                return { backgroundColor: '#cecec8bd' };
+              }
+              return null;
+            },
+            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+              var newValInt = parseInt(params.newValue);
+              var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
+              if (valueChanged) {
+                params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
+              }
+              return valueChanged;
+            },
+          },
+        ],
+      },
+      {
+        headerName: 'Capital Gain Loss',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'space-around'
+          }
+        },
+        editable: false,
+        children: [
+          {
+            headerName: 'Short Term Capital Loss',
+            field: 'STCGLoss',
             editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-            width: 300,
             suppressMovable: true,
             cellStyle: function (params) {
               if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
@@ -133,21 +173,19 @@ export class MoreInfoComponent implements OnInit {
             },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
               var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.adjustedAmount !== newValInt;
+              var valueChanged = params.data.STCGLoss !== newValInt;
               if (valueChanged) {
-                params.data.adjustedAmount = newValInt ? newValInt : params.oldValue;
+                params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
               }
               return valueChanged;
             },
 
           },
-
           {
-            headerName: 'c. Brought forward Business loss available for set off during the year [c=a-b]',
-            field: 'setOffDuringTheYear',
-            suppressMovable: true,
+            headerName: 'Long Term Capital Loss',
+            field: 'LTCGLoss',
             editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-            width: 300,
+            suppressMovable: true,
             cellStyle: function (params) {
               if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
                 return { backgroundColor: '#cecec8bd' };
@@ -156,82 +194,16 @@ export class MoreInfoComponent implements OnInit {
             },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
               var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.setOffDuringTheYear !== newValInt;
+              var valueChanged = params.data.LTCGLoss !== newValInt;
               if (valueChanged) {
-                params.data.setOffDuringTheYear = newValInt ? newValInt : params.oldValue;
+                params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
               }
               return valueChanged;
             },
 
-          }
+          },
         ],
-        suppressMovable: true,
       },
-      {
-        headerName: 'Short Term Capital Loss',
-        field: 'STCGLoss',
-        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-        suppressMovable: true,
-        cellStyle: function (params) {
-          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-            return { backgroundColor: '#cecec8bd' };
-          }
-          return null;
-        },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.STCGLoss !== newValInt;
-          if (valueChanged) {
-            params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-
-      },
-      {
-        headerName: 'Long Term Capital Loss',
-        field: 'LTCGLoss',
-        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-        suppressMovable: true,
-        cellStyle: function (params) {
-          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-            return { backgroundColor: '#cecec8bd' };
-          }
-          return null;
-        },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.LTCGLoss !== newValInt;
-          if (valueChanged) {
-            params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-
-      },
-      {
-        headerName: 'Loss from Speculative Business',
-        field: 'speculativeBusinessLoss',
-        editable: (params: IsColumnFuncParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
-        suppressMovable: true,
-        cellStyle: function (params) {
-          if ((params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') || (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11')) {
-            return { backgroundColor: '#cecec8bd' };
-          }
-          return null;
-        },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
-          if (valueChanged) {
-            params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-
-
-      },
-
       {
         headerName: 'Actions',
         editable: false,

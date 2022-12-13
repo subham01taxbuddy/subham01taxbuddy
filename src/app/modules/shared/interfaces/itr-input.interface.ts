@@ -260,6 +260,7 @@ export interface Improvement {
     dateOfImprovement: string;
     costOfImprovement: number;
     indexCostOfImprovement: number;
+    financialYearOfImprovement: string;
 }
 export interface Investments {
     srn: string;

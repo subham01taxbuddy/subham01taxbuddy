@@ -30,11 +30,7 @@ export class OtherAssetsComponent implements OnInit {
     let listedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'GOLD');
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
-      this.goldCg.improvement.forEach(imp => {
-        if(imp.dateOfImprovement == null){
-          this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
-        }
-      });
+      this.clearNullImprovements();
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -50,6 +46,14 @@ export class OtherAssetsComponent implements OnInit {
     this.otherAssetsCallInConstructor();
     this.improvementCallInConstructor();
     this.deductionCallInConstructor();
+  }
+
+  clearNullImprovements() {
+    this.goldCg.improvement.forEach(imp => {
+      if(imp.financialYearOfImprovement == null || !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)){
+        this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
+      }
+    });
   }
 
   ngOnInit() {
@@ -255,12 +259,14 @@ export class OtherAssetsComponent implements OnInit {
       if (result !== undefined) {
         if (mode === 'ADD') {
           this.goldCg.improvement.push(result);
-          this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
+          // this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
         } else {
           this.goldCg.improvement.splice((improvement.id - 1), 1, result);
-          this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
+          // this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
         }
-        this.calculateCg()
+        this.calculateCg();
+        this.clearNullImprovements();
+        this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
       }
     });
 
@@ -284,6 +290,11 @@ export class OtherAssetsComponent implements OnInit {
   }
 
   improvementCreateRowData() {
+    this.goldCg.improvement.forEach(imp => {
+      if(imp.dateOfImprovement == null){
+        this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
+      }
+    });
     return this.goldCg.improvement;
   }
 
@@ -376,7 +387,8 @@ export class OtherAssetsComponent implements OnInit {
 
   deleteImprovement(i) {
     this.goldCg.improvement.splice(i, 1);
-    this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
+    this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
+    this.clearNullImprovements();
   }
 
 
@@ -574,7 +586,7 @@ export class OtherAssetsComponent implements OnInit {
         let improvement = {
           indexCostOfImprovement: 0,
           id: asset.srn,
-          dateOfImprovement:" ",
+          dateOfImprovement:"",
           costOfImprovement:0,
           financialYearOfImprovement:null,
           srn:asset.srn

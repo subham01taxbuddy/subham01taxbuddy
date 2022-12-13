@@ -322,6 +322,7 @@ export class LabFormComponent implements OnInit {
       dateOfImprovement: null,
       costOfImprovement: null,
       indexCostOfImprovement: null,
+      financialYearOfImprovement: null
     };
     if (improve.valid) {
       improve.push(this.createImprovementForm(obj));
@@ -725,6 +726,7 @@ export class LabFormComponent implements OnInit {
         dateOfImprovement: null,
         costOfImprovement: null,
         indexCostOfImprovement: null,
+        financialYearOfImprovement: null
       };
       improve.push(this.createImprovementForm(obj));
     } else {
