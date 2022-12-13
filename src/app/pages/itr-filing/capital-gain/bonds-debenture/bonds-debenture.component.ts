@@ -117,7 +117,7 @@ export class BondsDebentureComponent implements OnInit {
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
       isUploaded: [obj.isUploaded || null],
       hasIndexation: [obj.hasIndexation || null],
-      algorithm: [obj.algorithm || 'null'],
+      algorithm: [obj.algorithm || 'cgProperty'],
       fmvAsOn31Jan2018: [obj.fmvAsOn31Jan2018 || null],
 
     });

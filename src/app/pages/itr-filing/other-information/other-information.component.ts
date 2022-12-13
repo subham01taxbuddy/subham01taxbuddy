@@ -29,8 +29,31 @@ export class OtherInformationComponent implements OnInit {
     if (this.ITR_JSON.unlistedSharesDetails === null || this.ITR_JSON.unlistedSharesDetails === undefined) {
       this.ITR_JSON.unlistedSharesDetails = [];
     }
-    if (this.ITR_JSON.directorInCompany === null || this.ITR_JSON.directorInCompany === undefined) {
+    if (this.ITR_JSON?.directorInCompany === null || this.ITR_JSON?.directorInCompany === undefined) {
       this.ITR_JSON.directorInCompany = [];
+    }
+    if(!this.ITR_JSON.systemFlags?.directorInCompany) {
+      if(this.ITR_JSON.systemFlags) {
+        this.ITR_JSON.systemFlags.directorInCompany = false;
+      } else {
+        this.ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false
+        }
+      }
     }
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON))
     this.sharesCallInConstructor();
@@ -291,10 +314,10 @@ export class OtherInformationComponent implements OnInit {
 
   //
   ChangeDirectorStatus() {
-    if (this.ITR_JSON.systemFlags.directorInCompany) {
+    if (this.ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {
-      if (this.ITR_JSON.directorInCompany.length > 0) {
+      if (this.ITR_JSON?.directorInCompany.length > 0) {
         this.Copy_ITR_JSON.directorInCompany = [];
         this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
         this.serviceCall('Director in company')
@@ -324,7 +347,7 @@ export class OtherInformationComponent implements OnInit {
         this.directorGridOptions?.api.setRowData(this.directorCreateRowData());
         this.directorGridOptions?.api.setColumnDefs(this.directorCreateColumnDef());
       } else {
-        if (this.ITR_JSON.directorInCompany.length === 0) {
+        if (this.ITR_JSON?.directorInCompany.length === 0) {
           this.ITR_JSON.systemFlags.directorInCompany = false;
         }
       }
@@ -454,7 +477,7 @@ export class OtherInformationComponent implements OnInit {
 
   directorCreateRowData() {
     const dataToReturn = [];
-    for (let i = 0; i < this.ITR_JSON.directorInCompany.length; i++) {
+    for (let i = 0; i < this.ITR_JSON?.directorInCompany.length; i++) {
       const val = this.ITR_JSON.directorInCompany[i];
       const temp = {
         id: i + 1,
@@ -479,7 +502,7 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));
       this.loading = false;
       this.utilsService.showSnackBar(msg + ' details removed successfully');
-      if (this.ITR_JSON.systemFlags.directorInCompany)
+      if (this.ITR_JSON.systemFlags?.directorInCompany)
         this.directorGridOptions?.api.setRowData(this.directorCreateRowData());
       if (this.ITR_JSON.systemFlags.haveUnlistedShares)
         this.sharesGridOptions.api.setRowData(this.sharesCreateRowData());

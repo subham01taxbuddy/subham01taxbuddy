@@ -100,6 +100,10 @@
                                         *ngIf="housePropertyForm.controls['loans'].controls[i].controls['interestAmount'].hasError('pattern')">
                                         Enter positive number without decimal.
                                     </mat-error>
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['loans'].controls[i].controls['interestAmount'].hasError('min')">
+                                        Interest amount should be 1
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
                         </span>

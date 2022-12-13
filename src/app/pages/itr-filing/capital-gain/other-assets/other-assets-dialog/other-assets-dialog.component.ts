@@ -17,20 +17,21 @@ export class OtherAssetsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    let num: any = Math.random().toFixed(2);
-    let digit = num * 100
+    // let num: any = Math.random().toFixed(2);
+    // let digit = num * 100
     this.assetDetailsForm = this.fb.group({
-      srn: [digit],
+      srn: [this.data.rowIndex],
       sellDate: ['', [Validators.required]],
       sellValue: ['', [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       purchaseDate: ['', [Validators.required]],
       purchaseCost: ['', [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       sellExpense: [''],
       gainType: [''],
-      "algorithm": "",
+      "algorithm": "cgProperty",
       "stampDutyValue": 0,
       "valueInConsideration": 0,
-      "indexCostOfAcquisition": 0
+      "indexCostOfAcquisition": 0,
+      capitalGain:0
     });
     if (this.data.mode === 'EDIT') {
       this.assetDetailsForm.patchValue(this.data.assetDetails);

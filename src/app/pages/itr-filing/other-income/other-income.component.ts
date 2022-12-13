@@ -510,7 +510,7 @@ export class OtherIncomeComponent implements OnInit {
   }
 
   getTotal() {
-    return this.dividendIncomes.controls['quarter1'].value + this.dividendIncomes.controls['quarter2'].value + this.dividendIncomes.controls['quarter3'].value + this.dividendIncomes.controls['quarter4'].value + this.dividendIncomes.controls['quarter5'].value;
+    return parseInt(this.dividendIncomes.controls['quarter1'].value) + parseInt(this.dividendIncomes.controls['quarter2'].value) + parseInt(this.dividendIncomes.controls['quarter3'].value) + parseInt(this.dividendIncomes.controls['quarter4'].value) + parseInt(this.dividendIncomes.controls['quarter5'].value);
   }
   calFamPension() {
     this.famPenDeduction = 0;

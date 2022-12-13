@@ -238,7 +238,7 @@ export class SummaryComponent implements OnInit {
     return this.utilsService.currencyFormatter(grossTotal);
   }
   totalExpAllow(allowance) {
-    const total = allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES');
+    const total = allowance?.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES');
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -246,7 +246,7 @@ export class SummaryComponent implements OnInit {
     }
   }
   totalPT(deductions) {
-    const total = deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX');
+    const total = deductions?.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX');
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -255,7 +255,7 @@ export class SummaryComponent implements OnInit {
   }
 
   totalEA(deductions) {
-    const total = deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW');
+    const total = deductions?.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW');
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -272,7 +272,7 @@ export class SummaryComponent implements OnInit {
   }
   natureOfBusinessFromCode(natureOfBusiness) {
     if (this.natureOfBusinessDropdown?.length !== 0) {
-      const nameArray = this.natureOfBusinessDropdown.filter((item: any) => item.code === natureOfBusiness);
+      const nameArray = this.natureOfBusinessDropdown?.filter((item: any) => item.code === natureOfBusiness);
       console.log('nameArray = ', nameArray);
       return natureOfBusiness + '- ' + nameArray[0].label;
     } else {

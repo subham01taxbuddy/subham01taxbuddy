@@ -72,10 +72,56 @@ export class BondsComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.getBondsTableData([]);
-    this.getDeductionTableData([this.bondsDeductionData]);
-    this.getZeroBondsTableData([]);
-    this.getZeroDeductionTableData([this.bondsDeductionData]);
+
+    if (this.Copy_ITR_JSON.capitalGain) {
+      let assetDetails;
+      let data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "BONDS");
+      if (data.length > 0) {
+        data.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+            }
+          })
+          this.getBondsTableData(assetDetails);
+          if (obj.deduction) {
+            this.getDeductionTableData(obj.deduction);
+          } else {
+            this.getDeductionTableData([this.bondsDeductionData]);
+          }
+        });
+      } else {
+        this.getBondsTableData([]);
+        this.getDeductionTableData([this.bondsDeductionData]);
+      }
+      let zeroData = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "ZERO_COUPON_BONDS");
+      if (zeroData.length > 0) {
+        zeroData.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+            }
+          })
+          this.getZeroBondsTableData(assetDetails);
+          if (obj.deduction) {
+            this.getZeroDeductionTableData(obj.deduction);
+          } else {
+            this.getZeroDeductionTableData([this.bondsDeductionData]);
+          }
+        });
+      }
+      this.getZeroBondsTableData([]);
+      this.getZeroDeductionTableData([this.bondsDeductionData]);
+    } else {
+      this.getBondsTableData([]);
+      this.getDeductionTableData([this.bondsDeductionData]);
+      this.getZeroBondsTableData([]);
+      this.getZeroDeductionTableData([this.bondsDeductionData]);
+    }
   }
 
   ngOnInit(): void {
@@ -177,7 +223,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.capitalGain == 0) {
+      if (result?.capitalGain <= 0) {
         this.deduction = false;
         this.isDisable = true;
         this.onDeductionChanged();
@@ -217,7 +263,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.capitalGain == 0) {
+      if (result?.capitalGain <= 0) {
         this.zeroDeduction = false;
         this.isZeroDisable = true;
       } else {
@@ -583,6 +629,13 @@ export class BondsComponent implements OnInit {
         "costOfImprovement": element.costOfImprovement
       })
     });
+    if (!this.bondsGridOptions.rowData) {
+      this.deductionGridOptions.rowData['api'].setRowData([]);
+    }
+    if (!this.zeroBondsGridOptions.rowData) {
+      this.zeroDeductionGridOptions.rowData['api'].setRowData([]);
+    }
+
 
     const bondData = {
       "assessmentYear": "",
@@ -641,7 +694,11 @@ export class BondsComponent implements OnInit {
         this.deductionGridOptions.api.setRowData([this.bondsDeductionData]);
       }
     } else {
-      this.deductionGridOptions.api.setRowData([]);
+      if (!this.deductionGridOptions.api) {
+        this.getDeductionTableData([]);
+      } else {
+        this.deductionGridOptions.api.setRowData([]);
+      }
     }
   }
 
@@ -653,7 +710,11 @@ export class BondsComponent implements OnInit {
         this.zeroDeductionGridOptions.api.setRowData([this.bondsDeductionData]);
       }
     } else {
-      this.zeroDeductionGridOptions.api.setRowData([]);
+      if (!this.zeroDeductionGridOptions.api) {
+        this.getZeroDeductionTableData([]);
+      } else {
+        this.zeroDeductionGridOptions.api.setRowData([]);
+      }
     }
   }
 }

@@ -41,8 +41,8 @@ export class EquityMfComponent implements OnInit {
     public snackBar: MatSnackBar,
     private itrMsService: ItrMsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let listedData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
-    if (listedData.length > 0) {
+    let listedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
+    if (listedData?.length > 0) {
       this.listedCg = listedData[0];
     } else {
       this.listedCg = {
@@ -57,8 +57,8 @@ export class EquityMfComponent implements OnInit {
       }
     }
 
-    let unlistedData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-    if (unlistedData.length > 0) {
+    let unlistedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+    if (unlistedData?.length > 0) {
       this.unlistedCg = unlistedData[0];
     } else {
       this.unlistedCg = {

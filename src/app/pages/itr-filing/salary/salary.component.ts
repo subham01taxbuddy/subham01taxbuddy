@@ -174,7 +174,7 @@ export class SalaryComponent implements OnInit {
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
-      professionalTax: [null, {validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change'}],
+      professionalTax: [null, { validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change' }],
     });
   }
 
@@ -580,6 +580,9 @@ export class SalaryComponent implements OnInit {
     this.loading = true;
     if (this.employerMode === 'ADD') {
       const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+      if(this.Copy_ITR_JSON.employers == null || this.Copy_ITR_JSON.employers.length == 0){
+        this.Copy_ITR_JSON.employers = [];
+      }
       this.Copy_ITR_JSON.employers.push(myEmp);
     } else if (this.employerMode === 'UPDATE') {
       const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
@@ -628,22 +631,26 @@ export class SalaryComponent implements OnInit {
     // this.employerCallInConstructor();
 
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
-      if (!this.utilsService.isNonEmpty(result)) {
-        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
-        return
-      }
-      this.ITR_JSON = result;
-      this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
-      this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      if (this.utilsService.isNonEmpty(result)) {
+        debugger
+        this.ITR_JSON = result;
+        this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
+        this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
 
-      // this.utilsService.disposable.unsubscribe();
-      this.utilsService.showSnackBar('Salary updated successfully.');
-      this.utilsService.smoothScrollToTop();
-      this.salaryView = 'TABLE';
-      this.employerCallInConstructor();
-      this.loading = false;
+        // this.utilsService.disposable.unsubscribe();
+        this.utilsService.showSnackBar('Salary updated successfully.');
+        this.utilsService.smoothScrollToTop();
+        this.salaryView = 'TABLE';
+        this.employerCallInConstructor();
+        this.loading = false;
+        return
+      } else {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
+      }
+
     }, error => {
       this.loading = false;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -983,18 +990,18 @@ export class SalaryComponent implements OnInit {
     const data = [];
     if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.employers) && this.ITR_JSON.employers instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
-        let exemptions = this.ITR_JSON.employers[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES');
-        let salary = this.ITR_JSON.employers[i].salary.filter(item => item.salaryType === 'SEC17_1');
-        let profitsInLieuOfSalary = this.ITR_JSON.employers[i].profitsInLieuOfSalaryType.filter(item => item.salaryType === 'SEC17_3');
-        let perquisites = this.ITR_JSON.employers[i].perquisites.filter(item => item.perquisiteType === 'SEC17_2');
-        let pt = this.ITR_JSON.employers[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX');
+        let exemptions = this.ITR_JSON.employers[i].allowance?.filter(item => item.allowanceType === 'ALL_ALLOWANCES');
+        let salary = this.ITR_JSON.employers[i].salary?.filter(item => item.salaryType === 'SEC17_1');
+        let profitsInLieuOfSalary = this.ITR_JSON.employers[i].profitsInLieuOfSalaryType?.filter(item => item.salaryType === 'SEC17_3');
+        let perquisites = this.ITR_JSON.employers[i].perquisites?.filter(item => item.perquisiteType === 'SEC17_2');
+        let pt = this.ITR_JSON.employers[i].deductions?.filter(item => item.deductionType === 'PROFESSIONAL_TAX');
         data.push({
           index: i + 1,
           id: this.ITR_JSON.employers[i].id,
           employerName: this.utilsService.isNonEmpty(this.ITR_JSON.employers[i].employerName) ? this.ITR_JSON.employers[i].employerName : `Employer ${i + 1}`,
-          grossSalary: (salary.length > 0 ? salary[0].taxableAmount : 0) + (profitsInLieuOfSalary.length > 0 ? profitsInLieuOfSalary[0].taxableAmount : 0) + (perquisites.length > 0 ? perquisites[0].taxableAmount : 0),
-          exemptions: exemptions.length > 0 ? exemptions[0].exemptAmount : 0,
-          totalDeductions: this.ITR_JSON.employers[i].standardDeduction + (pt.length > 0 ? pt[0].exemptAmount : 0),
+          grossSalary: (salary?.length > 0 ? salary[0].taxableAmount : 0) + (profitsInLieuOfSalary?.length > 0 ? profitsInLieuOfSalary[0].taxableAmount : 0) + (perquisites?.length > 0 ? perquisites[0].taxableAmount : 0),
+          exemptions: exemptions?.length > 0 ? exemptions[0].exemptAmount : 0,
+          totalDeductions: this.ITR_JSON.employers[i].standardDeduction + (pt?.length > 0 ? pt[0].exemptAmount : 0),
           taxableIncome: this.ITR_JSON.employers[i].taxableIncome,
           // exemptAmount: null
         });

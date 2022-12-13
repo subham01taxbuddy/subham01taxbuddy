@@ -100,8 +100,8 @@ export class HousePropertyComponent implements OnInit {
       // isEligibleFor80EEA: [false],
       loans: this.fb.array([this.fb.group({
         loanType: ['HOUSING'],
-        principalAmount: [null, Validators.pattern(AppConstants.numericRegex)],
-        interestAmount: [0, [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
+        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
+        interestAmount: ['', [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
       })]),
       coOwners: this.fb.array([]),
       tenant: this.fb.array([]),
@@ -213,6 +213,7 @@ export class HousePropertyComponent implements OnInit {
 
     this.housePropertyForm = this.createHousePropertyForm();
     this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[index]);
+    this.changePropType(this.housePropertyForm.controls['propertyType'].value);
     this.housePropertyForm.controls['country'].setValue('91');
     if (this.ITR_JSON.houseProperties[index].tenant instanceof Array) {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
@@ -395,7 +396,7 @@ export class HousePropertyComponent implements OnInit {
   saveHouseProperty(view) {
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */) {
-      this.housePropertyForm.controls['country'].setValue('91');
+        this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
       // if (this.isCoOwners.value) {
       //   let sum = 0;
@@ -429,6 +430,14 @@ export class HousePropertyComponent implements OnInit {
       } else {
         hp.isEligibleFor80EE = false;
         hp.isEligibleFor80EEA = false;
+      }
+      if (((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].value || ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['principalAmount'].value) {
+        hp.loans.forEach(element => {
+          element.principalAmount = parseFloat(element.principalAmount);
+          element.interestAmount = parseFloat(element.interestAmount)
+        })
+      } else {
+        hp.loans = [];
       }
       if (this.mode === 'ADD') {
         this.Copy_ITR_JSON.houseProperties.push(hp);

@@ -361,12 +361,12 @@ export class PersonalInformationComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      gender: [''],
-      dateOfBirth: [''],
+      // gender: [''],
+      // dateOfBirth: [''],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      // aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
-      residentialStatus: ['RESIDENT'],
+      // residentialStatus: ['RESIDENT'],
       regime: ['', Validators.required],
       previousYearRegime: ['', Validators.required],
       address: this.fb.group({
@@ -563,6 +563,8 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   async saveProfile(ref) {
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.findAssesseeType();
     if (this.customerProfileForm.controls['regime'].value === 'NEW') {
       this.removeOldRegimeData();
@@ -584,13 +586,14 @@ export class PersonalInformationComponent implements OnInit {
       const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
-          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+            controlErrors[keyError]);
         });
       }
     });
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
+      // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -598,11 +601,11 @@ export class PersonalInformationComponent implements OnInit {
           mName: this.customerProfileForm.controls['middleName'].value,
           lName: this.customerProfileForm.controls['lastName'].value,
           fatherName: this.customerProfileForm.controls['fatherName'].value,
-          age: ageCalculated,
-          gender: this.customerProfileForm.controls['gender'].value,
+          age: this.ITR_JSON.family[0]['age'],
+          gender: this.ITR_JSON.family[0]['gender'],
           relationShipCode: 'SELF',
           relationType: 'SELF',
-          dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
+          dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth']
         }
       ];
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
@@ -682,13 +685,13 @@ export class PersonalInformationComponent implements OnInit {
     return true;
   }
 
-  calAge(dob) {
-    const birthday: any = new Date(dob);
-    const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
-    const today: any = new Date(currentYear, 2, 31);
-    const timeDiff: any = ((today - birthday) / (31557600000));
-    return Math.floor(timeDiff);
-  }
+  // calAge(dob) {
+  //   const birthday: any = new Date(dob);
+  //   const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
+  //   const today: any = new Date(currentYear, 2, 31);
+  //   const timeDiff: any = ((today - birthday) / (31557600000));
+  //   return Math.floor(timeDiff);
+  // }
 
   documents = []
   getDocuments() {

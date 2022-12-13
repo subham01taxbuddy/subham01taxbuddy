@@ -14,12 +14,12 @@
     </div>
   </div>
   <br>
-  <div style="text-align: right;" *ngIf="ITR_JSON.systemFlags.directorInCompany">
+  <div style="text-align: right;" *ngIf="ITR_JSON.systemFlags?.directorInCompany">
     <button class="tbd-btn-small" (click)="addDirectorDetails('Add director details','ADD',null)">Add &nbsp;&nbsp;
       <i class="fa fa-plus" aria-hidden="true"></i>
     </button>
   </div>
-  <div style="height: 100%; padding-top: 5px; box-sizing: border-box;" *ngIf="ITR_JSON.systemFlags.directorInCompany">
+  <div style="height: 100%; padding-top: 5px; box-sizing: border-box;" *ngIf="ITR_JSON.systemFlags?.directorInCompany">
     <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham" [gridOptions]="directorGridOptions"
       (rowClicked)="onDirectorRowClicked($event)">
     </ag-grid-angular>
