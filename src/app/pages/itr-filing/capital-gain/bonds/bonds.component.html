@@ -15,7 +15,7 @@
         </div>
         <div class="card__col-xs-12 card__col-sm-12">
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
+                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
                     [gridOptions]="bondsGridOptions" [frameworkComponents]="frameworkComponents"
                     (rowClicked)="onBondsRowClicked($event)">
                 </ag-grid-angular>
@@ -41,7 +41,7 @@
         </div>
         <div class="card__col-xs-12 card__col-sm-12" *ngIf="deduction">
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
+                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
                     [gridOptions]="deductionGridOptions" [frameworkComponents]="frameworkComponents"
                     (rowClicked)="onDeductionRowClicked($event)">
                 </ag-grid-angular>
@@ -64,7 +64,7 @@
         </div>
         <div class="card__col-xs-12 card__col-sm-12">
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
+                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
                     [gridOptions]="zeroBondsGridOptions" [frameworkComponents]="frameworkComponents"
                     (rowClicked)="onZeroBondsRowClicked($event)">
                 </ag-grid-angular>
@@ -91,7 +91,7 @@
         </div>
         <div class="card__col-xs-12 card__col-sm-12" *ngIf="zeroDeduction">
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
+                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
                     [gridOptions]="zeroDeductionGridOptions" [frameworkComponents]="frameworkComponents"
                     (rowClicked)="onZeroDeductionRowClicked($event)">
                 </ag-grid-angular>

@@ -31,8 +31,11 @@
             <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
           </mat-tab>
           <mat-tab label="Business Income">
-            <app-business *ngIf="tabIndex === 1"></app-business>
+            <app-business-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-business-income>
           </mat-tab>
+          <!-- <mat-tab label="Business Income">
+            <app-business *ngIf="tabIndex === 1"></app-business>
+          </mat-tab> -->
           <mat-tab label="Other Sources">
             <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
           </mat-tab>

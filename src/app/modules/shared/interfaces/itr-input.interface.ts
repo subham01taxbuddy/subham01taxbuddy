@@ -418,6 +418,22 @@ export interface Immovable {
     amount: number;
 }
 
+export interface businessIncome {
+    natureOfBusiness: any;
+    tradeOfBusiness: any;
+    receiptBank: any;
+    income6: any;
+    receiptMode: any;
+    income8: any;
+}
+
+export interface professionalIncome {
+    natureOfProfession: any;
+    tradeName: any;
+    grossReceipts: any;
+    presumptiveIncome: any;
+}
+
 export interface Bonds {
     srn: Number;
     id: any,
