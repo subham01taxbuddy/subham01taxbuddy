@@ -72,29 +72,56 @@ export class BondsComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    // const bondsArray = this.bondsGridOptions.rowDa;
-    // const deductionArray = this.bondsDeduction;
-    // const zeroBondsArray = this.zeroBonds;
-    // const zeroDeductionArray = this.zeroBondsDeduction;
+
     if (this.Copy_ITR_JSON.capitalGain) {
-      const data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "BONDS");
-
-      // const zeroData = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "ZERO_COUPON_BONDS");
-      // zeroData.forEach((obj: any) => {
-      //   obj.assetDetails.forEach((element: any) => {
-      //     zeroBondsArray.push(this.createZeroBondsForm(element));
-      //   })
-      //   obj.deduction.forEach((element: any) => {
-      //     zeroDeductionArray.push(this.createZeroBondsDeductionForm(element));
-      //   })
-      // });
-
+      let assetDetails;
+      let data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "BONDS");
+      if (data.length > 0) {
+        data.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+            }
+          })
+          this.getBondsTableData(assetDetails);
+          if (obj.deduction) {
+            this.getDeductionTableData(obj.deduction);
+          } else {
+            this.getDeductionTableData([this.bondsDeductionData]);
+          }
+        });
+      } else {
+        this.getBondsTableData([]);
+        this.getDeductionTableData([this.bondsDeductionData]);
+      }
+      let zeroData = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "ZERO_COUPON_BONDS");
+      if (zeroData.length > 0) {
+        zeroData.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+            }
+          })
+          this.getZeroBondsTableData(assetDetails);
+          if (obj.deduction) {
+            this.getZeroDeductionTableData(obj.deduction);
+          } else {
+            this.getZeroDeductionTableData([this.bondsDeductionData]);
+          }
+        });
+      }
+      this.getZeroBondsTableData([]);
+      this.getZeroDeductionTableData([this.bondsDeductionData]);
+    } else {
+      this.getBondsTableData([]);
+      this.getDeductionTableData([this.bondsDeductionData]);
+      this.getZeroBondsTableData([]);
+      this.getZeroDeductionTableData([this.bondsDeductionData]);
     }
-
-    this.getBondsTableData([]);
-    this.getDeductionTableData([this.bondsDeductionData]);
-    this.getZeroBondsTableData([]);
-    this.getZeroDeductionTableData([this.bondsDeductionData]);
   }
 
   ngOnInit(): void {
