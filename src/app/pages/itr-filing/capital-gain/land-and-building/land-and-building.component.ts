@@ -101,6 +101,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         assetType: labData[0].assetType,
         description: assetDetails.description,
         sellDate: assetDetails.sellDate,
+        costOfAcquisition: assetDetails.indexCostOfAcquisition,
         valueInConsideration: /* value */assetDetails.valueInConsideration,
         // totalCost: tCost,
         gainType: assetDetails.gainType,
@@ -196,24 +197,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           },
         },
       },
-      // {
-      //   headerName: 'Date of Sale',
-      //   field: 'sellDate',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   cellRenderer: (params) => {
-      //     return params.data.sellDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
-      //   }
-      // },
-      {
-        headerName: 'Type of Gain',
-        field: 'gainType',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-        },
-      },
       {
         headerName: 'Full Value Consideration',
         field: 'valueInConsideration',
@@ -221,6 +204,15 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.valueInConsideration ? params.data.valueInConsideration.toLocaleString('en-IN') : params.data.valueInConsideration;
+        },
+      },
+      {
+        headerName: 'Cost of Acquisition',
+        field: 'costOfAcquisition',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.costOfAcquisition ? params.data.costOfAcquisition.toLocaleString('en-IN') : params.data.costOfAcquisition;
         },
       },
       {
@@ -247,18 +239,17 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
         },
       },
-      // {
-      //   headerName: 'Total Cost',
-      //   field: 'totalCost',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.totalCost ? params.data.totalCost.toLocaleString('en-IN') : params.data.totalCost;
-      //   },
-      // },
-
       {
-        headerName: 'Gain Amount',
+        headerName: 'Type of Gain',
+        field: 'gainType',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
+        },
+      },
+      {
+        headerName: 'Total Capital Gain',
         field: 'cgIncome',
         editable: false,
         suppressMovable: true,
