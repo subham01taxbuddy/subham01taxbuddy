@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { businessIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { businessIncome, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { BusinessDialogComponent } from './business-dialog/business-dialog.component';
 
@@ -12,19 +12,24 @@ import { BusinessDialogComponent } from './business-dialog/business-dialog.compo
 })
 export class PresumptiveBusinessIncomeComponent implements OnInit {
   public businessGridOptions: GridOptions;
+  ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
   businessData: businessIncome = {
     natureOfBusiness: null,
-    tradeOfBusiness: null,
-    receiptBank: null,
-    income6: null,
-    receiptMode: null,
-    income8: null,
+    tradeName: null,
+    receipts: null,
+    presumptiveIncome: null,
+    periodOfHolding: null,
+    minimumPresumptiveIncome: null,
   }
 
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
-  ) { }
+  ) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+  }
 
   ngOnInit(): void {
     this.getBusinessTableData([]);
@@ -62,12 +67,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       {
         headerName: 'Trade of Business',
-        field: 'tradeOfBusiness',
+        field: 'tradeName',
         editable: false,
         suppressMovable: true,
         width: 200,
         valueGetter: function nameFromCode(params) {
-          return params.data.tradeOfBusiness ? params.data.tradeOfBusiness.toLocaleString('en-IN') : params.data.tradeOfBusiness;
+          return params.data.tradeName ? params.data.tradeName.toLocaleString('en-IN') : params.data.tradeName;
         },
       },
 
@@ -78,17 +83,17 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         children: [
           {
             headerName: 'Receipt received in bank',
-            field: 'receiptBank',
+            field: 'receipts',
             editable: false,
             width: 170,
             suppressMovable: true,
             valueGetter: function nameFromCode(params) {
-              return params.data.receiptBank ? params.data.receiptBank.toLocaleString('en-IN') : params.data.receiptBank;
+              return params.data.receipts ? params.data.receipts.toLocaleString('en-IN') : params.data.receipts;
             },
           },
           {
             headerName: 'presumptive income at 6%',
-            field: 'income6',
+            field: 'presumptiveIncome',
             editable: false,
             suppressMovable: true,
             suppressChangeDetection: true,
@@ -105,17 +110,17 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         children: [
           {
             headerName: 'Receipt received in any other mode',
-            field: 'receiptMode',
+            field: 'periodOfHolding',
             editable: false,
             width: 170,
             suppressMovable: true,
             valueGetter: function nameFromCode(params) {
-              return params.data.receiptMode ? params.data.receiptMode.toLocaleString('en-IN') : params.data.receiptMode;
+              return params.data.periodOfHolding ? params.data.periodOfHolding.toLocaleString('en-IN') : params.data.periodOfHolding;
             },
           },
           {
             headerName: 'presumptive income at 8%',
-            field: 'income8',
+            field: 'minimumPresumptiveIncome',
             editable: false,
             suppressMovable: true,
             suppressChangeDetection: true,
@@ -202,6 +207,50 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   onContinue() {
-
+    let presBusinessIncome = [];
+    this.businessGridOptions.rowData.forEach(element => {
+      let isAdded = false;
+      presBusinessIncome.forEach(data => {
+        if (data.natureOfBusiness == element.natureOfBusiness) {
+          isAdded = true;
+          data.incomes.push({
+            "id": null,
+            "incomeType": "BUSINESS",
+            "receipts": element.receipts,
+            "presumptiveIncome": element.presumptiveIncome,
+            "periodOfHolding": element.periodOfHolding,
+            "minimumPresumptiveIncome": element.minimumPresumptiveIncome,
+            "registrationNo": null,
+            "ownership": null,
+            "tonnageCapacity": null
+          });
+        }
+      });
+      if (!isAdded) {
+        presBusinessIncome.push({
+          "id": null,
+          "businessType": "BUSINESS",
+          "natureOfBusiness": element.natureOfBusiness,
+          "label": null,
+          "tradeName": element.tradeName,
+          "salaryInterestAmount": null,
+          "taxableIncome": null,
+          "exemptIncome": null,
+          "incomes": [{
+            "id": null,
+            "incomeType": "BUSINESS",
+            "receipts": element.receipts,
+            "presumptiveIncome": element.presumptiveIncome,
+            "periodOfHolding": element.periodOfHolding,
+            "minimumPresumptiveIncome": element.minimumPresumptiveIncome,
+            "registrationNo": null,
+            "ownership": null,
+            "tonnageCapacity": null
+          }]
+        });
+      };
+    });
+    console.log("presBusinessIncome", presBusinessIncome)
+    this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
   }
 }

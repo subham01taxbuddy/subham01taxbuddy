@@ -632,7 +632,6 @@ export class SalaryComponent implements OnInit {
 
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       if (this.utilsService.isNonEmpty(result)) {
-        debugger
         this.ITR_JSON = result;
         this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
         this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));

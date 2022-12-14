@@ -585,7 +585,7 @@ export class BusinessComponent implements OnInit {
   editBusiness(index) {
     this.mode = 'UPDATE';
     this.currentIndex = index;
-    this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
+    // this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
     this.businessMode = 'FORM';
     console.log('this.localPresumptiveIncome =', this.localPresumptiveIncome);
     const name = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === this.localPresumptiveIncome.natureOfBusiness);
@@ -733,7 +733,7 @@ export class BusinessComponent implements OnInit {
     let sum = 0;
     for (let i = 0; i < this.ITR_JSON.business?.presumptiveIncomes.length; i++) {
       for (let j = 0; j < this.ITR_JSON.business.presumptiveIncomes[i].incomes.length; j++) {
-        sum = sum + this.ITR_JSON.business.presumptiveIncomes[i].incomes[j].presumptiveIncome;
+        // sum = sum + this.ITR_JSON.business.presumptiveIncomes[i].incomes[j].presumptiveIncome;
       }
     }
     return this.utilsService.currencyFormatter(sum);
@@ -760,7 +760,10 @@ export class BusinessComponent implements OnInit {
           cashInHand: /* Number( */this.commonForm.controls['cashInHand'].value/* ) */,
           loanAndAdvances: /* Number( */this.commonForm.controls['loanandAdvance'].value/* ) */,
           otherAssets: /* Number( */this.commonForm.controls['otherAsset'].value/* ) */,
-          totalAssets: null
+          totalAssets: null,
+          id:null,
+          investments:null,
+          
         };
         // SERVICE CALL MAIN NEXT BUTTON
         const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;

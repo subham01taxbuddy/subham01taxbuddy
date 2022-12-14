@@ -19,10 +19,10 @@
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" placeholder="Trade of Business"
-                        formControlName="tradeOfBusiness" maxlength="30">
-                    <mat-error *ngIf="businessForm.controls['tradeOfBusiness'].hasError('required')">Please enter
+                        formControlName="tradeName" maxlength="30">
+                    <mat-error *ngIf="businessForm.controls['tradeName'].hasError('required')">Please enter
                         trade of business</mat-error>
-                    <mat-error *ngIf="businessForm.controls['tradeOfBusiness'].hasError('pattern')">Please enter
+                    <mat-error *ngIf="businessForm.controls['tradeName'].hasError('pattern')">Please enter
                         character only</mat-error>
                 </mat-form-field>
             </div>
@@ -31,36 +31,36 @@
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" digitsOnly placeholder="Receipt received in bank"
                         matTooltip="Total collection from client received in bank (including cheque)"
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="receiptBank"
+                        matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="receipts"
                         maxlength="14">
-                    <mat-error *ngIf="businessForm.controls['receiptBank'].hasError('required')">Please enter
+                    <mat-error *ngIf="businessForm.controls['receipts'].hasError('required')">Please enter
                         receipt received in bank</mat-error>
                 </mat-form-field>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="presumptive income at 6%" formControlName="income6"
-                        name="income6" maxlength="14">
-                    <mat-error *ngIf="businessForm.controls['income6'].hasError('required')">Please the
+                    <input matInput class="input-field" placeholder="presumptive income at 6%" formControlName="presumptiveIncome"
+                        name="presumptiveIncome" maxlength="14">
+                    <mat-error *ngIf="businessForm.controls['presumptiveIncome'].hasError('required')">Please the
                         amount</mat-error>
                 </mat-form-field>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" name="receiptMode" digitsOnly
-                        placeholder="Receipt received in any other mode" formControlName="receiptMode" maxlength="14">
-                    <mat-error *ngIf="businessForm.controls['receiptMode'].hasError('required')">Please enter
+                    <input matInput class="input-field" name="periodOfHolding" digitsOnly
+                        placeholder="Receipt received in any other mode" formControlName="periodOfHolding" maxlength="14">
+                    <mat-error *ngIf="businessForm.controls['periodOfHolding'].hasError('required')">Please enter
                         amount</mat-error>
                 </mat-form-field>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" name="income8" placeholder="Presumptive income at 8%"
-                        formControlName="income8" maxlength="14" digitsOnly>
-                    <mat-error *ngIf="businessForm.controls['income8'].hasError('required')">Please enter
+                    <input matInput class="input-field" name="minimumPresumptiveIncome" placeholder="Presumptive income at 8%"
+                        formControlName="minimumPresumptiveIncome" maxlength="14" digitsOnly>
+                    <mat-error *ngIf="businessForm.controls['minimumPresumptiveIncome'].hasError('required')">Please enter
                         amount</mat-error>
                 </mat-form-field>
             </div>

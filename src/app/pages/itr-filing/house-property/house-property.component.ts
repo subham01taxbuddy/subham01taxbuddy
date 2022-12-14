@@ -336,7 +336,6 @@ export class HousePropertyComponent implements OnInit {
 
   changePropType(type) {
     console.log(type)
-    debugger
     if (type === 'SOP') {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators(null);

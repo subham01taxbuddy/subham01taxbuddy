@@ -30,11 +30,11 @@ export class BusinessDialogComponent implements OnInit {
   initBusinessForm(obj?: businessIncome) {
     this.businessForm = this.formBuilder.group({
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
-      tradeOfBusiness: [obj?.tradeOfBusiness || null, [Validators.required,Validators.pattern(AppConstants.charRegex)]],
-      receiptBank: [obj?.receiptBank || null, Validators.required],
-      income6: [obj?.income6 || null, Validators.required],
-      receiptMode: [obj?.receiptMode || null, Validators.required],
-      income8: [obj?.income8 || null, Validators.required],
+      tradeName: [obj?.tradeName || null, [Validators.required,Validators.pattern(AppConstants.charRegex)]],
+      receipts: [obj?.receipts || null, Validators.required],
+      presumptiveIncome: [obj?.presumptiveIncome || null, Validators.required],
+      periodOfHolding: [obj?.periodOfHolding || null, Validators.required],
+      minimumPresumptiveIncome: [obj?.minimumPresumptiveIncome || null, Validators.required],
     });
   }
 
