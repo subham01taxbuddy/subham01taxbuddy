@@ -833,6 +833,7 @@ export class LabFormComponent implements OnInit {
       mode: mode,
       rowIndex: rowIndex,
       investment: investment,
+      assets: this.cgArrayElement.assetDetails[this.currentCgIndex],
       gainType: this.cgArrayElement.assetDetails[this.currentCgIndex].gainType,
       capitalGain: this.cgArrayElement.assetDetails[this.currentCgIndex].capitalGain,//(assetDetails.controls[0] as FormGroup).getRawValue().capitalGain,
       assetClassName: 'Plot of Land'//name.length > 0 ? name[0].assetName : assetSelected.assetType

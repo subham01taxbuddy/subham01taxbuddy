@@ -150,6 +150,9 @@ export class AddInvestmentDialogComponent implements OnInit {
     // if(!this.investmentForm.controls['costOfNewAssets'].value || !this.investmentForm.controls['investmentInCGAccount'].value){
     //   return;
     // }
+    // let capitalGain = parseInt(this.data.assets.capitalGain);
+    let saleValue = this.data.assets.valueInConsideration? parseInt(this.data.assets.valueInConsideration) : 0;
+    let expenses = this.data.assets.sellExpense ? parseInt(this.data.assets.sellExpense) : 0;
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain: this.data.capitalGain,
@@ -157,6 +160,8 @@ export class AddInvestmentDialogComponent implements OnInit {
       deductionSection: `SECTION_${this.investmentForm.controls['underSection'].value}`,
       costOfNewAsset: this.investmentForm.controls['costOfNewAssets'].value,
       cgasDepositedAmount: this.investmentForm.controls['investmentInCGAccount'].value,
+      "saleValue": saleValue,
+      "expenses": expenses
     }]};
     this.itrMsService.postMethod(param, request).subscribe((result: any) => {
       console.log('Deductions result=', result);

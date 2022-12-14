@@ -5,6 +5,9 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -30,13 +33,16 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class InvestmentDialogComponent implements OnInit {
-
-  constructor(public fb: FormBuilder, public dialogRef: MatDialogRef<InvestmentDialogComponent>,
+  
+  constructor(public fb: FormBuilder, public utilsService: UtilsService, private itrMsService: ItrMsService,
+    public dialogRef: MatDialogRef<InvestmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
   investmentForm: FormGroup;
   // assetType = '';
   ITR_JSON: ITR_JSON;
+  loading = false;
+
   ngOnInit() {
     console.log('Applied Section Details===', this.data);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -56,20 +62,55 @@ export class InvestmentDialogComponent implements OnInit {
       costOfNewAssets: ['', [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       purchaseDate: ['', Validators.required],
       investmentInCGAccount: ['', Validators.pattern(AppConstants.amountWithoutDecimal)],
-      totalDeductionClaimed: ['', [/* Validators.required,  */Validators.pattern(AppConstants.amountWithoutDecimal)]],
+      totalDeductionClaimed: [{value:'', disabled:true}, [/* Validators.required,  */Validators.pattern(AppConstants.amountWithoutDecimal)]],
       // costOfPlantMachinary: ['', Validators.pattern(AppConstants.amountWithoutDecimal)],
     });
   }
 
   saveInvestments() {
-    if (this.investmentForm.valid) {
-      console.log('Investment form:', this.investmentForm.value)
-      let result = {
-        deduction: this.investmentForm.value,
-        'rowIndex': this.data.rowIndex
-      };
-      this.dialogRef.close(result);
-    }
+    this.loading = true;
+    let capitalGain = 0;
+    let saleValue = 0;
+    let expenses = 0;
+
+    this.data.assets.forEach((element: any) => {
+      capitalGain += parseInt(element.capitalGain);
+      saleValue += element.sellValue? parseInt(element.sellValue) : 0;
+      expenses += element.sellExpense ? parseInt(element.sellExpense) : 0;
+    });
+    
+    let param = '/calculate/capital-gain/deduction';
+    let request = {
+      "capitalGain": capitalGain,
+      "capitalGainDeductions": [
+        {
+          "deductionSection": "SECTION_54F",
+          "costOfNewAsset": parseInt(this.investmentForm.controls['costOfNewAssets'].value),
+          "cgasDepositedAmount": parseInt(this.investmentForm.controls['investmentInCGAccount'].value),
+          "saleValue": saleValue,
+          "expenses": expenses
+        },
+      ]
+    };
+    this.itrMsService.postMethod(param, request).subscribe((res: any) => {
+      this.loading = false;
+      if (res.success) {
+        if (res.data.length > 0) {
+          this.investmentForm.controls['totalDeductionClaimed'].setValue(res.data[0].deductionAmount)
+        } else {
+          this.investmentForm.controls['totalDeductionClaimed'].setValue(0)
+        }
+        let result = {
+          deduction: this.investmentForm.getRawValue(),
+          'rowIndex': this.data.rowIndex
+        };
+        this.dialogRef.close(result);
+      }
+    },
+    error => {
+      this.loading = false;
+      this.utilsService.showErrorMsg("Something went wrong please try again.")
+    });
   }
 
   cancelInvestments() {

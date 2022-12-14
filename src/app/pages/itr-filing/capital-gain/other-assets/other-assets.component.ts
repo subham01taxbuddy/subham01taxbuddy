@@ -31,6 +31,10 @@ export class OtherAssetsComponent implements OnInit {
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       this.clearNullImprovements();
+      this.totalCg = 0;
+      this.goldCg.assetDetails.forEach(item => {
+        this.totalCg += item.capitalGain;
+      });
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -394,11 +398,13 @@ export class OtherAssetsComponent implements OnInit {
 
   addDeduction(mode, gridApi, rowIndex, investment?) {
     if (this.goldCg.assetDetails.length > 0) {
+      let assets = this.goldCg.assetDetails;
       const data = {
         assetType: 'GOLD',
         mode: mode,
         rowIndex: rowIndex,
         investment: investment,
+        assets: assets
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
         data: data,
@@ -460,7 +466,7 @@ export class OtherAssetsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         cellRenderer: (params) => {
-          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
+          return params.data?.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
         }
       },
       {

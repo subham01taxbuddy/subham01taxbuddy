@@ -865,11 +865,15 @@ export class EquityMfComponent implements OnInit {
 
   addListedDeduction(mode, rowIndex, investment?) {
     if (this.listedCg.assetDetails.length > 0) {
+
+      let assets = this.listedCg.assetDetails;
+
       const data = {
         assetType: 'EQUITY_SHARES_LISTED',
         mode: mode,
         rowIndex: rowIndex,
         investment: investment,
+        assets: assets
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
         data: data,
@@ -898,11 +902,15 @@ export class EquityMfComponent implements OnInit {
   }
   addUnListedDeduction(mode, rowIndex, investment?) {
     if (this.unlistedCg.assetDetails.length > 0) {
+
+      let assets = this.unlistedCg.assetDetails;
+
       const data = {
         assetType: 'EQUITY_SHARES_UNLISTED',
         mode: mode,
         rowIndex: rowIndex,
         investment: investment,
+        assets: assets
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
         data: data,
