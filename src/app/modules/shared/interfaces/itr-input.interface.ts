@@ -693,21 +693,23 @@ export interface NewIncomes {
 export interface ProfitLossACIncomes {
     id: Number;
     businessType: string;
-    totalgrossProfitFromNonSpeculativeIncome: Number;
-    netProfitfromNonSpeculativeIncome: Number;
+    totalgrossProfitFromNonSpeculativeIncome?: Number;
+    netProfitfromNonSpeculativeIncome?: Number;
     incomes: ProfitLossIncomes[];
-    expenses: NewExpenses[]
+    expenses?: NewExpenses[]
 }
 
 export interface ProfitLossIncomes {
     id: any;
     incomeType: string;
     turnOver: Number;
-    finishedGoodsOpeningStock: Number;
-    finishedGoodsClosingStock: Number;
-    purchase: Number;
-    COGS: Number;
+    finishedGoodsOpeningStock?: Number;
+    finishedGoodsClosingStock?: Number;
+    purchase?: Number;
+    COGS?: Number;
     grossProfit: any;
+    expenditure?: number;
+    netIncomeFromSpeculativeIncome?: number;
 }
 
 export interface NewExpenses {
