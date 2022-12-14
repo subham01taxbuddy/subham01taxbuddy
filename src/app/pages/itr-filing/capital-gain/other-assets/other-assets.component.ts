@@ -1,3 +1,4 @@
+import { Improvement } from './../../../../modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -293,11 +294,33 @@ export class OtherAssetsComponent implements OnInit {
     };
   }
 
+  calculateIndexCost(improvement: Improvement, index) {
+    let req = {
+      "cost": improvement.costOfImprovement,
+      "purchaseOrImprovementFinancialYear": improvement.financialYearOfImprovement,
+      "assetType": "GOLD",
+      // "buyDate": this.immovableForm.controls['purchaseDate'].value,
+      // "sellDate": this.immovableForm.controls['sellDate'].value
+    }
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('INDEX COST : ', res);
+      improvement.indexCostOfImprovement = res.data.costOfAcquisitionOrImprovement;
+      this.goldCg.improvement[index] = improvement;
+      this.improvementGridOptions?.api.setRowData(this.goldCg.improvement);
+    })
+  }
+
   improvementCreateRowData() {
+    let index = 0;
     this.goldCg.improvement.forEach(imp => {
-      if(imp.dateOfImprovement == null){
-        this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
+      if(imp.financialYearOfImprovement == null || !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)){
+        this.goldCg.improvement.splice(index, 1);
+      }else{
+        //calculate cost of improvement
+        this.calculateIndexCost(imp, index);
       }
+      index++;
     });
     return this.goldCg.improvement;
   }
@@ -608,7 +631,7 @@ export class OtherAssetsComponent implements OnInit {
       this.loading = false;
       console.log('Single CG result:', res);
       this.goldCg.assetDetails = res.assetDetails;
-      this.goldCg.improvement = res.improvement;
+      // this.goldCg.improvement = res.improvement;
       this.goldCg.deduction = res.deduction;
       this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
       this.totalCg = 0;
