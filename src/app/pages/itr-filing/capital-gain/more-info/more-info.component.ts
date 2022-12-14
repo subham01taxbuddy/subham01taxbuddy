@@ -297,6 +297,10 @@ export class MoreInfoComponent implements OnInit {
   }
 
   continue() {
+    //reinitialise the objects so as to get the data updated in other tabs
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    
     this.Copy_ITR_JSON.carryForwordLosses = this.scheduleCFLLoss.rowData;
     console.log(this.Copy_ITR_JSON)
     this.loading = true;
