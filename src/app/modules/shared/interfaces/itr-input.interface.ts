@@ -428,9 +428,9 @@ export interface businessIncome {
 }
 
 export interface professionalIncome {
-    natureOfProfession: any;
+    natureOfBusiness: any;
     tradeName: any;
-    grossReceipts: any;
+    receipts: any;
     presumptiveIncome: any;
 }
 

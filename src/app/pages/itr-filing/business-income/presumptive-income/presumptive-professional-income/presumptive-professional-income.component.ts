@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { businessIncome, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { businessIncome, ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
 
 @Component({
@@ -12,17 +13,23 @@ import { ProfessionalDialogComponent } from './professional-dialog/professional-
 })
 export class PresumptiveProfessionalIncomeComponent implements OnInit {
   public professionalGridOptions: GridOptions;
+  ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
   professionalData: professionalIncome = {
-    natureOfProfession: null,
+    natureOfBusiness: null,
     tradeName: null,
-    grossReceipts: null,
+    receipts: null,
     presumptiveIncome: null,
   }
 
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
-  ) { }
+    public utilsService: UtilsService
+  ) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+  }
 
   ngOnInit(): void {
     this.getProfessionalTableData([]);
@@ -49,12 +56,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     return [
       {
         headerName: 'Nature of Profession',
-        field: 'natureOfProfession',
+        field: 'natureOfBusiness',
         suppressMovable: true,
         editable: false,
         width: 400,
         valueGetter: function nameFromCode(params) {
-          return params.data.natureOfProfession ? params.data.natureOfProfession.toLocaleString('en-IN') : params.data.natureOfProfession;
+          return params.data.natureOfBusiness ? params.data.natureOfBusiness.toLocaleString('en-IN') : params.data.natureOfBusiness;
         },
       },
 
@@ -72,11 +79,11 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       {
         headerName: 'Gross Receipt',
         editable: false,
-        field: 'grossReceipts',
+        field: 'receipts',
         width: 250,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.grossReceipts ? params.data.grossReceipts.toLocaleString('en-IN') : params.data.grossReceipts;
+          return params.data.receipts ? params.data.receipts.toLocaleString('en-IN') : params.data.receipts;
         },
       },
 
@@ -169,6 +176,71 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    let presBusinessIncome = [];
+    this.professionalGridOptions.rowData.forEach(element => {
+      let isAdded = false;
+      presBusinessIncome.forEach(data => {
+        if (data.natureOfBusiness == element.natureOfBusiness) {
+          isAdded = true;
+          data.incomes.push({
+            "id": null,
+            "incomeType": "PROFESSIONAL",
+            "receipts": element.receipts,
+            "presumptiveIncome": element.presumptiveIncome,
+            "periodOfHolding": null,
+            "minimumPresumptiveIncome": null,
+            "registrationNo": null,
+            "ownership": null,
+            "tonnageCapacity": null
+          });
+        }
+      });
+      if (!isAdded) {
+        presBusinessIncome.push({
+          "id": null,
+          "businessType": "PROFESSIONAL",
+          "natureOfBusiness": element.natureOfBusiness,
+          "label": null,
+          "tradeName": element.tradeName,
+          "salaryInterestAmount": null,
+          "taxableIncome": null,
+          "exemptIncome": null,
+          "incomes": [{
+            "id": null,
+            "incomeType": "PROFESSIONAL",
+            "receipts": element.receipts,
+            "presumptiveIncome": element.presumptiveIncome,
+            "periodOfHolding": null,
+            "minimumPresumptiveIncome": null,
+            "registrationNo": null,
+            "ownership": null,
+            "tonnageCapacity": null
+          }]
+        });
+      };
+    });
+    console.log("presBusinessIncome", presBusinessIncome)
+    if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
+    } else {
+      this.Copy_ITR_JSON.business.presumptiveIncomes = (this.Copy_ITR_JSON.business.presumptiveIncomes).concat(presBusinessIncome)
+    }
+    console.log(this.Copy_ITR_JSON);
+
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('professional income added successfully');
+      console.log('business=', result);
+      this.utilsService.smoothScrollToTop();
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Failed to add professional income, please try again.');
+      this.utilsService.smoothScrollToTop();
+    });
   }
 }

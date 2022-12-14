@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { businessIncome, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { BusinessDialogComponent } from './business-dialog/business-dialog.component';
 
 @Component({
@@ -26,6 +27,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
+    public utilsService: UtilsService
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -251,6 +253,25 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       };
     });
     console.log("presBusinessIncome", presBusinessIncome)
-    this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
+
+    if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
+    } else {
+      this.Copy_ITR_JSON.business.presumptiveIncomes = (this.Copy_ITR_JSON.business.presumptiveIncomes).concat(presBusinessIncome)
+    }
+    console.log(this.Copy_ITR_JSON);
+
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Business income added successfully');
+      console.log('Bonds=', result);
+      this.utilsService.smoothScrollToTop();
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Failed to add business income, please try again.');
+      this.utilsService.smoothScrollToTop();
+    });
   }
 }

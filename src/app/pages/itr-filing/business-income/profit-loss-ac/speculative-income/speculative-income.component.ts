@@ -13,9 +13,9 @@ import { ProfessionalDialogComponent } from '../../presumptive-income/presumptiv
 export class SpeculativeIncomeComponent implements OnInit {
   public professionalGridOptions: GridOptions;
   professionalData: professionalIncome = {
-    natureOfProfession: null,
+    natureOfBusiness: null,
     tradeName: null,
-    grossReceipts: null,
+    receipts: null,
     presumptiveIncome: null,
   }
 
