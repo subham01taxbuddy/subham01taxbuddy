@@ -746,6 +746,12 @@ export class LabFormComponent implements OnInit {
   }
 
   saveImmovableCG(formGroupName, index) {
+
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+
     // this.cgOutput = []
     console.log('saveImmovableCG',formGroupName, formGroupName.getRawValue());
     console.log('cgOutput', this.cgOutput)

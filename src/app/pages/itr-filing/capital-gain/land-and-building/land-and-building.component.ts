@@ -372,9 +372,18 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
-    this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON.capitalGain.filter(item =>
-      !((item.assetDetails[0].description === assetSelected.description) && (item.assetType === assetSelected.assetType))
-    );
+    let selectedObject = JSON.parse(assetSelected.assetSelected);
+    let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
+    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === selectedObject.assetType))[0];
+    if(selectedTypeList){
+      selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.deduction = selectedTypeList.deduction.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.improvement = selectedTypeList.improvement.filter(itm => (itm.srn !== selectedObject.srn));
+    }
+    this.Copy_ITR_JSON.capitalGain = filtered;
+    if(selectedTypeList && selectedTypeList.assetDetails.length > 0) {
+      this.Copy_ITR_JSON.capitalGain.push(selectedTypeList);
+    }
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
