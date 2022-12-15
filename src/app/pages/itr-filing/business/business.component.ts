@@ -460,6 +460,11 @@ export class BusinessComponent implements OnInit {
   }
 
   serviceCallToupdateData() {
+
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     let copyAllPresumptiveIncomes = [];
     if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.presumptiveIncomes)) {
       copyAllPresumptiveIncomes = JSON.parse(JSON.stringify(this.ITR_JSON.business.presumptiveIncomes));
@@ -740,6 +745,10 @@ export class BusinessComponent implements OnInit {
   }
 
   saveCommonForm() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    
     if (this.businessMode === 'TABLE') {
       if (this.commonForm.valid) {
         this.loading = true;

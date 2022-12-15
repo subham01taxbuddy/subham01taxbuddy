@@ -648,6 +648,7 @@ export class LabFormComponent implements OnInit {
         } else{
           this.improvements.push(improvementDetails.getRawValue());
         }
+        this.mergeImprovements();
         this.calculateCapitalGain(formGroupName, '', index);
         // const improve = <FormArray>formGroupName.get('improvement');
         // for (let i = 0; i < improve.length; i++) {
@@ -708,7 +709,15 @@ export class LabFormComponent implements OnInit {
   removeImprovement(index, formGroupName) {
     console.log('Remove Index', index);
     const improve = <FormArray>formGroupName.get('improvement');
+    let objToRemove = improve.controls[index].value;
     improve.removeAt(index);
+
+    //update the cg object
+    console.log('objToRemove', objToRemove);
+    let filtered = this.cgArrayElement.improvement.filter(item => (item.srn == objToRemove.srn 
+      && item.costOfImprovement === objToRemove.costOfImprovement && item.dateOfImprovement == objToRemove.dateOfImprovement))
+    this.cgArrayElement.improvement.splice(this.cgArrayElement.improvement.indexOf(filtered[0]), 1);
+
     // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
     improve.length === 0 ? this.isImprovements.setValue(false) : null;
@@ -833,6 +842,7 @@ export class LabFormComponent implements OnInit {
       mode: mode,
       rowIndex: rowIndex,
       investment: investment,
+      assets: this.cgArrayElement.assetDetails[this.currentCgIndex],
       gainType: this.cgArrayElement.assetDetails[this.currentCgIndex].gainType,
       capitalGain: this.cgArrayElement.assetDetails[this.currentCgIndex].capitalGain,//(assetDetails.controls[0] as FormGroup).getRawValue().capitalGain,
       assetClassName: 'Plot of Land'//name.length > 0 ? name[0].assetName : assetSelected.assetType

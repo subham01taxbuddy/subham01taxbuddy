@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Bonds, Deduction, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -100,15 +101,15 @@ export class BondsDebentureComponent implements OnInit {
       id: [obj.id || null],
       description: [obj.description || null],
       stampDutyValue: [obj.stampDutyValue || null],
-      valueInConsideration: [obj.valueInConsideration || null, Validators.required],
-      purchaseCost: [obj.purchaseCost || null],
+      valueInConsideration: [obj.valueInConsideration || null, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
+      purchaseCost: [obj.purchaseCost || null, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
       isinCode: [obj.isinCode || null],
       nameOfTheUnits: [obj.nameOfTheUnits || null],
       sellOrBuyQuantity: [obj.sellOrBuyQuantity || null],
       sellValuePerUnit: [obj.sellValuePerUnit || null],
       purchaseDate: [obj.purchaseDate || null, Validators.required],
-      indexCostOfAcquisition: [obj.indexCostOfAcquisition || null, Validators.required],
-      costOfImprovement: [obj.costOfImprovement || null],
+      indexCostOfAcquisition: [obj.indexCostOfAcquisition || null],
+      costOfImprovement: [obj.costOfImprovement || null, [Validators.pattern(AppConstants.amountWithDecimal)]],
       sellDate: [obj.sellDate || null, Validators.required],
       sellValue: [obj.sellValue || null],
       sellExpense: [obj.sellExpense || null],

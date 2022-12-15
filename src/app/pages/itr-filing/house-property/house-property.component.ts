@@ -394,6 +394,11 @@ export class HousePropertyComponent implements OnInit {
   }
 
   saveHouseProperty(view) {
+
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */) {
         this.housePropertyForm.controls['country'].setValue('91');
