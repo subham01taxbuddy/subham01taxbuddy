@@ -113,10 +113,7 @@ export class DeclarationComponent implements OnInit {
   }
 
   getITRType() {
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
+  
     this.loading = true;
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((ITR_RESULT: ITR_JSON) => {
       this.ITR_JSON = ITR_RESULT;
@@ -133,17 +130,25 @@ export class DeclarationComponent implements OnInit {
     // if (this.ITR_JSON.systemFlags.hasSalary && this.ITR_JSON.employers.length > 0) {
     //   this.ITR_JSON.employerCategory = this.ITR_JSON.employers[0].employerCategory;
     // }
+    
     const param = '/tax';
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
       console.log('result is=====', result);
       sessionStorage.setItem(AppConstants.TAX_SUM, JSON.stringify(result));
       if (result.taxSummary.automated) {
         if (result.taxSummary.changeItr) {
+          //reinitialise the objects so as to get the data updated in other tabs
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    
           this.ITR_JSON.itrType = result.taxSummary.itrType;
           this.ITR_JSON.declaration = this.declarationsForm.getRawValue();
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.checkITRTypeChanged();
           console.log('Call again this service here');
         } else {
+          //reinitialise the objects so as to get the data updated in other tabs
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    
           this.getITRType();
         }
       } else {
