@@ -578,6 +578,10 @@ export class OtherAssetsComponent implements OnInit {
   }
 
   saveCg() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true
     if (this.goldCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'GOLD')

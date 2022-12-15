@@ -6,6 +6,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { BondsDebentureComponent } from '../bonds-debenture/bonds-debenture.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-bonds',
@@ -610,6 +611,10 @@ export class BondsComponent implements OnInit {
   }
 
   onContinue() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     const bondIndex = this.ITR_JSON.capitalGain.findIndex(element => element.assetType === 'BONDS')
     const zeroBondIndex = this.ITR_JSON.capitalGain.findIndex(element => element.assetType === 'ZERO_COUPON_BONDS')
     const bondImprovement = [];

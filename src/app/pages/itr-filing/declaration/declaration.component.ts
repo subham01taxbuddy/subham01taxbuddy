@@ -113,6 +113,10 @@ export class DeclarationComponent implements OnInit {
   }
 
   getITRType() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true;
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((ITR_RESULT: ITR_JSON) => {
       this.ITR_JSON = ITR_RESULT;

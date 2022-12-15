@@ -1241,6 +1241,10 @@ export class TaxesPaidComponent implements OnInit {
 
 
   saveAndContinue() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true;
     var onSalary = []
     var tdsOtherThanSalary16A = []

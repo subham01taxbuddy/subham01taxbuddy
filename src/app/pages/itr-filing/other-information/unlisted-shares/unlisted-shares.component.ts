@@ -125,6 +125,10 @@ export class UnlistedSharesComponent implements OnInit {
   }
 
   saveShareDetials() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.sharesForm.valid) {
       this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = true;
       console.log('Save form here', this.sharesForm.getRawValue());

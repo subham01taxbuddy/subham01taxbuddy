@@ -367,6 +367,10 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   }
 
   deleteCapitalGain(assetSelected) {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true;
     this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON.capitalGain.filter(item =>
       !((item.assetDetails[0].description === assetSelected.description) && (item.assetType === assetSelected.assetType))

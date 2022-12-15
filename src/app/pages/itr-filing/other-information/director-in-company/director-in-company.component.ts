@@ -58,6 +58,10 @@ export class DirectorInCompanyComponent implements OnInit {
 
 
   saveDirectorDetials() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.directorForm.valid) {
       this.Copy_ITR_JSON.systemFlags.directorInCompany = true;
       console.log('Save form here', this.directorForm.getRawValue());

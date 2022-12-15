@@ -564,6 +564,10 @@ export class PersonalInformationComponent implements OnInit {
 
   async saveProfile(ref) {
 
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.findAssesseeType();
     if (this.customerProfileForm.controls['regime'].value === 'NEW') {

@@ -1043,6 +1043,10 @@ export class EquityMfComponent implements OnInit {
   }
 
   saveCg() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.listedCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_LISTED')
       this.ITR_JSON.capitalGain.push(this.listedCg)

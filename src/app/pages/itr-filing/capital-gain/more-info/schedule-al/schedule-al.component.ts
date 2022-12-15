@@ -191,8 +191,10 @@ export class ScheduleALComponent implements OnInit {
   }
 
   saveAssets() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     Object.assign(this.movableAssets, this.movableAssetsForm.value);
     this.Copy_ITR_JSON.movableAsset = [];
     this.Copy_ITR_JSON.movableAsset.push(this.movableAssets);

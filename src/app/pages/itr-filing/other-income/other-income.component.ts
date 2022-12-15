@@ -278,7 +278,10 @@ export class OtherIncomeComponent implements OnInit {
   saveOtherIncome() {
     console.log('Dividend Income,', this.dividendIncomes.value);
 
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.Copy_ITR_JSON.dividendIncomes = [
       {
         "income": this.dividendIncomes.controls['quarter1'].value,

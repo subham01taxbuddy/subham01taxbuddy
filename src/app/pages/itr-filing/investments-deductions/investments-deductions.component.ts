@@ -622,6 +622,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   saveInvestmentDeductions() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.max5000Limit('SELF')
     if (this.investmentDeductionForm.valid) {
       Object.keys(this.investmentDeductionForm.controls).forEach((item: any) => {
@@ -1026,6 +1030,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
+          //re-intialise the ITR objects
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
           this.Copy_ITR_JSON.donations = this.ITR_JSON.donations.filter((item: any) => item.identifier !== params.data.identifier);
           this.serviceCall('OTHER', this.Copy_ITR_JSON);
           break;
@@ -1063,6 +1071,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   serviceCall(val, ITR_JSON) {
+    
     this.loading = true;
     this.utilsService.saveItrObject(ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;

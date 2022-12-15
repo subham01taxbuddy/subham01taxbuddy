@@ -65,6 +65,10 @@ export class OtherInformationComponent implements OnInit {
   }
 
   ChangeSharesStatus() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.ITR_JSON.systemFlags.haveUnlistedShares) {
       this.addSharesDetails('Add unlisted shares details', 'ADD', null);
     } else {
@@ -301,6 +305,10 @@ export class OtherInformationComponent implements OnInit {
           break;
         }
         case 'remove': {
+          //re-intialise the ITR objects
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
           this.Copy_ITR_JSON.unlistedSharesDetails.splice(params.data.id - 1, 1);
           if (this.Copy_ITR_JSON.unlistedSharesDetails.length === 0) {
             this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
@@ -314,6 +322,10 @@ export class OtherInformationComponent implements OnInit {
 
   //
   ChangeDirectorStatus() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {
@@ -463,6 +475,10 @@ export class OtherInformationComponent implements OnInit {
           break;
         }
         case 'remove': {
+          //re-intialise the ITR objects
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
           this.Copy_ITR_JSON.directorInCompany.splice(params.data.id - 1, 1);
           if (this.Copy_ITR_JSON.directorInCompany.length === 0) {
             this.Copy_ITR_JSON.systemFlags.directorInCompany = false;

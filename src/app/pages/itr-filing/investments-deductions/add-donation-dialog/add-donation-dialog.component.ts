@@ -592,6 +592,10 @@ export class AddDonationDialogComponent implements OnInit {
   }
 
   saveGeneralDonation() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.generalDonationForm.valid) {
       if (this.generalDonationForm.controls['panNumber'].value !== this.Copy_ITR_JSON.panNumber) {
         if (this.data.mode === 'EDIT') {
