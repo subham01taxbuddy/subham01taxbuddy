@@ -661,7 +661,7 @@ export interface CarryForwardLosses {
 
 export interface NewBusiness {
     presumptiveIncomes: NewPresumptiveIncomes[];
-    profitLossACIncomes: ProfitLossACIncomes[];
+    profitLossACIncomes:ProfitLossACIncomes[];
     financialParticulars: NewFinancialParticulars;
     fixedAssetsDetails: FixedAssetsDetails[];
     businessDescription: BusinessDescription[];
@@ -700,7 +700,7 @@ export interface ProfitLossACIncomes {
 }
 
 export interface ProfitLossIncomes {
-    id: any;
+    id: Number;
     incomeType: string;
     turnOver: Number;
     finishedGoodsOpeningStock: Number;
@@ -713,6 +713,7 @@ export interface ProfitLossIncomes {
 export interface NewExpenses {
     expenseType: string;
     expenseAmount: Number;
+    description:any;
 }
 export interface NewFinancialParticulars {
     id: Number;

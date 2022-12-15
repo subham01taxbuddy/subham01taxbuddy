@@ -1,0 +1,52 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div>
+    <div style="font-size: 20 !important; font-weight: 600;">{{data.mode==='ADD'?'Add Trading Details':'Update Trading
+        Details'}}
+    </div>
+    <form [formGroup]="tradingForm" style="margin-top: 20px">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="turnOver" formControlName="turnOver"
+                        maxlength="30">
+                    <mat-error *ngIf="tradingForm.controls['turnOver'].hasError('required')">Please enter
+                        turnOver</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" digitsOnly placeholder="opening stock of finishing goods"
+                        formControlName="finishedGoodsOpeningStock" maxlength="14">
+                    <mat-error *ngIf="tradingForm.controls['finishedGoodsOpeningStock'].hasError('required')">Please
+                        enter opening stock amount</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="closing stock amount"
+                        formControlName="finishedGoodsClosingStock" name="finishedGoodsClosingStock" maxlength="14">
+                    <mat-error *ngIf="tradingForm.controls['finishedGoodsClosingStock'].hasError('required')">Please the
+                        amount</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="purchase" formControlName="purchase"
+                        name="purchase" maxlength="14">
+                    <mat-error *ngIf="tradingForm.controls['purchase'].hasError('required')">Please the
+                        amount</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row dialog-button">
+                <div class="sub_btn top-space">
+                    <button type="submit" class="tbd-btn" [disabled]="tradingForm.invalid"
+                        (click)="saveTradingDetails()">Save</button>
+                    <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
