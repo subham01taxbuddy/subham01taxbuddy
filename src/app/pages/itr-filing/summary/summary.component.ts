@@ -320,7 +320,7 @@ export class SummaryComponent implements OnInit {
   slab(rate, input) {
     let slabs = [];
     if (input === 'INPUT') {
-      let inputSlabs = this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput[0].taxRate === rate);
+      let inputSlabs = this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput && item.cgOutput[0]?.taxRate === rate);
       if(inputSlabs) {
         slabs = inputSlabs;
       }
