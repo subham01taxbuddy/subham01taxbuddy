@@ -1084,7 +1084,7 @@ export class TaxesPaidComponent implements OnInit {
           return '';
         },
         valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
+          var newValInt = params.newValue;
           var valueChanged = params.data.bsrCode !== newValInt;
           if (valueChanged) {
             params.data.bsrCode = newValInt ? newValInt : params.oldValue;
