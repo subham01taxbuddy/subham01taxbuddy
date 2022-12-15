@@ -110,6 +110,34 @@ export class DeclarationComponent implements OnInit {
     }
   }
 
+  getITRType() {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+    const param = `/itr-type?itrId=${this.ITR_JSON.itrId}`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      if(result.data.itrType) {
+        //update type in ITR object & save
+        this.ITR_JSON.itrType = result.data.itrType;
+        const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+          this.ITR_JSON.declaration = this.declarationsForm.getRawValue();
+          this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((ITR_RESULT: ITR_JSON) => {
+            this.ITR_JSON = ITR_RESULT;
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            this.loading = false;
+            this.saveAndNext.emit(true);
+          }, error => {
+            this.loading = false;
+            this.utilsService.showSnackBar('Unable to update details, Please try again.');
+          });
+      } else {
+        this.loading = false;
+      this.utilsService.showSnackBar('Unable to get ITR type, Please try again.');  
+      }
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Unable to get ITR type, Please try again.');
+    });
+  }
+
   checkITRTypeChanged() {
     // if (this.ITR_JSON.systemFlags.hasSalary && this.ITR_JSON.employers.length > 0) {
     //   this.ITR_JSON.employerCategory = this.ITR_JSON.employers[0].employerCategory;
@@ -125,21 +153,7 @@ export class DeclarationComponent implements OnInit {
           this.checkITRTypeChanged();
           console.log('Call again this service here');
         } else {
-          const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-          this.ITR_JSON.declaration = this.declarationsForm.getRawValue();
-          this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((ITR_RESULT: ITR_JSON) => {
-            this.ITR_JSON = ITR_RESULT;
-            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-            if (result.taxSummary.totalIncomeAfterDeductionIncludeSR > 5000000) {
-              this.utilsService.showSnackBar('Applicable for ITR 2')
-            } //else {
-              this.loading = false;
-              this.saveAndNext.emit(true);
-            //}
-          }, error => {
-            this.loading = false;
-            this.utilsService.showSnackBar('Unable to update details, Please try again.');
-          });
+          this.getITRType();
         }
       } else {
         this.loading = false;
