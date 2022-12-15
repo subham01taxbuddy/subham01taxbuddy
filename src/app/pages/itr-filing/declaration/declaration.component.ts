@@ -148,7 +148,8 @@ export class DeclarationComponent implements OnInit {
         } else {
           //reinitialise the objects so as to get the data updated in other tabs
           this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    
+          this.ITR_JSON.declaration = this.declarationsForm.getRawValue();
+
           this.getITRType();
         }
       } else {
