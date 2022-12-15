@@ -1,9 +1,12 @@
+import { businessIncome } from './../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GridOptions, GridSizeChangedEvent } from 'ag-grid-community';
+import { GridOptions, GridSizeChangedEvent, ValueSetterParams } from 'ag-grid-community';
 import { ITR_JSON, ProfitLossIncomes } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ProfessionalDialogComponent } from '../../presumptive-income/presumptive-professional-income/professional-dialog/professional-dialog.component';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-speculative-income',
@@ -34,6 +37,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   constructor(
+    public utilsService: UtilsService,
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
   ) { 
@@ -52,6 +56,12 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit();
+  }
+
+  calculateNetIncome() {
+    this.speculativeIncome.netIncomeFromSpeculativeIncome = 
+      this.speculativeIncome.grossProfit - this.speculativeIncome.expenditure;
+    this.getProfessionalTableData([this.speculativeIncome]);
   }
 
   getProfessionalTableData(rowsData) {
@@ -91,6 +101,15 @@ export class SpeculativeIncomeComponent implements OnInit {
         valueGetter: function nameFromCode(params) {
           return params.data.grossProfit ? params.data.grossProfit.toLocaleString('en-IN') : params.data.grossProfit;
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.grossProfit !== newValInt;
+          if (valueChanged) {
+            params.data.grossProfit = newValInt ? newValInt : params.oldValue;
+            this.calculateNetIncome();
+          }
+          return valueChanged;
+        },
       },
 
       {
@@ -100,6 +119,15 @@ export class SpeculativeIncomeComponent implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.expenditure ? params.data.expenditure.toLocaleString('en-IN') : params.data.expenditure;
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.expenditure !== newValInt;
+          if (valueChanged) {
+            params.data.expenditure = newValInt ? newValInt : params.oldValue;
+            this.calculateNetIncome();
+          }
+          return valueChanged;
         },
       },
 
@@ -116,6 +144,46 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(acIncome => (acIncome.businessType === 'SPECULATIVEINCOME'))[0];
+    let index = this.ITR_JSON.business?.profitLossACIncomes?.indexOf(specBusiness);
+    if(specBusiness) {
+      if(specBusiness.incomes) {
+        specBusiness.incomes[0] = this.speculativeIncome;
+      } else {
+        specBusiness.incomes = [];
+        specBusiness.incomes.push(this.speculativeIncome);
+      }
+      this.Copy_ITR_JSON.business?.profitLossACIncomes?.splice(index, 1, specBusiness);
+    } else {
+      specBusiness = {
+        id: null,
+        businessType: 'SPECULATIVEINCOME',
+        incomes: [this.speculativeIncome]
+      };
+      if(!this.Copy_ITR_JSON.business.profitLossACIncomes) {
+        this.Copy_ITR_JSON.business.profitLossACIncomes = [];
+      }
+      this.Copy_ITR_JSON.business.profitLossACIncomes.push(specBusiness);
+    }
+    console.log(this.Copy_ITR_JSON);
+    this.loading = true;
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      this.utilsService.showSnackBar('Schedule CFL updated successfully');
+      console.log('Assets & Liabilities save result=', result);
+      this.utilsService.smoothScrollToTop();
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to add schedule CFL, please try again.');
+      this.utilsService.smoothScrollToTop();
+    });
   }
 }
