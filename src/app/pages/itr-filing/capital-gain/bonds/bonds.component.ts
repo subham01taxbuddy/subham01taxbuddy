@@ -307,12 +307,12 @@ export class BondsComponent implements OnInit {
 
       {
         headerName: 'Cost of Acquisition without indexation (Purchase value)',
-        field: 'indexCostOfAcquisition',
+        field: 'purchaseCost',
         suppressMovable: true,
         editable: false,
         width: 200,
         valueGetter: function nameFromCode(params) {
-          return params.data.indexCostOfAcquisition ? params.data.indexCostOfAcquisition.toLocaleString('en-IN') : params.data.indexCostOfAcquisition;
+          return params.data.purchaseCost ? params.data.purchaseCost.toLocaleString('en-IN') : params.data.purchaseCost;
         },
       },
 
