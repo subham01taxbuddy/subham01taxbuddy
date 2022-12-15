@@ -302,7 +302,7 @@ export class CustomerProfileComponent implements OnInit {
         // else
         //   this.router.navigate(['/pages/itr-filing/direct-upload']);
       }, error => {
-        this.utilsService.showSnackBar('Fialed to update customer profile.');
+        this.utilsService.showSnackBar('Failed to update customer profile.');
         this.loading = false;
       });
     } else {
