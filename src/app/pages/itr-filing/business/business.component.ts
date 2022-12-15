@@ -525,8 +525,7 @@ export class BusinessComponent implements OnInit {
       this.loading = true;
 
       // SERVICE CALL MAIN NEXT BUTTON
-      const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-      this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
@@ -713,8 +712,7 @@ export class BusinessComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = true;
     }
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
@@ -772,8 +770,7 @@ export class BusinessComponent implements OnInit {
           totalAssets: null
         };
         // SERVICE CALL MAIN NEXT BUTTON
-        const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-        this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+        this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
           this.ITR_JSON = result;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.utilsService.smoothScrollToTop();

@@ -495,8 +495,7 @@ export class OtherInformationComponent implements OnInit {
 
   serviceCall(msg) {
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe(result => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
       this.ITR_JSON = JSON.parse(JSON.stringify(result));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));

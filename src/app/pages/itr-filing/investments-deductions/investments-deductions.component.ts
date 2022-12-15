@@ -1064,8 +1064,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
 
   serviceCall(val, ITR_JSON) {
     this.loading = true;
-    const param = '/itr/' + ITR_JSON.userId + '/' + ITR_JSON.itrId + '/' + ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));

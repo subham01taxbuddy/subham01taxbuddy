@@ -1052,8 +1052,7 @@ export class EquityMfComponent implements OnInit {
       this.ITR_JSON.capitalGain.push(this.unlistedCg)
     }
     console.log('CG:', this.ITR_JSON.capitalGain);
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
       console.log(result);
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));

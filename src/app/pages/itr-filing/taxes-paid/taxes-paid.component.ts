@@ -1326,8 +1326,7 @@ export class TaxesPaidComponent implements OnInit {
       return
     }
 
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: ITR_JSON) => {
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.loading = false;

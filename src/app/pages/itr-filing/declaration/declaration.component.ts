@@ -1,3 +1,5 @@
+import { result } from 'lodash';
+import { concatMap, Observable } from 'rxjs';
 import { UtilsService } from './../../../services/utils.service';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
@@ -111,30 +113,15 @@ export class DeclarationComponent implements OnInit {
   }
 
   getITRType() {
-    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
-    const param = `/itr-type?itrId=${this.ITR_JSON.itrId}`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      if(result.data.itrType) {
-        //update type in ITR object & save
-        this.ITR_JSON.itrType = result.data.itrType;
-        const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-          this.ITR_JSON.declaration = this.declarationsForm.getRawValue();
-          this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((ITR_RESULT: ITR_JSON) => {
-            this.ITR_JSON = ITR_RESULT;
-            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-            this.loading = false;
-            this.saveAndNext.emit(true);
-          }, error => {
-            this.loading = false;
-            this.utilsService.showSnackBar('Unable to update details, Please try again.');
-          });
-      } else {
-        this.loading = false;
-      this.utilsService.showSnackBar('Unable to get ITR type, Please try again.');  
-      }
+    this.loading = true;
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((ITR_RESULT: ITR_JSON) => {
+      this.ITR_JSON = ITR_RESULT;
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      this.saveAndNext.emit(true);
     }, error => {
       this.loading = false;
-      this.utilsService.showSnackBar('Unable to get ITR type, Please try again.');
+      this.utilsService.showSnackBar('Unable to update details, Please try again.');
     });
   }
 
