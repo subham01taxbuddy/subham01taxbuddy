@@ -35,6 +35,8 @@ export class EquityMfComponent implements OnInit {
 
   totalListedCg = 0;
   totalUnlistedCg = 0;
+  canAddListedDeduction = false;
+  canAddUnlistedDeduction = false;
 
   constructor(private utilsService: UtilsService,
     public matDialog: MatDialog,
@@ -101,9 +103,12 @@ export class EquityMfComponent implements OnInit {
 
   calculatedTotalListedCg(){
     this.totalListedCg = 0;
+    let longTermGain = false;
     this.listedCg.assetDetails.forEach(item => {
       this.totalListedCg += item.capitalGain;
+      longTermGain = item.gainType === 'LONG';
     });
+    this.canAddListedDeduction = this.totalListedCg<=0 || this.listedCg.deduction.length === 0 || longTermGain;
   }
 
   listedCreateRowData() {
@@ -446,9 +451,12 @@ export class EquityMfComponent implements OnInit {
 
   calculateTotalUnlistedCg() {
     this.totalUnlistedCg = 0;
+    let longTermGain = false;
     this.unlistedCg.assetDetails.forEach(item => {
       this.totalUnlistedCg += item.capitalGain;
+      longTermGain = item.gainType === 'LONG';
     });
+    this.canAddUnlistedDeduction = this.totalUnlistedCg<=0 || this.unlistedCg.deduction.length === 0 || longTermGain;
   }
 
   unListedCreateRowData() {

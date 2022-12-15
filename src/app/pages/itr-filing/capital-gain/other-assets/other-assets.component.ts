@@ -23,6 +23,7 @@ export class OtherAssetsComponent implements OnInit {
   goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
   totalCg = 0;
+  canAddDeductions = false;
 
   constructor(public matDialog: MatDialog,
     public utilsService: UtilsService,
@@ -32,10 +33,7 @@ export class OtherAssetsComponent implements OnInit {
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       this.clearNullImprovements();
-      this.totalCg = 0;
-      this.goldCg.assetDetails.forEach(item => {
-        this.totalCg += item.capitalGain;
-      });
+      this.calculateTotalCg();
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -51,6 +49,14 @@ export class OtherAssetsComponent implements OnInit {
     this.otherAssetsCallInConstructor();
     this.improvementCallInConstructor();
     this.deductionCallInConstructor();
+  }
+
+  calculateTotalCg() {
+    this.totalCg = 0;
+    this.goldCg.assetDetails.forEach(item => {
+      this.totalCg += item.capitalGain;
+    });
+    this.canAddDeductions = this.totalCg > 0 && this.goldCg.deduction?.length === 0;
   }
 
   clearNullImprovements() {
@@ -447,6 +453,7 @@ export class OtherAssetsComponent implements OnInit {
             this.goldCg.deduction.splice(result.rowIndex, 1, result.deduction);
             gridApi.setRowData(this.goldCg.deduction)
           }
+          this.calculateTotalCg();
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
         }
       });
@@ -560,7 +567,7 @@ export class OtherAssetsComponent implements OnInit {
       switch (actionType) {
         case 'remove': {
           console.log('DATA FOR DELETE INVESTMENT:', params.data)
-          this.deleteAsset(params.rowIndex);
+          this.deleteDeduction(params.rowIndex);
           break;
         }
         case 'edit': {
@@ -637,10 +644,7 @@ export class OtherAssetsComponent implements OnInit {
       // this.goldCg.improvement = res.improvement;
       this.goldCg.deduction = res.deduction;
       this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-      this.totalCg = 0;
-      this.goldCg.assetDetails.forEach(item => {
-        this.totalCg += item.capitalGain;
-      });
+      this.calculateTotalCg();
     }, error => {
       this.loading = false;
     })
