@@ -1,0 +1,14 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<h1 mat-dialog-title> Delete Confirmation</h1>
+<mat-dialog-content>
+  <div class="row">
+    <div class=" card__col-xs-12 card__col-sm-12">
+      Are you sure want to delete the data
+    </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button class="tbd-btn" (click)="this.dialogRef.close(true)">Yes</button>
+  <button type="submit" class="tbd-btn-secondary" mat-dialog-close>No</button>
+</mat-dialog-actions>

@@ -179,7 +179,7 @@ export class SummaryComponent implements OnInit {
 
           this.refund = this.summaryDetail.taxRefund;
           this.deductionDetail = summary.assessment.summaryDeductions?.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
-          this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN;
+          this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
           this.totalLoss = summary.assessment.currentYearLosses;
           this.show = true;
           sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
@@ -238,7 +238,7 @@ export class SummaryComponent implements OnInit {
     return this.utilsService.currencyFormatter(grossTotal);
   }
   totalExpAllow(allowance) {
-    const total = allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES');
+    const total = allowance?.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES');
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -246,7 +246,7 @@ export class SummaryComponent implements OnInit {
     }
   }
   totalPT(deductions) {
-    const total = deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX');
+    const total = deductions?.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX');
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -255,7 +255,7 @@ export class SummaryComponent implements OnInit {
   }
 
   totalEA(deductions) {
-    const total = deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW');
+    const total = deductions?.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW');
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -272,7 +272,7 @@ export class SummaryComponent implements OnInit {
   }
   natureOfBusinessFromCode(natureOfBusiness) {
     if (this.natureOfBusinessDropdown?.length !== 0) {
-      const nameArray = this.natureOfBusinessDropdown.filter((item: any) => item.code === natureOfBusiness);
+      const nameArray = this.natureOfBusinessDropdown?.filter((item: any) => item.code === natureOfBusiness);
       console.log('nameArray = ', nameArray);
       return natureOfBusiness + '- ' + nameArray[0].label;
     } else {
@@ -320,7 +320,7 @@ export class SummaryComponent implements OnInit {
   slab(rate, input) {
     let slabs = [];
     if (input === 'INPUT') {
-      let inputSlabs = this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput[0].taxRate === rate);
+      let inputSlabs = this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput && item.cgOutput[0]?.taxRate === rate);
       if(inputSlabs) {
         slabs = inputSlabs;
       }

@@ -155,7 +155,7 @@ body {
 }
 
 .tbd-btn:disabled,
-.tbd-btn[disabled]{
+.tbd-btn[disabled] {
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;
@@ -222,6 +222,12 @@ body {
   background-color: #04a3bc;
 }
 
+.tbd-btn-small:disabled {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .tbd-btn-small-secondary {
   padding: 4px 9px;
   text-align: center;
@@ -246,4 +252,55 @@ body {
   background: transparent;
   font-size: 16px;
   cursor: pointer;
+}
+
+.cg-table {
+  &.ag-theme-balham {
+    .ag-ltr {
+      .ag-cell {
+        // border-right: 1px solid #423f3f2e !important;
+      }
+    }
+  }
+
+  .ag-cell-value,
+  .ag-group-value {
+    white-space: normal;
+  }
+}
+
+.hide {
+  .mat-select-trigger {
+    .mat-select-arrow-wrapper {
+      display: none;
+    }
+  }
+}
+
+.container {
+  .mat-tab-body-content {
+    overflow: hidden !important;
+  }
+}
+
+.filing-date {
+  &.ag-cell-value {
+    .mat-form-field {
+      .mat-form-field-wrapper {
+        .mat-form-field-flex {
+          .mat-form-field-suffix {
+            .mat-datepicker-toggle {
+              .mat-focus-indicator {
+                .mat-button-wrapper {
+                  .mat-datepicker-toggle-default-icon {
+                    padding-bottom: 12px !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

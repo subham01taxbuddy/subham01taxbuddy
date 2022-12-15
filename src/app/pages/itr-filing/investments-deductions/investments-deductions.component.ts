@@ -552,6 +552,29 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     if (self instanceof Array && self.length > 0) {
       this.userAge = self[0].age
     }
+    if(!this.ITR_JSON.systemFlags?.hasParentOverSixty) {
+      if(this.ITR_JSON.systemFlags) {
+        this.ITR_JSON.systemFlags.hasParentOverSixty = false;
+      } else {
+        this.ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false
+        }
+      }
+    }
   }
 
   ngOnInit() {
@@ -599,6 +622,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   saveInvestmentDeductions() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.max5000Limit('SELF')
     if (this.investmentDeductionForm.valid) {
       Object.keys(this.investmentDeductionForm.controls).forEach((item: any) => {
@@ -1003,6 +1030,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
+          //re-intialise the ITR objects
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
           this.Copy_ITR_JSON.donations = this.ITR_JSON.donations.filter((item: any) => item.identifier !== params.data.identifier);
           this.serviceCall('OTHER', this.Copy_ITR_JSON);
           break;
@@ -1036,13 +1067,13 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       });
     }
 
-    return newData;
+    return newData ? newData : [];
   }
 
   serviceCall(val, ITR_JSON) {
+    
     this.loading = true;
-    const param = '/itr/' + ITR_JSON.userId + '/' + ITR_JSON.itrId + '/' + ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
@@ -1061,7 +1092,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   isParentOverSixty() {
-    if (!this.ITR_JSON.systemFlags.hasParentOverSixty) {
+    if (!this.ITR_JSON?.systemFlags?.hasParentOverSixty) {
       console.log('clear parent related values');
       // this.investmentDeductionForm.controls['premium'].setValue(null);
       // this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);

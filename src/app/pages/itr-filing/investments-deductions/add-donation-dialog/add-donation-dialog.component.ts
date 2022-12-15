@@ -592,6 +592,10 @@ export class AddDonationDialogComponent implements OnInit {
   }
 
   saveGeneralDonation() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.generalDonationForm.valid) {
       if (this.generalDonationForm.controls['panNumber'].value !== this.Copy_ITR_JSON.panNumber) {
         if (this.data.mode === 'EDIT') {
@@ -621,8 +625,7 @@ export class AddDonationDialogComponent implements OnInit {
 */
   serviceCall() {
     this.loading = true;
-    const param = '/itr/' + this.Copy_ITR_JSON.userId + '/' + this.Copy_ITR_JSON.itrId + '/' + this.Copy_ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.loading = false;

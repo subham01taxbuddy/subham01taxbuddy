@@ -1,0 +1,32 @@
+<!-- <div class="container"> -->
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<mat-tab-group>
+  <mat-tab label="Schedule AL">
+    <app-schedule-al (saveAndNext)="saveAndNext($event)"></app-schedule-al>
+  </mat-tab>
+  <mat-tab label="Losses to be carried forward(CFL)">
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-12">
+
+        <div class="cfl-header">
+          <b> Losses to be carried forward (Schedule CFL)
+          </b>
+        </div>
+        <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
+          <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
+            [gridOptions]="scheduleCFLLoss" [rowHeight]="rowHeight" (rowClicked)="onRowClicked($event)">
+          </ag-grid-angular>
+
+        </div>
+        <div class="btn-cfl">
+          <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left"
+              aria-hidden="true"></i>
+            &nbsp;&nbsp;Back</button>
+          <button class="tbd-btn" (click)="continue()">&nbsp;&nbsp;Continue </button>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+</mat-tab-group>
+<!-- </div> -->

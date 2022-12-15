@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams, ValueSetterParams } from 'ag-grid-community';
 import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -190,6 +190,7 @@ export class OtherIncomeComponent implements OnInit {
         headerName: 'Salary Type',
         field: 'incomeType',
         suppressMovable: true,
+        width: 380,
         valueGetter: function nameFromCode(params) {
           if (otherIncomeDropdown.length !== 0) {
             const nameArray = otherIncomeDropdown.filter((item: any) => item.value === params.data.incomeType);
@@ -215,7 +216,15 @@ export class OtherIncomeComponent implements OnInit {
         suppressMovable: true,
         editable: true,
         // cellEditor: 'numericEditor',
-        headerComponentParams: { menuIcon: 'fa-external-link-alt' }
+        headerComponentParams: { menuIcon: 'fa-external-link-alt' },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.amount !== newValInt;
+          if (valueChanged) {
+            params.data.amount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
 
       {
@@ -269,7 +278,10 @@ export class OtherIncomeComponent implements OnInit {
   saveOtherIncome() {
     console.log('Dividend Income,', this.dividendIncomes.value);
 
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.Copy_ITR_JSON.dividendIncomes = [
       {
         "income": this.dividendIncomes.controls['quarter1'].value,
@@ -337,14 +349,13 @@ export class OtherIncomeComponent implements OnInit {
     }
 
 
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Other Income updated successfully.');
-      this.saveAndNext.emit(true);
+      this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to update other income.');
@@ -501,7 +512,7 @@ export class OtherIncomeComponent implements OnInit {
   }
 
   getTotal() {
-    return this.dividendIncomes.controls['quarter1'].value + this.dividendIncomes.controls['quarter2'].value + this.dividendIncomes.controls['quarter3'].value + this.dividendIncomes.controls['quarter4'].value + this.dividendIncomes.controls['quarter5'].value;
+    return parseInt(this.dividendIncomes.controls['quarter1'].value) + parseInt(this.dividendIncomes.controls['quarter2'].value) + parseInt(this.dividendIncomes.controls['quarter3'].value) + parseInt(this.dividendIncomes.controls['quarter4'].value) + parseInt(this.dividendIncomes.controls['quarter5'].value);
   }
   calFamPension() {
     this.famPenDeduction = 0;
@@ -549,6 +560,7 @@ export class OtherIncomeComponent implements OnInit {
         headerName: 'Income Type',
         field: 'natureDesc',
         suppressMovable: true,
+        width: 400,
         valueGetter: function nameFromCode(params) {
           console.log('AAAA', params);
           if (exemptIncomesDropdown.length !== 0) {
@@ -575,7 +587,15 @@ export class OtherIncomeComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
-        width: 100,
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.amount !== newValInt;
+          if (valueChanged) {
+            params.data.amount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
+        // width: 100,
       },
       {
         headerName: 'Clear',

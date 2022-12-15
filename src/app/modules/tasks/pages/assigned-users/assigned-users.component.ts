@@ -840,7 +840,7 @@ export class AssignedUsersComponent implements OnInit {
           this.loading = false;
           objITR = result;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-          this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+          this.router.navigate(['/pages/itr-filing/itr'],{ 
             state: { 
               userId: data.userId, 
               panNumber: data.panNumber, 
@@ -878,7 +878,7 @@ export class AssignedUsersComponent implements OnInit {
           console.log('obj:', obj);
           workingItr = JSON.parse(JSON.stringify(obj));
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-          this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+          this.router.navigate(['/pages/itr-filing/itr'],{ 
             state: { 
               userId: data.userId, 
               panNumber: data.panNumber, 
@@ -959,7 +959,7 @@ export class AssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+        this.router.navigate(['/pages/itr-filing/itr'],{ 
           state: { 
             userId: data.userId, 
             panNumber: data.panNumber, 

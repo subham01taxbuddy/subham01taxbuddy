@@ -4,7 +4,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { TitleCasePipe, Location } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -334,7 +334,7 @@ export class PersonalInformationComponent implements OnInit {
     { value: 'FEMALE', label: 'Female' },
   ]
 
-  constructor(private location: Location, public fb: FormBuilder,
+  constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
     private titlecasePipe: TitleCasePipe,
@@ -361,23 +361,22 @@ export class PersonalInformationComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      gender: [''],
-      dateOfBirth: ['', Validators.required],
+      // gender: [''],
+      // dateOfBirth: [''],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      // aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
-      residentialStatus: ['RESIDENT', Validators.required],
-      employerCategory: [''],
+      // residentialStatus: ['RESIDENT'],
       regime: ['', Validators.required],
-      previousYearRegime: [''],
+      previousYearRegime: ['', Validators.required],
       address: this.fb.group({
         flatNo: ['', Validators.required],
         premisesName: [''],
         road: [''],
-        area: ['', Validators.required],
+        area: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
         state: ['91', Validators.required],
         country: ['91', Validators.required],
-        city: ['', Validators.required],
+        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
         pinCode: ['', Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.required, Validators.pattern(AppConstants.PINCode)])]
       }),
       seventhProviso139: this.fb.group({
@@ -395,7 +394,7 @@ export class PersonalInformationComponent implements OnInit {
     return this.fb.group({
       ifsCode: [obj.ifsCode || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.IFSCRegex)])],
       countryName: ['91', Validators.required],
-      name: [obj.name || '', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
+      name: [obj.name || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
       accountNumber: [obj.accountNumber || '', Validators.compose([Validators.minLength(3), Validators.maxLength(20), Validators.required, Validators.pattern(AppConstants.numericRegex)])],
       hasRefund: [obj.hasRefund || false]
     });
@@ -557,28 +556,48 @@ export class PersonalInformationComponent implements OnInit {
         });
       }
     });
-    
-    this.lastFilingDetailsNeeded = this.ITR_JSON.regime === 'NEW' || 
+
+    this.lastFilingDetailsNeeded = this.ITR_JSON.regime === 'NEW' ||
       this.ITR_JSON.previousYearRegime === 'NEW';
     this.onRegimeChanged();
   }
 
   async saveProfile(ref) {
-    this.findAssesseeType();
-    if (this.customerProfileForm.controls['regime'].value === 'NEW')
-      this.removeOldRegimeData();
 
-      Object.keys(this.customerProfileForm.controls).forEach(key => {
-        const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
-        if (controlErrors != null) {
-          Object.keys(controlErrors).forEach(keyError => {
-           console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-          });
-        }
-      });
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.findAssesseeType();
+    if (this.customerProfileForm.controls['regime'].value === 'NEW') {
+      this.removeOldRegimeData();
+    }
+
+    //check if at least one account is selected for refund
+    var isBankSelected = false;
+    this.customerProfileForm.controls['bankDetails'].value.forEach(bank => {
+      if (bank['hasRefund']) {
+        isBankSelected = true;
+      }
+    });
+    if (!isBankSelected) {
+      this.utilsService.showSnackBar('Please select atleast one bank account in which you prefer to get refund.');
+      return;
+    }
+
+    Object.keys(this.customerProfileForm.controls).forEach(key => {
+      const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+            controlErrors[keyError]);
+        });
+      }
+    });
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
+      // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -586,11 +605,11 @@ export class PersonalInformationComponent implements OnInit {
           mName: this.customerProfileForm.controls['middleName'].value,
           lName: this.customerProfileForm.controls['lastName'].value,
           fatherName: this.customerProfileForm.controls['fatherName'].value,
-          age: ageCalculated,
-          gender: this.customerProfileForm.controls['gender'].value,
+          age: this.ITR_JSON.family[0]['age'],
+          gender: this.ITR_JSON.family[0]['gender'],
           relationShipCode: 'SELF',
           relationType: 'SELF',
-          dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
+          dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth']
         }
       ];
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
@@ -598,12 +617,11 @@ export class PersonalInformationComponent implements OnInit {
       // const response = await this.verifyAllBanks();
       // console.log('Bank API response in saveProfile', ":", response);
       // if (response) {
-      const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe(result => {
+      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(result => {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Customer profile updated successfully.');
-        this.saveAndNext.emit(true);
+        this.saveAndNext.emit({ subTab: true, tabName: 'OTHER' });
 
       }, error => {
         this.utilsService.showSnackBar('Failed to update customer profile.');
@@ -645,12 +663,6 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.employers[i].deductions = this.ITR_JSON.employers[i].deductions?.filter((item: any) => item.deductionType !== 'PROFESSIONAL_TAX');
     }
 
-    // Removing 80U,80DD,80DDB
-    this.ITR_JSON.disabilities = [];
-    // Removing 80GGC
-    this.ITR_JSON.donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType !== 'POLITICAL')
-    // Removing 80EEB
-    this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE')
 
     console.log(this.ITR_JSON)
 
@@ -676,13 +688,13 @@ export class PersonalInformationComponent implements OnInit {
     return true;
   }
 
-  calAge(dob) {
-    const birthday: any = new Date(dob);
-    const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
-    const today: any = new Date(currentYear, 2, 31);
-    const timeDiff: any = ((today - birthday) / (31557600000));
-    return Math.floor(timeDiff);
-  }
+  // calAge(dob) {
+  //   const birthday: any = new Date(dob);
+  //   const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
+  //   const today: any = new Date(currentYear, 2, 31);
+  //   const timeDiff: any = ((today - birthday) / (31557600000));
+  //   return Math.floor(timeDiff);
+  // }
 
   documents = []
   getDocuments() {
@@ -751,11 +763,9 @@ export class PersonalInformationComponent implements OnInit {
     })
   }
 
-  previousRoute() {
-    // this.router.navigate(['/tasks/filings']);
-    // this.router.navigate(['/pages/itr-filing/customer-profile']);
-    this.location.back();
-  }
+  // previousRoute() {
+  //   this.router.navigate(['/pages/itr-filing/customer-profile']);
+  // }
 
   afterUploadDocs(fileUpload) {
     if (fileUpload === 'File uploaded successfully') {
@@ -764,11 +774,11 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   onRegimeChanged() {
-    if ((this.customerProfileForm.controls['regime'].value === 'NEW' || 
-      this.customerProfileForm.controls['previousYearRegime'].value === 'NEW') && this.customerProfileForm.controls['previousYearRegime'].value !== '') {
-        this.lastFilingDetailsNeeded = true;
-        this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
-        this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
+    if (this.customerProfileForm.controls['regime'].value === 'NEW' ||
+      this.customerProfileForm.controls['previousYearRegime'].value === 'NEW') {
+      this.lastFilingDetailsNeeded = true;
+      this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
+      this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
     } else {
       this.lastFilingDetailsNeeded = false;
       this.lastFilingDetailsNeeded = false;

@@ -1,4 +1,9 @@
+import { state } from '@angular/animations';
+import { AnyTxtRecord } from "dns";
+
 export interface ITR_JSON {
+    zeroBonds?: any;
+    bonds?: any;
     ackStatus: string;
     acknowledgementReceived: boolean;
     userId: number;
@@ -40,7 +45,7 @@ export interface ITR_JSON {
     upload: Upload[];
     employers: Employer[];
     houseProperties: HouseProperties[];
-    capitalGain: CapitalGain[];
+    capitalGain: NewCapitalGain[];
     business: Business;
     pastYearLosses: PastYearLosses[];
     foreignIncome: null;
@@ -66,6 +71,12 @@ export interface ITR_JSON {
     previousYearRegime: string;
     dividendIncomes?: any[];
     exemptIncomes?: any[];
+    jurisdictions?: Jurisdictions[],
+    conditionsResStatus?: any,
+    movableAsset?: MovableAsset[],
+    immovableAsset?: Immovable[],
+    bondsDeduction?: Deduction[],
+    carryForwordLosses?: CarryForwardLosses[],
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -131,10 +142,7 @@ export interface Disabilities {
 }
 export interface HouseProperties {
     propertyType: string;
-    building: string;
-    flatNo: string;
-    street: string;
-    locality: string;
+    address: string;
     city: string;
     state: string;
     pinCode: string;
@@ -202,10 +210,24 @@ export interface Loans {
     principalAmount: number;
     interestAmount: number;
 }
-export interface CapitalGain {
+export interface NewCapitalGain {
+    assessmentYear: string;
+    assesseeType: string;
+    residentialStatus: string;
     assetType: string;
+    assetDetails?: AssetDetails[];
+    improvement: Improvement[];
+    deduction?: Investments[];
+    buyersDetails: BuyersDetails[];
+}
+
+export interface AssetDetails {
+    capitalGain: number;
+    srn: number;
+    id: string;
     description: string;
     gainType: string;
+    grandFatheredValue: number;
     sellDate: string;
     sellValue: number;
     stampDutyValue: number;
@@ -213,36 +235,58 @@ export interface CapitalGain {
     sellExpense: number;
     purchaseDate: string;
     purchaseCost: number;
-    improvement: Improvement[];
+    isinCode: string;
+    nameOfTheUnits: string;
+    sellOrBuyQuantity: number;
+    sellValuePerUnit: number;
+    purchaseValuePerUnit: number;
     isUploaded: boolean;
     hasIndexation: boolean;
     algorithm: string;
-    fmvAsOn31Jan2018: number;
-    cgOutput: any[];
-    investments: Investments[];
+    fmvAsOn31Jan2018: string;
+    indexCostOfAcquisition: number;
+}
+
+export interface NewCapitalGain {
+    assetType: string;
+    assetDetails?: AssetDetails[];
+    improvement: Improvement[];
+    deduction?: Investments[];
     buyersDetails: BuyersDetails[];
 }
 export interface Improvement {
     id: number;
+    srn: number;
     dateOfImprovement: string;
     costOfImprovement: number;
     indexCostOfImprovement: number;
+    financialYearOfImprovement: string;
 }
 export interface Investments {
+    srn: string;
     underSection: string;
     orgAssestTransferDate: string;
     costOfNewAssets: number;
     purchaseDate: string;
     investmentInCGAccount: number;
     totalDeductionClaimed: number;
+
+    // "panOfEligibleCompany":"",
+    // "purchaseDatePlantMachine":"",
+    // "costOfPlantMachinary":0
 }
 export interface BuyersDetails {
+    id: string;
+    srn: number;
     name: string;
     pan: string;
+    aadhaarNumber: string;
     share: number;
     amount: number;
     address: string;
     pin: string;
+    state: string;
+    country: string;
 }
 
 export interface Employer {
@@ -373,6 +417,45 @@ export interface Immovable {
     country: string;
     pinCode: string;
     amount: number;
+}
+
+export interface Bonds {
+    srn: Number;
+    id: any,
+    description: any;
+    purchaseDate: any;
+    stampDutyValue: any;
+    valueInConsideration: any;
+    indexCostOfAcquisition: Number;
+    costOfImprovement: Number;
+    sellDate: any;
+    sellValue: Number;
+    sellExpense: Number;
+    gainType: any;
+    capitalGain: Number;
+    purchaseCost: any;
+    isinCode: any;
+    nameOfTheUnits: any;
+    sellOrBuyQuantity: any;
+    sellValuePerUnit: any;
+    purchaseValuePerUnit: any;
+    isUploaded: any;
+    algorithm: any;
+    hasIndexation: any;
+    fmvAsOn31Jan2018: any;
+}
+
+export interface Deduction {
+    srn: any;
+    underSection: any;
+    orgAssestTransferDate: any;
+    panOfEligibleCompany: any;
+    purchaseDatePlantMachine: any;
+    purchaseDate: any;
+    costOfNewAssets: Number;
+    investmentInCGAccount: Number;
+    totalDeductionClaimed: Number;
+    costOfPlantMachinary: any;
 }
 export interface BankDetails {
     bankType: string;
@@ -529,4 +612,34 @@ export interface SeventhProviso139 {
     depAmtAggAmtExcd1CrPrYrFlg: number;
     incrExpAggAmt2LkTrvFrgnCntryFlg: number;
     incrExpAggAmt1LkElctrctyPrYrFlg: number;
+}
+export interface Jurisdictions {
+    jurisdictionResidence: any;
+    Tin: any;
+}
+
+export interface MovableAsset {
+    jwelleryAmount: number;
+    artWorkAmount: number;
+    vehicleAmount: number;
+    bankAmount: number;
+    shareAmount: number;
+    insuranceAmount: number;
+    loanAmount: number;
+    cashInHand: number;
+    assetLiability: number;
+}
+
+export interface CarryForwardLosses {
+    assessmentPastYear: string;
+    dateofFilling: string;
+    housePropertyLoss: number;
+    STCGLoss: number;
+    LTCGLoss: number;
+    pastYear: number;
+    totalLoss: number;
+    speculativeBusinessLoss: number;
+    broughtForwordBusinessLoss: number;
+    setOffDuringTheYear: number;
+    adjustedAmount: number;
 }

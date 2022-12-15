@@ -2,7 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { concatMap, Observable, Subject } from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -33,7 +33,7 @@ export class UtilsService {
     * @returns this will return boolean value
     */
     isNonEmpty(param: any): boolean {
-        if (param)
+        if (param !== null && param !== undefined && param !== "")
             return true
         else
             return false
@@ -139,7 +139,7 @@ export class UtilsService {
                     console.log('this.ITR_JSON in utils', this.ITR_JSON);
                     console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                    this.router.navigate(['/pages/itr-filing/itr'],{ 
                         state: { 
                           userId: this.ITR_JSON.userId, 
                           panNumber: profile.panNumber, 
@@ -192,7 +192,7 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                    this.router.navigate(['/pages/itr-filing/itr'],{ 
                         state: { 
                           userId: this.ITR_JSON.userId, 
                           panNumber: profile.panNumber, 
@@ -214,7 +214,7 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                    this.router.navigate(['/pages/itr-filing/itr'],{ 
                         state: { 
                           userId: this.ITR_JSON.userId, 
                           panNumber: profile.panNumber, 
@@ -341,7 +341,9 @@ export class UtilsService {
             seventhProviso139: null,
             depPayInvClmUndDednVIA: 'N',
             declaration: undefined,
-            disability: undefined
+            disability: undefined,
+            movableAsset: [],
+            immovableAsset: []
         };
 
         return ITR_JSON;
@@ -717,6 +719,52 @@ export class UtilsService {
         }
     }
 
+    checkDuplicateInObject(propertyName, inputArray) {
+        let seenDuplicate = false,
+            // eslint-disable-next-line prefer-const
+            testObject = {};
+
+        inputArray.map(function (item) {
+            const itemPropertyName = item[propertyName];
+            if (itemPropertyName in testObject) {
+                testObject[itemPropertyName].duplicate = true;
+                item.duplicate = true;
+                seenDuplicate = true;
+            } else {
+                testObject[itemPropertyName] = item;
+                delete item.duplicate;
+            }
+        });
+
+        return seenDuplicate;
+    }
+
+    async getPincodeData(pinCode) {
+        const promise = new Promise<any>((resolve, reject) => {
+            let data = null;
+            if (pinCode.valid) {
+                const param = '/pincode/' + pinCode.value;
+                // return await this.userMsService.getMethod(param).toPromise();
+                this.userMsService.getMethod(param).subscribe((result: any) => {
+                    data = {
+                        country: 'INDIA',
+                        countryCode: '91',
+                        city: result.taluka,
+                        stateCode: result.stateCode
+                    }
+                    resolve(data);
+                }, error => {
+                if (error.status === 404) {
+                    reject(error);
+                }
+                });
+            } else {
+                console.log('pinCode invalid', pinCode);
+            }
+        });
+        return promise;
+    }
+
     // updateAssignmentToggle(assignmentToggleData) :Observable<any>{
     //     return this.httpClient.post('environment.url' + '/user/sme/assignment-logic-toggle', assignmentToggleData)
     // }
@@ -724,4 +772,20 @@ export class UtilsService {
     // getAssignmentToggle() :Observable<any>{
     //     return this.httpClient.get('environment.url' + '/user/sme/assignment-logic-toggle')
     // }
+
+    private updateItrObject(result, itrObject:ITR_JSON) {
+        //update type in ITR object & save
+        itrObject.itrType = result?.data?.itrType;
+        const param = '/itr/' + itrObject.userId + '/' + itrObject.itrId + '/' + itrObject.assessmentYear;
+        return this.itrMsService.putMethod(param, itrObject);
+    }
+
+    saveItrObject(itrObject: ITR_JSON): Observable<any> {
+        //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+        const param = `/itr-type?itrId=${itrObject.itrId}`;
+        return this.itrMsService.getMethod(param).pipe(
+            concatMap(result => this.updateItrObject(result, itrObject))
+        );
+    }
+
 }
