@@ -666,14 +666,26 @@ export class BondsComponent implements OnInit {
     }
     console.log(zeroBondData);
     if (bondIndex >= 0) {
-      this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+      if(bondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+      } else{
+        this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
+      }
     } else {
-      this.Copy_ITR_JSON.capitalGain.push(bondData);
+      if(bondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain.push(bondData);
+      }
     }
     if (zeroBondIndex >= 0) {
-      this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+      if(zeroBondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+      } else {
+        this.Copy_ITR_JSON.capitalGain.splice(zeroBondIndex, 1);
+      }
     } else {
-      this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+      if(zeroBondData.assetDetails.length) {
+        this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+      }
     }
     console.log(this.Copy_ITR_JSON);
 
