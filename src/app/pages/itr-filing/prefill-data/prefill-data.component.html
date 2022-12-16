@@ -51,8 +51,8 @@
             <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
     </div> -->
     <div class="card__col-xs-12 card__col-sm-4">
-      <input type="file" id="input-file-id" hidden file-model="MeterFile" class="inptfile"
-                (change)="uploadFile($event.target.files)">
+      <input type="file" id="input-jsonfile-id" hidden file-model="MeterFile" class="inptfile"
+                (change)="uploadJsonFile($event.target.files)">
       <button class="tbd-btn" (click)="upload()">Upload Prefill JSON</button>
     </div>
   </div>
