@@ -38,7 +38,8 @@ export class ListedUnlistedDialogComponent implements OnInit {
       indexCostOfAcquisition: [0],
       algorithm: ['cgSharesMF'],
       stampDutyValue: 0,
-      valueInConsideration: 0
+      valueInConsideration: 0,
+      capitalGain: 0
     });
     if (this.data.mode === 'EDIT') {
       this.assetDetailsForm.patchValue(this.data.assetDetails);

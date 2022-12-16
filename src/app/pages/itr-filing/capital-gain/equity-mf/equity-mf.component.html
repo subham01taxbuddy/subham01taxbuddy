@@ -20,7 +20,7 @@
       class="fa fa-info-circle" aria-hidden="true"
       title="Applicable for any capital assets other than residential HP"></i>
     <span style="float: right;">
-      <button class="tbd-btn-small" [disabled]="canAddListedDeduction"  (click)="addListedDeduction('ADD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
+      <button class="tbd-btn-small" [disabled]="!canAddListedDeduction"  (click)="addListedDeduction('ADD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
           aria-hidden="true"></i>
       </button>
     </span>
@@ -54,7 +54,7 @@
       class="fa fa-info-circle" aria-hidden="true"
       title="Applicable for any capital assets other than residential HP"></i>
     <span style="float: right;">
-      <button class="tbd-btn-small" [disabled]="canAddUnlistedDeduction" (click)="addUnListedDeduction('ADD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
+      <button class="tbd-btn-small" [disabled]="!canAddUnlistedDeduction" (click)="addUnListedDeduction('ADD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
           aria-hidden="true"></i>
       </button>
     </span>
