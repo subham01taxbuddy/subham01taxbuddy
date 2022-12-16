@@ -162,7 +162,8 @@ export class LabFormComponent implements OnInit {
       // this.amount = cgOutPut.cgIncome;
       this.immovableForm.patchValue(this.data.assetSelected);
       
-      this.improvements = dataToPatch[0].improvement.filter(imp => (imp.srn == this.data.assetSelected.srn));
+      this.improvements = dataToPatch[0].improvement.filter(imp => (imp.srn == this.data.assetSelected.srn && this.utilsService.isNonEmpty(imp.dateOfImprovement)));
+      
       if (this.improvements instanceof Array && this.improvements.length > 0) {
         this.isImprovements.setValue(true);
         const improvement = <FormArray>this.immovableForm.get('improvement');
@@ -718,6 +719,11 @@ export class LabFormComponent implements OnInit {
       && item.costOfImprovement === objToRemove.costOfImprovement && item.dateOfImprovement == objToRemove.dateOfImprovement))
     this.cgArrayElement.improvement.splice(this.cgArrayElement.improvement.indexOf(filtered[0]), 1);
 
+    //remove from improvements list also
+    let toDelete = this.improvements.filter(item => (item.srn == objToRemove.srn 
+      && item.costOfImprovement === objToRemove.costOfImprovement && item.dateOfImprovement == objToRemove.dateOfImprovement))
+    this.improvements.splice(this.improvements.indexOf(toDelete[0]), 1);
+
     // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
     improve.length === 0 ? this.isImprovements.setValue(false) : null;
@@ -777,19 +783,10 @@ export class LabFormComponent implements OnInit {
         this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm = 'cgProperty';//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
         this.cgArrayElement.assetDetails[this.currentCgIndex].hasIndexation = false;//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
         
-        // if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
-        //   //add empty improvement object
-        //   this.cgArrayElement.improvement = [];
-        //   let improvement = {
-        //     indexCostOfImprovement: 0,
-        //     id: 0,
-        //     dateOfImprovement:" ",
-        //     costOfImprovement:0,
-        //     financialYearOfImprovement:null,
-        //     srn:this.currentCgIndex
-        //   }
-        //   this.cgArrayElement.improvement.push(improvement);
-        // }
+        let filtered = this.cgArrayElement.improvement.filter(imp => (imp.srn != this.currentCgIndex));
+        if(this.improvements.length > 0) {
+          this.cgArrayElement.improvement = filtered.concat(this.improvements);
+        }
 
         if (this.data.mode === 'ADD') {
           let labData = this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0];
