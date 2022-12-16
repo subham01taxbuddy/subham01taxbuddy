@@ -1,0 +1,23 @@
+<div style="overflow: hidden;">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+    <div class="card__row" style="margin-bottom: 10px;">
+        <div class="">
+            <div class="card__col-xs-12 card__col-sm-10">
+                <b style="font-size: 14px;">Add depreciation details in case of fixed assets </b>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
+                <button class="tbd-btn-small" style="text-align: right;"
+                    (click)="addEditProfessionalRow('ADD', balanceData,'depreciation')">Add
+                    More&nbsp;&nbsp;
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-12">
+            <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
+                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
+                    [gridOptions]="professionalGridOptions" (rowClicked)="onProfessionalRowClicked($event)">
+                </ag-grid-angular>
+            </div>
+        </div>
+    </div>

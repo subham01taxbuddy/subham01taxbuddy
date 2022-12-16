@@ -751,7 +751,7 @@ export interface FixedAssetsDetails {
 
 export interface BusinessDescription {
     id: any;
-    natureOfBusiness: Number;
-    tradeName: string;
-    businessDescription: string;
+    natureOfBusiness: any;
+    tradeName: any;
+    businessDescription: any;
 }
