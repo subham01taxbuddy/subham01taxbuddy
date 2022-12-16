@@ -492,6 +492,12 @@ export class BusinessComponent implements OnInit {
     if (totalProfessionalIncome <= 5000000 && totalBusinessIncome <= 20000000) {
       const myPresumptiveIncome = JSON.parse(JSON.stringify(this.localPresumptiveIncome));
       if (this.mode === 'ADD') {
+        if(!this.Copy_ITR_JSON.business) {
+          this.Copy_ITR_JSON.business = {
+            presumptiveIncomes: [],
+            financialParticulars: null
+          };
+        }
         if(!this.Copy_ITR_JSON.business.presumptiveIncomes) {
           this.Copy_ITR_JSON.business.presumptiveIncomes = [];
         }
