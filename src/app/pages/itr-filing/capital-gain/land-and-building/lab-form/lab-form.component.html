@@ -25,7 +25,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <form [formGroup]="immovableForm">
   <b>Add details of capital gain from Land / Building / Property?</b> <span style="float: right;"> Capital Gain Type:
-    {{cgArrayElement?.assetDetails[0]?.gainType ? cgArrayElement?.assetDetails[0]?.gainType  : 'NA'}}</span>
+    {{cgArrayElement?.assetDetails[currentCgIndex]?.gainType ? cgArrayElement?.assetDetails[currentCgIndex]?.gainType  : 'NA'}}</span>
   <br>
   <div formArrayName="assetDetails">
     <div class="card__row" *ngFor="let asset of getAssetDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
