@@ -213,7 +213,7 @@ export class HousePropertyComponent implements OnInit {
 
     this.housePropertyForm = this.createHousePropertyForm();
     this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[index]);
-    this.changePropType(this.housePropertyForm.controls['propertyType'].value);
+    this.changePropType(this.housePropertyForm.controls['propertyType'].value, 'EDIT');
     this.housePropertyForm.controls['country'].setValue('91');
     if (this.ITR_JSON.houseProperties[index].tenant instanceof Array) {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
@@ -334,7 +334,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  changePropType(type) {
+  changePropType(type, mode?) {
     console.log(type)
     if (type === 'SOP') {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
@@ -345,9 +345,10 @@ export class HousePropertyComponent implements OnInit {
       ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators([Validators.min(1)]);
       ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].updateValueAndValidity();
     } else if (type === 'LOP') {
-      const tenant = <FormArray>this.housePropertyForm.get('tenant');
-      tenant.push(this.createTenantForm());
-
+      if (mode != 'EDIT') {
+        const tenant = <FormArray>this.housePropertyForm.get('tenant');
+        tenant.push(this.createTenantForm());
+      }
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
 
@@ -401,7 +402,7 @@ export class HousePropertyComponent implements OnInit {
 
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */) {
-        this.housePropertyForm.controls['country'].setValue('91');
+      this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
       // if (this.isCoOwners.value) {
       //   let sum = 0;
