@@ -174,7 +174,7 @@
                 </div>
                 <br>
                 <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
-                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
+                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value > 200000">
                     <div class="customradiobtn bdr_btm">
                         <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
                             house

@@ -71,7 +71,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   checkEligibility() {
-    if (Number(((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].value) < 200000) {
+    if (Number(((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].value) <= 200000) {
       this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
     }
   }
@@ -464,7 +464,7 @@ export class HousePropertyComponent implements OnInit {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-      for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+      for (let i = 0; i < this.ITR_JSON?.houseProperties?.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
           // this.isSelfOccupied = true;
         } else {
