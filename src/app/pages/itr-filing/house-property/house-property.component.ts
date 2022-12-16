@@ -118,7 +118,7 @@ export class HousePropertyComponent implements OnInit {
       name: [obj.name || '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       // isSelf: [obj.isSelf || false],
       panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
-      percentage: [obj.percentage || null, Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.max(99), Validators.min(1), Validators.pattern(AppConstants.numericRegex)])],
+      percentage: [obj.percentage || 0, Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.max(99), Validators.min(0)])],
     });
   }
   get getCoOwnersArray() {
