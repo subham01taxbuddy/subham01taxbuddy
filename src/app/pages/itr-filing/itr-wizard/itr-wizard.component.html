@@ -14,10 +14,10 @@
             <app-personal-information (saveAndNext)="saveAndNext($event)">
             </app-personal-information>
           </mat-tab>
-          <!-- <mat-tab label="Other Information">
+          <mat-tab label="Other Information">
             <app-other-information (saveAndNext)="saveAndNext($event)">
             </app-other-information>
-          </mat-tab> -->
+          </mat-tab>
         </mat-tab-group>
         <ng-template matStepLabel>Personal Information</ng-template>
       </mat-step>
@@ -36,12 +36,12 @@
           <mat-tab label="Other Sources">
             <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
           </mat-tab>
-          <!-- <mat-tab label="Capital Gain">
+          <mat-tab label="Capital Gain">
             <app-capital-gain (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-capital-gain>
-          </mat-tab> -->
-          <!-- <mat-tab label="More Information">
+          </mat-tab>
+          <mat-tab label="More Information">
             <app-more-info (saveAndNext)="saveAndNext($event)"></app-more-info>
-          </mat-tab> -->
+          </mat-tab>
         </mat-tab-group>
         <!--  <div class="content" style="width: 60%;padding-right: 10px;">
           <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
