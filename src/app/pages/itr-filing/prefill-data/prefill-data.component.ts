@@ -153,8 +153,8 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     });
   }
 
-  uploadFile(file: FileList) {
-    console.log("File", file);
+  uploadJsonFile(file: FileList) {
+    console.log("File in prefill", file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
 
@@ -179,7 +179,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   }
 
   upload() {
-    document.getElementById("input-file-id").click();
+    document.getElementById("input-jsonfile-id").click();
   }
 
   ngOnDestroy() {
