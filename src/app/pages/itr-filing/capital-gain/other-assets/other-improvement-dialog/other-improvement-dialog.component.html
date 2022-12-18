@@ -5,7 +5,8 @@
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <mat-select placeholder="Select Asset Srn" name="selectSrn" formControlName="srn" required>
+          <mat-select placeholder="Select Asset Srn" name="selectSrn" formControlName="srn" 
+          (selectionChange)="assetSelected()" required>
             <mat-option *ngFor="let data of data.assetDetails" [value]="data.srn">
               {{ data.srn }}
             </mat-option>

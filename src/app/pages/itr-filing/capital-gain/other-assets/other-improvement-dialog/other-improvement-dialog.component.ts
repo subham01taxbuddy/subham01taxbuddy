@@ -10,6 +10,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   styleUrls: ['./other-improvement-dialog.component.scss']
 })
 export class OtherImprovementDialogComponent implements OnInit {
+  financialyears = []
   improvementYears = [];
   improvementForm!: FormGroup;
 
@@ -31,12 +32,30 @@ export class OtherImprovementDialogComponent implements OnInit {
       this.improvementForm.patchValue(this.data.improvement);
     }
   }
+
+  assetSelected() {
+    let selectedAsset = this.improvementForm.controls['srn'].value;
+    let assetDetails = this.data.assetDetails.filter(item => (item.srn === selectedAsset))[0];
+    if(assetDetails.gainType === 'LONG') {
+      this.improvementForm.controls['indexCostOfImprovement'].enable();
+    } else{
+      this.improvementForm.controls['indexCostOfImprovement'].disable();
+    }
+    let purchaseDate = assetDetails.purchaseDate;
+    let purchaseYear = new Date(purchaseDate).getFullYear();
+    console.log(this.financialyears.indexOf(purchaseYear + '-' + (purchaseYear+1)));
+    console.log('FY : ', purchaseYear + '-' + (purchaseYear+1));
+    this.improvementYears = this.financialyears.splice(this.financialyears.indexOf(purchaseYear + '-' + (purchaseYear+1)));
+        
+  }
+
   getImprovementYears() {
     const param = `/capital-gain/improvement/financial-years`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       if (res.success)
         console.log('FY : ', res);
-      this.improvementYears = res.data;
+      this.financialyears = res.data;
+      this.improvementYears = this.financialyears;
       // sessionStorage.setItem('improvementYears', res.data)
     })
   }
