@@ -36,7 +36,7 @@
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" [matDatepicker]="sellDate" placeholder="Sale Date"
-                        formControlName="sellDate" name="sellDate" maxlength="14">
+                        formControlName="sellDate" name="sellDate">
                     <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
                     <mat-datepicker #sellDate></mat-datepicker>
                     <mat-error *ngIf="bondsForm.controls['sellDate'].hasError('required')">Please select
