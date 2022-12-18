@@ -1,6 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div>
-    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Professional Income':'Update Professional Income'}}
+    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Professional Income':'Update Professional
+        Income'}}
     </div>
     <form [formGroup]="professionForm" style="margin-top: 20px">
         <div class="card__row">
@@ -18,8 +19,8 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="Trade of Business"
-                        formControlName="tradeName" maxlength="30">
+                    <input matInput class="input-field" placeholder="Trade of Business" formControlName="tradeName"
+                        maxlength="30">
                     <mat-error *ngIf="professionForm.controls['tradeName'].hasError('required')">Please enter
                         trade of business</mat-error>
                     <mat-error *ngIf="professionForm.controls['tradeName'].hasError('pattern')">Please enter
@@ -32,7 +33,7 @@
                     <input matInput class="input-field" digitsOnly placeholder="Receipt received in bank"
                         matTooltip="Total collection from client received in bank (including cheque)"
                         matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="receipts"
-                        maxlength="14">
+                        maxlength="14" (blur)="calculateFiftyPer()">
                     <mat-error *ngIf="professionForm.controls['receipts'].hasError('required')">Please enter
                         receipt received in bank</mat-error>
                 </mat-form-field>
@@ -40,10 +41,12 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="presumptive income at 6%"
+                    <input matInput class="input-field" digitsOnly placeholder="presumptive income at 50%"
                         formControlName="presumptiveIncome" name="presumptiveIncome" maxlength="14">
                     <mat-error *ngIf="professionForm.controls['presumptiveIncome'].hasError('required')">Please the
                         amount</mat-error>
+                    <mat-error *ngIf="professionForm.controls['presumptiveIncome'].hasError('min')">Amount should be
+                        greater than {{amountFifty}} </mat-error>
                 </mat-form-field>
             </div>
             <div class="row dialog-button">

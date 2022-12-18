@@ -38,26 +38,15 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
       if (data.length > 0) {
         let businessArray = [];
-        debugger
         data.forEach((obj: any) => {
           incomeDetails = obj.incomes;
-          if (obj.incomes.length > 1) {
             for (let i = 0; i < obj.incomes.length; i++) {
               incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
               incomeDetails[i].tradeName = obj.tradeName;
-              // this.getBusinessTableData(incomeDetails);
-              businessArray = incomeDetails
+              businessArray.push(incomeDetails[i]);
             }
-
-          } else {
-            incomeDetails[0].natureOfBusiness = obj.natureOfBusiness;
-            incomeDetails[0].tradeName = obj.tradeName;
-            businessArray = incomeDetails
-          }
-
         });
         this.getBusinessTableData(businessArray);
-
       }
       else {
         this.getBusinessTableData([]);
@@ -68,7 +57,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getBusinessTableData([]);
   }
 
   getBusinessTableData(rowsData) {
@@ -100,7 +88,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           return params.data.natureOfBusiness ? params.data.natureOfBusiness.toLocaleString('en-IN') : params.data.natureOfBusiness;
         },
       },
-
       {
         headerName: 'Trade of Business',
         field: 'tradeName',
@@ -111,11 +98,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           return params.data.tradeName ? params.data.tradeName.toLocaleString('en-IN') : params.data.tradeName;
         },
       },
-
       {
         headerName: 'Gross turnover of the year-Received in bank',
         editable: false,
-        // width: 340,
         children: [
           {
             headerName: 'Receipt received in bank',
@@ -138,11 +123,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         ],
         suppressMovable: true,
       },
-
       {
         headerName: 'Gross turnover of the year-Received in any other mode',
         editable: false,
-        // width: 340,
         children: [
           {
             headerName: 'Receipt received in any other mode',
@@ -188,7 +171,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     ];
   }
 
-
   public onBusinessRowClicked(params) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -213,8 +195,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   addEditBusinessRow(mode, data: any, index?) {
     if (mode === 'ADD') {
       const length = this.businessGridOptions.rowData.length;
-      data.id = length + 1;
-    }
+   }
 
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
       data: {
@@ -227,7 +208,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
           this.businessGridOptions.rowData.push(result);
@@ -239,7 +219,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         }
       }
     });
-
   }
 
   onContinue() {
@@ -291,7 +270,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
       this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
     } else {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = (this.Copy_ITR_JSON.business.presumptiveIncomes).concat(presBusinessIncome)
+      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "BUSINESS");
+      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(presBusinessIncome)
     }
     console.log(this.Copy_ITR_JSON);
 
