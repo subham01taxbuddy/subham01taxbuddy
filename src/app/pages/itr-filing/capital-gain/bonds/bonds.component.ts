@@ -92,6 +92,13 @@ export class BondsComponent implements OnInit {
           } else {
             this.getDeductionTableData([this.bondsDeductionData]);
           }
+          if (this.getBondsCg() <= 0) {
+            this.deduction = false;
+            this.isDisable = true;
+            this.onDeductionChanged();
+          } else {
+            this.isDisable = false;
+          }
         });
       } else {
         this.getBondsTableData([]);
@@ -198,6 +205,13 @@ export class BondsComponent implements OnInit {
   deleteBonds(index) {
     this.bondsGridOptions.rowData.splice(index, 1);
     this.bondsGridOptions.api.setRowData(this.bondsGridOptions.rowData);
+    if (this.getBondsCg() <= 0) {
+      this.deduction = false;
+      this.isDisable = true;
+      this.onDeductionChanged();
+    } else {
+      this.isDisable = false;
+    }
   }
 
   deleteZeroBonds(index) {
@@ -239,13 +253,6 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (this.getBondsCg() <= 0) {
-        this.deduction = false;
-        this.isDisable = true;
-        this.onDeductionChanged();
-      } else {
-        this.isDisable = false;
-      }
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
@@ -256,6 +263,13 @@ export class BondsComponent implements OnInit {
           this.bondsGridOptions.rowData[index] = result;
           this.bondsGridOptions.api.setRowData(this.bondsGridOptions.rowData);
         }
+      }
+      if (this.getBondsCg() <= 0) {
+        this.deduction = false;
+        this.isDisable = true;
+        this.onDeductionChanged();
+      } else {
+        this.isDisable = false;
       }
     });
 
