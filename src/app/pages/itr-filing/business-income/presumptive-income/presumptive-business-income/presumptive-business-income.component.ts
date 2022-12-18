@@ -16,6 +16,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   businessData: businessIncome = {
+    id: null,
     natureOfBusiness: null,
     tradeName: null,
     receipts: null,
@@ -31,10 +32,43 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
+      let incomeDetails;
+      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
+      if (data.length > 0) {
+        let businessArray = [];
+        debugger
+        data.forEach((obj: any) => {
+          incomeDetails = obj.incomes;
+          if (obj.incomes.length > 1) {
+            for (let i = 0; i < obj.incomes.length; i++) {
+              incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
+              incomeDetails[i].tradeName = obj.tradeName;
+              // this.getBusinessTableData(incomeDetails);
+              businessArray = incomeDetails
+            }
+
+          } else {
+            incomeDetails[0].natureOfBusiness = obj.natureOfBusiness;
+            incomeDetails[0].tradeName = obj.tradeName;
+            businessArray = incomeDetails
+          }
+
+        });
+        this.getBusinessTableData(businessArray);
+
+      }
+      else {
+        this.getBusinessTableData([]);
+      }
+    } else {
+      this.getBusinessTableData([]);
+    }
   }
 
   ngOnInit(): void {
-    this.getBusinessTableData([]);
+    // this.getBusinessTableData([]);
   }
 
   getBusinessTableData(rowsData) {
@@ -179,7 +213,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   addEditBusinessRow(mode, data: any, index?) {
     if (mode === 'ADD') {
       const length = this.businessGridOptions.rowData.length;
-      // data.srn = length + 1;
+      data.id = length + 1;
     }
 
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
@@ -216,7 +250,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         if (data.natureOfBusiness == element.natureOfBusiness) {
           isAdded = true;
           data.incomes.push({
-            "id": null,
+            "id": element.id,
             "incomeType": "BUSINESS",
             "receipts": element.receipts,
             "presumptiveIncome": element.presumptiveIncome,
@@ -230,7 +264,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       });
       if (!isAdded) {
         presBusinessIncome.push({
-          "id": null,
+          "id": element.id,
           "businessType": "BUSINESS",
           "natureOfBusiness": element.natureOfBusiness,
           "label": null,
@@ -239,7 +273,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           "taxableIncome": null,
           "exemptIncome": null,
           "incomes": [{
-            "id": null,
+            "id": element.id,
             "incomeType": "BUSINESS",
             "receipts": element.receipts,
             "presumptiveIncome": element.presumptiveIncome,

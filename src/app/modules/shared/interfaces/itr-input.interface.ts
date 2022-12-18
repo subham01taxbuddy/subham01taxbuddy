@@ -419,6 +419,7 @@ export interface Immovable {
 }
 
 export interface businessIncome {
+    id:number;
     natureOfBusiness: any;
     tradeName: any;
     receipts: any;
