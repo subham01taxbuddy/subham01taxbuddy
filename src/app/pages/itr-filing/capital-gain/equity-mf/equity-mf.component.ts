@@ -297,10 +297,16 @@ export class EquityMfComponent implements OnInit {
       if (result !== undefined) {
         if (mode === 'ADD') {
           if (type === 'EQUITY_SHARES_LISTED') {
+            if(!this.listedCg.assetDetails) {
+              this.listedCg.assetDetails = [];
+            }
             this.listedCg.assetDetails.push(result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
             
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
+            if(!this.unlistedCg.assetDetails) {
+              this.unlistedCg.assetDetails = [];
+            }
             this.unlistedCg.assetDetails.push(result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
           }
