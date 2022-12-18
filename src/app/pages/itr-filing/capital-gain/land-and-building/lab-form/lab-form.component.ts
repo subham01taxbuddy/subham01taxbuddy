@@ -12,6 +12,7 @@ import { NewCapitalGain, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { AddInvestmentDialogComponent } from '../add-investment-dialog/add-investment-dialog.component';
+import * as moment from 'moment';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -633,17 +634,24 @@ export class LabFormComponent implements OnInit {
       console.log('isImprovementValid', index, this.immovableForm);
       let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[0] as FormGroup;
       let improvementDetails = (this.immovableForm.controls['improvement'] as FormArray).controls[index] as FormGroup;
+      let selectedYear = moment(assetDetails.controls['sellDate'].value);
+      let sellFinancialYear = (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
       let req = {
         "cost": improvementDetails.controls['costOfImprovement'].value,
         "purchaseOrImprovementFinancialYear": improvementDetails.controls['dateOfImprovement'].value,
         "assetType": "PLOT_OF_LAND",
         "buyDate": assetDetails.controls['purchaseDate'].value,
-        "sellDate": assetDetails.controls['sellDate'].value
+        "sellDate": assetDetails.controls['sellDate'].value,
+        "sellFinancialYear": sellFinancialYear
       }
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST:', res);
-        improvementDetails.controls['indexCostOfImprovement'].setValue(res.data.costOfAcquisitionOrImprovement);
+        if(res.data.capitalGainType === 'LONG') { 
+          improvementDetails.controls['indexCostOfImprovement'].setValue(res.data.costOfAcquisitionOrImprovement);
+        } else {
+          improvementDetails.controls['indexCostOfImprovement'].setValue(improvementDetails.controls['costOfImprovement'].value);
+        }
         if(index<this.improvements.length){
           Object.assign(this.improvements[index], improvementDetails.getRawValue());
         } else{
@@ -1034,19 +1042,26 @@ export class LabFormComponent implements OnInit {
       index = 0;
     }
     let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[index] as FormGroup;
+    let selectedYear = moment(assetDetails.controls['sellDate'].value);
+    let sellFinancialYear = (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
     if(assetDetails.controls['purchaseCost'].value){
       let req = {  
       "cost": assetDetails.controls['purchaseCost'].value,
         // "purchaseOrImprovementFinancialYear": "2002-2003",
         "assetType": "PLOT_OF_LAND",
         "buyDate": assetDetails.controls['purchaseDate'].value,
-        "sellDate": assetDetails.controls['sellDate'].value
+        "sellDate": assetDetails.controls['sellDate'].value,
+        "sellFinancialYear": sellFinancialYear
       }
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST : ', res);
         if(res.data.capitalGainType) {
-          assetDetails.controls['indexCostOfAcquisition'].setValue(res.data.costOfAcquisitionOrImprovement);
+          if(res.data.capitalGainType === 'LONG') {
+            assetDetails.controls['indexCostOfAcquisition'].setValue(res.data.costOfAcquisitionOrImprovement);
+          } else {
+            assetDetails.controls['indexCostOfAcquisition'].setValue(assetDetails.controls['purchaseCost'].value);
+          }
           assetDetails.controls['gainType'].setValue(res.data.capitalGainType);
           //this.cgArrayElement.assetDetails[0].indexCostOfAcquisition = res.data.costOfAcquisitionOrImprovement;
           if(this.cgArrayElement.assetDetails && this.cgArrayElement.assetDetails.length > 0){
