@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { BusinessDescription, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { FixedAssetsDetails, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddBalanceSheetComponent } from '../add-balance-sheet/add-balance-sheet.component';
@@ -12,26 +12,26 @@ import { AddBalanceSheetComponent } from '../add-balance-sheet/add-balance-sheet
   styleUrls: ['./depreciation-dialog.component.scss']
 })
 export class DepreciationDialogComponent implements OnInit {
-  public professionalGridOptions: GridOptions;
+  public depreciationGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  balanceData: BusinessDescription = {
+  depreciationData: FixedAssetsDetails = {
     id: null,
-    natureOfBusiness: null,
-    tradeName: null,
-    businessDescription: null,
+    assetType: null,
+    description: null,
+    bookValue: null,
+    depreciationRate: null,
+    depreciationAmount: null,
+    fixedAssetClosingAmount: null,
   }
-
-  commonForm: FormGroup;
-  total1 = 0;
-  total2 = 0;
-  difference = 0;
 
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public fb: FormBuilder,
+    public dialogRef: MatDialogRef<DepreciationDialogComponent>,
+
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -39,15 +39,15 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getProfessionalTableData([]);
+    this.getDepreciationTableData([]);
   }
 
-  getProfessionalTableData(rowsData) {
-    this.professionalGridOptions = <GridOptions>{
+  getDepreciationTableData(rowsData) {
+    this.depreciationGridOptions = <GridOptions>{
       rowData: rowsData,
-      columnDefs: this.createProfessionalColumnDef(rowsData),
+      columnDefs: this.createDepreciationColumnDef(rowsData),
       onGridReady: () => {
-        this.professionalGridOptions.api.sizeColumnsToFit();
+        this.depreciationGridOptions.api.sizeColumnsToFit();
       },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
@@ -59,7 +59,7 @@ export class DepreciationDialogComponent implements OnInit {
     };
   }
 
-  createProfessionalColumnDef(rowsData) {
+  createDepreciationColumnDef(rowsData) {
     return [
       {
         headerName: 'Description *',
@@ -149,30 +149,30 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
 
-  public onProfessionalRowClicked(params) {
+  public onDepreciationRowClicked(params) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.deleteProfession(params.rowIndex);
+          this.deleteDepreciation(params.rowIndex);
           break;
         }
         case 'edit': {
-          this.addEditProfessionalRow('EDIT', params.data, 'depreciation', params.rowIndex);
+          this.addDepreciationRow('EDIT', params.data, 'depreciation', params.rowIndex);
           break;
         }
       }
     }
   }
 
-  deleteProfession(index) {
-    this.professionalGridOptions.rowData.splice(index, 1);
-    this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+  deleteDepreciation(index) {
+    this.depreciationGridOptions.rowData.splice(index, 1);
+    this.depreciationGridOptions.api.setRowData(this.depreciationGridOptions.rowData);
   }
 
-  addEditProfessionalRow(mode, data: any, type, index?) {
+  addDepreciationRow(mode, data: any, type, index?) {
     if (mode === 'ADD') {
-      const length = this.professionalGridOptions.rowData.length;
+      const length = this.depreciationGridOptions.rowData.length;
       data.srn = length + 1;
     }
 
@@ -188,18 +188,21 @@ export class DepreciationDialogComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add CG=', result);
+      console.log('DepreciationDialogData=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.professionalGridOptions.rowData.push(result);
-          this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+          this.depreciationGridOptions.rowData.push(result);
+          this.depreciationGridOptions.api.setRowData(this.depreciationGridOptions.rowData);
         }
         if (mode === 'EDIT') {
-          this.professionalGridOptions.rowData[index] = result;
-          this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+          this.depreciationGridOptions.rowData[index] = result;
+          this.depreciationGridOptions.api.setRowData(this.depreciationGridOptions.rowData);
         }
       }
     });
 
+  }
+  closeDepreciationDialog() {
+    this.dialogRef.close(this.depreciationGridOptions.rowData);
   }
 }

@@ -1,10 +1,11 @@
 <div *ngIf="data.type==='balance'">
     <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
     <div>
-        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Professional Income':'Update Professional
+        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Balance sheet Income':'Update Balance
+            sheet
             Income'}}
         </div>
-        <form [formGroup]="professionForm" style="margin-top: 20px">
+        <form [formGroup]="balanceGridForm" style="margin-top: 20px">
             <div class="card__row">
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field class="input-field-width">
@@ -14,7 +15,7 @@
                                 [value]="profession.label">
                                 {{profession.label}}-{{profession.code}}
                             </mat-option></mat-select>
-                        <mat-error *ngIf="professionForm.controls['natureOfBusiness'].hasError('required')">Please
+                        <mat-error *ngIf="balanceGridForm.controls['natureOfBusiness'].hasError('required')">Please
                             select
                             nature of profession</mat-error>
                     </mat-form-field>
@@ -22,11 +23,11 @@
 
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field class="input-field-width">
-                        <input matInput class="input-field" placeholder="Trade of Business" formControlName="tradeName"
+                        <input matInput class="input-field" placeholder="Trade Name" formControlName="tradeName"
                             maxlength="30">
-                        <mat-error *ngIf="professionForm.controls['tradeName'].hasError('required')">Please enter
+                        <mat-error *ngIf="balanceGridForm.controls['tradeName'].hasError('required')">Please enter
                             trade of business</mat-error>
-                        <mat-error *ngIf="professionForm.controls['tradeName'].hasError('pattern')">Please enter
+                        <mat-error *ngIf="balanceGridForm.controls['tradeName'].hasError('pattern')">Please enter
                             character only</mat-error>
                     </mat-form-field>
                 </div>
@@ -35,7 +36,7 @@
                     <mat-form-field class="input-field-width">
                         <input matInput class="input-field" placeholder="Business Description"
                             formControlName="businessDescription" maxlength="14">
-                        <mat-error *ngIf="professionForm.controls['businessDescription'].hasError('required')">Please
+                        <mat-error *ngIf="balanceGridForm.controls['businessDescription'].hasError('required')">Please
                             enter
                             Business Description</mat-error>
                     </mat-form-field>
@@ -43,8 +44,8 @@
 
                 <div class="row dialog-button">
                     <div class="sub_btn top-space">
-                        <button type="submit" class="tbd-btn" [disabled]="professionForm.invalid"
-                            (click)="saveBusinessDetails()">Save</button>
+                        <button type="submit" class="tbd-btn" [disabled]="balanceGridForm.invalid"
+                            (click)="saveBalanceGridDetails()">Save</button>
                         <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
                     </div>
                 </div>
@@ -73,8 +74,7 @@
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field class="input-field-width">
                         <mat-select placeholder="Asset Type" formControlName="assetType" name="assetType">
-                            <mat-option *ngFor="let type of assetTypeList"
-                                [value]="type.key">
+                            <mat-option *ngFor="let type of assetTypeList" [value]="type.key">
                                 {{type.value}}
                             </mat-option></mat-select>
                         <mat-error *ngIf="depreciationForm.controls['assetType'].hasError('required')">Please
@@ -97,10 +97,8 @@
                     <mat-form-field class="input-field-width">
                         <mat-select placeholder="Depreciation Rate" formControlName="depreciationRate"
                             name="depreciationRate">
-                            <mat-option *ngFor="let profession of natureOfProfessionDropdown"
-                                [value]="profession.label">
-                                {{profession.label}}-{{profession.code}}
-                            </mat-option></mat-select>
+                            <mat-option *ngFor="let rate of depreciationRateList" [value]="rate.key">
+                                {{rate.value}} </mat-option></mat-select>
                         <mat-error *ngIf="depreciationForm.controls['depreciationRate'].hasError('required')">Please
                             select Depreciation Rate</mat-error>
                     </mat-form-field>
@@ -109,7 +107,7 @@
                 <div class="row dialog-button">
                     <div class="sub_btn top-space">
                         <button type="submit" class="tbd-btn" [disabled]="depreciationForm.invalid"
-                            (click)="saveBusinessDetails()">Save</button>
+                            (click)="saveDepreciationDetails()">Save</button>
                         <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
                     </div>
                 </div>

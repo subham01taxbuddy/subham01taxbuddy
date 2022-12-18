@@ -2,8 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { BusinessDescription, FixedAssetsDetails, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { BusinessDescription, FixedAssetsDetails } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-add-balance-sheet',
@@ -15,7 +16,7 @@ export class AddBalanceSheetComponent implements OnInit {
   natureOfBusinessDropdownAll: any;
   natureOfProfessionDropdown: any;
   loading = false;
-  professionForm: FormGroup;
+  balanceGridForm: FormGroup;
   depreciationForm: FormGroup;
 
   assetTypeList = [
@@ -23,23 +24,27 @@ export class AddBalanceSheetComponent implements OnInit {
     { key: 'PlantAndMachinery', value: 'Plant & Machinery (Mobile phones & others, etc.)' },
     { key: 'FurnitureAndFittings', value: 'Furniture & Fittings' },
     { key: 'IntangibleAssets', value: 'Intangible Assets' },
-
+  ]
+  depreciationRateList = [
+    { key: 'FULL', value: 'Full Rate' },
+    { key: 'HALF', value: 'Half Rate' },
   ]
   constructor(
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
+    public toastMsgService: ToastMessageService,
     public dialogRef: MatDialogRef<AddBalanceSheetComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     this.getMastersData();
-    this.initProfessionForm(this.data.data);
+    this.initBalanceGridForm(this.data.data);
     this.initDepreciationForm(this.data.data);
   }
 
-  initProfessionForm(obj?: BusinessDescription) {
-    this.professionForm = this.formBuilder.group({
+  initBalanceGridForm(obj?: BusinessDescription) {
+    this.balanceGridForm = this.formBuilder.group({
       id: [obj?.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
@@ -69,12 +74,36 @@ export class AddBalanceSheetComponent implements OnInit {
     });
   }
 
-  saveBusinessDetails() {
-    this.dialogRef.close(this.professionForm.value)
+  saveBalanceGridDetails() {
+    this.dialogRef.close(this.balanceGridForm.value)
   }
 
   saveDepreciationDetails() {
-    this.dialogRef.close(this.depreciationForm.value)
+    this.loading = true;
+    let param = '/calculate/depreciation';
+    let request = {
+      "assetType": this.depreciationForm.controls['assetType'].value,
+      "bookValue": this.depreciationForm.controls['bookValue'].value,
+      "depreciationRate": this.depreciationForm.controls['depreciationRate'].value,
+    };
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      if (result.success) {
+        this.depreciationForm.controls['depreciationAmount'].setValue(result.data.depreciationAmount);
+        this.depreciationForm.controls['fixedAssetClosingAmount'].setValue(result.data.depreciationPercentageApplied);
+        this.toastMsgService.alert("message", "Depreciation amount and depreciation percentage calculated successfully.");
+      } else {
+        this.loading = false;
+        this.toastMsgService.alert("error", "Failed to calculate Depreciation amount and depreciation percentage.");
+      }
+      this.dialogRef.close(this.depreciationForm.value);
+      this.loading = false;
+    },
+      error => {
+        this.loading = false;
+        this.toastMsgService.alert("error", "Failed to calculate Depreciation amount and depreciation percentage.");
+
+      })
+
   }
 
   cancel() {

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { BusinessDescription, businessIncome, ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { BusinessDescription, ITR_JSON, NewFinancialParticulars } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddBalanceSheetComponent } from './add-balance-sheet/add-balance-sheet.component';
@@ -15,20 +15,22 @@ import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-
   styleUrls: ['./balance-sheet.component.scss']
 })
 export class BalanceSheetComponent implements OnInit {
-  public professionalGridOptions: GridOptions;
+  public balanceSheetGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  balanceData: BusinessDescription = {
+  balanceSheetData: BusinessDescription = {
     id: null,
     natureOfBusiness: null,
     tradeName: null,
     businessDescription: null,
   }
 
-  commonForm: FormGroup;
+  assetLiabilitiesForm: FormGroup;
   total1 = 0;
   total2 = 0;
   difference = 0;
+  depreciationObj: any[];
+  loading: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -42,17 +44,17 @@ export class BalanceSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getProfessionalTableData([]);
+    this.getBalanceSheetTableData([]);
     this.initForm();
-    this.getLiabilitiesAssets();
+    // this.getLiabilitiesAssets();
   }
 
-  getProfessionalTableData(rowsData) {
-    this.professionalGridOptions = <GridOptions>{
+  getBalanceSheetTableData(rowsData) {
+    this.balanceSheetGridOptions = <GridOptions>{
       rowData: rowsData,
-      columnDefs: this.createProfessionalColumnDef(rowsData),
+      columnDefs: this.createBalanceSheetColumnDef(rowsData),
       onGridReady: () => {
-        this.professionalGridOptions.api.sizeColumnsToFit();
+        this.balanceSheetGridOptions.api.sizeColumnsToFit();
       },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
@@ -64,7 +66,7 @@ export class BalanceSheetComponent implements OnInit {
     };
   }
 
-  createProfessionalColumnDef(rowsData) {
+  createBalanceSheetColumnDef(rowsData) {
     return [
       {
         headerName: 'Sr. No',
@@ -86,7 +88,7 @@ export class BalanceSheetComponent implements OnInit {
       },
 
       {
-        headerName: 'Trade Name of the propritorship, if any',
+        headerName: 'Trade Name of the proprietorship, if any',
         field: 'tradeName',
         editable: false,
         suppressMovable: true,
@@ -131,30 +133,30 @@ export class BalanceSheetComponent implements OnInit {
   }
 
 
-  public onProfessionalRowClicked(params) {
+  public onBalanceSheetRowClicked(params) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.deleteProfession(params.rowIndex);
+          this.deleteBalanceSheet(params.rowIndex);
           break;
         }
         case 'edit': {
-          this.addEditProfessionalRow('EDIT', params.data, 'balance', params.rowIndex);
+          this.addEditBalanceSheetRow('EDIT', params.data, 'balance', params.rowIndex);
           break;
         }
       }
     }
   }
 
-  deleteProfession(index) {
-    this.professionalGridOptions.rowData.splice(index, 1);
-    this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+  deleteBalanceSheet(index) {
+    this.balanceSheetGridOptions.rowData.splice(index, 1);
+    this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
   }
 
-  addEditProfessionalRow(mode, data: any, type, index?) {
+  addEditBalanceSheetRow(mode, data: any, type, index?) {
     if (mode === 'ADD') {
-      const length = this.professionalGridOptions.rowData.length;
+      const length = this.balanceSheetGridOptions.rowData.length;
       data.srn = length + 1;
     }
 
@@ -170,15 +172,15 @@ export class BalanceSheetComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add CG=', result);
+      console.log('BalanceGridData=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.professionalGridOptions.rowData.push(result);
-          this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+          this.balanceSheetGridOptions.rowData.push(result);
+          this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
         }
         if (mode === 'EDIT') {
-          this.professionalGridOptions.rowData[index] = result;
-          this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+          this.balanceSheetGridOptions.rowData[index] = result;
+          this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
         }
       }
     });
@@ -188,75 +190,78 @@ export class BalanceSheetComponent implements OnInit {
 
   //liabilities////////////////////////
 
-  initForm() {
-    this.commonForm = this.fb.group({
-      partnerOwnCapital: ['', Validators.pattern(AppConstants.numericRegex)],
-      securedLoan: ['', Validators.pattern(AppConstants.numericRegex)],
-      unsecuredLoan: ['', Validators.pattern(AppConstants.numericRegex)],
-      advances: ['', Validators.pattern(AppConstants.numericRegex)],
-      sundryCreditors: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
-      otherLiabilities: ['', Validators.pattern(AppConstants.numericRegex)],
-      fixedAssets: ['', Validators.pattern(AppConstants.numericRegex)],
-      inventories: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
-      sundryDeptors: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
-      balanceWithBank: ['', Validators.pattern(AppConstants.numericRegex)],
-      cashInHand: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
-      loanandAdvance: ['', Validators.pattern(AppConstants.numericRegex)],
-      investments: ['', Validators.pattern(AppConstants.numericRegex)],
-      otherAsset: ['', Validators.pattern(AppConstants.numericRegex)],
-      gstrNumber: ['', Validators.pattern(AppConstants.gstrReg)],
-      turnOverAsPerGST: [0, Validators.pattern(AppConstants.numericRegex)],
+  initForm(obj?: NewFinancialParticulars) {
+    this.assetLiabilitiesForm = this.fb.group({
+      id: [obj?.id || null],
+      membersOwnCapital: [obj?.membersOwnCapital || null, [Validators.pattern(AppConstants.numericRegex)]],
+      securedLoans: [obj?.securedLoans || null, Validators.pattern(AppConstants.numericRegex)],
+      unSecuredLoans: [obj?.unSecuredLoans || null, Validators.pattern(AppConstants.numericRegex)],
+      advances: [obj?.advances || null, Validators.pattern(AppConstants.numericRegex)],
+      sundryCreditorsAmount: [obj?.sundryCreditorsAmount || null, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
+      otherLiabilities: [obj?.otherLiabilities || null, Validators.pattern(AppConstants.numericRegex)],
+      totalCapitalLiabilities: [obj?.totalCapitalLiabilities || null],
+      fixedAssets: [obj?.fixedAssets || null, Validators.pattern(AppConstants.numericRegex)],
+      inventories: [obj?.inventories || null, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
+      sundryDebtorsAmount: [obj?.sundryDebtorsAmount || null, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
+      balanceWithBank: [obj?.balanceWithBank || null, Validators.pattern(AppConstants.numericRegex)],
+      cashInHand: [obj?.cashInHand || null, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
+      loanAndAdvances: [obj?.loanAndAdvances || null, Validators.pattern(AppConstants.numericRegex)],
+      investments: [obj?.investments || null, Validators.pattern(AppConstants.numericRegex)],
+      otherAssets: [obj?.otherAssets || null, Validators.pattern(AppConstants.numericRegex)],
+      totalAssets: [obj?.totalAssets || null],
+      GSTRNumber: [obj?.GSTRNumber || null],
+      grossTurnOverAmount: [obj?.grossTurnOverAmount || 0],
     });
   }
 
-  getLiabilitiesAssets() {
-    if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.financialParticulars)) {
-      this.commonForm.setValue({
-        gstrNumber: this.ITR_JSON.business.financialParticulars.GSTRNumber,
-        turnOverAsPerGST: this.ITR_JSON.business.financialParticulars.grossTurnOverAmount,
-        partnerOwnCapital: this.ITR_JSON.business.financialParticulars.membersOwnCapital,
-        securedLoan: this.ITR_JSON.business.financialParticulars.securedLoans,
-        unsecuredLoan: this.ITR_JSON.business.financialParticulars.unSecuredLoans,
-        advances: this.ITR_JSON.business.financialParticulars.advances,
-        sundryCreditors: this.ITR_JSON.business.financialParticulars.sundryCreditorsAmount,
-        otherLiabilities: this.ITR_JSON.business.financialParticulars.otherLiabilities,
-        fixedAssets: this.ITR_JSON.business.financialParticulars.fixedAssets,
-        inventories: this.ITR_JSON.business.financialParticulars.inventories,
-        sundryDeptors: this.ITR_JSON.business.financialParticulars.sundryDebtorsAmount,
-        balanceWithBank: this.ITR_JSON.business.financialParticulars.balanceWithBank,
-        cashInHand: this.ITR_JSON.business.financialParticulars.cashInHand,
-        loanandAdvance: this.ITR_JSON.business.financialParticulars.loanAndAdvances,
-        investments: this.ITR_JSON.business.financialParticulars.investments,
-        otherAsset: this.ITR_JSON.business.financialParticulars.otherAssets,
-      });
-    }
-  }
+  // getLiabilitiesAssets() {
+  //   if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.financialParticulars)) {
+  //     this.assetLiabilitiesForm.setValue({
+  //       gstrNumber: this.ITR_JSON.business.financialParticulars.GSTRNumber,
+  //       turnOverAsPerGST: this.ITR_JSON.business.financialParticulars.grossTurnOverAmount,
+  //       partnerOwnCapital: this.ITR_JSON.business.financialParticulars.membersOwnCapital,
+  //       securedLoan: this.ITR_JSON.business.financialParticulars.securedLoans,
+  //       unsecuredLoan: this.ITR_JSON.business.financialParticulars.unSecuredLoans,
+  //       advances: this.ITR_JSON.business.financialParticulars.advances,
+  //       sundryCreditors: this.ITR_JSON.business.financialParticulars.sundryCreditorsAmount,
+  //       otherLiabilities: this.ITR_JSON.business.financialParticulars.otherLiabilities,
+  //       fixedAssets: this.ITR_JSON.business.financialParticulars.fixedAssets,
+  //       inventories: this.ITR_JSON.business.financialParticulars.inventories,
+  //       sundryDeptors: this.ITR_JSON.business.financialParticulars.sundryDebtorsAmount,
+  //       balanceWithBank: this.ITR_JSON.business.financialParticulars.balanceWithBank,
+  //       cashInHand: this.ITR_JSON.business.financialParticulars.cashInHand,
+  //       loanandAdvance: this.ITR_JSON.business.financialParticulars.loanAndAdvances,
+  //       investments: this.ITR_JSON.business.financialParticulars.investments,
+  //       otherAsset: this.ITR_JSON.business.financialParticulars.otherAssets,
+  //     });
+  //   }
+  // }
 
 
   calculateTotal1() {
     this.total1 = 0;
-    this.total1 = Number(this.commonForm.controls['partnerOwnCapital'].value) +
-      Number(this.commonForm.controls['securedLoan'].value) +
-      Number(this.commonForm.controls['unsecuredLoan'].value) +
-      Number(this.commonForm.controls['advances'].value) +
-      Number(this.commonForm.controls['sundryCreditors'].value) +
-      Number(this.commonForm.controls['otherLiabilities'].value);
+    this.total1 = Number(this.assetLiabilitiesForm.controls['membersOwnCapital'].value) +
+      Number(this.assetLiabilitiesForm.controls['securedLoans'].value) +
+      Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value) +
+      Number(this.assetLiabilitiesForm.controls['advances'].value) +
+      Number(this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value) +
+      Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
     this.difference = this.total1 - this.total2;
-    this.commonForm.controls['turnOverAsPerGST'].setValue(this.difference);
+    this.assetLiabilitiesForm.controls['grossTurnOverAmount'].setValue(this.difference);
   }
 
   calculateTotal2() {
     this.total2 = 0;
-    this.total2 = Number(this.commonForm.controls['fixedAssets'].value) +
-      Number(this.commonForm.controls['inventories'].value) +
-      Number(this.commonForm.controls['sundryDeptors'].value) +
-      Number(this.commonForm.controls['balanceWithBank'].value) +
-      Number(this.commonForm.controls['cashInHand'].value) +
-      Number(this.commonForm.controls['loanandAdvance'].value) +
-      Number(this.commonForm.controls['investments'].value);
-    Number(this.commonForm.controls['otherAsset'].value);
+    this.total2 = Number(this.assetLiabilitiesForm.controls['fixedAssets'].value) +
+      Number(this.assetLiabilitiesForm.controls['inventories'].value) +
+      Number(this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].value) +
+      Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) +
+      Number(this.assetLiabilitiesForm.controls['cashInHand'].value) +
+      Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value) +
+      Number(this.assetLiabilitiesForm.controls['investments'].value);
+    Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
     this.difference = this.total1 - this.total2;
-    this.commonForm.controls['turnOverAsPerGST'].setValue(this.difference);
+    this.assetLiabilitiesForm.controls['grossTurnOverAmount'].setValue(this.difference);
   }
 
   showPopUp(value) {
@@ -271,122 +276,37 @@ export class BalanceSheetComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log('Result add CG=', result);
+        console.log('depreciationGridData=', result);
         if (result !== undefined) {
-
+          this.depreciationObj = result;
         }
       });
     }
   }
 
   onContinue() {
+    this.loading = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    let businessDescription = [];
+    businessDescription.push(this.balanceSheetGridOptions.rowData);
+    this.Copy_ITR_JSON.business.businessDescription = businessDescription;
+    this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.getRawValue();
+    this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
 
-    let presBusinessIncome = [];
-    this.professionalGridOptions.rowData.forEach(element => {
-      let isAdded = false;
-      presBusinessIncome.forEach(data => {
-        if (data.natureOfBusiness == element.natureOfBusiness) {
-          isAdded = true;
-          data.incomes.push({
-            "id": null,
-            "incomeType": "PROFESSIONAL",
-            "receipts": element.receipts,
-            "presumptiveIncome": element.presumptiveIncome,
-            "periodOfHolding": null,
-            "minimumPresumptiveIncome": null,
-            "registrationNo": null,
-            "ownership": null,
-            "tonnageCapacity": null
-          });
-        }
-      });
-      if (!isAdded) {
-        presBusinessIncome.push({
-          "id": null,
-          "businessType": "PROFESSIONAL",
-          "natureOfBusiness": element.natureOfBusiness,
-          "label": null,
-          "tradeName": element.tradeName,
-          "salaryInterestAmount": null,
-          "taxableIncome": null,
-          "exemptIncome": null,
-          "incomes": [{
-            "id": null,
-            "incomeType": "PROFESSIONAL",
-            "receipts": element.receipts,
-            "presumptiveIncome": element.presumptiveIncome,
-            "periodOfHolding": null,
-            "minimumPresumptiveIncome": null,
-            "registrationNo": null,
-            "ownership": null,
-            "tonnageCapacity": null
-          }]
-        });
-      };
-    });
-    console.log("presBusinessIncome", presBusinessIncome)
-    if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
-    } else {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = (this.Copy_ITR_JSON.business.presumptiveIncomes).concat(presBusinessIncome)
-    }
     console.log(this.Copy_ITR_JSON);
 
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('professional income added successfully');
-      console.log('business=', result);
+      this.utilsService.showSnackBar('Balance Sheet income added successfully');
+      console.log('Balance Sheet=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Failed to add professional income, please try again.');
+      this.utilsService.showSnackBar('Failed to add Balance Sheet income, please try again.');
       this.utilsService.smoothScrollToTop();
     });
-
-
-    // if (this.commonForm.valid) {
-    //   this.loading = true;
-    //   this.ITR_JSON.business.financialParticulars = {
-    //     GSTRNumber: this.commonForm.controls['gstrNumber'].value,
-    //     grossTurnOverAmount: /* Number( */this.commonForm.controls['turnOverAsPerGST'].value/* ) */,
-    //     membersOwnCapital: /* Number( */this.commonForm.controls['partnerOwnCapital'].value/* ) */,
-    //     securedLoans: /* Number( */this.commonForm.controls['securedLoan'].value/* ) */,
-    //     unSecuredLoans: /* Number( */this.commonForm.controls['unsecuredLoan'].value/* ) */,
-    //     advances: /* Number( */this.commonForm.controls['advances'].value/* ) */,
-    //     sundryCreditorsAmount: /* Number( */this.commonForm.controls['sundryCreditors'].value/* ) */,
-    //     otherLiabilities: /* Number( */this.commonForm.controls['otherLiabilities'].value/* ) */,
-    //     totalCapitalLiabilities: null,
-    //     fixedAssets: /* Number( */this.commonForm.controls['fixedAssets'].value/* ) */,
-    //     inventories: /* Number( */this.commonForm.controls['inventories'].value/* ) */,
-    //     sundryDebtorsAmount: /* Number( */this.commonForm.controls['sundryDeptors'].value/* ) */,
-    //     balanceWithBank: /* Number( */this.commonForm.controls['balanceWithBank'].value/* ) */,
-    //     cashInHand: /* Number( */this.commonForm.controls['cashInHand'].value/* ) */,
-    //     loanAndAdvances: /* Number( */this.commonForm.controls['loanandAdvance'].value/* ) */,
-    //     investments: /* Number( */this.commonForm.controls['investments'].value/* ) */,
-    //     otherAssets: /* Number( */this.commonForm.controls['otherAsset'].value/* ) */,
-    //     totalAssets: null,
-    //     id:null,
-    //     investments:null,
-
-    //   };
-    //   // SERVICE CALL MAIN NEXT BUTTON
-    //   const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    //   this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
-    //     this.ITR_JSON = result;
-    //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-    //     this.utilsService.smoothScrollToTop();
-    //     this.loading = false;
-    //     this.utilsService.showSnackBar('Business details updated successfully.');
-    //   }, error => {
-    //     this.loading = false;
-    //     this.utilsService.showSnackBar('Failed to update.');
-    //   });
-    // } else {
-    //   $('input.ng-invalid').first().focus();
-    // }
   }
 }
