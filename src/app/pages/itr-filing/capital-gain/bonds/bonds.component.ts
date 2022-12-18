@@ -205,6 +205,21 @@ export class BondsComponent implements OnInit {
     this.zeroBondsGridOptions.api.setRowData(this.zeroBondsGridOptions.rowData);
   }
 
+  getBondsCg() {
+    let totalCg = 0;
+    this.bondsGridOptions.rowData.forEach(element => {
+      totalCg += element.capitalGain;
+    });
+    return totalCg;
+  }
+
+  getZCBondsCg() {
+    let totalCg = 0;
+    this.zeroBondsGridOptions.rowData.forEach(element => {
+      totalCg += element.capitalGain;
+    });
+    return totalCg;
+  }
 
   addEditBondsRow(mode, type, data: any, index?) {
     if (mode === 'ADD') {
@@ -224,7 +239,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.capitalGain <= 0) {
+      if (this.getBondsCg() <= 0) {
         this.deduction = false;
         this.isDisable = true;
         this.onDeductionChanged();
@@ -264,7 +279,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.capitalGain <= 0) {
+      if (this.getZCBondsCg() <= 0) {
         this.zeroDeduction = false;
         this.isZeroDisable = true;
       } else {
