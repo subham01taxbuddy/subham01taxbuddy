@@ -176,6 +176,7 @@ export class HousePropertyComponent implements OnInit {
       });
       return true;
     } else {
+      this.calAnnualValue();
       return false;
     }
   }
@@ -580,7 +581,16 @@ export class HousePropertyComponent implements OnInit {
 
   calAnnualValue() {
     if (this.housePropertyForm.controls['grossAnnualRentReceived'].valid && this.housePropertyForm.controls['propertyTax'].valid) {
-      this.annualValue = Number(this.housePropertyForm.controls['grossAnnualRentReceived'].value) - Number(this.housePropertyForm.controls['propertyTax'].value);
+      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+      let totalCoOwnerPercent = 0;
+      if (coOwner.value instanceof Array) {
+        coOwner.value.forEach(item => {
+          totalCoOwnerPercent += parseInt(item.percentage);
+        });
+      }
+      let ownerPercentage = 100 - totalCoOwnerPercent;
+
+      this.annualValue = (Number(this.housePropertyForm.controls['grossAnnualRentReceived'].value) - Number(this.housePropertyForm.controls['propertyTax'].value)) * ownerPercentage * 0.01;
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
     }
   }
