@@ -121,8 +121,9 @@ export class BondsComponent implements OnInit {
             this.getZeroDeductionTableData([this.bondsDeductionData]);
           }
         });
+      } else {
+        this.getZeroBondsTableData([]);
       }
-      // this.getZeroBondsTableData([]);
       this.getZeroDeductionTableData([this.bondsDeductionData]);
     } else {
       this.getBondsTableData([]);
