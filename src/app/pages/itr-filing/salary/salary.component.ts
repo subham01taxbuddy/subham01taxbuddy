@@ -575,6 +575,19 @@ export class SalaryComponent implements OnInit {
     }
   }
 
+  async updateDataByPincode() {
+    let pincode = this.employerDetailsFormGroup.controls['pinCode'];
+    console.log('pin', pincode.value);
+    await this.utilsService.getPincodeData(pincode).then(result => {
+      console.log('pindata', result);
+      // debugger
+      this.employerDetailsFormGroup.controls['city'].setValue(result.city);
+      // this.employerDetailsFormGroup.controls['country'].setValue(result.countryCode);
+      this.employerDetailsFormGroup.controls['state'].setValue(result.stateCode);
+    });
+    
+  }
+
   serviceCall() {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
@@ -703,6 +716,7 @@ export class SalaryComponent implements OnInit {
 
     /* Employer set values */
     this.employerDetailsFormGroup.patchValue(this.localEmployer);
+    this.updateDataByPincode();
 
     // this.getData(this.localEmployer.pinCode);
     this.salaryGridOptions.rowData = this.salaryCreateRowData(this.salaryDropdown);
