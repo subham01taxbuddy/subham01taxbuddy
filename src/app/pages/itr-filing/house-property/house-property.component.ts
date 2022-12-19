@@ -95,6 +95,7 @@ export class HousePropertyComponent implements OnInit {
       country: ['', Validators.required],
       pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
       grossAnnualRentReceived: [null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
+      rentPercentage: [{value:null, disabled:true}],
       propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
       isEligibleFor80EE: [''],
       // isEligibleFor80EEA: [false],
@@ -141,6 +142,7 @@ export class HousePropertyComponent implements OnInit {
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     coOwner.length === 0 ? this.isCoOwners.setValue(false) : null;
+    this.calAnnualValue();
   }
 
   coOwnerPanValidation() {
@@ -245,6 +247,7 @@ export class HousePropertyComponent implements OnInit {
     if (this.housePropertyForm.getRawValue().coOwners.length > 0) {
       this.isCoOwners.setValue(true);
     }
+    this.calAnnualValue();
 
     // if (this.housePropertyForm.getRawValue().loans.length > 0) {
     //   this.isHomeLoan.setValue(true);
@@ -267,6 +270,7 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['coOwners'] = this.fb.array([]);
       // }
     }
+    this.calAnnualValue();
   }
 
   get getTenantArray() {
@@ -339,8 +343,10 @@ export class HousePropertyComponent implements OnInit {
     console.log(type)
     if (type === 'SOP') {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['rentPercentage'].setValue(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
+      this.housePropertyForm.controls['rentPercentage'].updateValueAndValidity();
       this.housePropertyForm.controls['propertyTax'].setValue(null);
       this.housePropertyForm.controls['tenant'] = this.fb.array([]);
       ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators([Validators.min(1)]);
@@ -590,7 +596,9 @@ export class HousePropertyComponent implements OnInit {
       }
       let ownerPercentage = 100 - totalCoOwnerPercent;
 
-      this.annualValue = (Number(this.housePropertyForm.controls['grossAnnualRentReceived'].value) - Number(this.housePropertyForm.controls['propertyTax'].value)) * ownerPercentage * 0.01;
+      let rentPercent = Number(this.housePropertyForm.controls['grossAnnualRentReceived'].value) * ownerPercentage * 0.01;
+      this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
+      this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
     }
   }

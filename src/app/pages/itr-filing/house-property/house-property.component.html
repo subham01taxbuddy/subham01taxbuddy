@@ -115,17 +115,14 @@
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>
-                                {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of
-                                rent
-                                received during the year?':
-                                (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the
-                                expected rent amount from said property?' :'')}}
+                                {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Gross rent received / receivable / letable value':
+                                (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}
                             </mat-label>
                             <input formControlName="grossAnnualRentReceived" matInput
-                                placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
+                                placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? ':
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
                                 matTooltipClass="tab-tooltip"
-                                matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
+                                matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Gross rent received / receivable / letable value':
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
                                 name="rentAmount" class="input-field" maxlength="11" digitsOnly
                                 (blur)="calAnnualValue()">
@@ -136,6 +133,17 @@
                             <mat-error *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('min')">
                                 Amount
                                 can not be 0.</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4" *ngIf="isCoOwners.value">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Your share of rent received</mat-label>
+                            <input formControlName="rentPercentage" matInput currencyMask
+                                placeholder="Your share of rent received" name="rentPercentage"
+                                class="input-field" maxlength="11" digitsOnly (blur)="calAnnualValue()">
+                            <mat-error *ngIf="housePropertyForm.controls['rentPercentage'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4">
