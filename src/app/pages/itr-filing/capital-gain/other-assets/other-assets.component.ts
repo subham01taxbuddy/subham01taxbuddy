@@ -434,6 +434,7 @@ export class OtherAssetsComponent implements OnInit {
     this.goldCg.improvement.splice(i, 1);
     this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
     this.clearNullImprovements();
+    this.calculateCg()
   }
 
 
