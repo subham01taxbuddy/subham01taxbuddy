@@ -598,6 +598,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
+      hasParentOverSixty:[null]
     });
     this.setInvestmentsDeductionsValues();
     this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
@@ -719,6 +720,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
+          this.ITR_JSON.systemFlags.hasParentOverSixty = true;
         this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
@@ -797,6 +799,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         this.investmentDeductionForm.controls['selfPreventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
         this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
       } else if (this.ITR_JSON.insurances[i].policyFor === 'PARENTS') {
+        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(true);
         this.investmentDeductionForm.controls['premium'].setValue(this.ITR_JSON.insurances[i].premium);
         this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
         this.investmentDeductionForm.controls['medicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
