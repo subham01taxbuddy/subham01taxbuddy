@@ -118,7 +118,7 @@
                                 {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Gross rent received / receivable / letable value':
                                 (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}
                             </mat-label>
-                            <input formControlName="grossAnnualRentReceived" matInput
+                            <input formControlName="annualRentReceived" matInput
                                 placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? ':
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
                                 matTooltipClass="tab-tooltip"
@@ -127,10 +127,10 @@
                                 name="rentAmount" class="input-field" maxlength="11" digitsOnly
                                 (blur)="calAnnualValue()">
                             <mat-error
-                                *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('pattern')">
+                                *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('pattern')">
                                 Enter
                                 positive amount without decimal.</mat-error>
-                            <mat-error *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('min')">
+                            <mat-error *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('min')">
                                 Amount
                                 can not be 0.</mat-error>
                         </mat-form-field>

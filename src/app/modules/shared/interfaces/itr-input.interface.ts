@@ -1,5 +1,3 @@
-import { state } from '@angular/animations';
-import { AnyTxtRecord } from "dns";
 
 export interface ITR_JSON {
     zeroBonds?: any;
@@ -77,6 +75,10 @@ export interface ITR_JSON {
     immovableAsset?: Immovable[],
     bondsDeduction?: Deduction[],
     carryForwordLosses?: CarryForwardLosses[],
+    currentYearLosses?: CurrentYearLosses,
+    adjustmentofLossesInScheduleBFLA?: AdjustmentofLossesInScheduleBFLA,
+    totalOfEarlierYearLosses?: TotalOfEarlierYearLosses,
+    totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -155,6 +157,7 @@ export interface HouseProperties {
     isEligibleFor80EEA: boolean;
     tenant: Tenant[];
     coOwners: CoOwners[];
+    ownerPercentage: number;
     loans: Loans[];
 }
 export interface Business {
@@ -349,16 +352,6 @@ export interface Upload {
     uniqueName: number;
     date: string;
 }
-export interface PastYearLosses {
-    LTCGLoss: number;
-    STCGLoss: number;
-    assessmentPastYear: string;
-    dateofFilling: any;
-    housePropertyLoss: number;
-    pastYear: number;
-}
-
-
 export interface OtherIncome {
     incomeType: string;
     details: string;
@@ -641,5 +634,62 @@ export interface CarryForwardLosses {
     speculativeBusinessLoss: number;
     broughtForwordBusinessLoss: number;
     setOffDuringTheYear: number;
-    adjustedAmount: number;
+    // adjustedAmount: number;
+}
+
+export interface CurrentYearLosses {
+    assessmentYear: string,
+    housePropertyLoss: number,
+    STCGLoss: number,
+    LTCGLoss: number,
+    totalLoss: number,
+    speculativeLoss: number,
+    businessLoss: number
+}
+export interface PastYearLosses {
+    dateofFilling: any;
+    pastYear: number;
+
+    assessmentPastYear: string;
+    housePropertyLoss: number;
+    LTCGLoss: number;
+    STCGLoss: number;
+    speculativeBusinessLoss: number;
+    broughtForwordBusinessLoss: number;
+    setOffWithCurrentYearSpeculativeBusinessIncome: number;
+    setOffWithCurrentYearBroughtForwordBusinessIncome: number;
+    setOffWithCurrentYearHPIncome: number;
+    setOffWithCurrentYearSTCGIncome: number;
+    setOffWithCurrentYearLTCGIncome: number;
+    carryForwardAmountBusiness: number;
+    carryForwardAmountSpeculative: number;
+    carryForwardAmountHP: number;
+    carryForwardAmountSTCGIncome: number;
+    carryForwardAmountLTCGIncome: number;
+    totalLoss: number;
+}
+
+export interface AdjustmentofLossesInScheduleBFLA{
+    housePropertyLoss: number;
+    STCGLoss: number;
+    LTCGLoss: number;
+    totalLoss: number;
+    speculativeBusinessLoss: number;
+    broughtForwordBusinessLoss: number;
+}
+export interface TotalOfEarlierYearLosses{
+    housePropertyLoss: number;
+    STCGLoss: number;
+    LTCGLoss: number;
+    totalLoss: number;
+    speculativeBusinessLoss: number;
+    broughtForwordBusinessLoss: number;
+}
+export interface TotalLossCarriedForwardedToFutureYears{
+    housePropertyLoss: number;
+    STCGLoss: number;
+    LTCGLoss: number;
+    totalLoss: number;
+    speculativeBusinessLoss: number;
+    broughtForwordBusinessLoss: number;
 }
