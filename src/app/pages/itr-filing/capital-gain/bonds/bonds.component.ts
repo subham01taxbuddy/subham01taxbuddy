@@ -123,8 +123,8 @@ export class BondsComponent implements OnInit {
         });
       } else {
         this.getZeroBondsTableData([]);
+        this.getZeroDeductionTableData([this.bondsDeductionData]);
       }
-      this.getZeroDeductionTableData([this.bondsDeductionData]);
     } else {
       this.getBondsTableData([]);
       this.getDeductionTableData([this.bondsDeductionData]);
