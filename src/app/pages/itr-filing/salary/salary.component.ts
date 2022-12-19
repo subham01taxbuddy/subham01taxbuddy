@@ -623,52 +623,43 @@ export class SalaryComponent implements OnInit {
     }
     this.Copy_ITR_JSON.systemFlags.hasSalary = true;
     this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
-    // this.ITR_JSON.employers = [];
-    // const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-    // this.ITR_JSON.employers.push(myEmp);
-    // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+    
     console.log('Employer details Filled:', this.ITR_JSON)
-    const param = '/taxitr?type=employers';
+    
+    const param = `/itr-type?itrId=${this.Copy_ITR_JSON.itrId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.Copy_ITR_JSON.itrType = res?.data?.itrType;
+      const param1 = '/taxitr?type=employers';
+      this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe((result: any) => {
+        if (this.utilsService.isNonEmpty(result)) {
+          this.ITR_JSON = result;
+          this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
+          this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
 
-    // this.ITR_JSON = result;
-    // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON))
-    // this.currentIndex = this.ITR_JSON.employers.findIndex((item:any) => item.id === this.localEmployer.id);
-    // this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          // this.utilsService.disposable.unsubscribe();
+          this.utilsService.showSnackBar('Salary updated successfully.');
+          this.utilsService.smoothScrollToTop();
+          this.salaryView = 'TABLE';
+          this.employerCallInConstructor();
+          this.loading = false;
+          return
+        } else {
+          this.loading = false;
+          this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
+        }
 
-    // // this.utilsService.disposable.unsubscribe();
-    // this.utilsService.showSnackBar('Salary updated successfully.');
-    // this.utilsService.smoothScrollToTop();
-    // this.salaryView = 'TABLE';
-    // this.employerCallInConstructor();
-
-    this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
-      if (this.utilsService.isNonEmpty(result)) {
-        this.ITR_JSON = result;
-        this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
-        this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
+      }, error => {
+        this.loading = false;
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-
         // this.utilsService.disposable.unsubscribe();
-        this.utilsService.showSnackBar('Salary updated successfully.');
+        this.utilsService.showSnackBar('Failed to save salary detail.');
         this.utilsService.smoothScrollToTop();
-        this.salaryView = 'TABLE';
-        this.employerCallInConstructor();
-        this.loading = false;
-        return
-      } else {
-        this.loading = false;
-        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
-      }
-
+      });
     }, error => {
-      this.loading = false;
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      // this.utilsService.disposable.unsubscribe();
+      console.log('Error fetching itr type', error);
       this.utilsService.showSnackBar('Failed to save salary detail.');
-      this.utilsService.smoothScrollToTop();
     });
   }
 
@@ -955,43 +946,39 @@ export class SalaryComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hraAvailed = false;
       this.Copy_ITR_JSON.systemFlags.hasSalary = false;
     }
-    // const param = `/itremployer?docId=${id}&userId=${this.ITR_JSON.userId}&itrId=${this.ITR_JSON.itrId}&assessmentYear=${this.ITR_JSON.assessmentYear}`;
-    // this.itrMsService.deleteMethod(param).subscribe((result: any) => {
-    //   this.ITR_JSON = result;
-    //   this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    //   if(this.ITR_JSON.employers.length > 0){
-    //     this.employerCallInConstructor();
-    //   }else{
-    //     this.addEmployer(null);
-    //   }
-    //   sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-    //   this.loading = false;
-    // }, error => {
-    //   this.loading = false;
-    // });
+    
     this.loading = true;
-    const param = '/taxitr?type=employers';
-    this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      if (this.ITR_JSON.employers.length > 0) {
-        this.employersGridOptions.api.updateRowData({ remove: [params.data] });
-      } else {
-        this.addEmployer(null);
-      }
 
-      this.loading = false;
-      this.utilsService.showSnackBar('Employer deleted Successfully.');
+    const param = `/itr-type?itrId=${this.Copy_ITR_JSON.itrId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.Copy_ITR_JSON.itrType = res?.data?.itrType;
+      const param1 = '/taxitr?type=employers';
+      this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe((result: any) => {
+        this.ITR_JSON = result;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        if (this.ITR_JSON.employers.length > 0) {
+          this.employersGridOptions.api.updateRowData({ remove: [params.data] });
+        } else {
+          this.addEmployer(null);
+        }
+
+        this.loading = false;
+        this.utilsService.showSnackBar('Employer deleted Successfully.');
+      }, error => {
+        this.loading = false;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        // this.utilsService.disposable.unsubscribe();
+        this.utilsService.showSnackBar('Failed to delete employer detail.');
+        this.utilsService.smoothScrollToTop();
+      });
     }, error => {
-      this.loading = false;
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      // this.utilsService.disposable.unsubscribe();
-      this.utilsService.showSnackBar('Failed to delete employer detail.');
-      this.utilsService.smoothScrollToTop();
+      console.log('error fetching itr type', error);
+      this.utilsService.showSnackBar('Failed to delete employer detail');
     });
 
   }
+
   getSalaryTaxableIncome() {
     let taxable = 0
     for (let i = 0; i < this.ITR_JSON?.employers?.length; i++) {
