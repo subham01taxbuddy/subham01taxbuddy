@@ -2,7 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { concatMap, Observable, Subject } from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -778,4 +778,20 @@ export class UtilsService {
     // getAssignmentToggle() :Observable<any>{
     //     return this.httpClient.get('environment.url' + '/user/sme/assignment-logic-toggle')
     // }
+
+    private updateItrObject(result, itrObject:ITR_JSON) {
+        //update type in ITR object & save
+        itrObject.itrType = result?.data?.itrType;
+        const param = '/itr/' + itrObject.userId + '/' + itrObject.itrId + '/' + itrObject.assessmentYear;
+        return this.itrMsService.putMethod(param, itrObject);
+    }
+
+    saveItrObject(itrObject: ITR_JSON): Observable<any> {
+        //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+        const param = `/itr-type?itrId=${itrObject.itrId}`;
+        return this.itrMsService.getMethod(param).pipe(
+            concatMap(result => this.updateItrObject(result, itrObject))
+        );
+    }
+
 }

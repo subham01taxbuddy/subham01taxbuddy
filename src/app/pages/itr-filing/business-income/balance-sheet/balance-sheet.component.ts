@@ -40,7 +40,7 @@ export class BalanceSheetComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
+    this.depreciationObj = [];
   }
 
   ngOnInit(): void {
@@ -210,7 +210,8 @@ export class BalanceSheetComponent implements OnInit {
       otherAssets: [obj?.otherAssets || null, Validators.pattern(AppConstants.numericRegex)],
       totalAssets: [obj?.totalAssets || null],
       GSTRNumber: [obj?.GSTRNumber || null],
-      grossTurnOverAmount: [obj?.grossTurnOverAmount || 0],
+      grossTurnOverAmount: [obj?.grossTurnOverAmount || null],
+      difference: [obj?.difference || 0],
     });
   }
 
@@ -247,7 +248,7 @@ export class BalanceSheetComponent implements OnInit {
       Number(this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value) +
       Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
     this.difference = this.total1 - this.total2;
-    this.assetLiabilitiesForm.controls['grossTurnOverAmount'].setValue(this.difference);
+    this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
   calculateTotal2() {
@@ -261,14 +262,15 @@ export class BalanceSheetComponent implements OnInit {
       Number(this.assetLiabilitiesForm.controls['investments'].value);
     Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
     this.difference = this.total1 - this.total2;
-    this.assetLiabilitiesForm.controls['grossTurnOverAmount'].setValue(this.difference);
+    this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
   showPopUp(value) {
     if (value) {
       const dialogRef = this.matDialog.open(DepreciationDialogComponent, {
         data: {
-          data: value
+          data: value,
+          list: this.depreciationObj
         },
         closeOnNavigation: true,
         disableClose: false,

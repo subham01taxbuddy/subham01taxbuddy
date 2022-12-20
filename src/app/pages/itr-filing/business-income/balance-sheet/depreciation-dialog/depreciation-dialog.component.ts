@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { FixedAssetsDetails, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -31,7 +31,7 @@ export class DepreciationDialogComponent implements OnInit {
     public utilsService: UtilsService,
     public fb: FormBuilder,
     public dialogRef: MatDialogRef<DepreciationDialogComponent>,
-
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -39,7 +39,8 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDepreciationTableData([]);
+    let rowData = this.data.list ? this.data.list : [];
+    this.getDepreciationTableData(rowData);
   }
 
   getDepreciationTableData(rowsData) {

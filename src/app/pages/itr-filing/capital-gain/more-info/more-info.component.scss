@@ -28,3 +28,9 @@
 .btn-cfl {
     text-align: right;
 }
+
+::ng-deep .ag-header-group-cell-label {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center;
+  }

@@ -1,12 +1,15 @@
+import { result } from 'lodash';
+import { TotalOfEarlierYearLosses, PastYearLosses } from './../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { GridOptions, IsColumnFuncParams, ValueSetterParams } from 'ag-grid-community';
+import { GridOptions, IsColumnFuncParams, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import * as moment from 'moment';
+import { data } from 'jquery';
 
 
 @Component({
@@ -21,6 +24,8 @@ export class MoreInfoComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
 
   public scheduleCFLLoss: GridOptions;
+  pastYearLosses: PastYearLosses[];
+  totalLoss: PastYearLosses;
 
   constructor(
     public utilsService: UtilsService,
@@ -31,11 +36,46 @@ export class MoreInfoComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    this.pastYearLosses = this.ITR_JSON.pastYearLosses;
+    if(!this.pastYearLosses || this.pastYearLosses.length == 0) {
+      this.pastYearLosses.push(this.createPastYearLoss('2014-15'));
+      this.pastYearLosses.push(this.createPastYearLoss('2015-16'));
+      this.pastYearLosses.push(this.createPastYearLoss('2016-17'));
+      this.pastYearLosses.push(this.createPastYearLoss('2017-18'));
+      this.pastYearLosses.push(this.createPastYearLoss('2018-19'));
+      this.pastYearLosses.push(this.createPastYearLoss('2019-20'));
+      this.pastYearLosses.push(this.createPastYearLoss('2020-21'));
+      this.pastYearLosses.push(this.createPastYearLoss('2021-22'));
+    }
     this.getTableData();
   }
 
+  createPastYearLoss(year) {
+    return {
+      pastYear: null,
+      assessmentPastYear: year, 
+      dateofFilling: '',
+      housePropertyLoss: null, 
+      broughtForwordBusinessLoss: null,
+      STCGLoss: null, 
+      LTCGLoss: null, 
+      speculativeBusinessLoss: null,
+      setOffWithCurrentYearSpeculativeBusinessIncome: null,
+      setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+      setOffWithCurrentYearHPIncome: null,
+      setOffWithCurrentYearSTCGIncome: null,
+      setOffWithCurrentYearLTCGIncome: null,
+      carryForwardAmountBusiness: null,
+      carryForwardAmountSpeculative: null,
+      carryForwardAmountHP: null,        
+      carryForwardAmountSTCGIncome: null,
+      carryForwardAmountLTCGIncome: null,
+      totalLoss: null
+    }
+  }
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
+
   }
 
   canDeactivate() {
@@ -46,11 +86,19 @@ export class MoreInfoComponent implements OnInit {
     return [
       {
         headerName: 'Assessment Year',
-        field: 'assessmentPastYear',
+        // field: 'assessmentPastYear',
         editable: false,
         suppressMovable: true,
         pinned: 'left',
-        width: 150,
+        width: 100,
+        valueGetter: (params: ValueGetterParams) => {
+          let rowIndex = params.node.rowIndex;
+          if(rowIndex >= 8) {
+            return params.data.assessmentPastYear;
+          } else {
+            return params.data.assessmentPastYear;
+          }
+        }
       },
       {
         headerName: 'Date of Filing',
@@ -83,23 +131,42 @@ export class MoreInfoComponent implements OnInit {
           }
           return null;
         },
+        valueGetter: (params: ValueGetterParams) => {
+          let rowIndex = params.node.rowIndex;
+          if(rowIndex >= 8) {
+            return this.totalLoss.housePropertyLoss;
+          } else {
+            return params.data.housePropertyLoss;
+          }
+        },
         valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
           var newValInt = parseInt(params.newValue);
           var valueChanged = params.data.housePropertyLoss !== newValInt;
           if (valueChanged) {
             params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
           }
+          //update total
+          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function(a, b){ return a+ b; })
+
           return valueChanged;
         },
 
       },
 
       {
-        headerName: 'Loss from business other than loss from speculative business and specified business',
+        headerName: 'Business & Speculative income',
+        cellStyle: { textAlign: 'center' },
+        // cellStyle: function (params: any) {
+        //   return {
+        //     'textAlign': 'center !important;',//, display: 'flex',
+        //     // 'align-items': 'center',
+        //     'justify-content': 'center !important;'
+        //   }
+        // },
         editable: false,
         children: [
           {
-            headerName: 'a. Brought Forward Business Loss',
+            headerName: 'Brought Forward Business Loss',
             field: 'broughtForwordBusinessLoss',
             editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
@@ -109,129 +176,142 @@ export class MoreInfoComponent implements OnInit {
               }
               return null;
             },
+            valueGetter: (params: ValueGetterParams) => {
+              let rowIndex = params.node.rowIndex;
+              if(rowIndex >= 8) {
+                return this.totalLoss.broughtForwordBusinessLoss;
+              } else {
+                return params.data.broughtForwordBusinessLoss;
+              }
+            },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.broughtForwordBusinessLoss !== newValInt;
               if (valueChanged) {
                 params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
               }
+              //update total
+              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function(a, b){ return a+ b; })
+
               return valueChanged;
             },
 
           },
           {
-            headerName: 'b. Amount as adjusted on account of opting for taxation u/s 115BAC',
-            field: 'adjustedAmount',
-            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-            width: 300,
+            headerName: 'Loss from Speculative Business',
+            field: 'speculativeBusinessLoss',
+            editable: (params: IsColumnFuncParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
             suppressMovable: true,
             cellStyle: function (params) {
-              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+              if ((params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') || (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11')) {
                 return { backgroundColor: '#cecec8bd' };
               }
               return null;
             },
+            valueGetter: (params: ValueGetterParams) => {
+              let rowIndex = params.node.rowIndex;
+              if(rowIndex >= 8) {
+                return this.totalLoss.speculativeBusinessLoss;
+              } else {
+                return params.data.speculativeBusinessLoss;
+              }
+            },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
               var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.adjustedAmount !== newValInt;
+              var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
               if (valueChanged) {
-                params.data.adjustedAmount = newValInt ? newValInt : params.oldValue;
+                params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
               }
+
+              //update total
+              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce(function(a, b){ return a+ b; })
+
               return valueChanged;
             },
-
           },
-
-          {
-            headerName: 'c. Brought forward Business loss available for set off during the year [c=a-b]',
-            field: 'setOffDuringTheYear',
-            suppressMovable: true,
-            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-            width: 300,
-            cellStyle: function (params) {
-              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-                return { backgroundColor: '#cecec8bd' };
-              }
-              return null;
-            },
-            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-              var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.setOffDuringTheYear !== newValInt;
-              if (valueChanged) {
-                params.data.setOffDuringTheYear = newValInt ? newValInt : params.oldValue;
-              }
-              return valueChanged;
-            },
-
-          }
         ],
-        suppressMovable: true,
       },
       {
-        headerName: 'Short Term Capital Loss',
-        field: 'STCGLoss',
-        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-        suppressMovable: true,
-        cellStyle: function (params) {
-          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-            return { backgroundColor: '#cecec8bd' };
+        headerName: 'Capital Gain Loss',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'space-around'
           }
-          return null;
         },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.STCGLoss !== newValInt;
-          if (valueChanged) {
-            params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
+        editable: false,
+        children: [
+          {
+            headerName: 'Short Term Capital Loss',
+            field: 'STCGLoss',
+            width: 180,
+            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+            suppressMovable: true,
+            cellStyle: function (params) {
+              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+                return { backgroundColor: '#cecec8bd' };
+              }
+              return null;
+            },
+            valueGetter: (params: ValueGetterParams) => {
+              let rowIndex = params.node.rowIndex;
+              if(rowIndex >= 8) {
+                return this.totalLoss.STCGLoss;
+              } else {
+                return params.data.STCGLoss;
+              }
+            },
+            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+              var newValInt = parseInt(params.newValue);
+              var valueChanged = params.data.STCGLoss !== newValInt;
+              if (valueChanged) {
+                params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
+              }
 
+              //update total
+              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce(function(a, b){ return a+ b; })
+
+              return valueChanged;
+            },
+
+          },
+          {
+            headerName: 'Long Term Capital Loss',
+            field: 'LTCGLoss',
+            width:180,
+            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+            suppressMovable: true,
+            cellStyle: function (params) {
+              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+                return { backgroundColor: '#cecec8bd' };
+              }
+              return null;
+            },
+            valueGetter: (params: ValueGetterParams) => {
+              let rowIndex = params.node.rowIndex;
+              if(rowIndex >= 8) {
+                return this.totalLoss.LTCGLoss;
+              } else {
+                return params.data.LTCGLoss;
+              }
+            },
+            valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+              var newValInt = parseInt(params.newValue);
+              var valueChanged = params.data.LTCGLoss !== newValInt;
+              if (valueChanged) {
+                params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
+              }
+
+              //update total
+              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce(function(a, b){ return a+ b; })
+
+              return valueChanged;
+            },
+
+          },
+        ],
       },
-      {
-        headerName: 'Long Term Capital Loss',
-        field: 'LTCGLoss',
-        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
-        suppressMovable: true,
-        cellStyle: function (params) {
-          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-            return { backgroundColor: '#cecec8bd' };
-          }
-          return null;
-        },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.LTCGLoss !== newValInt;
-          if (valueChanged) {
-            params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-
-      },
-      {
-        headerName: 'Loss from Speculative Business',
-        field: 'speculativeBusinessLoss',
-        editable: (params: IsColumnFuncParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
-        suppressMovable: true,
-        cellStyle: function (params) {
-          if ((params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') || (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11')) {
-            return { backgroundColor: '#cecec8bd' };
-          }
-          return null;
-        },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
-          if (valueChanged) {
-            params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-
-
-      },
-
       {
         headerName: 'Actions',
         editable: false,
@@ -241,9 +321,12 @@ export class MoreInfoComponent implements OnInit {
         width: 70,
         pinned: 'right',
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Delete">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
+          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+          } else{
+            return `<button type="button" class="action_icon add_button" title="Delete">
+            <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+          </button>`;
+          }
 
         },
         cellStyle: { textAlign: 'center' }
@@ -287,20 +370,14 @@ export class MoreInfoComponent implements OnInit {
   }
 
   getRowData() {
-    return [
-      { assessmentPastYear: '2014-15', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2015-16', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2016-17', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2017-18', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2018-19', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2019-20', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2020-21', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2021-22', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: 'Total of earlier year losses', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: 'Adjustment of above losses in schedule BFLA', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: '2022-23 (Current Year Losses)', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-      { assessmentPastYear: 'Total Loss carried forward to future years', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', adjustedAmount: '', setOffDuringTheYear: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: '', Actions: '' },
-    ];
+    let data = [];
+    data = data.concat(this.pastYearLosses);
+    this.totalLoss = this.createPastYearLoss('Total of earlier year losses');
+    this.pastYearLosses.forEach(element => {
+      this.totalLoss.LTCGLoss += element.LTCGLoss;
+    });
+    data.push(this.totalLoss);
+    return data;
   }
 
 
@@ -319,17 +396,21 @@ export class MoreInfoComponent implements OnInit {
 
 
   delete(index) {
-    this.scheduleCFLLoss.rowData.splice(index, 1);
-    this.scheduleCFLLoss.api.setRowData(this.scheduleCFLLoss.rowData);
+    let loss = this.pastYearLosses[index];
+    this.pastYearLosses.splice(index, 1, this.createPastYearLoss(loss.assessmentPastYear));
+    this.scheduleCFLLoss.api.setRowData(this.getRowData());
 
   }
 
   continue() {
-    this.Copy_ITR_JSON.carryForwordLosses = this.scheduleCFLLoss.rowData;
+    //reinitialise the objects so as to get the data updated in other tabs
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    
+    this.Copy_ITR_JSON.pastYearLosses = this.pastYearLosses;
     console.log(this.Copy_ITR_JSON)
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.loading = false;
