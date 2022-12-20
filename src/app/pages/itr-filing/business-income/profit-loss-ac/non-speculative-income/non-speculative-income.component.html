@@ -37,15 +37,16 @@
                         <mat-label class="card__col-xs-12 card__col-sm-9"
                             style="font-weight: 800;font-size: 14px;">Expense</mat-label>
                         <div class="card__col-xs-12 card__col-sm-3" style="text-align: right;">
-                            <button class="tbd-btn-small" style="text-align: right;" [disabled]="profitLossForm.invalid"
-                                (click)="addExpenseForm()">Add
+                            <button class="tbd-btn-small" style="text-align: right;margin-bottom: 5px;"
+                                [disabled]="profitLossForm.invalid" (click)="addExpenseForm()">Add
                                 More&nbsp;
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
-                    <div formArrayName="expenses" class="card__row">
-                        <div *ngFor="let expense of expenses.controls; let i=index" [formGroupName]="i">
+                    <div formArrayName="expenses">
+                        <div *ngFor="let expense of expenses.controls; let i=index" [formGroupName]="i"
+                            class="card__row">
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-form-field class="input-field-width">
                                     <mat-select placeholder="expense Type" formControlName="expenseType"

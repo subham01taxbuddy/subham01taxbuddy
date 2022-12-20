@@ -1,10 +1,8 @@
-import { businessIncome } from './../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridSizeChangedEvent, ValueSetterParams } from 'ag-grid-community';
 import { ITR_JSON, ProfitLossIncomes } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { ProfessionalDialogComponent } from '../../presumptive-income/presumptive-professional-income/professional-dialog/professional-dialog.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 

@@ -22,10 +22,24 @@ export class BusinessDialogComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<BusinessDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    console.log("DATA", data)
+  }
 
   ngOnInit(): void {
-    this.getMastersData();
+    let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    if (natureOfBusiness) {
+      this.natureOfBusinessDropdown = natureOfBusiness.filter((item: any) => item.section === '44AD');
+      this.data.natureList.forEach(item => {
+        this.natureOfBusinessDropdown.forEach(element => {
+          if (item.natureOfBusiness.includes(element.label)) {
+            element.disabled = true;
+          }
+        });
+      });
+    } else {
+      this.getMastersData();
+    }
     this.initBusinessForm(this.data.data);
   }
 
@@ -63,6 +77,7 @@ export class BusinessDialogComponent implements OnInit {
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
+      sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(this.natureOfBusinessDropdownAll));
       this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44AD');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {
