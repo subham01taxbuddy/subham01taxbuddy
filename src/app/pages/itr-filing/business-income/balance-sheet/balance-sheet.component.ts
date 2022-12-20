@@ -300,12 +300,14 @@ export class BalanceSheetComponent implements OnInit {
 
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.loading = false;
       this.ITR_JSON = result;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Balance Sheet income added successfully');
       console.log('Balance Sheet=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
+      this.loading = false;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to add Balance Sheet income, please try again.');
       this.utilsService.smoothScrollToTop();
