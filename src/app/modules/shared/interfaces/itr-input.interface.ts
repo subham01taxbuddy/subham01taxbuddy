@@ -730,6 +730,7 @@ export interface NewFinancialParticulars {
     totalAssets: any;
     GSTRNumber: any,
     grossTurnOverAmount: any;
+    difference: number;
 }
 
 export interface FixedAssetsDetails {

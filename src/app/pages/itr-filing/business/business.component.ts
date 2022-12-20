@@ -763,6 +763,7 @@ export class BusinessComponent implements OnInit {
           totalAssets: null,
           id:null,
           investments:null,
+          difference: null
           
         };
         // SERVICE CALL MAIN NEXT BUTTON

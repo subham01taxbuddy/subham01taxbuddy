@@ -208,12 +208,29 @@
             <br>
 
             <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-6">&nbsp;</div>
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="card__col-xs-6 card__col-sm-6">
+                        <mat-form-field appearance="outline">
+                        <mat-label>GST Turnover </mat-label>
+                        <input matInput placeholder="GST Turnover" name="grossTurnOverAmount"
+                            [formControl]="assetLiabilitiesForm.controls['grossTurnOverAmount']" class="input-field"
+                            maxlength="14">
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-6 card__col-sm-6">
+                        <mat-form-field appearance="outline">
+                        <mat-label>GST Number </mat-label>
+                        <input matInput placeholder="GST Number" name="GSTRNumber"
+                            [formControl]="assetLiabilitiesForm.controls['GSTRNumber']" class="input-field"
+                            maxlength="14">
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field appearance="outline">
                         <mat-label>Difference </mat-label>
-                        <input matInput placeholder="Turnover amount" name="TurnOver" readonly
-                            [formControl]="assetLiabilitiesForm.controls['grossTurnOverAmount']" class="input-field"
+                        <input matInput placeholder="Difference" name="difference" readonly
+                            [formControl]="assetLiabilitiesForm.controls['difference']" class="input-field"
                             maxlength="14">
                     </mat-form-field>
                 </div>
@@ -226,5 +243,5 @@
     <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
         &nbsp;&nbsp;Back</button>
     <button class="tbd-btn" (click)="onContinue()"
-        [disabled]="assetLiabilitiesForm.controls['grossTurnOverAmount'].value != 0">&nbsp;&nbsp;Continue </button>
+        [disabled]="assetLiabilitiesForm.controls['difference'].value !== 0">&nbsp;&nbsp;Continue </button>
 </div>
