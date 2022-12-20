@@ -16,6 +16,7 @@ export class ProfessionalDialogComponent implements OnInit {
   natureOfProfessionDropdown: any;
   loading = false;
   professionForm: FormGroup;
+  amountFifty: number = 0;
   constructor(
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
@@ -33,8 +34,17 @@ export class ProfessionalDialogComponent implements OnInit {
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       receipts: [obj?.receipts || null, Validators.required],
-      presumptiveIncome: [obj?.presumptiveIncome || null, Validators.required],
+      presumptiveIncome: [obj?.presumptiveIncome || null, [Validators.required, Validators.min(this.amountFifty)]],
     });
+  }
+
+  calculateFiftyPer() {
+    this.amountFifty = 0;
+    this.amountFifty = this.professionForm.controls['receipts'].value;
+    this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
+    this.professionForm.controls['presumptiveIncome'].setValue(this.amountFifty);
+    this.professionForm.controls['presumptiveIncome'].setValidators([Validators.required, Validators.min(this.amountFifty)]);
+    this.professionForm.controls['presumptiveIncome'].updateValueAndValidity();
   }
 
   getMastersData() {

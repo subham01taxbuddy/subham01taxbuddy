@@ -18,8 +18,8 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="Trade of Business"
-                        formControlName="tradeName" maxlength="30">
+                    <input matInput class="input-field" placeholder="Trade of Business" formControlName="tradeName"
+                        maxlength="30">
                     <mat-error *ngIf="businessForm.controls['tradeName'].hasError('required')">Please enter
                         trade of business</mat-error>
                     <mat-error *ngIf="businessForm.controls['tradeName'].hasError('pattern')">Please enter
@@ -32,7 +32,7 @@
                     <input matInput class="input-field" digitsOnly placeholder="Receipt received in bank"
                         matTooltip="Total collection from client received in bank (including cheque)"
                         matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="receipts"
-                        maxlength="14">
+                        (blur)="calculateSixPer()" maxlength="14">
                     <mat-error *ngIf="businessForm.controls['receipts'].hasError('required')">Please enter
                         receipt received in bank</mat-error>
                 </mat-form-field>
@@ -40,28 +40,38 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="presumptive income at 6%" formControlName="presumptiveIncome"
-                        name="presumptiveIncome" maxlength="14">
+                    <input matInput class="input-field" placeholder="presumptive income at 6%"
+                        formControlName="presumptiveIncome" name="presumptiveIncome" maxlength="14">
                     <mat-error *ngIf="businessForm.controls['presumptiveIncome'].hasError('required')">Please the
                         amount</mat-error>
+                    <mat-error *ngIf="businessForm.controls['presumptiveIncome'].hasError('min')">Amount should be
+                        greater than {{amountSix}} </mat-error>
+
                 </mat-form-field>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" name="periodOfHolding" digitsOnly
-                        placeholder="Receipt received in any other mode" formControlName="periodOfHolding" maxlength="14">
+                        placeholder="Receipt received in any other mode" formControlName="periodOfHolding"
+                        (blur)="calculateEightPer()" maxlength="14">
                     <mat-error *ngIf="businessForm.controls['periodOfHolding'].hasError('required')">Please enter
                         amount</mat-error>
+
                 </mat-form-field>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" name="minimumPresumptiveIncome" placeholder="Presumptive income at 8%"
-                        formControlName="minimumPresumptiveIncome" maxlength="14" digitsOnly>
-                    <mat-error *ngIf="businessForm.controls['minimumPresumptiveIncome'].hasError('required')">Please enter
+                    <input matInput class="input-field" name="minimumPresumptiveIncome"
+                        placeholder="Presumptive income at 8%" formControlName="minimumPresumptiveIncome" maxlength="14"
+                        digitsOnly>
+                    <mat-error *ngIf="businessForm.controls['minimumPresumptiveIncome'].hasError('required')">Please
+                        enter
                         amount</mat-error>
+                    <mat-error *ngIf="businessForm.controls['minimumPresumptiveIncome'].hasError('min')">Amount should
+                        be greater
+                        than {{amountEight}}</mat-error>
                 </mat-form-field>
             </div>
         </div>

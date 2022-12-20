@@ -15,6 +15,8 @@ export class BusinessDialogComponent implements OnInit {
   natureOfBusinessDropdown: any;
   loading = false;
   businessForm: FormGroup;
+  amountSix: number = 0;
+  amountEight: number = 0;
   constructor(
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
@@ -29,20 +31,39 @@ export class BusinessDialogComponent implements OnInit {
 
   initBusinessForm(obj?: businessIncome) {
     this.businessForm = this.formBuilder.group({
+      id: [obj.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
-      tradeName: [obj?.tradeName || null, [Validators.required,Validators.pattern(AppConstants.charRegex)]],
+      tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       receipts: [obj?.receipts || null, Validators.required],
-      presumptiveIncome: [obj?.presumptiveIncome || null, Validators.required],
+      presumptiveIncome: [obj?.presumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
       periodOfHolding: [obj?.periodOfHolding || null, Validators.required],
-      minimumPresumptiveIncome: [obj?.minimumPresumptiveIncome || null, Validators.required],
+      minimumPresumptiveIncome: [obj?.minimumPresumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
     });
+  }
+
+  calculateSixPer() {
+    this.amountSix = 0;
+    this.amountSix = this.businessForm.controls['receipts'].value;
+    this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
+    this.businessForm.controls['presumptiveIncome'].setValue(this.amountSix);
+    this.businessForm.controls['presumptiveIncome'].setValidators([Validators.required, Validators.min(this.amountSix)]);
+    this.businessForm.controls['presumptiveIncome'].updateValueAndValidity();
+  }
+
+  calculateEightPer() {
+    this.amountEight = 0;
+    this.amountEight = this.businessForm.controls['periodOfHolding'].value;
+    this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
+    this.businessForm.controls['minimumPresumptiveIncome'].setValue(this.amountEight);
+    this.businessForm.controls['minimumPresumptiveIncome'].setValidators([Validators.required, Validators.min(this.amountEight)]);
+    this.businessForm.controls['minimumPresumptiveIncome'].updateValueAndValidity();
   }
 
   getMastersData() {
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44AD');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {
     });

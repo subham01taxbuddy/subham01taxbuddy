@@ -75,6 +75,9 @@ import { BusinessDialogComponent } from './business-income/presumptive-income/pr
 import { ProfessionalDialogComponent } from './business-income/presumptive-income/presumptive-professional-income/professional-dialog/professional-dialog.component';
 import { NonSpeculativeIncomeComponent } from './business-income/profit-loss-ac/non-speculative-income/non-speculative-income.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
+import { AddUpdateTradingComponent } from './business-income/profit-loss-ac/non-speculative-income/add-update-trading/add-update-trading.component';
+import { AddBalanceSheetComponent } from './business-income/balance-sheet/add-balance-sheet/add-balance-sheet.component';
+import { DepreciationDialogComponent } from './business-income/balance-sheet/depreciation-dialog/depreciation-dialog.component';
 
 @NgModule({
     imports: [
@@ -158,6 +161,9 @@ import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/spe
         ProfessionalDialogComponent,
         NonSpeculativeIncomeComponent,
         SpeculativeIncomeComponent,
+        AddUpdateTradingComponent,
+        AddBalanceSheetComponent,
+        DepreciationDialogComponent,
        ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,

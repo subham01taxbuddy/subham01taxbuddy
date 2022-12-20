@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { businessIncome, ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {  ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
@@ -29,10 +29,30 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
+      let incomeDetails;
+      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
+      if (data.length > 0) {
+        let businessArray = [];
+        data.forEach((obj: any) => {
+          incomeDetails = obj.incomes;
+            for (let i = 0; i < obj.incomes.length; i++) {
+              incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
+              incomeDetails[i].tradeName = obj.tradeName;
+              businessArray.push(incomeDetails[i]);
+            }
+        });
+        this.getProfessionalTableData(businessArray);
+      }
+      else {
+        this.getProfessionalTableData([]);
+      }
+    } else {
+      this.getProfessionalTableData([]);
+    }
   }
 
   ngOnInit(): void {
-    this.getProfessionalTableData([]);
   }
 
   getProfessionalTableData(rowsData) {
@@ -146,7 +166,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   addEditProfessionalRow(mode, data: any, index?) {
     if (mode === 'ADD') {
       const length = this.professionalGridOptions.rowData.length;
-      // data.srn = length + 1;
     }
 
     const dialogRef = this.matDialog.open(ProfessionalDialogComponent, {
@@ -226,8 +245,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
       this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
     } else {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = (this.Copy_ITR_JSON.business.presumptiveIncomes).concat(presBusinessIncome)
-    }
+      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "PROFESSIONAL");
+      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(presBusinessIncome)
+  }
     console.log(this.Copy_ITR_JSON);
 
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
