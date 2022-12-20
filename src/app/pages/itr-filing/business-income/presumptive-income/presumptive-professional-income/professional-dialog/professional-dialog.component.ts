@@ -25,7 +25,19 @@ export class ProfessionalDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getMastersData();
+    let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    if (natureOfBusiness) {
+      this.natureOfProfessionDropdown = natureOfBusiness.filter((item: any) => item.section === '44ADA');
+      this.data.natureList.forEach(item => {
+        this.natureOfProfessionDropdown.forEach(element => {
+          if (item.natureOfBusiness.includes(element.label)) {
+            element.disabled = true;
+          }
+        });
+      });
+    } else {
+      this.getMastersData();
+    }
     this.initProfessionForm(this.data.data);
   }
 
@@ -51,6 +63,7 @@ export class ProfessionalDialogComponent implements OnInit {
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
+      sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(this.natureOfBusinessDropdownAll));
       this.natureOfProfessionDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {

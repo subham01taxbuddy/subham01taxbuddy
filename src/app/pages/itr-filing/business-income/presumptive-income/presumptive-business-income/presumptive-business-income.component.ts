@@ -40,11 +40,11 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         let businessArray = [];
         data.forEach((obj: any) => {
           incomeDetails = obj.incomes;
-            for (let i = 0; i < obj.incomes.length; i++) {
-              incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
-              incomeDetails[i].tradeName = obj.tradeName;
-              businessArray.push(incomeDetails[i]);
-            }
+          for (let i = 0; i < obj.incomes.length; i++) {
+            incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
+            incomeDetails[i].tradeName = obj.tradeName;
+            businessArray.push(incomeDetails[i]);
+          }
         });
         this.getBusinessTableData(businessArray);
       }
@@ -195,12 +195,13 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   addEditBusinessRow(mode, data: any, index?) {
     if (mode === 'ADD') {
       const length = this.businessGridOptions.rowData.length;
-   }
+    }
 
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
       data: {
         mode: mode,
-        data: data
+        data: data,
+        natureList: this.businessGridOptions.rowData,
       },
       closeOnNavigation: true,
       disableClose: false,

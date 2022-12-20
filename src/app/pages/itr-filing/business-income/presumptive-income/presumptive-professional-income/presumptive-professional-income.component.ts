@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import {  ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
@@ -36,11 +36,11 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         let businessArray = [];
         data.forEach((obj: any) => {
           incomeDetails = obj.incomes;
-            for (let i = 0; i < obj.incomes.length; i++) {
-              incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
-              incomeDetails[i].tradeName = obj.tradeName;
-              businessArray.push(incomeDetails[i]);
-            }
+          for (let i = 0; i < obj.incomes.length; i++) {
+            incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
+            incomeDetails[i].tradeName = obj.tradeName;
+            businessArray.push(incomeDetails[i]);
+          }
         });
         this.getProfessionalTableData(businessArray);
       }
@@ -171,7 +171,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     const dialogRef = this.matDialog.open(ProfessionalDialogComponent, {
       data: {
         mode: mode,
-        data: data
+        data: data,
+        natureList: this.professionalGridOptions.rowData,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -247,7 +248,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     } else {
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "PROFESSIONAL");
       this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(presBusinessIncome)
-  }
+    }
     console.log(this.Copy_ITR_JSON);
 
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;

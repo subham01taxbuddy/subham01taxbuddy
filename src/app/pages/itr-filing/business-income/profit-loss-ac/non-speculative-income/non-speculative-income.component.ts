@@ -45,8 +45,21 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getTradingTableData([this.tradingData]);
-    this.initForm();
+    if (this.Copy_ITR_JSON.business.profitLossACIncomes) {
+      let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType === "NONSPECULATIVEINCOME");
+      if (data.length > 0) {
+        this.getTradingTableData(data[0].incomes);
+        // this.profitLossForm.controls['grossProfit'].setValue(data[0].totalgrossProfitFromNonSpeculativeIncome);
+        // this.profitLossForm.controls['netProfit'].setValue(data[0].netProfitfromNonSpeculativeIncome);
+        // this.profitLossForm.patchValue(data[0]);
+      } else {
+        this.getTradingTableData([this.tradingData]);
+        this.initForm();
+      }
+    } else {
+      this.getTradingTableData([this.tradingData]);
+      this.initForm();
+    }
   }
 
   initForm() {
@@ -243,7 +256,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     const row = this.profitLossForm.getRawValue();
     const profitLossACIncomes = [];
     profitLossACIncomes.push({
-      "id": 1,
+      "id": null,
       "businessType": "NONSPECULATIVEINCOME",
       "totalgrossProfitFromNonSpeculativeIncome": row.grossProfit,
       "netProfitfromNonSpeculativeIncome": row.netProfit,
