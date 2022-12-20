@@ -24,7 +24,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   tradingData: ProfitLossIncomes = {
-    id: 1,
+    id: 0,
     incomeType: "NONSPECULATIVEINCOME",
     turnOver: 0,
     finishedGoodsOpeningStock: 0,
@@ -33,6 +33,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     COGS: 0,
     grossProfit: 0
   }
+  loading: boolean = false;
 
   constructor(
     public matDialog: MatDialog,
@@ -45,6 +46,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm();
     if (this.Copy_ITR_JSON.business.profitLossACIncomes) {
       let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType === "NONSPECULATIVEINCOME");
       if (data.length > 0) {
@@ -57,11 +59,9 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         })
       } else {
         this.getTradingTableData([this.tradingData]);
-        this.initForm();
       }
     } else {
       this.getTradingTableData([this.tradingData]);
-      this.initForm();
     }
   }
 
@@ -256,6 +256,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    this.loading = true;
     const row = this.profitLossForm.getRawValue();
     const profitLossACIncomes = [];
     profitLossACIncomes.push({
@@ -266,18 +267,23 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       "incomes": this.tradingGridOptions.rowData,
       "expenses": row.expenses,
     });
-
-    this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes;
-
+    if (!this.Copy_ITR_JSON.business.profitLossACIncomes) {
+      this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes
+    } else {
+      let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType != "NONSPECULATIVEINCOME");
+      this.Copy_ITR_JSON.business.profitLossACIncomes = (data).concat(profitLossACIncomes)
+    }
     console.log(this.Copy_ITR_JSON);
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
+      this.loading = false;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('non-speculative income added successfully');
       console.log('non-speculative income=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
+      this.loading = false;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to add non-speculative income, please try again.');
       this.utilsService.smoothScrollToTop();

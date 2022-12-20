@@ -174,13 +174,13 @@ export class SpeculativeIncomeComponent implements OnInit {
       this.ITR_JSON = result;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.loading = false;
-      this.utilsService.showSnackBar('Schedule CFL updated successfully');
-      console.log('Assets & Liabilities save result=', result);
+      this.utilsService.showSnackBar('Speculative income added successfully');
+      console.log('Speculative income=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
-      this.utilsService.showSnackBar('Failed to add schedule CFL, please try again.');
+      this.utilsService.showSnackBar('Failed to add Speculative income, please try again.');
       this.utilsService.smoothScrollToTop();
     });
   }

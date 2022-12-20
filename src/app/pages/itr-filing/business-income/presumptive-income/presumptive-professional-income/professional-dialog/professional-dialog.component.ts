@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-professional-dialog',
@@ -19,6 +20,7 @@ export class ProfessionalDialogComponent implements OnInit {
   amountFifty: number = 0;
   constructor(
     public itrMsService: ItrMsService,
+    public utilsService: UtilsService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ProfessionalDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -60,13 +62,18 @@ export class ProfessionalDialogComponent implements OnInit {
   }
 
   getMastersData() {
+    this.loading = true;
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
       sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(this.natureOfBusinessDropdownAll));
       this.natureOfProfessionDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to get nature of Business list, please try again.');
+      this.utilsService.smoothScrollToTop();
     });
   }
 

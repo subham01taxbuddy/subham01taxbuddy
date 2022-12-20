@@ -57,14 +57,14 @@ export class AddUpdateTradingComponent implements OnInit {
         this.toastMsgService.alert("message", "COGS and Gross Profit calculated successfully.");
       } else {
         this.loading = false;
-        this.toastMsgService.alert("error", "Failed to calculate CGOS and Gross Profit.");
+        this.toastMsgService.alert("error", "Failed to calculate COGS and Gross Profit.");
       }
       this.dialogRef.close(this.tradingForm.value);
       this.loading = false;
     },
       error => {
         this.loading = false;
-        this.toastMsgService.alert("error", "Failed to calculate CGOS and Gross Profit.");
+        this.toastMsgService.alert("error", "Failed to calculate COGS and Gross Profit.");
 
       })
 

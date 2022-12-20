@@ -24,6 +24,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     periodOfHolding: null,
     minimumPresumptiveIncome: null,
   }
+  loading: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -223,6 +224,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    this.loading = true;
     let presBusinessIncome = [];
     this.businessGridOptions.rowData.forEach(element => {
       let isAdded = false;
@@ -279,11 +281,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
+      this.loading = false;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Business income added successfully');
-      console.log('Bonds=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
+      this.loading = false;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to add business income, please try again.');
       this.utilsService.smoothScrollToTop();

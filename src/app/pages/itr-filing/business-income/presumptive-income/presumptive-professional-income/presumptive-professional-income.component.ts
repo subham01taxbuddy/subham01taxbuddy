@@ -21,6 +21,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     receipts: null,
     presumptiveIncome: null,
   }
+  loading: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -196,6 +197,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    this.loading = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -254,11 +256,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
+      this.loading = false;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('professional income added successfully');
-      console.log('business=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
+      this.loading = false;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to add professional income, please try again.');
       this.utilsService.smoothScrollToTop();
