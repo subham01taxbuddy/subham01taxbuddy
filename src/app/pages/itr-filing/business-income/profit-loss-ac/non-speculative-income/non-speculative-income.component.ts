@@ -49,9 +49,12 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType === "NONSPECULATIVEINCOME");
       if (data.length > 0) {
         this.getTradingTableData(data[0].incomes);
-        // this.profitLossForm.controls['grossProfit'].setValue(data[0].totalgrossProfitFromNonSpeculativeIncome);
-        // this.profitLossForm.controls['netProfit'].setValue(data[0].netProfitfromNonSpeculativeIncome);
-        // this.profitLossForm.patchValue(data[0]);
+        this.profitLossForm.controls['grossProfit'].setValue(data[0].totalgrossProfitFromNonSpeculativeIncome);
+        this.profitLossForm.controls['netProfit'].setValue(data[0].netProfitfromNonSpeculativeIncome);
+        let expenseList = data[0].expenses
+        expenseList.forEach(element => {
+          this.addExpenseForm(element);
+        })
       } else {
         this.getTradingTableData([this.tradingData]);
         this.initForm();
@@ -83,9 +86,9 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     return <FormArray>this.profitLossForm.get('expenses');
   }
 
-  addExpenseForm() {
+  addExpenseForm(element) {
     const expenses = this.expenses;
-    expenses.push(this.initExpenseForm(this.newExpenses))
+    expenses.push(this.initExpenseForm(element))
   }
 
   deleteExpenseForm(index) {

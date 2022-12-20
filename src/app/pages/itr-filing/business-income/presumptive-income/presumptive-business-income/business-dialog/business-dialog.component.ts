@@ -32,7 +32,7 @@ export class BusinessDialogComponent implements OnInit {
       this.natureOfBusinessDropdown = natureOfBusiness.filter((item: any) => item.section === '44AD');
       this.data.natureList.forEach(item => {
         this.natureOfBusinessDropdown.forEach(element => {
-          if (item.natureOfBusiness.includes(element.label)) {
+          if (item.natureOfBusiness.includes(element.label) && this.data.data.natureOfBusiness != element.label) {
             element.disabled = true;
           }
         });
@@ -42,6 +42,7 @@ export class BusinessDialogComponent implements OnInit {
     }
     this.initBusinessForm(this.data.data);
   }
+
 
   initBusinessForm(obj?: businessIncome) {
     this.businessForm = this.formBuilder.group({

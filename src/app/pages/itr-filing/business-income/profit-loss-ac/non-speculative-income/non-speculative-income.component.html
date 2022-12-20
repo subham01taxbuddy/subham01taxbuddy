@@ -38,7 +38,7 @@
                             style="font-weight: 800;font-size: 14px;">Expense</mat-label>
                         <div class="card__col-xs-12 card__col-sm-3" style="text-align: right;">
                             <button class="tbd-btn-small" style="text-align: right;margin-bottom: 5px;"
-                                [disabled]="profitLossForm.invalid" (click)="addExpenseForm()">Add
+                                [disabled]="profitLossForm.invalid" (click)="addExpenseForm(this.newExpenses)">Add
                                 More&nbsp;
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </button>
