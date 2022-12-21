@@ -74,6 +74,9 @@ export class BalanceSheetComponent implements OnInit {
         suppressMovable: true,
         editable: false,
         width: 80,
+        valueGetter: function nameFromCode(params) {
+          return params.data.id ? params.data.id.toLocaleString('en-IN') : params.data.id;
+        },
       },
 
       {
@@ -157,7 +160,7 @@ export class BalanceSheetComponent implements OnInit {
   addEditBalanceSheetRow(mode, data: any, type, index?) {
     if (mode === 'ADD') {
       const length = this.balanceSheetGridOptions.rowData.length;
-      data.srn = length + 1;
+      data.id = length + 1;
     }
 
     const dialogRef = this.matDialog.open(AddBalanceSheetComponent, {
@@ -291,14 +294,13 @@ export class BalanceSheetComponent implements OnInit {
     this.loading = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    let businessDescription = [];
-    businessDescription.push(this.balanceSheetGridOptions.rowData);
-    this.Copy_ITR_JSON.business.businessDescription = businessDescription;
+
+    this.Copy_ITR_JSON.business.businessDescription = this.balanceSheetGridOptions.rowData;
     this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.getRawValue();
     this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
 
     console.log(this.Copy_ITR_JSON);
-
+    debugger
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.loading = false;
