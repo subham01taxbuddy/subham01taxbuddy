@@ -224,6 +224,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true;
     let presBusinessIncome = [];
     this.businessGridOptions.rowData.forEach(element => {

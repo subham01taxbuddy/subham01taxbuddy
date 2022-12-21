@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON, NewExpenses, ProfitLossIncomes } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -256,6 +257,9 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true;
     const row = this.profitLossForm.getRawValue();
     const profitLossACIncomes = [];
