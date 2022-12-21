@@ -15,16 +15,16 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field>
-          <input matInput formControlName="sellDate" name="sellDate" readonly [matDatepicker]="sellDate" placeholder="Sale Date"
-            (blur)="calculateGainType()" (dateChange)="calculateGainType()">
+          <input matInput formControlName="sellDate" name="sellDate" readonly [matDatepicker]="sellDate"
+            placeholder="Sale Date" (blur)="calculateGainType()" (dateChange)="calculateGainType()">
           <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
           <mat-datepicker #sellDate></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput digitsOnly formControlName="sellValuePerUnit" placeholder="Sell Price"
-            name="sellValuePerUnit" class="input-field" maxlength="14"
+          <input matInput digitsOnly formControlName="sellValuePerUnit" placeholder="Sell Price" name="sellValuePerUnit"
+            class="input-field" maxlength="14"
             (blur)="assetDetailsForm.controls['sellValue'].setValue(assetDetailsForm.controls['sellValuePerUnit'].value * assetDetailsForm.controls['sellOrBuyQuantity'].value)"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['sellValuePerUnit'].hasError('pattern')">Enter
@@ -87,12 +87,11 @@
         </mat-form-field>
       </div>
       <!-- ------------------ -->
-      <ng-container
-        *ngIf="buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'">
+      <ng-container *ngIf="buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'">
         <div class="card__col-xs-12 card__col-sm-6">
           <mat-form-field class="input-field-width">
             <input matInput formControlName="isinCode" placeholder="ISIN Code" name="isinCode" class="input-field"
-            (blur)="calculateFMV()">
+              (blur)="calculateFMV()">
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-6">
@@ -102,7 +101,7 @@
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-6">
-          <mat-form-field class="input-field-width">
+          <mat-form-field digitsOnly class="input-field-width">
             <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV as on 31st Jan 2018"
               name="fmvAsOn31Jan2018" class="input-field">
           </mat-form-field>
