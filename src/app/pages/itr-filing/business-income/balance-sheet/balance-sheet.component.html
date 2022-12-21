@@ -173,7 +173,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Investments</mat-label>
                             <input type="number" [formControl]="assetLiabilitiesForm.controls['investments']" matInput
-                                placeholder="Other assets" name="investments" class="input-field" maxlength="14"
+                                placeholder="Investments" name="investments" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['investments'].hasError('pattern')">
                                 Enter positive number without decimal.</mat-error>
@@ -211,18 +211,24 @@
                 <div class="card__col-xs-12 card__col-sm-6">
                     <div class="card__col-xs-6 card__col-sm-6">
                         <mat-form-field appearance="outline">
-                        <mat-label>GST Turnover </mat-label>
-                        <input matInput placeholder="GST Turnover" name="grossTurnOverAmount"
-                            [formControl]="assetLiabilitiesForm.controls['grossTurnOverAmount']" class="input-field"
-                            maxlength="14">
+                            <mat-label>GST Turnover </mat-label>
+                            <input matInput placeholder="GST Turnover" name="grossTurnOverAmount"
+                                [formControl]="assetLiabilitiesForm.controls['grossTurnOverAmount']" class="input-field"
+                                maxlength="14">
+                            <mat-error *ngIf="assetLiabilitiesForm.controls['grossTurnOverAmount'].hasError('pattern')">
+                                Enter positive number without decimal.</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-6 card__col-sm-6">
                         <mat-form-field appearance="outline">
-                        <mat-label>GST Number </mat-label>
-                        <input matInput placeholder="GST Number" name="GSTRNumber"
-                            [formControl]="assetLiabilitiesForm.controls['GSTRNumber']" class="input-field"
-                            maxlength="14">
+                            <mat-label>GSTR Number </mat-label>
+                            <input matInput placeholder="GST Number" name="GSTRNumber"
+                                [formControl]="assetLiabilitiesForm.controls['GSTRNumber']" class="input-field"
+                                maxlength="14"
+                                matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
+                                matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase>
+                            <mat-error *ngIf="assetLiabilitiesForm.controls['GSTRNumber'].hasError('pattern')">Enter
+                                valid GST Number</mat-error>
                         </mat-form-field>
                     </div>
                 </div>

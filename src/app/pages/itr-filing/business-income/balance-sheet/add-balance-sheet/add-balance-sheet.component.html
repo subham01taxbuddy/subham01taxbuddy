@@ -11,13 +11,13 @@
                     <mat-form-field class="input-field-width">
                         <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                             name="natureOfBusiness">
-                            <mat-option *ngFor="let profession of natureOfProfessionDropdown"
-                                [value]="profession.label">
-                                {{profession.label}}-{{profession.code}}
+                            <mat-option *ngFor="let nature of natureOfBusinessDropdownAll" [value]="nature.label"
+                                [disabled]="nature.disabled">
+                                {{nature.label}}-{{nature.code}}
                             </mat-option></mat-select>
                         <mat-error *ngIf="balanceGridForm.controls['natureOfBusiness'].hasError('required')">Please
                             select
-                            nature of profession</mat-error>
+                            nature of Business</mat-error>
                     </mat-form-field>
                 </div>
 

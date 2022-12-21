@@ -5,6 +5,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { BusinessDescription, FixedAssetsDetails } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-add-balance-sheet',
@@ -33,12 +34,25 @@ export class AddBalanceSheetComponent implements OnInit {
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
     public toastMsgService: ToastMessageService,
+    public utilsService: UtilsService,
     public dialogRef: MatDialogRef<AddBalanceSheetComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    this.getMastersData();
+    let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    if (natureOfBusiness) {
+      this.natureOfBusinessDropdownAll = natureOfBusiness;
+      this.data.natureList.forEach(item => {
+        this.natureOfBusinessDropdownAll.forEach(element => {
+          if (item.natureOfBusiness.includes(element.label) && this.data.data.natureOfBusiness != element.label) {
+            element.disabled = true;
+          }
+        });
+      });
+    } else {
+      this.getMastersData();
+    }
     this.initBalanceGridForm(this.data.data);
     this.initDepreciationForm(this.data.data);
   }
@@ -65,12 +79,18 @@ export class AddBalanceSheetComponent implements OnInit {
   }
 
   getMastersData() {
+    this.loading = true;
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
-      this.natureOfProfessionDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
+      this.loading = false;
+      sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(this.natureOfBusinessDropdownAll));
+      // this.natureOfProfessionDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to get nature of Business list, please try again.');
+      this.utilsService.smoothScrollToTop();
     });
   }
 

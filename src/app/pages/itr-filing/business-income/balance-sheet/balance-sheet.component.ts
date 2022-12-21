@@ -164,7 +164,8 @@ export class BalanceSheetComponent implements OnInit {
       data: {
         mode: mode,
         data: data,
-        type: type
+        type: type,
+        natureList: this.balanceSheetGridOptions.rowData
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -259,8 +260,8 @@ export class BalanceSheetComponent implements OnInit {
       Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) +
       Number(this.assetLiabilitiesForm.controls['cashInHand'].value) +
       Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value) +
-      Number(this.assetLiabilitiesForm.controls['investments'].value);
-    Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
+      Number(this.assetLiabilitiesForm.controls['investments'].value) +
+      Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
     this.difference = this.total1 - this.total2;
     this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
