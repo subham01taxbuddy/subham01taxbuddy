@@ -6,7 +6,7 @@
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="sellOrBuyQuantity" placeholder="Sell/Buy Quantity"
+          <input matInput digitsOnly formControlName="sellOrBuyQuantity" placeholder="Sell/Buy Quantity"
             name="sellOrBuyQuantity" class="input-field" maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['sellOrBuyQuantity'].hasError('pattern')">Enter
@@ -15,16 +15,16 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field>
-          <input matInput formControlName="sellDate" name="sellDate" [matDatepicker]="sellDate" placeholder="Sale Date"
-            (blur)="calculateGainType()" (dateChange)="calculateGainType()">
+          <input matInput formControlName="sellDate" name="sellDate" readonly [matDatepicker]="sellDate"
+            placeholder="Sale Date" (blur)="calculateGainType()" (dateChange)="calculateGainType()">
           <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
           <mat-datepicker #sellDate></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="sellValuePerUnit" placeholder="Sell Price"
-            name="sellValuePerUnit" class="input-field" maxlength="14"
+          <input matInput digitsOnly formControlName="sellValuePerUnit" placeholder="Sell Price" name="sellValuePerUnit"
+            class="input-field" maxlength="14"
             (blur)="assetDetailsForm.controls['sellValue'].setValue(assetDetailsForm.controls['sellValuePerUnit'].value * assetDetailsForm.controls['sellOrBuyQuantity'].value)"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['sellValuePerUnit'].hasError('pattern')">Enter
@@ -33,8 +33,8 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="sellValue" placeholder="Sell Value" name="sellValue"
-            class="input-field" maxlength="14" (blur)="calculateGainType()"
+          <input matInput digitsOnly formControlName="sellValue" placeholder="Sell Value" name="sellValue"
+            class="input-field" maxlength="14" (blur)="calculateGainType()" required
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['sellValue'].hasError('pattern')">Enter
             valid amount.</mat-error>
@@ -43,14 +43,14 @@
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field>
           <input matInput formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
-            placeholder="Buy Date" (blur)="calculateGainType()" (dateChange)="calculateGainType()">
+            placeholder="Buy Date" readonly (blur)="calculateGainType()" (dateChange)="calculateGainType()">
           <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
           <mat-datepicker #purchaseDate></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="purchaseValuePerUnit" placeholder="Buy Price"
+          <input matInput digitsOnly formControlName="purchaseValuePerUnit" placeholder="Buy Price"
             name="purchaseValuePerUnit" class="input-field" maxlength="14"
             (blur)="assetDetailsForm.controls['purchaseCost'].setValue(assetDetailsForm.controls['purchaseValuePerUnit'].value * assetDetailsForm.controls['sellOrBuyQuantity'].value)"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
@@ -60,7 +60,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="purchaseCost" placeholder="Buy Value" name="purchaseCost"
+          <input matInput digitsOnly formControlName="purchaseCost" placeholder="Buy Value" name="purchaseCost"
             class="input-field" maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['purchaseCost'].hasError('pattern')">Enter
@@ -69,7 +69,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="sellExpense" placeholder="Expenses" name="sellExpense"
+          <input matInput digitsOnly formControlName="sellExpense" placeholder="Expenses" name="sellExpense"
             class="input-field" maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['sellExpense'].hasError('pattern')">Enter
@@ -78,7 +78,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6" *ngIf="this.data.assetType === 'EQUITY_SHARES_UNLISTED'">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="indexCostOfAcquisition"
+          <input matInput digitsOnly formControlName="indexCostOfAcquisition"
             placeholder="Cost of Acquisition with indexation" name="indexCostOfAcquisition" class="input-field"
             maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
@@ -87,12 +87,11 @@
         </mat-form-field>
       </div>
       <!-- ------------------ -->
-      <ng-container
-        *ngIf="buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'">
+      <ng-container *ngIf="buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'">
         <div class="card__col-xs-12 card__col-sm-6">
           <mat-form-field class="input-field-width">
             <input matInput formControlName="isinCode" placeholder="ISIN Code" name="isinCode" class="input-field"
-            (blur)="calculateFMV()">
+              (blur)="calculateFMV()">
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-6">
@@ -102,7 +101,7 @@
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-6">
-          <mat-form-field class="input-field-width">
+          <mat-form-field digitsOnly class="input-field-width">
             <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV as on 31st Jan 2018"
               name="fmvAsOn31Jan2018" class="input-field">
           </mat-form-field>

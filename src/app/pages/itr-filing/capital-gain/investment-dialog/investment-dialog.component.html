@@ -24,7 +24,7 @@
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field>
-          <input matInput formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
+          <input matInput formControlName="purchaseDate" readonly name="purchaseDate" [matDatepicker]="purchaseDate"
             placeholder="Date of Purchase">
           <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
           <mat-datepicker #purchaseDate></mat-datepicker>
@@ -32,7 +32,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="costOfNewAssets" placeholder="Cost of New Asset"
+          <input matInput digitsOnly formControlName="costOfNewAssets" placeholder="Cost of New Asset"
             name="costOfNewAssets" class="input-field" maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="investmentForm.controls['costOfNewAssets'].hasError('pattern')">Enter
@@ -41,7 +41,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput currencyMask type="number" formControlName="investmentInCGAccount"
+          <input matInput currencyMask digitsOnly formControlName="investmentInCGAccount"
             placeholder="Amount Deposited in CGAS" name="investmentInCGAccount" class="input-field" maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="investmentForm.controls['investmentInCGAccount'].hasError('pattern')">Enter
@@ -50,7 +50,7 @@
       </div>
       <!-- <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput currencyMask type="number" formControlName="totalDeductionClaimed" [hidden]="true"
+          <input matInput currencyMask digitsOnly formControlName="totalDeductionClaimed" [hidden]="true"
             placeholder="Deduction Claimed" name="totalDeductionClaimed" class="input-field" maxlength="14" [disabled]="true"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="investmentForm.controls['totalDeductionClaimed'].hasError('pattern')">Enter
