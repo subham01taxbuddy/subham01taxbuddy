@@ -179,7 +179,7 @@ export class SummaryComponent implements OnInit {
 
           this.refund = this.summaryDetail.taxRefund;
           this.deductionDetail = summary.assessment.summaryDeductions?.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
-          this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN;
+          this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
           this.totalLoss = summary.assessment.currentYearLosses;
           this.show = true;
           sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));

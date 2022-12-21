@@ -6,6 +6,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { BondsDebentureComponent } from '../bonds-debenture/bonds-debenture.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-bonds',
@@ -91,6 +92,13 @@ export class BondsComponent implements OnInit {
           } else {
             this.getDeductionTableData([this.bondsDeductionData]);
           }
+          if (this.getBondsCg() <= 0) {
+            this.deduction = false;
+            this.isDisable = true;
+            this.onDeductionChanged();
+          } else {
+            this.isDisable = false;
+          }
         });
       } else {
         this.getBondsTableData([]);
@@ -113,9 +121,10 @@ export class BondsComponent implements OnInit {
             this.getZeroDeductionTableData([this.bondsDeductionData]);
           }
         });
+      } else {
+        this.getZeroBondsTableData([]);
+        this.getZeroDeductionTableData([this.bondsDeductionData]);
       }
-      this.getZeroBondsTableData([]);
-      this.getZeroDeductionTableData([this.bondsDeductionData]);
     } else {
       this.getBondsTableData([]);
       this.getDeductionTableData([this.bondsDeductionData]);
@@ -197,6 +206,13 @@ export class BondsComponent implements OnInit {
   deleteBonds(index) {
     this.bondsGridOptions.rowData.splice(index, 1);
     this.bondsGridOptions.api.setRowData(this.bondsGridOptions.rowData);
+    if (this.getBondsCg() <= 0) {
+      this.deduction = false;
+      this.isDisable = true;
+      this.onDeductionChanged();
+    } else {
+      this.isDisable = false;
+    }
   }
 
   deleteZeroBonds(index) {
@@ -204,6 +220,21 @@ export class BondsComponent implements OnInit {
     this.zeroBondsGridOptions.api.setRowData(this.zeroBondsGridOptions.rowData);
   }
 
+  getBondsCg() {
+    let totalCg = 0;
+    this.bondsGridOptions.rowData.forEach(element => {
+      totalCg += element.capitalGain;
+    });
+    return totalCg;
+  }
+
+  getZCBondsCg() {
+    let totalCg = 0;
+    this.zeroBondsGridOptions.rowData.forEach(element => {
+      totalCg += element.capitalGain;
+    });
+    return totalCg;
+  }
 
   addEditBondsRow(mode, type, data: any, index?) {
     if (mode === 'ADD') {
@@ -223,13 +254,6 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.capitalGain <= 0) {
-        this.deduction = false;
-        this.isDisable = true;
-        this.onDeductionChanged();
-      } else {
-        this.isDisable = false;
-      }
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
@@ -240,6 +264,13 @@ export class BondsComponent implements OnInit {
           this.bondsGridOptions.rowData[index] = result;
           this.bondsGridOptions.api.setRowData(this.bondsGridOptions.rowData);
         }
+      }
+      if (this.getBondsCg() <= 0) {
+        this.deduction = false;
+        this.isDisable = true;
+        this.onDeductionChanged();
+      } else {
+        this.isDisable = false;
       }
     });
 
@@ -263,7 +294,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.capitalGain <= 0) {
+      if (this.getZCBondsCg() <= 0) {
         this.zeroDeduction = false;
         this.isZeroDisable = true;
       } else {
@@ -307,12 +338,12 @@ export class BondsComponent implements OnInit {
 
       {
         headerName: 'Cost of Acquisition without indexation (Purchase value)',
-        field: 'indexCostOfAcquisition',
+        field: 'purchaseCost',
         suppressMovable: true,
         editable: false,
         width: 200,
         valueGetter: function nameFromCode(params) {
-          return params.data.indexCostOfAcquisition ? params.data.indexCostOfAcquisition.toLocaleString('en-IN') : params.data.indexCostOfAcquisition;
+          return params.data.purchaseCost ? params.data.purchaseCost.toLocaleString('en-IN') : params.data.purchaseCost;
         },
       },
 
@@ -610,6 +641,10 @@ export class BondsComponent implements OnInit {
   }
 
   onContinue() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     const bondIndex = this.ITR_JSON.capitalGain.findIndex(element => element.assetType === 'BONDS')
     const zeroBondIndex = this.ITR_JSON.capitalGain.findIndex(element => element.assetType === 'ZERO_COUPON_BONDS')
     const bondImprovement = [];
@@ -661,19 +696,30 @@ export class BondsComponent implements OnInit {
     }
     console.log(zeroBondData);
     if (bondIndex >= 0) {
-      this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+      if(bondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+      } else{
+        this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
+      }
     } else {
-      this.Copy_ITR_JSON.capitalGain.push(bondData);
+      if(bondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain.push(bondData);
+      }
     }
     if (zeroBondIndex >= 0) {
-      this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+      if(zeroBondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+      } else {
+        this.Copy_ITR_JSON.capitalGain.splice(zeroBondIndex, 1);
+      }
     } else {
-      this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+      if(zeroBondData.assetDetails.length) {
+        this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+      }
     }
     console.log(this.Copy_ITR_JSON);
 
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Bonds and zero coupon bonds data added successfully');

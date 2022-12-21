@@ -72,6 +72,8 @@ export class ScheduleALComponent implements OnInit {
       assetLiability:0
     }
     //this.movableAssets = this.ITR_JSON.movableAssets;
+    // console.log('constructor object', this.Copy_ITR_JSON);
+
     if(!this.ITR_JSON.movableAsset || this.ITR_JSON.movableAsset.length == 0){
       this.movableAssets = movable;
     } else {
@@ -82,16 +84,16 @@ export class ScheduleALComponent implements OnInit {
   }
 
   createMovableAssetsForm() {
-    this.movableAssetsForm = new FormGroup({
-      jwelleryAmount: new FormControl(),
-      artWorkAmount:new FormControl(),
-      vehicleAmount:new FormControl(),
-      bankAmount:new FormControl(),
-      shareAmount:new FormControl(),
-      insuranceAmount:new FormControl(),
-      loanAmount:new FormControl(),
-      cashInHand:new FormControl(),
-      assetLiability: new FormControl()
+    this.movableAssetsForm = this.fb.group({
+      jwelleryAmount: [this.movableAssets?.jwelleryAmount],
+      artWorkAmount: [this.movableAssets?.artWorkAmount],
+      vehicleAmount: [this.movableAssets?.vehicleAmount],
+      bankAmount: [this.movableAssets?.bankAmount],
+      shareAmount: [this.movableAssets?.shareAmount],
+      insuranceAmount: [this.movableAssets?.insuranceAmount],
+      loanAmount: [this.movableAssets?.loanAmount],
+      cashInHand: [this.movableAssets.cashInHand],
+      assetLiability: [this.movableAssets?.assetLiability]
     });
   }
 
@@ -117,6 +119,7 @@ export class ScheduleALComponent implements OnInit {
     const immovableAssetsArray = <FormArray>this.immovableAssetsForm.controls['immovableAssetsArray'];
 
     this.immovableAssets = [];
+    console.log('init object', this.Copy_ITR_JSON);
     if(this.Copy_ITR_JSON.immovableAsset) {
       this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
         // this.immovableAssetsForm = this.createImmovableAssetsForm(obj);
@@ -188,14 +191,17 @@ export class ScheduleALComponent implements OnInit {
   }
 
   saveAssets() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     Object.assign(this.movableAssets, this.movableAssetsForm.value);
     this.Copy_ITR_JSON.movableAsset = [];
     this.Copy_ITR_JSON.movableAsset.push(this.movableAssets);
     this.Copy_ITR_JSON.immovableAsset = this.immovableAssets;
-    console.log(this.Copy_ITR_JSON);
+    console.log('updated object', this.Copy_ITR_JSON);
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.loading = false;
@@ -231,12 +237,6 @@ export class ScheduleALComponent implements OnInit {
         const immovableAssetsArray = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
         immovableAssetsArray.push(this.createImmovableAssetsForm(result));
         return;
-        // this.ITR_JSON = result;
-        // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
-        // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        /* if (this.ITR_JSON.capitalGain.length > 0)
-          this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData()) */
       }
     });
   }

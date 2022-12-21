@@ -598,6 +598,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
+      hasParentOverSixty:[null]
     });
     this.setInvestmentsDeductionsValues();
     this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
@@ -622,6 +623,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   saveInvestmentDeductions() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.max5000Limit('SELF')
     if (this.investmentDeductionForm.valid) {
       Object.keys(this.investmentDeductionForm.controls).forEach((item: any) => {
@@ -715,6 +720,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
+          this.ITR_JSON.systemFlags.hasParentOverSixty = true;
         this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
@@ -793,6 +799,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         this.investmentDeductionForm.controls['selfPreventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
         this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
       } else if (this.ITR_JSON.insurances[i].policyFor === 'PARENTS') {
+        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(true);
         this.investmentDeductionForm.controls['premium'].setValue(this.ITR_JSON.insurances[i].premium);
         this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
         this.investmentDeductionForm.controls['medicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
@@ -1026,6 +1034,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
+          //re-intialise the ITR objects
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
           this.Copy_ITR_JSON.donations = this.ITR_JSON.donations.filter((item: any) => item.identifier !== params.data.identifier);
           this.serviceCall('OTHER', this.Copy_ITR_JSON);
           break;
@@ -1063,9 +1075,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   serviceCall(val, ITR_JSON) {
+    
     this.loading = true;
-    const param = '/itr/' + ITR_JSON.userId + '/' + ITR_JSON.itrId + '/' + ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));

@@ -101,6 +101,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         assetType: labData[0].assetType,
         description: assetDetails.description,
         sellDate: assetDetails.sellDate,
+        costOfAcquisition: assetDetails.indexCostOfAcquisition,
         valueInConsideration: /* value */assetDetails.valueInConsideration,
         // totalCost: tCost,
         gainType: assetDetails.gainType,
@@ -196,24 +197,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           },
         },
       },
-      // {
-      //   headerName: 'Date of Sale',
-      //   field: 'sellDate',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   cellRenderer: (params) => {
-      //     return params.data.sellDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
-      //   }
-      // },
-      {
-        headerName: 'Type of Gain',
-        field: 'gainType',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-        },
-      },
       {
         headerName: 'Full Value Consideration',
         field: 'valueInConsideration',
@@ -221,6 +204,15 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.valueInConsideration ? params.data.valueInConsideration.toLocaleString('en-IN') : params.data.valueInConsideration;
+        },
+      },
+      {
+        headerName: 'Cost of Acquisition',
+        field: 'costOfAcquisition',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.costOfAcquisition ? params.data.costOfAcquisition.toLocaleString('en-IN') : params.data.costOfAcquisition;
         },
       },
       {
@@ -247,18 +239,17 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
         },
       },
-      // {
-      //   headerName: 'Total Cost',
-      //   field: 'totalCost',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.totalCost ? params.data.totalCost.toLocaleString('en-IN') : params.data.totalCost;
-      //   },
-      // },
-
       {
-        headerName: 'Gain Amount',
+        headerName: 'Type of Gain',
+        field: 'gainType',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
+        },
+      },
+      {
+        headerName: 'Total Capital Gain',
         field: 'cgIncome',
         editable: false,
         suppressMovable: true,
@@ -376,13 +367,26 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   }
 
   deleteCapitalGain(assetSelected) {
-    this.loading = true;
-    this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON.capitalGain.filter(item =>
-      !((item.assetDetails[0].description === assetSelected.description) && (item.assetType === assetSelected.assetType))
-    );
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.loading = true;
+    let selectedObject = JSON.parse(assetSelected.assetSelected);
+    let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
+    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
+    if(selectedTypeList){
+      selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.deduction = selectedTypeList.deduction?.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.improvement = selectedTypeList.improvement?.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(itm => (itm.srn !== selectedObject.srn));
+    }
+    this.Copy_ITR_JSON.capitalGain = filtered;
+    if(selectedTypeList && selectedTypeList.assetDetails.length > 0) {
+      this.Copy_ITR_JSON.capitalGain.push(selectedTypeList);
+    }
+
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));

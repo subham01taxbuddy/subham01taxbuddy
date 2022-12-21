@@ -1084,7 +1084,7 @@ export class TaxesPaidComponent implements OnInit {
           return '';
         },
         valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
+          var newValInt = params.newValue;
           var valueChanged = params.data.bsrCode !== newValInt;
           if (valueChanged) {
             params.data.bsrCode = newValInt ? newValInt : params.oldValue;
@@ -1241,6 +1241,10 @@ export class TaxesPaidComponent implements OnInit {
 
 
   saveAndContinue() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.loading = true;
     var onSalary = []
     var tdsOtherThanSalary16A = []
@@ -1326,8 +1330,7 @@ export class TaxesPaidComponent implements OnInit {
       return
     }
 
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: ITR_JSON) => {
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.loading = false;

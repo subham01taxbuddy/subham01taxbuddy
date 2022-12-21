@@ -24,8 +24,9 @@
 </div> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <form [formGroup]="immovableForm">
-  <b>Add details of capital gain from Land / Building / Property?</b> <span style="float: right;"> Capital Gain Type:
-    {{cgArrayElement?.assetDetails[0]?.gainType ? cgArrayElement?.assetDetails[0]?.gainType  : 'NA'}}</span>
+  <b>Add details of capital gain from Land / Building / Property?</b> 
+  <span style="float: right;"> <b> Capital Gain: </b>{{cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain ? cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain  : 'NA'}} <b>Type: </b>
+    {{cgArrayElement?.assetDetails[currentCgIndex]?.gainType ? cgArrayElement?.assetDetails[currentCgIndex]?.gainType  : 'NA'}}</span>
   <br>
   <div formArrayName="assetDetails">
     <div class="card__row" *ngFor="let asset of getAssetDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
@@ -46,7 +47,7 @@
       <div class="card__col-lg-4">
         <mat-form-field>
           <input matInput [min]="minSellDate" [max]="maxSellDate" formControlName="sellDate" name="asset[i]"
-            [matDatepicker]="sellDate" placeholder="Date of Sale"
+            [matDatepicker]="sellDate" placeholder="Date of Sale" (blur)="this.calculateIndexCost(i)"
             (dateChange)="calMaxPurchaseDate(this.immovableForm.controls['assetDetails'].controls[i].controls['sellDate'].value,this.immovableForm)"
             (dateInput)="calMaxPurchaseDate(this.immovableForm.controls['assetDetails'].controls[i].controls['sellDate'].value,this.immovableForm)"
             (blur)="calMaxPurchaseDate(this.immovableForm.controls['assetDetails'].controls[i].controls['sellDate'].value,this.immovableForm)" required>

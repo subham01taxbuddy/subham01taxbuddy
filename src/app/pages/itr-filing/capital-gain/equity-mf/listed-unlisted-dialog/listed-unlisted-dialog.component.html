@@ -34,7 +34,7 @@
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
           <input matInput type="number" formControlName="sellValue" placeholder="Sell Value" name="sellValue"
-            class="input-field" maxlength="14"
+            class="input-field" maxlength="14" (blur)="calculateGainType()"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="assetDetailsForm.controls['sellValue'].hasError('pattern')">Enter
             valid amount.</mat-error>

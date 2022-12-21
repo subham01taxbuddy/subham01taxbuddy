@@ -760,9 +760,9 @@ export class UtilsService {
                     }
                     resolve(data);
                 }, error => {
-                    if (error.status === 404) {
-                        reject(error);
-                    }
+                if (error.status === 404) {
+                    reject(error);
+                }
                 });
             } else {
                 console.log('pinCode invalid', pinCode);

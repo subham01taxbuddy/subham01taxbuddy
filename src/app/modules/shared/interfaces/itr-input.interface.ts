@@ -157,6 +157,7 @@ export interface HouseProperties {
     isEligibleFor80EEA: boolean;
     tenant: Tenant[];
     coOwners: CoOwners[];
+    ownerPercentage: number;
     loans: Loans[];
 }
 export interface Business {
@@ -262,6 +263,7 @@ export interface Improvement {
     dateOfImprovement: string;
     costOfImprovement: number;
     indexCostOfImprovement: number;
+    financialYearOfImprovement: string;
 }
 export interface Investments {
     srn: string;
@@ -649,7 +651,7 @@ export interface CarryForwardLosses {
     speculativeBusinessLoss: number;
     broughtForwordBusinessLoss: number;
     setOffDuringTheYear: number;
-    adjustedAmount: number;
+    // adjustedAmount: number;
 }
 
 export interface NewBusiness {

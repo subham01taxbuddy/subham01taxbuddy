@@ -58,6 +58,10 @@ export class DirectorInCompanyComponent implements OnInit {
 
 
   saveDirectorDetials() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.directorForm.valid) {
       this.Copy_ITR_JSON.systemFlags.directorInCompany = true;
       console.log('Save form here', this.directorForm.getRawValue());
@@ -75,8 +79,7 @@ export class DirectorInCompanyComponent implements OnInit {
 
   serviceCall() {
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe(result => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
       this.loading = false;
       this.utilsService.showSnackBar('Director in company details added successfully');

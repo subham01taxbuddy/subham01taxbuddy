@@ -24,11 +24,11 @@ export class ListedUnlistedDialogComponent implements OnInit {
       srn: [0],
       sellOrBuyQuantity: [0, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       sellDate: [null, [Validators.required]],
-      sellValuePerUnit: [0, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
-      sellValue: [0, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
+      sellValuePerUnit: [0, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
+      sellValue: [0, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
       purchaseDate: [null, [Validators.required]],
-      purchaseValuePerUnit: [0, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
-      purchaseCost: [0, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
+      purchaseValuePerUnit: [0, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
+      purchaseCost: [0, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
       sellExpense: [0],
       isinCode: [''],
       nameOfTheUnits: [''],
@@ -38,7 +38,8 @@ export class ListedUnlistedDialogComponent implements OnInit {
       indexCostOfAcquisition: [0],
       algorithm: ['cgSharesMF'],
       stampDutyValue: 0,
-      valueInConsideration: 0
+      valueInConsideration: 0,
+      capitalGain: 0
     });
     if (this.data.mode === 'EDIT') {
       this.assetDetailsForm.patchValue(this.data.assetDetails);

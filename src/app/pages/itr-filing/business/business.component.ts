@@ -460,6 +460,11 @@ export class BusinessComponent implements OnInit {
   }
 
   serviceCallToupdateData() {
+
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     let copyAllPresumptiveIncomes = [];
     if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.presumptiveIncomes)) {
       copyAllPresumptiveIncomes = JSON.parse(JSON.stringify(this.ITR_JSON.business.presumptiveIncomes));
@@ -520,8 +525,7 @@ export class BusinessComponent implements OnInit {
       this.loading = true;
 
       // SERVICE CALL MAIN NEXT BUTTON
-      const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-      this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
@@ -585,7 +589,7 @@ export class BusinessComponent implements OnInit {
   editBusiness(index) {
     this.mode = 'UPDATE';
     this.currentIndex = index;
-    // this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
+    //this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
     this.businessMode = 'FORM';
     console.log('this.localPresumptiveIncome =', this.localPresumptiveIncome);
     const name = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === this.localPresumptiveIncome.natureOfBusiness);
@@ -708,8 +712,7 @@ export class BusinessComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = true;
     }
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
@@ -740,6 +743,10 @@ export class BusinessComponent implements OnInit {
   }
 
   saveCommonForm() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    
     if (this.businessMode === 'TABLE') {
       if (this.commonForm.valid) {
         this.loading = true;
@@ -767,8 +774,7 @@ export class BusinessComponent implements OnInit {
           
         };
         // SERVICE CALL MAIN NEXT BUTTON
-        const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-        this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+        this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
           this.ITR_JSON = result;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.utilsService.smoothScrollToTop();

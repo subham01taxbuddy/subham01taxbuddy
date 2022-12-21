@@ -112,8 +112,7 @@ export class UnlistedSharesComponent implements OnInit {
     //   // this.utilsService.disposable.unsubscribe();
     // });
     this.loading = true;
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe(result => {
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
       this.loading = false;
       this.utilsService.showSnackBar('Unlisted share details added successfully.');
@@ -126,6 +125,10 @@ export class UnlistedSharesComponent implements OnInit {
   }
 
   saveShareDetials() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     if (this.sharesForm.valid) {
       this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = true;
       console.log('Save form here', this.sharesForm.getRawValue());

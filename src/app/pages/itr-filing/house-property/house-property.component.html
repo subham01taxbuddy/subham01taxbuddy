@@ -22,7 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody class="report-table__body">
-                                <ng-template ngFor let-house [ngForOf]="ITR_JSON.houseProperties" let-i="index">
+                                <ng-template ngFor let-house [ngForOf]="ITR_JSON?.houseProperties" let-i="index">
                                     <tr class="report-table__row">
                                         <td class="report-table__cell report-table__cell_day">
                                             {{house.propertyType==="SOP"?"Self
@@ -115,27 +115,35 @@
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>
-                                {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of
-                                rent
-                                received during the year?':
-                                (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the
-                                expected rent amount from said property?' :'')}}
+                                {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Gross rent received / receivable / letable value':
+                                (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}
                             </mat-label>
-                            <input formControlName="grossAnnualRentReceived" matInput
-                                placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
+                            <input formControlName="annualRentReceived" matInput
+                                placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? ':
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
                                 matTooltipClass="tab-tooltip"
-                                matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
+                                matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Gross rent received / receivable / letable value':
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
                                 name="rentAmount" class="input-field" maxlength="11" digitsOnly
                                 (blur)="calAnnualValue()">
                             <mat-error
-                                *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('pattern')">
+                                *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('pattern')">
                                 Enter
                                 positive amount without decimal.</mat-error>
-                            <mat-error *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('min')">
+                            <mat-error *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('min')">
                                 Amount
                                 can not be 0.</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4" *ngIf="isCoOwners.value">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Your share of rent received</mat-label>
+                            <input formControlName="rentPercentage" matInput currencyMask
+                                placeholder="Your share of rent received" name="rentPercentage"
+                                class="input-field" maxlength="11" digitsOnly (blur)="calAnnualValue()">
+                            <mat-error *ngIf="housePropertyForm.controls['rentPercentage'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4">
@@ -174,7 +182,7 @@
                 </div>
                 <br>
                 <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
-                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
+                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value > 200000">
                     <div class="customradiobtn bdr_btm">
                         <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
                             house
