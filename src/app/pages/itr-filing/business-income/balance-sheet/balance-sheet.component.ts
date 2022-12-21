@@ -45,7 +45,7 @@ export class BalanceSheetComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBalanceSheetTableData([]);
-    this.initForm();
+    this.initForm(this.ITR_JSON.business?.financialParticulars);
     // this.getLiabilitiesAssets();
   }
 
@@ -300,7 +300,6 @@ export class BalanceSheetComponent implements OnInit {
     this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
 
     console.log(this.Copy_ITR_JSON);
-    debugger
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.loading = false;
