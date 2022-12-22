@@ -37,7 +37,7 @@ export class MoreInfoComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
-    if(!this.pastYearLosses || this.pastYearLosses.length == 0) {
+    if (!this.pastYearLosses || this.pastYearLosses.length == 0) {
       this.pastYearLosses.push(this.createPastYearLoss('2014-15'));
       this.pastYearLosses.push(this.createPastYearLoss('2015-16'));
       this.pastYearLosses.push(this.createPastYearLoss('2016-17'));
@@ -53,12 +53,12 @@ export class MoreInfoComponent implements OnInit {
   createPastYearLoss(year) {
     return {
       pastYear: null,
-      assessmentPastYear: year, 
+      assessmentPastYear: year,
       dateofFilling: '',
-      housePropertyLoss: null, 
+      housePropertyLoss: null,
       broughtForwordBusinessLoss: null,
-      STCGLoss: null, 
-      LTCGLoss: null, 
+      STCGLoss: null,
+      LTCGLoss: null,
       speculativeBusinessLoss: null,
       setOffWithCurrentYearSpeculativeBusinessIncome: null,
       setOffWithCurrentYearBroughtForwordBusinessIncome: null,
@@ -67,7 +67,7 @@ export class MoreInfoComponent implements OnInit {
       setOffWithCurrentYearLTCGIncome: null,
       carryForwardAmountBusiness: null,
       carryForwardAmountSpeculative: null,
-      carryForwardAmountHP: null,        
+      carryForwardAmountHP: null,
       carryForwardAmountSTCGIncome: null,
       carryForwardAmountLTCGIncome: null,
       totalLoss: null
@@ -93,7 +93,7 @@ export class MoreInfoComponent implements OnInit {
         width: 100,
         valueGetter: (params: ValueGetterParams) => {
           let rowIndex = params.node.rowIndex;
-          if(rowIndex >= 8) {
+          if (rowIndex >= 8) {
             return params.data.assessmentPastYear;
           } else {
             return params.data.assessmentPastYear;
@@ -133,7 +133,7 @@ export class MoreInfoComponent implements OnInit {
         },
         valueGetter: (params: ValueGetterParams) => {
           let rowIndex = params.node.rowIndex;
-          if(rowIndex >= 8) {
+          if (rowIndex >= 8) {
             return this.totalLoss.housePropertyLoss;
           } else {
             return params.data.housePropertyLoss;
@@ -143,10 +143,10 @@ export class MoreInfoComponent implements OnInit {
           var newValInt = parseInt(params.newValue);
           var valueChanged = params.data.housePropertyLoss !== newValInt;
           if (valueChanged) {
-            params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
+            params.data.housePropertyLoss = newValInt ? newValInt : 0;
           }
           //update total
-          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function(a, b){ return a+ b; })
+          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function (a, b) { return a + b; })
 
           return valueChanged;
         },
@@ -178,7 +178,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.broughtForwordBusinessLoss;
               } else {
                 return params.data.broughtForwordBusinessLoss;
@@ -188,10 +188,10 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.broughtForwordBusinessLoss !== newValInt;
               if (valueChanged) {
-                params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
+                params.data.broughtForwordBusinessLoss = newValInt ? newValInt : 0;
               }
               //update total
-              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -210,7 +210,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.speculativeBusinessLoss;
               } else {
                 return params.data.speculativeBusinessLoss;
@@ -220,11 +220,11 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
               if (valueChanged) {
-                params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
+                params.data.speculativeBusinessLoss = newValInt ? newValInt : 0;
               }
 
               //update total
-              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -256,7 +256,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.STCGLoss;
               } else {
                 return params.data.STCGLoss;
@@ -266,11 +266,11 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.STCGLoss !== newValInt;
               if (valueChanged) {
-                params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
+                params.data.STCGLoss = newValInt ? newValInt : 0;
               }
 
               //update total
-              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -279,7 +279,7 @@ export class MoreInfoComponent implements OnInit {
           {
             headerName: 'Long Term Capital Loss',
             field: 'LTCGLoss',
-            width:180,
+            width: 180,
             editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
             cellStyle: function (params) {
@@ -290,7 +290,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.LTCGLoss;
               } else {
                 return params.data.LTCGLoss;
@@ -300,11 +300,11 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.LTCGLoss !== newValInt;
               if (valueChanged) {
-                params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
+                params.data.LTCGLoss = newValInt ? newValInt : 0;
               }
 
               //update total
-              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -322,7 +322,7 @@ export class MoreInfoComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params) {
           if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-          } else{
+          } else {
             return `<button type="button" class="action_icon add_button" title="Delete">
             <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
           </button>`;
@@ -406,7 +406,7 @@ export class MoreInfoComponent implements OnInit {
     //reinitialise the objects so as to get the data updated in other tabs
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    
+
     this.Copy_ITR_JSON.pastYearLosses = this.pastYearLosses;
     console.log(this.Copy_ITR_JSON)
     this.loading = true;

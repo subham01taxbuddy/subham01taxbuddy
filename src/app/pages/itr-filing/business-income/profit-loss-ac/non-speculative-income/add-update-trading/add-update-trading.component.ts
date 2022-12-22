@@ -33,8 +33,8 @@ export class AddUpdateTradingComponent implements OnInit {
       id: [obj?.id || null],
       incomeType: [obj?.incomeType || null],
       turnOver: [obj?.turnOver || null, Validators.required],
-      finishedGoodsOpeningStock: [obj?.finishedGoodsOpeningStock || null, Validators.required],
-      finishedGoodsClosingStock: [obj?.finishedGoodsClosingStock || null, Validators.required],
+      finishedGoodsOpeningStock: [obj?.finishedGoodsOpeningStock || null],
+      finishedGoodsClosingStock: [obj?.finishedGoodsClosingStock || null],
       purchase: [obj?.purchase || null, [Validators.required]],
       COGS: [obj?.COGS || null],
       grossProfit: [obj?.grossProfit || null],
@@ -46,8 +46,8 @@ export class AddUpdateTradingComponent implements OnInit {
     let param = '/calculate/profitLossNonSpeculativeInCogsGP';
     let request = {
       "turnOver": this.tradingForm.controls['turnOver'].value,
-      "openingStockOfFinishedGoods": this.tradingForm.controls['finishedGoodsOpeningStock'].value,
-      "closingStockOfFinishedGoods": this.tradingForm.controls['finishedGoodsClosingStock'].value,
+      "openingStockOfFinishedGoods": this.tradingForm.controls['finishedGoodsOpeningStock'].value ? this.tradingForm.controls['finishedGoodsOpeningStock'].value : 0,
+      "closingStockOfFinishedGoods": this.tradingForm.controls['finishedGoodsClosingStock'].value ? this.tradingForm.controls['finishedGoodsClosingStock'].value : 0,
       "purchase": this.tradingForm.controls['purchase'].value
     };
     this.itrMsService.postMethod(param, request).subscribe((result: any) => {

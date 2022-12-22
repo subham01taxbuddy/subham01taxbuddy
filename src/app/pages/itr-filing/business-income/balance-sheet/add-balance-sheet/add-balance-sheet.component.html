@@ -27,8 +27,6 @@
                             maxlength="30">
                         <mat-error *ngIf="balanceGridForm.controls['tradeName'].hasError('required')">Please enter
                             trade of business</mat-error>
-                        <mat-error *ngIf="balanceGridForm.controls['tradeName'].hasError('pattern')">Please enter
-                            character only</mat-error>
                     </mat-form-field>
                 </div>
 
@@ -36,9 +34,9 @@
                     <mat-form-field class="input-field-width">
                         <input matInput class="input-field" placeholder="Business Description"
                             formControlName="businessDescription" maxlength="14">
-                        <mat-error *ngIf="balanceGridForm.controls['businessDescription'].hasError('required')">Please
+                        <mat-error *ngIf="balanceGridForm.controls['businessDescription'].hasError('pattern')">Please
                             enter
-                            Business Description</mat-error>
+                            char only</mat-error>
                     </mat-form-field>
                 </div>
 

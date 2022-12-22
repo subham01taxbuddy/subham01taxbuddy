@@ -7,10 +7,10 @@
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="turnOver" formControlName="turnOver"
+                    <input matInput  digitsOnly class="input-field" placeholder="Turnover" formControlName="turnOver"
                         maxlength="30">
                     <mat-error *ngIf="tradingForm.controls['turnOver'].hasError('required')">Please enter
-                        turnOver</mat-error>
+                        turnover</mat-error>
                 </mat-form-field>
             </div>
 
@@ -25,7 +25,7 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="closing stock amount"
+                    <input matInput class="input-field" digitsOnly placeholder="closing stock amount"
                         formControlName="finishedGoodsClosingStock" name="finishedGoodsClosingStock" maxlength="14">
                     <mat-error *ngIf="tradingForm.controls['finishedGoodsClosingStock'].hasError('required')">Please the
                         amount</mat-error>
@@ -34,7 +34,7 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="purchase" formControlName="purchase"
+                    <input matInput digitsOnly class="input-field" placeholder="purchase" formControlName="purchase"
                         name="purchase" maxlength="14">
                     <mat-error *ngIf="tradingForm.controls['purchase'].hasError('required')">Please the
                         amount</mat-error>

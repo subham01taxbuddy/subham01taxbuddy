@@ -61,8 +61,8 @@ export class AddBalanceSheetComponent implements OnInit {
     this.balanceGridForm = this.formBuilder.group({
       id: [obj?.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
-      tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
-      businessDescription: [obj?.businessDescription || null, Validators.required],
+      tradeName: [obj?.tradeName || null, [Validators.required]],
+      businessDescription: [obj?.businessDescription || null, Validators.pattern(AppConstants.charRegex)],
     });
   }
 

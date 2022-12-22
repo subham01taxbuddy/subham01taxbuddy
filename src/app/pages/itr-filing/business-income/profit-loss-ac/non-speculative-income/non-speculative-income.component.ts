@@ -21,7 +21,18 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     expenseAmount: null,
     description: null,
   }
-  expenseTypeList = ['Trading Expenses', 'Electricity', 'Internet', 'Mobile', 'Professional Fees', 'Audit Fees', 'Interest', 'Taxes & Cess', 'Other Expenses']
+
+  expenseTypeList: any[] = [
+    { key: 'Trading Expenses', value: 'Trading Expenses' },
+    { key: 'Electricity', value: 'Electricity' },
+    { key: 'Internet', value: 'Internet' },
+    { key: 'Mobile', value: 'Mobile' },
+    { key: 'Professional Fees', value: 'Professional Fees' },
+    { key: 'Audit Fees', value: 'Audit Fees' },
+    { key: 'Interest', value: 'Interest' },
+    { key: 'Taxes & Cess', value: 'Taxes & Cess' },
+    { key: 'Other Expenses', value: 'Other Expenses' }
+  ]
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   tradingData: ProfitLossIncomes = {
@@ -90,12 +101,14 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   addExpenseForm(element) {
     const expenses = this.expenses;
     expenses.push(this.initExpenseForm(element))
+    this.changed();
   }
 
   deleteExpenseForm(index) {
     const expenses = this.expenses;
     expenses.removeAt(index)
     this.calculateNetProfit();
+    this.changed();
   }
 
   getTradingTableData(rowsData) {
@@ -255,6 +268,19 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     const net = form.grossProfit - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
   }
+
+  changed() {
+    const expenses = this.expenses;
+    this.expenseTypeList.forEach((type) => {
+      type.disabled = false;
+      expenses.controls.forEach((element: FormGroup) => {
+        if (element.controls['expenseType'].value == (type.key)) {
+          type.disabled = true;
+        }
+      })
+    })
+  }
+
 
   onContinue() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));

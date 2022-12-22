@@ -46,7 +46,7 @@ export class ProfessionalDialogComponent implements OnInit {
   initProfessionForm(obj?: professionalIncome) {
     this.professionForm = this.formBuilder.group({
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
-      tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      tradeName: [obj?.tradeName || null, [Validators.required]],
       receipts: [obj?.receipts || null, Validators.required],
       presumptiveIncome: [obj?.presumptiveIncome || null, [Validators.required, Validators.min(this.amountFifty)]],
     });
