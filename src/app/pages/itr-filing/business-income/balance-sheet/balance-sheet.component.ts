@@ -46,6 +46,11 @@ export class BalanceSheetComponent implements OnInit {
   ngOnInit(): void {
     this.getBalanceSheetTableData([]);
     this.initForm(this.ITR_JSON.business?.financialParticulars);
+    this.calculateTotal1();
+    this.calculateTotal2();
+    if(this.ITR_JSON.business?.fixedAssetsDetails) {
+      this.depreciationObj = this.ITR_JSON.business.fixedAssetsDetails;
+    }
     // this.getLiabilitiesAssets();
   }
 
@@ -210,7 +215,7 @@ export class BalanceSheetComponent implements OnInit {
       balanceWithBank: [obj?.balanceWithBank || null, Validators.pattern(AppConstants.numericRegex)],
       cashInHand: [obj?.cashInHand || null, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
       loanAndAdvances: [obj?.loanAndAdvances || null, Validators.pattern(AppConstants.numericRegex)],
-      investments: [obj?.investments || null, Validators.pattern(AppConstants.numericRegex)],
+      investment: [obj?.investment || null, Validators.pattern(AppConstants.numericRegex)],
       otherAssets: [obj?.otherAssets || null, Validators.pattern(AppConstants.numericRegex)],
       totalAssets: [obj?.totalAssets || null],
       GSTRNumber: [obj?.GSTRNumber || null],
@@ -236,7 +241,7 @@ export class BalanceSheetComponent implements OnInit {
   //       balanceWithBank: this.ITR_JSON.business.financialParticulars.balanceWithBank,
   //       cashInHand: this.ITR_JSON.business.financialParticulars.cashInHand,
   //       loanandAdvance: this.ITR_JSON.business.financialParticulars.loanAndAdvances,
-  //       investments: this.ITR_JSON.business.financialParticulars.investments,
+  //       investment: this.ITR_JSON.business.financialParticulars.investment,
   //       otherAsset: this.ITR_JSON.business.financialParticulars.otherAssets,
   //     });
   //   }
@@ -263,7 +268,7 @@ export class BalanceSheetComponent implements OnInit {
       Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) +
       Number(this.assetLiabilitiesForm.controls['cashInHand'].value) +
       Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value) +
-      Number(this.assetLiabilitiesForm.controls['investments'].value) +
+      Number(this.assetLiabilitiesForm.controls['investment'].value) +
       Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
     this.difference = this.total1 - this.total2;
     this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);

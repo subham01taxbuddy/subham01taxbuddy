@@ -769,7 +769,7 @@ export class BusinessComponent implements OnInit {
           otherAssets: /* Number( */this.commonForm.controls['otherAsset'].value/* ) */,
           totalAssets: null,
           id:null,
-          investments:null,
+          investment:null,
           difference: null
           
         };

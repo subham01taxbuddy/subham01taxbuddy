@@ -91,7 +91,8 @@ export class DepreciationDialogComponent implements OnInit {
         suppressMovable: true,
         width: 200,
         valueGetter: function nameFromCode(params) {
-          return params.data.bookValue ? params.data.bookValue.toLocaleString('en-IN') : params.data.bookValue;
+          let bookValue = 100*params.data.depreciationAmount/(100-params.data.fixedAssetClosingAmount);
+          return params.data.bookValue ? params.data.bookValue.toLocaleString('en-IN') : bookValue;
         },
       },
 

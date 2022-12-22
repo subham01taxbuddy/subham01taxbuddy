@@ -172,10 +172,10 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Investments</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['investments']" matInput
-                                placeholder="Investments" name="investments" class="input-field" maxlength="14"
+                            <input type="number" [formControl]="assetLiabilitiesForm.controls['investment']" matInput
+                                placeholder="Investments" name="investment" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2()">
-                            <mat-error *ngIf="assetLiabilitiesForm.controls['investments'].hasError('pattern')">
+                            <mat-error *ngIf="assetLiabilitiesForm.controls['investment'].hasError('pattern')">
                                 Enter positive number without decimal.</mat-error>
                         </mat-form-field>
                     </div>

@@ -727,7 +727,7 @@ export interface NewFinancialParticulars {
     balanceWithBank: any;
     cashInHand: Number;
     loanAndAdvances: any;
-    investments: any;
+    investment: any;
     otherAssets: any;
     totalAssets: any;
     GSTRNumber: any,
