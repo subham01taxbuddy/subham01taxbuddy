@@ -44,7 +44,7 @@ export class BalanceSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getBalanceSheetTableData([]);
+    this.getBalanceSheetTableData(this.ITR_JSON?.business?.businessDescription);
     this.initForm(this.ITR_JSON.business?.financialParticulars);
     this.calculateTotal1();
     this.calculateTotal2();
