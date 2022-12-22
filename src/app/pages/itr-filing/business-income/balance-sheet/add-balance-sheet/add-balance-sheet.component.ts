@@ -62,7 +62,7 @@ export class AddBalanceSheetComponent implements OnInit {
       id: [obj?.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
-      businessDescription: [obj?.businessDescription || null, Validators.required],
+      businessDescription: [obj?.businessDescription || null, Validators.pattern(AppConstants.charRegex)],
     });
   }
 

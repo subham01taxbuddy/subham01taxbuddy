@@ -38,7 +38,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Partner’s/Member’s capital or own capital</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['membersOwnCapital']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['membersOwnCapital']"
                                 matInput placeholder="Partner’s/Member’s capital or own capital"
                                 name="membersOwnCapital" class="input-field" maxlength="14" (blur)="calculateTotal1()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['membersOwnCapital'].hasError('pattern')">
@@ -48,7 +48,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Fixed assets</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['fixedAssets']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['fixedAssets']" matInput
                                 placeholder="Fixed assets" name="fixedAssets" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2(); showPopUp(assetLiabilitiesForm.controls['fixedAssets'].value)">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['fixedAssets'].hasError('pattern')">
@@ -60,7 +60,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Secured loan</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['securedLoans']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['securedLoans']" matInput
                                 placeholder="Secured loan" name="securedLoans" class="input-field" maxlength="14"
                                 (blur)="calculateTotal1()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['securedLoans'].hasError('pattern')">
@@ -70,7 +70,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Inventories</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['inventories']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['inventories']" matInput
                                 placeholder="Inventories" name="Inventories" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2()" required>
                             <mat-error *ngIf="assetLiabilitiesForm.controls['inventories'].hasError('pattern')">
@@ -82,7 +82,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Unsecured loan</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['unSecuredLoans']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['unSecuredLoans']"
                                 matInput placeholder="Unsecured loan" name="unSecuredLoans" class="input-field"
                                 maxlength="14" (blur)="calculateTotal1()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['unSecuredLoans'].hasError('pattern')">
@@ -92,7 +92,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Sundry debtors</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['sundryDebtorsAmount']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['sundryDebtorsAmount']"
                                 matInput placeholder="Sundry debtors" name="sundryDebtorsAmount" class="input-field"
                                 maxlength="14" (blur)="calculateTotal2()" required>
                             <mat-error *ngIf="assetLiabilitiesForm.controls['sundryDebtorsAmount'].hasError('pattern')">
@@ -104,7 +104,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Advances</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['advances']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['advances']" matInput
                                 placeholder="Advances" name="Advances" class="input-field" maxlength="14"
                                 (blur)="calculateTotal1()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['advances'].hasError('pattern')">Enter
@@ -114,7 +114,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Balance with bank</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['balanceWithBank']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['balanceWithBank']"
                                 matInput placeholder="Balance with bank" name="balanceWithBank" class="input-field"
                                 maxlength="14" (blur)="calculateTotal2()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['balanceWithBank'].hasError('pattern')">
@@ -126,7 +126,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Sundry creditors</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['sundryCreditorsAmount']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['sundryCreditorsAmount']"
                                 matInput placeholder="Sundry creditors" name="sundryCreditorsAmount" class="input-field"
                                 maxlength="14" (blur)="calculateTotal1()" required>
                             <mat-error
@@ -137,7 +137,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Cash in hand</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['cashInHand']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['cashInHand']" matInput
                                 placeholder="Cash in hand" name="cashInHand" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2()" required>
                             <mat-error *ngIf="assetLiabilitiesForm.controls['cashInHand'].hasError('pattern')">
@@ -149,7 +149,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Other liabilities</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['otherLiabilities']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['otherLiabilities']"
                                 matInput placeholder="Other liabilities" name="otherLiabilities" class="input-field"
                                 maxlength="14" (blur)="calculateTotal1()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['otherLiabilities'].hasError('pattern')">
@@ -159,7 +159,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Loans and advance</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['loanAndAdvances']"
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['loanAndAdvances']"
                                 matInput placeholder="Loans and advance" name="loanAndAdvances" class="input-field"
                                 maxlength="14" (blur)="calculateTotal2()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['loanAndAdvances'].hasError('pattern')">
@@ -172,7 +172,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Investments</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['investments']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['investments']" matInput
                                 placeholder="Investments" name="investments" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['investments'].hasError('pattern')">
@@ -185,7 +185,7 @@
                     <div class="card__col-xs-12 card__col-sm-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Other assets</mat-label>
-                            <input type="number" [formControl]="assetLiabilitiesForm.controls['otherAssets']" matInput
+                            <input digitsOnly [formControl]="assetLiabilitiesForm.controls['otherAssets']" matInput
                                 placeholder="Other assets" name="otherAssets" class="input-field" maxlength="14"
                                 (blur)="calculateTotal2()">
                             <mat-error *ngIf="assetLiabilitiesForm.controls['otherAssets'].hasError('pattern')">
