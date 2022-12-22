@@ -50,7 +50,7 @@ export class BusinessDialogComponent implements OnInit {
     this.businessForm = this.formBuilder.group({
       id: [obj.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
-      tradeName: [obj?.tradeName || null, [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      tradeName: [obj?.tradeName || null, [Validators.required]],
       receipts: [obj?.receipts || null, Validators.required],
       presumptiveIncome: [obj?.presumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
       periodOfHolding: [obj?.periodOfHolding || null, Validators.required],
