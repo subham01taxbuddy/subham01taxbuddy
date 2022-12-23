@@ -37,7 +37,7 @@ export class MoreInfoComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
-    if(!this.pastYearLosses || this.pastYearLosses.length == 0) {
+    if (!this.pastYearLosses || this.pastYearLosses.length == 0) {
       this.pastYearLosses.push(this.createPastYearLoss('2014-15'));
       this.pastYearLosses.push(this.createPastYearLoss('2015-16'));
       this.pastYearLosses.push(this.createPastYearLoss('2016-17'));
@@ -53,12 +53,12 @@ export class MoreInfoComponent implements OnInit {
   createPastYearLoss(year) {
     return {
       pastYear: null,
-      assessmentPastYear: year, 
+      assessmentPastYear: year,
       dateofFilling: '',
-      housePropertyLoss: null, 
+      housePropertyLoss: null,
       broughtForwordBusinessLoss: null,
-      STCGLoss: null, 
-      LTCGLoss: null, 
+      STCGLoss: null,
+      LTCGLoss: null,
       speculativeBusinessLoss: null,
       setOffWithCurrentYearSpeculativeBusinessIncome: null,
       setOffWithCurrentYearBroughtForwordBusinessIncome: null,
@@ -67,7 +67,7 @@ export class MoreInfoComponent implements OnInit {
       setOffWithCurrentYearLTCGIncome: null,
       carryForwardAmountBusiness: null,
       carryForwardAmountSpeculative: null,
-      carryForwardAmountHP: null,        
+      carryForwardAmountHP: null,
       carryForwardAmountSTCGIncome: null,
       carryForwardAmountLTCGIncome: null,
       totalLoss: null
@@ -93,7 +93,7 @@ export class MoreInfoComponent implements OnInit {
         width: 100,
         valueGetter: (params: ValueGetterParams) => {
           let rowIndex = params.node.rowIndex;
-          if(rowIndex >= 8) {
+          if (rowIndex >= 8) {
             return params.data.assessmentPastYear;
           } else {
             return params.data.assessmentPastYear;
@@ -133,7 +133,7 @@ export class MoreInfoComponent implements OnInit {
         },
         valueGetter: (params: ValueGetterParams) => {
           let rowIndex = params.node.rowIndex;
-          if(rowIndex >= 8) {
+          if (rowIndex >= 8) {
             return this.totalLoss.housePropertyLoss;
           } else {
             return params.data.housePropertyLoss;
@@ -146,7 +146,7 @@ export class MoreInfoComponent implements OnInit {
             params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
           }
           //update total
-          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function(a, b){ return a+ b; })
+          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function (a, b) { return a + b; })
 
           return valueChanged;
         },
@@ -178,7 +178,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.broughtForwordBusinessLoss;
               } else {
                 return params.data.broughtForwordBusinessLoss;
@@ -191,7 +191,7 @@ export class MoreInfoComponent implements OnInit {
                 params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
               }
               //update total
-              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -210,7 +210,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.speculativeBusinessLoss;
               } else {
                 return params.data.speculativeBusinessLoss;
@@ -224,7 +224,7 @@ export class MoreInfoComponent implements OnInit {
               }
 
               //update total
-              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -256,7 +256,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.STCGLoss;
               } else {
                 return params.data.STCGLoss;
@@ -270,7 +270,7 @@ export class MoreInfoComponent implements OnInit {
               }
 
               //update total
-              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -279,7 +279,7 @@ export class MoreInfoComponent implements OnInit {
           {
             headerName: 'Long Term Capital Loss',
             field: 'LTCGLoss',
-            width:180,
+            width: 180,
             editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
             cellStyle: function (params) {
@@ -290,7 +290,7 @@ export class MoreInfoComponent implements OnInit {
             },
             valueGetter: (params: ValueGetterParams) => {
               let rowIndex = params.node.rowIndex;
-              if(rowIndex >= 8) {
+              if (rowIndex >= 8) {
                 return this.totalLoss.LTCGLoss;
               } else {
                 return params.data.LTCGLoss;
@@ -304,7 +304,7 @@ export class MoreInfoComponent implements OnInit {
               }
 
               //update total
-              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce(function(a, b){ return a+ b; })
+              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce(function (a, b) { return a + b; })
 
               return valueChanged;
             },
@@ -322,7 +322,7 @@ export class MoreInfoComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params) {
           if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-          } else{
+          } else {
             return `<button type="button" class="action_icon add_button" title="Delete">
             <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
           </button>`;
@@ -406,7 +406,17 @@ export class MoreInfoComponent implements OnInit {
     //reinitialise the objects so as to get the data updated in other tabs
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    
+    let isError = false;
+    this.pastYearLosses.forEach(element => {
+      if (element.dateofFilling && (element.LTCGLoss == 0 && element.STCGLoss == 0 && element.broughtForwordBusinessLoss == 0 && element.housePropertyLoss == 0 && element.speculativeBusinessLoss == 0)) {
+        isError = true;
+      }
+    });
+    if (isError) {
+      this.utilsService.showSnackBar('Please enter the any of the loss value.');
+      this.utilsService.smoothScrollToTop();
+      return;
+    }
     this.Copy_ITR_JSON.pastYearLosses = this.pastYearLosses;
     console.log(this.Copy_ITR_JSON)
     this.loading = true;
@@ -415,7 +425,7 @@ export class MoreInfoComponent implements OnInit {
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Schedule CFL updated successfully');
-      console.log('Assets & Liabilities save result=', result);
+      console.log('Schedule CFL=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
