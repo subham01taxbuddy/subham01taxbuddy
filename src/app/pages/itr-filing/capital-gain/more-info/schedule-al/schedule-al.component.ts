@@ -92,7 +92,7 @@ export class ScheduleALComponent implements OnInit {
       shareAmount: [this.movableAssets?.shareAmount],
       insuranceAmount: [this.movableAssets?.insuranceAmount],
       loanAmount: [this.movableAssets?.loanAmount],
-      cashInHand: [this.movableAssets.cashInHand],
+      cashInHand: [this.movableAssets?.cashInHand],
       assetLiability: [this.movableAssets?.assetLiability]
     });
   }
