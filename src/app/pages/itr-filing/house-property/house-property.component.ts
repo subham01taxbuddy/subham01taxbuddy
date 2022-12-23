@@ -238,8 +238,9 @@ export class HousePropertyComponent implements OnInit {
         }
       });
       //reverse calculate the gross rent based on owner percentage
-      let ownerPercentage = 100 - totalCoOwnPercent;
-      let grossRent = this.ITR_JSON.houseProperties[index].grossAnnualRentReceived * 100/ownerPercentage;
+      // let ownerPercentage = 100 - totalCoOwnPercent;
+      // let grossRent = this.ITR_JSON.houseProperties[index].grossAnnualRentReceived * 100/ownerPercentage;
+      let grossRent = this.ITR_JSON.houseProperties[index].grossAnnualRentReceived;
       this.housePropertyForm.controls['annualRentReceived'].setValue(grossRent);
     } else {
       this.housePropertyForm.controls['annualRentReceived'].setValue(this.ITR_JSON.houseProperties[index].grossAnnualRentReceived);
@@ -624,7 +625,7 @@ export class HousePropertyComponent implements OnInit {
       // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
       this.annualValue = this.housePropertyForm.controls['annualRentReceived'].value - Number(this.housePropertyForm.controls['propertyTax'].value);
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
-      this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
+      // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }
   }
 
