@@ -139,13 +139,14 @@ export class UtilsService {
                     console.log('this.ITR_JSON in utils', this.ITR_JSON);
                     console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'],{ 
-                        state: { 
-                          userId: this.ITR_JSON.userId, 
-                          panNumber: profile.panNumber, 
-                          eriClientValidUpto: profile.eriClientValidUpto, 
-                          name: profile.fName + ' ' + profile.lName } 
-                        });
+                    this.router.navigate(['/pages/itr-filing/itr'], {
+                        state: {
+                            userId: this.ITR_JSON.userId,
+                            panNumber: profile.panNumber,
+                            eriClientValidUpto: profile.eriClientValidUpto,
+                            name: profile.fName + ' ' + profile.lName
+                        }
+                    });
                     /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
                       if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {
                         this.openConformationDialog(this.ITR_JSON, profile, assessmentYear, financialYear);
@@ -192,13 +193,14 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'],{ 
-                        state: { 
-                          userId: this.ITR_JSON.userId, 
-                          panNumber: profile.panNumber, 
-                          eriClientValidUpto: profile.eriClientValidUpto, 
-                          name: profile.fName + ' ' + profile.lName } 
-                        });
+                    this.router.navigate(['/pages/itr-filing/itr'], {
+                        state: {
+                            userId: this.ITR_JSON.userId,
+                            panNumber: profile.panNumber,
+                            eriClientValidUpto: profile.eriClientValidUpto,
+                            name: profile.fName + ' ' + profile.lName
+                        }
+                    });
                 }, error => {
                     this.loading = false;
                 });
@@ -214,13 +216,14 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'],{ 
-                        state: { 
-                          userId: this.ITR_JSON.userId, 
-                          panNumber: profile.panNumber, 
-                          eriClientValidUpto: profile.eriClientValidUpto, 
-                          name: profile.fName + ' ' + profile.lName } 
-                        });
+                    this.router.navigate(['/pages/itr-filing/itr'], {
+                        state: {
+                            userId: this.ITR_JSON.userId,
+                            panNumber: profile.panNumber,
+                            eriClientValidUpto: profile.eriClientValidUpto,
+                            name: profile.fName + ' ' + profile.lName
+                        }
+                    });
                 }, error => {
                     this.loading = false;
                 });

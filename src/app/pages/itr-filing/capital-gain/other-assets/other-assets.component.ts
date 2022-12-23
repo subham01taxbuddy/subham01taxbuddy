@@ -229,7 +229,7 @@ export class OtherAssetsComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          console.log('DATA FOR DELETE Asset:', params.data)
           this.deleteAsset(params.rowIndex);
           break;
         }
@@ -248,8 +248,20 @@ export class OtherAssetsComponent implements OnInit {
         this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
       }
     });
+    this.goldCg.deduction.forEach(ded => {
+      if(parseInt(ded.srn) == this.goldCg.assetDetails[i].srn){
+        this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
+      }
+    });
     this.goldCg.assetDetails.splice(i, 1);
+    if(this.goldCg.assetDetails.length === 0) {
+      //remove deductions 
+      this.goldCg.deduction = [];
+      this.goldCg.improvement = [];
+    }
     this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
+    this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
+    this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
 
@@ -422,6 +434,7 @@ export class OtherAssetsComponent implements OnInit {
     this.goldCg.improvement.splice(i, 1);
     this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
     this.clearNullImprovements();
+    this.calculateCg()
   }
 
 
@@ -590,9 +603,9 @@ export class OtherAssetsComponent implements OnInit {
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true
+    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'GOLD');
     if (this.goldCg.assetDetails.length > 0) {
-      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'GOLD')
-      this.ITR_JSON.capitalGain.push(this.goldCg)
+      this.ITR_JSON.capitalGain.push(this.goldCg);
     }
 
     console.log('CG:', this.ITR_JSON.capitalGain);

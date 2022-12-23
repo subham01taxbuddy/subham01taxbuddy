@@ -12,6 +12,7 @@ import { NewCapitalGain, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { AddInvestmentDialogComponent } from '../add-investment-dialog/add-investment-dialog.component';
+import * as moment from 'moment';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -162,7 +163,8 @@ export class LabFormComponent implements OnInit {
       // this.amount = cgOutPut.cgIncome;
       this.immovableForm.patchValue(this.data.assetSelected);
       
-      this.improvements = dataToPatch[0].improvement.filter(imp => (imp.srn == this.data.assetSelected.srn));
+      this.improvements = dataToPatch[0].improvement.filter(imp => (imp.srn == this.data.assetSelected.srn && this.utilsService.isNonEmpty(imp.dateOfImprovement)));
+      
       if (this.improvements instanceof Array && this.improvements.length > 0) {
         this.isImprovements.setValue(true);
         const improvement = <FormArray>this.immovableForm.get('improvement');
@@ -632,17 +634,26 @@ export class LabFormComponent implements OnInit {
       console.log('isImprovementValid', index, this.immovableForm);
       let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[0] as FormGroup;
       let improvementDetails = (this.immovableForm.controls['improvement'] as FormArray).controls[index] as FormGroup;
+      let selectedYear = moment(assetDetails.controls['sellDate'].value);
+      let sellFinancialYear = selectedYear.get('month') > 2 ? selectedYear.get('year') + '-'+ (selectedYear.get('year')+1)
+      : (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
+    
       let req = {
         "cost": improvementDetails.controls['costOfImprovement'].value,
         "purchaseOrImprovementFinancialYear": improvementDetails.controls['dateOfImprovement'].value,
         "assetType": "PLOT_OF_LAND",
         "buyDate": assetDetails.controls['purchaseDate'].value,
-        "sellDate": assetDetails.controls['sellDate'].value
+        "sellDate": assetDetails.controls['sellDate'].value,
+        "sellFinancialYear": sellFinancialYear
       }
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST:', res);
-        improvementDetails.controls['indexCostOfImprovement'].setValue(res.data.costOfAcquisitionOrImprovement);
+        if(res.data.capitalGainType === 'LONG') { 
+          improvementDetails.controls['indexCostOfImprovement'].setValue(res.data.costOfAcquisitionOrImprovement);
+        } else {
+          improvementDetails.controls['indexCostOfImprovement'].setValue(improvementDetails.controls['costOfImprovement'].value);
+        }
         if(index<this.improvements.length){
           Object.assign(this.improvements[index], improvementDetails.getRawValue());
         } else{
@@ -718,6 +729,11 @@ export class LabFormComponent implements OnInit {
       && item.costOfImprovement === objToRemove.costOfImprovement && item.dateOfImprovement == objToRemove.dateOfImprovement))
     this.cgArrayElement.improvement.splice(this.cgArrayElement.improvement.indexOf(filtered[0]), 1);
 
+    //remove from improvements list also
+    let toDelete = this.improvements.filter(item => (item.srn == objToRemove.srn 
+      && item.costOfImprovement === objToRemove.costOfImprovement && item.dateOfImprovement == objToRemove.dateOfImprovement))
+    this.improvements.splice(this.improvements.indexOf(toDelete[0]), 1);
+
     // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
     improve.length === 0 ? this.isImprovements.setValue(false) : null;
@@ -777,19 +793,10 @@ export class LabFormComponent implements OnInit {
         this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm = 'cgProperty';//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
         this.cgArrayElement.assetDetails[this.currentCgIndex].hasIndexation = false;//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
         
-        // if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
-        //   //add empty improvement object
-        //   this.cgArrayElement.improvement = [];
-        //   let improvement = {
-        //     indexCostOfImprovement: 0,
-        //     id: 0,
-        //     dateOfImprovement:" ",
-        //     costOfImprovement:0,
-        //     financialYearOfImprovement:null,
-        //     srn:this.currentCgIndex
-        //   }
-        //   this.cgArrayElement.improvement.push(improvement);
-        // }
+        let filtered = this.cgArrayElement.improvement.filter(imp => (imp.srn != this.currentCgIndex));
+        if(this.improvements.length > 0) {
+          this.cgArrayElement.improvement = filtered.concat(this.improvements);
+        }
 
         if (this.data.mode === 'ADD') {
           let labData = this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0];
@@ -1037,19 +1044,27 @@ export class LabFormComponent implements OnInit {
       index = 0;
     }
     let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[index] as FormGroup;
+    let selectedYear = moment(assetDetails.controls['sellDate'].value);
+    let sellFinancialYear = selectedYear.get('month') > 2 ? selectedYear.get('year') + '-'+ (selectedYear.get('year')+1)
+      : (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
     if(assetDetails.controls['purchaseCost'].value){
       let req = {  
       "cost": assetDetails.controls['purchaseCost'].value,
         // "purchaseOrImprovementFinancialYear": "2002-2003",
         "assetType": "PLOT_OF_LAND",
         "buyDate": assetDetails.controls['purchaseDate'].value,
-        "sellDate": assetDetails.controls['sellDate'].value
+        "sellDate": assetDetails.controls['sellDate'].value,
+        "sellFinancialYear": sellFinancialYear
       }
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST : ', res);
         if(res.data.capitalGainType) {
-          assetDetails.controls['indexCostOfAcquisition'].setValue(res.data.costOfAcquisitionOrImprovement);
+          if(res.data.capitalGainType === 'LONG') {
+            assetDetails.controls['indexCostOfAcquisition'].setValue(res.data.costOfAcquisitionOrImprovement);
+          } else {
+            assetDetails.controls['indexCostOfAcquisition'].setValue(assetDetails.controls['purchaseCost'].value);
+          }
           assetDetails.controls['gainType'].setValue(res.data.capitalGainType);
           //this.cgArrayElement.assetDetails[0].indexCostOfAcquisition = res.data.costOfAcquisitionOrImprovement;
           if(this.cgArrayElement.assetDetails && this.cgArrayElement.assetDetails.length > 0){

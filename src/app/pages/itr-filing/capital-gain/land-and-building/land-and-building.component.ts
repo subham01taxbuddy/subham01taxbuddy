@@ -374,11 +374,12 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     this.loading = true;
     let selectedObject = JSON.parse(assetSelected.assetSelected);
     let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
-    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === selectedObject.assetType))[0];
+    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
     if(selectedTypeList){
       selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.deduction = selectedTypeList.deduction.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.improvement = selectedTypeList.improvement.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.deduction = selectedTypeList.deduction?.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.improvement = selectedTypeList.improvement?.filter(itm => (itm.srn !== selectedObject.srn));
+      selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(itm => (itm.srn !== selectedObject.srn));
     }
     this.Copy_ITR_JSON.capitalGain = filtered;
     if(selectedTypeList && selectedTypeList.assetDetails.length > 0) {

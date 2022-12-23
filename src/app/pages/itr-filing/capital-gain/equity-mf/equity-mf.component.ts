@@ -78,6 +78,8 @@ export class EquityMfComponent implements OnInit {
     this.unListedCallInConstructor();
     this.listedDeductionCallInConstructor();
     this.unlistedDeductionCallInConstructor();
+    this.calculatedTotalListedCg();
+    this.calculateTotalUnlistedCg();
   }
 
   ngOnInit() {
@@ -108,7 +110,7 @@ export class EquityMfComponent implements OnInit {
       this.totalListedCg += item.capitalGain;
       longTermGain = item.gainType === 'LONG';
     });
-    this.canAddListedDeduction = this.totalListedCg<=0 || this.listedCg.deduction.length === 0 || longTermGain;
+    this.canAddListedDeduction = this.totalListedCg > 0 && this.listedCg.deduction.length === 0 && longTermGain;
   }
 
   listedCreateRowData() {
@@ -295,13 +297,18 @@ export class EquityMfComponent implements OnInit {
       if (result !== undefined) {
         if (mode === 'ADD') {
           if (type === 'EQUITY_SHARES_LISTED') {
+            if(!this.listedCg.assetDetails) {
+              this.listedCg.assetDetails = [];
+            }
             this.listedCg.assetDetails.push(result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
-            this.calculatedTotalListedCg();
+            
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
+            if(!this.unlistedCg.assetDetails) {
+              this.unlistedCg.assetDetails = [];
+            }
             this.unlistedCg.assetDetails.push(result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
-            this.calculateTotalUnlistedCg();
           }
           // let currObj = this.cgArray.filter(item => item.assetType === type);
           // if (currObj.length > 0 && currObj[0].assetDetails instanceof Array) {
@@ -334,11 +341,9 @@ export class EquityMfComponent implements OnInit {
           if (type === 'EQUITY_SHARES_LISTED') {
             this.listedCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
-            this.calculatedTotalListedCg();
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
             this.unlistedCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
-            this.calculateTotalUnlistedCg();
           }
 
           // let currObj = this.cgArray.filter(item => item.assetType === type);
@@ -356,7 +361,7 @@ export class EquityMfComponent implements OnInit {
           //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
           // }
         }
-        this.calculateCg(type)
+        this.calculateCg(type);
       }
     });
 
@@ -388,10 +393,12 @@ export class EquityMfComponent implements OnInit {
         case 'remove': {
           console.log('DATA FOR DELETE INVESTMENT:', params.data)
           this.deleteDeduction('EQUITY_SHARES_LISTED', params.rowIndex);
+          this.calculatedTotalListedCg();
           break;
         }
         case 'edit': {
           this.addListedDeduction('EDIT', params.rowIndex, params.data)
+          this.calculatedTotalListedCg();
           break;
         }
       }
@@ -405,10 +412,12 @@ export class EquityMfComponent implements OnInit {
         case 'remove': {
           console.log('DATA FOR DELETE INVESTMENT:', params.data)
           this.deleteDeduction('EQUITY_SHARES_UNLISTED', params.rowIndex);
+          this.calculateTotalUnlistedCg();
           break;
         }
         case 'edit': {
-          this.addUnListedDeduction('EDIT', params.rowIndex, params.data)
+          this.addUnListedDeduction('EDIT', params.rowIndex, params.data);
+          this.calculateTotalUnlistedCg();
           break;
         }
       }
@@ -456,7 +465,7 @@ export class EquityMfComponent implements OnInit {
       this.totalUnlistedCg += item.capitalGain;
       longTermGain = item.gainType === 'LONG';
     });
-    this.canAddUnlistedDeduction = this.totalUnlistedCg<=0 || this.unlistedCg.deduction.length === 0 || longTermGain;
+    this.canAddUnlistedDeduction = this.totalUnlistedCg > 0 && this.unlistedCg.deduction.length === 0 && longTermGain;
   }
 
   unListedCreateRowData() {
@@ -902,6 +911,7 @@ export class EquityMfComponent implements OnInit {
             this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction)
           }
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
+          this.calculatedTotalListedCg();
         }
       });
     } else {
@@ -939,6 +949,7 @@ export class EquityMfComponent implements OnInit {
             this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction)
           }
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
+          this.calculateTotalUnlistedCg();
         }
       });
     } else {
@@ -956,31 +967,26 @@ export class EquityMfComponent implements OnInit {
       this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails)
       this.calculateTotalUnlistedCg();
     }
-    // let index = this.cgArray.findIndex(item => item.assetType === type);
-    // if (index !== -1) {
-    //   this.cgArray[index].assetDetails.splice(i, 1)
-    // }
+    if(this.listedCg.assetDetails.length === 0) {
+      //remove deductions 
+      this.listedCg.deduction = [];
+      this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction);
+    } else if(this.unlistedCg.assetDetails.length === 0) {
+      //remove deductions
+      this.unlistedCg.deduction = [];
+      this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction);
+    }
 
-    // // TODO Add api calls here after delete
-    // if (type === 'EQUITY_SHARES_LISTED') {
-    //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
-    //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
-    //     this.listedGridOptions.api?.setRowData(assets[0].assetDetails)
-    // } else if (type === 'EQUITY_SHARES_UNLISTED') {
-    //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-    //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
-    //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
-    // }
-    // this.investmentsCallInConstructor(this.investmentsCreateRowData());
-    // this.serviceCall();
   }
   deleteDeduction(type, i) {
     if (type === 'EQUITY_SHARES_LISTED') {
       this.listedCg.deduction.splice(i, 1);
-      this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction)
+      this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction);
+      this.calculatedTotalListedCg();
     } else if (type === 'EQUITY_SHARES_UNLISTED') {
       this.unlistedCg.deduction.splice(i, 1);
-      this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction)
+      this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction);
+      this.calculateTotalUnlistedCg();
     }
   }
   calculateSingleCg(request) {
@@ -1053,16 +1059,17 @@ export class EquityMfComponent implements OnInit {
   saveCg() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    if (this.listedCg.assetDetails.length > 0) {
-      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_LISTED')
-      this.ITR_JSON.capitalGain.push(this.listedCg)
+    
+    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_LISTED')
+    if(this.listedCg.assetDetails.length > 0) {
+      this.ITR_JSON.capitalGain.push(this.listedCg);
     }
-    if (this.unlistedCg.assetDetails.length > 0) {
-      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_UNLISTED')
-      this.ITR_JSON.capitalGain.push(this.unlistedCg)
+    
+    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_UNLISTED')
+    if(this.unlistedCg.assetDetails.length > 0) {
+      this.ITR_JSON.capitalGain.push(this.unlistedCg);
     }
+    
     console.log('CG:', this.ITR_JSON.capitalGain);
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
       console.log(result);
@@ -1099,11 +1106,11 @@ export class EquityMfComponent implements OnInit {
         this.listedCg.assetDetails = res.assetDetails;
         this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
         this.calculatedTotalListedCg();
-        this.calculateTotalUnlistedCg();
       };
       if (type === 'EQUITY_SHARES_UNLISTED') {
         this.unlistedCg.assetDetails = res.assetDetails;
         this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
+        this.calculateTotalUnlistedCg();
       };
     }, error => {
       this.loading = false;

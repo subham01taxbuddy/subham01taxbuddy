@@ -65,9 +65,6 @@ export class OtherInformationComponent implements OnInit {
   }
 
   ChangeSharesStatus() {
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.ITR_JSON.systemFlags.haveUnlistedShares) {
       this.addSharesDetails('Add unlisted shares details', 'ADD', null);
@@ -322,10 +319,7 @@ export class OtherInformationComponent implements OnInit {
 
   //
   ChangeDirectorStatus() {
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
+    
     if (this.ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {

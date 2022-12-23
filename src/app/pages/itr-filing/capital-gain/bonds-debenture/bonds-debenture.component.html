@@ -5,7 +5,7 @@
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="Buy Date" formControlName="purchaseDate"
+                    <input matInput class="input-field" readonly placeholder="Buy Date" formControlName="purchaseDate"
                         name="purchaseDate" [matDatepicker]="purchaseDate">
                     <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                     <mat-datepicker #purchaseDate></mat-datepicker>
@@ -16,7 +16,7 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field"
+                    <input matInput class="input-field" digitsOnly
                         placeholder="Cost of Acquisition without indexation (Purchase value)"
                         formControlName="purchaseCost" maxlength="14">
                     <mat-error *ngIf="bondsForm.controls['purchaseCost'].hasError('required')">Please enter
@@ -26,7 +26,7 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="Cost of improvement without indexation"
+                    <input matInput class="input-field" digitsOnly placeholder="Cost of improvement without indexation"
                         formControlName="costOfImprovement" maxlength="14">
                     <mat-error *ngIf="bondsForm.controls['costOfImprovement'].hasError('required')">Please enter
                         cost of improvement</mat-error>
@@ -35,8 +35,8 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" [matDatepicker]="sellDate" placeholder="Sale Date"
-                        formControlName="sellDate" name="sellDate" maxlength="14">
+                    <input matInput class="input-field" readonly [matDatepicker]="sellDate" placeholder="Sale Date"
+                        formControlName="sellDate" name="sellDate">
                     <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
                     <mat-datepicker #sellDate></mat-datepicker>
                     <mat-error *ngIf="bondsForm.controls['sellDate'].hasError('required')">Please select
@@ -47,7 +47,7 @@
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" name="assets[i]"
-                        placeholder="Sale value/Full value consideration" formControlName="valueInConsideration"
+                        placeholder="Sale value/Full value consideration" digitsOnly formControlName="valueInConsideration"
                         maxlength="14">
                     <mat-error *ngIf="bondsForm.controls['valueInConsideration'].hasError('required')">Please enter
                         sale value</mat-error>
@@ -80,7 +80,7 @@
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="Purchase date of new asset"
+                    <input matInput class="input-field" readonly placeholder="Purchase date of new asset"
                         formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate">
                     <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                     <mat-datepicker #purchaseDate></mat-datepicker>

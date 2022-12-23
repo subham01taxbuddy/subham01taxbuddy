@@ -94,7 +94,8 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Pin Code</mat-label>
                                 <input type="text" trim digitsOnly matInput placeholder="Pin Code" name="pinCode"
-                                    class="input-field" formControlName="pinCode" maxlength="6" required>
+                                    class="input-field" formControlName="pinCode" maxlength="6" required
+                                    (blur)="updateDataByPincode()">
                                 <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
                                     Enter pincode
                                 </mat-error>

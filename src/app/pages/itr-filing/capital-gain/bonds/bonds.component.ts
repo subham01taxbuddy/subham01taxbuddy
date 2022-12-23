@@ -92,6 +92,13 @@ export class BondsComponent implements OnInit {
           } else {
             this.getDeductionTableData([this.bondsDeductionData]);
           }
+          if (this.getBondsCg() <= 0) {
+            this.deduction = false;
+            this.isDisable = true;
+            this.onDeductionChanged();
+          } else {
+            this.isDisable = false;
+          }
         });
       } else {
         this.getBondsTableData([]);
@@ -114,9 +121,10 @@ export class BondsComponent implements OnInit {
             this.getZeroDeductionTableData([this.bondsDeductionData]);
           }
         });
+      } else {
+        this.getZeroBondsTableData([]);
+        this.getZeroDeductionTableData([this.bondsDeductionData]);
       }
-      this.getZeroBondsTableData([]);
-      this.getZeroDeductionTableData([this.bondsDeductionData]);
     } else {
       this.getBondsTableData([]);
       this.getDeductionTableData([this.bondsDeductionData]);
@@ -198,6 +206,13 @@ export class BondsComponent implements OnInit {
   deleteBonds(index) {
     this.bondsGridOptions.rowData.splice(index, 1);
     this.bondsGridOptions.api.setRowData(this.bondsGridOptions.rowData);
+    if (this.getBondsCg() <= 0) {
+      this.deduction = false;
+      this.isDisable = true;
+      this.onDeductionChanged();
+    } else {
+      this.isDisable = false;
+    }
   }
 
   deleteZeroBonds(index) {
@@ -205,6 +220,21 @@ export class BondsComponent implements OnInit {
     this.zeroBondsGridOptions.api.setRowData(this.zeroBondsGridOptions.rowData);
   }
 
+  getBondsCg() {
+    let totalCg = 0;
+    this.bondsGridOptions.rowData.forEach(element => {
+      totalCg += element.capitalGain;
+    });
+    return totalCg;
+  }
+
+  getZCBondsCg() {
+    let totalCg = 0;
+    this.zeroBondsGridOptions.rowData.forEach(element => {
+      totalCg += element.capitalGain;
+    });
+    return totalCg;
+  }
 
   addEditBondsRow(mode, type, data: any, index?) {
     if (mode === 'ADD') {
@@ -224,13 +254,6 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.capitalGain <= 0) {
-        this.deduction = false;
-        this.isDisable = true;
-        this.onDeductionChanged();
-      } else {
-        this.isDisable = false;
-      }
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
@@ -241,6 +264,13 @@ export class BondsComponent implements OnInit {
           this.bondsGridOptions.rowData[index] = result;
           this.bondsGridOptions.api.setRowData(this.bondsGridOptions.rowData);
         }
+      }
+      if (this.getBondsCg() <= 0) {
+        this.deduction = false;
+        this.isDisable = true;
+        this.onDeductionChanged();
+      } else {
+        this.isDisable = false;
       }
     });
 
@@ -264,7 +294,7 @@ export class BondsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.capitalGain <= 0) {
+      if (this.getZCBondsCg() <= 0) {
         this.zeroDeduction = false;
         this.isZeroDisable = true;
       } else {
@@ -666,14 +696,26 @@ export class BondsComponent implements OnInit {
     }
     console.log(zeroBondData);
     if (bondIndex >= 0) {
-      this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+      if(bondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
+      } else{
+        this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
+      }
     } else {
-      this.Copy_ITR_JSON.capitalGain.push(bondData);
+      if(bondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain.push(bondData);
+      }
     }
     if (zeroBondIndex >= 0) {
-      this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+      if(zeroBondData.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
+      } else {
+        this.Copy_ITR_JSON.capitalGain.splice(zeroBondIndex, 1);
+      }
     } else {
-      this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+      if(zeroBondData.assetDetails.length) {
+        this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
+      }
     }
     console.log(this.Copy_ITR_JSON);
 

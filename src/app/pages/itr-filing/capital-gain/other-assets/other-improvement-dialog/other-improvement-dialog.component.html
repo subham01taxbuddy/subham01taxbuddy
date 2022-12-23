@@ -5,7 +5,8 @@
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <mat-select placeholder="Select Asset Srn" name="selectSrn" formControlName="srn" required>
+          <mat-select placeholder="Select Asset Srn" name="selectSrn" formControlName="srn" 
+          (selectionChange)="assetSelected()" required>
             <mat-option *ngFor="let data of data.assetDetails" [value]="data.srn">
               {{ data.srn }}
             </mat-option>
@@ -22,7 +23,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="costOfImprovement" placeholder="Cost Of Improvement"
+          <input matInput digitsOnly formControlName="costOfImprovement" placeholder="Cost Of Improvement"
             name="costOfImprovement" class="input-field" maxlength="14" (blur)="calculateIndexCost()"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
 
@@ -30,7 +31,7 @@
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput type="number" formControlName="indexCostOfImprovement"
+          <input matInput digitsOnly formControlName="indexCostOfImprovement"
             placeholder="Cost Of Improvement with Indexation" name="indexCostOfImprovement" class="input-field"
             maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
