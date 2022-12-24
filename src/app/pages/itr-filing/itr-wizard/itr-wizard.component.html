@@ -24,6 +24,9 @@
       <mat-step [stepControl]="incomeForm">
         <ng-template matStepLabel>Income Details</ng-template>
         <mat-tab-group [selectedIndex]="incomeSubTab">
+          <mat-tab label="Capital Gain">
+            <app-capital-gain (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-capital-gain>
+          </mat-tab>
           <mat-tab label="Salary Income">
             <app-salary *ngIf="tabIndex=== 1"></app-salary>
           </mat-tab>
@@ -35,9 +38,6 @@
           </mat-tab>
           <mat-tab label="Other Sources">
             <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
-          </mat-tab>
-          <mat-tab label="Capital Gain">
-            <app-capital-gain (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-capital-gain>
           </mat-tab>
           <mat-tab label="More Information">
             <app-more-info (saveAndNext)="saveAndNext($event)"></app-more-info>

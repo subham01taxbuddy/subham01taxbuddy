@@ -67,7 +67,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
         this.personalInfoSubTab = this.personalInfoSubTab + 1
       } else if (event.tabName === 'CAPITAL') {
         //other sources tab is 3, as tabs before this don't have save button
-        this.incomeSubTab = 4
+        this.incomeSubTab = 5
       }
     } else {
       this.stepper.next();
