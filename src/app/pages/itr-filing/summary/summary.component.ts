@@ -135,6 +135,7 @@ export class SummaryComponent implements OnInit {
   }]
   itrJsonForFileItr: any;
   isValidItr: boolean;
+  summaryIncome: any;
 
   constructor(private itrMsService: ItrMsService, private userMsService: UserMsService,
     public utilsService: UtilsService, private router: Router, private http: HttpClient,
@@ -165,7 +166,7 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
       // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
       console.log('result is=====', result);
-
+      this.summaryIncome = result.summaryIncome;
       const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
       this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
         console.log('SUMMARY Result=> ', summary);
@@ -320,15 +321,15 @@ export class SummaryComponent implements OnInit {
   slab(rate, input) {
     let slabs = [];
     if (input === 'INPUT') {
-      let inputSlabs = this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput && item.cgOutput[0]?.taxRate === rate);
-      if(inputSlabs) {
+      let inputSlabs = this.summaryIncome.cgIncomeN.capitalGain?.filter((item: any) => item.cgIncome && item.taxRate === rate);
+      if (inputSlabs) {
         slabs = inputSlabs;
       }
     } else {
       if (this.utilsService.isNonEmpty(this.losses.summaryIncome) && this.utilsService.isNonEmpty(this.losses.summaryIncome.cgIncomeN)
         && this.losses.summaryIncome.cgIncomeN.capitalGain instanceof Array) {
         let lossSlabs = this.losses.summaryIncome.cgIncomeN.capitalGain.filter((item: any) => item.taxRate === rate);
-        if(lossSlabs) {
+        if (lossSlabs) {
           slabs = lossSlabs;
         }
       }
@@ -470,14 +471,14 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('Response of send PDF:', res)
-      if(!res.success) {
+      if (!res.success) {
         this.utilsService.showSnackBar(res.message);
       } else {
         this.utilsService.showSnackBar(res.message);
         //also update user status
         let statusParam = '/itr-status';
         let sType = 'ITR';
-        
+
         let param2 = {
           "statusId": 7,//waiting for confirmation
           "userId": this.ITR_JSON.userId,
@@ -526,7 +527,7 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    if(confirm('Are you sure you want to file the ITR?')) {
+    if (confirm('Are you sure you want to file the ITR?')) {
       this.fileITR();
     }
   }
@@ -615,7 +616,7 @@ export class SummaryComponent implements OnInit {
       console.log(error.error.message);
       this.loading = false;
       this.isValidateJson = false;
-      if(error.error.message){
+      if (error.error.message) {
         this.utilsService.showSnackBar(error.error.message);
       } else {
         this.utilsService.showSnackBar('Something went wrong, try after some time.');

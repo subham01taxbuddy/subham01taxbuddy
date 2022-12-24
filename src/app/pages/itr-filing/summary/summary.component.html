@@ -74,7 +74,8 @@
                     <!-- Bank  -->
                     <div class="txBt" style="border-bottom: none">
                         <span class="txLf">Bank Name:</span><span class="txMuLf">{{bankArray?.name}}</span>
-                        <span class="txLf">Account Number:</span><span class="txMuLf">{{bankArray?.accountNumber}}</span>
+                        <span class="txLf">Account Number:</span><span
+                            class="txMuLf">{{bankArray?.accountNumber}}</span>
                     </div>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-4 card__col-md-4" *ngIf="taxable && taxable > 0">
@@ -121,8 +122,9 @@
               [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"> <i
                 class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
-        <button type="button"  *ngIf="isValidItr" (click)="confirmSubmitITR()" class="btn grBut pull-right"
-            [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;" [disabled]="!isValidateJson">
+        <button type="button" *ngIf="isValidItr" (click)="confirmSubmitITR()" class="btn grBut pull-right"
+            [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;"
+            [disabled]="!isValidateJson">
             File
             ITR</button>
         <!-- <button *ngIf="isValidateJson" type="button" (click)="confirmSubmitITR()"
@@ -1774,7 +1776,8 @@
                                         </table>
 
                                         <div class="bxHed"
-                                            *ngIf="ITR_JSON?.taxPaid?.tcs && ITR_JSON?.taxPaid?.tcs?.length > 0">TCS</div>
+                                            *ngIf="ITR_JSON?.taxPaid?.tcs && ITR_JSON?.taxPaid?.tcs?.length > 0">TCS
+                                        </div>
                                         <table class="table table-bordered table-striped table-hover"
                                             *ngIf="ITR_JSON?.taxPaid?.tcs && ITR_JSON?.taxPaid?.tcs?.length > 0">
                                             <thead>
@@ -2005,7 +2008,8 @@
     <!-- </div> -->
     <div class="sub_btn lwBtDn" *ngIf="show">
         <button type="button" *ngIf="isValidItr" (click)="confirmSubmitITR()" class="btn grBut pull-right"
-            [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;" [disabled]="!isValidateJson">
+            [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;"
+            [disabled]="!isValidateJson">
             File
             ITR</button>
         <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
