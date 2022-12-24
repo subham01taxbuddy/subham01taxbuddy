@@ -9,6 +9,7 @@ export const environment = {
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
 	matomoScriptId: '4',
 	isValidItr:false,
+	// KOMMUNICATE_ID: '3eb13dbd656feb3acdbdf650efbf437d1',
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",

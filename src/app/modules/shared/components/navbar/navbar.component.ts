@@ -104,6 +104,7 @@ export class NavbarComponent implements DoCheck {
 
     Auth.signOut()
       .then(data => {
+        // (window as any).Kommunicate.logout();
         this.loading = false;
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();
