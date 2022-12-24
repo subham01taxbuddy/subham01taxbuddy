@@ -38,6 +38,7 @@ export class MoreInfoComponent implements OnInit {
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
     if (!this.pastYearLosses || this.pastYearLosses.length == 0) {
+      this.pastYearLosses = [];
       this.pastYearLosses.push(this.createPastYearLoss('2014-15'));
       this.pastYearLosses.push(this.createPastYearLoss('2015-16'));
       this.pastYearLosses.push(this.createPastYearLoss('2016-17'));
