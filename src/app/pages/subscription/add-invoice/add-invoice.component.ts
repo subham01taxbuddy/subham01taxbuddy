@@ -177,6 +177,11 @@ export class AddInvoiceComponent implements OnInit {
           this.changeService();
           break;
         }
+        case 'OTHER': {
+          this.service = 'Other Services';
+          this.changeService();
+          break;
+        }
       }
       this.invoiceForm.controls['subscriptionId'].setValue(id);
       this.invoiceForm.controls['serviceType'].setValue(applicableService);
@@ -258,15 +263,15 @@ export class AddInvoiceComponent implements OnInit {
       city: [''],
       country: [''],
       gstin: [{ value: '', disabled: withinMonth }, [Validators.pattern(AppConstants.GSTNRegex)]],
-      countryCode: [AppConstants.defaultCountry, [Validators.required]], 
-      phone: ['', [Validators.required]], 
+      countryCode: [AppConstants.defaultCountry, [Validators.required]],
+      phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
-      subTotal: ['', Validators.required], 
-      cgstTotal: [''], 
+      subTotal: ['', Validators.required],
+      cgstTotal: [''],
       sgstTotal: [''],
       igstTotal: [''],
-      discountTotal: [''],  
-      total: ['', Validators.required], 
+      discountTotal: [''],
+      total: ['', Validators.required],
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
       inovicePreparedBy: '',
@@ -305,7 +310,7 @@ export class AddInvoiceComponent implements OnInit {
         this.invoiceForm.controls['addressLine2'].setValue(this.userProfile.address[0].area);
         this.invoiceForm.controls['pincode'].setValue(this.userProfile.address[0].pinCode);
         this.invoiceForm.controls['zipCode'].setValue(this.userProfile.address[0].zipCode);
-        this.invoiceForm.controls['countryCode'].setValue(this.userProfile.address[0].country!="" ? this.userProfile.address[0].country :AppConstants.defaultCountry);
+        this.invoiceForm.controls['countryCode'].setValue(this.userProfile.address[0].country != "" ? this.userProfile.address[0].country : AppConstants.defaultCountry);
         this.invoiceForm.controls['country'].setValue(this.userProfile.address[0].country === "91" ? "INDIA" : "");
         this.invoiceForm.controls['city'].setValue(this.userProfile.address[0].city);
         let stateName = this.stateDropdown.filter((item: any) => item.stateCode === this.userProfile.address[0].state)[0].stateName;
@@ -396,12 +401,12 @@ export class AddInvoiceComponent implements OnInit {
   getCityData(pinCode) {
     console.log(pinCode)
     if (pinCode.valid) {
-      this.changeCountry('INDIA');  
+      this.changeCountry('INDIA');
       const param = '/pincode/' + pinCode.value;
       this.userMsService.getMethod(param).subscribe((result: any) => {
-        this.invoiceForm.controls['country'].setValue('INDIA');   
+        this.invoiceForm.controls['country'].setValue('INDIA');
         this.invoiceForm.controls['city'].setValue(result.taluka);
-        this.invoiceForm.controls['state'].setValue(result.stateName);  
+        this.invoiceForm.controls['state'].setValue(result.stateName);
         this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
       }, error => {
         if (error.status === 404) {
@@ -597,22 +602,20 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'TDS filing', details: 'TDS Notice' },
     { service: 'TDS filing', details: 'Any other services' },
     { service: 'TPA', details: 'TPA' },
-    { service: 'Other Services', details: 'Advance tax' },
-    { service: 'Other Services', details: 'ROC filing' },
-    { service: 'Other Services', details: 'Tax Audit' },
-    { service: 'Other Services', details: 'Statutory Audit' },
-    { service: 'Other Services', details: 'Shop Act/Gumasta/Trade License' },
-    { service: 'Other Services', details: 'MSME Registration' },
-    { service: 'Other Services', details: 'IEC Registration' },
-    { service: 'Other Services', details: 'Trademark Registration' },
-    { service: 'Other Services', details: 'Food License' },
-    { service: 'Other Services', details: 'Digital signature' },
-    { service: 'Other Services', details: 'ESIC Registration' },
-    { service: 'Other Services', details: 'Udyog Aadhar' },
+    { service: 'Other Services', details: 'Accounting' },
+    { service: 'Other Services', details: 'TDS Registration' },
+    { service: 'Other Services', details: 'TDS Filing' },
+    { service: 'Other Services', details: 'ROC / Firm Registration' },
     { service: 'Other Services', details: 'PT Registration' },
-    { service: 'Other Services', details: 'PT filing' },
-    { service: 'Other Services', details: 'PF Registration' },
-    { service: 'Other Services', details: 'TAN Registration' }];
+    { service: 'Other Services', details: 'PT Return Filing' },
+    { service: 'Other Services', details: 'PF Withdrawal' },
+    { service: 'Other Services', details: 'Food Licence' },
+    { service: 'Other Services', details: 'Shop Licence / adhhr Udhuyog' },
+    { service: 'Other Services', details: 'Company registration' },
+    { service: 'Other Services', details: 'Import / Export Certificate' },
+    { service: 'Other Services', details: 'PF / ESIC Registration' },
+    { service: 'Other Services', details: 'Audit (Professional / Free Lancer' },
+    { service: 'Other Services', details: 'Other Services' }];
     this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
     if (this.service === "TPA") {
       this.serviceDetail = "TPA";

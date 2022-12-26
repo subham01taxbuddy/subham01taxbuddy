@@ -118,6 +118,9 @@ export class AddSubscriptionComponent implements OnInit {
     else if (serviceType === 'NOTICE') {
       this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'NOTICE');
     }
+    else if (serviceType === 'OTHER') {
+      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'OTHER');
+    }
     else if (serviceType === 'ALL') {
       this.filteredPlans = this.allPlans;
     }
