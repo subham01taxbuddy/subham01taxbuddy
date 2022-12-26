@@ -139,10 +139,19 @@ export class HousePropertyComponent implements OnInit {
     }
   }
   createTenantForm(obj: { name?: string, panNumber?: string } = {}): FormGroup {
-    return this.fb.group({
-      name: [obj.name || '', [Validators.required]],
-      panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
-    });
+    let type = parseInt(this.ITR_JSON.itrType);
+    console.log('hurray',type);
+    if(type === 2 || type === 3) {
+      return this.fb.group({
+        name: [obj.name || '', [Validators.required]],
+        panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
+      });
+    } else {
+      return this.fb.group({
+        name: [obj.name || ''],
+        panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
+      });
+    }
   }
   createCoOwnerForm(obj: { name?: string, isSelf?: boolean, panNumber?: string, percentage?: number } = {}): FormGroup {
     return this.fb.group({
