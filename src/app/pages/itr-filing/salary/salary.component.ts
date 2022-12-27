@@ -164,18 +164,44 @@ export class SalaryComponent implements OnInit {
     this.employerDetailsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
   }
 
+  tabChanged() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
+    this.salaryCallInConstructor(this.salaryDropdown);
+    this.summaryAllowCallInConstructor(this.allowanceDropdown);
+    this.employerCallInConstructor();
+    
+  }
+
   createEmployerDetailsFormGroup() {
-    return this.fb.group({
-      employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
-      address: ['', Validators.required],
-      city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
-      state: ['', Validators.compose([Validators.required])],
-      pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
-      // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
-      employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
-      entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
-      professionalTax: [null, { validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change' }],
-    });
+    let type = parseInt(this.ITR_JSON.itrType);
+    console.log('hurray',type);
+    if(type === 2 || type === 3) {
+      return this.fb.group({
+        employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        address: ['', Validators.required],
+        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        state: ['', Validators.compose([Validators.required])],
+        pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
+        // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
+        employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
+        entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
+        professionalTax: [null, { validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change' }],
+      });
+    } else {
+      return this.fb.group({
+        employerName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+        address: [''],
+        city: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+        state: [''],
+        pinCode: ['', Validators.compose([Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
+        // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
+        employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
+        entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
+        professionalTax: [null, { validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change' }],
+      });
+    }
   }
 
   // Salary Grid Start
@@ -676,7 +702,8 @@ export class SalaryComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
   }
   editEmployerDetails(index) {
-    this.employerDetailsFormGroup.reset();
+    // this.employerDetailsFormGroup.reset();
+    this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.currentIndex = index;
     this.salaryView = 'FORM';
     this.localEmployer = this.ITR_JSON.employers[index];

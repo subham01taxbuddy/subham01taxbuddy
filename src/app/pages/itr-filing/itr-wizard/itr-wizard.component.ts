@@ -1,3 +1,7 @@
+import { HousePropertyComponent } from './../house-property/house-property.component';
+import { BusinessComponent } from './../../business/business.component';
+import { SalaryComponent } from './../salary/salary.component';
+import { OtherInformationComponent } from './../other-information/other-information.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -5,6 +9,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { PersonalInformationComponent } from '../personal-information/personal-information.component';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -13,6 +19,12 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild('stepper', { read: MatStepper }) private stepper: MatStepper;
+  @ViewChild(PersonalInformationComponent) private personalInfoComponent;
+  @ViewChild(OtherInformationComponent) private otherInfoComponent;
+  @ViewChild(SalaryComponent) private salaryComponent;
+  @ViewChild(BusinessComponent) private businessComponent;
+  @ViewChild(HousePropertyComponent) private housePropertyComponent;
+
   personalForm: FormGroup;
   incomeForm: FormGroup;
   taxSavingForm: FormGroup;
@@ -67,7 +79,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
         this.personalInfoSubTab = this.personalInfoSubTab + 1
       } else if (event.tabName === 'CAPITAL') {
         //other sources tab is 3, as tabs before this don't have save button
-        this.incomeSubTab = 4
+        this.incomeSubTab = 5
       }
     } else {
       this.stepper.next();
@@ -78,6 +90,26 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.tabIndex = tab.selectedIndex;
     this.getDocuments();
     console.log('tab changed', this.tabIndex)
+  }
+
+  profileTabChanged(event: MatTabChangeEvent) {
+    console.log(event);
+    if(event.index === 1) {
+      this.personalInfoComponent.tabChanged();
+    } else if(event.index === 2) {
+      this.otherInfoComponent.tabChanged();
+    }
+  }
+
+  incomeTabChanged(event: MatTabChangeEvent) {
+    console.log(event);
+    if(event.tab.textLabel.toString() === 'Salary Income') {
+      this.salaryComponent.tabChanged();
+    } else if(event.tab.textLabel.toString() === 'House Property') {
+      this.housePropertyComponent.tabChanged();
+    } else if(event.tab.textLabel.toString() === 'Business Income') {
+      this.businessComponent.tabChanged();
+    }
   }
 
   afterUploadDocs(fileUpload) {

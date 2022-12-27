@@ -64,6 +64,12 @@ export class OtherInformationComponent implements OnInit {
 
   }
 
+  tabChanged() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    
+  }
+
   ChangeSharesStatus() {
 
     if (this.ITR_JSON.systemFlags.haveUnlistedShares) {

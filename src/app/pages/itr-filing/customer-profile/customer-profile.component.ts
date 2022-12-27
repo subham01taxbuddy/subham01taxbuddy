@@ -257,6 +257,7 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
+  
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();

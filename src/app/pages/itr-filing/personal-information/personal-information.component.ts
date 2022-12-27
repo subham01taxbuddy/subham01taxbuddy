@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray, ValidationErrors } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -353,6 +353,13 @@ export class PersonalInformationComponent implements OnInit {
     this.stateDropdown = this.stateDropdownMaster;
     this.getDocuments();
     // this.getItrDocuments();
+  }
+
+  tabChanged() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.setCustomerProfileValues();
+    
   }
 
   createCustomerProfileForm(): FormGroup {
