@@ -304,3 +304,11 @@ body {
     }
   }
 }
+
+.pagination {
+  .ag-root-wrapper {
+    .ag-paging-panel {
+      justify-content: flex-start !important;
+    }
+  }
+}
