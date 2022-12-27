@@ -1,3 +1,4 @@
+import { OtherInformationComponent } from './../other-information/other-information.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -5,6 +6,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { PersonalInformationComponent } from '../personal-information/personal-information.component';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -13,6 +16,9 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild('stepper', { read: MatStepper }) private stepper: MatStepper;
+  @ViewChild(PersonalInformationComponent) private personalInfoComponent;
+  @ViewChild(OtherInformationComponent) private otherInfoComponent;
+
   personalForm: FormGroup;
   incomeForm: FormGroup;
   taxSavingForm: FormGroup;
@@ -78,6 +84,15 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.tabIndex = tab.selectedIndex;
     this.getDocuments();
     console.log('tab changed', this.tabIndex)
+  }
+
+  profileTabChanged(event: MatTabChangeEvent) {
+    console.log(event);
+    if(event.index === 1) {
+      this.personalInfoComponent.tabChanged();
+    } else if(event.index === 2) {
+      this.otherInfoComponent.tabChanged();
+    }
   }
 
   afterUploadDocs(fileUpload) {

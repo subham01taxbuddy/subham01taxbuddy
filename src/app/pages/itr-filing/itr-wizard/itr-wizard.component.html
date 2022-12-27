@@ -6,7 +6,7 @@
         <mat-icon>done</mat-icon>
       </ng-template>
       <mat-step [stepControl]="personalForm">
-        <mat-tab-group [selectedIndex]="personalInfoSubTab">
+        <mat-tab-group [selectedIndex]="personalInfoSubTab" (selectedTabChange)="profileTabChanged($event)">
           <mat-tab label="Customer Profile">
             <app-customer-profile (saveAndNext)="saveAndNext($event)"></app-customer-profile>
           </mat-tab>
