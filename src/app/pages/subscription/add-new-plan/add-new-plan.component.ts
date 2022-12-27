@@ -395,7 +395,6 @@ export class AddNewPlanComponent implements OnInit {
       this.userSubscription.isActive = true;
       this.updateSubscription(val);
     } else {
-      debugger
       this.toastMessage.alert("error", "Select Start date and End date")
     }
   }

@@ -606,7 +606,6 @@ export class SalaryComponent implements OnInit {
     console.log('pin', pincode.value);
     await this.utilsService.getPincodeData(pincode).then(result => {
       console.log('pindata', result);
-      // debugger
       this.employerDetailsFormGroup.controls['city'].setValue(result.city);
       // this.employerDetailsFormGroup.controls['country'].setValue(result.countryCode);
       this.employerDetailsFormGroup.controls['state'].setValue(result.stateCode);
