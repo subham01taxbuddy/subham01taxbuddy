@@ -70,7 +70,7 @@
             <b>{{getCount('unpaid')}}</b> | Failed: <b>{{getCount('failed')}}</b></span>
         <br>
         <div class="card__row">
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceListGridOptions"
+            <ag-grid-angular class="ag-theme-balham pagination" [gridOptions]="invoiceListGridOptions"
                 (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
             </ag-grid-angular>
         </div>
