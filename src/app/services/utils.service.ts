@@ -757,9 +757,9 @@ export class UtilsService {
                     }
                     resolve(data);
                 }, error => {
-                if (error.status === 404) {
-                    reject(error);
-                }
+                    if (error.status === 404) {
+                        reject(error);
+                    }
                 });
             } else {
                 console.log('pinCode invalid', pinCode);
@@ -776,7 +776,7 @@ export class UtilsService {
     //     return this.httpClient.get('environment.url' + '/user/sme/assignment-logic-toggle')
     // }
 
-    private updateItrObject(result, itrObject:ITR_JSON) {
+    private updateItrObject(result, itrObject: ITR_JSON) {
         //update type in ITR object & save
         itrObject.itrType = result?.data?.itrType;
         const param = '/itr/' + itrObject.userId + '/' + itrObject.itrId + '/' + itrObject.assessmentYear;
