@@ -1,3 +1,6 @@
+import { HousePropertyComponent } from './../house-property/house-property.component';
+import { BusinessComponent } from './../../business/business.component';
+import { SalaryComponent } from './../salary/salary.component';
 import { OtherInformationComponent } from './../other-information/other-information.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
@@ -18,6 +21,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild('stepper', { read: MatStepper }) private stepper: MatStepper;
   @ViewChild(PersonalInformationComponent) private personalInfoComponent;
   @ViewChild(OtherInformationComponent) private otherInfoComponent;
+  @ViewChild(SalaryComponent) private salaryComponent;
+  @ViewChild(BusinessComponent) private businessComponent;
+  @ViewChild(HousePropertyComponent) private housePropertyComponent;
 
   personalForm: FormGroup;
   incomeForm: FormGroup;
@@ -92,6 +98,17 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
       this.personalInfoComponent.tabChanged();
     } else if(event.index === 2) {
       this.otherInfoComponent.tabChanged();
+    }
+  }
+
+  incomeTabChanged(event: MatTabChangeEvent) {
+    console.log(event);
+    if(event.tab.textLabel.toString() === 'Salary Income') {
+      this.salaryComponent.tabChanged();
+    } else if(event.tab.textLabel.toString() === 'House Property') {
+      this.housePropertyComponent.tabChanged();
+    } else if(event.tab.textLabel.toString() === 'Business Income') {
+      this.businessComponent.tabChanged();
     }
   }
 

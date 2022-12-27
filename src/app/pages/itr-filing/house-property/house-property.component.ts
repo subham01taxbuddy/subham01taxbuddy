@@ -71,6 +71,12 @@ export class HousePropertyComponent implements OnInit {
     console.log('HOUSING deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
 
+  tabChanged() {
+    //re-initialize the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.housePropertyForm = this.createHousePropertyForm();
+  }
+
   checkEligibility() {
     if (Number(((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].value) <= 200000) {
       this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')

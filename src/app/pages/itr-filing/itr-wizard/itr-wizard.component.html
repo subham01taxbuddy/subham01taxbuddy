@@ -23,7 +23,7 @@
       </mat-step>
       <mat-step [stepControl]="incomeForm">
         <ng-template matStepLabel>Income Details</ng-template>
-        <mat-tab-group [selectedIndex]="incomeSubTab">
+        <mat-tab-group [selectedIndex]="incomeSubTab" (selectedTabChange)="incomeTabChanged($event)">
           <mat-tab label="Capital Gain">
             <app-capital-gain (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-capital-gain>
           </mat-tab>

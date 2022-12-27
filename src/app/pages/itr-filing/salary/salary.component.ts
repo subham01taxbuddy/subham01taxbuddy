@@ -164,6 +164,16 @@ export class SalaryComponent implements OnInit {
     this.employerDetailsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
   }
 
+  tabChanged() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
+    this.salaryCallInConstructor(this.salaryDropdown);
+    this.summaryAllowCallInConstructor(this.allowanceDropdown);
+    this.employerCallInConstructor();
+    
+  }
+
   createEmployerDetailsFormGroup() {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray',type);
