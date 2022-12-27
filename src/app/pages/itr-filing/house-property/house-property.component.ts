@@ -88,34 +88,70 @@ export class HousePropertyComponent implements OnInit {
   }
 
   createHousePropertyForm(): FormGroup {
-    return this.fb.group({
-      propertyType: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
-      state: ['', Validators.required],
-      country: ['', Validators.required],
-      pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
-      grossAnnualRentReceived: [null],
-      annualRentReceived: [null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
-      rentPercentage: [{value:null, disabled:true}],
-      propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-      isEligibleFor80EE: [''],
-      // isEligibleFor80EEA: [false],
-      loans: this.fb.array([this.fb.group({
-        loanType: ['HOUSING'],
-        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
-        interestAmount: ['', [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
-      })]),
-      coOwners: this.fb.array([]),
-      tenant: this.fb.array([]),
-      ownerPercentage: []
-    });
+    let type = parseInt(this.ITR_JSON.itrType);
+    console.log('hurray',type);
+    if(type === 2 || type === 3) {
+      return this.fb.group({
+        propertyType: ['', Validators.required],
+        address: ['', Validators.required],
+        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        state: ['', Validators.required],
+        country: ['', Validators.required],
+        pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
+        grossAnnualRentReceived: [null],
+        annualRentReceived: [null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
+        rentPercentage: [{value:null, disabled:true}],
+        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        isEligibleFor80EE: [''],
+        // isEligibleFor80EEA: [false],
+        loans: this.fb.array([this.fb.group({
+          loanType: ['HOUSING'],
+          principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
+          interestAmount: ['', [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
+        })]),
+        coOwners: this.fb.array([]),
+        tenant: this.fb.array([]),
+        ownerPercentage: []
+      });
+    } else {
+      return this.fb.group({
+        propertyType: ['', Validators.required],
+        address: [''],
+        city: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+        state: [''],
+        country: [''],
+        pinCode: ['', Validators.compose([Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
+        grossAnnualRentReceived: [null],
+        annualRentReceived: [null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
+        rentPercentage: [{value:null, disabled:true}],
+        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        isEligibleFor80EE: [''],
+        // isEligibleFor80EEA: [false],
+        loans: this.fb.array([this.fb.group({
+          loanType: ['HOUSING'],
+          principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
+          interestAmount: ['', [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
+        })]),
+        coOwners: this.fb.array([]),
+        tenant: this.fb.array([]),
+        ownerPercentage: []
+      });
+    }
   }
   createTenantForm(obj: { name?: string, panNumber?: string } = {}): FormGroup {
-    return this.fb.group({
-      name: [obj.name || '', [Validators.required]],
-      panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
-    });
+    let type = parseInt(this.ITR_JSON.itrType);
+    console.log('hurray',type);
+    if(type === 2 || type === 3) {
+      return this.fb.group({
+        name: [obj.name || '', [Validators.required]],
+        panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
+      });
+    } else {
+      return this.fb.group({
+        name: [obj.name || ''],
+        panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
+      });
+    }
   }
   createCoOwnerForm(obj: { name?: string, isSelf?: boolean, panNumber?: string, percentage?: number } = {}): FormGroup {
     return this.fb.group({
