@@ -109,7 +109,7 @@ export class AddBalanceSheetComponent implements OnInit {
     this.itrMsService.postMethod(param, request).subscribe((result: any) => {
       if (result.success) {
         this.depreciationForm.controls['depreciationAmount'].setValue(result.data.depreciationAmount);
-        this.depreciationForm.controls['fixedAssetClosingAmount'].setValue(result.data.depreciationPercentageApplied);
+        this.depreciationForm.controls['fixedAssetClosingAmount'].setValue(result.data.bookValueAfterDepreciation);
         this.toastMsgService.alert("message", "Depreciation amount and depreciation percentage calculated successfully.");
       } else {
         this.loading = false;

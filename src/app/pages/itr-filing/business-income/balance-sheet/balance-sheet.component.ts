@@ -55,6 +55,9 @@ export class BalanceSheetComponent implements OnInit {
   }
 
   getBalanceSheetTableData(rowsData) {
+    if(!rowsData) {
+      rowsData = [];
+    }
     this.balanceSheetGridOptions = <GridOptions>{
       rowData: rowsData,
       columnDefs: this.createBalanceSheetColumnDef(rowsData),
