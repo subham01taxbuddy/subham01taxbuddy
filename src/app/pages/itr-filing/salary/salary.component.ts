@@ -692,7 +692,8 @@ export class SalaryComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
   }
   editEmployerDetails(index) {
-    this.employerDetailsFormGroup.reset();
+    // this.employerDetailsFormGroup.reset();
+    this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.currentIndex = index;
     this.salaryView = 'FORM';
     this.localEmployer = this.ITR_JSON.employers[index];
