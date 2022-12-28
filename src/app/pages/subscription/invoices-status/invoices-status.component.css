@@ -1,26 +1,24 @@
-.disabledBtn{
-    /* pointer-events: none;
+.disabledBtn {
+  /* pointer-events: none;
     cursor: default;
     text-decoration: none;
     color: black; */
-   background-color:  #dddddd !important;
-  }
+  background-color: #dddddd !important;
+}
 
-  .btn{
-    background-color: #63B12D;
-    height: 36px;
-    width: auto;
-    border-radius: 6px;
-    color: #eee;
-    margin: auto;
-  }
+.btn {
+  background-color: #63B12D;
+  height: 36px;
+  width: auto;
+  border-radius: 6px;
+  color: #eee;
+  margin: auto;
+}
 
-  .head-label{
-    font-size: 15px;
-    padding: 13px;
-    margin: 4px 0px 0px 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-  }
-
-
+.head-label {
+  font-size: 15px;
+  padding: 13px;
+  margin: 4px 0px 0px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
