@@ -88,7 +88,7 @@
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Invoice Date</mat-label>
-                            <input matInput formControlName="invoiceDate" [matDatepicker]="picker" [max]="maxDate"
+                            <input matInput formControlName="invoiceDate" [matDatepicker]="picker" [min]="maxDate" [max]="maxDate"
                                 autocomplete="off"
                                 (dateChange)="updateDueDate(this.invoiceForm.controls['invoiceDate'].value)"
                                 [disabled]="isUpdateInvoice">
