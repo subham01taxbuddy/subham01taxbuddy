@@ -4,10 +4,10 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { HttpHeaders, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { TitleCasePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -257,6 +257,7 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
+  
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
@@ -302,7 +303,7 @@ export class CustomerProfileComponent implements OnInit {
         // else
         //   this.router.navigate(['/pages/itr-filing/direct-upload']);
       }, error => {
-        this.utilsService.showSnackBar('Fialed to update customer profile.');
+        this.utilsService.showSnackBar('Failed to update customer profile.');
         this.loading = false;
       });
     } else {
@@ -312,9 +313,9 @@ export class CustomerProfileComponent implements OnInit {
   calAge(dob) {
     const birthday: any = new Date(dob);
     const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
-    const today: any = new Date(currentYear, 2, 31);
+    const today: any = new Date(currentYear, 3, 1);
     const timeDiff: any = ((today - birthday) / (31557600000));
-    return Math.floor(timeDiff);
+    return timeDiff > 60 ? Math.ceil(timeDiff) : Math.floor(timeDiff);
   }
 
   changeReviseForm() {

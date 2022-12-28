@@ -136,6 +136,15 @@ export class BusinessComponent implements OnInit {
         map(name => { return name ? this._filter(name) : this.natureOfBusinessDropdown.slice(); })
       );
   }
+
+  tabChanged() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.calculateTotal1();
+    this.calculateTotal2();
+    
+  }
+
   addBusinessIncome() {
     this.mode = 'ADD';
     this.businessMode = 'FORM';

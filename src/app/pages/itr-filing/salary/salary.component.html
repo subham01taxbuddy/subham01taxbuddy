@@ -23,7 +23,7 @@
                                 <mat-label>Name of the employer</mat-label>
                                 <input type="text" trim matInput placeholder="Name of the employer"
                                     name="NameOfEmployer" class="input-field" formControlName="employerName"
-                                    maxlength="125" required>
+                                    maxlength="125">
                                 <mat-error
                                     *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('required')">
                                     Enter the name of employer
@@ -55,7 +55,7 @@
                                 <mat-label>Address of employer</mat-label>
                                 <input type="text" trim matInput placeholder="Address of employer"
                                     name="AddressOfEmployer" class="input-field" formControlName="address"
-                                    maxlength="200" required>
+                                    maxlength="200">
                                 <mat-error *ngIf="employerDetailsFormGroup.controls['address'].hasError('required')">
                                     Enter the address
                                 </mat-error>
@@ -65,7 +65,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Town/City</mat-label>
                                 <input type="text" trim matInput placeholder="Town/City" name="TAN" class="input-field"
-                                    formControlName="city" maxlength="20" required>
+                                    formControlName="city" maxlength="20">
                                 <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
                                     Enter the town/city
                                 </mat-error>
@@ -79,7 +79,7 @@
                         <div class="card__col-xs-12 card__col-sm-8">
                             <mat-form-field appearance="outline">
                                 <mat-label>Select state</mat-label>
-                                <mat-select placeholder="Select state" name="state" formControlName="state" required>
+                                <mat-select placeholder="Select state" name="state" formControlName="state">
                                     <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                                         {{ state.stateName | titlecase}}
                                     </mat-option>
@@ -94,7 +94,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Pin Code</mat-label>
                                 <input type="text" trim digitsOnly matInput placeholder="Pin Code" name="pinCode"
-                                    class="input-field" formControlName="pinCode" maxlength="6" required
+                                    class="input-field" formControlName="pinCode" maxlength="6"
                                     (blur)="updateDataByPincode()">
                                 <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
                                     Enter pincode

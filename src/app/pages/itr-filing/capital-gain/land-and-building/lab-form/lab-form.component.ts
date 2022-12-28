@@ -441,7 +441,6 @@ export class LabFormComponent implements OnInit {
     const buyersDetails = (this.immovableForm.controls['buyersDetails'] as FormArray).controls[index] as FormGroup;
     await this.utilsService.getPincodeData(buyersDetails.controls['pin']).then(result => {
       console.log('pindata', result);
-      // debugger
       // buyersDetails.controls['city'].setValue(result.city);
       buyersDetails.controls['country'].setValue(result.countryCode);
       buyersDetails.controls['state'].setValue(result.stateCode);
@@ -635,7 +634,9 @@ export class LabFormComponent implements OnInit {
       let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[0] as FormGroup;
       let improvementDetails = (this.immovableForm.controls['improvement'] as FormArray).controls[index] as FormGroup;
       let selectedYear = moment(assetDetails.controls['sellDate'].value);
-      let sellFinancialYear = (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
+      let sellFinancialYear = selectedYear.get('month') > 2 ? selectedYear.get('year') + '-'+ (selectedYear.get('year')+1)
+      : (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
+    
       let req = {
         "cost": improvementDetails.controls['costOfImprovement'].value,
         "purchaseOrImprovementFinancialYear": improvementDetails.controls['dateOfImprovement'].value,
@@ -1043,7 +1044,8 @@ export class LabFormComponent implements OnInit {
     }
     let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[index] as FormGroup;
     let selectedYear = moment(assetDetails.controls['sellDate'].value);
-    let sellFinancialYear = (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
+    let sellFinancialYear = selectedYear.get('month') > 2 ? selectedYear.get('year') + '-'+ (selectedYear.get('year')+1)
+      : (selectedYear.get('year') - 1) + '-' + selectedYear.get('year');
     if(assetDetails.controls['purchaseCost'].value){
       let req = {  
       "cost": assetDetails.controls['purchaseCost'].value,

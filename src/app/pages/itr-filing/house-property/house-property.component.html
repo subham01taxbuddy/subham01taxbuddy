@@ -22,7 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody class="report-table__body">
-                                <ng-template ngFor let-house [ngForOf]="ITR_JSON?.houseProperties" let-i="index">
+                                <ng-template ngFor let-house [ngForOf]="ITR_JSON.houseProperties" let-i="index">
                                     <tr class="report-table__row">
                                         <td class="report-table__cell report-table__cell_day">
                                             {{house.propertyType==="SOP"?"Self
@@ -213,7 +213,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Address of Property</mat-label>
                             <input type="text" trim matInput placeholder="Address of Property" name="address"
-                                class="input-field" formControlName="address" required>
+                                class="input-field" formControlName="address">
                             <mat-error *ngIf="housePropertyForm.controls['address'].hasError('required')">
                                 Enter address of property
                             </mat-error>
@@ -223,7 +223,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Town/City</mat-label>
                             <input type="text" trim matInput placeholder="Town/City" name="city" class="input-field"
-                                formControlName="city" required>
+                                formControlName="city">
                             <mat-error *ngIf="housePropertyForm.controls['city'].hasError('required')">
                                 Enter town/city
                             </mat-error>
@@ -237,7 +237,7 @@
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Select state</mat-label>
-                            <mat-select placeholder="Select state" name="state" formControlName="state" required>
+                            <mat-select placeholder="Select state" name="state" formControlName="state">
                                 <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                                     {{ state.stateName | titlecase}}
                                 </mat-option>
@@ -250,7 +250,7 @@
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
-                            <mat-select name="country" formControlName="country" required>
+                            <mat-select name="country" formControlName="country">
                                 <mat-option value="91"> India </mat-option>
                             </mat-select>
                             <mat-error *ngIf="housePropertyForm.controls['country'].hasError('required')">
@@ -262,7 +262,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Pin Code</mat-label>
                             <input type="text" trim matInput placeholder="Pin Code" name="pinCode" class="input-field"
-                                formControlName="pinCode" (blur)="updateDataByPincode()" required>
+                                formControlName="pinCode" (blur)="updateDataByPincode()">
                             <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('required')">
                                 Enter pincode
                             </mat-error>
@@ -378,7 +378,7 @@
                             <td> {{i+1}}</td>
                             <td>
                                 <mat-form-field class="input-field-width">
-                                    <input matInput class="input-field" name="ten[i]" formControlName="name" required
+                                    <input matInput class="input-field" name="ten[i]" formControlName="name"
                                         maxlength="40" type="text" trim>
                                     <mat-error
                                         *ngIf="housePropertyForm.controls['tenant'].controls[i].controls['name'].hasError('required')">

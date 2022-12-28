@@ -27,6 +27,12 @@ export class BusinessIncomeComponent implements OnInit {
   ngOnInit(): void {
     this.utilsService.smoothScrollToTop();
   }
+
+  tabChanged() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    
+  }
   canDeactivate() {
     return true;
   }

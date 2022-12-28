@@ -38,6 +38,7 @@ export class MoreInfoComponent implements OnInit {
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
     if (!this.pastYearLosses || this.pastYearLosses.length == 0) {
+      this.pastYearLosses = [];
       this.pastYearLosses.push(this.createPastYearLoss('2014-15'));
       this.pastYearLosses.push(this.createPastYearLoss('2015-16'));
       this.pastYearLosses.push(this.createPastYearLoss('2016-17'));
@@ -406,7 +407,17 @@ export class MoreInfoComponent implements OnInit {
     //reinitialise the objects so as to get the data updated in other tabs
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
+    let isError = false;
+    this.pastYearLosses.forEach(element => {
+      if (element.dateofFilling && (element.LTCGLoss == 0 && element.STCGLoss == 0 && element.broughtForwordBusinessLoss == 0 && element.housePropertyLoss == 0 && element.speculativeBusinessLoss == 0)) {
+        isError = true;
+      }
+    });
+    if (isError) {
+      this.utilsService.showSnackBar('Please enter the any of the loss value.');
+      this.utilsService.smoothScrollToTop();
+      return;
+    }
     this.Copy_ITR_JSON.pastYearLosses = this.pastYearLosses;
     console.log(this.Copy_ITR_JSON)
     this.loading = true;
@@ -415,7 +426,7 @@ export class MoreInfoComponent implements OnInit {
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Schedule CFL updated successfully');
-      console.log('Assets & Liabilities save result=', result);
+      console.log('Schedule CFL=', result);
       this.utilsService.smoothScrollToTop();
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));

@@ -92,7 +92,7 @@ export class ScheduleALComponent implements OnInit {
       shareAmount: [this.movableAssets?.shareAmount],
       insuranceAmount: [this.movableAssets?.insuranceAmount],
       loanAmount: [this.movableAssets?.loanAmount],
-      cashInHand: [this.movableAssets.cashInHand],
+      cashInHand: [this.movableAssets?.cashInHand],
       assetLiability: [this.movableAssets?.assetLiability]
     });
   }
@@ -138,7 +138,6 @@ export class ScheduleALComponent implements OnInit {
     console.log('pin', pincode.value);
     await this.utilsService.getPincodeData(pincode).then(result => {
       console.log('pindata', result);
-      // debugger
       assetDetails.controls['city'].setValue(result.city);
       assetDetails.controls['country'].setValue(result.countryCode);
       assetDetails.controls['state'].setValue(result.stateCode);
