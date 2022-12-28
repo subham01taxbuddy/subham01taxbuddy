@@ -120,6 +120,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
             suppressMovable: true,
             suppressChangeDetection: true,
             width: 170,
+            valueGetter: function nameFromCode(params) {
+              return params.data.presumptiveIncome ? params.data.presumptiveIncome - params.data.minimumPresumptiveIncome : null;
+            },
           }
         ],
         suppressMovable: true,

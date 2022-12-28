@@ -52,7 +52,8 @@ export class BusinessDialogComponent implements OnInit {
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required]],
       receipts: [obj?.receipts || null, Validators.required],
-      presumptiveIncome: [obj?.presumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
+      preIncome:[obj?.presumptiveIncome - obj?.minimumPresumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
+      presumptiveIncome: [obj?.presumptiveIncome || null],
       periodOfHolding: [obj?.periodOfHolding || null, Validators.required],
       minimumPresumptiveIncome: [obj?.minimumPresumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
     });
@@ -62,9 +63,9 @@ export class BusinessDialogComponent implements OnInit {
     this.amountSix = 0;
     this.amountSix = this.businessForm.controls['receipts'].value;
     this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
-    this.businessForm.controls['presumptiveIncome'].setValue(this.amountSix);
-    this.businessForm.controls['presumptiveIncome'].setValidators([Validators.required, Validators.min(this.amountSix)]);
-    this.businessForm.controls['presumptiveIncome'].updateValueAndValidity();
+    this.businessForm.controls['preIncome'].setValue(this.amountSix);
+    this.businessForm.controls['preIncome'].setValidators([Validators.required, Validators.min(this.amountSix)]);
+    this.businessForm.controls['preIncome'].updateValueAndValidity();
   }
 
   calculateEightPer() {
@@ -96,6 +97,7 @@ export class BusinessDialogComponent implements OnInit {
 
 
   saveBusinessDetails() {
+    this.businessForm.controls['presumptiveIncome'].setValue(this.businessForm.controls['preIncome'].value + this.businessForm.controls['minimumPresumptiveIncome'].value);
     this.dialogRef.close(this.businessForm.value)
   }
 
