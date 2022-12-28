@@ -43,6 +43,11 @@ export class ProfessionalDialogComponent implements OnInit {
     this.initProfessionForm(this.data.data);
   }
 
+  getFullName() {
+    let business = this.natureOfProfessionDropdown.filter(item => item.code === this.professionForm.controls['natureOfBusiness'].value);
+    return business[0] ? business[0].label + '-' + business[0].code : null;
+  }
+
   initProfessionForm(obj?: professionalIncome) {
     this.professionForm = this.formBuilder.group({
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],

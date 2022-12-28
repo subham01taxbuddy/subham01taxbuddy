@@ -6,9 +6,9 @@
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <mat-select placeholder="Natur of Business" formControlName="natureOfBusiness"
-                        name="natureOfBusiness">
-                        <mat-option *ngFor="let business of natureOfBusinessDropdown" [value]="business.label"
+                    <mat-select placeholder="Nature of Business" formControlName="natureOfBusiness"
+                        name="natureOfBusiness" matTooltip="{{getFullName()}}">
+                        <mat-option *ngFor="let business of natureOfBusinessDropdown" [value]="business.code"
                             [disabled]="business.disabled">
                             {{business.label}}-{{business.code}}
                         </mat-option></mat-select>

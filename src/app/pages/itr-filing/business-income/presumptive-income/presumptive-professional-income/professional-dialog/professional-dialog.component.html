@@ -8,8 +8,8 @@
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
                     <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
-                        name="natureOfBusiness">
-                        <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.label"
+                        name="natureOfBusiness" matTooltip="{{getFullName()}}">
+                        <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.code"
                             [disabled]="profession.disabled">
                             {{profession.label}}-{{profession.code}}
                         </mat-option></mat-select>

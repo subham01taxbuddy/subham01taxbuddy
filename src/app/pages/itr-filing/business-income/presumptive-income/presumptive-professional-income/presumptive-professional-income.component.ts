@@ -22,6 +22,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     presumptiveIncome: null,
   }
   loading: boolean;
+  natureOfBusinessList: [];
 
   constructor(
     public matDialog: MatDialog,
@@ -30,6 +31,16 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    
+    let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    if (natureOfBusiness) {
+      this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44ADA');
+    } else {
+      this.getMastersData();
+    }
+  }
+
+  ngOnInit(): void {
     if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
       let incomeDetails;
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
@@ -53,13 +64,27 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  getMastersData() {
+    this.loading = true;
+    const param = '/itrmaster';
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      let natureOfBusinessAll = result.natureOfBusiness;
+      this.loading = false;
+      sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(natureOfBusinessAll));
+      this.natureOfBusinessList = natureOfBusinessAll.filter((item: any) => item.section === '44ADA');
+      sessionStorage.setItem('MASTER', JSON.stringify(result));
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to get nature of Business list, please try again.');
+      this.utilsService.smoothScrollToTop();
+
+    });
   }
 
   getProfessionalTableData(rowsData) {
     this.professionalGridOptions = <GridOptions>{
       rowData: rowsData,
-      columnDefs: this.createProfessionalColumnDef(rowsData),
+      columnDefs: this.createProfessionalColumnDef(this.natureOfBusinessList, rowsData),
       onGridReady: () => {
         this.professionalGridOptions.api.sizeColumnsToFit();
       },
@@ -73,7 +98,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     };
   }
 
-  createProfessionalColumnDef(rowsData) {
+  createProfessionalColumnDef(natureOfBusinessList, rowsData) {
     return [
       {
         headerName: 'Nature of Profession',
@@ -82,7 +107,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         editable: false,
         width: 400,
         valueGetter: function nameFromCode(params) {
-          return params.data.natureOfBusiness ? params.data.natureOfBusiness.toLocaleString('en-IN') : params.data.natureOfBusiness;
+          console.log(natureOfBusinessList.length);
+          let business = natureOfBusinessList.filter(item => item.code === params.data.natureOfBusiness);
+          return business[0] ? business[0].label : null;
         },
       },
 

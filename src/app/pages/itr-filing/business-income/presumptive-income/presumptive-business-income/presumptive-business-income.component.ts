@@ -25,6 +25,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     minimumPresumptiveIncome: null,
   }
   loading: boolean;
+  natureOfBusinessList: [];
 
   constructor(
     public matDialog: MatDialog,
@@ -34,6 +35,16 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    if (natureOfBusiness) {
+      this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44AD');
+    } else {
+      this.getMastersData();
+    }
+    
+  }
+
+  ngOnInit(): void {
     if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
       let incomeDetails;
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
@@ -57,13 +68,27 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  getMastersData() {
+    this.loading = true;
+    const param = '/itrmaster';
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      let natureOfBusinessAll = result.natureOfBusiness;
+      this.loading = false;
+      sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(natureOfBusinessAll));
+      this.natureOfBusinessList = natureOfBusinessAll.filter((item: any) => item.section === '44AD');
+      sessionStorage.setItem('MASTER', JSON.stringify(result));
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to get nature of Business list, please try again.');
+      this.utilsService.smoothScrollToTop();
+
+    });
   }
 
   getBusinessTableData(rowsData) {
     this.businessGridOptions = <GridOptions>{
       rowData: rowsData,
-      columnDefs: this.createBusinessColumnDef(rowsData),
+      columnDefs: this.createBusinessColumnDef(this.natureOfBusinessList, rowsData),
       onGridReady: () => {
         this.businessGridOptions.api.sizeColumnsToFit();
       },
@@ -77,7 +102,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     };
   }
 
-  createBusinessColumnDef(rowsData) {
+  createBusinessColumnDef(natureOfBusinessList, rowsData) {
     return [
       {
         headerName: 'Nature of Business',
@@ -86,7 +111,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         editable: false,
         width: 310,
         valueGetter: function nameFromCode(params) {
-          return params.data.natureOfBusiness ? params.data.natureOfBusiness.toLocaleString('en-IN') : params.data.natureOfBusiness;
+          console.log(natureOfBusinessList.length);
+          let business = natureOfBusinessList.filter(item => item.code === params.data.natureOfBusiness);
+          return business[0] ? business[0].label : null;
         },
       },
       {
