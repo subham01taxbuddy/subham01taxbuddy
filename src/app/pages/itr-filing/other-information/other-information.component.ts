@@ -67,7 +67,35 @@ export class OtherInformationComponent implements OnInit {
   tabChanged() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    
+    if (this.ITR_JSON.unlistedSharesDetails === null || this.ITR_JSON.unlistedSharesDetails === undefined) {
+      this.ITR_JSON.unlistedSharesDetails = [];
+    }
+    if (this.ITR_JSON?.directorInCompany === null || this.ITR_JSON?.directorInCompany === undefined) {
+      this.ITR_JSON.directorInCompany = [];
+    }
+    if(!this.ITR_JSON.systemFlags?.directorInCompany) {
+      if(this.ITR_JSON.systemFlags) {
+        this.ITR_JSON.systemFlags.directorInCompany = false;
+      } else {
+        this.ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false
+        }
+      }
+    } 
   }
 
   ChangeSharesStatus() {

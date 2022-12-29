@@ -2972,7 +2972,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             details: ''
           };
 
-          this.incomeData.push(obj);
+          // this.incomeData.push(obj);
 
           //add these to ITR object dividend values, default to quarter 1
           let dividendObj = {
