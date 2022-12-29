@@ -51,9 +51,9 @@
                                 <mat-form-field class="input-field-width">
                                     <mat-select placeholder="expense Type" formControlName="expenseType"
                                         name="expenseType" (selectionChange)="changed()">
-                                        <mat-option *ngFor="let type of expenseTypeList" [value]="type.value"
+                                        <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
                                             [disabled]="type.disabled">
-                                            {{type.key}}
+                                            {{type.value}}
                                         </mat-option></mat-select>
                                     <!-- <mat-error *ngIf="expense.controls[i]['expenseType'].hasError('required')">Please
                                         enter
