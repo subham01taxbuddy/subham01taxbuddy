@@ -138,7 +138,6 @@ export class ScheduleALComponent implements OnInit {
     console.log('pin', pincode.value);
     await this.utilsService.getPincodeData(pincode).then(result => {
       console.log('pindata', result);
-      // debugger
       assetDetails.controls['city'].setValue(result.city);
       assetDetails.controls['country'].setValue(result.countryCode);
       assetDetails.controls['state'].setValue(result.stateCode);

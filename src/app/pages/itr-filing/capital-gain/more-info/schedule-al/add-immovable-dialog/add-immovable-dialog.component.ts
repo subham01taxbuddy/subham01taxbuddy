@@ -73,7 +73,6 @@ export class AddImmovableDialogComponent implements OnInit {
     console.log('pin', pincode.value);
     await this.utilsService.getPincodeData(pincode).then(result => {
       console.log('pindata', result);
-      // debugger
       this.assetForm.controls['city'].setValue(result.city);
       this.assetForm.controls['country'].setValue(result.countryCode);
       this.assetForm.controls['state'].setValue(result.stateCode);
