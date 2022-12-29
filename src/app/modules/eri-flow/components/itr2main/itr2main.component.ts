@@ -5651,7 +5651,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           incomeType: 'DIVIDEND',
           details: ''
         };
-        this.incomeData.push(obj)
+        // this.incomeData.push(obj)
       }
       if (this.utilService.isNonEmpty(this.otherSourceForm.controls['familyPension'].value)) {
         let obj = {
@@ -5685,7 +5685,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           incomeType: 'DIVIDEND',
           details: ''
         };
-        this.incomeData.push(obj)
+        // this.incomeData.push(obj)
       }
 
       if (this.utilService.isNonEmpty(this.totalOfExcempt)) {
