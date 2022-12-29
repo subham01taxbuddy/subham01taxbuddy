@@ -552,6 +552,10 @@ export class SummaryComponent implements OnInit {
             acknowledgementNo: res.arnNumber
           }
         });
+        disposable.backdropClick().subscribe(() => {
+          disposable.close();
+          this.router.navigate(['/tasks/filings']);
+        });
       } else {
         if (res.errors instanceof Array && res.errors.length > 0) {
           this.utilsService.showSnackBar(res.errors[0].errFld);
