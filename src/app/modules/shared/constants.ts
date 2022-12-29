@@ -10,7 +10,7 @@ export class AppConstants {
     public static tanNumberRegex = /^[A-Z]{4}\d{5}[A-Z]{1}$/;
     public static mobileNumberRegex = /^[1-9]{1}[0-9]{9}$/;  // regex given by dinesh  //"[0-9]{10}"
     public static charRegex = '^[a-zA-Z ]+$';
-    public static charSpecialRegex = '^[a-zA-Z ()&,.]+$';
+    public static charSpecialRegex = '^[ A-Za-z0-9_.,&()]*$';
     public static charAndNoRegex = '^[a-zA-Z0-9 _]*[a-zA-Z0-9][a-zA-Z0-9 _]*$';   //'[a-zA-Z0-9]*$';
     public static IFSCRegex = /^[A-Za-z]{4}[0][A-Za-z0-9]{6}$/;
     public static gstrReg = '[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]{3}';
