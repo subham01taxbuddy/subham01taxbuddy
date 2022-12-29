@@ -2936,7 +2936,7 @@ export class TaxSummaryComponent implements OnInit {
             incomeType: 'DIVIDEND',
             details: ''
           };
-          this.incomeData.push(obj)
+          // this.incomeData.push(obj)
         }
         //   if (this.sourcesOfIncome.toatlIncome !== 0) {
         //     let obj = {
