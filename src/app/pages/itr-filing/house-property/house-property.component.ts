@@ -523,8 +523,8 @@ export class HousePropertyComponent implements OnInit {
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
-    const param = `/itr-type?itrId=${request.itrId}`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+    const param = `/itr/itr-type`;
+    this.itrMsService.postMethod(param, request).subscribe((res: any) => {
       request.itrType = res?.data?.itrType;
       const param1 = '/taxitr?type=houseProperties';
       this.itrMsService.postMethod(param1, request).subscribe((result: ITR_JSON) => {

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { request } from 'http';
 declare let $: any;
 
 @Component({
@@ -654,8 +655,8 @@ export class SalaryComponent implements OnInit {
     
     console.log('Employer details Filled:', this.ITR_JSON)
     
-    const param = `/itr-type?itrId=${this.Copy_ITR_JSON.itrId}`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+    const param = `/itr/itr-type`;
+    this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((res: any) => {
       this.Copy_ITR_JSON.itrType = res?.data?.itrType;
       const param1 = '/taxitr?type=employers';
       this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe((result: any) => {
@@ -978,8 +979,8 @@ export class SalaryComponent implements OnInit {
     
     this.loading = true;
 
-    const param = `/itr-type?itrId=${this.Copy_ITR_JSON.itrId}`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+    const param = `/itr/itr-type`;
+    this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((res: any) => {
       this.Copy_ITR_JSON.itrType = res?.data?.itrType;
       const param1 = '/taxitr?type=employers';
       this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe((result: any) => {
