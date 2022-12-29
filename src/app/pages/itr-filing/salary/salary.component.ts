@@ -212,7 +212,10 @@ export class SalaryComponent implements OnInit {
       onGridReady: () => {
         this.salaryGridOptions.api.sizeColumnsToFit();
       },
-
+      onCellValueChanged: (event) => {
+        console.log(event);
+        this.salaryGridOptions.rowData[event.rowIndex] = event.data;
+      },
       // frameworkComponents: {
       //   numericEditor: NumericEditorComponent
       // },
