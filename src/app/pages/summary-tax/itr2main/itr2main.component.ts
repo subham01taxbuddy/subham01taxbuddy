@@ -7208,7 +7208,7 @@ export class Itr2mainComponent implements OnInit {
           incomeType: 'DIVIDEND',
           details: ''
         };
-        this.incomeData.push(obj)
+        // this.incomeData.push(obj)
       }
 
       if (this.utilService.isNonEmpty(this.deductionAndRemainForm.controls['agricultureIncome'].value)) {   //Privious val bind in otherSourceForm form
@@ -7231,7 +7231,7 @@ export class Itr2mainComponent implements OnInit {
           incomeType: 'DIVIDEND',
           details: ''
         };
-        this.incomeData.push(obj)
+        // this.incomeData.push(obj)
       }
 
       if (this.utilService.isNonEmpty(this.totalOfExcempt)) {
