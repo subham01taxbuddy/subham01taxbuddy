@@ -621,7 +621,7 @@ export class CustomerProfileComponent implements OnInit {
         callerAgentUserId: this.ITR_JSON.filingTeamMemberId,
         assessmentYear: this.ITR_JSON.assessmentYear,
         name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
-        dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
+        dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value,
         mobileNumber: this.ITR_JSON.contactNumber
       }
     })
@@ -643,7 +643,7 @@ export class CustomerProfileComponent implements OnInit {
         callerAgentUserId: this.ITR_JSON.filingTeamMemberId,
         assessmentYear: this.ITR_JSON.assessmentYear,
         name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
-        dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
+        dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value,
         mobileNumber: this.ITR_JSON.contactNumber,
         itrId: this.ITR_JSON.itrId
       }
