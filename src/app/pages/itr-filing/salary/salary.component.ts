@@ -179,9 +179,9 @@ export class SalaryComponent implements OnInit {
     console.log('hurray',type);
     if(type === 2 || type === 3) {
       return this.fb.group({
-        employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charSpecialRegex)])],
         address: ['', Validators.required],
-        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charSpecialRegex)])],
         state: ['', Validators.compose([Validators.required])],
         pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
         // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
