@@ -94,6 +94,17 @@ export class HousePropertyComponent implements OnInit {
     //re-initialize the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.housePropertyForm = this.createHousePropertyForm();
+    if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties)
+      && this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
+      this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[0]);
+      if (this.ITR_JSON.houseProperties[0].isEligibleFor80EE) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE')
+      } else if (this.ITR_JSON.houseProperties[0].isEligibleFor80EEA) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA')
+      } else {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
+      }
+    }
   }
 
   checkEligibility() {
