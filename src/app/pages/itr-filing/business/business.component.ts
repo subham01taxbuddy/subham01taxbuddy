@@ -31,7 +31,7 @@ export class BusinessComponent implements OnInit {
   natureOfBusinessPlaceholder: String = 'Nature of Business';
   natureOfBusinessForm = new FormControl('', Validators.required);
   filteredOptions: Observable<any[]>;
-  tradeName = new FormControl('', [Validators.required, Validators.pattern(AppConstants.charRegex)]);
+  tradeName = new FormControl('', [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)]);
   businessType = new FormControl('BUSINESS', [Validators.required]);
   businessIncomeCashForm: FormGroup;
   businessIncomeBankForm: FormGroup;
