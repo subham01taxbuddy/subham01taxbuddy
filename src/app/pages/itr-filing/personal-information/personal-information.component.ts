@@ -380,10 +380,10 @@ export class PersonalInformationComponent implements OnInit {
         flatNo: ['', Validators.required],
         premisesName: [''],
         road: [''],
-        area: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        area: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charSpecialRegex)])],
         state: ['91', Validators.required],
         country: ['91', Validators.required],
-        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charSpecialRegex)])],
         pinCode: ['', Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.required, Validators.pattern(AppConstants.PINCode)])]
       }),
       seventhProviso139: this.fb.group({
