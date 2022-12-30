@@ -51,6 +51,25 @@ export class HousePropertyComponent implements OnInit {
       this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
       this.hpView = 'TABLE';
     }
+    if(!this.Copy_ITR_JSON.systemFlags) {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false
+      };
+    }
   }
 
   ngOnInit() {
@@ -463,6 +482,25 @@ export class HousePropertyComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    if(!this.Copy_ITR_JSON.systemFlags) {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false
+      };
+    }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */) {
       this.housePropertyForm.controls['country'].setValue('91');
