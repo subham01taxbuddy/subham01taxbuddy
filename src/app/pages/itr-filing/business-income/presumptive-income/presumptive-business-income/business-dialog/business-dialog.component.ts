@@ -1,3 +1,4 @@
+import { NewPresumptiveIncomes } from './../../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -46,16 +47,18 @@ export class BusinessDialogComponent implements OnInit {
   }
 
 
-  initBusinessForm(obj?: businessIncome) {
+  initBusinessForm(obj?: NewPresumptiveIncomes) {
+    let bank = obj?.incomes?.filter(item => (item.incomeType === 'BANK'));
+    let cash = obj?.incomes?.filter(item => (item.incomeType === 'CASH'));
     this.businessForm = this.formBuilder.group({
       id: [obj.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required]],
-      receipts: [obj?.receipts || null, Validators.required],
-      preIncome:[obj?.presumptiveIncome - obj?.minimumPresumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
-      presumptiveIncome: [obj?.presumptiveIncome || null],
-      periodOfHolding: [obj?.periodOfHolding || null, Validators.required],
-      minimumPresumptiveIncome: [obj?.minimumPresumptiveIncome || null, [Validators.required, Validators.min(this.amountSix)]],
+      receipts: [bank[0] ? bank[0].receipts : null, Validators.required],
+      preIncome:[bank[0] ? bank[0].presumptiveIncome : null, [Validators.required, Validators.min(this.amountSix)]],
+      presumptiveIncome: [null],
+      receivedInCash: [cash[0] ? cash[0].receipts : null, Validators.required],
+      minimumPresumptiveIncome: [cash[0] ? cash[0].presumptiveIncome : null, [Validators.required, Validators.min(this.amountSix)]],
     });
   }
 
@@ -75,7 +78,7 @@ export class BusinessDialogComponent implements OnInit {
 
   calculateEightPer() {
     this.amountEight = 0;
-    this.amountEight = this.businessForm.controls['periodOfHolding'].value;
+    this.amountEight = this.businessForm.controls['receivedInCash'].value;
     this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
     this.businessForm.controls['minimumPresumptiveIncome'].setValue(this.amountEight);
     this.businessForm.controls['minimumPresumptiveIncome'].setValidators([Validators.required, Validators.min(this.amountEight)]);
@@ -102,8 +105,39 @@ export class BusinessDialogComponent implements OnInit {
 
 
   saveBusinessDetails() {
-    this.businessForm.controls['presumptiveIncome'].setValue(this.businessForm.controls['preIncome'].value + this.businessForm.controls['minimumPresumptiveIncome'].value);
-    this.dialogRef.close(this.businessForm.value)
+    //this.businessForm.controls['presumptiveIncome'].setValue(this.businessForm.controls['preIncome'].value + this.businessForm.controls['minimumPresumptiveIncome'].value);
+    console.log('this.natureOfBusinessForm === ', this.businessForm.value);
+    if (this.businessForm.valid) {
+      let localPresumptiveIncome = {
+        businessType: 'BUSINESS',
+        natureOfBusiness: this.businessForm.controls['natureOfBusiness'].value,
+        tradeName: this.businessForm.controls['tradeName'].value,
+        incomes: [],
+        taxableIncome: null,
+        exemptIncome: null
+      };
+
+      localPresumptiveIncome.incomes.push({
+        incomeType: 'CASH',
+        receipts: this.businessForm.controls['receivedInCash'].value,
+        presumptiveIncome: this.businessForm.controls['minimumPresumptiveIncome'].value,
+        periodOfHolding: 0,
+        // minimumPresumptiveIncome: this.businessForm.controls['minimumPresumptiveIncome'].value
+      });
+      localPresumptiveIncome.incomes.push({
+        incomeType: 'BANK',
+        receipts: this.businessForm.controls['receipts'].value,
+        presumptiveIncome: this.businessForm.controls['preIncome'].value,
+        periodOfHolding: 0,
+        // minimumPresumptiveIncome: this.businessForm.controls['preIncome'].value
+      });
+      this.dialogRef.close(localPresumptiveIncome);
+      
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+    
+    
   }
 
   cancel() {

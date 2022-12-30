@@ -1,3 +1,4 @@
+import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
@@ -49,16 +50,16 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let incomeDetails;
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
       if (data.length > 0) {
-        let businessArray = [];
-        data.forEach((obj: any) => {
-          incomeDetails = obj.incomes;
-          for (let i = 0; i < obj.incomes.length; i++) {
-            incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
-            incomeDetails[i].tradeName = obj.tradeName;
-            businessArray.push(incomeDetails[i]);
-          }
-        });
-        this.getBusinessTableData(businessArray);
+        // let businessArray = [];
+        // data.forEach((obj: any) => {
+        //   incomeDetails = obj.incomes;
+        //   for (let i = 0; i < obj.incomes.length; i++) {
+        //     incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
+        //     incomeDetails[i].tradeName = obj.tradeName;
+        //     businessArray.push(incomeDetails[i]);
+        //   }
+        // });
+        this.getBusinessTableData(data);
       }
       else {
         this.getBusinessTableData([]);
@@ -137,7 +138,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
             width: 170,
             suppressMovable: true,
             valueGetter: function nameFromCode(params) {
-              return params.data.receipts ? params.data.receipts.toLocaleString('en-IN') : params.data.receipts;
+              console.log('receipts', params.data.incomes);
+              let bank = params.data.incomes.filter(item => (item.incomeType === 'BANK'));
+              return bank[0] ? bank[0].receipts : null;
             },
           },
           {
@@ -148,7 +151,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
             suppressChangeDetection: true,
             width: 170,
             valueGetter: function nameFromCode(params) {
-              return params.data.presumptiveIncome ? params.data.presumptiveIncome - params.data.minimumPresumptiveIncome : null;
+              let bank = params.data.incomes.filter(item => (item.incomeType === 'BANK'));
+              return bank[0] ? bank[0].presumptiveIncome : null;
             },
           }
         ],
@@ -160,21 +164,26 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         children: [
           {
             headerName: 'Receipt received in any other mode',
-            field: 'periodOfHolding',
+            // field: 'periodOfHolding',
             editable: false,
             width: 170,
             suppressMovable: true,
             valueGetter: function nameFromCode(params) {
-              return params.data.periodOfHolding ? params.data.periodOfHolding.toLocaleString('en-IN') : params.data.periodOfHolding;
+              let cash = params.data.incomes.filter(item => (item.incomeType === 'CASH'));
+              return cash[0] ? cash[0].receipts.toLocaleString('en-IN') : null;
             },
           },
           {
             headerName: 'presumptive income at 8%',
-            field: 'minimumPresumptiveIncome',
+            // field: 'minimumPresumptiveIncome',
             editable: false,
             suppressMovable: true,
             suppressChangeDetection: true,
             width: 170,
+            valueGetter: function nameFromCode(params) {
+              let cash = params.data.incomes.filter(item => (item.incomeType === 'CASH'));
+              return cash[0] ? cash[0].presumptiveIncome.toLocaleString('en-IN') : null;
+            },
           }
         ],
         suppressMovable: true,
@@ -231,7 +240,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
       data: {
         mode: mode,
-        data: data,
+        data: this.businessGridOptions.rowData[index],
         natureList: this.businessGridOptions.rowData,
       },
       closeOnNavigation: true,
@@ -258,56 +267,56 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
-    let presBusinessIncome = [];
-    this.businessGridOptions.rowData.forEach(element => {
-      let isAdded = false;
-      presBusinessIncome.forEach(data => {
-        if (data.natureOfBusiness == element.natureOfBusiness) {
-          isAdded = true;
-          data.incomes.push({
-            "id": element.id,
-            "incomeType": "BUSINESS",
-            "receipts": element.receipts,
-            "presumptiveIncome": element.presumptiveIncome,
-            "periodOfHolding": element.periodOfHolding,
-            "minimumPresumptiveIncome": element.minimumPresumptiveIncome,
-            "registrationNo": null,
-            "ownership": null,
-            "tonnageCapacity": null
-          });
-        }
-      });
-      if (!isAdded) {
-        presBusinessIncome.push({
-          "id": element.id,
-          "businessType": "BUSINESS",
-          "natureOfBusiness": element.natureOfBusiness,
-          "label": null,
-          "tradeName": element.tradeName,
-          "salaryInterestAmount": null,
-          "taxableIncome": null,
-          "exemptIncome": null,
-          "incomes": [{
-            "id": element.id,
-            "incomeType": "BUSINESS",
-            "receipts": element.receipts,
-            "presumptiveIncome": element.presumptiveIncome,
-            "periodOfHolding": element.periodOfHolding,
-            "minimumPresumptiveIncome": element.minimumPresumptiveIncome,
-            "registrationNo": null,
-            "ownership": null,
-            "tonnageCapacity": null
-          }]
-        });
-      };
-    });
-    console.log("presBusinessIncome", presBusinessIncome)
+    // let presBusinessIncome = [];
+    // this.businessGridOptions.rowData.forEach(element => {
+    //   let isAdded = false;
+    //   presBusinessIncome.forEach(data => {
+    //     if (data.natureOfBusiness == element.natureOfBusiness) {
+    //       isAdded = true;
+    //       data.incomes.push({
+    //         "id": element.id,
+    //         "incomeType": "BUSINESS",
+    //         "receipts": element.receipts,
+    //         "presumptiveIncome": element.presumptiveIncome,
+    //         "periodOfHolding": element.periodOfHolding,
+    //         "minimumPresumptiveIncome": element.minimumPresumptiveIncome,
+    //         "registrationNo": null,
+    //         "ownership": null,
+    //         "tonnageCapacity": null
+    //       });
+    //     }
+    //   });
+    //   if (!isAdded) {
+    //     presBusinessIncome.push({
+    //       "id": element.id,
+    //       "businessType": "BUSINESS",
+    //       "natureOfBusiness": element.natureOfBusiness,
+    //       "label": null,
+    //       "tradeName": element.tradeName,
+    //       "salaryInterestAmount": null,
+    //       "taxableIncome": null,
+    //       "exemptIncome": null,
+    //       "incomes": [{
+    //         "id": element.id,
+    //         "incomeType": "BUSINESS",
+    //         "receipts": element.receipts,
+    //         "presumptiveIncome": element.presumptiveIncome,
+    //         "periodOfHolding": element.periodOfHolding,
+    //         "minimumPresumptiveIncome": element.minimumPresumptiveIncome,
+    //         "registrationNo": null,
+    //         "ownership": null,
+    //         "tonnageCapacity": null
+    //       }]
+    //     });
+    //   };
+    // });
+    // console.log("presBusinessIncome", presBusinessIncome)
 
     if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
+      this.Copy_ITR_JSON.business.presumptiveIncomes = this.businessGridOptions.rowData;
     } else {
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "BUSINESS");
-      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(presBusinessIncome)
+      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(this.businessGridOptions.rowData)
     }
     console.log(this.Copy_ITR_JSON);
 
