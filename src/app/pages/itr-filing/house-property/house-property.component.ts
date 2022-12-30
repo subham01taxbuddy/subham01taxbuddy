@@ -258,7 +258,7 @@ export class HousePropertyComponent implements OnInit {
 
   currentIndex: number = null;
   housingView = '';
-  mode = '';
+  mode = 'ADD';
   viewForm = false;
   addHousingIncome() {
     // ASHISH HULWAN because of new view changes changes the below values as per need
@@ -545,6 +545,9 @@ export class HousePropertyComponent implements OnInit {
         })
       } else {
         hp.loans = [];
+      }
+      if(!this.Copy_ITR_JSON.houseProperties) {
+        this.Copy_ITR_JSON.houseProperties = [];
       }
       if (this.mode === 'ADD') {
         this.Copy_ITR_JSON.houseProperties.push(hp);
