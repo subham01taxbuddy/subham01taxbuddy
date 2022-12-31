@@ -10,6 +10,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -402,28 +403,12 @@ export class AddInvoiceComponent implements OnInit {
     console.log('Invoice Form: ', this.invoiceForm)
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
-      // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
-      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
-      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
-      //   var filingEstimateObj = {
-      //     "userId": this.invoiceForm.controls['userId'].value,
-      //     "clientName": this.invoiceForm.controls['billTo'].value,
-      //     "clientEmail": this.invoiceForm.controls['email'].value,
-      //     "clientMobile": this.invoiceForm.controls['phone'].value,
-      //     "smeEmail": smeInfo.USER_EMAIL,
-      //     "smeName": smeInfo.USER_F_NAME,
-      //     "smeMobile": smeInfo.USER_MOBILE,
-      //     "estimatedDateTime": this.invoiceForm.controls['estimatedDateTime'].value,
-      //     "itrType": this.invoiceForm.controls['itrType'].value,
-      //     "comment": this.invoiceForm.controls['comment'].value,
-      //     "isMarkAsDone": false,
-      //   }
-      // }
-      // console.log('filingEstimateObj info -> ', filingEstimateObj)
+      
       this.loading = true;
       const param = '/invoice';
       const request = this.invoiceForm.getRawValue();
-      console.log('Invoice values:', request);
+      let selectedDate = moment(request.invoiceDate).utc;
+      console.log('Invoice values:', request, selectedDate);
       this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
         this.showInvoiceForm = false;
         console.log("result: ", result);
