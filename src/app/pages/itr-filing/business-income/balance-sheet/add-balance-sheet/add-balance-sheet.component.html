@@ -11,7 +11,7 @@
                     <mat-form-field class="input-field-width">
                         <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                             name="natureOfBusiness">
-                            <mat-option *ngFor="let nature of natureOfBusinessDropdownAll" [value]="nature.label"
+                            <mat-option *ngFor="let nature of natureOfBusinessDropdownAll" [value]="nature.code"
                                 [disabled]="nature.disabled">
                                 {{nature.label}}-{{nature.code}}
                             </mat-option></mat-select>
