@@ -334,6 +334,17 @@ export class HousePropertyComponent implements OnInit {
     }
     this.calAnnualValue();
 
+    if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties)
+      && this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
+      if (this.ITR_JSON.houseProperties[index].isEligibleFor80EE) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE')
+      } else if (this.ITR_JSON.houseProperties[index].isEligibleFor80EEA) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA')
+      } else {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
+      }
+    }
+    
     // if (this.housePropertyForm.getRawValue().loans.length > 0) {
     //   this.isHomeLoan.setValue(true);
     // }
