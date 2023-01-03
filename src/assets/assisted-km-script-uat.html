@@ -48,13 +48,13 @@
                     Kommunicate.customizeWidgetCss(css);
                     const userDetail = {
                         email: userObj['email'],
-                        phoneNumber: userObj['mobile'],
-                        displayName: userObj['firstName'] + ' ' + userObj['lastName'],
+                        phoneNumber: userObj['mobileNumber'],
+                        displayName: userObj['name'],
                         userId: userObj.userId,
                         password: '',
                         metadata: {
                             'userId': userObj.userId,
-                            'contactNumber': userObj.mobile,
+                            'contactNumber': userObj.mobileNumber,
                             'email': userObj['email'],
                             'Company Id': compId,
                             'Platform': 'Website'
