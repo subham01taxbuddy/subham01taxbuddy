@@ -65,6 +65,19 @@ import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.c
 import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
 import { BondsDebentureComponent } from './capital-gain/bonds-debenture/bonds-debenture.component';
 import { BondsComponent } from './capital-gain/bonds/bonds.component';
+import { BusinessIncomeComponent } from './business-income/business-income.component';
+import { PresumptiveIncomeComponent } from './business-income/presumptive-income/presumptive-income.component';
+import { PresumptiveBusinessIncomeComponent } from './business-income/presumptive-income/presumptive-business-income/presumptive-business-income.component';
+import { PresumptiveProfessionalIncomeComponent } from './business-income/presumptive-income/presumptive-professional-income/presumptive-professional-income.component';
+import { ProfitLossAcComponent } from './business-income/profit-loss-ac/profit-loss-ac.component';
+import { BalanceSheetComponent } from './business-income/balance-sheet/balance-sheet.component';
+import { BusinessDialogComponent } from './business-income/presumptive-income/presumptive-business-income/business-dialog/business-dialog.component';
+import { ProfessionalDialogComponent } from './business-income/presumptive-income/presumptive-professional-income/professional-dialog/professional-dialog.component';
+import { NonSpeculativeIncomeComponent } from './business-income/profit-loss-ac/non-speculative-income/non-speculative-income.component';
+import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
+import { AddUpdateTradingComponent } from './business-income/profit-loss-ac/non-speculative-income/add-update-trading/add-update-trading.component';
+import { AddBalanceSheetComponent } from './business-income/balance-sheet/add-balance-sheet/add-balance-sheet.component';
+import { DepreciationDialogComponent } from './business-income/balance-sheet/depreciation-dialog/depreciation-dialog.component';
 
 @NgModule({
     imports: [
@@ -138,6 +151,19 @@ import { BondsComponent } from './capital-gain/bonds/bonds.component';
         AddImmovableDialogComponent,
         BondsDebentureComponent,
         BondsComponent,
+        BusinessIncomeComponent,
+        PresumptiveIncomeComponent,
+        PresumptiveBusinessIncomeComponent,
+        PresumptiveProfessionalIncomeComponent,
+        ProfitLossAcComponent,
+        BalanceSheetComponent,
+        BusinessDialogComponent,
+        ProfessionalDialogComponent,
+        NonSpeculativeIncomeComponent,
+        SpeculativeIncomeComponent,
+        AddUpdateTradingComponent,
+        AddBalanceSheetComponent,
+        DepreciationDialogComponent,
        ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,

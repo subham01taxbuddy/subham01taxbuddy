@@ -292,7 +292,10 @@ export class UtilsService {
             capitalGain: [],
             business: {
                 presumptiveIncomes: [],
-                financialParticulars: null
+                financialParticulars: null,
+                businessDescription: [],
+                fixedAssetsDetails: [],
+                profitLossACIncomes: [],
             },
             pastYearLosses: [],
             foreignIncome: null,

@@ -157,12 +157,7 @@ export class SummaryComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
     const param = '/tax';
-    if (this.ITR_JSON.itrType !== '4') {
-      if (this.ITR_JSON.business) {
-        this.ITR_JSON.business.financialParticulars = null;
-        this.ITR_JSON.business.presumptiveIncomes = [];
-      }
-    }
+    
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
       // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
       console.log('result is=====', result);
@@ -551,6 +546,10 @@ export class SummaryComponent implements OnInit {
           data: {
             acknowledgementNo: res.arnNumber
           }
+        });
+        disposable.backdropClick().subscribe(() => {
+          disposable.close();
+          this.router.navigate(['/tasks/filings']);
         });
       } else {
         if (res.errors instanceof Array && res.errors.length > 0) {

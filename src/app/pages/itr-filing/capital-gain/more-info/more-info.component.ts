@@ -38,6 +38,7 @@ export class MoreInfoComponent implements OnInit {
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
     if (!this.pastYearLosses || this.pastYearLosses.length == 0) {
+      this.pastYearLosses = [];
       this.pastYearLosses.push(this.createPastYearLoss('2014-15'));
       this.pastYearLosses.push(this.createPastYearLoss('2015-16'));
       this.pastYearLosses.push(this.createPastYearLoss('2016-17'));
@@ -143,7 +144,7 @@ export class MoreInfoComponent implements OnInit {
           var newValInt = parseInt(params.newValue);
           var valueChanged = params.data.housePropertyLoss !== newValInt;
           if (valueChanged) {
-            params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
+            params.data.housePropertyLoss = newValInt ? newValInt : 0;
           }
           //update total
           this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function (a, b) { return a + b; })
@@ -188,7 +189,7 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.broughtForwordBusinessLoss !== newValInt;
               if (valueChanged) {
-                params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
+                params.data.broughtForwordBusinessLoss = newValInt ? newValInt : 0;
               }
               //update total
               this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function (a, b) { return a + b; })
@@ -220,7 +221,7 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
               if (valueChanged) {
-                params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
+                params.data.speculativeBusinessLoss = newValInt ? newValInt : 0;
               }
 
               //update total
@@ -266,7 +267,7 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.STCGLoss !== newValInt;
               if (valueChanged) {
-                params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
+                params.data.STCGLoss = newValInt ? newValInt : 0;
               }
 
               //update total
@@ -300,7 +301,7 @@ export class MoreInfoComponent implements OnInit {
               var newValInt = parseInt(params.newValue);
               var valueChanged = params.data.LTCGLoss !== newValInt;
               if (valueChanged) {
-                params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
+                params.data.LTCGLoss = newValInt ? newValInt : 0;
               }
 
               //update total

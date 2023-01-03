@@ -51,6 +51,25 @@ export class HousePropertyComponent implements OnInit {
       this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
       this.hpView = 'TABLE';
     }
+    if(!this.Copy_ITR_JSON.systemFlags) {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false
+      };
+    }
   }
 
   ngOnInit() {
@@ -75,6 +94,17 @@ export class HousePropertyComponent implements OnInit {
     //re-initialize the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.housePropertyForm = this.createHousePropertyForm();
+    if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties)
+      && this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
+      this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[0]);
+      if (this.ITR_JSON.houseProperties[0].isEligibleFor80EE) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE')
+      } else if (this.ITR_JSON.houseProperties[0].isEligibleFor80EEA) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA')
+      } else {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
+      }
+    }
   }
 
   checkEligibility() {
@@ -239,7 +269,7 @@ export class HousePropertyComponent implements OnInit {
 
   currentIndex: number = null;
   housingView = '';
-  mode = '';
+  mode = 'ADD';
   viewForm = false;
   addHousingIncome() {
     // ASHISH HULWAN because of new view changes changes the below values as per need
@@ -304,6 +334,17 @@ export class HousePropertyComponent implements OnInit {
     }
     this.calAnnualValue();
 
+    if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties)
+      && this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
+      if (this.ITR_JSON.houseProperties[index].isEligibleFor80EE) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE')
+      } else if (this.ITR_JSON.houseProperties[index].isEligibleFor80EEA) {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA')
+      } else {
+        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
+      }
+    }
+    
     // if (this.housePropertyForm.getRawValue().loans.length > 0) {
     //   this.isHomeLoan.setValue(true);
     // }
@@ -463,6 +504,25 @@ export class HousePropertyComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    if(!this.Copy_ITR_JSON.systemFlags) {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false
+      };
+    }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */) {
       this.housePropertyForm.controls['country'].setValue('91');
@@ -508,6 +568,9 @@ export class HousePropertyComponent implements OnInit {
       } else {
         hp.loans = [];
       }
+      if(!this.Copy_ITR_JSON.houseProperties) {
+        this.Copy_ITR_JSON.houseProperties = [];
+      }
       if (this.mode === 'ADD') {
         this.Copy_ITR_JSON.houseProperties.push(hp);
       } else {
@@ -523,8 +586,8 @@ export class HousePropertyComponent implements OnInit {
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
-    const param = `/itr-type?itrId=${request.itrId}`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+    const param = `/itr/itr-type`;
+    this.itrMsService.postMethod(param, request).subscribe((res: any) => {
       request.itrType = res?.data?.itrType;
       const param1 = '/taxitr?type=houseProperties';
       this.itrMsService.postMethod(param1, request).subscribe((result: ITR_JSON) => {

@@ -9,6 +9,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -428,10 +429,12 @@ export class AddInvoiceComponent implements OnInit {
     console.log('Invoice Form: ', this.invoiceForm)
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
+      
       this.loading = true;
       const param = '/invoice';
       const request = this.invoiceForm.getRawValue();
-      console.log('Invoice values:', request);
+      let selectedDate = moment(request.invoiceDate).utc;
+      console.log('Invoice values:', request, selectedDate);
       this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
         this.showInvoiceForm = false;
         console.log("result: ", result);

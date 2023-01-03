@@ -1,5 +1,5 @@
+import { BusinessIncomeComponent } from './../business-income/business-income.component';
 import { HousePropertyComponent } from './../house-property/house-property.component';
-import { BusinessComponent } from './../../business/business.component';
 import { SalaryComponent } from './../salary/salary.component';
 import { OtherInformationComponent } from './../other-information/other-information.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
@@ -22,7 +22,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild(PersonalInformationComponent) private personalInfoComponent;
   @ViewChild(OtherInformationComponent) private otherInfoComponent;
   @ViewChild(SalaryComponent) private salaryComponent;
-  @ViewChild(BusinessComponent) private businessComponent;
+  @ViewChild(BusinessIncomeComponent) private businessComponent;
   @ViewChild(HousePropertyComponent) private housePropertyComponent;
 
   personalForm: FormGroup;
