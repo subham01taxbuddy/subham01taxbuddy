@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -22,7 +23,10 @@ export class MoreOptionsDialogComponent implements OnInit {
   initialData = {};
   statusList = [];
   // isDisable = true;
+  loggedInUserData: any;
+  
   constructor(
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
@@ -44,6 +48,12 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   ngOnInit() {
     // this.getStatus();
+    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
+
+  }
+
+  isApplicable(permissionRoles: any) {
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
   }
 
   closeDialog() {
