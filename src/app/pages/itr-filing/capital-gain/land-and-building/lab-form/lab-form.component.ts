@@ -797,8 +797,12 @@ export class LabFormComponent implements OnInit {
           this.cgArrayElement.improvement = filtered.concat(this.improvements);
         }
 
+        if(!this.Copy_ITR_JSON.capitalGain){
+          this.Copy_ITR_JSON.capitalGain = [];
+        }
+
         if (this.data.mode === 'ADD') {
-          let labData = this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0];
+          let labData = this.Copy_ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND')[0];
           if(labData) {
             this.Copy_ITR_JSON.capitalGain.splice(this.Copy_ITR_JSON.capitalGain.indexOf(labData), 1, this.cgArrayElement);
             //this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
