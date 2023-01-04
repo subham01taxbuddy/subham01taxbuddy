@@ -794,4 +794,10 @@ export class UtilsService {
         );
     }
 
+    getDueDateDetails() {
+        //https://uat-api.taxbuddy.com/itr/due-date
+        const param = '/due-date';
+        return this.itrMsService.getMethod(param);
+    }
+
 }

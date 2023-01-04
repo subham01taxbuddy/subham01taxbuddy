@@ -363,6 +363,11 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   createCustomerProfileForm(): FormGroup {
+    let itrFilingDueDate = sessionStorage.getItem('itrFilingDueDate');
+    if(Date() > itrFilingDueDate) {
+      console.log('Due date is over');
+    }
+
     return this.fb.group({
       firstName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
@@ -374,7 +379,7 @@ export class PersonalInformationComponent implements OnInit {
       // aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       // residentialStatus: ['RESIDENT'],
-      regime: ['', Validators.required],
+      regime: [{value:'', disabled:Date() > itrFilingDueDate}, Validators.required],
       previousYearRegime: ['', Validators.required],
       address: this.fb.group({
         flatNo: ['', Validators.required],
@@ -395,6 +400,7 @@ export class PersonalInformationComponent implements OnInit {
       form10IEAckNo: null,
       form10IEDate: null
     });
+    
   }
 
   createBankDetailsForm(obj: { ifsCode?: string, name?: String, accountNumber?: string, hasRefund?: boolean } = {}): FormGroup {
