@@ -403,7 +403,7 @@ export class AddInvoiceComponent implements OnInit {
     console.log('Invoice Form: ', this.invoiceForm)
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
-      
+
       this.loading = true;
       const param = '/invoice';
       const request = this.invoiceForm.getRawValue();
@@ -559,6 +559,7 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
     { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
     { service: 'ITR Filing', details: 'ITR Filing' },
+      { service: 'ITR Filing', details: 'HNI Plan' },
     { service: 'GST Filing', details: 'GST Registration' },
     { service: 'GST Filing', details: 'GST Annual Subscription' },
     { service: 'GST Filing', details: 'GSTR Annual return' },
