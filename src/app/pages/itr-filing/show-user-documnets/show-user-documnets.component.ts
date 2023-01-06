@@ -202,7 +202,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
       console.log(res);
       this.docUrl = res['signedUrl'];
       this.loading = false;
-      this.utilsService.showSnackBar(res.response);
+      window.open(this.docUrl);
+      // this.utilsService.showSnackBar(res.response);
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar(error);
