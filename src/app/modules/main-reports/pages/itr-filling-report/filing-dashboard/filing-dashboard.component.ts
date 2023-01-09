@@ -40,7 +40,7 @@ export class FilingDashboardComponent implements OnInit {
 
   getFilingReport() {
     this.loading = true;
-    const param = `/api/itr-filing-count?assessmentYear=2021-2022`;
+    const param = `/api/itr-filing-count?assessmentYear=2022-2023`;
     this.itrMsService.getMethod(param).subscribe(res => {
       console.log(res);
       this.setTodaysChart(res['today']);

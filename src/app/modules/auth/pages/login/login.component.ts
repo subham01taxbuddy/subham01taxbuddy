@@ -167,6 +167,7 @@ export class LoginComponent implements OnInit {
     this.getFyList();
     this.getAgentList();
     this.getSmeInfoDetails(jhi.userId);
+    this.getDueDateDetails();
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
       this.router.navigate(['/tasks/assigned-users']);
       this.utilsService.logAction(jhi.userId, 'login')
@@ -182,6 +183,12 @@ export class LoginComponent implements OnInit {
       if (jhi.role.length > 0)
         this._toastMessageService.alert("error", "Access Denied.");
     }
+  }
+  getDueDateDetails() {
+    //https://uat-api.taxbuddy.com/itr/due-date
+    this.utilsService.getDueDateDetails().subscribe((result: any) => {
+      sessionStorage.setItem('itrFilingDueDate', result.data.itrFilingDueDate);
+    });
   }
 
   sendOtpOnWhatapp(values: any) {

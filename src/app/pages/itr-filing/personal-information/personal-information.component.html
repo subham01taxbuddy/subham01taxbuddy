@@ -256,14 +256,17 @@
             <div class="card__col-xs-12 card__col-sm-8" style="padding-top: 10px;">
                 Are you opting for New Tax Regime?
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="card__col-xs-12 card__col-sm-4" matTooltip="{{customerProfileForm.controls['regime'].disabled? 'Due date is over' : null}}">
                 <mat-form-field appearance="outline">
                     <mat-label>Select One</mat-label>
-                    <mat-select name="regime" formControlName="regime" required (selectionChange)="onRegimeChanged()">
+                    <mat-select name="regime" formControlName="regime" required 
+                    (selectionChange)="onRegimeChanged()">
                         <!-- formControlName="employerCategory" TODO -->
                         <mat-option value="NEW"> Yes </mat-option>
                         <mat-option value="OLD"> No </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="customerProfileForm.controls['regime'].disabled">
+                        Due date is over</mat-error>
                 </mat-form-field>
             </div>
         </div>
