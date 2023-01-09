@@ -52,23 +52,9 @@ export class ReviewListComponent implements OnInit {
   reviewColumnDef() {
     return [
       {
-        headerName: 'Product',
-        field: 'productName',
-        width: 100,
-        pinned: 'left',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
         headerName: 'Platform',
         field: 'sourcePlatform',
-        width: 140,
-        pinned: 'left',
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -81,7 +67,6 @@ export class ReviewListComponent implements OnInit {
         headerName: 'Rating',
         field: 'sourceRating',
         width: 80,
-        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -110,9 +95,9 @@ export class ReviewListComponent implements OnInit {
         }
       },
       {
-        headerName: 'User name',
+        headerName: 'User Name',
         field: 'sourceUserName',
-        width: 130,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -122,23 +107,10 @@ export class ReviewListComponent implements OnInit {
         }
       },
       {
-        headerName: 'User Mobile',
-        field: 'sourceMobile',
-        width: 130,
+        headerName: 'User Comment',
+        field: 'sourceComment',
+        width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'User Email',
-        field: 'sourceEmail',
-        width: 130,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -164,6 +136,56 @@ export class ReviewListComponent implements OnInit {
           debounceMs: 0
         }
       },
+      {
+        headerName: 'Status',
+        field: 'status',
+        width: 100,
+        suppressMovable: true,
+        cellRenderer: (data: any) => {},
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Mobile',
+        field: 'sourceMobile',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Email',
+        field: 'sourceEmail',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Product',
+        field: 'productName',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+
       {
         headerName: 'View',
         editable: false,
@@ -208,7 +230,7 @@ export class ReviewListComponent implements OnInit {
           }
         },
       },
-     
+
     ]
   }
 
@@ -254,16 +276,17 @@ export class ReviewListComponent implements OnInit {
   }
 
   getReview(pageNo) {
-    let pagination = `?page=${pageNo}&pageSize=5`;
+    let pagination = `?page=${pageNo}&pageSize=12`;
     var param = `review${pagination}`;
     this.loading = true;
     this.reviewService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.content instanceof Array && response.content.length > 0) {
-        this.reviewGridOptions.api?.setRowData(this.createRowData(response.content));
-        this.userInfo = response.content;
-        this.config.totalItems = response.totalElements;
+      if (response.body.content instanceof Array && response.body.content.length > 0) {
+        this.loading = false;
+        this.userInfo = response.body.content;
+        this.reviewGridOptions.api?.setRowData(this.createRowData(response.body.content));
+        this.config.totalItems = response.body.totalElements;
       } else {
+        this.loading = false;
         this.config.totalItems = 0;
         this.reviewGridOptions.api?.setRowData(this.createRowData([]));
       }
@@ -277,7 +300,7 @@ export class ReviewListComponent implements OnInit {
   createRowData(data: any) {
     var userArray = [];
     for (let i = 0; i < data.length; i++) {
-     
+
       let platform = '-';
       if (data[i].sourcePlatform) {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
@@ -307,7 +330,7 @@ export class ReviewListComponent implements OnInit {
         case 'view':
           this.viewReview('View review', '', params.data);
           break;
-          case 'update-sme-notes':
+        case 'update-sme-notes':
           this.updateSmeNote('Update notes', '', params.data)
       }
     }
