@@ -168,13 +168,20 @@ export class ReviewListComponent implements OnInit {
         field: 'status',
         width: 100,
         suppressMovable: true,
-        cellRenderer: (data: any) => { },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        
       },
       {
         headerName: 'User Mobile',
@@ -354,7 +361,8 @@ export class ReviewListComponent implements OnInit {
         sourceEmail: data[i].sourceEmail ? data[i].sourceEmail : '-',
         isReviewNegative: data[i].isReviewNegative,
         id: data[i].id,
-        status: data[i].status
+        status: data[i].status,
+        sourceComment:data[i].sourceComment
       })
       userArray.push(userInfo);
     }
