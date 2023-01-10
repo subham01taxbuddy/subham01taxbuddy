@@ -54,7 +54,7 @@ export class ReviewListComponent implements OnInit {
       {
         headerName: 'Platform',
         field: 'sourcePlatform',
-        width: 100,
+        width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -77,7 +77,7 @@ export class ReviewListComponent implements OnInit {
       },
       {
         headerName: 'Review Date',
-        field: 'sourceReviewDate',
+        field: 'sourceReviewDateTime',
         width: 130,
         suppressMovable: true,
         cellRenderer: (data: any) => {
@@ -236,7 +236,7 @@ export class ReviewListComponent implements OnInit {
         },
       },
       {
-        headerName: 'Update Review',
+        headerName: 'Add Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -271,6 +271,11 @@ export class ReviewListComponent implements OnInit {
         mode: key
       }
     })
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        this.getReview(0);
+      }
+    });
   }
 
   viewReview(title, key, data) {
