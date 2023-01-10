@@ -168,7 +168,7 @@ export class ReviewListComponent implements OnInit {
         field: 'status',
         width: 100,
         suppressMovable: true,
-        cellRenderer: (data: any) => {},
+        cellRenderer: (data: any) => { },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -236,7 +236,7 @@ export class ReviewListComponent implements OnInit {
         },
       },
       {
-        headerName: 'Add Notes',
+        headerName: 'Update Review',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -247,7 +247,7 @@ export class ReviewListComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
            </button>`;
         },
-        width: 60,
+        width: 100,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -292,9 +292,14 @@ export class ReviewListComponent implements OnInit {
       data: {
         title: title,
         leadData: data,
-        mode: key
+        mode: key,
       }
-    })
+    });
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        this.getReview(0);
+      }
+    });
   }
 
   pageChanged(event: any) {
@@ -343,7 +348,8 @@ export class ReviewListComponent implements OnInit {
         sourceMobile: data[i].sourceMobile ? data[i].sourceMobile : '-',
         sourceEmail: data[i].sourceEmail ? data[i].sourceEmail : '-',
         isReviewNegative: data[i].isReviewNegative,
-
+        id: data[i].id,
+        status: data[i].status
       })
       userArray.push(userInfo);
     }
@@ -355,10 +361,10 @@ export class ReviewListComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'view':
-          this.viewReview('View review', '', params.data);
+          this.viewReview('View Review', '', params.data);
           break;
         case 'update-sme-notes':
-          this.updateSmeNote('Update notes', '', params.data)
+          this.updateSmeNote('Update Review', '', params.data)
       }
     }
   }
