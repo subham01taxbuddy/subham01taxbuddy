@@ -10,6 +10,7 @@ export const environment = {
 	matomoScriptId: '3',
 	isValidItr:true,
 	assistedKmScript: '../assets/assisted-km-script-uat.html',
+	environment:'PROD',
 
 
 	s3_cred: {

@@ -9,6 +9,7 @@ export const environment = {
     reviewUrl: "https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/",
     matomoScriptId: '5',
     assistedKmScript: '../assets/assisted-km-script-uat.html',
+	environment:'DEV',
 
     s3_cred: {
         // user_name: "ashish@ssbainnovations.com",

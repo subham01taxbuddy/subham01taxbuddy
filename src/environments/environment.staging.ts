@@ -10,6 +10,7 @@ export const environment = {
 	matomoScriptId: '5',
 	isValidItr:false,
 	assistedKmScript: '../assets/assisted-km-script-uat.html',
+	environment:'UAT',
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
