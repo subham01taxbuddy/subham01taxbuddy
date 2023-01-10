@@ -51,7 +51,9 @@ export class UpdateSmeNotesComponent implements OnInit {
       {
         "sourceRating": this.data.leadData.sourceRating,
         "isReviewNegative": this.data.leadData.isReviewNegative,
-        "status": this.data.leadData.status
+        "status": this.data.leadData.status,
+        "reviewSentiment":this.smeReviewForm.controls['reviewSentiment'].value,
+        "smeNotes":this.smeReviewForm.controls['smeNotes'].value,
       },
       "pathParameters": {
         "id": this.data.leadData.id

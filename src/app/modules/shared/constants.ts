@@ -107,7 +107,7 @@ export class AppConstants {
     public static sourceList: any = [{ label: 'Play store', value: 'PLAY_STORE' }, { label: 'Apple store', value: 'APPLE_STORE' }, { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' }];
     public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
     public static ratingList: any = [{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }];
-    public static sentimentList: any = [{ label: 'Positive', value: true }, { label: 'Negative', value: false }];
+    public static sentimentList: any = [{ label: 'Positive', value: 'Positive' }, { label: 'Negative', value: 'Negative' }];
     public static defaultCountry = '91';
     public static stateDropdown: any = [{
         "id": "5b4599c9c15a76370a3424c2",
