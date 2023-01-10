@@ -5,6 +5,7 @@ import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ConfirmModel } from 'src/app/pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
 
 @Component({
@@ -18,14 +19,16 @@ export class ViewReviewComponent implements OnInit {
   config: { itemsPerPage: number; currentPage: number; totalItems: number; };
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
+  isDataById: boolean;
+  userDetails: any;
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private reviewService: ReviewService,
     private _toastMessageService: ToastMessageService,
     public dialogRef: MatDialogRef<ViewReviewComponent>,
-  ) { 
+  ) {
     this.reviewGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reviewColumnDef(),
@@ -45,6 +48,30 @@ export class ViewReviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.viewReviewById();
+  }
+
+  viewReviewById() {
+    var param = `review/byid`;
+    const requestBody = {
+      "id": this.data.leadData.id,
+      "environment": environment.environment
+    }
+    this.loading = true;
+    this.reviewService.postMethod(param, requestBody).subscribe((response: any) => {
+      if (response.success) {
+        this.loading = false;
+        this.isDataById=true;
+        this.userDetails = response.body;
+      } else {
+        this.isDataById=false;
+        this.loading = false;
+      }
+    },
+      error => {
+        this.isDataById=null;
+        this.loading = false;
+      })
   }
 
   getReview(pageNo) {
@@ -161,7 +188,7 @@ export class ViewReviewComponent implements OnInit {
         field: 'status',
         width: 100,
         suppressMovable: true,
-        cellRenderer: (data: any) => {},
+        cellRenderer: (data: any) => { },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {

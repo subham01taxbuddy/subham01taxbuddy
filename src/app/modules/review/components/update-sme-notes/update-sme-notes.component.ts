@@ -50,7 +50,7 @@ export class UpdateSmeNotesComponent implements OnInit {
       "body":
       {
         "sourceRating": this.data.leadData.sourceRating,
-        "isReviewNegative": this.smeReviewForm.controls['reviewSentiment'].value,
+        "isReviewNegative": this.data.leadData.isReviewNegative,
         "status": this.data.leadData.status
       },
       "pathParameters": {
@@ -64,7 +64,7 @@ export class UpdateSmeNotesComponent implements OnInit {
       this.dialogRef.close(true);
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", 'Failed to Add Review');
+      this._toastMessageService.alert("error", 'Failed to Update Review');
       this.dialogRef.close(false);
     });
   }
