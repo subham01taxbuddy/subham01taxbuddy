@@ -37,7 +37,7 @@ export class ReviewListComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 5,
+      itemsPerPage: 12,
       currentPage: 1,
       totalItems: 0
     };
