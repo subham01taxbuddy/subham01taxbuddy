@@ -40,7 +40,6 @@ export class ViewReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewReviewById();
-    this.getReview();
   }
 
   viewReviewById() {
@@ -55,6 +54,9 @@ export class ViewReviewComponent implements OnInit {
         this.loading = false;
         this.isDataById = true;
         this.userDetails = response.body;
+        if (this.userDetails.sourcePlatform != 'Kommunicate') {
+          this.getReview();
+        }
       } else {
         this.isDataById = false;
         this.loading = false;
