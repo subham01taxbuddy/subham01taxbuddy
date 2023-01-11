@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { ChatOptionsDialogComponent } from 'src/app/modules/tasks/components/chat-options/chat-options-dialog.component';
 import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
 
@@ -21,6 +22,7 @@ export class ViewReviewComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private reviewService: ReviewService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<ViewReviewComponent>,
   ) {
     this.reviewGridOptions = <GridOptions>{
@@ -62,6 +64,10 @@ export class ViewReviewComponent implements OnInit {
         this.isDataById = null;
         this.loading = false;
       })
+  }
+
+  openKommunicateDashboard() {
+    window.open(`https://dashboard.kommunicate.io/conversations/${this.data.leadData.groupId}`, "_blank");
   }
 
   getReview() {
@@ -203,11 +209,14 @@ export class ViewReviewComponent implements OnInit {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'view':
+        case 'view': {
           // this.viewReview('View Review', '', params.data);
           break;
-        case 'update-sme-notes':
-        // this.updateSmeNote('Update Review', '', params.data)
+        }
+        case 'update-sme-notes': {
+          // this.updateSmeNote('Update Review', '', params.data);
+          break;
+        }
       }
     }
   }
