@@ -143,7 +143,6 @@ export class ReviewListComponent implements OnInit {
         //     return params.data.sourceComment.value;
         //   }
         // },
-        
       },
       {
         headerName: 'Review type',
@@ -368,7 +367,7 @@ export class ReviewListComponent implements OnInit {
       let platform = '-';
       if (data[i].sourcePlatform) {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
-        platform = filterData.length ? filterData[0].label : '-'
+        platform = filterData.length ? filterData[0].label : data[i].sourcePlatform
       }
 
       let userInfo: any = Object.assign({}, userArray[i], {
@@ -382,7 +381,8 @@ export class ReviewListComponent implements OnInit {
         isReviewNegative: data[i].isReviewNegative,
         id: data[i].id,
         status: data[i].status,
-        sourceComment: data[i].sourceComment
+        sourceComment: data[i].sourceComment,
+        groupId: data[i].groupId ? data[i].groupId : ''
       })
       userArray.push(userInfo);
     }

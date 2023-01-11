@@ -66,9 +66,13 @@
   </div>
 </mat-dialog-content>
 
-<div class="card__row" style="margin-top: 10px;">
+<div class="card__row" style="margin-top: 10px;" *ngIf="userDetails && userDetails?.sourcePlatform!='Kommunicate'">
   <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions" (rowClicked)="onRowClicked($event)">
   </ag-grid-angular>
+</div>
+
+<div class="card__row" style="margin-top: 10px;" *ngIf="userDetails?.sourcePlatform==='Kommunicate'">
+  <button mat-raised-button class="btn-help" (click)="openKommunicateDashboard()">Open With Kommunicate</button>
 </div>
 
 <mat-dialog-actions align="center">
