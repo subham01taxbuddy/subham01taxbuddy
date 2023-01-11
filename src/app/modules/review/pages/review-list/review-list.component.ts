@@ -1,8 +1,10 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { environment } from 'src/environments/environment';
 import { AddUpdateReviewComponent } from '../../components/add-update-review/add-update-review.component';
 import { UpdateSmeNotesComponent } from '../../components/update-sme-notes/update-sme-notes.component';
 import { ViewReviewComponent } from '../../components/view-review/view-review.component';
@@ -34,6 +36,13 @@ export class ReviewListComponent implements OnInit {
       },
 
       sortable: true,
+      // defaultColDef: {
+      //   resizable: true,
+      //   cellRendererFramework: AgTooltipComponent,
+      //   cellRendererParams: (params: ICellRendererParams) => {
+      //     this.formatToolTip(params.data)
+      //   }
+      // },
     };
 
     this.config = {
@@ -44,10 +53,15 @@ export class ReviewListComponent implements OnInit {
 
   }
 
+  formatToolTip(params: any) {
+    if (params.sourceComment.value) {
+      return params.sourceComment.value;
+    }
+  }
+
   ngOnInit(): void {
     this.getReview(0);
   }
-
 
   reviewColumnDef() {
     return [
@@ -115,7 +129,14 @@ export class ReviewListComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        // tooltipField:'qqqqqq',
+        // tooltip: function (params) {
+        //   if (params.data.sourceComment) {
+        //     return params.data.sourceComment.value;
+        //   }
+        // },
+        
       },
       {
         headerName: 'Review type',
@@ -154,7 +175,6 @@ export class ReviewListComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        
       },
       {
         headerName: 'User Mobile',
@@ -293,8 +313,8 @@ export class ReviewListComponent implements OnInit {
   }
 
   getReview(pageNo) {
-    let pagination = `?page=${pageNo}&pageSize=12`;
-    var param = `review${pagination}`;
+    let pagination = `page=${pageNo}&pageSize=12`;
+    var param = `review?sortBy=addedAt&environment=${environment.environment}&sortingOrder=desc&${pagination}`;
     this.loading = true;
     this.reviewService.getMethod(param).subscribe((response: any) => {
       if (response.body.content instanceof Array && response.body.content.length > 0) {
@@ -335,7 +355,7 @@ export class ReviewListComponent implements OnInit {
         isReviewNegative: data[i].isReviewNegative,
         id: data[i].id,
         status: data[i].status,
-        sourceComment:data[i].sourceComment
+        sourceComment: data[i].sourceComment
       })
       userArray.push(userInfo);
     }
