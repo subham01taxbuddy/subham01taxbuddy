@@ -66,6 +66,63 @@ export class ReviewListComponent implements OnInit {
   reviewColumnDef() {
     return [
       {
+        headerName: 'User Name',
+        field: 'sourceUserName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'User Mobile',
+        field: 'sourceMobile',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'User Email',
+        field: 'sourceEmail',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
         headerName: 'Platform',
         field: 'sourcePlatform',
         width: 130,
@@ -75,19 +132,14 @@ export class ReviewListComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Rating',
-        field: 'sourceRating',
-        width: 80,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
       },
       {
         headerName: 'Review Date',
@@ -109,9 +161,27 @@ export class ReviewListComponent implements OnInit {
         }
       },
       {
-        headerName: 'User Name',
-        field: 'sourceUserName',
+        headerName: 'User Comment',
+        field: 'sourceComment',
         width: 200,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'Rating',
+        field: 'sourceRating',
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -128,11 +198,19 @@ export class ReviewListComponent implements OnInit {
         },
       },
       {
-        headerName: 'User Comment',
-        field: 'sourceComment',
-        width: 200,
+        headerName: 'Status',
+        field: 'status',
+        width: 100,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
@@ -175,62 +253,6 @@ export class ReviewListComponent implements OnInit {
             return '-';
           }
         },
-      },
-
-      {
-        headerName: 'Status',
-        field: 'status',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        cellRenderer: (data: any) => {
-          if (data.value) {
-            return data.value;
-          } else {
-            return '-';
-          }
-        },
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        },
-      },
-      {
-        headerName: 'User Mobile',
-        field: 'sourceMobile',
-        width: 130,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'User Email',
-        field: 'sourceEmail',
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Product',
-        field: 'productName',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
       },
 
       {
