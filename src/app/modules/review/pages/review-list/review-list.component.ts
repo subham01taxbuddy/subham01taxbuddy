@@ -36,13 +36,13 @@ export class ReviewListComponent implements OnInit {
       },
 
       sortable: true,
-      // defaultColDef: {
-      //   resizable: true,
-      //   cellRendererFramework: AgTooltipComponent,
-      //   cellRendererParams: (params: ICellRendererParams) => {
-      //     this.formatToolTip(params.data)
-      //   }
-      // },
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data)
+        }
+      },
     };
 
     this.config = {
@@ -54,9 +54,9 @@ export class ReviewListComponent implements OnInit {
   }
 
   formatToolTip(params: any) {
-    if (params.sourceComment.value) {
-      return params.sourceComment.value;
-    }
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak }
   }
 
   ngOnInit(): void {
@@ -130,12 +130,6 @@ export class ReviewListComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        // tooltipField:'qqqqqq',
-        // tooltip: function (params) {
-        //   if (params.data.sourceComment) {
-        //     return params.data.sourceComment.value;
-        //   }
-        // },
       },
       {
         headerName: 'Review type',
