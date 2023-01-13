@@ -223,9 +223,9 @@ export class ReviewListComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: (data: any) => {
           if (data.value) {
-            return 'Positive';
-          } else {
             return 'Negative';
+          } else {
+            return 'Positive';
           }
         },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },

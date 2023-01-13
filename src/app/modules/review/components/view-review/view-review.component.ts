@@ -144,52 +144,6 @@ export class ViewReviewComponent implements OnInit {
           debounceMs: 0
         }
       },
-
-      {
-        headerName: 'View',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="view"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-eye" aria-hidden="true" data-action-type="view"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
-      {
-        headerName: 'Add Notes',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
-
     ]
   }
 
@@ -205,22 +159,6 @@ export class ViewReviewComponent implements OnInit {
       userArray.push(userInfo);
     }
     return userArray;
-  }
-
-  onRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'view': {
-          // this.viewReview('View Review', '', params.data);
-          break;
-        }
-        case 'update-sme-notes': {
-          // this.updateSmeNote('Update Review', '', params.data);
-          break;
-        }
-      }
-    }
   }
 
 }
