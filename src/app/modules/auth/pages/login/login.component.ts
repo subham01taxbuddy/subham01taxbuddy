@@ -235,7 +235,7 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
         setTimeout(() => {
           this.InitChat();
-        });
+        }, 2000);
       }
     }, error => {
       this.loading = false;
@@ -255,7 +255,32 @@ export class LoginComponent implements OnInit {
         "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
         "popupWidget": true,
         "automaticChatOpenOnNavigation": true,
-        'userId': loginSMEInfo['userId']
+        'userId': loginSMEInfo['userId'],
+
+        "onInit": function () {
+          var chatContext = {
+            'userName': loginSMEInfo['name'],
+            'email': loginSMEInfo['email'],
+            'contactNumber': loginSMEInfo['mobileNumber'],
+          };
+         
+          const userDetail = {
+            email: loginSMEInfo['email'],
+            phoneNumber: loginSMEInfo['mobileNumber'],
+            displayName: loginSMEInfo['name'],
+            userId: loginSMEInfo.userId,
+            password: '',
+            metadata: {
+              'userId': loginSMEInfo.userId,
+              'contactNumber': loginSMEInfo.mobileNumber,
+              'email': loginSMEInfo['email'],
+              'Platform': 'Website'
+            }
+          };
+          (window as any).Kommunicate.updateChatContext(chatContext);
+
+          (window as any).Kommunicate.updateUser(userDetail);
+        }
       };
       var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
       s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
@@ -284,25 +309,13 @@ export class LoginComponent implements OnInit {
         'defaultBotIds': '3eb13dbd656feb3acdbdf650efbf437d1',
         "skipRouting": true
       };
+      
       (window as any).Kommunicate.displayKommunicateWidget(true);
       const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
       const loginSMEInfo = data[0];
       var css = "#km-faq{display:none!important;}";
       (window as any).Kommunicate.customizeWidgetCss(css);
-      const userDetail = {
-        email: loginSMEInfo['email'],
-        phoneNumber: loginSMEInfo['mobileNumber'],
-        displayName: loginSMEInfo['name'],
-        userId: loginSMEInfo.userId,
-        password: '',
-        metadata: {
-          'userId': loginSMEInfo.userId,
-          'contactNumber': loginSMEInfo.mobileNumber,
-          'email': loginSMEInfo['email'],
-          'Platform': 'Website'
-        }
-      };
-      (window as any).Kommunicate.updateUser(userDetail);
+      
       (window as any).Kommunicate.updateSettings(defaultSettings);
       // (window as any).Kommunicate.startConversation(defaultSettings, function (response) {
       //         console.log("new conversation created");
