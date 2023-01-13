@@ -67,7 +67,7 @@
 </mat-dialog-content>
 
 <div class="card__row" style="margin-top: 10px;" *ngIf="userDetails && userDetails?.sourcePlatform!='Kommunicate'">
-  <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions" (rowClicked)="onRowClicked($event)">
+  <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions">
   </ag-grid-angular>
 </div>
 
