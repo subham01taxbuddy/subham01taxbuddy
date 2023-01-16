@@ -16,7 +16,8 @@ export class SmeListComponent implements OnInit {
   loading = false;
   smeList: any = [];
 
-  constructor(private userMsService: UserMsService,
+  constructor(
+    private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,

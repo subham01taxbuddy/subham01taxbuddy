@@ -14,7 +14,7 @@
           <!-- <table>
             <tr *ngFor="let item of smeList | paginate:config"></tr>
           </table> -->
-          <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeListGridOptions"
+          <ag-grid-angular class="ag-theme-balham pagination" [gridOptions]="smeListGridOptions"
             (rowClicked)="onUsersRowClicked($event)" [suppressExcelExport]="true" [popupParent]="popupParent"
             paginationPageSize=30 pagination=true>
 
