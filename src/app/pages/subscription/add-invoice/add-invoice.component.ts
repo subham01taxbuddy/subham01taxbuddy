@@ -429,7 +429,7 @@ export class AddInvoiceComponent implements OnInit {
     console.log('Invoice Form: ', this.invoiceForm)
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
-      
+
       this.loading = true;
       const param = '/invoice';
       const request = this.invoiceForm.getRawValue();
@@ -605,6 +605,7 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'TDS filing', details: 'TDS Notice' },
     { service: 'TDS filing', details: 'Any other services' },
     { service: 'TPA', details: 'TPA' },
+      { service: 'TPA', details: 'HNI' },
     { service: 'Other Services', details: 'Accounting' },
     { service: 'Other Services', details: 'TDS Registration' },
     { service: 'Other Services', details: 'TDS Filing' },
