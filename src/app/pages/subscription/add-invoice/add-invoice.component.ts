@@ -580,6 +580,7 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'TDS filing', details: 'TDS Notice' },
     { service: 'TDS filing', details: 'Any other services' },
     { service: 'TPA', details: 'TPA' },
+      { service: 'TPA', details: 'HNI' },
     { service: 'Other Services', details: 'Accounting' },
     { service: 'Other Services', details: 'TDS Registration' },
     { service: 'Other Services', details: 'TDS Filing' },
