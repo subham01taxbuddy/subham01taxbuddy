@@ -87,6 +87,11 @@ export class BusinessComponent implements OnInit {
 		});
 	}
 
+	tabChanged() {
+		//re-intialise the ITR objects
+		// this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+	}
+
 	resetAllData() {
 		NavbarService.getInstance(null).merchantData = null;
 		NavbarService.getInstance(null).isMerchantChanged = true;
