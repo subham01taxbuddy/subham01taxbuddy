@@ -292,7 +292,10 @@ export class UtilsService {
             capitalGain: [],
             business: {
                 presumptiveIncomes: [],
-                financialParticulars: null
+                financialParticulars: null,
+                businessDescription: [],
+                fixedAssetsDetails: [],
+                profitLossACIncomes: [],
             },
             pastYearLosses: [],
             foreignIncome: null,
@@ -789,6 +792,12 @@ export class UtilsService {
         return this.itrMsService.postMethod(param, itrObject).pipe(
             concatMap(result => this.updateItrObject(result, itrObject))
         );
+    }
+
+    getDueDateDetails() {
+        //https://uat-api.taxbuddy.com/itr/due-date
+        const param = '/due-date';
+        return this.itrMsService.getMethod(param);
     }
 
 }

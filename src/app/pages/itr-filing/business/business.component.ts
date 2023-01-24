@@ -501,12 +501,6 @@ export class BusinessComponent implements OnInit {
     if (totalProfessionalIncome <= 5000000 && totalBusinessIncome <= 20000000) {
       const myPresumptiveIncome = JSON.parse(JSON.stringify(this.localPresumptiveIncome));
       if (this.mode === 'ADD') {
-        if(!this.Copy_ITR_JSON.business) {
-          this.Copy_ITR_JSON.business = {
-            presumptiveIncomes: [],
-            financialParticulars: null
-          };
-        }
         if(!this.Copy_ITR_JSON.business.presumptiveIncomes) {
           this.Copy_ITR_JSON.business.presumptiveIncomes = [];
         }
@@ -604,7 +598,7 @@ export class BusinessComponent implements OnInit {
   editBusiness(index) {
     this.mode = 'UPDATE';
     this.currentIndex = index;
-    this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
+    //this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
     this.businessMode = 'FORM';
     console.log('this.localPresumptiveIncome =', this.localPresumptiveIncome);
     const name = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === this.localPresumptiveIncome.natureOfBusiness);
@@ -749,9 +743,9 @@ export class BusinessComponent implements OnInit {
 
   calTotalPresumptiveIncome() {
     let sum = 0;
-    for (let i = 0; i < this.ITR_JSON.business?.presumptiveIncomes?.length; i++) {
-      for (let j = 0; j < this.ITR_JSON.business.presumptiveIncomes[i].incomes?.length; j++) {
-        sum = sum + this.ITR_JSON.business.presumptiveIncomes[i].incomes[j].presumptiveIncome;
+    for (let i = 0; i < this.ITR_JSON.business?.presumptiveIncomes.length; i++) {
+      for (let j = 0; j < this.ITR_JSON.business.presumptiveIncomes[i].incomes.length; j++) {
+        // sum = sum + this.ITR_JSON.business.presumptiveIncomes[i].incomes[j].presumptiveIncome;
       }
     }
     return this.utilsService.currencyFormatter(sum);
@@ -782,7 +776,11 @@ export class BusinessComponent implements OnInit {
           cashInHand: /* Number( */this.commonForm.controls['cashInHand'].value/* ) */,
           loanAndAdvances: /* Number( */this.commonForm.controls['loanandAdvance'].value/* ) */,
           otherAssets: /* Number( */this.commonForm.controls['otherAsset'].value/* ) */,
-          totalAssets: null
+          totalAssets: null,
+          id:null,
+          investment:null,
+          difference: null
+          
         };
         // SERVICE CALL MAIN NEXT BUTTON
         this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {

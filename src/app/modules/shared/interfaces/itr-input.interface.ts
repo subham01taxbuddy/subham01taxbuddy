@@ -44,7 +44,7 @@ export interface ITR_JSON {
     employers: Employer[];
     houseProperties: HouseProperties[];
     capitalGain: NewCapitalGain[];
-    business: Business;
+    business: NewBusiness;
     pastYearLosses: PastYearLosses[];
     foreignIncome: null;
     incomes: OtherIncome[];
@@ -412,6 +412,23 @@ export interface Immovable {
     amount: number;
 }
 
+export interface businessIncome {
+    id:number;
+    natureOfBusiness: any;
+    tradeName: any;
+    receipts: any;
+    presumptiveIncome: any;
+    periodOfHolding: any;
+    minimumPresumptiveIncome: any;
+}
+
+export interface professionalIncome {
+    natureOfBusiness: any;
+    tradeName: any;
+    receipts: any;
+    presumptiveIncome: any;
+}
+
 export interface Bonds {
     srn: Number;
     id: any,
@@ -635,6 +652,104 @@ export interface CarryForwardLosses {
     broughtForwordBusinessLoss: number;
     setOffDuringTheYear: number;
     // adjustedAmount: number;
+}
+
+export interface NewBusiness {
+    presumptiveIncomes: NewPresumptiveIncomes[];
+    profitLossACIncomes:ProfitLossACIncomes[];
+    financialParticulars: NewFinancialParticulars;
+    fixedAssetsDetails: FixedAssetsDetails[];
+    businessDescription: BusinessDescription[];
+}
+export interface NewPresumptiveIncomes {
+    id: any;
+    businessType: string;
+    natureOfBusiness: string;
+    label: any;
+    tradeName: string;
+    salaryInterestAmount: any;
+    taxableIncome: any;
+    exemptIncome: any;
+    incomes: NewIncomes[]
+}
+
+export interface NewIncomes {
+    id: any;
+    incomeType: string;
+    receipts: Number;
+    presumptiveIncome: Number;
+    periodOfHolding: Number;
+    minimumPresumptiveIncome: Number;
+    registrationNo: any;
+    ownership: any;
+    tonnageCapacity: any;
+}
+
+export interface ProfitLossACIncomes {
+    id: Number;
+    businessType: string;
+    totalgrossProfitFromNonSpeculativeIncome?: Number;
+    netProfitfromNonSpeculativeIncome?: Number;
+    incomes: ProfitLossIncomes[];
+    expenses?: NewExpenses[]
+}
+
+export interface ProfitLossIncomes {
+    id: Number;
+    incomeType: string;
+    turnOver: Number;
+    finishedGoodsOpeningStock?: Number;
+    finishedGoodsClosingStock?: Number;
+    purchase?: Number;
+    COGS?: Number;
+    grossProfit: any;
+    expenditure?: number;
+    netIncomeFromSpeculativeIncome?: number;
+}
+
+export interface NewExpenses {
+    expenseType: string;
+    expenseAmount: Number;
+    description:any;
+}
+export interface NewFinancialParticulars {
+    id: Number;
+    membersOwnCapital: any;
+    securedLoans: any;
+    unSecuredLoans: any;
+    advances: any;
+    sundryCreditorsAmount: Number;
+    otherLiabilities: any;
+    totalCapitalLiabilities: any;
+    fixedAssets: any;
+    inventories: Number;
+    sundryDebtorsAmount: Number;
+    balanceWithBank: any;
+    cashInHand: Number;
+    loanAndAdvances: any;
+    investment: any;
+    otherAssets: any;
+    totalAssets: any;
+    GSTRNumber: any,
+    grossTurnOverAmount: any;
+    difference: number;
+}
+
+export interface FixedAssetsDetails {
+    id: Number;
+    assetType: string;
+    description: string;
+    bookValue: Number;
+    depreciationRate: string;
+    depreciationAmount: Number;
+    fixedAssetClosingAmount: Number;
+}
+
+export interface BusinessDescription {
+    id: any;
+    natureOfBusiness: any;
+    tradeName: any;
+    businessDescription: any;
 }
 
 export interface CurrentYearLosses {

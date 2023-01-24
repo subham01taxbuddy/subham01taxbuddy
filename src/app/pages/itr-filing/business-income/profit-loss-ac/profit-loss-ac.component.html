@@ -1,0 +1,9 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<mat-tab-group>
+    <mat-tab label="Non-Speculative Income">
+        <app-non-speculative-income (saveAndNext)="saveAndNext($event)"></app-non-speculative-income>
+    </mat-tab>
+    <mat-tab label="Speculative Income">
+        <app-speculative-income (saveAndNext)="saveAndNext($event)"></app-speculative-income>
+    </mat-tab>
+</mat-tab-group>
