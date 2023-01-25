@@ -565,7 +565,7 @@ export class UserProfileComponent implements OnInit {
             this.userInfo.address.push(result.data.formValue);
             this.userProfileForm.controls['address'].setValue(this.userInfo.address);
           }
-          else if (result.data.action === 'Edit') {
+          else if (result.data.action === 'Save') {
             console.log('result formValue-> ', result.data.formValue);
             
             this.addressData.splice(result.data.index, 1, result.data.formValue);
