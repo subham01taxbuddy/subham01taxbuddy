@@ -6,9 +6,11 @@ export const environment = {
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
 	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
-	reviewUrl: "https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/",
-	matomoScriptId: '3',
-	isValidItr:true,
+	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
+	matomoScriptId: '4',
+	isValidItr:false,
+	assistedKmScript: '../assets/assisted-km-script-uat.html',
+	environment:'UAT',
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",

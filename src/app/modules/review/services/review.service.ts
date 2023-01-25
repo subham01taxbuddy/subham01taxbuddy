@@ -11,9 +11,9 @@ export class ReviewService {
 
   headers: any;
   constructor(
-    private httpClient:HttpClient
+    private httpClient: HttpClient
   ) { }
- 
+
   postMethod<T>(...param: any): Observable<any> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
@@ -26,6 +26,14 @@ export class ReviewService {
     this.headers.append('Content-Type', 'application/json');
     this.headers = this.headers.set(InterceptorSkipHeader, '');
     return this.httpClient.get<T>(environment.reviewUrl + param[0], { headers: this.headers });
-}
+  }
+
+  
+  putMethod<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.put<T>(`${environment.reviewUrl}${param[0]}`, param[1], { headers: this.headers });
+  }
+
 
 }

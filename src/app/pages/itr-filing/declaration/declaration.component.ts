@@ -119,10 +119,10 @@ export class DeclarationComponent implements OnInit {
       this.ITR_JSON = ITR_RESULT;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.loading = false;
-      if(this.ITR_JSON.itrType === '3') {
-        alert('This is ITR 3 and can not be filed from backoffice');
-        return;
-      }
+      //if(this.ITR_JSON.itrType === '3') {
+      //  alert('This is ITR 3 and can not be filed from backoffice');
+      //  return;
+      //}
       this.saveAndNext.emit(true);
     }, error => {
       this.loading = false;

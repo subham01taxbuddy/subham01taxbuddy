@@ -1,8 +1,10 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { environment } from 'src/environments/environment';
 import { AddUpdateReviewComponent } from '../../components/add-update-review/add-update-review.component';
 import { UpdateSmeNotesComponent } from '../../components/update-sme-notes/update-sme-notes.component';
 import { ViewReviewComponent } from '../../components/view-review/view-review.component';
@@ -21,7 +23,6 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
-  productList: any[] = AppConstants.productList;
 
   constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
@@ -35,65 +36,114 @@ export class ReviewListComponent implements OnInit {
       },
 
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data)
+        }
+      },
     };
 
     this.config = {
-      itemsPerPage: 5,
+      itemsPerPage: 12,
       currentPage: 1,
       totalItems: 0
     };
 
   }
 
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak }
+  }
+
   ngOnInit(): void {
     this.getReview(0);
   }
 
-
   reviewColumnDef() {
     return [
       {
-        headerName: 'Product',
-        field: 'productName',
-        width: 100,
-        pinned: 'left',
+        headerName: 'User Name',
+        field: 'sourceUserName',
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'User Mobile',
+        field: 'sourceMobile',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'User Email',
+        field: 'sourceEmail',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
       },
       {
         headerName: 'Platform',
         field: 'sourcePlatform',
-        width: 140,
-        pinned: 'left',
+        width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Rating',
-        field: 'sourceRating',
-        width: 80,
-        pinned: 'left',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
       },
       {
         headerName: 'Review Date',
-        field: 'sourceReviewDate',
+        field: 'sourceReviewDateTime',
         width: 130,
         suppressMovable: true,
         cellRenderer: (data: any) => {
@@ -111,40 +161,60 @@ export class ReviewListComponent implements OnInit {
         }
       },
       {
-        headerName: 'User name',
-        field: 'sourceUserName',
-        width: 130,
+        headerName: 'User Comment',
+        field: 'sourceComment',
+        width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
       },
       {
-        headerName: 'User Mobile',
-        field: 'sourceMobile',
-        width: 130,
+        headerName: 'Rating',
+        field: 'sourceRating',
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
       },
       {
-        headerName: 'User Email',
-        field: 'sourceEmail',
-        width: 130,
+        headerName: 'Status',
+        field: 'status',
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
       },
       {
         headerName: 'Review type',
@@ -153,9 +223,9 @@ export class ReviewListComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: (data: any) => {
           if (data.value) {
-            return 'Positive';
-          } else {
             return 'Negative';
+          } else {
+            return 'Positive';
           }
         },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -165,6 +235,26 @@ export class ReviewListComponent implements OnInit {
           debounceMs: 0
         }
       },
+           {
+        headerName: 'Product',
+        field: 'productName',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+
       {
         headerName: 'View',
         editable: false,
@@ -199,7 +289,7 @@ export class ReviewListComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
            </button>`;
         },
-        width: 60,
+        width: 100,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -209,7 +299,7 @@ export class ReviewListComponent implements OnInit {
           }
         },
       },
-     
+
     ]
   }
 
@@ -223,6 +313,11 @@ export class ReviewListComponent implements OnInit {
         mode: key
       }
     })
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        this.getReview(0);
+      }
+    });
   }
 
   viewReview(title, key, data) {
@@ -244,9 +339,14 @@ export class ReviewListComponent implements OnInit {
       data: {
         title: title,
         leadData: data,
-        mode: key
+        mode: key,
       }
-    })
+    });
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        this.getReview(0);
+      }
+    });
   }
 
   pageChanged(event: any) {
@@ -255,16 +355,17 @@ export class ReviewListComponent implements OnInit {
   }
 
   getReview(pageNo) {
-    let pagination = `?page=${pageNo}&pageSize=5`;
-    var param = `review${pagination}`;
+    let pagination = `page=${pageNo}&pageSize=12`;
+    var param = `review?sortBy=addedAt&environment=${environment.environment}&sortingOrder=desc&${pagination}`;
     this.loading = true;
     this.reviewService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.content instanceof Array && response.content.length > 0) {
-        this.reviewGridOptions.api?.setRowData(this.createRowData(response.content));
-        this.userInfo = response.content;
-        this.config.totalItems = response.totalElements;
+      if (response.body.content instanceof Array && response.body.content.length > 0) {
+        this.loading = false;
+        this.userInfo = response.body.content;
+        this.reviewGridOptions.api?.setRowData(this.createRowData(response.body.content));
+        this.config.totalItems = response.body.totalElements;
       } else {
+        this.loading = false;
         this.config.totalItems = 0;
         this.reviewGridOptions.api?.setRowData(this.createRowData([]));
       }
@@ -278,20 +379,15 @@ export class ReviewListComponent implements OnInit {
   createRowData(data: any) {
     var userArray = [];
     for (let i = 0; i < data.length; i++) {
-      let productName = '-';
-      if (data[i].productName) {
-        const filterData = this.productList.filter(element => element.value === data[i].productName);
-        productName = filterData.length ? filterData[0].label : '-'
-      }
-
+     
       let platform = '-';
       if (data[i].sourcePlatform) {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
-        platform = filterData.length ? filterData[0].label : '-'
+        platform = filterData.length ? filterData[0].label : data[i].sourcePlatform
       }
 
       let userInfo: any = Object.assign({}, userArray[i], {
-        productName: productName,
+        productName: data[i].productName,
         sourcePlatform: platform,
         sourceRating: data[i].sourceRating,
         sourceReviewDateTime: data[i].sourceReviewDateTime,
@@ -299,7 +395,10 @@ export class ReviewListComponent implements OnInit {
         sourceMobile: data[i].sourceMobile ? data[i].sourceMobile : '-',
         sourceEmail: data[i].sourceEmail ? data[i].sourceEmail : '-',
         isReviewNegative: data[i].isReviewNegative,
-
+        id: data[i].id,
+        status: data[i].status,
+        sourceComment: data[i].sourceComment,
+        groupId: data[i].groupId ? data[i].groupId : ''
       })
       userArray.push(userInfo);
     }
@@ -311,10 +410,10 @@ export class ReviewListComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'view':
-          this.viewReview('View review', '', params.data);
+          this.viewReview('View Review', '', params.data);
           break;
-          case 'update-sme-notes':
-          this.updateSmeNote('Update notes', '', params.data)
+        case 'update-sme-notes':
+          this.updateSmeNote('Update Review', '', params.data)
       }
     }
   }

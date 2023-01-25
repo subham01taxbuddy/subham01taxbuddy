@@ -480,6 +480,18 @@
                                                     <td>Rs {{calReceipts(business.incomes)}}</td>
                                                     <td>Rs {{calPresumptiveIncome(business.incomes)}}</td>
                                                 </tr>
+                                                <tr *ngFor="let business of ITR_JSON.business?.profitLossACIncomes">
+                                                    <td>
+                                                        {{
+                                                        (business.businessType === 'SPECULATIVEINCOME' ? 'Income from Speculative' :
+                                                        (business.businessType === 'NONSPECULATIVEINCOME' ? 'Income from Non speculative':''))}}
+                                                    </td>
+                                                    <td>{{natureOfBusinessFromCode(business?.natureOfBusiness)}}</td>
+                                                    <td>{{business?.tradeName}}</td>
+                                                    <td>Rs {{business.incomes[0].turnOver}}</td>
+                                                    <td>Rs {{utilsService.currencyFormatter(business.businessType === 'SPECULATIVEINCOME' ? business.incomes[0].netIncomeFromSpeculativeIncome :
+                                                        (business.businessType === 'NONSPECULATIVEINCOME' ? business.netProfitfromNonSpeculativeIncome:''))}}</td>
+                                                </tr>
 
                                                 <!--  <tr>
                             <td>Section 44ADA</td>

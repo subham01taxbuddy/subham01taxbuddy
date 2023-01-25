@@ -1,6 +1,33 @@
 .value {
-  display: block;
+  margin-left: 10px;
   margin-top: 10px;
   font-size: 13px;
+}
+
+.title {
   font-weight: 600;
+  font-size: 13px;
+}
+
+.btn-help {
+  display: inline-block;
+  margin: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1em;
+  border-radius: 5px;
+  transition-property: color, background-color;
+  transition-duration: 0.25s;
+  cursor: pointer;
+  color: white;
+  padding: 10px 15px;
+  border: solid 2px;
+  background-color: #63b12d;
+}
+
+.btn-help:hover {
+  background-color: white;
+  color: #63b12d;
+  border: solid 2px #63b12d;
 }

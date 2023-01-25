@@ -288,8 +288,7 @@ export class CustomerProfileComponent implements OnInit {
 
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
 
-
-      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+      this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
         this.updateStatus(); // Update staus automatically
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
