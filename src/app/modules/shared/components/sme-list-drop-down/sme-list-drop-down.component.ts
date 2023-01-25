@@ -20,7 +20,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
 
   smeList: any[] = [];
-  selectedSme = new FormControl('', Validators.required);
+  selectedSme = new FormControl('');
   filteredOptions!: Observable<any[]>;
 
   constructor(public utilsService: UtilsService,
