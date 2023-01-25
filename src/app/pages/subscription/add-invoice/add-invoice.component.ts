@@ -621,9 +621,9 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'Other Services', details: 'Audit (Professional / Free Lancer' },
     { service: 'Other Services', details: 'Other Services' }];
     this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
-    if (this.service === "TPA") {
-      this.serviceDetail = "TPA";
-    }
+    // if (this.service === "TPA") {
+    //   this.serviceDetail = "TPA";
+    // }
   }
 
   getExactPromoDiscount() {
