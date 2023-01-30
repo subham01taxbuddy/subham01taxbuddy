@@ -23,6 +23,8 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
+  selectStatus: '';
+  statusList: any[] = AppConstants.statusList;
 
   constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
@@ -235,7 +237,7 @@ export class ReviewListComponent implements OnInit {
           debounceMs: 0
         }
       },
-           {
+      {
         headerName: 'Product',
         field: 'productName',
         width: 100,
@@ -287,6 +289,28 @@ export class ReviewListComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
+           </button>`;
+        },
+        width: 100,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-edit" aria-hidden="true" data-action-type="update-status"></i>
            </button>`;
         },
         width: 100,
@@ -356,7 +380,11 @@ export class ReviewListComponent implements OnInit {
 
   getReview(pageNo) {
     let pagination = `page=${pageNo}&pageSize=12`;
-    var param = `review?sortBy=addedAt&environment=${environment.environment}&sortingOrder=desc&${pagination}`;
+    if (this.selectStatus) {
+      var param = `review?status=${this.selectStatus}&environment=${environment.environment}&sortingOrder=desc&${pagination}`;
+    } else {
+      var param = `review?environment=${environment.environment}&sortingOrder=desc&${pagination}`;
+    }
     this.loading = true;
     this.reviewService.getMethod(param).subscribe((response: any) => {
       if (response.body.content instanceof Array && response.body.content.length > 0) {
@@ -413,7 +441,11 @@ export class ReviewListComponent implements OnInit {
           this.viewReview('View Review', '', params.data);
           break;
         case 'update-sme-notes':
-          this.updateSmeNote('Update Review', '', params.data)
+          this.updateSmeNote('Update Review', '', params.data);
+          break;
+        case 'update-status':
+          this.updateSmeNote('Update Status', '', params.data);
+          break;
       }
     }
   }
