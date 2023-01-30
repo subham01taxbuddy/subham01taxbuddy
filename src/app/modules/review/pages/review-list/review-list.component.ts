@@ -381,9 +381,9 @@ export class ReviewListComponent implements OnInit {
   getReview(pageNo) {
     let pagination = `page=${pageNo}&pageSize=12`;
     if (this.selectStatus) {
-      var param = `review?status=${this.selectStatus}&environment=${environment.environment}&sortingOrder=desc&${pagination}`;
+      var param = `review?status=${this.selectStatus}&environment=${environment.environment}&${pagination}`;
     } else {
-      var param = `review?environment=${environment.environment}&sortingOrder=desc&${pagination}`;
+      var param = `review?environment=${environment.environment}&${pagination}`;
     }
     this.loading = true;
     this.reviewService.getMethod(param).subscribe((response: any) => {
