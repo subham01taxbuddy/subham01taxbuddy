@@ -43,7 +43,8 @@ export class AssignedUsersComponent implements OnInit {
   }
   agents = [];
   agentId = null;
-  constructor(private userMsService: UserMsService,
+  constructor(
+    private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
