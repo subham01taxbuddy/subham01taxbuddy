@@ -614,7 +614,7 @@ export class FilingDashboardComponent implements OnInit {
       dateFormat: 'MMMM YY'
     }, {
       value: 'total',
-      label: 'This Season (F.Y. 20-21)',
+      label: 'This Season (F.Y. 22-23)',
     }]
     var data = [];
     for (let i = 0; i < temp.length; i++) {
