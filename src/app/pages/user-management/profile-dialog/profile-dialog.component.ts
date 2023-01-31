@@ -307,7 +307,7 @@ export class ProfileDialogComponent implements OnInit {
     })
 
     console.log('this.data -> ',this.data);
-    if(this.data.submitBtn === "Edit" && this.data.mode === "Address"){
+    if(this.data.submitBtn === "Save" && this.data.mode === "Address"){
       this.addressForm.patchValue(this.data.userObject)
       // let stateCode = this.state_list.filter((item:any) => item.stateName === this.data.userObject.state)[0].stateCode;
       // if(this.utilService.isNonEmpty(stateCode)){
@@ -385,7 +385,7 @@ export class ProfileDialogComponent implements OnInit {
         console.log('Add body :-> ',body)
         this.dialogRef.close({ event: 'close', data: body})
       }
-      else if(this.data.submitBtn === "Edit"){
+      else if(this.data.submitBtn === "Save"){
         console.log('this.addressForm -> ',this.addressForm.value)
         let body = {
           from: this.data.mode,
