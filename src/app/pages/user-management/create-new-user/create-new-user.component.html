@@ -44,7 +44,7 @@
         <div class="card__col-lg-3">
           <mat-form-field appearance="outline">
             <mat-label>Mobile Number</mat-label>
-            <input matInput type="number" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
+            <input matInput type="number" [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
               pattern=""  required />
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
               is required</mat-error>

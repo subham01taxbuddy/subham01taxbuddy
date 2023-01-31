@@ -36,6 +36,7 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
+import { NumbersOnlyDirective } from './directives/numbers-only.directive';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         DigitsOnlyDirective,
-        AgTooltipComponent
+        AgTooltipComponent,
+        NumbersOnlyDirective
     ],
     imports: [
         CommonModule,
@@ -115,7 +117,8 @@ import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component
         CurrencyPipe,
         ShimmerModule,
         DigitsOnlyDirective,
-        AgTooltipComponent
+        AgTooltipComponent,
+        NumbersOnlyDirective
 
     ],
     providers: [StorageService],
