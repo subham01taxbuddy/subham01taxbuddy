@@ -66,14 +66,23 @@
   </div>
 </mat-dialog-content>
 
+<div class="card__row" style="margin-top: 10px;" *ngIf="userDetails?.sourcePlatform==='Kommunicate'">
+  <button mat-raised-button class="btn-help" (click)="openKommunicateDashboard('kommunicate')">Open With Kommunicate
+    &nbsp;&nbsp;<i class="fa fa-comments-o" aria-hidden="true"></i></button>
+</div>
+
+<div class="card__row" style="margin-top: 10px;"
+  *ngIf="userDetails?.sourcePlatform==='Play Store' || userDetails?.sourcePlatform==='Google My Business' ||  userDetails?.sourcePlatform==='GOOGLE_WORKSPACE'">
+  <button mat-raised-button class="btn-help" (click)="openKommunicateDashboard('NotKommunicate')"
+    [disabled]="waChatLink === null">Open With
+    Kommunicate &nbsp;&nbsp;<i class="fa fa-comments-o" aria-hidden="true"></i></button>
+</div>
+
 <div class="card__row" style="margin-top: 10px;" *ngIf="userDetails && userDetails?.sourcePlatform!='Kommunicate'">
-  <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions">
+  <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions" (rowClicked)="onUsersRowClicked($event)">
   </ag-grid-angular>
 </div>
 
-<div class="card__row" style="margin-top: 10px;" *ngIf="userDetails?.sourcePlatform==='Kommunicate'">
-  <button mat-raised-button class="btn-help" (click)="openKommunicateDashboard()">Open With Kommunicate</button>
-</div>
 
 <mat-dialog-actions align="center">
   <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>

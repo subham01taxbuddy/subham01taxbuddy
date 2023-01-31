@@ -14,7 +14,9 @@ import { ReviewService } from '../../services/review.service';
 export class UpdateSmeNotesComponent implements OnInit {
   userData: any;
   smeReviewForm: FormGroup;
+  updateStatusForm: FormGroup;
   sentimentList = AppConstants.sentimentList;
+  statusList: any[] = AppConstants.statusList;
   loading: boolean;
   constructor(
     private fb: FormBuilder,
@@ -30,16 +32,23 @@ export class UpdateSmeNotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.initUpdateStatusForm();
   }
 
 
   initForm() {
     this.smeReviewForm = this.fb.group({
-      reviewSentiment: ['', Validators.required],
-      smeNotes: ['', Validators.required],
-      status: ['OPEN'],
+      reviewSentiment: [this.data.leadData.reviewSentiment ? this.data.leadData.reviewSentiment : '', Validators.required],
+      smeNotes: [this.data.leadData.smeNotes ? this.data.leadData.smeNotes : '', Validators.required],
+      status: [this.data.leadData.status ? this.data.leadData.status : ''],
       userId: [this.userData.USER_UNIQUE_ID],
       smeId: [""],
+    })
+  }
+
+  initUpdateStatusForm() {
+    this.updateStatusForm = this.fb.group({
+      status: [this.data.leadData.status ? this.data.leadData.status : '', Validators.required]
     })
   }
 
@@ -52,8 +61,8 @@ export class UpdateSmeNotesComponent implements OnInit {
         "sourceRating": this.data.leadData.sourceRating,
         "isReviewNegative": this.data.leadData.isReviewNegative,
         "status": this.data.leadData.status,
-        "reviewSentiment":this.smeReviewForm.controls['reviewSentiment'].value,
-        "smeNotes":this.smeReviewForm.controls['smeNotes'].value,
+        "reviewSentiment": this.smeReviewForm.controls['reviewSentiment'].value,
+        "smeNotes": this.smeReviewForm.controls['smeNotes'].value,
       },
       "pathParameters": {
         "id": this.data.leadData.id
@@ -67,6 +76,34 @@ export class UpdateSmeNotesComponent implements OnInit {
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", 'Failed to Update Review');
+      this.dialogRef.close(false);
+    });
+  }
+
+  updateStatus() {
+    this.loading = true;
+    const param = `review/byid`;
+    const requestBody = {
+      "body":
+      {
+        "sourceRating": this.data.leadData.sourceRating,
+        "isReviewNegative": this.data.leadData.isReviewNegative,
+        "status": this.updateStatusForm.controls['status'].value,
+        "smeNotes": this.data.leadData.smeNotes,
+        "reviewSentiment": this.data.leadData.reviewSentiment,
+      },
+      "pathParameters": {
+        "id": this.data.leadData.id
+      },
+      "environment": environment.environment
+    }
+    this.reviewService.putMethod(param, requestBody).subscribe((res: any) => {
+      this._toastMessageService.alert("success", 'Review Status Updated Successfully!!');
+      this.loading = false;
+      this.dialogRef.close(true);
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", 'Failed to Update Status');
       this.dialogRef.close(false);
     });
   }
