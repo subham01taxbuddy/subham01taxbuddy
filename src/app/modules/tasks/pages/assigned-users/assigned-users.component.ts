@@ -1,5 +1,5 @@
 import { async } from '@angular/core/testing';
-import { ReviseReturnDialogComponent } from './../../../../pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
+import { ReviseReturnDialogComponent } from '../../../../pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
@@ -522,7 +522,7 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED') 
+          if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED')
               ||  params.data.serviceType != 'ITR') {
             return `<button type="button" class="action_icon add_button" title="Re Assignment"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -570,7 +570,7 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return ` 
+          return `
            <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
@@ -816,7 +816,7 @@ export class AssignedUsersComponent implements OnInit {
     const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    
+
     if(data.itrObjectStatus === 'CREATE') {
       //no ITR object found, create a new ITR object
       this.loading = true;
@@ -831,29 +831,29 @@ export class AssignedUsersComponent implements OnInit {
       objITR.filingTeamMemberId = loggedInId;
       //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
       console.log('obj:', objITR);
-      
+
       //update status to WIP
       //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
-      
+
       const param = '/itr';
       this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
           console.log('My iTR Json successfully created-==', result);
           this.loading = false;
           objITR = result;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-          this.router.navigate(['/pages/itr-filing/itr'],{ 
-            state: { 
-              userId: data.userId, 
-              panNumber: data.panNumber, 
-              eriClientValidUpto: data.eriClientValidUpto, 
-              name: data.name } 
+          this.router.navigate(['/pages/itr-filing/itr'],{
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data.eriClientValidUpto,
+              name: data.name }
             });
       }, error => {
           this.loading = false;
       });
       this.loading = false;
       console.log('end');
-      
+
     } else {
       //one more ITR objects in place, use existing ITR object
       let itrFilter = data.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${data.openItrId}` : '';
@@ -879,17 +879,17 @@ export class AssignedUsersComponent implements OnInit {
           console.log('obj:', obj);
           workingItr = JSON.parse(JSON.stringify(obj));
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-          this.router.navigate(['/pages/itr-filing/itr'],{ 
-            state: { 
-              userId: data.userId, 
-              panNumber: data.panNumber, 
-              eriClientValidUpto: data.eriClientValidUpto, 
-              name: data.name 
-            } 
+          this.router.navigate(['/pages/itr-filing/itr'],{
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data.eriClientValidUpto,
+              name: data.name
+            }
           });
         } else {
           //multiple ITRs found, navigate to ITR tab with the results
-          this.router.navigateByUrl('/tasks/filings', 
+          this.router.navigateByUrl('/tasks/filings',
             {state: {'mobileNumber': data.mobileNumber}});
         }
       }, async (error:any) => {
@@ -898,7 +898,7 @@ export class AssignedUsersComponent implements OnInit {
       });
 
     }
-   
+
   }
 
   async getUserProfile(userId) {
@@ -960,12 +960,12 @@ export class AssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/itr'],{ 
-          state: { 
-            userId: data.userId, 
-            panNumber: data.panNumber, 
-            eriClientValidUpto: data.eriClientValidUpto, 
-            name: data.name } 
+        this.router.navigate(['/pages/itr-filing/itr'],{
+          state: {
+            userId: data.userId,
+            panNumber: data.panNumber,
+            eriClientValidUpto: data.eriClientValidUpto,
+            name: data.name }
           });
       }
       console.log('The dialog was closed', result);
@@ -1086,7 +1086,7 @@ export class AssignedUsersComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
     });
-    
+
   }
 
   reAssignUser(client) {

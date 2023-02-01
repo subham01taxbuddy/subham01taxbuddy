@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,13 +13,14 @@ export class AppComponent {
   constructor(
     private router: Router,
   ) {
-    // router.events.subscribe((val) => {
-    //   if (val instanceof NavigationEnd) {
-    //     if (val.urlAfterRedirects != '/login') {
-    //       this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');         
-    //     }
-    //   }
-    // });
+    router.events.subscribe((val) => {
+      console.log(val);
+      if (val instanceof NavigationEnd) {
+        if (val.urlAfterRedirects != '/login') {
+          // this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');
+        }
+      }
+    });
 
     (function (d, m) {
       var kommunicateSettings =
@@ -44,11 +45,11 @@ export class AppComponent {
               "field": "Phone",
               "type": "number",
               "required": true,
-              "element": "input", // Optional field (Possible values: textarea or input) 
+              "element": "input", // Optional field (Possible values: textarea or input)
               "placeholder": "Enter your phone number"
             }
           ],
-       
+
       };
 
       var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
