@@ -160,44 +160,24 @@ export interface HouseProperties {
     ownerPercentage: number;
     loans: Loans[];
 }
-export interface Business {
-    presumptiveIncomes: PresumptiveIncomes[];
-    financialParticulars: FinancialParticulars;
-}
+
 export interface PresumptiveIncomes {
-    businessType: string;
-    natureOfBusiness: string;
-    tradeName: string;
-    incomes: Incomes[];
-    taxableIncome: number;
-    exemptIncome: number;
+  businessType: string;
+  natureOfBusiness: string;
+  tradeName: string;
+  incomes: Incomes[];
+  taxableIncome: number;
+  exemptIncome: number;
 }
-export interface FinancialParticulars {
-    GSTRNumber: string;
-    grossTurnOverAmount: number;
-    membersOwnCapital: number;
-    securedLoans: number;
-    unSecuredLoans: number;
-    advances: number;
-    sundryCreditorsAmount: number;
-    otherLiabilities: number;
-    totalCapitalLiabilities: number;
-    fixedAssets: number;
-    inventories: number;
-    sundryDebtorsAmount: number;
-    balanceWithBank: number;
-    cashInHand: number;
-    loanAndAdvances: number;
-    otherAssets: number;
-    totalAssets: number;
-}
+
 export interface Incomes {
-    incomeType: string;
-    receipts: number;
-    presumptiveIncome: number;
-    periodOfHolding: number;
-    minimumPresumptiveIncome: number;
+  incomeType: string;
+  receipts: number;
+  presumptiveIncome: number;
+  periodOfHolding: number;
+  minimumPresumptiveIncome: number;
 }
+
 export interface Tenant {
     name: string;
     panNumber: string;
