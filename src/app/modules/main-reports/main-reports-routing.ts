@@ -16,6 +16,10 @@ import { RepoByAgentNameComponent } from "./pages/knowlarity-report/repo-by-agen
 import { RepoBySmeNameComponent } from "./pages/knowlarity-report/repo-by-sme-name/repo-by-sme-name.component";
 import { MainReportsComponent } from "./pages/main-reports/main-reports.component";
 import { MissedChatReportComponent } from "./pages/missed-chat-report/missed-chat-report.component";
+import { AssignedUserCountComponent } from "./pages/new-email-reports/assigned-user-count/assigned-user-count.component";
+import { GstDailyReportComponent } from "./pages/new-email-reports/gst-daily-report/gst-daily-report.component";
+import { InboundCallsDuringNonOfficeHrsComponent } from "./pages/new-email-reports/inbound-calls-during-non-office-hrs/inbound-calls-during-non-office-hrs.component";
+import { NewEmailReportsComponent } from "./pages/new-email-reports/new-email-reports.component";
 import { SpamTableComponent } from "./pages/spam-table/spam-table.component";
 import { StatusWiseCountComponent } from "./pages/status-wise-count/status-wise-count.component";
 
@@ -54,7 +58,18 @@ const routes: Routes = [
             { path: 'spam-report', component: SpamTableComponent },
             { path: 'email-me', component: EmailReportsComponent },
             { path: 'status-wise-count', component: StatusWiseCountComponent },
-            { path: '', redirectTo: 'knowlarity-repo', pathMatch: '' }
+            { path: '', redirectTo: 'knowlarity-repo', pathMatch: '' },
+
+            
+            {
+                path: 'email-reports', component: NewEmailReportsComponent,
+                children: [
+                    { path: 'gst-daily-report', component: GstDailyReportComponent },
+                    { path: 'assigned-user-count', component: AssignedUserCountComponent },
+                    { path: 'inbound-calls-offhour', component: InboundCallsDuringNonOfficeHrsComponent },
+                    { path: '', redirectTo: 'gst-daily-report', pathMatch: '' }
+                ]
+            },
         ]
     }
 ]

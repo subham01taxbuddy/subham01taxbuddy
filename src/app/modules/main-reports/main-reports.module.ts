@@ -1,3 +1,7 @@
+import { InboundCallsDuringNonOfficeHrsComponent } from './pages/new-email-reports/inbound-calls-during-non-office-hrs/inbound-calls-during-non-office-hrs.component';
+import { AssignedUserCountComponent } from './pages/new-email-reports/assigned-user-count/assigned-user-count.component';
+import { GstDailyReportComponent } from './pages/new-email-reports/gst-daily-report/gst-daily-report.component';
+import { NewEmailReportsComponent } from './pages/new-email-reports/new-email-reports.component';
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { NgxLoadingModule } from "ngx-loading";
@@ -42,7 +46,11 @@ import { StatusWiseCountComponent } from "./pages/status-wise-count/status-wise-
         MissedInbondCallsComponent,
         LastYearFilingComponent,
         EmailReportsComponent,
-        StatusWiseCountComponent
+        StatusWiseCountComponent,
+        NewEmailReportsComponent,
+        GstDailyReportComponent,
+        AssignedUserCountComponent,
+        InboundCallsDuringNonOfficeHrsComponent
     ],
     imports: [
         CommonModule,

@@ -1,0 +1,13 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix" style="padding-top: 0px;">
+  <div class="card">
+    <div class="card__row">
+      <span> Total Count:
+        <b>{{totalCount}}</b></span>
+    </div>
+    <div class="card__row">
+      <ag-grid-angular class="ag-theme-balham" [gridOptions]="gstDailyReportGridOption">
+      </ag-grid-angular>
+    </div>
+  </div>
+</div>
