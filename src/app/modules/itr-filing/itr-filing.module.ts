@@ -8,7 +8,6 @@ import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.c
 // import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './users/users.component';
-import { PagesModule } from './../pages.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
@@ -79,6 +78,8 @@ import { AddUpdateTradingComponent } from './business-income/profit-loss-ac/non-
 import { AddBalanceSheetComponent } from './business-income/balance-sheet/add-balance-sheet/add-balance-sheet.component';
 import { DepreciationDialogComponent } from './business-income/balance-sheet/depreciation-dialog/depreciation-dialog.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
+import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
+import { PagesModule } from 'src/app/pages/pages.module';
 
 @NgModule({
   imports: [
@@ -166,6 +167,7 @@ import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.com
     AddBalanceSheetComponent,
     DepreciationDialogComponent,
     PrefillIdComponent,
+    SourceOfIncomesComponent,
   ],
   exports: [
     CustomerProfileComponent

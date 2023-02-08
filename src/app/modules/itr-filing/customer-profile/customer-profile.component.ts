@@ -297,7 +297,7 @@ export class CustomerProfileComponent implements OnInit {
         // if (ref === "CONTINUE") {
         // if (this.customerProfileForm.controls['itrType'].value === '1'
         // || this.customerProfileForm.controls['itrType'].value === '4')
-        // this.router.navigate(['/pages/itr-filing/itr']);
+        // this.router.navigate(['/itr-filing/itr']);
         this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
         // else
         //   this.router.navigate(['/pages/itr-filing/direct-upload']);

@@ -17,7 +17,7 @@ export class SidebarComponent implements DoCheck {
   constructor(private navbarService: NavbarService, private roleBaseAuthGuardService: RoleBaseAuthGuardService, private route: Router) {
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
     this.route.events.subscribe((url: any) => {
-      // if (route.url === '/pages/itr-filing/itr') {
+      // if (route.url === '/itr-filing/itr') {
       //   this.hideSideBar = true;
       // } else {
       //   this.hideSideBar = false;

@@ -13,10 +13,10 @@ import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { FilingStatusDialogComponent } from 'src/app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { ReviseReturnDialogComponent } from 'src/app/pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e-verification-dialog/e-verification-dialog.component';
+import { FilingStatusDialogComponent } from 'src/app/modules/itr-filing/filing-status-dialog/filing-status-dialog.component';
+import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 
 @Component({
   selector: 'app-filings',
@@ -588,7 +588,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/itr'], {
+    this.router.navigate(['/itr-filing/itr'], {
         state: {
           userId: data.userId,
           panNumber: data.panNumber,
@@ -632,7 +632,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/itr'], {
+        this.router.navigate(['/itr-filing/itr'], {
           state: {
             userId: data.userId,
             panNumber: data.panNumber,

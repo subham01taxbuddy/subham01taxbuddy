@@ -22,6 +22,9 @@ export const appRoutes: Routes = [
   {
     path: 'sme-management', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/sme-management/sme-management.module').then(m => m.SmeManagementModule)
   },
+  {
+    path: 'itr-filing', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/itr-filing/itr-filing.module').then(m => m.ItrFilingModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

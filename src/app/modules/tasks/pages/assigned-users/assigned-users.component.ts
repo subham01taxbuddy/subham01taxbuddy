@@ -1,5 +1,4 @@
 import { async } from '@angular/core/testing';
-import { ReviseReturnDialogComponent } from '../../../../pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
@@ -20,6 +19,7 @@ import { environment } from 'src/environments/environment';
 import { MoreOptionsDialogComponent } from '../../components/more-options-dialog/more-options-dialog.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { param } from 'jquery';
+import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 
 @Component({
   selector: 'app-assigned-users',
@@ -841,7 +841,7 @@ export class AssignedUsersComponent implements OnInit {
           this.loading = false;
           objITR = result;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-          this.router.navigate(['/pages/itr-filing/itr'],{
+          this.router.navigate(['/itr-filing/itr'],{
             state: {
               userId: data.userId,
               panNumber: data.panNumber,
@@ -879,7 +879,7 @@ export class AssignedUsersComponent implements OnInit {
           console.log('obj:', obj);
           workingItr = JSON.parse(JSON.stringify(obj));
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-          this.router.navigate(['/pages/itr-filing/itr'],{
+          this.router.navigate(['/itr-filing/itr'],{
             state: {
               userId: data.userId,
               panNumber: data.panNumber,
@@ -960,7 +960,7 @@ export class AssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/itr'],{
+        this.router.navigate(['/itr-filing/itr'],{
           state: {
             userId: data.userId,
             panNumber: data.panNumber,

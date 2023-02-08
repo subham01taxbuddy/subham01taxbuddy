@@ -29,7 +29,7 @@ const routes: Routes = [
             { path: 'tasks', component: FilingTasksComponent },
             { path: 'user-docs/:userId', component: ShowUserDocumnetsComponent },
             { path: 'add-client', component: AddClientComponent },
-            { path: '', redirectTo: '/pages/itr-filing/my-itrs', pathMatch: 'full' }
+            { path: '', redirectTo: '/itr-filing/my-itrs', pathMatch: 'full' }
         ]
     },
 ];
