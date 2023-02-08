@@ -14,21 +14,6 @@ export const appRoutes: Routes = [
     path: 'pages', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/pages/pages.module').then(m => m.PagesModule)
   },
   {
-    path: 'pages/master', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/modules/master/master.module').then(m => m.MasterModule)
-  },
-  {
-    path: 'pages/dashboard', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/dashboard/dashboard.module').then(m => m.DashboardModule)
-  },
-  {
-    path: 'pages/reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/main-reports/main-reports.module').then(m => m.MainReportsModule)
-  },
-  {
-    path: 'pages/review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
-  },
-  {
-    path: 'pages/delete-user', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/delete-user/delete-user.module').then(m => m.DeleteUserModule)
-  },
-  {
     path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
   },
   {
@@ -36,9 +21,6 @@ export const appRoutes: Routes = [
   },
   {
     path: 'sme-management', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/sme-management/sme-management.module').then(m => m.SmeManagementModule)
-  },
-  {
-    path: 'report-card', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/report-card/report-card.module').then(m => m.ReportCardModule)
   },
   { path: '**', redirectTo: 'login' },
 ];
