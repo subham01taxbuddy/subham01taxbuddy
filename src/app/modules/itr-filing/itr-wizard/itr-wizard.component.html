@@ -1,11 +1,17 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix">
-  <div class="card" style="padding: 0 !important;">
-   
-  </div>
-  <div class="card" style="padding: 0 !important;">
+  <h2 class="capitalize text-gray-1100 font-bold text-2xl leading-[35px] dark:text-gray-dark-1100 pb-[18px]">
+    ITR Filling Process
+  </h2>
+  <div style="padding: 0 !important;">
+    <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
+      <div class="flex items-center gap-x-1">
+        <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" /><a class="capitalize"
+          href="#">Pre-fill Data</a>
+      </div>
+      <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" /><span
+        class="capitalize text-color-brands">Source (salary</span>
+    </div>
     <router-outlet></router-outlet>
-    <!-- <app-prefill-id></app-prefill-id>
-    <app-source-of-incomes></app-source-of-incomes> -->
   </div>
 </div>
