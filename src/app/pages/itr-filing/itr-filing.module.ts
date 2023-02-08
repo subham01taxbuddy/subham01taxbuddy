@@ -78,6 +78,7 @@ import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/spe
 import { AddUpdateTradingComponent } from './business-income/profit-loss-ac/non-speculative-income/add-update-trading/add-update-trading.component';
 import { AddBalanceSheetComponent } from './business-income/balance-sheet/add-balance-sheet/add-balance-sheet.component';
 import { DepreciationDialogComponent } from './business-income/balance-sheet/depreciation-dialog/depreciation-dialog.component';
+import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 
 @NgModule({
   imports: [
@@ -164,6 +165,7 @@ import { DepreciationDialogComponent } from './business-income/balance-sheet/dep
     AddUpdateTradingComponent,
     AddBalanceSheetComponent,
     DepreciationDialogComponent,
+    PrefillIdComponent,
   ],
   exports: [
     CustomerProfileComponent
