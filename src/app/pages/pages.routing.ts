@@ -10,7 +10,6 @@ export const routes: Routes = [
 		path: '', canActivate: [AuthGuard],
 		children: [
 			{ path: 'tax-summary', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: () => import('./summary-tax/summary.module').then(m => m.SummaryModule) },
-			// { path: 'itr-filing', /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: () => import('./itr-filing/itr-filing.module').then(m => m.ItrFilingModule) },
 			// { path: '**', redirectTo: '/pages/dashboard/calling/calling2', pathMatch: 'full' },
 
 		]
