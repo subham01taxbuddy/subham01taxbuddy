@@ -7,6 +7,10 @@
   text-decoration: none;
   cursor: pointer;
   transition-property: color;
-   background-color:rgb(106 106 103);
+  background-color: rgb(106 106 103);
   transition-duration: .25s;
 }
+
+/* .mat-form-field .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 0 !important
+} */

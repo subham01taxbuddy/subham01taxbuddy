@@ -1,5 +1,5 @@
 import { ItrFilingComponent } from './itr-filing.component';
-import { CustomerProfileComponent } from './customer-profile/customer-profile.component';
+import { CustomerProfileComponent } from './itr-wizard/pages/all-personal-information/customer-profile/customer-profile.component';
 import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -15,6 +15,7 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { AddClientComponent } from './add-client/add-client.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
+import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
 
 const routes: Routes = [
     {
@@ -27,6 +28,8 @@ const routes: Routes = [
                 children: [
                     { path: 'prefill', component: PrefillIdComponent },
                     { path: 'sources', component: SourceOfIncomesComponent },
+                    { path: 'personal-info', component: AllPersonalInformationComponent },
+
 
                 ]
             },

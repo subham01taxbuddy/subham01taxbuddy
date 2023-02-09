@@ -11,7 +11,7 @@ import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
-import { CustomerProfileComponent } from './customer-profile/customer-profile.component';
+import { CustomerProfileComponent } from './itr-wizard/pages/all-personal-information/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
 import { NgxLoadingModule } from 'ngx-loading';
 // import { NgxImageZoomModule } from 'ngx-image-zoom';
@@ -80,6 +80,7 @@ import { DepreciationDialogComponent } from './business-income/balance-sheet/dep
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
 import { PagesModule } from 'src/app/pages/pages.module';
+import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
 
 @NgModule({
   imports: [
@@ -168,6 +169,7 @@ import { PagesModule } from 'src/app/pages/pages.module';
     DepreciationDialogComponent,
     PrefillIdComponent,
     SourceOfIncomesComponent,
+    AllPersonalInformationComponent,
   ],
   exports: [
     CustomerProfileComponent
