@@ -7,8 +7,19 @@
 
         <div class="card__row">
           <div class="card__col-xs-12">
-            <div class="card__col-sm-12 card__col-md-4" style="margin-top: 20px;">
+            <div class="card__col-sm-12 card__col-md-2" style="margin-top: 20px;">
               Total Count: <b>{{config.totalItems}}</b>
+            </div>
+
+            <div class="filter__col card__col-sm-12 card__col-md-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Select Platform</mat-label>
+                <mat-select placeholder="Select Platform" [(ngModel)]="selectPlatform">
+                  <mat-option *ngFor="let platform of platformList" [value]="platform.value">
+                    {{ platform.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
 
             <div class="filter__col card__col-sm-12 card__col-md-3">
