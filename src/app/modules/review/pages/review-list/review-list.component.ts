@@ -23,8 +23,10 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
-  selectStatus: '';
+  selectStatus:any = '';
   statusList: any[] = AppConstants.statusList;
+  platformList:any[]=AppConstants.platformList;
+  selectPlatform:any ='';
 
   constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
@@ -380,8 +382,11 @@ export class ReviewListComponent implements OnInit {
 
   getReview(pageNo) {
     let pagination = `page=${pageNo}&pageSize=12`;
-    if (this.selectStatus) {
-      var param = `review?status=${this.selectStatus}&environment=${environment.environment}&${pagination}`;
+    let platform = (this.selectPlatform && this.selectPlatform != 'All') ? `&platform=${this.selectPlatform}` : '';
+    let status = (this.selectStatus && this.selectStatus != 'All') ? `&status=${this.selectStatus}` : '';
+
+    if (this.selectStatus || this.selectPlatform) {
+      var param = `review?environment=${environment.environment}&${pagination}` + status + platform;
     } else {
       var param = `review?environment=${environment.environment}&${pagination}`;
     }
