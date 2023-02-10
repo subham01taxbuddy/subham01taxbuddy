@@ -11,14 +11,14 @@ import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
-import { CustomerProfileComponent } from './itr-wizard/pages/all-personal-information/customer-profile/customer-profile.component';
+import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
 import { NgxLoadingModule } from 'ngx-loading';
 // import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
-import { PersonalInformationComponent } from './personal-information/personal-information.component';
+import { PersonalInformationComponent } from './itr-wizard/components/personal-information/personal-information.component';
 import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
@@ -49,9 +49,6 @@ import { PrefillDataComponent } from './prefill-data/prefill-data.component';
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
-import { OtherInformationComponent } from './other-information/other-information.component';
-import { UnlistedSharesComponent } from './other-information/unlisted-shares/unlisted-shares.component';
-import { DirectorInCompanyComponent } from './other-information/director-in-company/director-in-company.component';
 import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { LandAndBuildingComponent } from './capital-gain/land-and-building/land-and-building.component';
 import { LabFormComponent } from './capital-gain/land-and-building/lab-form/lab-form.component';
@@ -81,6 +78,9 @@ import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.com
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
 import { PagesModule } from 'src/app/pages/pages.module';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
+import { OtherInformationComponent } from './itr-wizard/components/other-information/other-information.component';
+import { UnlistedSharesComponent } from './itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component';
+import { DirectorInCompanyComponent } from './itr-wizard/components/other-information/director-in-company/director-in-company.component';
 
 @NgModule({
   imports: [

@@ -1,5 +1,5 @@
 import { ItrFilingComponent } from './itr-filing.component';
-import { CustomerProfileComponent } from './itr-wizard/pages/all-personal-information/customer-profile/customer-profile.component';
+import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';

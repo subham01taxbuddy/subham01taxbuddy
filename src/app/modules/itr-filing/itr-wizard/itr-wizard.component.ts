@@ -1,7 +1,6 @@
 import { BusinessIncomeComponent } from './../business-income/business-income.component';
 import { HousePropertyComponent } from './../house-property/house-property.component';
 import { SalaryComponent } from './../salary/salary.component';
-import { OtherInformationComponent } from './../other-information/other-information.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -10,9 +9,10 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { PersonalInformationComponent } from '../personal-information/personal-information.component';
+import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
 import {Router} from "@angular/router";
+import { OtherInformationComponent } from './components/other-information/other-information.component';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -61,7 +61,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   gotoSchedule(schedule) {
     let componentName = this.schedules.getComponent(schedule);
-    this.router.navigate(['/itr-filing/itr/customer-profile'])
+    this.router.navigate(['/itr-filing/itr/personal-info'])
   }
   previousTab(tab) {
     // if (tab === 'personal') {

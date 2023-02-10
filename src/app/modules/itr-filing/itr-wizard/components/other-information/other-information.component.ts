@@ -1,4 +1,3 @@
-import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
@@ -7,6 +6,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { DirectorInCompanyComponent } from './director-in-company/director-in-company.component';
 import { UnlistedSharesComponent } from './unlisted-shares/unlisted-shares.component';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   selector: 'app-other-information',

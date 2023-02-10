@@ -1,9 +1,9 @@
-import { NriDetailsDialogComponent } from '../../../../components/nri-details-dialog/nri-details-dialog.component';
-import { UpdateManualFilingComponent } from '../../../../update-manual-filing/update-manual-filing.component';
+import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
+import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { UtilsService } from '../../../../../../services/utils.service';
+import { UtilsService } from '../../../../../services/utils.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -17,8 +17,8 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { AddClientDialogComponent } from '../../../../add-client-dialog/add-client-dialog.component';
-import { PrefillDataComponent } from '../../../../prefill-data/prefill-data.component';
+import { AddClientDialogComponent } from '../../../add-client-dialog/add-client-dialog.component';
+import { PrefillDataComponent } from '../../../prefill-data/prefill-data.component';
 import * as moment from 'moment';
 
 declare let $: any;
