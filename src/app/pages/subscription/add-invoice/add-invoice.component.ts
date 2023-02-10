@@ -183,6 +183,11 @@ export class AddInvoiceComponent implements OnInit {
           this.changeService();
           break;
         }
+        case 'TPA': {
+          this.service = 'TPA';
+          this.changeService();
+          break;
+        }
       }
       this.invoiceForm.controls['subscriptionId'].setValue(id);
       this.invoiceForm.controls['serviceType'].setValue(applicableService);
