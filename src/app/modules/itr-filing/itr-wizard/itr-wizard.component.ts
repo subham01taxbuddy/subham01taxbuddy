@@ -11,6 +11,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
+import { Schedules } from "../../shared/interfaces/schedules";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -39,15 +41,27 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   docUrl = '';
   loading = false;
   personalInfoSubTab = 0;
-  incomeSubTab = 0; 
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService) { }
+  incomeSubTab = 0;
+
+  showIncomeSources = true;
+  componentsList = [];
+
+  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService,
+              private router: Router,
+              private schedules: Schedules) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    console.log('Inside on init itr wizard')
+    console.log('Inside on init itr wizard');
+    this.componentsList.push(this.schedules.PERSONAL_INFO);
   }
   ngAfterContentChecked() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  }
+
+  gotoSchedule(schedule) {
+    let componentName = this.schedules.getComponent(schedule);
+    this.router.navigate(['/itr-filing/itr/customer-profile'])
   }
   previousTab(tab) {
     // if (tab === 'personal') {

@@ -27,6 +27,7 @@ const routes: Routes = [
                 children: [
                     { path: 'prefill', component: PrefillIdComponent },
                     { path: 'sources', component: SourceOfIncomesComponent },
+                    { path: 'customer-profile', component: CustomerProfileComponent}
 
                 ]
             },
