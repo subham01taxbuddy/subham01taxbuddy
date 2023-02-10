@@ -37,6 +37,7 @@ import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-ap
 import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
 import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kommunicate-dialog.component';
+import {Schedules} from "./interfaces/schedules";
 
 
 @NgModule({
@@ -118,10 +119,11 @@ import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kom
         ShimmerModule,
         DigitsOnlyDirective,
         AgTooltipComponent,
-        NumbersOnlyDirective
+        NumbersOnlyDirective,
+        Schedules
 
     ],
-    providers: [StorageService],
+    providers: [StorageService, Schedules],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
         KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent,
         UpdateManualFilingDialogComponent, AgTooltipComponent]
