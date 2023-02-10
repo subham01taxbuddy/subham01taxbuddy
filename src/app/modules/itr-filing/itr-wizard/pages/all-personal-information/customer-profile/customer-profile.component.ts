@@ -115,9 +115,10 @@ export class CustomerProfileComponent implements OnInit {
   ];
 
 
-  genderMaster = [
+  genderMaster: any[] = [
     { value: 'MALE', label: 'Male' },
     { value: 'FEMALE', label: 'Female' },
+    { value: 'OTHER', label: 'Other' }
   ]
 
   filePath = 'ITR/';

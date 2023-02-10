@@ -1,143 +1,12 @@
-<!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<!-- <div class="content" style="width: 35%; padding-right: 20px;">
-    <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
-    <br>
-    <div>
-        <span *ngFor="let docs of documents; let i=index">
-            <div style="padding: 5px; display: block; text-decoration:underline;">
-                <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
-                <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
-                        class="fa fa-trash" aria-hidden="true"></i></button>
-
-                <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
-                <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;"
-                    title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-            </div>
-
-        </span>
-        <div *ngIf="deletedFileData.length > 0" class="userInfo">
-            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle"
-                    aria-hidden="true"></i></button>
-            <table>
-                <tr>
-                    <th><b>Doc Deleted By</b></th>
-                    <th><b>Action</b></th>
-                    <th><b>Date</b></th>
-                </tr>
-                <tr *ngFor="let data of deletedFileData">
-                    <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
-                    <td>{{data.action}}</td>
-                    <td>{{data.date | date}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
-</div> -->
-
 <div class="card">
     <form [formGroup]="customerProfileForm">
-        <!--  <div class="card__row">
-           
-            <div class="card__col-xs-12 card__col-sm-3">
-                <mat-form-field appearance="outline">
-                    <mat-label>Residential status</mat-label>
-                    <mat-select placeholder="Residential status" name="residentialStatus"
-                        (selectionChange)="onSelectRecidencial(customerProfileForm.controls['residentialStatus'].value)"
-                        [formControl]="customerProfileForm.controls['residentialStatus']" required>
-                        <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
-                            {{ res.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-           
-                    
-        </div> -->
-        <!--  <div formGroupName="seventhProviso139">
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-8">
-                    Have you deposited more than 1 crore in your current A/c ( if Yes) then Enter the
-                    Amount
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Amount</mat-label>
-                        <input matInput placeholder="Amount" name="depAmtAggAmtExcd1CrPrYrFlg"
-                            formControlName="depAmtAggAmtExcd1CrPrYrFlg" class="input-field" maxlength="14" digitsOnly>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-8">
-                    Your foreign travel expenses is more than Rs. 2 Lakhs (If yes, then enter amount of
-                    expenditure)
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Amount</mat-label>
-                        <input matInput placeholder="Amount" name="incrExpAggAmt2LkTrvFrgnCntryFlg"
-                            formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg" class="input-field" maxlength="14"
-                            digitsOnly>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-8">
-                    Have your electricity bill exceeded 1 Lakh? (If yes, then enter amount)
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Amount</mat-label>
-                        <input matInput placeholder="Amount" name="incrExpAggAmt1LkElctrctyPrYrFlg"
-                            formControlName="incrExpAggAmt1LkElctrctyPrYrFlg" class="input-field" maxlength="14"
-                            digitsOnly>
-                    </mat-form-field>
-                </div>
-
-            </div>
-
-        </div> -->
-        <!-- <hr> -->
         <div class="card__title" style="padding:10px; font-size: 20px;">Address Details</div>
         <div formGroupName="address">
             <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Flat/Door/Block No.</mat-label>
-                        <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
-                            formControlName="flatNo" class="input-field" maxlength="50" required>
-                        <mat-error
-                            *ngIf="customerProfileForm.controls['address'].controls['flatNo'].hasError('required')">
-                            Enter
-                            flat/door/block no.</mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Premises name</mat-label>
-                        <input type="text" trim matInput placeholder="Premises name" name="premisesName"
-                            formControlName="premisesName" class="input-field" maxlength="50">
-                    </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Area/ Locality</mat-label>
-                        <input type="text" trim matInput placeholder="Area/ Locality" [pattern]="charRegex" name="area"
-                            formControlName="area" class="input-field" maxlength="50" required>
-                        <mat-error
-                            *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('required')">
-                            Enter area/ Locality</mat-error>
-                        <mat-error *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('pattern')">
-                            Enter character only</mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="card__row">
                 <div class="card__col-xs-12 card__col-sm-3">
+                    <mat-label>PIN Code</mat-label>
                     <mat-form-field appearance="outline">
-                        <mat-label>PIN Code</mat-label>
                         <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
                             class="input-field" maxlength="6" minlength="6" trim digitsOnly required
                             (blur)="getCityData()">
@@ -148,8 +17,8 @@
                     </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-3">
+                    <mat-label>Select country</mat-label>
                     <mat-form-field appearance="outline">
-                        <mat-label>Select country</mat-label>
                         <mat-select placeholder="Select country" name="country" formControlName="country"
                             (selectionChange)="changeCountry(customerProfileForm.controls['address'].controls['country'].value)"
                             required>
@@ -160,8 +29,8 @@
                     </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-3">
+                    <mat-label>Select state</mat-label>
                     <mat-form-field appearance="outline">
-                        <mat-label>Select state</mat-label>
                         <mat-select placeholder="Select state" name="state" formControlName="state" required>
                             <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                                 {{ state.stateName | titlecase}}
@@ -170,8 +39,8 @@
                     </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-3">
+                    <mat-label>City</mat-label>
                     <mat-form-field appearance="outline">
-                        <mat-label>City</mat-label>
                         <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
                             formControlName="city" class="input-field" maxlength="50" required>
                         <mat-error *ngIf="customerProfileForm.controls['address'].controls['city'].hasError('pattern')">
@@ -181,6 +50,38 @@
                             *ngIf="customerProfileForm.controls['address'].controls['city'].hasError('required')">
                             Enter
                             city name.</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Flat/Door/Block No.</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
+                            formControlName="flatNo" class="input-field" maxlength="50" required>
+                        <mat-error
+                            *ngIf="customerProfileForm.controls['address'].controls['flatNo'].hasError('required')">
+                            Enter
+                            flat/door/block no.</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Premises name</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input type="text" trim matInput placeholder="Premises name" name="premisesName"
+                            formControlName="premisesName" class="input-field" maxlength="50">
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Area/ Locality</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input type="text" trim matInput placeholder="Area/ Locality" [pattern]="charRegex" name="area"
+                            formControlName="area" class="input-field" maxlength="50" required>
+                        <mat-error
+                            *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('required')">
+                            Enter area/ Locality</mat-error>
+                        <mat-error *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('pattern')">
+                            Enter character only</mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -256,12 +157,11 @@
             <div class="card__col-xs-12 card__col-sm-8" style="padding-top: 10px;">
                 Are you opting for New Tax Regime?
             </div>
-            <div class="card__col-xs-12 card__col-sm-4" matTooltip="{{customerProfileForm.controls['regime'].disabled? 'Due date is over' : null}}">
+            <div class="card__col-xs-12 card__col-sm-4"
+                matTooltip="{{customerProfileForm.controls['regime'].disabled? 'Due date is over' : null}}">
+                <mat-label>Select One</mat-label>
                 <mat-form-field appearance="outline">
-                    <mat-label>Select One</mat-label>
-                    <mat-select name="regime" formControlName="regime" required 
-                    (selectionChange)="onRegimeChanged()">
-                        <!-- formControlName="employerCategory" TODO -->
+                    <mat-select name="regime" formControlName="regime" required (selectionChange)="onRegimeChanged()">
                         <mat-option value="NEW"> Yes </mat-option>
                         <mat-option value="OLD"> No </mat-option>
                     </mat-select>
@@ -275,11 +175,10 @@
                 Have you opted for new tax regime and filed form 10IE in the previous year?
             </div>
             <div class="card__col-xs-12 card__col-sm-4">
+                <mat-label>Select One</mat-label>
                 <mat-form-field appearance="outline">
-                    <mat-label>Select One</mat-label>
                     <mat-select name="previousYearRegime" formControlName="previousYearRegime"
                         (selectionChange)="onRegimeChanged()">
-                        <!-- formControlName="employerCategory" TODO -->
                         <mat-option value="NEW"> Yes </mat-option>
                         <mat-option value="OLD"> No </mat-option>
                     </mat-select>
@@ -322,30 +221,6 @@
                 </div>
             </div>
         </div>
-        <!--  <div class="card__col-xs-12 card__col-sm-7">
-                <div class="card__col-xs-12 card__col-sm-12" style="padding-bottom: 10px;">
-                    Please furnish the date of filing of from 10-IE along with Acknowledgement number
-                </div>
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Date of filing</mat-label>
-                        <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
-                            placeholder="Date of filing original return" name="orgITRDate"
-                            formControlName="orgITRDate" />
-                        <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #revisedPicker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Acknowledgement number</mat-label>
-                        <input matTooltip="Acknowledgement number maximum of 15 digit" matTooltipClass="tab-tooltip"
-                            matTooltipPosition="above" matInput placeholder="Acknowledgement of Original ITR"
-                            name="orgITRAckNum" class="input-field" maxlength="15" minlength="15"
-                            formControlName="orgITRAckNum" />
-                    </mat-form-field>
-                </div>
-            </div> -->
 
         <div class="footer__buttons clearfix">
             <!--  <button class="tbd-btn-secondary" (click)="previousRoute()"><i class="fa fa-arrow-left"
@@ -356,4 +231,3 @@
         </div>
     </form>
 </div>
-<!-- </div> -->
