@@ -32,8 +32,8 @@ export class OtherInformationComponent implements OnInit {
     if (this.ITR_JSON?.directorInCompany === null || this.ITR_JSON?.directorInCompany === undefined) {
       this.ITR_JSON.directorInCompany = [];
     }
-    if(!this.ITR_JSON.systemFlags?.directorInCompany) {
-      if(this.ITR_JSON.systemFlags) {
+    if (!this.ITR_JSON.systemFlags?.directorInCompany) {
+      if (this.ITR_JSON.systemFlags) {
         this.ITR_JSON.systemFlags.directorInCompany = false;
       } else {
         this.ITR_JSON.systemFlags = {
@@ -63,7 +63,7 @@ export class OtherInformationComponent implements OnInit {
   ngOnInit() {
 
   }
-
+  
   tabChanged() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -73,8 +73,8 @@ export class OtherInformationComponent implements OnInit {
     if (this.ITR_JSON?.directorInCompany === null || this.ITR_JSON?.directorInCompany === undefined) {
       this.ITR_JSON.directorInCompany = [];
     }
-    if(!this.ITR_JSON.systemFlags?.directorInCompany) {
-      if(this.ITR_JSON.systemFlags) {
+    if (!this.ITR_JSON.systemFlags?.directorInCompany) {
+      if (this.ITR_JSON.systemFlags) {
         this.ITR_JSON.systemFlags.directorInCompany = false;
       } else {
         this.ITR_JSON.systemFlags = {
@@ -95,7 +95,7 @@ export class OtherInformationComponent implements OnInit {
           haveUnlistedShares: false
         }
       }
-    } 
+    }
   }
 
   ChangeSharesStatus() {
@@ -353,7 +353,7 @@ export class OtherInformationComponent implements OnInit {
 
   //
   ChangeDirectorStatus() {
-    
+
     if (this.ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {

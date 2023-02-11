@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="card">
-  <div class="card__row">
-    <div class="card__col-xs-10 card__col-sm-10" style="padding:10px; font-size: 18px;">
+<div class="card card-header">
+  <div class="card__row pb-2 pt-2">
+    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px;">
       Weather you were director in a company at any time during the previous year?
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
@@ -13,7 +13,6 @@
       </mat-radio-group>
     </div>
   </div>
-  <br>
   <div style="text-align: right;" *ngIf="ITR_JSON.systemFlags?.directorInCompany">
     <button class="tbd-btn-small" (click)="addDirectorDetails('Add director details','ADD',null)">Add &nbsp;&nbsp;
       <i class="fa fa-plus" aria-hidden="true"></i>
@@ -24,11 +23,9 @@
       (rowClicked)="onDirectorRowClicked($event)">
     </ag-grid-angular>
   </div>
-  <br>
   <hr>
-  <br>
-  <div class="card__row">
-    <div class="card__col-xs-10 card__col-sm-10" style="padding:10px; font-size: 18px;">
+  <div class="card__row pb-2 pt-2">
+    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px;">
       Have you held unlisted equity shares at any time during the previous year
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
@@ -40,7 +37,6 @@
       </mat-radio-group>
     </div>
   </div>
-  <br>
   <div style="text-align: right;" *ngIf="ITR_JSON.systemFlags.haveUnlistedShares">
     <button class="tbd-btn-small" (click)="addSharesDetails('Add unlisted shares details','ADD',null)">Add &nbsp;&nbsp;
       <i class="fa fa-plus" aria-hidden="true"></i>
@@ -54,6 +50,6 @@
 </div>
 
 <div class="footer__buttons clearfix">
-  <button class="tbd-btn" (click)="saveAndContinue()">Save and Continue
+  <button class="tbd-btn save-btn" (click)="saveAndContinue()">Save
   </button>
 </div>

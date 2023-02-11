@@ -104,11 +104,11 @@
   margin: 16px 9px;
   padding: 11px 15px;
   text-align: center;
-  font-size: 1.166666667em;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1em;
   text-decoration: none;
-  border-radius: 35px;
+  border-radius: 12px;
   -webkit-transition-property: color, background-color;
   -o-transition-property: color, background-color;
   transition-property: color, background-color;

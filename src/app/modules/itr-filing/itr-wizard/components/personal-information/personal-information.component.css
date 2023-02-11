@@ -1,8 +1,9 @@
 .vertLine {
-  border-right: 1px #ff0000; /* line 1 pixel width, length of "Some content" */
+  border-right: 1px #ff0000;
+  /* line 1 pixel width, length of "Some content" */
 }
 
-.userInfo{
+.userInfo {
   margin-top: 15px;
   padding: 5px;
   height: auto;
@@ -11,7 +12,7 @@
   border-radius: 4px;
 }
 
-.table-responsive{
+.table-responsive {
   overflow-x: auto;
 }
 
@@ -20,15 +21,16 @@ table {
   border-spacing: 0;
   width: 100%;
   border: 1px solid #ddd;
- 
+
 }
 
-th{
+th {
   text-align: left;
   padding: 5px;
   font-size: 12px;
   border: 1px solid #ddd;
 }
+
 td {
   text-align: left;
   padding: 5px;
@@ -36,5 +38,23 @@ td {
   border: 1px solid #ddd;
 }
 
-tr:nth-child(even){background-color: #f2f2f2}
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
 
+.sub-heading {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: -0.022em;
+  color: #1E1E1E;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.add-btn {
+  font-weight: 400;
+  font-size: 13.7006px;
+  line-height: 16px;
+  color: #52C748;
+}

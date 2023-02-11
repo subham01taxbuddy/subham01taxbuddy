@@ -1,6 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="card">
+    
     <form [formGroup]="customerProfileForm">
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-4">
@@ -106,7 +107,7 @@
                 </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-4">
-                <mat-label>Employer Category</mat-label>
+                <mat-label>Employee Category</mat-label>
                 <mat-form-field appearance="outline">
                     <mat-select placeholder="Employer Category" name="employerCategory"
                         formControlName="employerCategory" required>
@@ -198,8 +199,8 @@
             </div>
         </div>
         <div class="">
-            <div class="card__row footer__buttons clearfix" style="margin-top: 40px; text-align: center;">
-                <button class="tbd-btn" (click)="saveProfile('CONTINUE')">Save </button>
+            <div class="card__row footer__buttons clearfix" style="margin-top: 40px;">
+                <button class="tbd-btn save-btn" (click)="saveProfile('CONTINUE')">Save </button>
             </div>
         </div>
     </form>

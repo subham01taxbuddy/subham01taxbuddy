@@ -7,22 +7,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AllPersonalInformationComponent implements OnInit {
   step = 0;
+  hide: boolean=true;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
-
   setStep(index: number) {
     this.step = index;
   }
 
-  nextStep() {
-    this.step++;
+  closed() {
+    this.hide = !this.hide;
+  }
+  editForm(type) {
+    // this.customerProfileForm.enable();
   }
 
-  prevStep() {
-    this.step--;
-  }
+
 }

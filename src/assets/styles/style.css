@@ -594,9 +594,8 @@ a {
 /* [ FOOTER ] */
 
 .footer__buttons {
-  text-align: right;
+  text-align: center;
   margin-top: 20px;
-  padding: 14px 0 19px;
   border-top-width: 1px;
   border-top-style: solid;
 }
