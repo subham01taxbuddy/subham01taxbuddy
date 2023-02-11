@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-prefill-id',
@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PrefillIdComponent implements OnInit {
 
+  @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  skip() {
+    this.skipPrefill.emit(null);
+  }
 }

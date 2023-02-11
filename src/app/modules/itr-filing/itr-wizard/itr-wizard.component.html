@@ -7,41 +7,47 @@
     <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
         <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" /><a class="capitalize text-color-brands"
-          href="#">Pre-fill Data</a>
+          (click)="showPrefillView()">Pre-fill Data</a>
       </div>
-      <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" /><span
-        class="capitalize">Source (salary)</span>
+      <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
+        <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
+        <span class="capitalize" (click)="gotoSources()">Sources</span>
+      </div>
+      <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
+        <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
+        <span class="capitalize">{{selectedSchedule}}</span>
+      </div>
     </div>
-    <div *ngIf="!showIncomeSources">
-      <app-prefill-id></app-prefill-id>
+    <div *ngIf="showPrefill">
+      <app-prefill-id (skipPrefill)="skipPrefill($event)"></app-prefill-id>
     </div>
     <div *ngIf="showIncomeSources">
       <app-source-of-incomes></app-source-of-incomes>
       <mat-accordion>
         <mat-expansion-panel *ngFor="let schedule of componentsList">
           <mat-expansion-panel-header (click)="gotoSchedule(schedule)"> {{schedules.getTitle(schedule)}}</mat-expansion-panel-header>
-<!--          <app-customer-profile *ngIf="schedule === schedules.PERSONAL_INFO"></app-customer-profile>-->
         </mat-expansion-panel>
       </mat-accordion>
+      <hr>
+      <!-- action-buttons  -->
+      <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+        <button (click)="showPrefillView()"
+          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
+          <span class="font-semibold">Back to Prefill Data</span>
+        </button>
 
+        <button
+          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
+          <span class="font-semibold">Go to Summary</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div *ngIf="!showIncomeSources">
       <router-outlet></router-outlet>
     </div>
 
-    <hr>
-    <!-- action-buttons  -->
-    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
-      <button
-        class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
-        <span class="font-semibold">Back to Prefill Data</span>
-      </button>
-
-      <button
-        class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
-        <span class="font-semibold">Go to Summary</span>
-      </button>
-    </div>
-
-  </div>
 
 
 </div>

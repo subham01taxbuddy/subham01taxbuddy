@@ -2,7 +2,7 @@ import { BusinessIncomeComponent } from './../business-income/business-income.co
 import { HousePropertyComponent } from './../house-property/house-property.component';
 import { SalaryComponent } from './../salary/salary.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
-import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
+import {Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -12,6 +12,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
 import {Router} from "@angular/router";
+import { Location } from '@angular/common';
 import { OtherInformationComponent } from './components/other-information/other-information.component';
 
 @Component({
@@ -43,11 +44,14 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   personalInfoSubTab = 0;
   incomeSubTab = 0;
 
-  showIncomeSources = true;
+  showIncomeSources = false;
+  showPrefill = true;
+  selectedSchedule = '';
+
   componentsList = [];
 
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService,
-              private router: Router,
+              private router: Router, private location: Location,
               private schedules: Schedules) { }
 
   ngOnInit() {
@@ -59,9 +63,29 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
+  skipPrefill(event) {
+    this.showPrefill = false;
+    this.showIncomeSources = true;
+  }
+
+  showPrefillView() {
+    this.showPrefill = true;
+    this.showIncomeSources = false;
+    if(this.router.url !== '/itr-filing/itr') {
+      this.location.back();
+    }
+  }
+
   gotoSchedule(schedule) {
+    this.showIncomeSources = false;
+    this.selectedSchedule = this.schedules.getTitle(schedule);
     let componentName = this.schedules.getComponent(schedule);
     this.router.navigate(['/itr-filing/itr/personal-info'])
+  }
+
+  gotoSources() {
+    this.showIncomeSources = true;
+    this.showPrefill = false;
   }
   previousTab(tab) {
     // if (tab === 'personal') {
