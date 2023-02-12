@@ -93,7 +93,8 @@
         <div class="card__row card__col-xs-12">
             <div class="card__title sub-heading mt-2 card__col-xs-10">Bank Details</div>
             <div class="card__col-xs-2 txt-center">
-                <button mat-icon-button color="warn" class="add-btn" (click)="addMoreBanks(this.customerProfileForm)">
+                <button mat-icon-button color="warn" class="add-btn" (click)="addMoreBanks(this.customerProfileForm)"
+                    [disabled]="!isEditPersonal">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Bank
                 </button>
             </div>
@@ -233,7 +234,8 @@
         </div>
 
         <div class="footer__buttons clearfix">
-            <button class="tbd-btn save-btn" (click)="saveProfile('NEXT')">Save
+            <button class="tbd-btn save-btn" [disabled]="!isEditPersonal && customerProfileForm.invalid"
+                (click)="saveProfile('NEXT')">Save
             </button>
         </div>
     </form>

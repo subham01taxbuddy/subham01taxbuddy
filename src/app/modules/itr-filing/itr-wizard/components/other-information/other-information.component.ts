@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -15,6 +15,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 })
 export class OtherInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  @Input() isEditOther = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -61,9 +62,17 @@ export class OtherInformationComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.isEditable();
   }
-  
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.isEditable();
+  }
+
+  isEditable() {
+    return this.isEditOther;
+  }
+
   tabChanged() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));

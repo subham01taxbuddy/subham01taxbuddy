@@ -200,7 +200,7 @@
         </div>
         <div class="">
             <div class="card__row footer__buttons clearfix" style="margin-top: 40px;">
-                <button class="tbd-btn save-btn" (click)="saveProfile('CONTINUE')">Save </button>
+                <button class="tbd-btn save-btn" [disabled]="!isEditCustomer && customerProfileForm.invalid" (click)="saveProfile('CONTINUE')">Save </button>
             </div>
         </div>
     </form>

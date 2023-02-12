@@ -6,7 +6,7 @@
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
       <mat-radio-group name="directorInCompany" (change)="ChangeDirectorStatus()"
-        [(ngModel)]="ITR_JSON.systemFlags.directorInCompany">
+        [(ngModel)]="ITR_JSON.systemFlags.directorInCompany" [disabled]="!isEditOther">
         <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
         </mat-radio-button> &nbsp;&nbsp;&nbsp;
         <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
@@ -30,7 +30,7 @@
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
       <mat-radio-group name="isUnlistedShares" (change)="ChangeSharesStatus()"
-        [(ngModel)]="ITR_JSON.systemFlags.haveUnlistedShares">
+        [(ngModel)]="ITR_JSON.systemFlags.haveUnlistedShares" [disabled]="!isEditOther">
         <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
         </mat-radio-button> &nbsp;&nbsp;&nbsp;
         <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
@@ -50,6 +50,6 @@
 </div>
 
 <div class="footer__buttons clearfix">
-  <button class="tbd-btn save-btn" (click)="saveAndContinue()">Save
+  <button class="tbd-btn save-btn"  [disabled]="!isEditOther" (click)="saveAndContinue()">Save
   </button>
 </div>

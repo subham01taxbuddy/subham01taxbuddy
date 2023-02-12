@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray, ValidationErrors } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -34,6 +34,7 @@ export const MY_FORMATS = {
 })
 export class PersonalInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  @Input() isEditPersonal = false;
 
   customerProfileForm: FormGroup;
   ITR_JSON: ITR_JSON;
@@ -348,15 +349,28 @@ export class PersonalInformationComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.customerProfileForm = this.createCustomerProfileForm();
+    this.isEditable();
     this.setCustomerProfileValues();
     this.getAllBankByIfsc();
     this.stateDropdown = this.stateDropdownMaster;
     this.getDocuments();
-    // this.getItrDocuments();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      this.isEditable();
+    }, 1000);
+  }
+
+  isEditable() {
+    if (this.isEditPersonal) {
+      this.customerProfileForm.enable();
+    } else {
+      this.customerProfileForm.disable();
+    }
   }
 
   tabChanged() {
-    //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.setCustomerProfileValues();
 
@@ -430,7 +444,7 @@ export class PersonalInformationComponent implements OnInit {
 
   deleteBank(index, formGroupName) {
     const bank = <FormArray>formGroupName.get('bankDetails');
-      bank.removeAt(index);
+    bank.removeAt(index);
   }
 
   getAllBankByIfsc() {

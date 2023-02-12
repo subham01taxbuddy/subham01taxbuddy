@@ -9083,6 +9083,10 @@ html:not(.dark) .minimize .moon-icon {
   text-align: center;
 }
 
+.display-flex {
+  display: flex !important;
+}
+
 .headers-align {
   .mat-expansion-panel {
     margin-bottom: 28px;
@@ -9241,6 +9245,12 @@ mat-label {
         pointer-events: visiblefill !important;
       }
     }
+
+    .edit {
+      button {
+        pointer-events: visiblefill !important;
+      }
+    }
   }
 }
 
@@ -9259,7 +9269,7 @@ mat-label {
   color: #1E1E1E;
 }
 
-.card-header{
+.card-header {
   background: rgba(217, 217, 217, 0.15);
   border: 2px solid #E4E4E4;
   border-radius: 5px;

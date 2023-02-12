@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AllPersonalInformationComponent implements OnInit {
   step = 0;
-  hide: boolean=true;
+  hide: boolean = true;
+  isEditCustomer: boolean;
+  isEditOther: boolean;
+  isEditPersonal: boolean;
 
   constructor() { }
 
@@ -17,11 +20,24 @@ export class AllPersonalInformationComponent implements OnInit {
     this.step = index;
   }
 
-  closed() {
-    this.hide = !this.hide;
+  closed(type) {
+    if (type === 'customer') {
+      this.isEditCustomer = false;
+    } else if (type === 'personal') {
+      this.isEditPersonal = false;
+    } else if (type === 'other') {
+      this.isEditOther = false;
+    }
   }
+
   editForm(type) {
-    // this.customerProfileForm.enable();
+    if (type === 'customer') {
+      this.isEditCustomer = true;
+    } else if (type === 'personal') {
+      this.isEditPersonal = true;
+    } else if (type === 'other') {
+      this.isEditOther = true;
+    }
   }
 
 
