@@ -16,6 +16,10 @@ import { AddClientComponent } from './add-client/add-client.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
+import {OtherIncomeComponent} from "./other-income/other-income.component";
+import {InvestmentsDeductionsComponent} from "./investments-deductions/investments-deductions.component";
+import {TaxesPaidComponent} from "./taxes-paid/taxes-paid.component";
+import {DeclarationComponent} from "./declaration/declaration.component";
 
 const routes: Routes = [
     {
@@ -29,8 +33,10 @@ const routes: Routes = [
                     { path: 'prefill', component: PrefillIdComponent },
                     { path: 'sources', component: SourceOfIncomesComponent },
                     { path: 'personal-info', component: AllPersonalInformationComponent },
-
-
+                    { path: 'other-income', component: OtherIncomeComponent },
+                    { path: 'investments-deductions', component: InvestmentsDeductionsComponent },
+                    { path: 'taxes-paid', component: TaxesPaidComponent },
+                    { path: 'declaration', component: DeclarationComponent },
                 ]
             },
             // { path: 'direct-upload', component: DirectUploadComponent },

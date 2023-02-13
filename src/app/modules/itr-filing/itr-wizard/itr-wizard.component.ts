@@ -58,6 +58,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('Inside on init itr wizard');
     this.componentsList.push(this.schedules.PERSONAL_INFO);
+    this.componentsList.push(this.schedules.OTHER_SOURCES);
+    this.componentsList.push(this.schedules.INVESTMENTS_DEDUCTIONS);
+    this.componentsList.push(this.schedules.TAXES_PAID);
+    this.componentsList.push(this.schedules.DECLARATION);
   }
   ngAfterContentChecked() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -79,11 +83,12 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   gotoSchedule(schedule) {
     this.showIncomeSources = false;
     this.selectedSchedule = this.schedules.getTitle(schedule);
-    let componentName = this.schedules.getComponent(schedule);
-    this.router.navigate(['/itr-filing/itr/personal-info'])
+    let navigationPath = this.schedules.getNavigationPath(schedule);
+    this.router.navigate(['/itr-filing/' +navigationPath]);
   }
 
   gotoSources() {
+    this.location.back();
     this.showIncomeSources = true;
     this.showPrefill = false;
   }

@@ -23,11 +23,18 @@
     </div>
     <div *ngIf="showIncomeSources">
       <app-source-of-incomes></app-source-of-incomes>
-      <mat-accordion>
-        <mat-expansion-panel *ngFor="let schedule of componentsList">
-          <mat-expansion-panel-header (click)="gotoSchedule(schedule)"> {{schedules.getTitle(schedule)}}</mat-expansion-panel-header>
-        </mat-expansion-panel>
-      </mat-accordion>
+      <div>
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel *ngFor="let schedule of componentsList" hideToggle>
+            <mat-expansion-panel-header (click)="gotoSchedule(schedule)">
+              <mat-panel-title>{{schedules.getTitle(schedule)}}</mat-panel-title>
+              <mat-icon>
+                arrow_forward_ios
+              </mat-icon>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
       <hr>
       <!-- action-buttons  -->
       <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
