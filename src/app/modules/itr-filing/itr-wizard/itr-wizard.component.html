@@ -1,21 +1,39 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <div class="main clearfix whole-padding">
-  <h2 class="capitalize text-gray-1100 font-bold text-2xl leading-[35px] dark:text-gray-dark-1100 pb-[18px]">
+  <h2
+    class="capitalize text-gray-1100 font-bold text-2xl leading-[35px] pb-[18px]"
+  >
     ITR Filling Process
   </h2>
-  <div style="padding: 0 !important;">
+  <div style="padding: 0 !important">
     <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
-        <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" /><a class="capitalize text-color-brands"
-          (click)="showPrefillView()">Pre-fill Data</a>
+        <img
+          src="../../../../assets/icon-font/icon-home-2.svg"
+          alt="home icon"
+        /><a class="capitalize text-color-brands" (click)="showPrefillView()"
+          >Pre-fill Data</a
+        >
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
-        <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
+        <img
+          src="../../../../assets/icon-font/icon-arrow-right.svg"
+          alt="arrow right icon"
+        />
         <span class="capitalize" (click)="gotoSources()">Sources</span>
       </div>
-      <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
-        <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span class="capitalize">{{selectedSchedule}}</span>
+      <div
+        class="flex items-center gap-x-1"
+        *ngIf="!showIncomeSources && !showPrefill"
+      >
+        <img
+          src="../../../../assets/icon-font/icon-arrow-right.svg"
+          alt="arrow right icon"
+        />
+        <span class="capitalize">{{ selectedSchedule }}</span>
       </div>
     </div>
     <div *ngIf="showPrefill">
@@ -25,36 +43,39 @@
       <app-source-of-incomes></app-source-of-incomes>
       <div>
         <mat-accordion class="headers-align">
-          <mat-expansion-panel *ngFor="let schedule of componentsList" hideToggle>
+          <mat-expansion-panel
+            *ngFor="let schedule of componentsList"
+            hideToggle
+          >
             <mat-expansion-panel-header (click)="gotoSchedule(schedule)">
-              <mat-panel-title>{{schedules.getTitle(schedule)}}</mat-panel-title>
-              <mat-icon>
-                arrow_forward_ios
-              </mat-icon>
+              <mat-panel-title>{{
+                schedules.getTitle(schedule)
+              }}</mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
             </mat-expansion-panel-header>
           </mat-expansion-panel>
         </mat-accordion>
       </div>
-      <hr>
+      <hr />
       <!-- action-buttons  -->
       <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
-        <button (click)="showPrefillView()"
-          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
+        <button
+          (click)="showPrefillView()"
+          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+        >
           <span class="font-semibold">Back to Prefill Data</span>
         </button>
 
         <button
-          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
+          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+        >
           <span class="font-semibold">Go to Summary</span>
         </button>
       </div>
-
     </div>
 
     <div *ngIf="!showIncomeSources">
       <router-outlet></router-outlet>
     </div>
-
-
-
+  </div>
 </div>
