@@ -16,27 +16,33 @@ export class SourceOfIncomesComponent implements OnInit {
   constructor(private schedules: Schedules) {
   }
   ngOnInit(): void {
-    this.sourcesList = [
-      {
-        name: 'Salary', selected: false, schedule: this.schedules.SALARY
-      },
-      {
-        name: 'House Property', selected: false, schedule: this.schedules.HOUSE_PROPERTY
-      }, {
-        name: 'Business / Profession', selected: false, schedule: this.schedules.BUSINESS_INCOME
-      }, {
-        name: 'Capital Gain', selected: false, schedule: this.schedules.CAPITAL_GAIN
-      },
-      {
-        name: 'Futures / Options', selected: false, schedule: this.schedules.SPECULATIVE_INCOME
-      }, {
-        name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
-      }];
+    let sources = sessionStorage.getItem('incomeSources');
+    if(sources != null) {
+      this.sourcesList = JSON.parse(sources);
+    } else {
+      this.sourcesList = [
+        {
+          name: 'Salary', selected: false, schedule: this.schedules.SALARY
+        },
+        {
+          name: 'House Property', selected: false, schedule: this.schedules.HOUSE_PROPERTY
+        }, {
+          name: 'Business / Profession', selected: false, schedule: this.schedules.BUSINESS_INCOME
+        }, {
+          name: 'Capital Gain', selected: false, schedule: this.schedules.CAPITAL_GAIN
+        },
+        {
+          name: 'Futures / Options', selected: false, schedule: this.schedules.SPECULATIVE_INCOME
+        }, {
+          name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
+        }];
+    }
   }
 
   sourcesUpdated(source) {
     let clickedSource = this.sourcesList.filter(item => item.name === source.name)[0];
     clickedSource.selected = !clickedSource.selected;
     this.scheduleSelected.emit(clickedSource);
+    sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
   }
 }

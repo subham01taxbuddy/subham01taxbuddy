@@ -14,6 +14,7 @@ import { Schedules } from "../../shared/interfaces/schedules";
 import {Router} from "@angular/router";
 import { Location } from '@angular/common';
 import { OtherInformationComponent } from './components/other-information/other-information.component';
+import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-incomes.component";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -22,7 +23,7 @@ import { OtherInformationComponent } from './components/other-information/other-
 })
 export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild('stepper', { read: MatStepper }) private stepper: MatStepper;
-  @ViewChild(PersonalInformationComponent) private personalInfoComponent;
+  @ViewChild(SourceOfIncomesComponent) private incomeSourcesComponent;
   @ViewChild(OtherInformationComponent) private otherInfoComponent;
   @ViewChild(SalaryComponent) private salaryComponent;
   @ViewChild(BusinessIncomeComponent) private businessComponent;
@@ -143,15 +144,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.tabIndex = tab.selectedIndex;
     this.getDocuments();
     console.log('tab changed', this.tabIndex)
-  }
-
-  profileTabChanged(event: MatTabChangeEvent) {
-    console.log(event);
-    if(event.index === 1) {
-      this.personalInfoComponent.tabChanged();
-    } else if(event.index === 2) {
-      this.otherInfoComponent.tabChanged();
-    }
   }
 
   incomeTabChanged(event: MatTabChangeEvent) {
