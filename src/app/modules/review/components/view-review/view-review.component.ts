@@ -1,3 +1,5 @@
+import { data } from 'jquery';
+import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
@@ -8,6 +10,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-view-review',
@@ -17,13 +20,13 @@ import { ReviewService } from '../../services/review.service';
 export class ViewReviewComponent implements OnInit {
   reviewGridOptions: GridOptions;
   loading!: boolean;
-  userInfo = [];
+  userInfo :any;
+  userId : any;
   sourceList: any[] = AppConstants.sourceList;
   isDataById: boolean;
   userDetails: any;
   waChatLink = null;
   loggedSmeInfo: any;
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private reviewService: ReviewService,
@@ -224,6 +227,20 @@ export class ViewReviewComponent implements OnInit {
         },
       },
       {
+        headerName: 'UserMatched',
+        field: 'matchedUserId',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: function (params: any) {
+          return `<button type="radio" class="action_icon add_button" title="review given by this user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-circle-o" aria-hidden="true" data-action-type="radio" ></i>
+           </button>`
+          
+        },
+      },
+      {
         headerName: 'Call',
         editable: false,
         suppressMenu: true,
@@ -256,6 +273,8 @@ export class ViewReviewComponent implements OnInit {
         lName: data[i].lName,
         mobileNumber: data[i].mobileNumber,
         email_address: data[i].email_address,
+        userId :data[i].userId,
+        id:data[i].id,
         filer: data[i].filer,
       })
       userArray.push(userInfo);
@@ -270,6 +289,11 @@ export class ViewReviewComponent implements OnInit {
         case 'call': {
           this.call(params.data);
           break;
+        }
+      };
+      switch(actionType){
+        case 'radio':{
+          this.radioValue(params.data);
         }
       }
     }
@@ -297,6 +321,42 @@ export class ViewReviewComponent implements OnInit {
       this.loading = false;
     })
   }
+  
+  radioValue(data){
+    this.loading = true;
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title:'Matched User ?',
+        message: 'Are you sure you Review Given By this User?.'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES'){
+        const param = `/prod/review/byid`;
+        debugger
+        const reqBody = {
+          body:{
+             "matchedUserId":data.userId
+              },
+             "pathParameters":{
+              "id": data.id},
+              "environment": environment.environment
+        }
+        this.userMsService.putMethodAWSURL(param,reqBody).subscribe((response: any) => {
+          if (response.success){
+             this._toastMessageService.alert("success", response.message)
+             this.loading=false;
+            } else {
+             this._toastMessageService.alert("error", response.error)
+             this.loading=false;
+            }
+        }, error => {
+          this.utilsService.showSnackBar('Error while making Match, Please try again.');
+          this.loading = false;
+        })
 
+      }
+      });
+}
 
 }

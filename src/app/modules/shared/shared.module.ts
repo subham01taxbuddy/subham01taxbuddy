@@ -1,3 +1,5 @@
+
+import { MatDialog, MatDialogContent, MatDialogModule } from '@angular/material/dialog';
 import { KommunicateDialogComponent } from '../../pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -37,6 +39,7 @@ import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 import { NumbersOnlyDirective } from './directives/numbers-only.directive';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -69,7 +72,10 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
         CurrencyPipe,
         DigitsOnlyDirective,
         AgTooltipComponent,
-        NumbersOnlyDirective
+        NumbersOnlyDirective,
+        ConfirmDialogComponent,
+        
+    
     ],
     imports: [
         CommonModule,
@@ -85,7 +91,9 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
         // NgxImageZoomModule.forRoot(),
         NgxDocViewerModule,
         NgxLoadingModule.forRoot({}),
-        ShimmerModule
+        ShimmerModule,
+        MatDialogModule,
+        
     ],
     exports: [
         CommonModule,
