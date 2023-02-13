@@ -7,22 +7,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AllPersonalInformationComponent implements OnInit {
   step = 0;
+  hide: boolean = true;
+  isEditCustomer: boolean;
+  isEditOther: boolean;
+  isEditPersonal: boolean;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
-
   setStep(index: number) {
     this.step = index;
   }
 
-  nextStep() {
-    this.step++;
+  closed(type) {
+    if (type === 'customer') {
+      this.isEditCustomer = false;
+    } else if (type === 'personal') {
+      this.isEditPersonal = false;
+    } else if (type === 'other') {
+      this.isEditOther = false;
+    }
   }
 
-  prevStep() {
-    this.step--;
+  editForm(type) {
+    if (type === 'customer') {
+      this.isEditCustomer = true;
+    } else if (type === 'personal') {
+      this.isEditPersonal = true;
+    } else if (type === 'other') {
+      this.isEditOther = true;
+    }
   }
+
+
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -15,6 +15,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 })
 export class OtherInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  @Input() isEditOther = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -32,8 +33,8 @@ export class OtherInformationComponent implements OnInit {
     if (this.ITR_JSON?.directorInCompany === null || this.ITR_JSON?.directorInCompany === undefined) {
       this.ITR_JSON.directorInCompany = [];
     }
-    if(!this.ITR_JSON.systemFlags?.directorInCompany) {
-      if(this.ITR_JSON.systemFlags) {
+    if (!this.ITR_JSON.systemFlags?.directorInCompany) {
+      if (this.ITR_JSON.systemFlags) {
         this.ITR_JSON.systemFlags.directorInCompany = false;
       } else {
         this.ITR_JSON.systemFlags = {
@@ -61,7 +62,15 @@ export class OtherInformationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isEditable();
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.isEditable();
+  }
+
+  isEditable() {
+    return this.isEditOther;
   }
 
   tabChanged() {
@@ -73,8 +82,8 @@ export class OtherInformationComponent implements OnInit {
     if (this.ITR_JSON?.directorInCompany === null || this.ITR_JSON?.directorInCompany === undefined) {
       this.ITR_JSON.directorInCompany = [];
     }
-    if(!this.ITR_JSON.systemFlags?.directorInCompany) {
-      if(this.ITR_JSON.systemFlags) {
+    if (!this.ITR_JSON.systemFlags?.directorInCompany) {
+      if (this.ITR_JSON.systemFlags) {
         this.ITR_JSON.systemFlags.directorInCompany = false;
       } else {
         this.ITR_JSON.systemFlags = {
@@ -95,7 +104,7 @@ export class OtherInformationComponent implements OnInit {
           haveUnlistedShares: false
         }
       }
-    } 
+    }
   }
 
   ChangeSharesStatus() {
@@ -353,7 +362,7 @@ export class OtherInformationComponent implements OnInit {
 
   //
   ChangeDirectorStatus() {
-    
+
     if (this.ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {

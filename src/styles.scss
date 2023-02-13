@@ -9078,6 +9078,15 @@ html:not(.dark) .minimize .moon-icon {
 /*# sourceMappingURL=style.min.css.map */
 
 //new  css written by Sushama
+
+.txt-center {
+  text-align: center;
+}
+
+.display-flex {
+  display: flex !important;
+}
+
 .headers-align {
   .mat-expansion-panel {
     margin-bottom: 28px;
@@ -9113,6 +9122,40 @@ html:not(.dark) .minimize .moon-icon {
   }
 }
 
+.mat-expanded {
+  .isShow {
+    display: block;
+  }
+}
+
+.isShow {
+  display: none;
+}
+
+.edit {
+  text-align: right;
+  margin-top: 20px;
+  padding: 14px 0 19px;
+  border-top-style: solid;
+
+  .edit_btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20.5882px;
+    gap: 6.86px;
+    position: absolute;
+    width: 77.83px;
+    height: 32.21px;
+    left: 975px;
+    top: 18px;
+    background: #E5F2F7;
+    border: 1px solid #797979;
+    border-radius: 6.86273px;
+  }
+}
+
 mat-label {
   display: block;
   font-weight: 500;
@@ -9123,7 +9166,7 @@ mat-label {
   flex: none;
   order: 0;
   flex-grow: 0;
-  margin-bottom: 0;
+  margin-bottom: 2px;
 }
 
 .mat-form-field {
@@ -9191,4 +9234,46 @@ mat-label {
 
 .card__row {
   margin: 0 -10px 0;
+}
+
+.hide-close {
+  mat-expansion-panel-header {
+    pointer-events: none;
+
+    mat-panel-title {
+      mat-icon {
+        pointer-events: visiblefill !important;
+      }
+    }
+
+    .edit {
+      button {
+        pointer-events: visiblefill !important;
+      }
+    }
+  }
+}
+
+.save-btn {
+  background: #EEFFE4;
+  border: 1px solid #9C9C9C;
+  border-radius: 6.86273px;
+  color: #000;
+}
+
+.note {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 150%;
+  letter-spacing: -0.022em;
+  color: #1E1E1E;
+}
+
+.card-header {
+  background: rgba(217, 217, 217, 0.15);
+  border: 2px solid #E4E4E4;
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: 75vw;
+  left: 26.1px;
 }

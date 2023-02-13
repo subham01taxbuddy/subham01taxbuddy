@@ -1,7 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="card">
+
     <form [formGroup]="customerProfileForm">
-        <div class="card__title" style="padding:10px; font-size: 20px;">Address Details</div>
+        <div class="card__row card__col-xs-12">
+            <div class="card__title card__col-xs-8 sub-heading">Address Details</div>
+        </div>
         <div formGroupName="address">
             <div class="card__row">
                 <div class="card__col-xs-12 card__col-sm-3">
@@ -87,26 +90,33 @@
             </div>
         </div>
         <hr>
-        <div class="card__title" style="padding:10px; font-size: 20px;">Bank Details</div>
+        <div class="card__row card__col-xs-12">
+            <div class="card__title sub-heading mt-2 card__col-xs-10">Bank Details</div>
+            <div class="card__col-xs-2 txt-center">
+                <button mat-icon-button color="warn" class="add-btn" (click)="addMoreBanks(this.customerProfileForm)"
+                    [disabled]="!isEditPersonal">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Bank
+                </button>
+            </div>
+        </div>
         <table class="table table-bordered" style="width: 100%;">
             <thead style="background:#eaeaea">
                 <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
-                    <th class="text-center">No</th>
+                    <th class="text-center">Edit</th>
                     <th class="text-center">IFSC Code*</th>
                     <th class="text-center">Name of Bank*</th>
                     <th class="text-center">Account Number*</th>
                     <th class="text-center">Refund Acc.*</th>
-                    <th class="action-th ">
-                        <button mat-icon-button color="warn" class="table-add-remove-button text-left"
-                            (click)="addMoreBanks(this.customerProfileForm)">
-                            <i class="fa fa-plus-square" aria-hidden="true"></i> Add
-                        </button>
-                    </th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody formArrayName="bankDetails">
                 <tr *ngFor="let bank of getBankDetailsArray.controls;let i=index" [formGroupName]="i">
-                    <td> {{i+1}}</td>
+                    <!-- <td> {{i+1}}</td> -->
+                    <td style="padding-left: 15px;">
+                        <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit">
+                        </mat-checkbox>
+                    </td>
                     <td>
                         <mat-form-field class="input-field-width" style="width: 90% !important;">
                             <input type="text" trim upperCase matInput formControlName="ifsCode" placeholder=""
@@ -144,6 +154,7 @@
 
                     <td style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
                         <button mat-icon-button color="warn" class="table-add-remove-button text-left"
+                            [disabled]="!customerProfileForm.controls['bankDetails'].controls[i].controls['hasEdit'].value"
                             (click)="deleteBank(i,this.customerProfileForm)">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
@@ -152,7 +163,7 @@
             </tbody>
         </table>
         <hr>
-        <div class="card__title" style="padding:10px; font-size: 16px;">Tax Regime Selection</div>
+        <div class="card__title sub-heading mt-2">Tax Regime Selection</div>
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-8" style="padding-top: 10px;">
                 Are you opting for New Tax Regime?
@@ -187,14 +198,14 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="card__row" *ngIf="lastFilingDetailsNeeded">
-            <div class="card__col-xs-12 card__col-sm-8 card__title" style="padding-top: 0px; font-size: 12px;">
+        <div class="card__row" *ngIf="lastFilingDetailsNeeded" style="margin-top: 0;">
+            <div class="card__col-xs-12 card__col-sm-8 note mb-5">
                 Please furnish date of filing of form 10-IE along with Acknowledgement number
             </div>
             <div class="card__col-xs-12">
-                <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px;">
+                <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px; padding-left: 0;">
+                    <mat-label>Acknowledgement Number</mat-label>
                     <mat-form-field appearance="outline">
-                        <mat-label>Acknowledgement Number</mat-label>
                         <input matInput maxlength="15" minlength="15"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             disabled placeholder="Acknowledgement Number" digitsOnly formControlName="form10IEAckNo"
@@ -207,8 +218,8 @@
                     </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px;">
+                    <mat-label>Date of filling</mat-label>
                     <mat-form-field appearance="outline">
-                        <mat-label>Date of filling</mat-label>
                         <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly
                             [matDatepicker]="picker1" autocomplete="off" formControlName="form10IEDate">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -223,10 +234,8 @@
         </div>
 
         <div class="footer__buttons clearfix">
-            <!--  <button class="tbd-btn-secondary" (click)="previousRoute()"><i class="fa fa-arrow-left"
-                    aria-hidden="true"></i>
-                &nbsp;&nbsp;Back</button> -->
-            <button class="tbd-btn" (click)="saveProfile('NEXT')">Save and Continue
+            <button class="tbd-btn save-btn" [disabled]="!isEditPersonal && customerProfileForm.invalid"
+                (click)="saveProfile('NEXT')">Save
             </button>
         </div>
     </form>

@@ -4,7 +4,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
@@ -55,7 +55,7 @@ export const MY_FORMATS = {
 })
 export class CustomerProfileComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-
+  @Input() isEditCustomer = false;
   loading: boolean = false;
   imageLoader: boolean = false;
   customerProfileForm: FormGroup;
@@ -144,12 +144,28 @@ export class CustomerProfileComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.customerProfileForm = this.createCustomerProfileForm();
+    this.isEditable();
     this.setCustomerProfileValues();
     this.changeReviseForm();
     this.getDocuments();
     this.getSmeList();
 
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      this.isEditable();
+    }, 1000);
+  }
+
+  isEditable() {
+    if (this.isEditCustomer) {
+      this.customerProfileForm.enable();
+    } else {
+      this.customerProfileForm.disable();
+    }
+  }
+
   zoom: number = 1.0;
   incrementZoom(amount: number) {
     this.zoom += amount;
@@ -671,6 +687,8 @@ export class CustomerProfileComponent implements OnInit {
 
     this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
   }
+
+
 
 }
 

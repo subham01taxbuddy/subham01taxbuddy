@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray, ValidationErrors } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -34,6 +34,7 @@ export const MY_FORMATS = {
 })
 export class PersonalInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  @Input() isEditPersonal = false;
 
   customerProfileForm: FormGroup;
   ITR_JSON: ITR_JSON;
@@ -348,23 +349,36 @@ export class PersonalInformationComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.customerProfileForm = this.createCustomerProfileForm();
+    this.isEditable();
     this.setCustomerProfileValues();
     this.getAllBankByIfsc();
     this.stateDropdown = this.stateDropdownMaster;
     this.getDocuments();
-    // this.getItrDocuments();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      this.isEditable();
+    }, 1000);
+  }
+
+  isEditable() {
+    if (this.isEditPersonal) {
+      this.customerProfileForm.enable();
+    } else {
+      this.customerProfileForm.disable();
+    }
   }
 
   tabChanged() {
-    //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.setCustomerProfileValues();
-    
+
   }
 
   createCustomerProfileForm(): FormGroup {
     let itrFilingDueDate = sessionStorage.getItem('itrFilingDueDate');
-    if(Date() > itrFilingDueDate) {
+    if (Date() > itrFilingDueDate) {
       console.log('Due date is over');
     }
 
@@ -379,7 +393,7 @@ export class PersonalInformationComponent implements OnInit {
       // aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       // residentialStatus: ['RESIDENT'],
-      regime: [{value:'', disabled:Date() > itrFilingDueDate}, Validators.required],
+      regime: [{ value: '', disabled: Date() > itrFilingDueDate }, Validators.required],
       previousYearRegime: ['', Validators.required],
       address: this.fb.group({
         flatNo: ['', Validators.required],
@@ -400,16 +414,17 @@ export class PersonalInformationComponent implements OnInit {
       form10IEAckNo: null,
       form10IEDate: null
     });
-    
+
   }
 
-  createBankDetailsForm(obj: { ifsCode?: string, name?: String, accountNumber?: string, hasRefund?: boolean } = {}): FormGroup {
+  createBankDetailsForm(obj: { ifsCode?: string, name?: String, accountNumber?: string, hasRefund?: boolean, hasEdit?: boolean } = {}): FormGroup {
     return this.fb.group({
       ifsCode: [obj.ifsCode || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.IFSCRegex)])],
       countryName: ['91', Validators.required],
       name: [obj.name || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
       accountNumber: [obj.accountNumber || '', Validators.compose([Validators.minLength(3), Validators.maxLength(20), Validators.required, Validators.pattern(AppConstants.numericRegex)])],
-      hasRefund: [obj.hasRefund || false]
+      hasRefund: [obj.hasRefund || false],
+      hasEdit: [obj.hasEdit || false]
     });
   }
 
