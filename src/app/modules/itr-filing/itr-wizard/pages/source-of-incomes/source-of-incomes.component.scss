@@ -1,0 +1,36 @@
+.sources-chip .mat-chip {
+  background-color: #FFFFFF;
+  border: 1.94547px solid #E3E3E3;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 19.4547px 29.1821px;
+  gap: 19.45px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 23.3456px;
+  line-height: 31px;
+  /* identical to box height, or 133% */
+
+  text-align: center;
+
+  /* Neutral/Neutral 500 [day] */
+
+  color: #7E7E8F;
+}
+
+.sources-chip .mat-chip-selected {
+  background-color: #00AECA;
+  color: #FFFFFF;
+}
+
+.mat-chip:after{
+  background-color: #FFFFFF;
+}
+
+.box-background {
+  background: rgba(255, 255, 255, 0.3);
+}

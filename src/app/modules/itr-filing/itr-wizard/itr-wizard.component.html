@@ -22,7 +22,7 @@
       <app-prefill-id (skipPrefill)="skipPrefill($event)"></app-prefill-id>
     </div>
     <div *ngIf="showIncomeSources">
-      <app-source-of-incomes></app-source-of-incomes>
+      <app-source-of-incomes (scheduleSelected)="updateSchedules($event)"></app-source-of-incomes>
       <div>
         <mat-accordion class="headers-align">
           <mat-expansion-panel *ngFor="let schedule of componentsList" hideToggle>

@@ -1,48 +1,22 @@
 <div class="mx-auto text-gray-900 font-normal grid grid-rows-[auto,1fr] scrollbar-hide" id="layout">
     <!-- main-body  -->
-    <main class="overflow-x-scroll scrollbar-hide flex flex-col justify-between px-[23px] pb-[28px] h-screen">
-        <div>
+    <div class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pb-[28px] h-screen">
+        <div class="box-background dark:border-dark-neutral-border rounded-2x1">
 
             <!-- sourcesOfIncome-content  -->
             <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
                 <div
-                    class="flex flex-1 border dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2x1 p-[25px]">
+                    class="flex flex-1 dark:bg-dark-neutral-bg p-[25px]">
                     <!-- sources-of-income options  -->
-                    <div class="flex basis-1/2 items-center flex-wrap gap-[10px]">
-                        <button
-                            class="btn bg-neutral text-gray-500 leading-3 rounded-[50px] dark:bg-dark-neutral-border py-[10px] px-[18px] dark:text-gray-dark-500 text-[10px]"
-                            href="#">
-                            Salary
-                        </button>
-                        <button
-                            class="btn bg-neutral text-gray-500 leading-3 rounded-[50px] dark:bg-dark-neutral-border py-[10px] px-[18px] dark:text-gray-dark-500 text-[10px]"
-                            href="#">
-                            House Property
-                        </button>
-                        <button
-                            class="btn bg-neutral text-gray-500 leading-3 rounded-[50px] dark:bg-dark-neutral-border py-[10px] px-[18px] dark:text-gray-dark-500 text-[10px]"
-                            href="#">
-                            Business / Profession
-                        </button>
-                        <button
-                            class="btn bg-neutral text-gray-500 leading-3 rounded-[50px] dark:bg-dark-neutral-border py-[10px] px-[18px] dark:text-gray-dark-500 text-[10px]"
-                            href="#">
-                            Capital Gain
-                        </button>
-                        <button
-                            class="btn bg-neutral text-gray-500 leading-3 rounded-[50px] dark:bg-dark-neutral-border py-[10px] px-[18px] dark:text-gray-dark-500 text-[10px]"
-                            href="#">
-                            Futures / Options
-                        </button>
-                        <button
-                            class="btn bg-neutral text-gray-500 leading-3 rounded-[50px] dark:bg-dark-neutral-border py-[10px] px-[18px] dark:text-gray-dark-500 text-[10px]"
-                            href="#">
-                            Foreign Income / NRI
-                        </button>
-                    </div>
+                    <mat-chip-list class="sources-chip" multiple (change)="sourcesUpdated($event)">
+                        <mat-chip disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"
+                        [selected]="source.selected">
+                            {{source.name}}
+                        </mat-chip>
+                    </mat-chip-list>
                 </div>
             </div>
 
         </div>
-    </main>
+    </div>
 </div>

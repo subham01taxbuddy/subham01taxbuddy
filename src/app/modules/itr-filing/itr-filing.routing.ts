@@ -20,6 +20,13 @@ import {OtherIncomeComponent} from "./other-income/other-income.component";
 import {InvestmentsDeductionsComponent} from "./investments-deductions/investments-deductions.component";
 import {TaxesPaidComponent} from "./taxes-paid/taxes-paid.component";
 import {DeclarationComponent} from "./declaration/declaration.component";
+import {SalaryComponent} from "./salary/salary.component";
+import {HousePropertyComponent} from "./house-property/house-property.component";
+import {BusinessComponent} from "./business/business.component";
+import {CapitalGainComponent} from "./capital-gain/capital-gain.component";
+import {
+  SpeculativeIncomeComponent
+} from "./business-income/profit-loss-ac/speculative-income/speculative-income.component";
 
 const routes: Routes = [
     {
@@ -37,6 +44,12 @@ const routes: Routes = [
                     { path: 'investments-deductions', component: InvestmentsDeductionsComponent },
                     { path: 'taxes-paid', component: TaxesPaidComponent },
                     { path: 'declaration', component: DeclarationComponent },
+                    { path: 'salary', component: SalaryComponent },
+                    { path: 'house-property', component: HousePropertyComponent },
+                    { path: 'business', component: BusinessComponent },
+                    { path: 'capital-gain', component: CapitalGainComponent },
+                    { path: 'future-options', component: SpeculativeIncomeComponent },
+                    // { path: 'nri', component: ForeeignIncomeComponent },
                 ]
             },
             // { path: 'direct-upload', component: DirectUploadComponent },
