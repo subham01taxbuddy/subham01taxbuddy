@@ -2,7 +2,7 @@ import { BusinessIncomeComponent } from './../business-income/business-income.co
 import { HousePropertyComponent } from './../house-property/house-property.component';
 import { SalaryComponent } from './../salary/salary.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
-import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
+import {Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -12,7 +12,9 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
 import {Router} from "@angular/router";
+import { Location } from '@angular/common';
 import { OtherInformationComponent } from './components/other-information/other-information.component';
+import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-incomes.component";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -21,7 +23,7 @@ import { OtherInformationComponent } from './components/other-information/other-
 })
 export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild('stepper', { read: MatStepper }) private stepper: MatStepper;
-  @ViewChild(PersonalInformationComponent) private personalInfoComponent;
+  @ViewChild(SourceOfIncomesComponent) private incomeSourcesComponent;
   @ViewChild(OtherInformationComponent) private otherInfoComponent;
   @ViewChild(SalaryComponent) private salaryComponent;
   @ViewChild(BusinessIncomeComponent) private businessComponent;
@@ -43,26 +45,64 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   personalInfoSubTab = 0;
   incomeSubTab = 0;
 
-  showIncomeSources = true;
+  showIncomeSources = false;
+  showPrefill = true;
+  selectedSchedule = '';
+
   componentsList = [];
 
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService,
-              private router: Router,
+              private router: Router, private location: Location,
               private schedules: Schedules) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('Inside on init itr wizard');
     this.componentsList.push(this.schedules.PERSONAL_INFO);
+    this.componentsList.push(this.schedules.OTHER_SOURCES);
+    this.componentsList.push(this.schedules.INVESTMENTS_DEDUCTIONS);
+    this.componentsList.push(this.schedules.TAXES_PAID);
+    this.componentsList.push(this.schedules.DECLARATION);
   }
   ngAfterContentChecked() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
-  gotoSchedule(schedule) {
-    let componentName = this.schedules.getComponent(schedule);
-    this.router.navigate(['/itr-filing/itr/personal-info'])
+  skipPrefill(event) {
+    this.showPrefill = false;
+    this.showIncomeSources = true;
   }
+
+  showPrefillView() {
+    this.showPrefill = true;
+    this.showIncomeSources = false;
+    if(this.router.url !== '/itr-filing/itr') {
+      this.location.back();
+    }
+  }
+
+  gotoSchedule(schedule) {
+    this.showIncomeSources = false;
+    this.selectedSchedule = this.schedules.getTitle(schedule);
+    let navigationPath = this.schedules.getNavigationPath(schedule);
+    this.router.navigate(['/itr-filing/' +navigationPath]);
+  }
+
+  gotoSources() {
+    this.location.back();
+    this.showIncomeSources = true;
+    this.showPrefill = false;
+  }
+
+  updateSchedules(scheduleInfo) {
+    if(scheduleInfo.selected) {
+      let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
+      this.componentsList.splice(index, 0, scheduleInfo.schedule);
+    } else {
+      this.componentsList = this.componentsList.filter(item => item !== scheduleInfo.schedule);
+    }
+  }
+
   previousTab(tab) {
     // if (tab === 'personal') {
     //   this.progressBarValue = 20;
@@ -104,15 +144,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.tabIndex = tab.selectedIndex;
     this.getDocuments();
     console.log('tab changed', this.tabIndex)
-  }
-
-  profileTabChanged(event: MatTabChangeEvent) {
-    console.log(event);
-    if(event.index === 1) {
-      this.personalInfoComponent.tabChanged();
-    } else if(event.index === 2) {
-      this.otherInfoComponent.tabChanged();
-    }
   }
 
   incomeTabChanged(event: MatTabChangeEvent) {
