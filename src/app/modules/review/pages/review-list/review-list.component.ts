@@ -382,8 +382,8 @@ export class ReviewListComponent implements OnInit {
 
   getReview(pageNo) {
     let pagination = `page=${pageNo}&pageSize=12`;
-    let platform = (this.selectPlatform && this.selectPlatform != 'All') ? `&platform=${this.selectPlatform}` : '';
-    let status = (this.selectStatus && this.selectStatus != 'All') ? `&status=${this.selectStatus}` : '';
+    let platform = ( this.selectPlatform = 'All') ? `&platform=${this.selectPlatform}` : '';
+    let status = ( this.selectStatus = 'OPEN') ? `&status=${this.selectStatus}` : '';
 
     if (this.selectStatus || this.selectPlatform) {
       var param = `review?environment=${environment.environment}&${pagination}` + status + platform;
