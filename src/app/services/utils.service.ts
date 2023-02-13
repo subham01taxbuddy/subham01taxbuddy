@@ -800,4 +800,12 @@ export class UtilsService {
         return this.itrMsService.getMethod(param);
     }
 
+    getCgSummary(userId, assessmentYear) {
+        const param = '/cg-summary';
+        const formData = new FormData();
+        formData.append("userId", userId);
+        formData.append("assessmentYear", assessmentYear);
+        return this.itrMsService.getMethod(param);
+    }
+
 }

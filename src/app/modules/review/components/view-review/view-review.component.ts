@@ -52,7 +52,7 @@ export class ViewReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewReviewById();
-    // this.getWhatsAppLink();
+    this.getWhatsAppLink();
   }
 
   viewReviewById() {
@@ -134,7 +134,7 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'First Name',
         field: 'fName',
-        width: 140,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -153,7 +153,7 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'Last Name',
         field: 'lName',
-        width: 140,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -210,7 +210,7 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'Name of the SME',
         field: 'filer',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -333,21 +333,21 @@ export class ViewReviewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES'){
         const param = `/prod/review/byid`;
+        debugger
         const reqBody = {
           body:{
              "matchedUserId":data.userId
               },
              "pathParameters":{
-              "id": this.data.leadData.id},
+              "id": data.id},
               "environment": environment.environment
         }
         this.userMsService.putMethodAWSURL(param,reqBody).subscribe((response: any) => {
-          this.loading = false;
           if (response.success){
              this._toastMessageService.alert("success", response.message)
              this.loading=false;
             } else {
-             this._toastMessageService.alert("error", response.message)
+             this._toastMessageService.alert("error", response.error)
              this.loading=false;
             }
         }, error => {
