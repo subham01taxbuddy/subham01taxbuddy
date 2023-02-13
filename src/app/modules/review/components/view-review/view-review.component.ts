@@ -333,7 +333,6 @@ export class ViewReviewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES'){
         const param = `/prod/review/byid`;
-        debugger
         const reqBody = {
           body:{
              "matchedUserId":data.userId
