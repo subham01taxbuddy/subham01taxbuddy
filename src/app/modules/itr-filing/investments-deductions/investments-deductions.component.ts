@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { AddDonationDialogComponent } from './add-donation-dialog/add-donation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 declare let $: any;
@@ -17,6 +16,7 @@ declare let $: any;
 })
 export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   @Output() saveAndNext = new EventEmitter<any>();
+  step = 0;
 
   loading: boolean = false;
   investmentDeductionForm: FormGroup;
@@ -552,8 +552,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     if (self instanceof Array && self.length > 0) {
       this.userAge = self[0].age
     }
-    if(!this.ITR_JSON.systemFlags?.hasParentOverSixty) {
-      if(this.ITR_JSON.systemFlags) {
+    if (!this.ITR_JSON.systemFlags?.hasParentOverSixty) {
+      if (this.ITR_JSON.systemFlags) {
         this.ITR_JSON.systemFlags.hasParentOverSixty = false;
       } else {
         this.ITR_JSON.systemFlags = {
@@ -598,7 +598,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
-      hasParentOverSixty:[null]
+      hasParentOverSixty: [null]
     });
     this.setInvestmentsDeductionsValues();
     this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
@@ -636,7 +636,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         } else {
           if (item === 'us80e') {
             this.ITR_JSON.loans = this.ITR_JSON.loans?.filter((item: any) => item.loanType !== 'EDUCATION');
-            if(!this.ITR_JSON.loans){
+            if (!this.ITR_JSON.loans) {
               this.ITR_JSON.loans = [];
             }
             this.ITR_JSON.loans?.push({
@@ -649,7 +649,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
             });
           } else if (item === 'us80gg') {
             this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID');
-            if(!this.ITR_JSON.expenses) {
+            if (!this.ITR_JSON.expenses) {
               this.ITR_JSON.expenses = [];
             }
             if (!this.ITR_JSON.systemFlags.hraAvailed) {
@@ -663,7 +663,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
             }
           } else if (item === 'us80ggc') {
             this.ITR_JSON.donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType !== 'POLITICAL');
-            if(!this.ITR_JSON.donations) {
+            if (!this.ITR_JSON.donations) {
               this.ITR_JSON.donations = [];
             }
             this.ITR_JSON.donations?.push({
@@ -682,7 +682,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
             });
           } else if (item === 'us80eeb') {
             this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE');
-            if(!this.ITR_JSON.expenses) {
+            if (!this.ITR_JSON.expenses) {
               this.ITR_JSON.expenses = [];
             }
             this.ITR_JSON.expenses?.push({
@@ -696,7 +696,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
       });
       this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "DEPENDANT");
-      if(!this.ITR_JSON.insurances) {
+      if (!this.ITR_JSON.insurances) {
         this.ITR_JSON.insurances = [];
       }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
@@ -714,13 +714,13 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         });
       }
       this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "PARENTS");
-      if(!this.ITR_JSON.insurances) {
+      if (!this.ITR_JSON.insurances) {
         this.ITR_JSON.insurances = [];
       }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
-          this.ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
         this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
@@ -839,7 +839,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
 
       if (!isAdded) {
-        if(!this.ITR_JSON.investments) {
+        if (!this.ITR_JSON.investments) {
           this.ITR_JSON.investments = [];
         }
         this.ITR_JSON.investments?.push({
@@ -860,31 +860,29 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   addDonation(title, mode, selectedData, donationType) {
-    const data = {
-      title: title,
-      mode: mode,
-      selectedData: selectedData,
-      ITR_JSON: this.ITR_JSON,
-      donationType: donationType
-    };
-    const dialogRef = this.matDialog.open(AddDonationDialogComponent, {
-      data: data,
-      closeOnNavigation: true,
-      width: '800px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add past year=', result);
-      if (result !== undefined && result !== '' && result !== null) {
-        this.ITR_JSON = result;
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        if (donationType === 'OTHER') {
-          this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
-        } /* else if (donationType === 'SCIENTIFIC') {
-          this.scientificDonationGridOptions.api?.setRowData(this.createRowData('SCIENTIFIC'));
-        } */
-      }
-    });
+    // const data = {
+    //   title: title,
+    //   mode: mode,
+    //   selectedData: selectedData,
+    //   ITR_JSON: this.ITR_JSON,
+    //   donationType: donationType
+    // };
+    // const dialogRef = this.matDialog.open(AddDonationDialogComponent, {
+    //   data: data,
+    //   closeOnNavigation: true,
+    //   width: '800px'
+    // });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('Result add past year=', result);
+    //   if (result !== undefined && result !== '' && result !== null) {
+    //     this.ITR_JSON = result;
+    //     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+    //     if (donationType === 'OTHER') {
+    //       this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
+    //     } 
+    //   }
+    // });
   }
   donationCallInConstructor(otherDonationToDropdown, stateDropdown) {
     this.DonationGridOptions = <GridOptions>{
@@ -1075,7 +1073,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   serviceCall(val, ITR_JSON) {
-    
+
     this.loading = true;
     this.utilsService.saveItrObject(ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
@@ -1278,5 +1276,21 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         this.investmentDeductionForm.controls['premium'].disable();
       }
     }
+  }
+
+  addNotes() {
+
+  }
+
+  editForm() {
+
+  }
+
+  closed() {
+
+  }
+
+  setStep(index: number) {
+    this.step = index;
   }
 }
