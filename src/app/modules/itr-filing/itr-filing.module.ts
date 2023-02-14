@@ -81,6 +81,8 @@ import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal
 import { OtherInformationComponent } from './itr-wizard/components/other-information/other-information.component';
 import { UnlistedSharesComponent } from './itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component';
 import { DirectorInCompanyComponent } from './itr-wizard/components/other-information/director-in-company/director-in-company.component';
+import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
+import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-deductions/investment-deductions.component';
 
 @NgModule({
   imports: [
@@ -170,6 +172,8 @@ import { DirectorInCompanyComponent } from './itr-wizard/components/other-inform
     PrefillIdComponent,
     SourceOfIncomesComponent,
     AllPersonalInformationComponent,
+    MedicalExpensesComponent,
+    InvestmentDeductionsComponent,
   ],
   exports: [
     CustomerProfileComponent
