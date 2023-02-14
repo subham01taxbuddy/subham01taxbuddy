@@ -26,6 +26,9 @@ import { BusinessComponent } from './business/business.component';
 import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-deductions/investment-deductions.component';
+import {
+  ForeignIncomeComponent
+} from "./itr-wizard/pages/foreign-income/foreign-income.component";
 
 const routes: Routes = [
   {
@@ -53,7 +56,7 @@ const routes: Routes = [
           { path: 'business', component: BusinessComponent },
           { path: 'capital-gain', component: CapitalGainComponent },
           { path: 'future-options', component: SpeculativeIncomeComponent },
-          // { path: 'nri', component: ForeeignIncomeComponent },
+          { path: 'nri', component: ForeignIncomeComponent },
         ],
       },
       // { path: 'direct-upload', component: DirectUploadComponent },
