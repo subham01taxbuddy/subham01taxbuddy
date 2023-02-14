@@ -555,7 +555,7 @@ select {
   animation: button-pop var(--animation-btn, 0.25s) ease-out;
   background-color: hsl(var(--n) / var(--tw-bg-opacity));
   border-color: transparent;
-  border-color: hsl(var(--n) / var(--tw-border-opacity));
+  //border-color: hsl(var(--n) / var(--tw-border-opacity));
   border-radius: var(--rounded-btn, 0.5rem);
   border-width: var(--border-btn, 1px);
   color: hsl(var(--nc) / var(--tw-text-opacity));
