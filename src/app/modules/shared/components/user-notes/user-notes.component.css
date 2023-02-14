@@ -1,31 +1,59 @@
 .flex-70 {
-    flex-basis: 70% !important;
+  flex-basis: 70% !important;
 }
 .flex-15 {
-    flex-basis: 15% !important;
+  flex-basis: 15% !important;
 }
 
-.notes{
-    /* max-height: 80%;
+.notes {
+  /* max-height: 80%;
     overflow-y: scroll; */
-    overflow: hidden;
+  overflow: hidden;
 }
 
-.text{
-    text-align: center;
-    font-size: 16px;
-    padding: 40px 20px;
+.text {
+  text-align: center;
+  font-size: 16px;
+  padding: 40px 20px;
 }
 
-.tableFixHead    {
-    overflow: hidden;
-    /* height: 400px;
+.tableFixHead {
+  overflow: hidden;
+  /* height: 400px;
     margin: 20px 5px; */
-    font-size: 14px;
-    }
+  font-size: 14px;
+}
 /* .tableFixHead th { position: sticky; top: 0; } */
 
 /* Just common table stuff. */
-table  { border-collapse: collapse; width: 100%; }
-th, td { padding: 8px 16px; text-align: left; }
-th     { background:#eee; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  padding: 8px 16px;
+  text-align: left;
+}
+th {
+  background: #eee;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.service-input {
+  width: 100%;
+}
+
+.notes-input {
+  width: 100%;
+}
+
+.add-notes {
+  width: 100%;
+}
