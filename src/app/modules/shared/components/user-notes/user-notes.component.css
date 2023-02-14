@@ -8,7 +8,7 @@
 .notes{
     /* max-height: 80%;
     overflow-y: scroll; */
-    overflow: auto;
+    overflow: hidden;
 }
 
 .text{
@@ -18,14 +18,14 @@
 }
 
 .tableFixHead    {
-    overflow: auto;
-    height: 400px;
-    margin: 20px 5px;
+    overflow: hidden;
+    /* height: 400px;
+    margin: 20px 5px; */
     font-size: 14px;
     }
-.tableFixHead th { position: sticky; top: 0; }
+/* .tableFixHead th { position: sticky; top: 0; } */
 
 /* Just common table stuff. */
 table  { border-collapse: collapse; width: 100%; }
-th, td { padding: 8px 16px; }
+th, td { padding: 8px 16px; text-align: left; }
 th     { background:#eee; }

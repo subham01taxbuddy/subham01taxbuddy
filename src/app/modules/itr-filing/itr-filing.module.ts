@@ -22,8 +22,8 @@ import { PersonalInformationComponent } from './itr-wizard/components/personal-i
 import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
-import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
-import { AddDonationDialogComponent } from './investments-deductions/add-donation-dialog/add-donation-dialog.component';
+import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
+import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
 import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';

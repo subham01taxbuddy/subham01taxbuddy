@@ -1,1 +1,95 @@
 <p>donations works!</p>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<form [formGroup]="donationForm">
+
+    <div class="card__row card__col-xs-12">
+        <div class="card__title sub-heading mt-2 card__col-xs-10">Bank Details</div>
+        <div class="card__col-xs-2 txt-center">
+            <button mat-icon-button color="warn" class="add-btn" (click)="addMoreDonations(this.donationForm)"
+                [disabled]="!isEditPersonal">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Bank
+            </button>
+        </div>
+    </div>
+    <table class="table table-bordered" style="width: 100%;">
+        <thead style="background:#eaeaea">
+            <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
+                <th class="text-center">Edit</th>
+                <th class="text-center">Donation Type*</th>
+                <th class="text-center">Amount in cash*</th>
+                <th class="text-center">Amount Other Than Cash*</th>
+                <th class="text-center">Name of donee*</th>
+                <th class="text-center">Address </th>
+                <th class="text-center">PIN </th>
+                <th class="text-center">City/Taluka/District </th>
+                <th class="text-center">State </th>
+                <th class="text-center">PAN of done </th>
+                <th class="text-center">Action </th>
+            </tr>
+        </thead>
+        <tbody formArrayName="donationDetails">
+            <tr *ngFor="let bank of getDonationDetailsArray.controls;let i=index" [formGroupName]="i">
+                <!-- <td> {{i+1}}</td> -->
+                <td style="padding-left: 15px;">
+                    <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit">
+                    </mat-checkbox>
+                </td>
+                <td>
+                    <mat-form-field class="input-field-width" style="width: 90% !important;">
+                        <mat-select (selectionChange)="displayTooltip()" matTooltip="{{donationToolTip}}"
+                            matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder=""
+                            formControlName="schemeCode" required>
+                            <mat-option *ngFor="let dropdown of otherDonationToDropdown" [value]="dropdown.value"
+                                matTooltip="{{dropdown.label}}" matTooltipClass="tab-tooltip"
+                                matTooltipPosition="above">
+                                {{ dropdown.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+
+                <td>
+                    <mat-form-field class="input-field-width" style="width: 90% !important;">
+                        <mat-form-field appearance="outline">
+                            <input formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
+                                required class="input-field" maxlength="14" digitsOnly>
+                            <mat-error
+                                *ngIf="donationForm.controls['donationDetails'].controls[i].controls['amountInCash'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
+                        </mat-form-field>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field class="input-field-width" style="width: 90% !important;">
+                        <mat-form-field>
+                            <input formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
+                                name="amount" required class="input-field" maxlength="14" digitsOnly>
+                            <mat-error
+                                *ngIf="donationForm.controls['donationDetails'].controls[i].controls['amountOtherThanCash'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
+                        </mat-form-field>
+                    </mat-form-field>
+                </td>
+                <td style="padding-left: 15px;">
+                    <mat-form-field>
+                        <mat-label>Name of donee</mat-label>
+                        <input formControlName="name" matInput placeholder="Name of donee" name="name" class="input-field"
+                          maxlength="125" required type="text" trim>
+                        <mat-error *ngIf="generalDonationForm.controls['name'].hasError('pattern')">
+                          Name should be character only</mat-error>
+                      </mat-form-field>
+                </td>
+
+                <td style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
+                    <button mat-icon-button color="warn" class="table-add-remove-button text-left"
+                        [disabled]="!donationForm.controls['donationDetails'].controls[i].controls['hasEdit'].value"
+                        (click)="deleteBank(i,this.donationForm)">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>

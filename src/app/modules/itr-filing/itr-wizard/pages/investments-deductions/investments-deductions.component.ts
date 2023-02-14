@@ -6,6 +6,8 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
+import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { AddDonationDialogComponent } from './add-donation-dialog/add-donation-dialog.component';
 declare let $: any;
 
 
@@ -543,9 +545,12 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     "status": true
   }];
 
-  constructor(public utilsService: UtilsService, private fb: FormBuilder,
+  constructor(
+    public utilsService: UtilsService,
+    private fb: FormBuilder,
     private itrMsService: ItrMsService,
-    public matDialog: MatDialog,) {
+    public matDialog: MatDialog,
+  ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF')
@@ -860,29 +865,29 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   addDonation(title, mode, selectedData, donationType) {
-    // const data = {
-    //   title: title,
-    //   mode: mode,
-    //   selectedData: selectedData,
-    //   ITR_JSON: this.ITR_JSON,
-    //   donationType: donationType
-    // };
-    // const dialogRef = this.matDialog.open(AddDonationDialogComponent, {
-    //   data: data,
-    //   closeOnNavigation: true,
-    //   width: '800px'
-    // });
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('Result add past year=', result);
-    //   if (result !== undefined && result !== '' && result !== null) {
-    //     this.ITR_JSON = result;
-    //     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-    //     if (donationType === 'OTHER') {
-    //       this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
-    //     } 
-    //   }
-    // });
+    const data = {
+      title: title,
+      mode: mode,
+      selectedData: selectedData,
+      ITR_JSON: this.ITR_JSON,
+      donationType: donationType
+    };
+    const dialogRef = this.matDialog.open(AddDonationDialogComponent, {
+      data: data,
+      closeOnNavigation: true,
+      width: '800px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Result add past year=', result);
+      if (result !== undefined && result !== '' && result !== null) {
+        this.ITR_JSON = result;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        if (donationType === 'OTHER') {
+          this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
+        } 
+      }
+    });
   }
   donationCallInConstructor(otherDonationToDropdown, stateDropdown) {
     this.DonationGridOptions = <GridOptions>{
@@ -1278,10 +1283,21 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     }
   }
 
-  addNotes() {
+  openNotesDialog(client) {
+    let disposable = this.matDialog.open(UserNotesComponent, {
+      width: '60vw',
+      height: '90vh',
+      data: {
+        title: 'Add Notes',
+        userId: this.ITR_JSON.userId,
+        clientName: this.ITR_JSON.family[0].fName + " " + this.ITR_JSON.family[0].lName,
+        serviceType: 'ITR'
+      }
+    })
 
+    disposable.afterClosed().subscribe(result => {
+    });
   }
-
   editForm() {
 
   }
