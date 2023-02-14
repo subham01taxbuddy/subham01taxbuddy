@@ -13,14 +13,14 @@ export class AppComponent {
   constructor(
     private router: Router,
   ) {
-    router.events.subscribe((val) => {
-      console.log(val);
-      if (val instanceof NavigationEnd) {
-        if (val.urlAfterRedirects != '/login') {
-          // this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');
-        }
-      }
-    });
+    // router.events.subscribe((val) => {
+    //   console.log(val);
+    //   if (val instanceof NavigationEnd) {
+    //     if (val.urlAfterRedirects != '/login') {
+    //       // this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');
+    //     }
+    //   }
+    // });
 
     (function (d, m) {
       var kommunicateSettings =

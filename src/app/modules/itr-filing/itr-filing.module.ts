@@ -84,6 +84,7 @@ import { DirectorInCompanyComponent } from './itr-wizard/components/other-inform
 import { DonationsComponent } from './itr-wizard/components/donations/donations.component';
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
+import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
 
 @NgModule({
   imports: [
@@ -177,6 +178,7 @@ import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreig
     MedicalExpensesComponent,
     InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
+    UploadDocComponent,
   ],
   exports: [
     CustomerProfileComponent
