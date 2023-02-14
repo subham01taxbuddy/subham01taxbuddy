@@ -9,7 +9,7 @@
 .toggle-btn__radio:checked+.toggle-btn__radio-controller,
 .btn:visited,
 .btn {
-    background-color: #63b12d;
+    background-color: #00AECA;
 }
 
 
@@ -57,7 +57,7 @@ a.text-l-green:hover {
 /* background-color */
 
 .btn:hover {
-    background-color: #307E00;
+    background-color: #00AECA;
 }
 
 

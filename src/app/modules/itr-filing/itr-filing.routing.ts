@@ -16,16 +16,20 @@ import { AddClientComponent } from './add-client/add-client.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
-import { OtherIncomeComponent } from './other-income/other-income.component';
-import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
-import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
-import { DeclarationComponent } from './declaration/declaration.component';
-import { SalaryComponent } from './salary/salary.component';
-import { HousePropertyComponent } from './house-property/house-property.component';
-import { BusinessComponent } from './business/business.component';
-import { CapitalGainComponent } from './capital-gain/capital-gain.component';
-import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
-import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-deductions/investment-deductions.component';
+import {OtherIncomeComponent} from "./other-income/other-income.component";
+import {InvestmentsDeductionsComponent} from "./itr-wizard/pages/investments-deductions/investments-deductions.component";
+import {TaxesPaidComponent} from "./taxes-paid/taxes-paid.component";
+import {DeclarationComponent} from "./declaration/declaration.component";
+import {SalaryComponent} from "./salary/salary.component";
+import {HousePropertyComponent} from "./house-property/house-property.component";
+import {BusinessComponent} from "./business/business.component";
+import {CapitalGainComponent} from "./capital-gain/capital-gain.component";
+import {
+  SpeculativeIncomeComponent
+} from "./business-income/profit-loss-ac/speculative-income/speculative-income.component";
+import {
+  ForeignIncomeComponent
+} from "./itr-wizard/pages/foreign-income/foreign-income.component";
 
 const routes: Routes = [
   {
@@ -44,7 +48,7 @@ const routes: Routes = [
           { path: 'other-income', component: OtherIncomeComponent },
           {
             path: 'investments-deductions',
-            component: InvestmentDeductionsComponent,
+            component: InvestmentsDeductionsComponent,
           },
           { path: 'taxes-paid', component: TaxesPaidComponent },
           { path: 'declaration', component: DeclarationComponent },
@@ -53,7 +57,7 @@ const routes: Routes = [
           { path: 'business', component: BusinessComponent },
           { path: 'capital-gain', component: CapitalGainComponent },
           { path: 'future-options', component: SpeculativeIncomeComponent },
-          // { path: 'nri', component: ForeeignIncomeComponent },
+          { path: 'nri', component: ForeignIncomeComponent },
         ],
       },
       // { path: 'direct-upload', component: DirectUploadComponent },
