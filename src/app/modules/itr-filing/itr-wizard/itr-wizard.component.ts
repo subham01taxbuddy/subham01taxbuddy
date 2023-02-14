@@ -104,7 +104,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   updateSchedules(scheduleInfo) {
     if(scheduleInfo.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
-      this.componentsList.splice(index, 0, scheduleInfo.schedule);
+      if(this.componentsList.indexOf(scheduleInfo.schedule) < 0) {
+        this.componentsList.splice(index, 0, scheduleInfo.schedule);
+      }
     } else {
       this.componentsList = this.componentsList.filter(item => item !== scheduleInfo.schedule);
     }
