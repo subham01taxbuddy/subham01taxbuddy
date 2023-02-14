@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import {FormArray, FormControl} from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GridOptions, ICellRendererParams, ValueSetterParams } from 'ag-grid-community';
@@ -139,6 +139,8 @@ export class OtherIncomeComponent implements OnInit {
 
   familyPension = new FormControl(null)
   dividendIncomes: FormGroup;
+  otherIncomeFormGroup: FormGroup;
+  otherIncomesFormArray: FormArray;
   constructor(public utilsService: UtilsService,
     private itrMsService: ItrMsService, public fb: FormBuilder,) { }
 
@@ -154,6 +156,12 @@ export class OtherIncomeComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.exemptIncomesCallInConstructor(this.exemptIncomesDropdown);
 
+    this.otherIncomesFormArray = this.fb.array([this.createOtherIncomeForm()]);
+    this.otherIncomeFormGroup = this.fb.group({
+      otherIncomes: this.otherIncomesFormArray
+    });
+
+
     this.otherIncomeCallInConstructor(this.otherIncomeDropdown);
     this.setOtherIncomeValues();
     this.getItrDocuments();
@@ -161,6 +169,13 @@ export class OtherIncomeComponent implements OnInit {
     console.log('OTHERE deletedFileData LENGTH ---> ', this.deletedFileData.length);
 
 
+  }
+
+  private createOtherIncomeForm() {
+    return this.fb.group({
+      income: [],
+      hasEdit: [ false]
+    });
   }
 
   // Salary Grid Start

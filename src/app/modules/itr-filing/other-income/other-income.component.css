@@ -1,35 +1,28 @@
-.userInfo{
-    margin-top: 15px;
-    padding: 5px;
-    height: auto;
-    width: 400px;
-    border: 1px solid black;
-    border-radius: 4px;
-  }
-  
-  .table-responsive{
-    overflow-x: auto;
-  }
-  
-  table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    border: 1px solid #ddd;
-   
-  }
-  
-  th{
-    text-align: left;
-    padding: 5px;
-    font-size: 12px;
-    border: 1px solid #ddd;
-  }
-  td {
-    text-align: left;
-    padding: 5px;
-    font-size: 12px;
-    border: 1px solid #ddd;
-  }
-  
-  tr:nth-child(even){background-color: #f2f2f2}
+.subTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  /* identical to box height, or 27px */
+
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+}
+
+.inputLabel {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14.4296px;
+  line-height: 14px;
+  margin-bottom: 10px;
+  /* identical to box height, or 100% */
+
+  letter-spacing: -0.009em;
+
+  /* Neutral/Neutral 1100 [day] */
+
+  color: #07070C;
+}
