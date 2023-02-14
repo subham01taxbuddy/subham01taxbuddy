@@ -18,7 +18,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { AddClientDialogComponent } from '../../../add-client-dialog/add-client-dialog.component';
-import { PrefillDataComponent } from '../../../prefill-data/prefill-data.component';
+import {PrefillDataComponent} from "../../pages/prefill-id/components/prefill-data/prefill-data.component";
 import * as moment from 'moment';
 
 declare let $: any;
@@ -457,7 +457,7 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   async updateStatus() {
-    // Auto update status to Preparing ITR 
+    // Auto update status to Preparing ITR
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {

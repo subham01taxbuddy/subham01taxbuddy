@@ -19,6 +19,11 @@ export class SourceOfIncomesComponent implements OnInit {
     let sources = sessionStorage.getItem('incomeSources');
     if(sources != null) {
       this.sourcesList = JSON.parse(sources);
+      this.sourcesList.forEach(source => {
+        if(source.selected) {
+          this.scheduleSelected.emit(source);
+        }
+      });
     } else {
       this.sourcesList = [
         {
