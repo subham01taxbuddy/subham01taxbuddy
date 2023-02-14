@@ -45,7 +45,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
-import { PrefillDataComponent } from './prefill-data/prefill-data.component';
+import { PrefillDataComponent} from "./itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component";
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
