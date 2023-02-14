@@ -6,16 +6,18 @@
   <div style="padding: 0 !important;">
     <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
-        <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" /><a class="capitalize text-color-brands"
+        <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" />
+        <a [ngClass]="showPrefill ? 'capitalize text-color-brands' : 'capitalize'"
           (click)="showPrefillView()">Pre-fill Data</a>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span class="capitalize" (click)="gotoSources()">Sources</span>
+        <span (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize text-color-brands' : 'capitalize'">
+          Sources</span>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span class="capitalize">{{selectedSchedule}}</span>
+        <span [ngClass]="!showIncomeSources && !showPrefill ? 'capitalize text-color-brands' : 'capitalize'">{{selectedSchedule}}</span>
       </div>
     </div>
     <div *ngIf="showPrefill">
@@ -51,7 +53,7 @@
 
     </div>
 
-    <div *ngIf="!showIncomeSources">
+    <div *ngIf="!showIncomeSources && !showPrefill">
       <router-outlet></router-outlet>
     </div>
 

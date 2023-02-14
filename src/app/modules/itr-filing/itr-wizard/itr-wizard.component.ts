@@ -74,11 +74,14 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   showPrefillView() {
+    if(this.router.url !== '/itr-filing/itr') {
+      // while(this.router.url !== '/itr-filing/itr') {
+        this.location.back();
+      // }
+    }
     this.showPrefill = true;
     this.showIncomeSources = false;
-    if(this.router.url !== '/itr-filing/itr') {
-      this.location.back();
-    }
+    // this.
   }
 
   gotoSchedule(schedule) {
