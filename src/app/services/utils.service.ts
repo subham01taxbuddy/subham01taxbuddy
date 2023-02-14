@@ -139,7 +139,7 @@ export class UtilsService {
                     console.log('this.ITR_JSON in utils', this.ITR_JSON);
                     console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -193,7 +193,7 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -216,7 +216,7 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -792,6 +792,12 @@ export class UtilsService {
         return this.itrMsService.postMethod(param, itrObject).pipe(
             concatMap(result => this.updateItrObject(result, itrObject))
         );
+    }
+
+    getDueDateDetails() {
+        //https://uat-api.taxbuddy.com/itr/due-date
+        const param = '/due-date';
+        return this.itrMsService.getMethod(param);
     }
 
 }

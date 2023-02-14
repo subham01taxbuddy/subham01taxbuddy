@@ -1,4 +1,3 @@
-import { KommunicateDialogComponent } from '../../pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpperCaseDirective, InputDataMaskDirective, CapitalizeFirstDirective, } from './input-data-mask.directive';
@@ -17,9 +16,6 @@ import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.comp
 import { ChangeStatusComponent } from './components/change-status/change-status.component';
 import { SmeListDropDownComponent } from './components/sme-list-drop-down/sme-list-drop-down.component';
 import { CallReassignmentComponent } from './components/call-reassignment/call-reassignment.component';
-import { WhatsAppDialogComponent } from '../../pages/itr-filing/whats-app-dialog/whats-app-dialog.component';
-import { FilingStatusDialogComponent } from '../../pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
-import { UpdateStatusComponent } from '../../pages/itr-filing/update-status/update-status.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { NgxLoadingModule } from 'ngx-loading';
@@ -36,6 +32,12 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
+import { NumbersOnlyDirective } from './directives/numbers-only.directive';
+import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-app-dialog.component';
+import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
+import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
+import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kommunicate-dialog.component';
+import {Schedules} from "./interfaces/schedules";
 
 
 @NgModule({
@@ -67,7 +69,8 @@ import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         DigitsOnlyDirective,
-        AgTooltipComponent
+        AgTooltipComponent,
+        NumbersOnlyDirective
     ],
     imports: [
         CommonModule,
@@ -115,10 +118,12 @@ import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component
         CurrencyPipe,
         ShimmerModule,
         DigitsOnlyDirective,
-        AgTooltipComponent
+        AgTooltipComponent,
+        NumbersOnlyDirective,
+        Schedules
 
     ],
-    providers: [StorageService],
+    providers: [StorageService, Schedules],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
         KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent,
         UpdateManualFilingDialogComponent, AgTooltipComponent]

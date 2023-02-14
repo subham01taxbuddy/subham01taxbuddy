@@ -1,0 +1,127 @@
+<div
+  class="relative overflow-x-hidden min-h-screen bg-gray-100 scrollbar-hide ecommerce-dashboard-page"
+>
+  <div
+    class="mx-auto text-gray-900 font-normal grid grid-rows-[auto,1fr] scrollbar-hide"
+    id="layout"
+  >
+    <!-- main-div  -->
+    <main
+      class="bg-white overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
+    >
+      <div>
+        <div class="rounded-2x1 bg-white px-[25px]">
+          <!-- Prefill-Header  -->
+          <h2
+            class="capitalize text-gray-1100 font-bold text-2xl leading-[35px] pb-[18px]"
+          >
+            Prefill
+          </h2>
+
+          <!-- prefill-subheading  -->
+        </div>
+
+        <!-- prefill-content  -->
+        <div
+          class="rounded-2xl bg-neutral-bg overflow-scroll scrollbar-hide p-[25px] mb-[33px]"
+        >
+          <div
+            class="flex items-center justify-between pb-4 border-neutral border-b"
+          >
+            <p class="text-subtitle-semibold font-semibold text-gray-1100">
+              Please select download or import option to have your pre-filled
+              data to proceed further
+            </p>
+          </div>
+
+          <!-- prefill options -->
+          <div class="p-7">
+            <!-- prefill-options  -->
+            <div class="flex flex-col gap-y-3 p-[25px] mb-[25px]">
+              <!-- download-prefill  -->
+              <div
+                class="bg-gray-100 border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[27px] pl-[21px] pb-[30px] pr-[26px] lg:flex-row"
+              >
+                <div
+                  class="flex items-start flex-col lg:items-center gap-x-[14px] lg:flex-row"
+                >
+                  <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
+                    <input
+                      class="checkbox checkbox-primary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                    />
+                  </div>
+                  <div class="flex flex-col gap-y-[6px]">
+                    <div
+                      class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                    >
+                      Download Prefill Data
+                    </div>
+                    <div
+                      class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
+                    >
+                      <span class="text-xs text-color-brands"
+                        >Please select this option to download the prefill data
+                        of the user</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- upload-prefill  -->
+              <div
+                class="bg-gray-100 border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[27px] pl-[21px] pb-[30px] pr-[26px] lg:flex-row"
+              >
+                <div
+                  class="flex items-start flex-col lg:items-center gap-x-[14px] lg:flex-row"
+                >
+                  <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
+                    <input
+                      class="checkbox checkbox-primary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                    />
+                  </div>
+                  <div class="flex flex-col gap-y-[6px]">
+                    <div
+                      class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                    >
+                      Upload Prefill Data
+                    </div>
+                    <div
+                      class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
+                    >
+                      <span class="text-xs text-color-brands"
+                        >Please select this option if you already have the
+                        prefill and want to upload and parse it.</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr />
+
+            <!-- action-buttona  -->
+            <div class="flex justify-between p-[30px]">
+              <button
+                (click)="skip()"
+                class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+              >
+                <span class="font-semibold text-gray-1100"
+                  >Skip to Sources of Income</span
+                >
+              </button>
+
+              <button
+                class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
+              >
+                <span class="font-semibold text-white">Proceed further</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

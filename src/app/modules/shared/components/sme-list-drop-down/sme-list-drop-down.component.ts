@@ -20,7 +20,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
 
   smeList: any[] = [];
-  selectedSme = new FormControl('', Validators.required);
+  selectedSme = new FormControl('');
   filteredOptions!: Observable<any[]>;
 
   constructor(public utilsService: UtilsService,
@@ -85,7 +85,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
   async getMyAgentList(serviceType) {
-    if (serviceType === 'TPA') {
+    if (serviceType === 'TPA' || serviceType === 'OTHER') {
       serviceType = 'ITR';
     }
     const param = `/sme/${serviceType}?isActive=true`;//&isAssignmentStart=true`;

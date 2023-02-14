@@ -8,7 +8,8 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</label><button mat-dialog-clo
     </app-sme-list-drop-down>
   </div>
   <div class="card__col-xs-12 card__col-sm-4">
-    <button type="submit" class="pull-right" class="tbd-btn" (click)="reAssign()">Re-Assign</button>
+    <button type="submit" class="pull-right" class="tbd-btn" (click)="reAssign()"
+      [disabled]="loading">Re-Assign</button>
 
   </div>
 

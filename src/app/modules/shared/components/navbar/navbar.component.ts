@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { environment } from 'src/environments/environment';
 import { MatomoService } from 'src/app/services/matomo.service';
+import { UtilsService } from 'src/app/services/utils.service';
 declare function matomo(title: any, url: any, event: any, scripdId: any);
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
@@ -36,7 +37,9 @@ export class NavbarComponent implements DoCheck {
     private router: Router,
     public dialog: MatDialog,
     public location: Location,
-    private matomoService: MatomoService) { }
+    private matomoService: MatomoService,
+    private utilsService: UtilsService
+  ) { }
 
 
 
@@ -101,9 +104,48 @@ export class NavbarComponent implements DoCheck {
 
   logout() {
     this.loading = true;
-
     Auth.signOut()
       .then(data => {
+        (window as any).Kommunicate.logout();
+        (function (d, m) {
+          var kommunicateSettings =
+          {
+            "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
+            "popupWidget": true,
+            "automaticChatOpenOnNavigation": true,
+            "preLeadCollection":
+              [
+                {
+                  "field": "Name", // Name of the field you want to add
+                  "required": true, // Set 'true' to make it a mandatory field
+                  "placeholder": "Enter your name" // add whatever text you want to show in the placeholder
+                },
+                {
+                  "field": "Email",
+                  "type": "email",
+                  "required": true,
+                  "placeholder": "Enter your email"
+                },
+                {
+                  "field": "Phone",
+                  "type": "number",
+                  "required": true,
+                  "element": "input", // Optional field (Possible values: textarea or input) 
+                  "placeholder": "Enter your phone number"
+                }
+              ],
+           
+          };
+  
+          var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+          s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+          var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+           (window as any).kommunicate = m; m._globals = kommunicateSettings;
+        }
+        )(document,  (window as any).kommunicate || {});
+    
+
+      
         this.loading = false;
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();

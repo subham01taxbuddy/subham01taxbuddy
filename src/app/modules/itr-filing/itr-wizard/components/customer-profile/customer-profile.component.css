@@ -1,0 +1,15 @@
+.sidebar__item {
+  display: block;
+  padding: 17px 0 12px;
+  height: 84px;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition-property: color;
+  background-color: rgb(106 106 103);
+  transition-duration: .25s;
+}
+
+
+

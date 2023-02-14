@@ -13,6 +13,7 @@ import { AgGridModule } from "ag-grid-angular";
 import { NgxPaginationModule } from "ngx-pagination";
 import { SmeManagementRoutingModule } from './sme-management.routing';
 import { SmeListComponent } from './pages/sme-list/sme-list.component';
+import { SmeLeftComponent } from './pages/sme-left/sme-left.component';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { SmeListComponent } from './pages/sme-list/sme-list.component';
         SmeManagementComponent,
         SmeListComponent,
         CreateSmeComponent,
-        AssignmentComponent
+        AssignmentComponent,
+        SmeLeftComponent
     ],
     entryComponents: []
 

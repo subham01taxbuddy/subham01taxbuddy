@@ -12,7 +12,7 @@
 <mat-form-field class="example-full-width" appearance="outline">
   <mat-label>Search & Select SME</mat-label>
   <input type="text" placeholder="Start typing..." aria-label="Assignee" matInput [formControl]="selectedSme"
-    [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+    [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" >
   <mat-error *ngIf="selectedSme.invalid">
     Please select value from dropdown only.
   </mat-error>

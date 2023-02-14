@@ -10,6 +10,7 @@ export class AppConstants {
     public static tanNumberRegex = /^[A-Z]{4}\d{5}[A-Z]{1}$/;
     public static mobileNumberRegex = /^[1-9]{1}[0-9]{9}$/;  // regex given by dinesh  //"[0-9]{10}"
     public static charRegex = '^[a-zA-Z ]+$';
+    public static charSpecialRegex = '^[a-zA-Z ()&,.]+$';
     public static charAndNoRegex = '^[a-zA-Z0-9 _]*[a-zA-Z0-9][a-zA-Z0-9 _]*$';   //'[a-zA-Z0-9]*$';
     public static IFSCRegex = /^[A-Za-z]{4}[0][A-Za-z0-9]{6}$/;
     public static gstrReg = '[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]{3}';
@@ -103,12 +104,13 @@ export class AppConstants {
         "isFilingActive": "true"
     }]; */
 
-  public static sourceList: any = [{ label: 'Play store', value: 'PLAY_STORE' }, { label: 'Apple store', value: 'APPLE_STORE' }, { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' }];
-  public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
-  public static ratingList: any = [{ label: '1', value: 'One' }, { label: '2', value: 'Two' }, { label: '3', value: 'Three' }, { label: '4', value: 'Four' }, { label: '5', value: 'Five' }];
-  public static sentimentList: any = [{ label: 'Positive', value: 'POSITIVE' }, { label: 'Negative', value: 'NEGATIVE' }];
-  public static defaultCountry='91';
-  public static stateDropdown: any = [{
+    public static sourceList: any = [{ label: 'Play store', value: 'PLAY_STORE' }, { label: 'Apple store', value: 'APPLE_STORE' }, { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' }];
+    public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
+    public static ratingList: any = [{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }];
+    public static sentimentList: any = [{ label: 'Positive', value: 'Positive' }, { label: 'Negative', value: 'Negative' }];
+    public static statusList: any = [{ label: 'open', value: 'OPEN' }, { label: 'Resolved', value: 'RESOLVED' }, { label: 'Unresolved', value: 'UNRESOLVED' }];
+    public static defaultCountry = '91';
+    public static stateDropdown: any = [{
         "id": "5b4599c9c15a76370a3424c2",
         "stateId": "1",
         "countryCode": "91",
