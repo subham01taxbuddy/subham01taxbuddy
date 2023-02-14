@@ -27,7 +27,6 @@ import {CapitalGainComponent} from "./capital-gain/capital-gain.component";
 import {
   SpeculativeIncomeComponent
 } from "./business-income/profit-loss-ac/speculative-income/speculative-income.component";
-import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-deductions/investment-deductions.component';
 
 const routes: Routes = [
   {
@@ -46,7 +45,7 @@ const routes: Routes = [
           { path: 'other-income', component: OtherIncomeComponent },
           {
             path: 'investments-deductions',
-            component: InvestmentDeductionsComponent,
+            component: InvestmentsDeductionsComponent,
           },
           { path: 'taxes-paid', component: TaxesPaidComponent },
           { path: 'declaration', component: DeclarationComponent },

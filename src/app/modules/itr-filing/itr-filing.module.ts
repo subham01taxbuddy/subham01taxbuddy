@@ -83,7 +83,6 @@ import { UnlistedSharesComponent } from './itr-wizard/components/other-informati
 import { DirectorInCompanyComponent } from './itr-wizard/components/other-information/director-in-company/director-in-company.component';
 import { DonationsComponent } from './itr-wizard/components/donations/donations.component';
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
-import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-deductions/investment-deductions.component';
 
 @NgModule({
   imports: [
@@ -175,7 +174,7 @@ import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-ded
     AllPersonalInformationComponent,
     DonationsComponent,
     MedicalExpensesComponent,
-    InvestmentDeductionsComponent,
+    InvestmentsDeductionsComponent,
   ],
   exports: [
     CustomerProfileComponent
