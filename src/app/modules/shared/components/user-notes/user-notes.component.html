@@ -1,76 +1,12 @@
-<label style="font-size: 18px;
-font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-close tabindex="-1"
-    class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
-
-<!-- <div class="notes">
-    <div class="card__row" style="margin-top: 0px;" *ngIf="notes.length > 0">
-        <div class="tab-panel items-tab card__col-xs-12">
-            <div class="tab-panel__content tab-panel__content_visible">
-                <div class="table product__table">
-                    <div class="table__row  table__row_header ">
-                        <div class="table__cell product-row__cell-unit flex-70">
-                            <a class="table__sort-link">Note</a>
-                        </div>
-                        <div class="table__cell product-row__cell-unit flex-15">
-                            <a class="table__sort-link">By</a>
-                        </div>
-                        <div class="table__cell product-row__cell-unit flex-15">
-                            <a class="table__sort-link">Date</a>
-                        </div>
-                    </div>
-    
-    
-                    <div *ngFor="let item of notes; let p=index ">
-                        <div class="table__row-item product-row">
-                            <div class="table__row product-row__main-variant">
-                                <div class="table__cell product-row__cell-stock flex-70">
-                                    {{item.note}}
-                                </div>
-                                <div class="table__cell product-row__cell-stock flex-15">
-                                    {{item.createdByName}}
-                                </div>
-                                <div class="table__cell product-row__cell-stock flex-15">
-                                    {{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-   </div>  -->
-
-<div class="tableFixHead" *ngIf="notes.length > 0">
-    <table>
-        <thead>
-            <tr>
-                <th><b>Service</b></th>
-                <th><b>Notes</b></th>
-                <th><b>By</b></th>
-                <th><b>Date</b></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of notes; let p=index ">
-                <td>{{item.serviceType}}</td>
-                <td>{{item.note}}</td>
-                <td>{{item.createdByName}}</td>
-                <td>{{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="card__col-lg-12">
+    <div class="card__col-lg-11" mat-dialog-title *ngIf="data.title">{{data.title}}</div>
+    <button mat-dialog-close tabindex="-1" class="tbd-btn-close card__col-lg-1"><i class="fa fa-times"
+            aria-hidden="true"></i></button>
 </div>
-
-<div *ngIf="notes.length === 0">
-    <p class="text"><b>No notes found.</b></p>
-</div>
-
-
 <div class="card__row">
-    <div class="card__col-xs-12 card__col-sm-4">
+    <div class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12">
+        <mat-label>Service Type: </mat-label>
         <mat-form-field appearance="outline">
-            <mat-label>Service type</mat-label>
             <mat-select placeholder="Service type" [formControl]="serviceType">
                 <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.value">
                     {{serviceType.label}}
@@ -80,15 +16,44 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
             </mat-error>
         </mat-form-field>
     </div>
-    <div class="card__col-xs-12 card__col-sm-4">
+    <div class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12">
+        <mat-label>Notes: </mat-label>
         <mat-form-field appearance="outline">
-            <mat-label>Note</mat-label>
             <textarea matInput [formControl]="noteDetails" cdkTextareaAutosize cdkAutosizeMinRows="1"
                 cdkAutosizeMaxRows="9" name="noteDetails" placeholder="Enter your note..."></textarea>
-            <mat-error class="error-msg" *ngIf="noteDetails.hasError('required') ">Please enter note details</mat-error>
+            <mat-error class="error-msg" *ngIf="noteDetails.hasError('required') ">Please enter note
+                details</mat-error>
         </mat-form-field>
     </div>
-    <div class="card__col-xs-12 card__col-sm-3">
-        <button type="submit" class="tbd-btn" (click)="addNote()">Add</button>
+    <div class="add-notes">
+        <button type="submit" class="tbd-btn" (click)="addNote()">Add Notes</button>
     </div>
+</div>
+<hr>
+
+<div class="saved-notes mt-5 mb-2">Saved Notes for {{data.clientName}}</div>
+
+<div class="tableFixHead" *ngIf="notes.length > 0">
+    <table>
+        <thead>
+            <tr>
+                <th>Notes</th>
+                <th>Service</th>
+                <th>SME</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of notes; let p=index ">
+                <td>{{item.note}}</td>
+                <td>{{item.serviceType}}</td>
+                <td>{{item.createdByName}}</td>
+                <td>{{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="notes.length === 0">
+    <p class="text"><b>No notes found.</b></p>
 </div>

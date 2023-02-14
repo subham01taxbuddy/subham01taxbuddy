@@ -8557,13 +8557,12 @@ body {
 }
 
 .tbd-btn-close {
-  float: right;
   cursor: pointer;
   background: none;
   border: none;
   font-size: 18px;
-  margin-top: -15px;
-  margin-right: -15px;
+  text-align: right;
+  color: #7E7E8F;
 }
 
 .tbd-btn-close:hover {
@@ -9276,4 +9275,26 @@ mat-label {
   box-sizing: border-box;
   width: 75vw;
   left: 26.1px;
+}
+
+
+.mat-dialog-title {
+  font-weight: 600 !important;
+  font-size: 25px !important;
+  line-height: 18px !important;
+  align-items: center;
+  text-align: center;
+  color: #07070C;
+}
+
+.add-notes {
+  width: 90%;
+  text-align: right;
+}
+
+.saved-notes {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 14px;
+  color: #000000;
 }

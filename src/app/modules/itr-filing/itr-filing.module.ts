@@ -22,8 +22,8 @@ import { PersonalInformationComponent } from './itr-wizard/components/personal-i
 import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
-import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
-import { AddDonationDialogComponent } from './investments-deductions/add-donation-dialog/add-donation-dialog.component';
+import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
+import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
 import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
@@ -81,6 +81,7 @@ import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal
 import { OtherInformationComponent } from './itr-wizard/components/other-information/other-information.component';
 import { UnlistedSharesComponent } from './itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component';
 import { DirectorInCompanyComponent } from './itr-wizard/components/other-information/director-in-company/director-in-company.component';
+import { DonationsComponent } from './itr-wizard/components/donations/donations.component';
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { InvestmentDeductionsComponent } from './itr-wizard/pages/investment-deductions/investment-deductions.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
@@ -173,8 +174,9 @@ import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreig
     PrefillIdComponent,
     SourceOfIncomesComponent,
     AllPersonalInformationComponent,
+    DonationsComponent,
     MedicalExpensesComponent,
-    InvestmentDeductionsComponent,
+    InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
   ],
   exports: [
