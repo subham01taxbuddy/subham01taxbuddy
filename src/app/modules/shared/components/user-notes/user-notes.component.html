@@ -51,17 +51,13 @@
 <hr />
 
 <div class="mat-elevation-z8" *ngIf="notes.length > 0">
-  <table mat-table [dataSource]="dataSource">
-    <!-- Position Column -->
-    <ng-container matColumnDef="Notes">
-      <th mat-header-cell *matHeaderCellDef>Notes</th>
-      <td mat-cell *matCellDef="let element">{{ element.note }}</td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="serviceType">
-      <th mat-header-cell *matHeaderCellDef>Service</th>
-      <td mat-cell *matCellDef="let element">{{ element.serviceType }}</td>
+  <table mat-table [dataSource]="notes">
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="Date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateAndTime | date : "dd MMM yyyy, hh:mm a" }}
+      </td>
     </ng-container>
 
     <!-- Weight Column -->
@@ -70,12 +66,16 @@
       <td mat-cell *matCellDef="let element">{{ element.createdByName }}</td>
     </ng-container>
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="Date">
-      <th mat-header-cell *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.dateAndTime | date : "dd MMM yyyy, hh:mm a" }}
-      </td>
+    <!-- Name Column -->
+    <ng-container matColumnDef="serviceType">
+      <th mat-header-cell *matHeaderCellDef>Service</th>
+      <td mat-cell *matCellDef="let element">{{ element.serviceType }}</td>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="Notes">
+      <th mat-header-cell *matHeaderCellDef>Notes</th>
+      <td mat-cell *matCellDef="let element">{{ element.note }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

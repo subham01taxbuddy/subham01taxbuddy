@@ -45,10 +45,10 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>(this.notes);
 
   displayedColumns: string[] = [
-    'Notes',
-    'serviceType',
-    'createdByName',
     'Date',
+    'createdByName',
+    'serviceType',
+    'Notes',
   ];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
