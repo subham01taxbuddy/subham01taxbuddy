@@ -21,17 +21,16 @@
           </h2>
 
           <button
-            class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
+            class="btn skip normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
             (click)="addClient()"
           >
-            <span class="font-semibold text-white"> + Add Client </span>
+            <span class="font-semibold"> + Add Client </span>
           </button>
-
-          <!-- prefill-subheading  -->
         </div>
 
         <!-- prefill-content  -->
         <div
+          *ngIf="!downloadPrefill"
           class="rounded-2xl bg-neutral-bg overflow-scroll scrollbar-hide p-[25px] mb-[33px]"
         >
           <div
@@ -58,6 +57,7 @@
                     <input
                       class="checkbox checkbox-primary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                       type="checkbox"
+                      [(ngModel)]="checked"
                     />
                   </div>
                   <div class="flex flex-col gap-y-[6px]">
@@ -76,6 +76,15 @@
                     </div>
                   </div>
                 </div>
+                <button
+                  type="button"
+                  size="12px"
+                  class="btn"
+                  (click)="downloadPrefillOpt()"
+                  [disabled]="!checked"
+                >
+                  Start
+                </button>
               </div>
               <!-- upload-prefill  -->
               <div
@@ -128,7 +137,11 @@
             </div>
           </div>
         </div>
+        <div *ngIf="downloadPrefill">
+          <app-prefill-data></app-prefill-data>
+        </div>
       </div>
     </main>
   </div>
+  <router-outlet></router-outlet>
 </div>

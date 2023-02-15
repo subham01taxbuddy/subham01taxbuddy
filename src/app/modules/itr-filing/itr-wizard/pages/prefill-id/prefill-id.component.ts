@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-prefill-id',
@@ -7,6 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./prefill-id.component.scss'],
 })
 export class PrefillIdComponent implements OnInit {
+  checked: boolean = false;
+  downloadPrefill: boolean = false;
+
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
   constructor(private router: Router) {}
@@ -21,5 +25,9 @@ export class PrefillIdComponent implements OnInit {
 
   addClient() {
     this.router.navigate(['/itr-filing/itr/eri']);
+  }
+
+  downloadPrefillOpt() {
+    this.downloadPrefill = true;
   }
 }
