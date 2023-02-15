@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { UserMsService } from 'src/app/services/user-ms.service';
+declare let $: any;
 @Component({
   selector: 'app-donations',
   templateUrl: './donations.component.html',
   styleUrls: ['./donations.component.scss']
 })
 export class DonationsComponent implements OnInit {
-  donationForm: FormGroup;
+  @Input() isAddDonation = Number;
+  generalDonationForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -520,59 +524,136 @@ export class DonationsComponent implements OnInit {
     "stateCode": "37",
     "status": true
   }];
-  constructor(
-    private fb: FormBuilder,
-  ) { }
+  config: any;
+  selectedPageNo = 0;
 
-  ngOnInit(): void {
-    this.donationForm = this.createDonationForm();
-  }
-  get getDonationDetailsArray() {
-    return <FormArray>this.donationForm.get('donationDetails');
-  }
-
-  deleteBank(index, formGroupName) {
-    const bank = <FormArray>formGroupName.get('donationDetails');
-    bank.removeAt(index);
-  }
-
-  createDonationForm(): FormGroup {
-    return this.fb.group({
-      donationDetails: this.fb.array([this.createDonationDetailsForm({})]),
-    });
-
-  }
-
-  createDonationDetailsForm(obj: { hasEdit?: boolean, donationType?: String, amountInCash?: any, amountOtherThanCash?: any, schemeCode?: any, details?: any, name?: any, address?: any, city?: any, pinCode?: any, state?: any, panNumber?: any } = {}): FormGroup {
-    return this.fb.group({
-      // identifier: ['', Validators.required],
-      hasEdit: [obj.hasEdit || false],
-      donationType: [obj.donationType || 'OTHER', Validators.required],
-      amountInCash: [null, Validators.required],
-      amountOtherThanCash: [null, Validators.required],
-      schemeCode: ['', Validators.required],
-      details: [''],
-      name: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      pinCode: ['', [Validators.required, Validators.pattern(AppConstants.PINCode)]],
-      state: ['', Validators.required],
-      panNumber: ['', [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)]]
-    });
-  }
-
-  addMoreDonations(formGroupName) {
-    const donationDetails = <FormArray>formGroupName.get('donationDetails');
-    if (donationDetails.valid) {
-      donationDetails.push(this.createDonationDetailsForm());
-    } else {
-      $('input.ng-invalid').first().focus();
-      console.log('add above details first');
+  constructor(private fb: FormBuilder,
+    public utilsService: UtilsService,
+    private userMsService: UserMsService,
+    private itrMsService: ItrMsService,
+  ) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    if (this.Copy_ITR_JSON.donations) {
+      this.Copy_ITR_JSON.donations.forEach(item => {
+        this.addMoreDonations(item);
+      })
     }
   }
 
-  displayTooltip() {
-    const donationLabel: any = this.otherDonationToDropdown.filter((item: any) => item.value === this.donationForm.controls['schemeCode'].value);
+  ngOnInit() {
+    this.config = {
+      itemsPerPage: 2,
+      currentPage: 1,
+    };
+
+    this.generalDonationForm = this.inItForm();
+    this.generalDonationForm.disable();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      if (this.isAddDonation) {
+        this.addMoreDonations();
+      }
+    }, 1000);
+  }
+
+  inItForm() {
+    return this.fb.group({
+      donationArray: this.fb.array([this.createDonationForm()]),
+    })
+  }
+
+  createDonationForm(item?): FormGroup {
+    return this.fb.group({
+      hasEdit: [item ? item.hasEdit : false],
+      identifier: [item ? item.identifier : ''],
+      donationType: [item ? item.donationType : 'OTHER'],
+      amountInCash: [item ? item.amountInCash : null, Validators.required],
+      amountOtherThanCash: [item ? item.amountOtherThanCash : null, Validators.required],
+      schemeCode: [item ? item.schemeCode : '', Validators.required],
+      details: [item ? item.details : ''],
+      name: [item ? item.name : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      address: [item ? item.address : '', Validators.required],
+      city: [item ? item.city : '', Validators.required],
+      pinCode: [item ? item.pinCode : '', [Validators.required, Validators.pattern(AppConstants.PINCode)]],
+      state: [item ? item.state : '', Validators.required],
+      panNumber: [item ? item.panNumber : '', [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)]]
+    });
+  }
+
+  getData(i, pin) {
+    const param = '/pincode/' + pin;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['city'].setValue(result.taluka);
+      ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['state'].setValue(result.stateCode);
+    }, error => {
+      if (error.status === 404) {
+        ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['city'].setValue(null);
+      }
+    });
+  }
+
+
+  displayTooltip(i) {
+    const donationLabel: any = this.otherDonationToDropdown.filter((item: any) => item.value === ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['schemeCode'].value);
     this.donationToolTip = donationLabel[0].label;
   }
+
+  editDonationForm(i) {
+    ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).enable();
+  }
+
+  saveGeneralDonation() {
+    if (this.generalDonationForm.valid) {
+      this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
+    }
+  }
+
+  get getDonationArray() {
+    return <FormArray>this.generalDonationForm.get('donationArray');
+  }
+
+
+  addMoreDonations(item?) {
+    const donationArray = <FormArray>this.generalDonationForm.get('donationArray');
+    if (donationArray.valid) {
+      donationArray.push(this.createDonationForm(item));
+      this.config.totalItems = donationArray.length;
+      this.changed();
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
+  deleteDonationArray() {
+    const donationArray = <FormArray>this.generalDonationForm.get('donationArray');
+    donationArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        donationArray.removeAt(index);
+        this.changed();
+      }
+    })
+  }
+
+  changed() {
+    const donationArray = <FormArray>this.generalDonationForm.get('donationArray');
+    this.otherDonationToDropdown.forEach((type) => {
+      donationArray.controls.forEach((element: FormGroup) => {
+        if (element.controls['schemeCode'].value == (type.value)) {
+          type.active = false;
+        }
+      })
+    })
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * ( this.config.currentPage - 1) + index;
+  }
+
 }

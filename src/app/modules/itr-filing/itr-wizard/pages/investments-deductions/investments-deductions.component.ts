@@ -7,7 +7,6 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-import { AddDonationDialogComponent } from './add-donation-dialog/add-donation-dialog.component';
 declare let $: any;
 
 
@@ -19,6 +18,7 @@ declare let $: any;
 export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   @Output() saveAndNext = new EventEmitter<any>();
   step = 0;
+  isAddDonation: Number;
 
   loading: boolean = false;
   investmentDeductionForm: FormGroup;
@@ -608,9 +608,6 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     this.setInvestmentsDeductionsValues();
     this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
 
-    // this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
-    // this.DonationGridOptions.api.setColumnDefs(this.donationCreateColoumnDef(this.otherDonationToDropdown, this.stateDropdown));
-    console.log('Investments-DEDUCTION deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
   max5000Limit(val) {
     if (val === 'SELF' && this.investmentDeductionForm.controls['selfPreventiveCheckUp'].valid &&
@@ -864,31 +861,12 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     }
   }
 
-  addDonation(title, mode, selectedData, donationType) {
-    const data = {
-      title: title,
-      mode: mode,
-      selectedData: selectedData,
-      ITR_JSON: this.ITR_JSON,
-      donationType: donationType
-    };
-    const dialogRef = this.matDialog.open(AddDonationDialogComponent, {
-      data: data,
-      closeOnNavigation: true,
-      width: '800px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add past year=', result);
-      if (result !== undefined && result !== '' && result !== null) {
-        this.ITR_JSON = result;
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        if (donationType === 'OTHER') {
-          this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
-        } 
-      }
-    });
+  addDonation(type) {
+    if (type === 'donation') {
+      this.isAddDonation = Math.random();
+    }
   }
+
   donationCallInConstructor(otherDonationToDropdown, stateDropdown) {
     this.DonationGridOptions = <GridOptions>{
       rowData: this.createRowData('OTHER'),
@@ -1047,7 +1025,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
         case 'edit': {
           console.log('edit params OTHER = ', params.data);
-          this.addDonation('Edit Donation', 'EDIT', params.data, 'OTHER');
+          // this.addDonation('Edit Donation', 'EDIT', params.data, 'OTHER');
           break;
         }
       }
@@ -1297,13 +1275,6 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
 
     disposable.afterClosed().subscribe(result => {
     });
-  }
-  editForm() {
-
-  }
-
-  closed() {
-
   }
 
   setStep(index: number) {

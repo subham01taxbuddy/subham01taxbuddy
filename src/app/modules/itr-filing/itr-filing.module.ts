@@ -23,7 +23,6 @@ import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
 import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
@@ -45,7 +44,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
-import { PrefillDataComponent} from "./itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component";
+import { PrefillDataComponent } from "./itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component";
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
@@ -85,6 +84,7 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -111,7 +111,6 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
     HousePropertyComponent,
     OtherIncomeComponent,
     InvestmentsDeductionsComponent,
-    AddDonationDialogComponent,
     TaxesPaidComponent,
     DeclarationComponent,
     SummaryComponent,
@@ -183,8 +182,9 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
   exports: [
     CustomerProfileComponent
   ],
-  entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
-    /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
+  entryComponents: [
+    ReviseReturnDialogComponent,
+    UpdateManualFilingComponent,
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
     NriDetailsDialogComponent,
@@ -194,7 +194,11 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
     ListedUnlistedDialogComponent,
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent]
+    OtherImprovementDialogComponent],
+  providers: [
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} }
+  ]
 
 })
 export class ItrFilingModule { }
