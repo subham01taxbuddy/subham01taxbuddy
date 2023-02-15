@@ -8394,6 +8394,10 @@ body[dir="rtl"] .checkbox[checked="true"] {
 
 // @import "~ng-pick-datetime/assets/style/picker.min.css";
 // @import "~ag-grid/src/styles/ag-grid";
+.ag-theme-balham {
+  font-family: Poppins !important;
+}
+
 .ag-theme-balham .ag-root {
   min-height: 82px !important;
 }

@@ -11,7 +11,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 import { Location } from '@angular/common';
 import { OtherInformationComponent } from './components/other-information/other-information.component';
 import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-incomes.component";
@@ -63,6 +63,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.componentsList.push(this.schedules.INVESTMENTS_DEDUCTIONS);
     this.componentsList.push(this.schedules.TAXES_PAID);
     this.componentsList.push(this.schedules.DECLARATION);
+    //for preventing going to specific schedule without initialization
+    if(this.router.url.startsWith('/itr-filing/itr') && this.router.url !== '/itr-filing/itr' && !this.showIncomeSources) {
+      this.router.navigate(['/itr-filing/itr']);
+    }
   }
   ngAfterContentChecked() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -100,7 +104,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   updateSchedules(scheduleInfo) {
     if(scheduleInfo.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
-      this.componentsList.splice(index, 0, scheduleInfo.schedule);
+      if(this.componentsList.indexOf(scheduleInfo.schedule) < 0) {
+        this.componentsList.splice(index, 0, scheduleInfo.schedule);
+      }
     } else {
       this.componentsList = this.componentsList.filter(item => item !== scheduleInfo.schedule);
     }

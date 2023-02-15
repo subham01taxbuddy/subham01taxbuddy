@@ -63,3 +63,12 @@ tr:nth-child(even) {
 .mat-accordion>.mat-expansion-panel-spacing:first-child {
   margin-top: 15px;
 }
+
+.upload-doc {
+  margin-left: 40px;
+}
+@media screen and (max-width: 1024px) {
+  .upload-doc {
+      display: none !important;
+  }
+}

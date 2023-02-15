@@ -33,12 +33,12 @@ import {
 
 const routes: Routes = [
   {
-    path: '',
-    component: ItrFilingComponent,
-    children: [
+    // path: '',
+    // component: ItrWizardComponent,
+    // children: [
       // { path: 'my-itrs', component: MyAssignedItrsComponent },
       // { path: 'customer-profile', component: CustomerProfileComponent },
-      {
+      // {
         path: 'itr',
         component: ItrWizardComponent,
         children: [
@@ -58,8 +58,8 @@ const routes: Routes = [
           { path: 'capital-gain', component: CapitalGainComponent },
           { path: 'future-options', component: SpeculativeIncomeComponent },
           { path: 'nri', component: ForeignIncomeComponent },
-        ],
-      },
+        // ],
+      // },
       // { path: 'direct-upload', component: DirectUploadComponent },
       // { path: 'acknowledgement', component: AcknowledgementComponent },
       // { path: 'team-itrs', canActivate: [RoleBaseAuthGuardService], component: MyTeamItrsComponent },
@@ -67,7 +67,7 @@ const routes: Routes = [
       // { path: 'tasks', component: FilingTasksComponent },
       // { path: 'user-docs/:userId', component: ShowUserDocumnetsComponent },
       // { path: 'add-client', component: AddClientComponent },
-      { path: '', redirectTo: '/itr-filing/my-itrs', pathMatch: 'full' },
+      { path: '', redirectTo: '/itr-filing/itr', pathMatch: 'full' },
     ],
   },
 ];
