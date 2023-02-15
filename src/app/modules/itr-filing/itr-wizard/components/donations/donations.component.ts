@@ -620,10 +620,14 @@ export class DonationsComponent implements OnInit {
     const donationArray = <FormArray>this.generalDonationForm.get('donationArray');
     if (donationArray.valid) {
       donationArray.push(this.createDonationForm(item));
-      this.config.totalItems = donationArray.length;
       this.changed();
     } else {
-      $('input.ng-invalid').first().focus();
+      donationArray.controls.forEach(element => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
     }
   }
 
@@ -653,7 +657,7 @@ export class DonationsComponent implements OnInit {
   }
 
   fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * ( this.config.currentPage - 1) + index;
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
 }

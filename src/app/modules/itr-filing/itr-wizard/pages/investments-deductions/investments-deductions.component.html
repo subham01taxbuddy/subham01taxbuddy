@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div>
-    <div class="card__row">
+    <div class="card__row display-flex">
         <div class="card__col-lg-6">
             <div class="card__title card__col-lg-8" style="padding:10px; font-size: 20px;">Investment/ Deduction Details
             </div>
@@ -14,11 +14,14 @@
     <form [formGroup]="investmentDeductionForm">
         <div class="card__row mb-2">
             <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
-                <div class="card__title" style="padding:10px 0; font-size: 18px;">Investment/ Deduction</div>
-                <div class="edit clearfix invest-edit">
-                    <button class="edit_btn invest" (click)="editForm()"><mat-icon>
-                            edit_square
-                        </mat-icon>Edit </button>
+                <div class="display-flex card__col-sm-12">
+                    <div class="card__title card__col-sm-9" style="padding:10px 0; font-size: 18px;">Investment/
+                        Deduction</div>
+                    <div class="edit clearfix invest-edit card__col-sm-3">
+                        <button class="edit_btn invest" (click)="editForm()"><mat-icon>
+                                edit_square
+                            </mat-icon>Edit </button>
+                    </div>
                 </div>
                 <div class="card__row">
                     <div class="card__col-lg-6" *ngIf="ITR_JSON.regime === 'OLD'">
@@ -118,15 +121,15 @@
                         General Donations under sec 80G
                     </mat-panel-title>
                     <div class="card__row edit clearfix isShow">
-                        <button class="edit_btn" (click)="$event.stopPropagation();addDonation('donation')"> <i
-                                class="fa fa-plus"></i>Add </button>
+                        <button type="button" class="edit_btn"
+                            (click)="$event.stopPropagation();addDonation('donation')"> <i class="fa fa-plus"></i>Add
+                        </button>
                     </div>
                 </mat-expansion-panel-header>
                 <app-donations [isAddDonation]="isAddDonation"></app-donations>
             </mat-expansion-panel>
 
-            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (closed)="closed()" hideToggle
-                class="hide-close">
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <mat-icon>
@@ -143,8 +146,19 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-    <div class="pull-right">
-        <button class="tbd-btn" (click)="saveInvestmentDeductions()">Save and Continue
+   
+    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+        <button
+            class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+            (click)="goBack()">
+            <mat-icon>keyboard_backspace</mat-icon>
+            <span class="font-semibold">&nbsp;Back to Main Page</span>
+        </button>
+
+        <button
+            class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+            (click)="saveInvestmentDeductions()">
+            <span class="font-semibold">Save All</span>
         </button>
     </div>
 </div>

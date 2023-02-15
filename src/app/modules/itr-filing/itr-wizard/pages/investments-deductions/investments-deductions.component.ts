@@ -7,6 +7,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { Router } from '@angular/router';
 declare let $: any;
 
 
@@ -546,6 +547,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }];
 
   constructor(
+    private router: Router,
     public utilsService: UtilsService,
     private fb: FormBuilder,
     private itrMsService: ItrMsService,
@@ -1279,5 +1281,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
 
   setStep(index: number) {
     this.step = index;
+  }
+
+  goBack() {
+    this.router.navigate(['/itr-filing/itr']);
   }
 }
