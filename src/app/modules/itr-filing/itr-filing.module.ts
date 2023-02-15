@@ -9,7 +9,7 @@ import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
 import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
@@ -45,7 +45,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
-import { PrefillDataComponent} from "./itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component";
+import { PrefillDataComponent } from './itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component';
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
@@ -85,6 +85,7 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
+import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 
 @NgModule({
   imports: [
@@ -98,9 +99,10 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
     SharedModule,
     PagesModule,
     NgxDocViewerModule,
-    NgxPaginationModule
+    NgxPaginationModule,
     // NgxExtendedPdfViewerModule
   ],
+  providers: [DatePipe],
   declarations: [
     ItrFilingComponent,
     UsersComponent,
@@ -179,12 +181,13 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
     InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
     UploadDocComponent,
+    AddClientsComponent,
   ],
-  exports: [
-    CustomerProfileComponent
-  ],
-  entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
-    /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
+  exports: [CustomerProfileComponent],
+  entryComponents: [
+    AddDonationDialogComponent /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */,
+    /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent,
+    UpdateManualFilingComponent,
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
     NriDetailsDialogComponent,
@@ -194,7 +197,7 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
     ListedUnlistedDialogComponent,
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent]
-
+    OtherImprovementDialogComponent,
+  ],
 })
-export class ItrFilingModule { }
+export class ItrFilingModule {}

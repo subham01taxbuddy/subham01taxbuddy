@@ -1,0 +1,51 @@
+.alert {
+  background-color: rgb(241, 91, 91);
+  border-radius: 9px;
+  padding: 9px;
+  margin-bottom: 4px;
+}
+
+.headline {
+  font-size: 21px;
+  /* text-decoration: underline; */
+  padding-left: 10px;
+}
+
+.user-name {
+  font-size: 17px;
+  margin-left: 5px;
+}
+
+.successRes {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  width: 45%;
+  margin-left: 30%;
+  background-color: #f2f2f2;
+}
+
+ul {
+  list-style-type: none;
+}
+
+ul li {
+  padding: 3px;
+}
+
+.skip {
+  background-color: white;
+  border-color: black;
+  color: black;
+}
+
+.skip:hover {
+  background-color: #00aeca;
+  color: white;
+}
+
+.user-name {
+  font-size: 17px;
+  margin-left: 5px;
+}
