@@ -23,10 +23,10 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
-  selectStatus:any = '';
+  selectStatus:any = 'OPEN';
   statusList: any[] = AppConstants.statusList;
   platformList:any[]=AppConstants.platformList;
-  selectPlatform:any ='';
+  selectPlatform:any ='All';
 
   constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
