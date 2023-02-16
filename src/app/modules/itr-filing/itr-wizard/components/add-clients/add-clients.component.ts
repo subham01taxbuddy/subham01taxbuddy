@@ -32,13 +32,21 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     directUpload: false,
   };
   personalInfo: any;
+  addedClient: boolean = false;
+  firstFormGroup = this._formBuilder.group({
+    firstCtrl: ['', Validators.required],
+  });
+  secondFormGroup = this._formBuilder.group({
+    secondCtrl: '',
+  });
 
   constructor(
     private fb: FormBuilder,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     public datePipe: DatePipe,
-    private utiService: UtilsService
+    private utiService: UtilsService,
+    private _formBuilder: FormBuilder
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
@@ -154,6 +162,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
             if (res.hasOwnProperty('messages')) {
               if (res.messages instanceof Array && res.messages.length > 0)
                 this.utiService.showSnackBar(res.messages[0].desc);
+              this.addedClient = true;
               this.changePage();
             }
           } else {

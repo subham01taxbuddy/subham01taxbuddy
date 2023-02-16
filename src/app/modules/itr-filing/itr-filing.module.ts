@@ -85,6 +85,8 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 
 @NgModule({
@@ -102,7 +104,11 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     NgxPaginationModule,
     // NgxExtendedPdfViewerModule
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} },
+  ],
   declarations: [
     ItrFilingComponent,
     UsersComponent,
