@@ -109,7 +109,7 @@ export class AppConstants {
     public static ratingList: any = [{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }];
     public static sentimentList: any = [{ label: 'Positive', value: 'Positive' }, { label: 'Negative', value: 'Negative' }];
     public static statusList: any = [{ label: 'All', value: 'All' },{ label: 'open', value: 'OPEN' }, { label: 'Resolved', value: 'RESOLVED' }, { label: 'Unresolved', value: 'UNRESOLVED' }];
-    public static platformList: any = [{ label: 'All', value: 'All' },{ label: 'PlayStore', value: 'PLAY_STORE' }, { label: 'Kommunicate', value: 'Kommunicate' }, { label: 'Google My Business', value: 'Google My Business' }, {label:'Apple Store' ,value:'apple store'} ];
+    public static platformList: any = [{ label: 'All', value: 'All' },{ label: 'Play Store', value: 'Play Store' }, { label: 'Kommunicate', value: 'Kommunicate' }, { label: 'Google My Business', value: 'Google My Business' }, {label:'Apple Store' ,value:'Apple Store'} ];
     public static defaultCountry = '91';
     public static stateDropdown: any = [{
         "id": "5b4599c9c15a76370a3424c2",

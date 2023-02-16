@@ -71,12 +71,12 @@
     &nbsp;&nbsp;<i class="fa fa-comments-o" aria-hidden="true"></i></button>
 </div>
 
-<div class="card__row" style="margin-top: 10px;"
+<!-- <div class="card__row" style="margin-top: 10px;"
   *ngIf="userDetails?.sourcePlatform==='Play Store' || userDetails?.sourcePlatform==='Google My Business' ||  userDetails?.sourcePlatform==='GOOGLE_WORKSPACE'">
   <button mat-raised-button class="btn-help" (click)="openKommunicateDashboard('NotKommunicate')"
     [disabled]="waChatLink === null">Open With
     Kommunicate &nbsp;&nbsp;<i class="fa fa-comments-o" aria-hidden="true"></i></button>
-</div>
+</div> -->
 
 <div class="card__row" style="margin-top: 10px;" *ngIf="userDetails && userDetails?.sourcePlatform!='Kommunicate'">
   <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions" (rowClicked)="onUsersRowClicked($event)">

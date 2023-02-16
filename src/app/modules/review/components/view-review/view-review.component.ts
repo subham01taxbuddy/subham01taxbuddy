@@ -52,7 +52,7 @@ export class ViewReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewReviewById();
-    this.getWhatsAppLink();
+    // this.getWhatsAppLink();
   }
 
   viewReviewById() {
@@ -134,7 +134,7 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'First Name',
         field: 'fName',
-        width: 150,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -153,7 +153,7 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'Last Name',
         field: 'lName',
-        width: 150,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -210,7 +210,7 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'Name of the SME',
         field: 'filer',
-        width: 200,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -342,11 +342,12 @@ export class ViewReviewComponent implements OnInit {
               "environment": environment.environment
         }
         this.userMsService.putMethodAWSURL(param,reqBody).subscribe((response: any) => {
+          this.loading = false;
           if (response.success){
              this._toastMessageService.alert("success", response.message)
              this.loading=false;
             } else {
-             this._toastMessageService.alert("error", response.error)
+             this._toastMessageService.alert("error", response.message)
              this.loading=false;
             }
         }, error => {
