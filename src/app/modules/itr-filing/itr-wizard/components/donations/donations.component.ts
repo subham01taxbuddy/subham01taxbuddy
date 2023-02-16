@@ -534,11 +534,7 @@ export class DonationsComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    if (this.Copy_ITR_JSON.donations) {
-      this.Copy_ITR_JSON.donations.forEach(item => {
-        this.addMoreDonations(item);
-      })
-    }
+
   }
 
   ngOnInit() {
@@ -548,6 +544,11 @@ export class DonationsComponent implements OnInit {
     };
 
     this.generalDonationForm = this.inItForm();
+    if (this.Copy_ITR_JSON.donations) {
+      this.Copy_ITR_JSON.donations.forEach(item => {
+        this.addMoreDonations(item);
+      })
+    }
     this.generalDonationForm.disable();
   }
 
