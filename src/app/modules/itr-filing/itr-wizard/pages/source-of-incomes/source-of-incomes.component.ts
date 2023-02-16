@@ -38,7 +38,8 @@ export class SourceOfIncomesComponent implements OnInit {
         },
         {
           name: 'Futures / Options', selected: false, schedule: this.schedules.SPECULATIVE_INCOME
-        }, {
+        },
+        {
           name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
         }];
     }
