@@ -9,139 +9,127 @@
         Other incomes
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
-      <div class="card__col-xs-12 card__col-sm-12">
-                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
-                                 [gridOptions]="otherIncomeGridOptions" (rowClicked)="onOtherIncomeRowClicked($event)">
-                </ag-grid-angular>
-        <div *ngIf="false" formGroup="otherIncomeFormGroup">
-          <table class="table table-bordered">
-            <thead style="background:#eaeaea">
-            <tr class="table-head">
-              <th class="text-center">Salary Type</th>
-              <th class="text-center">Gross Amount</th>
-              <th class="text-center">Actions</th>
-            </tr>
-            </thead>
-            <tbody formArrayName="otherIncomesFormArray">
-              <tr *ngFor="let income of otherIncomeDropdown;let i=index" [formGroupName]="i">
-              <td>
-                <mat-label>{{income.label}}</mat-label>
-              </td>
+    <div class="card">
+      <form [formGroup]="otherIncomeFormGroup">
+        <div class="card__col-xs-12 card__col-sm-12">
+          <div>
+            <table class="table table-bordered" style="width: 100%;">
+              <thead style="background:#eaeaea">
+              <tr class="table-head">
+                <th class="text-center">Salary Type</th>
+                <th class="text-center">Gross Amount</th>
+              </tr>
+              </thead>
+              <tbody formArrayName="otherIncomes">
+                <tr *ngFor="let income of getIncomeArray.controls;let i=index" [formGroupName]="i">
+                <td>
+                  {{income.value.label}}
+                </td>
 
-              <td>
-                <mat-form-field class="input-field-width" style="width: 90% !important;">
-                  <input type="text" trim matInput formControlName="name" placeholder="" name="income[i]"
-                         class="input-field" maxlength="125" required/>
-                  <!--                <mat-error-->
-                  <!--                  *ngIf="customerProfileForm.controls['bankDetails'].controls[i].controls['name'].hasError('pattern')">-->
-                  <!--                  Enter character only.</mat-error>-->
+                <td>
+                  <mat-form-field class="input-field-width" style="width: 90% !important;">
+                    <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                           formControlName="incomeValue"
+                           class="input-field" maxlength="125"/>
+                  </mat-form-field>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <hr>
+          <div style="padding-top: 20px;" formGroupName="dividendIncomes">
+
+            <div class="subTitle"> Quartely Break-up of Dividend Income
+              <span style="float: right;">Total: {{getTotal()}}</span>
+            </div>
+
+            <div class="card__row">
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">Upto 15 June 2022</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="Upto 15 June 2022" name="quarter1"
+                         formControlName="quarter1" class="input-field" maxlength="50"
+                         digitsOnly>
                 </mat-form-field>
-              </td>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">16 June 2022 - 15 Sep 2022</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="16 June 2022 - 15 Sep 2022" name="quarter2"
+                         formControlName="quarter2" class="input-field" maxlength="50"
+                         digitsOnly>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">16 Sep 2022 - 15 Dec 2022</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="16 Sep 2022 - 15 Dec 2022" name="quarter3"
+                         formControlName="quarter3" class="input-field" maxlength="50"
+                         digitsOnly>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">16 Dec 2022 - 15 March 2022</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="16 Dec 2022 - 15 March 2022" name="quarter4"
+                         formControlName="quarter4" class="input-field" maxlength="50"
+                         digitsOnly>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">16 March 2022 - 31 March 2022</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="16 March 2022 - 31 March 2022" name="quarter5"
+                         formControlName="quarter5" class="input-field" maxlength="50"
+                         digitsOnly>
+                </mat-form-field>
+              </div>
+            </div>
 
-              <td>
-                <button class="table-add-remove-button text-left">
-                  <!--                      [disabled]="!customerProfileForm.controls['bankDetails'].controls[i].controls['hasEdit'].value"-->
-                  Edit
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <br>
-        <hr>
-        <div style="padding-top: 20px;">
-
-          <div class="subTitle"> Quartely Break-up of Dividend Income
-            <span style="float: right;">Total: {{getTotal()}}</span>
           </div>
+          <hr>
 
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">Upto 15 June 2022</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput placeholder="Upto 15 June 2022" name="quarter1"
-                       [formControl]="dividendIncomes.controls['quarter1']" class="input-field" maxlength="50"
-                       digitsOnly>
-              </mat-form-field>
+          <div style="padding-top: 20px;">
+            <div class="subTitle">Family Pension
+              <!-- <span style="float: right;">Total:{{getTotalExemptIncome()}}</span> -->
             </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">16 June 2022 - 15 Sep 2022</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput placeholder="16 June 2022 - 15 Sep 2022" name="quarter2"
-                       [formControl]="dividendIncomes.controls['quarter2']" class="input-field" maxlength="50"
-                       digitsOnly>
-              </mat-form-field>
+            <div class="card__row">
+              <div class="card__col-xs-12 card__col-sm-4">
+                <mat-label class="inputLabel">Family pension</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="Family pension" name="quarter1"
+                         formControlName="familyPension" class="input-field" maxlength="50" digitsOnly
+                         (blur)="calFamPension()">
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-4">
+                <mat-label class="inputLabel">(-) Deduction u/s 57(iia)</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput name="quarter2" class="input-field"
+                         formControlName="famPenDeduction" digitsOnly disabled>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-4">
+                <mat-label class="inputLabel">Total Family Pension</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput name="quarter3" class="input-field"
+                         formControlName="totalFamPenDeduction" digitsOnly disabled>
+                </mat-form-field>
+              </div>
             </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">16 Sep 2022 - 15 Dec 2022</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput placeholder="16 Sep 2022 - 15 Dec 2022" name="quarter3"
-                       [formControl]="dividendIncomes.controls['quarter3']" class="input-field" maxlength="50"
-                       digitsOnly>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">16 Dec 2022 - 15 March 2022</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput placeholder="16 Dec 2022 - 15 March 2022" name="quarter4"
-                       [formControl]="dividendIncomes.controls['quarter4']" class="input-field" maxlength="50"
-                       digitsOnly>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">16 March 2022 - 31 March 2022</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput placeholder="16 March 2022 - 31 March 2022" name="quarter5"
-                       [formControl]="dividendIncomes.controls['quarter5']" class="input-field" maxlength="50"
-                       digitsOnly>
-              </mat-form-field>
-            </div>
+
           </div>
-
         </div>
-        <hr>
-
-        <div style="padding-top: 20px;">
-          <div class="subTitle">Family Pension
-            <!-- <span style="float: right;">Total:{{getTotalExemptIncome()}}</span> -->
+        <div class="">
+          <div class="footer__buttons clearfix" style="margin-top: 40px;">
+            <button class="tbd-btn save-btn" [disabled]="otherIncomeFormGroup.invalid"
+                    (click)="saveOtherIncome()">Save
+            </button>
           </div>
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-label class="inputLabel">Family pension</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput placeholder="Family pension" name="quarter1"
-                       [formControl]="familyPension" class="input-field" maxlength="50" digitsOnly
-                       (blur)="calFamPension()">
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-label class="inputLabel">(-) Deduction u/s 57(iia)</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput name="quarter2" class="input-field"
-                       [(ngModel)]="famPenDeduction" digitsOnly disabled>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-label class="inputLabel">Total Family Pension</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim matInput name="quarter3" class="input-field"
-                       [(ngModel)]="totalFamPenDeduction" digitsOnly disabled>
-              </mat-form-field>
-            </div>
-          </div>
-
         </div>
-      </div>
-      <div class="">
-        <div class="card__row footer__buttons clearfix" style="margin-top: 40px;">
-          <button class="tbd-btn save-btn" [disabled]="familyPension.invalid || dividendIncomes.invalid"
-                  (click)="saveOtherIncome()">Save
-          </button>
-        </div>
-      </div>
-
+      </form>
     </div>
   </mat-expansion-panel>
 
@@ -156,18 +144,49 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="card__col-xs-12 card__col-sm-12">
-      <div class="card__title" style="padding:10px; font-size: 20px;">Exempt Incomes
+      <div class="sectionTitle" style="padding:10px; font-size: 20px;">
         <span style="float: right;">Total:{{getTotalExemptIncome()}}</span>
       </div>
-      <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
-        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
-                         [gridOptions]="exemptIncomesGridOptions" (rowClicked)="onExemptIncomesRowClicked($event)">
-        </ag-grid-angular>
-      </div>
-      Note: 1. Sec 10(26) - Deduction is available only for certain category of assesses of NE Region and
-      Ladakh
-      <br>
-      Note: 2. Sec 10(26AAA) - Deduction is available only for certain Sikkimese assessees
+      <form [formGroup]="exemptIncomeFormGroup">
+        <div>
+          <table class="table table-bordered">
+            <thead style="background:#eaeaea">
+            <tr class="table-head">
+              <th class="text-center">Allowance Type</th>
+              <th class="text-center">Exempt Amount</th>
+            </tr>
+            </thead>
+            <tbody formArrayName="exemptIncomes">
+            <tr *ngFor="let income of getExemptIncomeArray.controls;let i=index" [formGroupName]="i">
+              <td class="label-td">
+                {{income.value.label}}
+              </td>
+
+              <td>
+                <mat-form-field appearance="none">
+                  <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                         formControlName="incomeValue"
+                         class="input-field" maxlength="125"/>
+                </mat-form-field>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          Note: 1. Sec 10(26) - Deduction is available only for certain category of assesses of NE Region and
+        Ladakh
+        <br>
+        Note: 2. Sec 10(26AAA) - Deduction is available only for certain Sikkimese assessees
+        </div>
+        <div class="">
+          <div class="footer__buttons clearfix" style="margin-top: 40px;">
+            <button class="tbd-btn save-btn" [disabled]="exemptIncomeFormGroup.invalid"
+                    (click)="saveExemptIncomes()">Save
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </mat-expansion-panel>
 
@@ -177,12 +196,12 @@
   <button
     class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
     <mat-icon>keyboard_backspace</mat-icon>
-    <span class="font-semibold">&nbsp;Back to Source Page</span>
+    <span class="font-semibold" (click)="goBack()">&nbsp;Back to Source Page</span>
   </button>
 
   <button
     class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
-    <span class="font-semibold">Save All</span>
+    <span class="font-semibold" (click)="saveAll()">Save All</span>
   </button>
 </div>
 <div class="card__row">

@@ -1,59 +1,116 @@
-<div class="card__col-lg-12">
-    <div class="card__col-lg-11" mat-dialog-title *ngIf="data.title">{{data.title}}</div>
-    <button mat-dialog-close tabindex="-1" class="tbd-btn-close card__col-lg-1"><i class="fa fa-times"
-            aria-hidden="true"></i></button>
+<div class="notes-header">
+  <div class="saved-notes mt-5 mb-2">Saved Notes for {{ data.clientName }}</div>
+  <div>
+    <div class="card__col-lg-11" mat-dialog-title *ngIf="data.title">
+      {{ data.title }}
+    </div>
+    <button mat-dialog-close tabindex="-1" class="tbd-btn-close card__col-lg-1">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+  </div>
 </div>
+
 <div class="card__row">
-    <div class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12">
-        <mat-label>Service Type: </mat-label>
-        <mat-form-field appearance="outline">
-            <mat-select placeholder="Service type" [formControl]="serviceType">
-                <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.value">
-                    {{serviceType.label}}
-                </mat-option>
-            </mat-select>
-            <mat-error class="error-msg" *ngIf="serviceType.hasError('required') ">Please select service type
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <div class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12">
-        <mat-label>Notes: </mat-label>
-        <mat-form-field appearance="outline">
-            <textarea matInput [formControl]="noteDetails" cdkTextareaAutosize cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="9" name="noteDetails" placeholder="Enter your note..."></textarea>
-            <mat-error class="error-msg" *ngIf="noteDetails.hasError('required') ">Please enter note
-                details</mat-error>
-        </mat-form-field>
-    </div>
-    <div class="add-notes">
-        <button type="submit" class="tbd-btn" (click)="addNote()">Add Notes</button>
-    </div>
+  <div class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12">
+    <mat-label>Service Type: </mat-label>
+    <mat-form-field class="service-input" appearance="outline">
+      <mat-select placeholder="Service type" [formControl]="serviceType">
+        <mat-option
+          *ngFor="let serviceType of serviceTypes"
+          [value]="serviceType.value"
+        >
+          {{ serviceType.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error class="error-msg" *ngIf="serviceType.hasError('required')"
+        >Please select service type
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12">
+    <mat-label>Notes: </mat-label>
+    <mat-form-field class="notes-input" appearance="outline">
+      <textarea
+        matInput
+        [formControl]="noteDetails"
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="9"
+        name="noteDetails"
+        placeholder="Enter your note..."
+      ></textarea>
+      <mat-error class="error-msg" *ngIf="noteDetails.hasError('required')"
+        >Please enter note details</mat-error
+      >
+    </mat-form-field>
+  </div>
+  <div class="add-notes">
+    <button type="submit" class="tbd-btn" (click)="addNote()">Add Notes</button>
+  </div>
 </div>
-<hr>
+<hr />
 
-<div class="saved-notes mt-5 mb-2">Saved Notes for {{data.clientName}}</div>
+<div class="mat-elevation-z8" *ngIf="notes.length > 0">
+  <table mat-table [dataSource]="notes">
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="Date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateAndTime | date : "dd MMM yyyy, hh:mm a" }}
+      </td>
+    </ng-container>
 
-<div class="tableFixHead" *ngIf="notes.length > 0">
-    <table>
-        <thead>
-            <tr>
-                <th>Notes</th>
-                <th>Service</th>
-                <th>SME</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of notes; let p=index ">
-                <td>{{item.note}}</td>
-                <td>{{item.serviceType}}</td>
-                <td>{{item.createdByName}}</td>
-                <td>{{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Weight Column -->
+    <ng-container matColumnDef="createdByName">
+      <th mat-header-cell *matHeaderCellDef>SME</th>
+      <td mat-cell *matCellDef="let element">{{ element.createdByName }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="serviceType">
+      <th mat-header-cell *matHeaderCellDef>Service</th>
+      <td mat-cell *matCellDef="let element">{{ element.serviceType }}</td>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="Notes">
+      <th mat-header-cell *matHeaderCellDef>Notes</th>
+      <td mat-cell *matCellDef="let element">{{ element.note }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+  >
+  </mat-paginator>
 </div>
+
+<!-- <div class="tableFixHead" *ngIf="notes.length > 0">
+  <table>
+    <thead>
+      <tr>
+        <th>Notes</th>
+        <th>Service</th>
+        <th>SME</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of notes; let p = index">
+        <td>{{ item.note }}</td>
+        <td>{{ item.serviceType }}</td>
+        <td>{{ item.createdByName }}</td>
+        <td>{{ item.dateAndTime | date : "dd MMM yyyy, hh:mm a" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
 
 <div *ngIf="notes.length === 0">
-    <p class="text"><b>No notes found.</b></p>
+  <p class="text"><b>No notes found.</b></p>
 </div>
