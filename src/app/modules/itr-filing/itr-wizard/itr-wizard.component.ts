@@ -125,14 +125,34 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.ngAfterContentChecked();
   }
 
-  updateSchedules(scheduleInfo) {
-    if(scheduleInfo.selected) {
+  updateSchedules(scheduleInfoEvent) {
+    if(scheduleInfoEvent.schedule.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
-      if(this.componentsList.indexOf(scheduleInfo.schedule) < 0) {
-        this.componentsList.splice(index, 0, scheduleInfo.schedule);
+      if(this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
+        //for future options, it shall be added inside capital gain
+        if(scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+          if(this.componentsList.indexOf(this.schedules.CAPITAL_GAIN) < 0) {
+            this.componentsList.splice(index, 0, this.schedules.CAPITAL_GAIN);
+          }
+        } else {
+          this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+        }
       }
     } else {
-      this.componentsList = this.componentsList.filter(item => item !== scheduleInfo.schedule);
+      //for removing future options, check if capital gain is there, if not remove
+      if(scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+        let cgSource = scheduleInfoEvent.sources.filter(item=> item.schedule === this.schedules.CAPITAL_GAIN)[0];
+        if(!cgSource.selected) {
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+        }
+      } else if(scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
+        let spSource = scheduleInfoEvent.sources.filter(item=> item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
+        if(!spSource.selected) {
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+        }
+      } else {
+        this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);
+      }
     }
   }
 
