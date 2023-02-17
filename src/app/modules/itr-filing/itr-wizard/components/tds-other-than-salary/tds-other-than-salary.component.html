@@ -1,0 +1,117 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<form [formGroup]="salaryForm">
+    <div formArrayName="salaryArray">
+        <div class="head-title mb-5">This is TDS on salary deducted by your employer. Enter the amount from form 16 or
+            26AS</div>
+        <div class="display-flex" *ngFor="let donation of getSalaryArray.controls | paginate:config ;let i=index"
+            [formGroupName]="fieldGlobalIndex(i)">
+            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+            </mat-checkbox>
+            <div class="card__col-xs-12 card__col-sm-12">
+
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>TAN of Deductor*</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input
+                            matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number"
+                            matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="deductorPAN"
+                            matInput currencyMask placeholder="XXXXNNNNNX" name="deductorPAN[i]" class="input-field"
+                            maxlength="10" minlength="10" required type="text" trim upperCase>
+
+                        <mat-error
+                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['deductorPAN'].hasError('pattern')">
+                            Enter
+                            valid PAN (e.g XXXX12345X)</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4" *ngIf="showHeadOfIncome==='TDTS'">
+                    <mat-label>Select Head of Income*</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-select matTooltip="{{donationToolTip}}" (selectionChange)="changed()"
+                            matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder=""
+                            formControlName="headOfIncome" name="headOfIncome[i]" required>
+                            <mat-option *ngFor="let dropdown of headOfIncomeDropdownTDS2" [value]="dropdown.code"
+                                matTooltip="{{dropdown.name}}" matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                [disabled]="dropdown.disabled">
+                                {{ dropdown.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4" *ngIf="showHeadOfIncome==='TDTSP'">
+                    <mat-label>Select Head of Income*</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-select matTooltip="{{donationToolTip}}" (selectionChange)="changed()"
+                            matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder=""
+                            formControlName="headOfIncome" name="headOfIncome[i]" required>
+                            <mat-option *ngFor="let dropdown of headOfIncomeDropdownTDS3" [value]="dropdown.code"
+                                matTooltip="{{dropdown.name}}" matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                [disabled]="dropdown.disabled">
+                                {{ dropdown.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Name of Deductor*</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input formControlName="deductorName" matInput placeholder="Name of deductor"
+                            name="deductorName[i]" class="input-field" maxlength="125" required type="text" trim>
+                        <mat-error
+                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['deductorName'].hasError('pattern')">
+                            Name should be character only</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Total Amount credited*</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input formControlName="totalAmountCredited" matInput placeholder="Amount Other Than Cash"
+                            name="totalAmountCredited[i]" required class="input-field" maxlength="14" digitsOnly>
+                        <mat-error
+                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalAmountCredited'].hasError('pattern')">
+                            Enter
+                            positive amount without decimal.</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Total Tax Deducted*</mat-label>
+                    <mat-form-field appearance="outline">
+                        <input formControlName="totalTdsDeposited" matInput placeholder="Amount Other Than Cash"
+                            name="totalTdsDeposited[i]" required class="input-field" maxlength="14" digitsOnly>
+                        <mat-error
+                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalTdsDeposited'].hasError('pattern')">
+                            Enter
+                            positive amount without decimal.</mat-error>
+                    </mat-form-field>
+                </div>
+
+            </div>
+
+            <div class="edit-head">
+                <button type="button" class="edit-donation" (click)="editSalaryForm(i)"><mat-icon>
+                        edit_square
+                    </mat-icon>Edit </button>
+            </div>
+        </div>
+        <div class="display-flex">
+            <div class="card__col-xs-12">
+                <div class="card__col-sm-3">
+                    <button type="submit" class="tbd-btn-secondary" (click)="deleteSalaryArray()"><i class="fa fa-trash"
+                            aria-hidden="true">&nbsp;</i>Delete</button>
+                </div>
+                <div class="card__col-sm-6 txt-center">
+                    <table>
+                        <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
+                    </table>
+                    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                </div>
+                <div class="card__col-sm-3" style="text-align: right;">
+                    <button class="tbd-btn save-btn" (click)="save()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

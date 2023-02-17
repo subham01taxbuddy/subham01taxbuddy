@@ -1,7 +1,3 @@
-.dialog-min-height {
-    min-height: 250px;
-}
-
 .edit-head {
     width: 132px;
 
@@ -23,9 +19,13 @@
     }
 }
 
+.head-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 11px;
+    color: #000000;
+}
 
-.address {
-    .mat-form-field {
-        width: 95% !important
-    }
+.tds-on {
+    display: inline-flex;
 }

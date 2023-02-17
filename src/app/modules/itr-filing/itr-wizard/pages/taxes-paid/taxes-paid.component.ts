@@ -14,7 +14,7 @@ import * as moment from 'moment';
 })
 export class TaxesPaidComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-
+  showHeadOfIncome = '';
   loading: boolean = false;
   onSalaryGridOptions: GridOptions;
   tdsOtherThanSalary16AGridOptions: GridOptions;
@@ -24,9 +24,16 @@ export class TaxesPaidComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
+  isAddOther: number;
+  step: any = 0;
+  isAddSalary: number;
+  isAddPanBased: number;
+  isAddTcs: number;
+  isAddAdvance: number;
   // headOfIncomeDropdownTDS2 = [];
 
   // headOfIncomeDropdownTDS3 = [
+
   //   { name: 'Income from business and Profession', code: 'BP' },
   //   { name: 'Income from House Property', code: 'HP' },
   //   { name: 'Income from Capital Gains', code: 'CG' },
@@ -65,7 +72,7 @@ export class TaxesPaidComponent implements OnInit {
   ngOnInit() {
     this.getItrDocuments();
 
-    if(!this.ITR_JSON.taxPaid) {
+    if (!this.ITR_JSON.taxPaid) {
       this.ITR_JSON.taxPaid = {
         onSalary: [],
         otherThanSalary16A: [],
@@ -75,29 +82,29 @@ export class TaxesPaidComponent implements OnInit {
         paidRefund: []
       };
     } else {
-      if(!this.ITR_JSON.taxPaid.onSalary) {
+      if (!this.ITR_JSON.taxPaid.onSalary) {
         this.ITR_JSON.taxPaid.onSalary = [];
-      } 
-      if(!this.ITR_JSON.taxPaid.otherThanSalary16A) {
+      }
+      if (!this.ITR_JSON.taxPaid.otherThanSalary16A) {
         this.ITR_JSON.taxPaid.otherThanSalary16A = [];
-      } 
-      if(!this.ITR_JSON.taxPaid.otherThanSalary26QB) {
+      }
+      if (!this.ITR_JSON.taxPaid.otherThanSalary26QB) {
         this.ITR_JSON.taxPaid.otherThanSalary26QB = [];
-      } 
-      if(!this.ITR_JSON.taxPaid.tcs) {
+      }
+      if (!this.ITR_JSON.taxPaid.tcs) {
         this.ITR_JSON.taxPaid.tcs = [];
-      } 
-      if(!this.ITR_JSON.taxPaid.otherThanTDSTCS) {
+      }
+      if (!this.ITR_JSON.taxPaid.otherThanTDSTCS) {
         this.ITR_JSON.taxPaid.otherThanTDSTCS = [];
-      } 
-      if(!this.ITR_JSON.taxPaid.paidRefund) {
+      }
+      if (!this.ITR_JSON.taxPaid.paidRefund) {
         this.ITR_JSON.taxPaid.paidRefund = [];
-      } 
+      }
     }
 
     this.onSalaryCallInConstructor();
-    console.log('onsalary',this.ITR_JSON.taxPaid?.onSalary);
-    
+    console.log('onsalary', this.ITR_JSON.taxPaid?.onSalary);
+
     this.onSalaryGridOptions.rowData = this.ITR_JSON.taxPaid?.onSalary;
     this.tdsOtherThanSalary16ACallInConstructor();
     this.tdsOtherThanSalary16AGridOptions.rowData = this.ITR_JSON.taxPaid?.otherThanSalary16A;
@@ -1251,7 +1258,7 @@ export class TaxesPaidComponent implements OnInit {
     var tdsOtherThanSalary26QB = []
     var tcs = []
     var otherThanTdsTcs = []
-    if(!this.ITR_JSON.taxPaid) {
+    if (!this.ITR_JSON.taxPaid) {
       this.ITR_JSON.taxPaid = {
         onSalary: [],
         otherThanSalary16A: [],
@@ -1413,6 +1420,30 @@ export class TaxesPaidComponent implements OnInit {
       this.docDetails.docUrl = '';
       this.docDetails.docType = '';
     }
+  }
+
+  //new design
+  addMore(type) {
+    if (type === 'salary') {
+      this.isAddSalary = Math.random();
+    } else if (type === 'other') {
+      this.isAddOther = Math.random();
+    } else if (type === 'panBased') {
+      this.isAddPanBased = Math.random();
+    } else if (type === 'tcs') {
+      this.isAddTcs = Math.random();
+    } else if (type === 'advance') {
+      this.isAddAdvance = Math.random();
+    }
+  }
+  setStep(index: number) {
+    if (index === 1) {
+      this.showHeadOfIncome = 'TDTS';
+    } else if (index === 2) {
+      this.showHeadOfIncome = 'TDTSP';
+    }
+    this.step = index;
+
   }
 
 }

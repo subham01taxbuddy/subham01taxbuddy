@@ -85,6 +85,11 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TdsOnSalaryComponent } from './itr-wizard/components/tds-on-salary/tds-on-salary.component';
+import { TdsOtherThanSalaryComponent } from './itr-wizard/components/tds-other-than-salary/tds-other-than-salary.component';
+import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';
+import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-paid/advance-tax-paid.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -102,7 +107,7 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     SharedModule,
     PagesModule,
     NgxDocViewerModule,
-    NgxPaginationModule,
+    NgxPaginationModule
     // NgxExtendedPdfViewerModule
   ],
   providers: [
@@ -188,13 +193,18 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
     UploadDocComponent,
+    TdsOnSalaryComponent,
+    TdsOtherThanSalaryComponent,
+    TcsComponent,
+    AdvanceTaxPaidComponent,
     AllBusinessIncomeComponent,
     AddClientsComponent,
   ],
-  exports: [CustomerProfileComponent],
+  exports: [
+    CustomerProfileComponent
+  ],
   entryComponents: [
-    AddDonationDialogComponent /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */,
-    /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent,
+    ReviseReturnDialogComponent,
     UpdateManualFilingComponent,
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
@@ -205,7 +215,11 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     ListedUnlistedDialogComponent,
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent,
-  ],
+    OtherImprovementDialogComponent],
+  providers: [
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} }
+  ]
+
 })
 export class ItrFilingModule {}

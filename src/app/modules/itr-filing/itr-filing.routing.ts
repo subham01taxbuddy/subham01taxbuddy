@@ -18,7 +18,7 @@ import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/s
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
+import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
