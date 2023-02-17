@@ -1,0 +1,31 @@
+.edit-head {
+    width: 132px;
+
+    .edit-donation {
+        background: #E5F2F6;
+        border: 0.5px solid #D9D9D9;
+        border-radius: 3px;
+        display: flex;
+        padding: 5px 4px;
+
+        .mat-icon {
+            height: 15px;
+            width: 19px;
+        }
+
+        .material-icons {
+            font-size: 14px;
+        }
+    }
+}
+
+.head-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 11px;
+    color: #000000;
+}
+
+.tds-on {
+    display: inline-flex;
+}

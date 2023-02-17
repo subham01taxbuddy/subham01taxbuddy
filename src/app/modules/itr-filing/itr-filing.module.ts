@@ -23,7 +23,7 @@ import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
+import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
@@ -85,6 +85,10 @@ import { MedicalExpensesComponent } from './itr-wizard/components/medical-expens
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TdsOnSalaryComponent } from './itr-wizard/components/tds-on-salary/tds-on-salary.component';
+import { TdsOtherThanSalaryComponent } from './itr-wizard/components/tds-other-than-salary/tds-other-than-salary.component';
+import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';
+import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-paid/advance-tax-paid.component';
 
 @NgModule({
   imports: [
@@ -178,6 +182,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
     InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
     UploadDocComponent,
+    TdsOnSalaryComponent,
+    TdsOtherThanSalaryComponent,
+    TcsComponent,
+    AdvanceTaxPaidComponent,
   ],
   exports: [
     CustomerProfileComponent
