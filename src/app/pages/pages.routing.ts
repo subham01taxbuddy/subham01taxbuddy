@@ -39,6 +39,8 @@ export const routes: Routes = [
 			{ path: 'user-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: () => import('./user-management/user-management.module').then(m => m.UserManagementModule) },
 			{ path: 'gst-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: () => import('./gst-filing/gst-filing.module').then(m => m.GstFilingModule) },
 			{ path: 'team-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: () => import('./team-management/team-mgnt.module').then(m => m.TeamManagementModule) },
+			{ path: 'bo-partners', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: () => import('./bo-partners/bo-partners.module').then(m => m.BoPartnersModule) },
+
 			// { path: '**', redirectTo: '/pages/dashboard/calling/calling2', pathMatch: 'full' },
 
 		]

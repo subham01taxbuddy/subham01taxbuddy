@@ -1,0 +1,39 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">View Documents of : {{data.partnerName}}</label>
+<button mat-dialog-close tabindex="-1" (click)="close()"
+  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i>
+</button>
+<div class="card__row">
+  <span *ngIf="data?.aadhar">
+    <button type="button" class="tbd-btn" title="Aadhar " (click)="openDocument(data?.aadhar)">
+    Aadhar&nbsp; 
+    </button>
+  </span>
+  <span *ngIf="data?.panCard">
+    <button type="button" class="tbd-btn" title="PanCard" (click)="openDocument(data?.panCard)">
+    Pan&nbsp;
+    </button>
+  </span>
+  <span *ngIf="data?.signedNDA">
+    <button type="button" class="tbd-btn" title="Signed NDA" (click)="openDocument(data?.signedNDA)">
+      Signed NDA&nbsp; 
+    </button>
+  </span>
+  <span *ngIf="data?.certificateOfPractice">
+    <button type="button" class="tbd-btn" title="Certificate Of Practice" (click)="openDocument(data?.certificateOfPractice)">
+      Certificate Of Practice&nbsp; 
+    </button>
+  </span>
+  <span *ngIf="data?.passbookOrCancelledCheque">
+    <button type="button" class="tbd-btn" title="Passbook Or CancelledCheque" (click)="openDocument(data?.passbookOrCancelledCheque)">
+      Passbook Or CancelledCheque&nbsp; 
+    </button>
+  </span>
+  <span *ngIf="data?.cvUrl">
+    <button type="button" class="tbd-btn" title="CV" (click)="openDocument(data?.cvUrl)">
+      CV &nbsp; 
+    </button>
+  </span>
+
+</div>
