@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -10,7 +10,8 @@ declare let $: any;
   styleUrls: ['./tcs.component.scss']
 })
 export class TcsComponent implements OnInit {
-  @Input() isAddTcs : Number;
+  @Input() isAddTcs: Number;
+  @Output() onSave= new EventEmitter();
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -75,6 +76,7 @@ export class TcsComponent implements OnInit {
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.tcs = this.salaryForm.value.salaryArray;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      this.onSave.emit();
       this.loading = false;
       this.utilsService.showSnackBar('TCS data saved successfully.');
     } else {

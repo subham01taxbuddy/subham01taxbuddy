@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -15,6 +15,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   @Input() isAddOther: Number;
   @Input() isAddPanBased: Number;
   @Input() showHeadOfIncome: String;
+  @Output() onSave = new EventEmitter();
 
   salaryForm: FormGroup;
   donationToolTip: any;
@@ -131,11 +132,13 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       if (this.showHeadOfIncome === 'TDTS') {
         this.Copy_ITR_JSON.taxPaid.otherThanSalary16A = this.salaryForm.value.salaryArray;
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+        this.onSave.emit();
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       } else if (this.showHeadOfIncome === 'TDTSP') {
         this.Copy_ITR_JSON.taxPaid.otherThanSalary26QB = this.salaryForm.value.salaryArray;
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+        this.onSave.emit();
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       }
