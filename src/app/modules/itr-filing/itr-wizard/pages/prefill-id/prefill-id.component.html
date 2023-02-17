@@ -8,7 +8,7 @@
     <!-- main-div  -->
     <main
       class="bg-white overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
-    >
+    *ngIf="!showEriView">
       <div>
         <div
           class="flex justify-between items-center rounded-2x1 bg-white px-[25px]"
@@ -147,7 +147,7 @@
               <!-- action-buttona  -->
               <div class="flex justify-between p-[30px]">
                 <button
-                  (click)="skip()"
+                  (click)="skipToSources()"
                   class="btn skip normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
                 >
                   <span class="font-semibold">Skip to Sources of Income</span>
@@ -167,5 +167,6 @@
         </div>
       </div>
     </main>
+    <router-outlet *ngIf="showEriView" (activate)="subscribeToEmmiter($event)" (deactivate)="unsubscribe()"></router-outlet>
   </div>
 </div>

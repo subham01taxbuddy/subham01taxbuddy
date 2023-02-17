@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -40,13 +40,17 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     secondCtrl: '',
   });
 
+  @Output() skipAddClient: EventEmitter<any> = new EventEmitter();
+  @Output() completeAddClient: EventEmitter<any> = new EventEmitter();
+
   constructor(
     private fb: FormBuilder,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     public datePipe: DatePipe,
     private utiService: UtilsService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private location: Location
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
@@ -307,5 +311,15 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     sessionStorage.removeItem('ERI-Request-Header');
+  }
+
+  skip() {
+    this.location.back();
+    this.skipAddClient.emit(true);
+  }
+
+  showPrefillView() {
+    this.location.back();
+    this.completeAddClient.emit(true);
   }
 }
