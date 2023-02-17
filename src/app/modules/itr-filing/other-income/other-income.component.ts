@@ -258,11 +258,12 @@ export class OtherIncomeComponent implements OnInit {
     let otherIncomes = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
     for (let i = 0; i < otherIncomes.controls.length; i++) {
       console.log(otherIncomes.controls[i]);
-      if (this.utilsService.isNonEmpty(otherIncomes.controls['incomeValue'].value)) {
+      let otherIncome = otherIncomes.controls[i] as FormGroup;
+      if (this.utilsService.isNonEmpty(otherIncome.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.incomes.push({
           expenses: 0,
-          amount: otherIncomes.controls[i].value.incomeValue,
-          incomeType: otherIncomes.controls[i].value.incomeType,
+          amount: otherIncome.controls['incomeValue'].value,
+          incomeType: otherIncome.controls['incomeType'].value,
           details: null
         });
       }

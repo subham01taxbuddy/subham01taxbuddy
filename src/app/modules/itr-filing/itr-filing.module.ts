@@ -23,8 +23,7 @@ import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
-import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
+// import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
@@ -85,10 +84,14 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TdsOnSalaryComponent } from './itr-wizard/components/tds-on-salary/tds-on-salary.component';
+import { TdsOtherThanSalaryComponent } from './itr-wizard/components/tds-other-than-salary/tds-other-than-salary.component';
+import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';
+import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-paid/advance-tax-paid.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
+import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
 
 @NgModule({
   imports: [
@@ -102,7 +105,7 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     SharedModule,
     PagesModule,
     NgxDocViewerModule,
-    NgxPaginationModule,
+    NgxPaginationModule
     // NgxExtendedPdfViewerModule
   ],
   providers: [
@@ -120,7 +123,7 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     HousePropertyComponent,
     OtherIncomeComponent,
     InvestmentsDeductionsComponent,
-    AddDonationDialogComponent,
+    // AddDonationDialogComponent,
     TaxesPaidComponent,
     DeclarationComponent,
     SummaryComponent,
@@ -188,13 +191,18 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
     UploadDocComponent,
+    TdsOnSalaryComponent,
+    TdsOtherThanSalaryComponent,
+    TcsComponent,
+    AdvanceTaxPaidComponent,
     AllBusinessIncomeComponent,
     AddClientsComponent,
   ],
-  exports: [CustomerProfileComponent],
+  exports: [
+    CustomerProfileComponent
+  ],
   entryComponents: [
-    AddDonationDialogComponent /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */,
-    /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent,
+    ReviseReturnDialogComponent,
     UpdateManualFilingComponent,
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
@@ -205,7 +213,7 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     ListedUnlistedDialogComponent,
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent,
-  ],
+    OtherImprovementDialogComponent],
+
 })
 export class ItrFilingModule {}

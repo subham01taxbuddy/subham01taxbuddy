@@ -7,6 +7,9 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { OtherIncomeComponent } from '../../../other-income/other-income.component';
+import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
+import { Subscription } from 'rxjs';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
@@ -20,6 +23,7 @@ export class PrefillIdComponent implements OnInit {
   downloadPrefill: boolean = false;
   uploadDoc: any;
   loading = false;
+  showEriView = false;
   navigationData: any;
   ITR_JSON: ITR_JSON;
 
@@ -40,11 +44,37 @@ export class PrefillIdComponent implements OnInit {
     console.log();
   }
 
-  skip() {
+  subscription: Subscription;
+
+  subscribeToEmmiter(componentRef) {
+    //this may not be needed for us
+    // if (!(componentRef instanceof OtherIncomeComponent)){
+    //   return;
+    // }
+    const child: AddClientsComponent = componentRef;
+    child.skipAddClient.subscribe(() => {
+      this.skipToSources();
+    });
+    child.completeAddClient.subscribe(() => {
+      this.showPrefillView();
+    });
+  }
+
+  unsubscribe() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+  skipToSources() {
     this.skipPrefill.emit(null);
   }
 
+  showPrefillView() {
+    this.showEriView = false;
+  }
+
   addClient() {
+    this.showEriView = true;
     this.router.navigate(['/itr-filing/itr/eri']);
   }
 

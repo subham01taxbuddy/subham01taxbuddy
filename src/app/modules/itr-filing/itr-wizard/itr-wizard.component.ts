@@ -111,6 +111,12 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     // this.
   }
 
+  gotoSummary() {
+    this.showIncomeSources = false;
+    this.selectedSchedule = 'Summary';
+    this.router.navigate(['/itr-filing/itr/summary']);
+  }
+
   gotoSchedule(schedule) {
     this.showIncomeSources = false;
     this.selectedSchedule = this.schedules.getTitle(schedule);

@@ -12,13 +12,13 @@ import { DelayComponent } from './delay/delay.component';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { AddClientComponent } from './add-client/add-client.component';
+import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
+import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
@@ -27,6 +27,7 @@ import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
+import { SummaryComponent } from './summary/summary.component';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 
 const routes: Routes = [
@@ -57,6 +58,7 @@ const routes: Routes = [
       { path: 'future-options', component: SpeculativeIncomeComponent },
       { path: 'nri', component: ForeignIncomeComponent },
       { path: 'eri', component: AddClientsComponent },
+      { path: 'summary', component: SummaryComponent },
       // ],
       // },
       // { path: 'direct-upload', component: DirectUploadComponent },
