@@ -85,6 +85,7 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
+import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 
 @NgModule({
   imports: [
@@ -179,6 +180,7 @@ import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-do
     InvestmentsDeductionsComponent,
     ForeignIncomeComponent,
     UploadDocComponent,
+    AllBusinessIncomeComponent,
   ],
   exports: [
     CustomerProfileComponent
