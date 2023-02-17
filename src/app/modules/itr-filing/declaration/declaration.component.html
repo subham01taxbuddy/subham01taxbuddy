@@ -1,55 +1,63 @@
 <!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<!-- <div class="content"> -->
-<div class="card__title" style="padding:10px; font-size: 20px;">Customer Declaration</div>
-<form [formGroup]="declarationsForm">
+<div class="cardRect">
+  <div class="card__title">Customer Declaration</div>
+  <form [formGroup]="declarationsForm">
     <div style="line-height: 2em; font-size: 16px;">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <strong>I</strong>,&nbsp;
-        <mat-form-field style="width: 30% !important; ">
-            <input id="name" matInput formControlName="name" placeholder="" class="input-field" maxlength="50">
-            <mat-error *ngIf="declarationsForm.controls['name'].hasError('pattern')">Only
-                alphabets</mat-error>
-            <mat-error *ngIf="declarationsForm.controls['name'].hasError('required')">Enter
-                Name</mat-error>
-        </mat-form-field> Son/daughter of&nbsp;&nbsp;
-        <mat-form-field style="width: 30% !important;">
-            <input maxlength="50" matInput formControlName="childOf" placeholder="" class="input-field"
-                (blur)="initCap(declarationsForm.controls['childOf'])">
-            <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('pattern')">Enter
-                valid name</mat-error>
-            <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('required')">Parent
-                name required</mat-error>
-        </mat-form-field>&nbsp;&nbsp; solemnly declare that to the best of my
-        knowledge and belief, the information given in the return is correct and complete and in
-        accordance with the provisions
-        of the Income-tax Act 1961, I further declare that I am making return
-        in my capacity as
-        <strong>{{declarationsForm.controls['capacity'].value}}</strong> and I am also competent
-        to make this return and verify it. I am holding permanent account number
-        &nbsp;&nbsp;
-        <mat-form-field style="width: 17% !important;">
-            <input matInput type="text" upperCase formControlName="panNumber" placeholder="" class="input-field">
-            <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('pattern')">Enter
-                valid PAN (XXXPXNNNNX).</mat-error>
-            <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('required')">Enter
-                PAN Number</mat-error>
-        </mat-form-field>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <strong>I</strong>,&nbsp;
+      <mat-form-field style="width: 30% !important; ">
+        <input id="name" matInput formControlName="name" placeholder="" class="input-field" maxlength="50">
+        <mat-error *ngIf="declarationsForm.controls['name'].hasError('pattern')">Only
+          alphabets
+        </mat-error>
+        <mat-error *ngIf="declarationsForm.controls['name'].hasError('required')">Enter
+          Name
+        </mat-error>
+      </mat-form-field>
+      Son/daughter of&nbsp;&nbsp;
+      <mat-form-field style="width: 30% !important;">
+        <input maxlength="50" matInput formControlName="childOf" placeholder="" class="input-field"
+               (blur)="initCap(declarationsForm.controls['childOf'])">
+        <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('pattern')">Enter
+          valid name
+        </mat-error>
+        <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('required')">Parent
+          name required
+        </mat-error>
+      </mat-form-field>&nbsp;&nbsp; solemnly declare that to the best of my
+      knowledge and belief, the information given in the return is correct and complete and in
+      accordance with the provisions
+      of the Income-tax Act 1961, I further declare that I am making return
+      in my capacity as
+      <strong>{{declarationsForm.controls['capacity'].value}}</strong> and I am also competent
+      to make this return and verify it. I am holding permanent account number
+      &nbsp;&nbsp;
+      <mat-form-field style="width: 17% !important;">
+        <input matInput type="text" upperCase formControlName="panNumber" placeholder="" class="input-field">
+        <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('pattern')">Enter
+          valid PAN (XXXPXNNNNX).
+        </mat-error>
+        <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('required')">Enter
+          PAN Number
+        </mat-error>
+      </mat-form-field>
     </div>
 
     <div>
-        <mat-form-field style="width: 35% !important;">
-            <input matInput type="text" maxlength="25" formControlName="place" placeholder="Place" class="input-field"
-                required>
-            <mat-error *ngIf="declarationsForm.controls['place'].hasError('pattern')">Please enter only
-                characters.</mat-error>
-            <mat-error *ngIf="declarationsForm.controls['place'].hasError('required')">Please enter place.
-            </mat-error>
-        </mat-form-field>
+      <mat-form-field style="width: 35% !important;">
+        <input matInput type="text" maxlength="25" formControlName="place" placeholder="Place" class="input-field"
+               required>
+        <mat-error *ngIf="declarationsForm.controls['place'].hasError('pattern')">Please enter only
+          characters.
+        </mat-error>
+        <mat-error *ngIf="declarationsForm.controls['place'].hasError('required')">Please enter place.
+        </mat-error>
+      </mat-form-field>
     </div>
-    <div class="footer__buttons clearfix" style="margin-top: 40px;">
-        <button class="tbd-btn" (click)="saveAndContinue()">Save and Continue
-        </button>
+    <div class="footer__buttons clearfix">
+      <button class="tbd-btn save-btn" (click)="saveAndContinue()">Save
+      </button>
     </div>
     <!--  <div class="card_footer">
               <div *ngIf="this.warningsArray.length === 0">
@@ -60,6 +68,6 @@
                     aria-hidden="true"></i></a>
               </div>
             </div> -->
-</form>
-<!-- </div> -->
+  </form>
+</div>
 <!-- </div> -->

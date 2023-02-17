@@ -132,6 +132,8 @@ export class OtherIncomeComponent implements OnInit {
   otherIncomesFormArray: FormArray;
   exemptIncomeFormGroup: FormGroup;
   exemptIncomesFormArray: FormArray;
+  private isEditOtherIncome: boolean = false;
+  private isEditExemptIncome: boolean = false;
   constructor(public utilsService: UtilsService,
     private itrMsService: ItrMsService, public fb: FormBuilder,
               private location: Location) { }
@@ -155,10 +157,13 @@ export class OtherIncomeComponent implements OnInit {
       famPenDeduction: [],
       totalFamPenDeduction: []
     });
+    this.otherIncomeFormGroup.disable();
+
     this.exemptIncomesFormArray = this.createExemptIncomeForm();
     this.exemptIncomeFormGroup = this.fb.group({
       exemptIncomes: this.exemptIncomesFormArray,
     });
+    this.exemptIncomeFormGroup.disable();
     this.setOtherIncomeValues();
     this.setExemptIncomeValues();
   }
@@ -322,8 +327,9 @@ export class OtherIncomeComponent implements OnInit {
       let otherIncomes = this.ITR_JSON.incomes.filter(item => item.incomeType === 'SAVING_INTEREST' || item.incomeType === 'FD_RD_INTEREST' || item.incomeType === 'TAX_REFUND_INTEREST' || item.incomeType === 'ANY_OTHER');
       let otherIncomesFormArray = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
-        const control = otherIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'] === otherIncomes[i].incomeType)[0];
-        control['incomeValue'].setValue(otherIncomes[i].amount);
+        console.log(otherIncomes[i].incomeType);
+        const control = otherIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'].value === otherIncomes[i].incomeType)[0] as FormGroup;
+        control.controls['incomeValue'].setValue(otherIncomes[i].amount);
       }
 
       let famPension = this.ITR_JSON.incomes.filter(item => item.incomeType === 'FAMILY_PENSION');
@@ -415,5 +421,15 @@ export class OtherIncomeComponent implements OnInit {
       }
     }
     return total;
+  }
+
+  editForm(type) {
+    if (type === 'otherIncome') {
+      this.isEditOtherIncome = true;
+      this.otherIncomeFormGroup.enable();
+    } else if (type === 'exemptIncome') {
+      this.isEditExemptIncome = true;
+      this.exemptIncomeFormGroup.enable();
+    }
   }
 }

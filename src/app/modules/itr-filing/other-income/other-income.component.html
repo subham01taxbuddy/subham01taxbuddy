@@ -8,6 +8,11 @@
         </mat-icon>
         Other incomes
       </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('otherIncome')"><mat-icon>
+          edit_square
+        </mat-icon>Edit </button>
+      </div>
     </mat-expansion-panel-header>
     <div class="card">
       <form [formGroup]="otherIncomeFormGroup">
@@ -133,8 +138,7 @@
     </div>
   </mat-expansion-panel>
 
-  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (closed)="closed('personal')" hideToggle
-                       class="hide-close">
+  <mat-expansion-panel hideToggle class="hide-close">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-icon>
@@ -142,6 +146,11 @@
         </mat-icon>
         Exempted Incomes
       </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('exemptIncome')"><mat-icon>
+          edit_square
+        </mat-icon>Edit </button>
+      </div>
     </mat-expansion-panel-header>
     <div class="card__col-xs-12 card__col-sm-12">
       <div class="sectionTitle" style="padding:10px; font-size: 20px;">
