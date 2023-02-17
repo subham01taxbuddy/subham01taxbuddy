@@ -24,7 +24,6 @@ import { HousePropertyComponent } from './house-property/house-property.componen
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
 // import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
-// import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
@@ -92,6 +91,7 @@ import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-paid/advance-tax-paid.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
+import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
 
 @NgModule({
   imports: [
@@ -124,7 +124,7 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     OtherIncomeComponent,
     InvestmentsDeductionsComponent,
     // AddDonationDialogComponent,
-    // TaxesPaidComponent,
+    TaxesPaidComponent,
     DeclarationComponent,
     SummaryComponent,
     AcknowledgementComponent,
