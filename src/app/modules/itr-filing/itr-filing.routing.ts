@@ -27,6 +27,7 @@ import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
+import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 
 const routes: Routes = [
   {

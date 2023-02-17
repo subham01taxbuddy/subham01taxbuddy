@@ -7,6 +7,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-prefill-id',
@@ -19,6 +20,8 @@ export class PrefillIdComponent implements OnInit {
   downloadPrefill: boolean = false;
   uploadDoc: any;
   loading = false;
+  navigationData: any;
+  ITR_JSON: ITR_JSON;
 
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
@@ -29,7 +32,9 @@ export class PrefillIdComponent implements OnInit {
     private itrMsService: ItrMsService,
     private utilsService: UtilsService,
     public dialogRef: MatDialogRef<PrefillIdComponent>
-  ) {}
+  ) {
+    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+  }
 
   ngOnInit(): void {
     console.log();
