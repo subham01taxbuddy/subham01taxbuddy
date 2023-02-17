@@ -22,6 +22,7 @@ export class TaxesPaidComponent implements OnInit {
   tcsGridOptions: GridOptions;
   otherThanTdsTcsGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
   isAddOther: number;
@@ -1345,6 +1346,24 @@ export class TaxesPaidComponent implements OnInit {
       this.saveAndNext.emit(true);
     }, error => {
       this.utilsService.showSnackBar('Failed to update Taxes paid.');
+      this.loading = false;
+    });
+  }
+
+  saveAll() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      this.utilsService.showSnackBar('Tds updated successfully.');
+      this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Failed to update tds.');
       this.loading = false;
     });
   }
