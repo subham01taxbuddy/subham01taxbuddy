@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {SourceOfIncomesComponent} from "../source-of-incomes/source-of-incomes.component";
+import {CustomerProfileComponent} from "../../components/customer-profile/customer-profile.component";
+import {PersonalInformationComponent} from "../../components/personal-information/personal-information.component";
+import {OtherInformationComponent} from "../../components/other-information/other-information.component";
 
 @Component({
   selector: 'app-all-personal-information',
@@ -6,6 +10,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./all-personal-information.component.scss']
 })
 export class AllPersonalInformationComponent implements OnInit {
+
+  @Output() saveAndNext = new EventEmitter<any>();
+
+  @ViewChild(CustomerProfileComponent) private customerProfileComponent;
+  @ViewChild(PersonalInformationComponent) private personalInfoComponent;
+  @ViewChild(OtherInformationComponent) private otherInfoComponent;
+
   step = 0;
   hide: boolean = true;
   isEditCustomer: boolean;
@@ -40,5 +51,14 @@ export class AllPersonalInformationComponent implements OnInit {
     }
   }
 
+  goBack() {
+    this.saveAndNext.emit(true);
+  }
+
+  saveAll() {
+    this.customerProfileComponent.saveProfile();
+    this.personalInfoComponent.saveProfile();
+    this.otherInfoComponent.saveAndContinue();
+  }
 
 }
