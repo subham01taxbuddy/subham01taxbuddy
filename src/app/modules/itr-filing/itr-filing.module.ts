@@ -23,8 +23,8 @@ import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
-import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
+// import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
+// import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
@@ -91,8 +91,6 @@ import { TdsOtherThanSalaryComponent } from './itr-wizard/components/tds-other-t
 import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-paid/advance-tax-paid.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 
 @NgModule({
@@ -125,8 +123,8 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     HousePropertyComponent,
     OtherIncomeComponent,
     InvestmentsDeductionsComponent,
-    AddDonationDialogComponent,
-    TaxesPaidComponent,
+    // AddDonationDialogComponent,
+    // TaxesPaidComponent,
     DeclarationComponent,
     SummaryComponent,
     AcknowledgementComponent,
@@ -216,10 +214,6 @@ import { AddClientsComponent } from './itr-wizard/components/add-clients/add-cli
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
     OtherImprovementDialogComponent],
-  providers: [
-    { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} }
-  ]
 
 })
 export class ItrFilingModule {}
