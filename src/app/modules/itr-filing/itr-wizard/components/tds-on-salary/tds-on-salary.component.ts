@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -12,6 +12,7 @@ declare let $: any;
   styleUrls: ['./tds-on-salary.component.scss']
 })
 export class TdsOnSalaryComponent implements OnInit {
+  @Output() onSave = new EventEmitter();
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -66,11 +67,12 @@ export class TdsOnSalaryComponent implements OnInit {
     ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
   }
 
-  saveGeneralDonation() {
+  save() {
     this.loading = true;
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.onSalary = this.salaryForm.value.salaryArray;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      this.onSave.emit();
       this.loading = false;
       this.utilsService.showSnackBar('tax on salary tax paid data saved successfully.');
     } else {

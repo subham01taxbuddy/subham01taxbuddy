@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -11,6 +11,7 @@ declare let $: any;
 })
 export class AdvanceTaxPaidComponent implements OnInit {
   @Input() isAddAdvance: Number;
+  @Output() onSave = new EventEmitter();
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -75,6 +76,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS = this.salaryForm.value.salaryArray;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      this.onSave.emit();
       this.loading = false;
       this.utilsService.showSnackBar('advance tax or self assessment tax paid data saved successfully.');
     } else {
