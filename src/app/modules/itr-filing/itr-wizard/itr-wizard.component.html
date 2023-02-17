@@ -7,17 +7,17 @@
     <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
         <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" />
-        <a [ngClass]="showPrefill ? 'capitalize text-color-brands' : 'capitalize'"
+        <a [ngClass]="showPrefill ? 'capitalize' : 'capitalize text-color-brands'"
           (click)="showPrefillView()">Pre-fill Data</a>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize text-color-brands' : 'capitalize'">
+        <span (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
           Sources</span>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span [ngClass]="!showIncomeSources && !showPrefill ? 'capitalize text-color-brands' : 'capitalize'">{{selectedSchedule}}</span>
+        <span [ngClass]="!showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</span>
       </div>
     </div>
     <div *ngIf="showPrefill">
@@ -54,9 +54,7 @@
     </div>
 
     <div *ngIf="!showIncomeSources && !showPrefill">
-      <router-outlet></router-outlet>
+      <router-outlet (activate)="subscribeToEmmiter($event)" (deactivate)="unsubscribe()"></router-outlet>
     </div>
-
-
 
 </div>

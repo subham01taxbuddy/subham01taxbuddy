@@ -2,7 +2,7 @@ import { BusinessIncomeComponent } from './../business-income/business-income.co
 import { HousePropertyComponent } from './../house-property/house-property.component';
 import { SalaryComponent } from './../salary/salary.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
-import {Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -15,6 +15,8 @@ import {NavigationEnd, Router} from "@angular/router";
 import { Location } from '@angular/common';
 import { OtherInformationComponent } from './components/other-information/other-information.component';
 import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-incomes.component";
+import {OtherIncomeComponent} from "../other-income/other-income.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -53,6 +55,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService,
               private router: Router, private location: Location,
+              private cdRef: ChangeDetectorRef,
               private schedules: Schedules) { }
 
   ngOnInit() {
@@ -69,7 +72,27 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     }
   }
   ngAfterContentChecked() {
+    this.cdRef.detectChanges();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  }
+
+  subscription: Subscription
+
+  subscribeToEmmiter(componentRef){
+    //this may not be needed for us
+    // if (!(componentRef instanceof OtherIncomeComponent)){
+    //   return;
+    // }
+    const child : OtherIncomeComponent = componentRef;
+    child.saveAndNext.subscribe( () => {
+      this.gotoSources();
+    });
+  }
+
+  unsubscribe(){
+    if (this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
 
   skipPrefill(event) {
@@ -99,16 +122,37 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.location.back();
     this.showIncomeSources = true;
     this.showPrefill = false;
+    this.ngAfterContentChecked();
   }
 
-  updateSchedules(scheduleInfo) {
-    if(scheduleInfo.selected) {
+  updateSchedules(scheduleInfoEvent) {
+    if(scheduleInfoEvent.schedule.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
-      if(this.componentsList.indexOf(scheduleInfo.schedule) < 0) {
-        this.componentsList.splice(index, 0, scheduleInfo.schedule);
+      if(this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
+        //for future options, it shall be added inside capital gain
+        if(scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+          if(this.componentsList.indexOf(this.schedules.CAPITAL_GAIN) < 0) {
+            this.componentsList.splice(index, 0, this.schedules.CAPITAL_GAIN);
+          }
+        } else {
+          this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+        }
       }
     } else {
-      this.componentsList = this.componentsList.filter(item => item !== scheduleInfo.schedule);
+      //for removing future options, check if capital gain is there, if not remove
+      if(scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+        let cgSource = scheduleInfoEvent.sources.filter(item=> item.schedule === this.schedules.CAPITAL_GAIN)[0];
+        if(!cgSource.selected) {
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+        }
+      } else if(scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
+        let spSource = scheduleInfoEvent.sources.filter(item=> item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
+        if(!spSource.selected) {
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+        }
+      } else {
+        this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);
+      }
     }
   }
 

@@ -1,13 +1,11 @@
 import {FormArray, FormControl} from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GridOptions, ICellRendererParams, ValueSetterParams } from 'ag-grid-community';
-import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-other-income',
@@ -16,16 +14,10 @@ import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip
 })
 export class OtherIncomeComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  public exemptIncomesGridOptions: GridOptions;
 
-  public otherIncomeGridOptions: GridOptions;
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  itrDocuments = [];
-  deletedFileData: any = [];
-  famPenDeduction: any;
-  totalFamPenDeduction: any;
 
   otherIncomeDropdown = [{
     "value": "SAVING_INTEREST",
@@ -136,190 +128,121 @@ export class OtherIncomeComponent implements OnInit {
     "detailed": false
   }]
 
-
-  familyPension = new FormControl(null)
-  dividendIncomes: FormGroup;
   otherIncomeFormGroup: FormGroup;
   otherIncomesFormArray: FormArray;
+  exemptIncomeFormGroup: FormGroup;
+  exemptIncomesFormArray: FormArray;
+  private isEditOtherIncome: boolean = false;
+  private isEditExemptIncome: boolean = false;
   constructor(public utilsService: UtilsService,
-    private itrMsService: ItrMsService, public fb: FormBuilder,) { }
+    private itrMsService: ItrMsService, public fb: FormBuilder,
+              private location: Location) { }
 
   ngOnInit() {
-    this.dividendIncomes = this.fb.group({
-      quarter1: [null],
-      quarter2: [null],
-      quarter3: [null],
-      quarter4: [null],
-      quarter5: [null],
-    })
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.exemptIncomesCallInConstructor(this.exemptIncomesDropdown);
 
-    this.otherIncomesFormArray = this.fb.array([this.createOtherIncomeForm()]);
+    this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.otherIncomeFormGroup = this.fb.group({
-      otherIncomes: this.otherIncomesFormArray
+      otherIncomes: this.otherIncomesFormArray,
+      dividendIncomes: this.fb.group({
+        quarter1: [null],
+        quarter2: [null],
+        quarter3: [null],
+        quarter4: [null],
+        quarter5: [null],
+      }),
+      familyPension: new FormControl(null),
+      famPenDeduction: [],
+      totalFamPenDeduction: []
     });
+    this.otherIncomeFormGroup.disable();
 
-
-    this.otherIncomeCallInConstructor(this.otherIncomeDropdown);
+    this.exemptIncomesFormArray = this.createExemptIncomeForm();
+    this.exemptIncomeFormGroup = this.fb.group({
+      exemptIncomes: this.exemptIncomesFormArray,
+    });
+    this.exemptIncomeFormGroup.disable();
     this.setOtherIncomeValues();
-    this.getItrDocuments();
-
-    console.log('OTHERE deletedFileData LENGTH ---> ', this.deletedFileData.length);
-
-
+    this.setExemptIncomeValues();
   }
 
   private createOtherIncomeForm() {
-    return this.fb.group({
-      income: [],
-      hasEdit: [ false]
-    });
-  }
-
-  // Salary Grid Start
-  otherIncomeCallInConstructor(otherIncomeDropdown) {
-    this.otherIncomeGridOptions = <GridOptions>{
-      rowData: this.otherIncomeCreateRowData(otherIncomeDropdown),
-      columnDefs: this.otherIncomeCreateColumnDef(otherIncomeDropdown),
-      onGridReady: () => {
-        this.otherIncomeGridOptions.api.sizeColumnsToFit();
-      },
-      // frameworkComponents: {
-      //   numericEditor: NumericEditorComponent
-      // },
-      suppressDragLeaveHidesColumns: true,
-      // enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      defaultColDef: {
-        resizable: true
-      },
-    };
-  }
-
-
-  otherIncomeCreateColumnDef(otherIncomeDropdown) {
-    return [
-      {
-        headerName: 'Salary Type',
-        field: 'incomeType',
-        suppressMovable: true,
-        width: 380,
-        valueGetter: function nameFromCode(params) {
-          if (otherIncomeDropdown.length !== 0) {
-            const nameArray = otherIncomeDropdown.filter((item: any) => item.value === params.data.incomeType);
-            return nameArray[0].label;
-          } else {
-            return params.data.incomeType;
-          }
-        },
-        editable: false,
-        tooltip: function (params) {
-          if (otherIncomeDropdown.length !== 0) {
-            const nameArray = otherIncomeDropdown.filter((item: any) => item.value === params.data.incomeType);
-            return nameArray[0].label;
-          } else {
-            return params.data.incomeType;
-          }
-        },
-        suppressMenu: true
-      },
-      {
-        headerName: 'Gross Amount',
-        field: 'amount',
-        suppressMovable: true,
-        editable: true,
-        // cellEditor: 'numericEditor',
-        headerComponentParams: { menuIcon: 'fa-external-link-alt' },
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.amount !== newValInt;
-          if (valueChanged) {
-            params.data.amount = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-      },
-
-      {
-        headerName: 'Clear',
-        suppressMovable: true,
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        width: 75,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-        <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
-       </button>`;
-        },
-      },
-
-    ];
-  }
-
-  public onOtherIncomeRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          this.otherIncomeGridOptions.rowData.splice(params.rowIndex, 1, {
-            id: params.data.id,
-            incomeType: params.data.incomeType,
-            amount: null,
-          });
-          this.otherIncomeGridOptions.api?.setRowData(this.otherIncomeGridOptions.rowData);
-          break;
-        }
-      }
-    }
-  }
-
-  otherIncomeCreateRowData(otherIncomeDropdown) {
     const data = [];
-    for (let i = 0; i < otherIncomeDropdown.length; i++) {
-      data.push({
-        id: i,
-        incomeType: otherIncomeDropdown[i].value,
-        amount: null,
-      });
+    for (let i = 0; i < this.otherIncomeDropdown.length; i++) {
+      data.push(this.fb.group({
+        label: this.otherIncomeDropdown[i].label,
+        incomeType: this.otherIncomeDropdown[i].value,
+        incomeValue: []
+      }));
     }
-    return data;
+    return this.fb.array(
+      data
+    );
+  }
+  private createExemptIncomeForm() {
+    const data = [];
+    for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
+      data.push(this.fb.group({
+        label: this.exemptIncomesDropdown[i].label,
+        incomeType: this.exemptIncomesDropdown[i].value,
+        incomeValue: []
+      }));
+    }
+    return this.fb.array(
+      data
+    );
+  }
+
+  get getIncomeArray() {
+    return <FormArray>this.otherIncomeFormGroup.get('otherIncomes');
+  }
+
+  get getExemptIncomeArray() {
+    return <FormArray>this.exemptIncomeFormGroup.get('exemptIncomes');
+  }
+
+  goBack() {
+    this.saveAndNext.emit(true);
+  }
+
+  saveAll() {
+    this.saveOtherIncome();
+    this.saveExemptIncomes();
   }
 
   saveOtherIncome() {
-    console.log('Dividend Income,', this.dividendIncomes.value);
+    console.log('Dividend Income,', this.otherIncomeFormGroup.controls['dividendIncomes'].value);
 
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    let dividendIncomes = this.otherIncomeFormGroup.controls['dividendIncomes'] as FormGroup;
     this.Copy_ITR_JSON.dividendIncomes = [
       {
-        "income": this.dividendIncomes.controls['quarter1'].value,
+        "income": dividendIncomes.controls['quarter1'].value,
         "date": "2022-04-28T18:30:00.000Z",
         quarter: 1
       },
       {
-        "income": this.dividendIncomes.controls['quarter2'].value,
+        "income": dividendIncomes.controls['quarter2'].value,
         "date": "2022-07-28T18:30:00.000Z",
         quarter: 2
       },
       {
-        "income": this.dividendIncomes.controls['quarter3'].value,
+        "income": dividendIncomes.controls['quarter3'].value,
         "date": "2022-09-28T18:30:00.000Z",
         quarter: 3
       },
       {
-        "income": this.dividendIncomes.controls['quarter4'].value,
+        "income": dividendIncomes.controls['quarter4'].value,
         "date": "2022-12-28T18:30:00.000Z",
         quarter: 4
       },
       {
-        "income": this.dividendIncomes.controls['quarter5'].value,
+        "income": dividendIncomes.controls['quarter5'].value,
         "date": "2023-03-20T18:30:00.000Z",
         quarter: 5
       }
@@ -332,37 +255,26 @@ export class OtherIncomeComponent implements OnInit {
     if (!this.Copy_ITR_JSON.incomes) {
       this.Copy_ITR_JSON.incomes = [];
     }
-    for (let i = 0; i < this.otherIncomeGridOptions.rowData.length; i++) {
-      if (this.utilsService.isNonEmpty(this.otherIncomeGridOptions.rowData[i].amount)) {
+    let otherIncomes = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
+    for (let i = 0; i < otherIncomes.controls.length; i++) {
+      console.log(otherIncomes.controls[i]);
+      if (this.utilsService.isNonEmpty(otherIncomes.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.incomes.push({
           expenses: 0,
-          amount: Number(this.otherIncomeGridOptions.rowData[i].amount),
-          incomeType: this.otherIncomeGridOptions.rowData[i].incomeType,
+          amount: otherIncomes.controls[i].value.incomeValue,
+          incomeType: otherIncomes.controls[i].value.incomeType,
           details: null
         });
       }
     }
-    if (this.utilsService.isNonZero(this.familyPension.value)) {
+    if (this.utilsService.isNonZero(this.otherIncomeFormGroup.controls['familyPension'].value)) {
       this.Copy_ITR_JSON.incomes.push({
-        "amount": this.familyPension.value,
+        "amount": this.otherIncomeFormGroup.controls['familyPension'].value,
         "incomeType": "FAMILY_PENSION",
         "details": "FAMILY_PENSION",
         "expenses": 0
       })
     }
-
-    this.Copy_ITR_JSON.exemptIncomes = []
-    for (let i = 0; i < this.exemptIncomesGridOptions.rowData.length; i++) {
-      if (this.utilsService.isNonZero(this.exemptIncomesGridOptions.rowData[i].amount)) {
-        this.Copy_ITR_JSON.exemptIncomes.push({
-          natureDesc: this.exemptIncomesGridOptions.rowData[i].natureDesc,
-          OthNatOfInc: '',
-          amount: Number(this.exemptIncomesGridOptions.rowData[i].amount)
-        });
-        // totalAllowExempt = totalAllowExempt + Number(this.exemptIncomesGridOptions.rowData[i].amount);
-      }
-    }
-
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
@@ -379,23 +291,50 @@ export class OtherIncomeComponent implements OnInit {
 
   }
 
+  saveExemptIncomes() {
+    this.Copy_ITR_JSON.exemptIncomes = [];
+    let exemptIncomes = this.exemptIncomeFormGroup.controls['exemptIncomes'] as FormArray;
+    for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
+      let exempt = exemptIncomes.controls[i] as FormGroup;
+      console.log(exempt.controls['incomeValue'].value);
+      if (this.utilsService.isNonZero(exempt.controls['incomeValue'].value)) {
+        this.Copy_ITR_JSON.exemptIncomes.push({
+          natureDesc: exempt.controls['incomeType'].value,
+          OthNatOfInc: '',
+          amount: exempt.controls['incomeValue'].value
+        });
+        // totalAllowExempt = totalAllowExempt + Number(this.exemptIncomesGridOptions.rowData[i].amount);
+      }
+    }
+
+    console.log(this.Copy_ITR_JSON.exemptIncomes);
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      this.utilsService.showSnackBar('Other Income updated successfully.');
+      this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Failed to update other income.');
+      this.loading = false;
+    });
+  }
+
   setOtherIncomeValues() {
-    this.otherIncomeGridOptions.rowData = this.otherIncomeCreateRowData(this.otherIncomeDropdown);
-    this.otherIncomeGridOptions.columnDefs = this.otherIncomeCreateColumnDef(this.otherIncomeDropdown);
     if (this.ITR_JSON.incomes instanceof Array) {
       let otherIncomes = this.ITR_JSON.incomes.filter(item => item.incomeType === 'SAVING_INTEREST' || item.incomeType === 'FD_RD_INTEREST' || item.incomeType === 'TAX_REFUND_INTEREST' || item.incomeType === 'ANY_OTHER');
+      let otherIncomesFormArray = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
-        const id = this.otherIncomeGridOptions.rowData.filter((item: any) => item.incomeType === otherIncomes[i].incomeType)[0].id;
-        this.otherIncomeGridOptions.rowData.splice(id, 1, {
-          id: id,
-          incomeType: otherIncomes[i].incomeType,
-          amount: otherIncomes[i].amount,
-        });
+        console.log(otherIncomes[i].incomeType);
+        const control = otherIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'].value === otherIncomes[i].incomeType)[0] as FormGroup;
+        control.controls['incomeValue'].setValue(otherIncomes[i].amount);
       }
 
       let famPension = this.ITR_JSON.incomes.filter(item => item.incomeType === 'FAMILY_PENSION');
       if (famPension.length > 0) {
-        this.familyPension.setValue(famPension[0].amount);
+        this.otherIncomeFormGroup.controls['familyPension'].setValue(famPension[0].amount);
         this.calFamPension();
       }
       // const sec17_1 = this.ITR_JSON.incomes.filter((item:any) => item.incomeType === 'SEC17_1');
@@ -406,165 +345,65 @@ export class OtherIncomeComponent implements OnInit {
 
 
     if (this.ITR_JSON.dividendIncomes instanceof Array) {
+      let dividendIncomes = this.otherIncomeFormGroup.controls['dividendIncomes'] as FormGroup;
       for (let i = 0; i < this.ITR_JSON.dividendIncomes.length; i++) {
         switch (this.ITR_JSON.dividendIncomes[i].quarter) {
           case 1: {
-            this.dividendIncomes.controls['quarter1'].setValue(this.ITR_JSON.dividendIncomes[i].income);
+            dividendIncomes.controls['quarter1'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
           case 2: {
-            this.dividendIncomes.controls['quarter2'].setValue(this.ITR_JSON.dividendIncomes[i].income);
+            dividendIncomes.controls['quarter2'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
           case 3: {
-            this.dividendIncomes.controls['quarter3'].setValue(this.ITR_JSON.dividendIncomes[i].income);
+            dividendIncomes.controls['quarter3'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
           case 4: {
-            this.dividendIncomes.controls['quarter4'].setValue(this.ITR_JSON.dividendIncomes[i].income);
+            dividendIncomes.controls['quarter4'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
           case 5: {
-            this.dividendIncomes.controls['quarter5'].setValue(this.ITR_JSON.dividendIncomes[i].income);
+            dividendIncomes.controls['quarter5'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
         }
       }
     }
 
-    this.exemptIncomesGridOptions.rowData = this.exemptIncomesCreateRowData(this.exemptIncomesDropdown);
-    this.exemptIncomesGridOptions.columnDefs = this.exemptIncomeCreateColumnDef(this.exemptIncomesDropdown);
+  }
+
+  setExemptIncomeValues() {
+    let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls['exemptIncomes'] as FormArray;
     if (this.ITR_JSON.exemptIncomes instanceof Array) {
       // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
+
       for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
-        const id = this.exemptIncomesGridOptions.rowData.filter((item: any) => item.natureDesc === this.ITR_JSON.exemptIncomes[i].natureDesc)[0].id;
-        this.exemptIncomesGridOptions.rowData.splice(id, 1, {
-          id: id,
-          natureDesc: this.ITR_JSON.exemptIncomes[i].natureDesc,
-          OthNatOfInc: this.ITR_JSON.exemptIncomes[i].OthNatOfInc,
-          amount: this.ITR_JSON.exemptIncomes[i].amount
-        });
+        const control = exemptIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'] === this.ITR_JSON.exemptIncomes[i].natureDesc)[0];
+        control['incomeValue'].setValue(this.ITR_JSON.exemptIncomes[i].amount);
       }
     }
-
-  }
-
-  getItrDocuments() {
-    const param1 =
-      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param1).subscribe((result: any) => {
-      this.itrDocuments = result;
-    })
-  }
-
-  deleteFile(fileName) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
-    var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
-      this.utilsService.showSnackBar(response.response);
-      this.getItrDocuments();
-    },
-      error => {
-        this.utilsService.showSnackBar(error.response);
-      })
-  }
-
-  deletedFileInfo(cloudFileId) {
-    this.deletedFileData = [];
-    this.loading = true;
-    let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
-        this.loading = false;
-      })
-  }
-
-  closeDialog() {
-    this.deletedFileData = [];
-  }
-
-  afterUploadDocs(fileUpload) {
-    if (fileUpload === 'File uploaded successfully') {
-      this.getItrDocuments();
-    }
-  }
-
-  zoom: number = 1.0;
-  incrementZoom(amount: number) {
-    this.zoom += amount;
-  }
-
-  docDetails = {
-    docUrl: '',
-    docType: ''
-  };
-  getDocsUrl(index) {
-
-
-    if (this.itrDocuments.length > 0) {
-
-      const docType = this.itrDocuments[index].fileName.split('.').pop();
-      if (this.itrDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
-      } else {
-        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
-      }
-      this.docDetails.docType = docType;
-    } else {
-      this.docDetails.docUrl = '';
-      this.docDetails.docType = '';
-    }
-
-    console.log('docDetails => ', this.docDetails)
   }
 
   getTotal() {
-    let q1 = this.dividendIncomes.controls['quarter1'].value ? this.dividendIncomes.controls['quarter1'].value : '0';
-    let q2 = this.dividendIncomes.controls['quarter1'].value ? this.dividendIncomes.controls['quarter2'].value : '0';
-    let q3 = this.dividendIncomes.controls['quarter1'].value ? this.dividendIncomes.controls['quarter3'].value : '0';
-    let q4 = this.dividendIncomes.controls['quarter1'].value ? this.dividendIncomes.controls['quarter4'].value : '0';
-    let q5 = this.dividendIncomes.controls['quarter1'].value ? this.dividendIncomes.controls['quarter5'].value : '0';
+    let dividendIncomes = this.otherIncomeFormGroup.controls['dividendIncomes'] as FormGroup;
+    let q1 = dividendIncomes.controls['quarter1'].value ? dividendIncomes.controls['quarter1'].value : '0';
+    let q2 = dividendIncomes.controls['quarter1'].value ? dividendIncomes.controls['quarter2'].value : '0';
+    let q3 = dividendIncomes.controls['quarter1'].value ? dividendIncomes.controls['quarter3'].value : '0';
+    let q4 = dividendIncomes.controls['quarter1'].value ? dividendIncomes.controls['quarter4'].value : '0';
+    let q5 = dividendIncomes.controls['quarter1'].value ? dividendIncomes.controls['quarter5'].value : '0';
     return parseInt(q1) + parseInt(q2) + parseInt(q3) + parseInt(q4) + parseInt(q5);
   }
   calFamPension() {
-    this.famPenDeduction = 0;
-    this.totalFamPenDeduction = this.familyPension.value;
-    if (this.familyPension.valid && this.ITR_JSON.regime === 'OLD') {
-      this.famPenDeduction = (this.familyPension.value / 3 > 15000 ? 15000 : this.familyPension.value / 3).toFixed()
-      this.totalFamPenDeduction = (this.familyPension.value - this.famPenDeduction).toFixed();
+    let famPenDeduction = 0;
+    let familyPension = this.otherIncomeFormGroup.controls['familyPension'];
+    let totalFamPenDeduction = familyPension.value;
+    if (familyPension.valid && this.ITR_JSON.regime === 'OLD') {
+      famPenDeduction = familyPension.value / 3 > 15000 ? 15000 : familyPension.value / 3;
+      this.otherIncomeFormGroup.controls['famPenDeduction'].setValue(famPenDeduction.toFixed());
+      this.otherIncomeFormGroup.controls['totalFamPenDeduction'].setValue((familyPension.value - famPenDeduction).toFixed());
     }
-  }
-
-  exemptIncomesCallInConstructor(exemptIncomesDropdown) {
-    this.exemptIncomesGridOptions = <GridOptions>{
-      rowData: this.exemptIncomesCreateRowData(exemptIncomesDropdown),
-      columnDefs: this.exemptIncomeCreateColumnDef(exemptIncomesDropdown),
-      onGridReady: () => {
-        this.exemptIncomesGridOptions.api.sizeColumnsToFit();
-      },
-
-      // frameworkComponents: {
-      //   numericEditor: NumericEditorComponent
-      // },
-      suppressDragLeaveHidesColumns: true,
-      // enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      defaultColDef: {
-        resizable: true,
-        cellRendererFramework: AgTooltipComponent,
-        cellRendererParams: (params: ICellRendererParams) => {
-          this.formatToolTip(params.data)
-        }
-      },
-    };
   }
 
   formatToolTip(params: any) {
@@ -574,105 +413,23 @@ export class OtherIncomeComponent implements OnInit {
     return { temp, lineBreak }
   }
 
-  exemptIncomeCreateColumnDef(exemptIncomesDropdown) {
-    return [
-      {
-        headerName: 'Income Type',
-        field: 'natureDesc',
-        suppressMovable: true,
-        width: 400,
-        valueGetter: function nameFromCode(params) {
-          console.log('AAAA', params);
-          if (exemptIncomesDropdown.length !== 0) {
-            const nameArray = exemptIncomesDropdown.filter((item: any) => item.value === params.data.natureDesc);
-            return nameArray[0].label;
-          } else {
-            return params.data.natureDesc;
-          }
-        },
-        editable: false,
-        tooltip: function (params) {
-          console.log('AAAA', params);
-          if (exemptIncomesDropdown.length !== 0) {
-            const nameArray = exemptIncomesDropdown.filter((item: any) => item.value === params.data.natureDesc);
-            return nameArray[0].label;
-          } else {
-            return params.data.natureDesc;
-          }
-        },
-      },
-      {
-        headerName: 'Exempt Amount',
-        field: 'amount',
-        editable: true,
-        suppressMovable: true,
-        cellEditor: 'numericEditor',
-        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.amount !== newValInt;
-          if (valueChanged) {
-            params.data.amount = newValInt ? newValInt : params.oldValue;
-          }
-          return valueChanged;
-        },
-        // width: 100,
-      },
-      {
-        headerName: 'Clear',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        sortable: true,
-        width: 60,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-          <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-        },
-      },
-    ];
-  }
-
-  public onExemptIncomesRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          this.exemptIncomesGridOptions.rowData.splice(params.rowIndex, 1, {
-            id: params.data.id,
-            natureDesc: params.data.natureDesc,
-            OthNatOfInc: '',
-            amount: 0
-          });
-          this.exemptIncomesGridOptions.api?.setRowData(this.exemptIncomesGridOptions.rowData);
-          break;
-        }
-      }
-    }
-  }
-
-  exemptIncomesCreateRowData(exemptIncomesDropdown) {
-    const data = [];
-    for (let i = 0; i < exemptIncomesDropdown.length; i++) {
-      data.push({
-        id: i,
-        natureDesc: exemptIncomesDropdown[i].value,
-        OthNatOfInc: '',
-        amount: null
-      });
-    }
-    return data;
-  }
-
   getTotalExemptIncome() {
     let total = 0;
-    for (let i = 0; i < this.exemptIncomesGridOptions.rowData.length; i++) {
-      if (this.utilsService.isNonZero(this.exemptIncomesGridOptions.rowData[i].amount)) {
-        total = total + Number(this.exemptIncomesGridOptions.rowData[i].amount);
+    for (let i = 0; i < this.exemptIncomesFormArray.controls.length; i++) {
+      if (this.utilsService.isNonZero(this.exemptIncomesFormArray.controls[i].value.incomeValue)) {
+        total = total + Number(this.exemptIncomesFormArray.controls[i].value.incomeValue);
       }
     }
     return total;
+  }
+
+  editForm(type) {
+    if (type === 'otherIncome') {
+      this.isEditOtherIncome = true;
+      this.otherIncomeFormGroup.enable();
+    } else if (type === 'exemptIncome') {
+      this.isEditExemptIncome = true;
+      this.exemptIncomeFormGroup.enable();
+    }
   }
 }

@@ -21,7 +21,11 @@ export class SourceOfIncomesComponent implements OnInit {
       this.sourcesList = JSON.parse(sources);
       this.sourcesList.forEach(source => {
         if(source.selected) {
-          this.scheduleSelected.emit(source);
+          let event = {
+            schedule : source,
+            sources: this.sourcesList
+          }
+          this.scheduleSelected.emit(event);
         }
       });
     } else {
@@ -38,16 +42,22 @@ export class SourceOfIncomesComponent implements OnInit {
         },
         {
           name: 'Futures / Options', selected: false, schedule: this.schedules.SPECULATIVE_INCOME
-        }, {
-          name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
-        }];
+        },
+        // {
+        //   name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
+        // }
+      ];
     }
   }
 
   sourcesUpdated(source) {
     let clickedSource = this.sourcesList.filter(item => item.name === source.name)[0];
     clickedSource.selected = !clickedSource.selected;
-    this.scheduleSelected.emit(clickedSource);
+    let event = {
+      schedule : clickedSource,
+      sources: this.sourcesList
+    }
+    this.scheduleSelected.emit(event);
     sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
   }
 }

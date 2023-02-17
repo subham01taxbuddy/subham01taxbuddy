@@ -89,6 +89,7 @@ import { TdsOnSalaryComponent } from './itr-wizard/components/tds-on-salary/tds-
 import { TdsOtherThanSalaryComponent } from './itr-wizard/components/tds-other-than-salary/tds-other-than-salary.component';
 import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-paid/advance-tax-paid.component';
+import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 
 @NgModule({
   imports: [
@@ -186,6 +187,7 @@ import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-pai
     TdsOtherThanSalaryComponent,
     TcsComponent,
     AdvanceTaxPaidComponent,
+    AllBusinessIncomeComponent,
   ],
   exports: [
     CustomerProfileComponent
