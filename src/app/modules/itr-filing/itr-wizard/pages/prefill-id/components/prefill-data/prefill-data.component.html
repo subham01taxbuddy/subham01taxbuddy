@@ -1,48 +1,209 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<b class="headline">Get User Prefill Data</b><br><br>
-<div class="card">
-  <div class="card__row">
-    <div class="card__col-xs-12 card__col-sm-8">
-      <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOtpOption" (change)="changeOtpOption()">
-        <mat-radio-button value="A">Aadhaar OTP</mat-radio-button>&nbsp;&nbsp;&nbsp;
-        <mat-radio-button value="E">E portal OTP</mat-radio-button>
-      </mat-radio-group>
-    </div>
-    <div class="card__col-xs-12 card__col-sm-4">
-      <button class="tbd-btn" (click)="getPrefillData()">Request Prefill OTP</button>
-    </div>
+<div>
+  <div class="p-[25px]">
+    <mat-stepper linear #stepper labelPosition="bottom">
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Request OTP</ng-template>
+          <div class="card flex gap-[25px] RequestOtp">
+            <div class="card__col-xs-12 card__col-md-5">
+              <mat-radio-group
+                formControlName="firstCtrl"
+                required
+                aria-label="Select an option"
+                [(ngModel)]="selectedOtpOption"
+                (change)="changeOtpOption()"
+              >
+                <mat-radio-button value="A">Aadhaar OTP</mat-radio-button
+                >&nbsp;&nbsp;&nbsp;
+                <mat-radio-button value="E">E portal OTP</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div>
+              <button
+                matStepperNext
+                class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+                style="width: 35%"
+                (click)="getPrefillData()"
+              >
+                <span class="font-semibold">Request OTP</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>Enter OTP</ng-template>
 
+          <div class="card flex">
+            <div class="enterOtp">
+              <form
+                [formGroup]="validateOtpForm"
+                class="enterOtp"
+                formControlName="secondCtrl"
+                required
+              >
+                <mat-form-field appearance="outline">
+                  <mat-label>Mobile OTP</mat-label>
+                  <input
+                    matTooltip="Enter Mobile OTP"
+                    formControlName="mobile"
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    matInput
+                    placeholder="Enter Mobile OTP"
+                    name="otp"
+                    class="input-field"
+                    maxlength="6"
+                    [(ngModel)]="mobileOtp"
+                    required
+                  />
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="outline"
+                  *ngIf="selectedOtpOption === 'E'"
+                >
+                  <mat-label>Email OTP</mat-label>
+                  <input
+                    matTooltip="Enter Email OTP"
+                    formControlName="email"
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    matInput
+                    placeholder="Enter Email OTP"
+                    name="otp"
+                    class="input-field"
+                    maxlength="6"
+                    [(ngModel)]="emailOtp"
+                    [required]="selectedOtpOption === 'E'"
+                  />
+                </mat-form-field>
+              </form>
+            </div>
+            <div>
+              <button
+                matStepperNext
+                (click)="verifyOtp()"
+                class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+                style="width: 35%"
+              >
+                <span class="font-semibold">Validate & Get Data</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Download JSON</ng-template>
+        <div class="flex card downloadJson justify-between items-center">
+          <p>You can download the Prefill JSON now</p>
+          <div>
+            <button
+              matStepperNext
+              (click)="downloadPrefillJson()"
+              class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+            >
+              <span class="font-semibold">Download Prefill JSON</span>
+            </button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-stepper>
+    <hr />
+    <!-- action-buttona  -->
+    <div class="flex justify-between p-[30px]">
+      <button
+        class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+      >
+        <span class="font-semibold">Go Back</span>
+      </button>
+    </div>
   </div>
-  <div class="card__row">
-    <form [formGroup]="validateOtpForm">
+</div>
+
+<!-- <div>
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+  ></ngx-loading>
+  <b class="headline">Get User Prefill Data</b><br /><br />
+  <div class="card">
+    <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-8">
-        <mat-form-field appearance="outline">
-          <mat-label>Mobile OTP</mat-label>
-          <input matTooltip="Enter Mobile OTP" formControlName="mobile" matTooltipClass="tab-tooltip"
-            matTooltipPosition="above" matInput placeholder="Enter Mobile OTP" name="otp" class="input-field"
-            maxlength="6" [(ngModel)]="mobileOtp" required>
-        </mat-form-field>
+        <mat-radio-group
+          aria-label="Select an option"
+          [(ngModel)]="selectedOtpOption"
+          (change)="changeOtpOption()"
+        >
+          <mat-radio-button value="A">Aadhaar OTP</mat-radio-button
+          >&nbsp;&nbsp;&nbsp;
+          <mat-radio-button value="E">E portal OTP</mat-radio-button>
+        </mat-radio-group>
       </div>
       <div class="card__col-xs-12 card__col-sm-4">
-        <mat-form-field appearance="outline" *ngIf="selectedOtpOption === 'E'">
-          <mat-label>Email OTP</mat-label>
-          <input matTooltip="Enter Email OTP" formControlName="email" matTooltipClass="tab-tooltip"
-            matTooltipPosition="above" matInput placeholder="Enter Email OTP" name="otp" class="input-field"
-            maxlength="6" [(ngModel)]="emailOtp" [required]="selectedOtpOption === 'E'">
-        </mat-form-field>
+        <button class="tbd-btn" (click)="getPrefillData()">
+          Request Prefill OTP
+        </button>
       </div>
-      <div class="card__col-xs-12 card__col-sm-4">
-        <button class="tbd-btn" (click)="verifyOtp()">Validate & Get Data</button>
-      </div>
-    </form>
-  </div>
-
-  <div class="card__row">
-    <div class="card__col-xs-12 card__col-sm-4">
-      <button class="tbd-btn" (click)="downloadPrefillJson()">Download Prefill JSON</button>
     </div>
-    
-    <!-- <div class="card__col-xs-12 card__col-sm-4">
+    <div class="card__row">
+      <form [formGroup]="validateOtpForm">
+        <div class="card__col-xs-12 card__col-sm-8">
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile OTP</mat-label>
+            <input
+              matTooltip="Enter Mobile OTP"
+              formControlName="mobile"
+              matTooltipClass="tab-tooltip"
+              matTooltipPosition="above"
+              matInput
+              placeholder="Enter Mobile OTP"
+              name="otp"
+              class="input-field"
+              maxlength="6"
+              [(ngModel)]="mobileOtp"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field
+            appearance="outline"
+            *ngIf="selectedOtpOption === 'E'"
+          >
+            <mat-label>Email OTP</mat-label>
+            <input
+              matTooltip="Enter Email OTP"
+              formControlName="email"
+              matTooltipClass="tab-tooltip"
+              matTooltipPosition="above"
+              matInput
+              placeholder="Enter Email OTP"
+              name="otp"
+              class="input-field"
+              maxlength="6"
+              [(ngModel)]="emailOtp"
+              [required]="selectedOtpOption === 'E'"
+            />
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <button class="tbd-btn" (click)="verifyOtp()">
+            Validate & Get Data
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-4">
+        <button class="tbd-btn" (click)="downloadPrefillJson()">
+          Download Prefill JSON
+        </button>
+      </div> -->
+
+<!-- <div class="card__col-xs-12 card__col-sm-4">
       <input type="file" id="input-file-id" hidden file-model="MeterFile" class="inptfile"
                 (change)="uploadFile($event.target.files)">
             <button mat-raised-button (click)='upload()'>
@@ -50,10 +211,17 @@
             </button>&nbsp;&nbsp;
             <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
     </div> -->
-    <div class="card__col-xs-12 card__col-sm-4">
-      <input type="file" id="input-jsonfile-id" hidden file-model="MeterFile" class="inptfile"
-                (change)="uploadJsonFile($event.target.files)">
-      <button class="tbd-btn" (click)="upload()">Upload Prefill JSON</button>
+<!-- <div class="card__col-xs-12 card__col-sm-4">
+        <input
+          type="file"
+          id="input-jsonfile-id"
+          hidden
+          file-model="MeterFile"
+          class="inptfile"
+          (change)="uploadJsonFile($event.target.files)"
+        />
+        <button class="tbd-btn" (click)="upload()">Upload Prefill JSON</button>
+      </div>
     </div>
   </div>
-</div>
+</div> -->

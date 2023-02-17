@@ -9095,6 +9095,10 @@ html:not(.dark) .minimize .moon-icon {
   display: flex !important;
 }
 
+.ml30 {
+  margin-left: 30px;
+}
+
 .headers-align {
   .mat-expansion-panel {
     margin-bottom: 28px;
@@ -9153,16 +9157,15 @@ html:not(.dark) .minimize .moon-icon {
     align-items: center;
     padding: 0px 20.5882px;
     gap: 6.86px;
-    position: absolute;
-    width: 77.83px;
+    width: 69.83px;
     height: 32.21px;
-    left: 975px;
-    top: 18px;
+    margin-right: 10px;
     background: #E5F2F7;
     border: 1px solid #797979;
     border-radius: 6.86273px;
   }
 }
+
 
 mat-label {
   display: block;
