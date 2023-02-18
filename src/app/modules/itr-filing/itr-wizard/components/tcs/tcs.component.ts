@@ -11,7 +11,7 @@ declare let $: any;
 })
 export class TcsComponent implements OnInit {
   @Input() isAddTcs: Number;
-  @Output() onSave= new EventEmitter();
+  @Output() onSave = new EventEmitter();
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -35,10 +35,12 @@ export class TcsComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    if (this.Copy_ITR_JSON.taxPaid?.tcs) {
+    if (this.Copy_ITR_JSON.taxPaid?.tcs && this.Copy_ITR_JSON.taxPaid?.tcs.length>0) {
       this.Copy_ITR_JSON.taxPaid.tcs.forEach(item => {
         this.addMoreSalary(item);
       })
+    }else{
+      this.addMoreSalary();
     }
     this.salaryForm.disable();
   }
@@ -46,14 +48,28 @@ export class TcsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
       if (this.isAddTcs) {
-        this.addMoreSalary();
+        this.addSalary();
       }
     }, 1000);
   }
 
+  addSalary() {
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    if (salaryArray.valid) {
+      this.addMoreSalary();
+    } else {
+      salaryArray.controls.forEach(element => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
+    }
+  }
+
   inItForm() {
     return this.fb.group({
-      salaryArray: this.fb.array([this.createForm()]),
+      salaryArray: this.fb.array([]),
     })
   }
 
@@ -92,16 +108,7 @@ export class TcsComponent implements OnInit {
 
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid) {
-      salaryArray.push(this.createForm(item));
-    } else {
-      salaryArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
-    }
+    salaryArray.push(this.createForm(item));
   }
 
   deleteSalaryArray() {

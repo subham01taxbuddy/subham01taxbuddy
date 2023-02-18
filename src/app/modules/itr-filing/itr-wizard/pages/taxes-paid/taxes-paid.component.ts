@@ -14,7 +14,6 @@ import * as moment from 'moment';
 })
 export class TaxesPaidComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  showHeadOfIncome = '';
   loading: boolean = false;
   onSalaryGridOptions: GridOptions;
   tdsOtherThanSalary16AGridOptions: GridOptions;
@@ -1456,13 +1455,7 @@ export class TaxesPaidComponent implements OnInit {
     }
   }
   setStep(index: number) {
-    if (index === 1) {
-      this.showHeadOfIncome = 'TDTS';
-    } else if (index === 2) {
-      this.showHeadOfIncome = 'TDTSP';
-    }
     this.step = index;
-
   }
 
 }
