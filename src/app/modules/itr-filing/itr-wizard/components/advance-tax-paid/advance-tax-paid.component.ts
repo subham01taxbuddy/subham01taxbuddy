@@ -23,12 +23,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
     private fb: FormBuilder,
     public utilsService: UtilsService,
   ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
   }
 
   ngOnInit() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
@@ -89,6 +89,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   save() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS = this.salaryForm.value.salaryArray;

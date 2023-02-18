@@ -23,23 +23,23 @@ export class TcsComponent implements OnInit {
     private fb: FormBuilder,
     public utilsService: UtilsService,
   ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
   }
 
   ngOnInit() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       itemsPerPage: 3,
       currentPage: 1,
     };
 
     this.salaryForm = this.inItForm();
-    if (this.Copy_ITR_JSON.taxPaid?.tcs && this.Copy_ITR_JSON.taxPaid?.tcs.length>0) {
+    if (this.Copy_ITR_JSON.taxPaid?.tcs && this.Copy_ITR_JSON.taxPaid?.tcs.length > 0) {
       this.Copy_ITR_JSON.taxPaid.tcs.forEach(item => {
         this.addMoreSalary(item);
       })
-    }else{
+    } else {
       this.addMoreSalary();
     }
     this.salaryForm.disable();
@@ -88,6 +88,8 @@ export class TcsComponent implements OnInit {
   }
 
   save() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.tcs = this.salaryForm.value.salaryArray;

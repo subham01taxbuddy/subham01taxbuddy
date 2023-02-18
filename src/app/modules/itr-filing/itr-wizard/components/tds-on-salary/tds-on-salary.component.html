@@ -1,10 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="">
     <div class="card__col-lg-12">
-        <div class="card__title card__col-lg-10" style="padding:10px; font-size: 20px;">TDS On Salary
+        <div class="card__title card__col-lg-10 tds-title">TDS On Salary
         </div>
         <div class="edit clearfix notes card__col-lg-2">
-            <button type="button" class="edit_btn" (click)="addMore()">
+            <button type="button" class="edit_btn" [disabled]="salaryForm.invalid" (click)="addMore()">
                 <i class="fa fa-plus"></i>Add
             </button>
         </div>

@@ -22,12 +22,12 @@ export class TdsOnSalaryComponent implements OnInit {
     private fb: FormBuilder,
     public utilsService: UtilsService,
   ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
   }
 
   ngOnInit() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
@@ -66,9 +66,21 @@ export class TdsOnSalaryComponent implements OnInit {
   }
 
   save() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.salaryForm.valid) {
-      this.Copy_ITR_JSON.taxPaid.onSalary = this.salaryForm.value.salaryArray;
+      if (!this.Copy_ITR_JSON.taxPaid) {
+        this.Copy_ITR_JSON.taxPaid = {
+          onSalary: [],
+          otherThanSalary16A: [],
+          otherThanSalary26QB: [],
+          tcs: [],
+          otherThanTDSTCS: [],
+          paidRefund: []
+        };
+      }
+      this.Copy_ITR_JSON.taxPaid['onSalary'] = this.salaryForm.value.salaryArray;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.onSave.emit();
       this.loading = false;
@@ -86,16 +98,7 @@ export class TdsOnSalaryComponent implements OnInit {
 
   addMore(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid) {
-      salaryArray.push(this.createForm(item));
-    } else {
-      salaryArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
-    }
+    salaryArray.push(this.createForm(item));
   }
 
   deleteSalaryArray() {

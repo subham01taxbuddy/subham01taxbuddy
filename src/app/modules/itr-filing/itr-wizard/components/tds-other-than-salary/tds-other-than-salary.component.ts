@@ -39,22 +39,21 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     private fb: FormBuilder,
     public utilsService: UtilsService
   ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
   }
 
   ngOnInit() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
     };
     this.salaryForm = this.initForm();
-    if (this.showHeadOfIncome === 'TDTS' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length>0) {
+    if (this.showHeadOfIncome === 'TDTS' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach(item => {
         this.addMoreSalary(item);
       })
-    } else if (this.showHeadOfIncome === 'TDTSP' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length>0) {
+    } else if (this.showHeadOfIncome === 'TDTSP' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach(item => {
         this.addMoreSalary(item);
       })
@@ -142,6 +141,8 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   save() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.salaryForm.valid) {
       if (this.showHeadOfIncome === 'TDTS') {
@@ -172,17 +173,8 @@ export class TdsOtherThanSalaryComponent implements OnInit {
 
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    // if (salaryArray.valid) {
     salaryArray.push(this.createForm(item));
     this.changed();
-    // } else {
-    //   salaryArray.controls.forEach(element => {
-    //     if ((element as FormGroup).invalid) {
-    //       element.markAsDirty();
-    //       element.markAllAsTouched();
-    //     }
-    //   });
-    // }
   }
 
   deleteSalaryArray() {
