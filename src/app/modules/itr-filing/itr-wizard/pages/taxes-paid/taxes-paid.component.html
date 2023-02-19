@@ -26,8 +26,8 @@
                     </button>
                 </div>
             </mat-expansion-panel-header>
-            <app-tds-other-than-salary [isAddOther]="isAddOther"
-                [showHeadOfIncome]="showHeadOfIncome"  (onSave)="saveAll()"></app-tds-other-than-salary>
+            <app-tds-other-than-salary [addData]="isAddOther" [showHeadOfIncome]="'TDTS'"
+                (onSave)="saveAll()"></app-tds-other-than-salary>
         </mat-expansion-panel>
 
         <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle class="hide-close">
@@ -44,13 +44,8 @@
                     </button>
                 </div>
             </mat-expansion-panel-header>
-            <app-tds-other-than-salary [isAddPanBased]="isAddPanBased"
-                [showHeadOfIncome]="showHeadOfIncome"  (onSave)="saveAll()"></app-tds-other-than-salary>
-            <!-- <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="tdsOtherThanSalary26QBGridOptions"
-                (rowClicked)="tdsOtherThanSalary26QBRowClicked($event)">
-            </ag-grid-angular>
-        </div> -->
+            <app-tds-other-than-salary [addData]="isAddPanBased" [showHeadOfIncome]="'TDTSP'"
+                (onSave)="saveAll()"></app-tds-other-than-salary>
         </mat-expansion-panel>
 
 
@@ -68,13 +63,7 @@
                     </button>
                 </div>
             </mat-expansion-panel-header>
-            <app-tcs [isAddTcs]="isAddTcs"  (onSave)="saveAll()"></app-tcs>
-
-            <!-- <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="tcsGridOptions"
-                (rowClicked)="tcsRowClicked($event)">
-            </ag-grid-angular>
-        </div> -->
+            <app-tcs [isAddTcs]="isAddTcs" (onSave)="saveAll()"></app-tcs>
         </mat-expansion-panel>
 
 
@@ -94,12 +83,7 @@
                 </div>
             </mat-expansion-panel-header>
 
-            <app-advance-tax-paid [isAddAdvance]="isAddAdvance"  (onSave)="saveAll()"></app-advance-tax-paid>
-            <!-- <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="otherThanTdsTcsGridOptions"
-                (rowClicked)="otherThanTdsTcsRowClicked($event)">
-            </ag-grid-angular>
-        </div> -->
+            <app-advance-tax-paid [isAddAdvance]="isAddAdvance" (onSave)="saveAll()"></app-advance-tax-paid>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

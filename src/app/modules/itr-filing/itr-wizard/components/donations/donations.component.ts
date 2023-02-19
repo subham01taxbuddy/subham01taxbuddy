@@ -12,7 +12,7 @@ declare let $: any;
   styleUrls: ['./donations.component.scss']
 })
 export class DonationsComponent implements OnInit {
-  @Input() isAddDonation = Number;
+  @Input() isAddDonation: Number;
   generalDonationForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -525,29 +525,30 @@ export class DonationsComponent implements OnInit {
     "status": true
   }];
   config: any;
-  selectedPageNo = 0;
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     public utilsService: UtilsService,
     private userMsService: UserMsService,
-    private itrMsService: ItrMsService,
   ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
   }
 
   ngOnInit() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
     };
 
     this.generalDonationForm = this.inItForm();
-    if (this.Copy_ITR_JSON.donations) {
+    if (this.Copy_ITR_JSON.donations && this.Copy_ITR_JSON.donations.length > 0) {
       this.Copy_ITR_JSON.donations.forEach(item => {
         this.addMoreDonations(item);
       })
+    } else {
+      this.addMoreDonations();
     }
     this.generalDonationForm.disable();
   }
@@ -555,14 +556,28 @@ export class DonationsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
       if (this.isAddDonation) {
-        this.addMoreDonations();
+        this.addDonations();
       }
     }, 1000);
   }
 
+  addDonations() {
+    const donationArray = <FormArray>this.generalDonationForm.get('donationArray');
+    if (donationArray.valid) {
+      this.addMoreDonations();
+    } else {
+      donationArray.controls.forEach(element => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
+    }
+  }
+
   inItForm() {
     return this.fb.group({
-      donationArray: this.fb.array([this.createDonationForm()]),
+      donationArray: this.fb.array([]),
     })
   }
 
@@ -619,17 +634,8 @@ export class DonationsComponent implements OnInit {
 
   addMoreDonations(item?) {
     const donationArray = <FormArray>this.generalDonationForm.get('donationArray');
-    if (donationArray.valid) {
-      donationArray.push(this.createDonationForm(item));
-      this.changed();
-    } else {
-      donationArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
-    }
+    donationArray.push(this.createDonationForm(item));
+    this.changed();
   }
 
   deleteDonationArray() {
