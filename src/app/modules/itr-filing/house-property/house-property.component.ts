@@ -51,6 +51,7 @@ export class HousePropertyComponent implements OnInit {
   annualValue = 0;
   step = 0;
   displayedColumns: string[] = ['Questions', 'Amount'];
+  defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
 
   constructor(
     private fb: FormBuilder,
@@ -116,6 +117,13 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
       }
     }
+
+    const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
+    // Condition is added because at least one tenant details is mandatory
+    if (nilTenant.length === 0) {
+      nilTenant.push(this.createTenantForm());
+    }
+
     console.log(
       'HOUSING deletedFileData LENGTH ---> ',
       this.deletedFileData.length
