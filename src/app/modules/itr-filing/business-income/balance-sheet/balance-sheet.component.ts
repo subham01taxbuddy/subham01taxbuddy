@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { BusinessDescription, ITR_JSON, NewFinancialParticulars } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -8,6 +10,14 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddBalanceSheetComponent } from './add-balance-sheet/add-balance-sheet.component';
 import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-dialog.component';
+
+const balanceSheetData : BusinessDescription[]=[
+  {
+    id : null,
+    natureOfBusiness: null,
+    tradeName: null,
+    businessDescription: null,},
+];
 
 @Component({
   selector: 'app-balance-sheet',
@@ -43,6 +53,8 @@ export class BalanceSheetComponent implements OnInit {
     this.depreciationObj = [];
   }
 
+  @Input() sheetData:any;
+
   ngOnInit(): void {
     this.getBalanceSheetTableData(this.ITR_JSON?.business?.businessDescription);
     this.initForm(this.ITR_JSON.business?.financialParticulars);
@@ -54,6 +66,31 @@ export class BalanceSheetComponent implements OnInit {
     // this.getLiabilitiesAssets();
   }
 
+  displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'businessDescription'];
+  dataSource = new MatTableDataSource<BusinessDescription>();
+  selection = new SelectionModel<BusinessDescription>(true, []);
+  
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  removeSelectedRows() {
+    this.selection.selected.forEach(item => {
+     let index: number = this.dataSource.data.findIndex(d => d === item);
+     console.log(this.dataSource.data.findIndex(d => d === item));
+     this.dataSource.data.splice(index,1);
+
+     this.dataSource = new MatTableDataSource<BusinessDescription>(this.dataSource.data);
+   });
+   this.selection = new SelectionModel<BusinessDescription>(true, []);
+ }
   getBalanceSheetTableData(rowsData) {
     if(!rowsData) {
       rowsData = [];
@@ -184,11 +221,14 @@ export class BalanceSheetComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('BalanceGridData=', result);
+      console.log('balanceSheetData=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.balanceSheetGridOptions.rowData.push(result);
-          this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
+          //  balanceSheetData.push(result)
+           this.dataSource.data.push(result)
+          this.dataSource = new MatTableDataSource(this.dataSource.data) 
+          // this.balanceSheetGridOptions.rowData.push(result);
+          // this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
         }
         if (mode === 'EDIT') {
           this.balanceSheetGridOptions.rowData[index] = result;
@@ -303,7 +343,7 @@ export class BalanceSheetComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    this.Copy_ITR_JSON.business.businessDescription = this.balanceSheetGridOptions.rowData;
+    this.Copy_ITR_JSON.business.businessDescription = this.dataSource.data;
     this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.getRawValue();
     this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
 
