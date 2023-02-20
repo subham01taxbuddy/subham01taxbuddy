@@ -1,4 +1,3 @@
-import { MovableAsset, Immovable } from './../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -7,7 +6,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { Immovable, ITR_JSON, MovableAsset } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AddImmovableDialogComponent } from './add-immovable-dialog/add-immovable-dialog.component';
 declare let $: any;

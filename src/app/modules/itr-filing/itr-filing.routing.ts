@@ -23,11 +23,11 @@ import { DeclarationComponent } from './declaration/declaration.component';
 import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { BusinessComponent } from './business/business.component';
-import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import {SummaryComponent} from "./summary/summary.component";
+import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
 
 const routes: Routes = [
   {
