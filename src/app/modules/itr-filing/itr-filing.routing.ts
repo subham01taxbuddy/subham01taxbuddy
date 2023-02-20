@@ -28,6 +28,7 @@ import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/spe
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import {SummaryComponent} from "./summary/summary.component";
+import {AllSalaryIncomeComponent} from "./itr-wizard/pages/all-salary-income/all-salary-income.component";
 
 const routes: Routes = [
   {
@@ -50,7 +51,15 @@ const routes: Routes = [
       },
       { path: 'taxes-paid', component: TaxesPaidComponent },
       { path: 'declaration', component: DeclarationComponent },
-      { path: 'salary', component: SalaryComponent },
+      {
+        path: 'salary',
+        component: AllSalaryIncomeComponent,
+        children: [
+          {
+            path: 'details', component: SalaryComponent
+          }
+        ]
+      },
       { path: 'house-property', component: HousePropertyComponent },
       { path: 'business', component: AllBusinessIncomeComponent },
       { path: 'capital-gain', component: CapitalGainComponent },

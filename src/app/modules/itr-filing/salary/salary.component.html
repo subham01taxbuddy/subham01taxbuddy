@@ -1,159 +1,230 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div style="padding-top: 20px;">
-    <form [formGroup]="employerDetailsFormGroup">
-        <div *ngIf="salaryView === 'TABLE'">
-            <div style="text-align: right;">
-                <button class="tbd-btn-small" (click)="addEmployer(null)">Add Employer&nbsp;&nbsp; <i class="fa fa-plus"
-                        aria-hidden="true"></i>
-                </button>
-            </div>
-            <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
-                <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
-                    [gridOptions]="employersGridOptions" (rowClicked)="onEmployerRowClicked($event)">
-                </ag-grid-angular>
-            </div>
-        </div>
-        <div *ngIf="salaryView === 'FORM'">
+    <mat-accordion class="headers-align">
+      <mat-expansion-panel hideToggle class="hide-close">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>
+              arrow_forward_ios
+            </mat-icon>
+            Gross Salary
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form [formGroup]="employerDetailsFormGroup">
+          <div class="cardRect">
+            <div class="sectionTitle">Employer Details</div>
             <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-7">
-                    <div class="card__title" style="padding:10px; font-size: 20px;">Employer Details</div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-8">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Name of the employer</mat-label>
-                                <input type="text" trim matInput placeholder="Name of the employer"
-                                    name="NameOfEmployer" class="input-field" formControlName="employerName"
-                                    maxlength="125">
-                                <mat-error
-                                    *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('required')">
-                                    Enter the name of employer
-                                </mat-error>
-                                <mat-error
-                                    *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('pattern')">
-                                    Enter character
-                                    only.</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Employer TAN</mat-label>
-                                <input type="text" trim
-                                    matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
-                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase
-                                    placeholder="TAN" name="TAN" class="input-field" formControlName="employerTAN"
-                                    maxlength="10">
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['employerTAN'].hasError('pattern')">
-                                    Enter
-                                    valid TAN (e.g XXXX12345X)
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-8">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Address of employer</mat-label>
-                                <input type="text" trim matInput placeholder="Address of employer"
-                                    name="AddressOfEmployer" class="input-field" formControlName="address"
-                                    maxlength="200">
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['address'].hasError('required')">
-                                    Enter the address
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Town/City</mat-label>
-                                <input type="text" trim matInput placeholder="Town/City" name="TAN" class="input-field"
-                                    formControlName="city" maxlength="20">
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
-                                    Enter the town/city
-                                </mat-error>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
-                                    Enter character
-                                    only.</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-8">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Select state</mat-label>
-                                <mat-select placeholder="Select state" name="state" formControlName="state">
-                                    <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
-                                        {{ state.stateName | titlecase}}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['state'].hasError('required')">
-                                    Select the state
-                                </mat-error>
-                            </mat-form-field>
-
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Pin Code</mat-label>
-                                <input type="text" trim digitsOnly matInput placeholder="Pin Code" name="pinCode"
-                                    class="input-field" formControlName="pinCode" maxlength="6"
-                                    (blur)="updateDataByPincode()">
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
-                                    Enter pincode
-                                </mat-error>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('pattern')">
-                                    Enter valid
-                                    pin
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="card__title" style="padding:10px; font-size: 20px;">Deductions u/s 16</div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-6">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Entertainment Allowance</mat-label>
-                                <input digitsOnly trim matInput placeholder="Entertainment Allowance u/s 16(ii)"
-                                    name="entertainmentAllow" class="input-field" formControlName="entertainmentAllow">
-                                <mat-error
-                                    *ngIf="employerDetailsFormGroup.controls['entertainmentAllow'].hasError('max')">
-                                    Enter valid amount
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-6">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Professional Tax</mat-label>
-                                <input digitsOnly trim class="input-field" matInput
-                                    placeholder="Professional Tax u/s 16(iii)" name="professionalTax"
-                                    formControlName="professionalTax" maxlength="10">
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['professionalTax'].hasError('max')">
-                                    Enter valid amount
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-5">
-                    <div class="card__title" style="padding:10px; font-size: 20px;">Salary Details</div>
-                    <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
-                        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
-                            [gridOptions]="salaryGridOptions" (rowClicked)="onSalaryRowClicked($event)">
-                        </ag-grid-angular>
-                    </div>
-                    <hr>
-                    <div class="card__title" style="padding:10px; font-size: 20px;">Exempt Allowance</div>
-                    <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
-                        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
-                            [gridOptions]="summaryAllowGridOptions" (rowClicked)="onSummaryAllowRowClicked($event)">
-                        </ag-grid-angular>
-                    </div>
-                </div>
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">Name of the employer</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Name of the employer"
+                         name="NameOfEmployer" class="input-field" formControlName="employerName"
+                         maxlength="125">
+                  <mat-error
+                    *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('required')">
+                    Enter the name of employer
+                  </mat-error>
+                  <mat-error
+                    *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('pattern')">
+                    Enter character
+                    only.</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-5">
+                <mat-label class="inputLabel">Employer TAN</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim
+                         matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
+                         matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase
+                         placeholder="TAN" name="TAN" class="input-field" formControlName="employerTAN"
+                         maxlength="10">
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['employerTAN'].hasError('pattern')">
+                    Enter
+                    valid TAN (e.g XXXX12345X)
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
-            <div class="pull-right">
-                <button class="tbd-btn-secondary" (click)="cancelEmployer()">Cancel</button>
-                <button class="tbd-btn" (click)="saveEmployerDetails()">Save
-                </button>
+            <div class="card__row">
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label class="inputLabel">Address of employer</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Address of employer"
+                         name="AddressOfEmployer" class="input-field" formControlName="address"
+                         maxlength="200">
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['address'].hasError('required')">
+                    Enter the address
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-5">
+                <mat-label class="inputLabel">Town/City</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Town/City" name="TAN" class="input-field"
+                         formControlName="city" maxlength="20">
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
+                    Enter the town/city
+                  </mat-error>
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
+                    Enter character
+                    only.</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="card__row">
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label>Select state</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select placeholder="Select state" name="state" formControlName="state">
+                    <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                      {{ state.stateName | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['state'].hasError('required')">
+                    Select the state
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+              <div class="card__col-xs-12 card__col-sm-5">
+                <mat-label>Pin Code</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim digitsOnly matInput placeholder="Pin Code" name="pinCode"
+                         class="input-field" formControlName="pinCode" maxlength="6"
+                         (blur)="updateDataByPincode()">
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
+                    Enter pincode
+                  </mat-error>
+                  <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('pattern')">
+                    Enter valid
+                    pin
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <hr style="margin-bottom: 10px;">
+            <div class="sectionTitle">Salary Details</div>
+            <div>
+              <table class="table table-bordered">
+                  <thead style="background:#eaeaea">
+                  <tr class="table-head">
+                    <th class="text-center">Salary Type</th>
+                    <th class="text-center">Gross Amount</th>
+                  </tr>
+                  </thead>
+                  <tbody formArrayName="salaryDetails">
+                  <tr *ngFor="let income of getSalaryArray.controls;let i=index" [formGroupName]="i">
+                    <td>
+                      {{income.value.label}}
+                    </td>
+
+                    <td>
+                      <mat-form-field class="input-field-width" style="width: 90% !important;">
+                        <input type="text" trim matInput placeholder="" name="salaryValue[i]"
+                               formControlName="salaryValue"
+                               class="input-field" maxlength="125"/>
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
             </div>
         </div>
-    </form>
+        </form>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel hideToggle class="hide-close">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>
+                arrow_forward_ios
+              </mat-icon>
+              Exempt Allowance
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <form [formGroup]="allowanceFormGroup">
+          <div class="cardRect">
+            <div class="sectionTitle">Exempt Allowance</div>
+            <table class="table table-bordered">
+              <thead style="background:#eaeaea">
+              <tr class="table-head">
+                <th class="text-center">Allowance Type</th>
+                <th class="text-center">Exempt Amount</th>
+              </tr>
+              </thead>
+              <tbody formArrayName="allowances">
+              <tr *ngFor="let income of getAllowanceArray.controls;let i=index" [formGroupName]="i">
+                <td>
+                  {{income.value.label}}
+                </td>
+
+                <td>
+                  <mat-form-field class="input-field-width" style="width: 90% !important;">
+                    <input type="text" trim matInput placeholder="" name="allowValue[i]"
+                           formControlName="allowValue"
+                           class="input-field" maxlength="125"/>
+                  </mat-form-field>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel hideToggle class="hide-close">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>
+                arrow_forward_ios
+              </mat-icon>
+              Deductions u/s 16
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="cardRect">
+          <div class="sectionTitle">Deductions u/s 16</div>
+          <div class="card__row">
+            <form [formGroup]="deductionsFormGroup">
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label>Entertainment Allowance</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="Entertainment Allowance u/s 16(ii)"
+                         name="entertainmentAllow" class="input-field" formControlName="entertainmentAllow">
+                  <mat-error
+                    *ngIf="deductionsFormGroup.controls['entertainmentAllow'].hasError('max')">
+                    Enter valid amount
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-6">
+                <mat-label>Professional Tax</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim class="input-field" matInput
+                         placeholder="Professional Tax u/s 16(iii)" name="professionalTax"
+                         formControlName="professionalTax" maxlength="10">
+                  <mat-error *ngIf="deductionsFormGroup.controls['professionalTax'].hasError('max')">
+                    Enter valid amount
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </form>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+      <button
+        class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+        (click)="goBack()">
+        <mat-icon>keyboard_backspace</mat-icon>
+        <span class="font-semibold">&nbsp;Back to Main Page</span>
+      </button>
+
+      <button
+        class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+        (click)="saveEmployerDetails()">
+        <span class="font-semibold">Save All</span>
+      </button>
+    </div>
 </div>

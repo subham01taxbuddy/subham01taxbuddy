@@ -92,6 +92,7 @@ import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-pai
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
+import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
 
 @NgModule({
   imports: [
@@ -197,6 +198,7 @@ import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.com
     AdvanceTaxPaidComponent,
     AllBusinessIncomeComponent,
     AddClientsComponent,
+    AllSalaryIncomeComponent,
   ],
   exports: [
     CustomerProfileComponent
