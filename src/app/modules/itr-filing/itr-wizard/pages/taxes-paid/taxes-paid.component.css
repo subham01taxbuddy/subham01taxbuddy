@@ -37,44 +37,6 @@ tr:nth-child(even) {
   background-color: #f2f2f2
 }
 
-.notes {
-  margin-top: 10px;
-}
-
-.note {
-  left: 656px;
-  top: auto;
-}
-
-.invest-edit {
-  margin-top: auto;
-  padding: 0;
-}
-
-.invest {
-  left: 436px;
-  top: 10px;
-}
-
-.save_buttons {
-  text-align: center;
-}
-
-.mat-accordion>.mat-expansion-panel-spacing:first-child {
-  margin-top: 15px;
-}
-
-.upload-doc {
-  margin-left: 40px;
-}
-
-@media screen and (max-width: 1024px) {
-  .upload-doc {
-    display: none !important;
-  }
-}
-
-
 .space-in {
   border: 1px solid gray;
   margin: 10px;

@@ -1,0 +1,99 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="">
+    <div class="card__col-lg-12">
+        <div class="card__title card__col-lg-10 tds-title">TDS On Salary
+        </div>
+        <div class="edit clearfix notes card__col-lg-2">
+            <button type="button" class="edit_btn" [disabled]="salaryForm.invalid" (click)="addMore()">
+                <i class="fa fa-plus"></i>Add
+            </button>
+        </div>
+        <div class="head-title mb-5">This is TDS on salary deducted by your employer. Enter the amount form 16 or
+            26AS</div>
+    </div>
+    <form [formGroup]="salaryForm">
+        <div formArrayName="salaryArray">
+            <div class="tds-on" *ngFor="let salary of getSalaryArray.controls | paginate:config ;let i=index"
+                [formGroupName]="fieldGlobalIndex(i)">
+                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml-5">
+                </mat-checkbox>
+                <div class="">
+                    <div class="card__col-xs-12 card__col-sm-6">
+                        <mat-label>TAN of Employer*</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input
+                                matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
+                                matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="deductorTAN"
+                                matInput currencyMask placeholder="XXXXXNNNNX" name="deductorTAN[i]" class="input-field"
+                                maxlength="10" minlength="10" required type="text" trim upperCase>
+
+                            <mat-error
+                                *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['deductorTAN'].hasError('pattern')">
+                                Enter
+                                valid TAN (e.g XXXXX1234X)</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-6">
+                        <mat-label>Name of Employer*</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input formControlName="deductorName" matInput placeholder="Name of donee"
+                                name="deductorName[i]" class="input-field" maxlength="125" required type="text" trim>
+                            <mat-error
+                                *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['deductorName'].hasError('pattern')">
+                                Name should be character only</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-xs-12 card__col-sm-6">
+                        <mat-label>Total Amount credited*</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input formControlName="totalAmountCredited" matInput placeholder="Amount Other Than Cash"
+                                name="totalAmountCredited[i]" required class="input-field" maxlength="14" digitsOnly>
+                            <mat-error
+                                *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalAmountCredited'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-xs-12 card__col-sm-6">
+                        <mat-label>Total Tax Deducted*</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input formControlName="totalTdsDeposited" matInput placeholder="Amount Other Than Cash"
+                                name="totalTdsDeposited[i]" required class="input-field" maxlength="14" digitsOnly>
+                            <mat-error
+                                *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalTdsDeposited'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div class="edit-head">
+                    <button type="button" class="edit-donation" (click)="editDonationForm(i)"><mat-icon>
+                            edit_square
+                        </mat-icon>Edit </button>
+                </div>
+            </div>
+            <div class="display-flex">
+                <div class="card__col-xs-12">
+                    <div class="card__col-sm-3">
+                        <button type="submit" class="tbd-btn-secondary" (click)="deleteSalaryArray()"><i
+                                class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
+                    </div>
+                    <div class="card__col-sm-6 txt-center">
+                        <table>
+                            <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
+                        </table>
+                        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                    </div>
+                    <div class="card__col-sm-3" style="text-align: right;">
+                        <button class="tbd-btn save-btn" (click)="save()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
