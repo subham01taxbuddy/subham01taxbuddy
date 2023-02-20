@@ -1,0 +1,121 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<mat-accordion class="headers-align">
+  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" (closed)="closed('land')" hideToggle
+    class="hide-close">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>
+          arrow_forward_ios
+        </mat-icon>
+        Land & Building
+      </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('land')"><mat-icon>
+            edit_square
+          </mat-icon>Edit </button>
+      </div>
+    </mat-expansion-panel-header>
+    <app-land-and-building></app-land-and-building>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (closed)="closed('listed')" hideToggle
+    class="hide-close">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>
+          arrow_forward_ios
+        </mat-icon>
+        Listed Securities (Equity Shares / Equity Mutual Funds) </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('listed')"><mat-icon>
+            edit_square
+          </mat-icon>Edit </button>
+      </div>
+    </mat-expansion-panel-header>
+    <app-equity-mf></app-equity-mf>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" (closed)="closed('unlisted')" hideToggle
+    class="hide-close">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>
+          arrow_forward_ios
+        </mat-icon>
+        Unlisted Securities (Shares not listed) </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('unlisted')"><mat-icon>
+            edit_square
+          </mat-icon>Edit </button>
+      </div>
+    </mat-expansion-panel-header>
+    <app-equity-mf></app-equity-mf>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" (closed)="closed('bonds')" hideToggle
+    class="hide-close">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>
+          arrow_forward_ios
+        </mat-icon>
+        Bonds & Debentures </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('bonds')"><mat-icon>
+            edit_square
+          </mat-icon>Edit </button>
+      </div>
+    </mat-expansion-panel-header>
+    <app-bonds></app-bonds>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)" (closed)="closed('zeroCouponBonds')" hideToggle
+    class="hide-close">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>
+          arrow_forward_ios
+        </mat-icon>
+        Zero Coupon Bonds </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('zeroCouponBonds')"><mat-icon>
+            edit_square
+          </mat-icon>Edit </button>
+      </div>
+    </mat-expansion-panel-header>
+    <app-bonds></app-bonds>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)" (closed)="closed('otherAssets')" hideToggle
+    class="hide-close">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>
+          arrow_forward_ios
+        </mat-icon>
+        Any Other Assets (Eg. Gold, Debt, Mutual Funds, Etc) </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation();editForm('otherAssets')"><mat-icon>
+            edit_square
+          </mat-icon>Edit </button>
+      </div>
+    </mat-expansion-panel-header>
+    <app-other-assets></app-other-assets>
+  </mat-expansion-panel>
+
+</mat-accordion>
+
+<div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+  <button
+    class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+    (click)="goBack()"><mat-icon>keyboard_backspace</mat-icon>
+    <span class="font-semibold">&nbsp;Back to Source Page</span>
+  </button>
+
+  <button
+    class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+    (click)="saveAll()">
+    <span class="font-semibold">Save All</span>
+  </button>
+</div>

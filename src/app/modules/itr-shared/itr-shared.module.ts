@@ -7,13 +7,14 @@ import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { MaterialModule } from '../shared/material.module';
 import { BankDialogComponent } from './dialogs/bank-dialog/bank-dialog.component';
 import { NoAccountCasesComponent } from './dialogs/no-account-cases/no-account-cases.component';
+import {WizardNavigation} from "./WizardNavigation";
 
 
 
 @NgModule({
     declarations: [
         BankDialogComponent,
-        NoAccountCasesComponent
+        NoAccountCasesComponent,
         // UpperCaseDirective
     ],
     imports: [

@@ -6,6 +6,18 @@ import { businessIncome, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { BusinessDialogComponent } from './business-dialog/business-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+
+const businessData: businessIncome[] = [{
+  id: null,
+  natureOfBusiness: null,
+  tradeName: null,
+  receipts: null,
+  presumptiveIncome: null,
+  periodOfHolding: null,
+  minimumPresumptiveIncome: null,
+}]
 
 @Component({
   selector: 'app-presumptive-business-income',
@@ -68,6 +80,32 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.getBusinessTableData([]);
     }
   }
+
+//   displayedColumns: string[] = ['select','Profession', 'TradeName', 'BusinessDescription'];
+//   dataSource = new MatTableDataSource<businessIncome>(businessData);
+//   selection = new SelectionModel<businessIncome>(true, []);
+  
+//   isAllSelected() {
+//     const numSelected = this.selection.selected.length;
+//     const numRows = this.dataSource.data.length;
+//     return numSelected === numRows;
+//   }
+  
+//   masterToggle() {
+//     this.isAllSelected() ?
+//         this.selection.clear() :
+//         this.dataSource.data.forEach(row => this.selection.select(row));
+//   }
+//   removeSelectedRows() {
+//     this.selection.selected.forEach(item => {
+//      let index: number = this.dataSource.data.findIndex(d => d === item);
+//      console.log(this.dataSource.data.findIndex(d => d === item));
+//      this.dataSource.data.splice(index,1);
+
+//      this.dataSource = new MatTableDataSource<businessIncome>(this.dataSource.data);
+//    });
+//    this.selection = new SelectionModel<businessIncome>(true, []);
+//  }
 
   getMastersData() {
     this.loading = true;
