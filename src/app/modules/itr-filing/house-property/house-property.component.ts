@@ -17,6 +17,7 @@ import {
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DeleteConfirmationDialogComponent } from '../components/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-house-property',
@@ -52,6 +53,8 @@ export class HousePropertyComponent implements OnInit {
   step = 0;
   displayedColumns: string[] = ['Questions', 'Amount'];
   defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
+  active: number[];
+  activeTenant: number[];
 
   constructor(
     private fb: FormBuilder,
@@ -302,10 +305,7 @@ export class HousePropertyComponent implements OnInit {
     } = {}
   ): FormGroup {
     return this.fb.group({
-      name: [
-        obj.name || '',
-        [Validators.required, Validators.pattern(AppConstants.charRegex)],
-      ],
+      name: [obj.name || '', [Validators.required]],
       // isSelf: [obj.isSelf || false],
       panNumber: [
         obj.panNumber || '',

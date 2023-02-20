@@ -26,18 +26,46 @@
     <div style="padding: 0 24px 24px 24px">
       <form [formGroup]="housePropertyForm">
         <!-- type-of-hp selection  -->
-        <div class="card__row" *ngIf="hpView === 'TABLE'">
+        <div class="card__row" *ngIf="hpView === 'FORM'">
+          <!-- add-more-hp-button  -->
           <div style="text-align: right">
-            <button
-              class="tbd-btn-small"
-              style="margin-right: 10px"
-              (click)="addHousingIncome()"
-            >
+            <button class="btn" (click)="addHousingIncome()">
               Add House Property&nbsp;&nbsp;
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
           </div>
-          <div class="card__col-xs-12" style="padding-top: 10px">
+
+          <div>
+            <mat-accordion class="headers-align">
+              <mat-expansion-panel
+                *ngFor="let house of ITR_JSON.houseProperties; let i = index"
+                hideToggle
+              >
+                <mat-expansion-panel-header
+                  style="cursor: pointer"
+                  (click)="editHouseProperty(i)"
+                >
+                  <mat-panel-title>{{
+                    house.propertyType === "SOP"
+                      ? "Self occupied"
+                      : house.propertyType === "LOP"
+                      ? "Let out"
+                      : house.propertyType === "DLOP"
+                      ? "Vacant"
+                      : ""
+                  }}</mat-panel-title>
+                  <mat-panel-description
+                    >{{ house.address }},
+                    {{ house.city }}</mat-panel-description
+                  >
+
+                  <mat-icon> arrow_forward_ios </mat-icon>
+                </mat-expansion-panel-header>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+
+          <!-- <div class="card__col-xs-12" style="padding-top: 10px">
             <div class="report-table-container">
               <div class="report-table-wrapper">
                 <table class="report-table">
@@ -111,10 +139,10 @@
                 </table>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
-        <div class="card" *ngIf="hpView === 'FORM'">
+        <div class="card" *ngIf="hpView === 'TABLE'">
           <div class="card__row flex flex-col gap-[10px]">
             <!-- type-of-property-radio-buttons  -->
             <div class="card__row">
@@ -139,28 +167,6 @@
                     >{{ propertyType.label | titlecase }}</mat-radio-button
                   >
                 </mat-radio-group>
-
-                <!-- <mat-form-field appearance="outline">
-                  <mat-label>Select Property Type</mat-label>
-                  <mat-select
-                    placeholder="Select Property Type"
-                    name="propertyType"
-                    formControlName="propertyType"
-                    (selectionChange)="
-                      changePropType(
-                        housePropertyForm.controls['propertyType'].value
-                      )
-                    "
-                    required
-                  >
-                    <mat-option
-                      *ngFor="let propertyType of propertyTypeDropdown"
-                      [value]="propertyType.value"
-                    >
-                      {{ propertyType.label | titlecase }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field> -->
               </div>
             </div>
 
@@ -945,6 +951,7 @@
                               type="checkbox"
                               id="customCheck2"
                               disabled
+                              name="checkbox"
                             />
                           </div>
                         </th>
@@ -972,7 +979,8 @@
                             <input
                               class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                               type="checkbox"
-                              id="customCheck2"
+                              name="checkbox"
+                              (click)="active = [i]"
                             />
                           </div>
                         </td>
@@ -1073,7 +1081,6 @@
                       </tr>
                     </tbody>
                   </table>
-
                   <!-- delete  -->
                   <div>
                     <button
@@ -1081,9 +1088,10 @@
                       type="button"
                       size="12px"
                       class="btn btn-outline-danger !important"
-                      (click)="removeCoOwner(i)"
+                      (click)="removeCoOwner(active)"
                     >
-                      <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                      Delete
                     </button>
                   </div>
 
@@ -1294,7 +1302,7 @@
                         <input
                           class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                           type="checkbox"
-                          id="customCheck2"
+                          (click)="activeTenant = [i]"
                         />
                       </div>
                     </td>
@@ -1347,7 +1355,7 @@
                           [class.invalid]="isduplicatePAN(i, 'tenant')"
                           upperCase
                           [matTooltip]="
-                            isduplicatePAN(i, 'coOwners')
+                            isduplicatePAN(i, 'tenant')
                               ? 'Duplicate PAN Number'
                               : ''
                           "
@@ -1381,21 +1389,21 @@
                   type="button"
                   size="12px"
                   class="btn btn-outline-danger !important"
-                  (click)="removeTenant(i)"
+                  (click)="removeTenant(activeTenant)"
                 >
                   <i class="fa fa-trash" aria-hidden="true"></i> Delete
                 </button>
               </div>
             </div>
           </div>
-        </div>
-        <!-- action buttons  -->
-        <div class="pull-right">
-          <!-- <a class="btn btn-cancel">Cancel</a> -->
-          <button class="tbd-btn-secondary" (click)="cancelHpForm()">
-            Cancel
-          </button>
-          <button class="tbd-btn" (click)="saveHouseProperty()">Save</button>
+          <!-- action buttons  -->
+          <div class="card__row flex gap-[10px] self-end">
+            <!-- <a class="btn btn-cancel">Cancel</a> -->
+            <button class="tbd-btn-secondary" (click)="cancelHpForm()">
+              Cancel
+            </button>
+            <button class="tbd-btn" (click)="saveHouseProperty()">Save</button>
+          </div>
         </div>
       </form>
     </div>
