@@ -35,47 +35,54 @@
             </button>
           </div>
 
-          <div>
-            <mat-accordion class="headers-align">
-              <mat-expansion-panel
-                *ngFor="let house of ITR_JSON.houseProperties; let i = index"
-                hideToggle
-                (click)="editHouseProperty(i)"
-                style="cursor: pointer"
-              >
-                <mat-expansion-panel-header>
-                  <mat-checkbox
+          <div
+            class="card"
+            style="padding: 25px"
+            *ngFor="let house of ITR_JSON.houseProperties; let i = index"
+            hideToggle
+          >
+            <div
+              class="flex justify-between"
+              (click)="editHouseProperty(i)"
+              style="cursor: pointer"
+            >
+              <!-- checkbox  -->
+              <div class="flex justify-between gap-[50px]">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                    type="checkbox"
+                    (click)="activeTenant = [i]"
                     (click)="$event.stopPropagation()"
-                  ></mat-checkbox>
-                  <mat-panel-title>
-                    {{
-                      house.propertyType === "SOP"
-                        ? "Self occupied"
-                        : house.propertyType === "LOP"
-                        ? "Let out"
-                        : house.propertyType === "DLOP"
-                        ? "Vacant"
-                        : ""
-                    }}</mat-panel-title
-                  >
-
-                  <mat-panel-description
-                    >{{ house.city }}, {{ house.pinCode }}
-                  </mat-panel-description>
-
-                  <mat-icon>arrow_forward_ios</mat-icon>
-                </mat-expansion-panel-header>
-              </mat-expansion-panel>
-              <div>
-                <button
-                  class="btn"
-                  style="cursor: pointer"
-                  (click)="deleteHpDetails(active)"
-                >
-                  Delete
-                </button>
+                  />
+                </div>
+                <!-- title  -->
+                <div class="card__title">
+                  {{
+                    house.propertyType === "SOP"
+                      ? "Self occupied"
+                      : house.propertyType === "LOP"
+                      ? "Let out"
+                      : house.propertyType === "DLOP"
+                      ? "Vacant"
+                      : ""
+                  }}
+                </div>
               </div>
-            </mat-accordion>
+              <!-- description  -->
+              <div>{{ house.city }}, {{ house.pinCode }}</div>
+              <!-- right icon  -->
+              <mat-icon>arrow_forward_ios</mat-icon>
+            </div>
+          </div>
+          <div>
+            <button
+              class="btn"
+              style="cursor: pointer"
+              (click)="deleteHpDetails(active)"
+            >
+              Delete
+            </button>
           </div>
 
           <!-- <div class="card__col-xs-12" style="padding-top: 10px">

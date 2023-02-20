@@ -27,7 +27,6 @@ import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/spe
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { SummaryComponent } from './summary/summary.component';
-import { SummaryComponent } from './summary/summary.component';
 import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
 import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
 
