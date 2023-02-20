@@ -12,7 +12,7 @@
         <div class="card__col-lg-6"></div>
     </div>
     <form [formGroup]="investmentDeductionForm">
-        <div class="card__row mb-2">
+        <div class="card__row display-flex">
             <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
                 <div class="display-flex card__col-sm-12">
                     <div class="card__title card__col-sm-9" style="padding:10px 0; font-size: 18px;">Investment/
@@ -104,8 +104,10 @@
                     </div>
                 </div>
             </div>
-            <div class="card card__col-sm-12 card__col-md-12 card__col-lg-5 card__col-xl-5 upload-doc">
-                <app-upload-doc></app-upload-doc>
+            <div class="space-in">
+            </div>
+            <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
+                <!-- <app-upload-doc  (onSave)="saveAll()"></app-upload-doc> -->
             </div>
         </div>
     </form>
@@ -126,7 +128,7 @@
                         </button>
                     </div>
                 </mat-expansion-panel-header>
-                <app-donations [isAddDonation]="isAddDonation"></app-donations>
+                <app-donations [isAddDonation]="isAddDonation" (onSave)="saveInvestmentDeductions()"></app-donations>
             </mat-expansion-panel>
 
             <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">

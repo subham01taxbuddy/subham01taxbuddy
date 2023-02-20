@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -18,6 +18,8 @@ export class DonationsComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
+  @Output() onSave = new EventEmitter();
+
   otherDonationToDropdown = [{
     "id": null,
     "donationType": "OTHER",
@@ -622,8 +624,19 @@ export class DonationsComponent implements OnInit {
   }
 
   saveGeneralDonation() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.loading = true;
+
     if (this.generalDonationForm.valid) {
       this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      this.onSave.emit();
+      this.loading = false;
+      this.utilsService.showSnackBar('Donation data saved successfully.');
+    } else {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to save Donation data.');
     }
   }
 
