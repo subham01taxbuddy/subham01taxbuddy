@@ -1,10 +1,8 @@
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { UserMsService } from 'src/app/services/user-ms.service';
 declare let $: any;
 @Component({
   selector: 'app-tds-other-than-salary',
@@ -12,18 +10,15 @@ declare let $: any;
   styleUrls: ['./tds-other-than-salary.component.scss']
 })
 export class TdsOtherThanSalaryComponent implements OnInit {
-  @Input() isAddOther: Number;
-  @Input() isAddPanBased: Number;
+  @Input() addData: Number;
   @Input() showHeadOfIncome: String;
   @Output() onSave = new EventEmitter();
 
   salaryForm: FormGroup;
-  donationToolTip: any;
-  Copy_ITR_JSON: ITR_JSON;
+  COPY_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
   config: any;
-  selectedPageNo = 0;
 
   headOfIncomeDropdownTDS2 = [
     { name: 'Income from business and Profession', code: 'BP', disabled: false },
@@ -40,63 +35,82 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     { name: 'Exempt Income', code: 'EI', disabled: false }
   ];
 
-  constructor(private fb: FormBuilder,
-    public utilsService: UtilsService,
-    private userMsService: UserMsService,
-    private itrMsService: ItrMsService,
+  constructor(
+    private fb: FormBuilder,
+    public utilsService: UtilsService
   ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
   }
 
   ngOnInit() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
     };
-
-    this.salaryForm = this.inItForm();
-    if (this.showHeadOfIncome === 'TDTS') {
-      if (this.Copy_ITR_JSON.taxPaid?.otherThanSalary16A) {
-        this.Copy_ITR_JSON.taxPaid.otherThanSalary16A.forEach(item => {
-          this.addMoreSalary(item);
-        })
-      }
-    }
-    if (this.showHeadOfIncome === 'TDTSP') {
-      if (this.Copy_ITR_JSON.taxPaid?.otherThanSalary26QB) {
-        this.Copy_ITR_JSON.taxPaid.otherThanSalary26QB.forEach(item => {
-          this.addMoreSalary(item);
-        })
-      }
+    this.salaryForm = this.initForm();
+    if (this.showHeadOfIncome === 'TDTS' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0) {
+      this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach(item => {
+        this.addMoreSalary(item);
+      })
+    } else if (this.showHeadOfIncome === 'TDTSP' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0) {
+      this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach(item => {
+        this.addMoreSalary(item);
+      })
+    } else {
+      this.addMoreSalary()
     }
     this.salaryForm.disable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
-      if (this.isAddOther || this.isAddPanBased) {
-        this.addMoreSalary();
+      if (this.addData) {
+        this.addSalary();
       }
     }, 1000);
   }
 
-  inItForm() {
+  addSalary() {
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    if (salaryArray.valid) {
+      this.addMoreSalary();
+    } else {
+      salaryArray.controls.forEach(element => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
+    }
+  }
+
+  initForm() {
     return this.fb.group({
-      salaryArray: this.fb.array([this.createDonationForm()]),
+      salaryArray: this.fb.array([]),
     })
   }
 
-  createDonationForm(item?): FormGroup {
-    return this.fb.group({
-      hasEdit: [item ? item.hasEdit : false],
-      deductorPAN: [item ? item.deductorPAN : '', [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)]],
-      deductorName: [item ? item.deductorName : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
-      totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
-      totalTdsDeposited: [item ? item.totalTdsDeposited : null, Validators.required],
-      headOfIncome: [item ? item.headOfIncome : '', Validators.required],
-    });
+  createForm(item?): FormGroup {
+    if (this.showHeadOfIncome === 'TDTS') {
+      return this.fb.group({
+        hasEdit: [item ? item.hasEdit : false],
+        deductorTAN: [item ? item.deductorTAN : '', [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)]],
+        deductorName: [item ? item.deductorName : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+        totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
+        totalTdsDeposited: [item ? item.totalTdsDeposited : null, Validators.required],
+        headOfIncome: [item ? item.headOfIncome : '', Validators.required],
+      });
+    } else if (this.showHeadOfIncome === 'TDTSP') {
+      return this.fb.group({
+        hasEdit: [item ? item.hasEdit : false],
+        deductorPAN: [item ? item.deductorPAN : '', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],
+        deductorName: [item ? item.deductorName : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+        totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
+        totalTdsDeposited: [item ? item.totalTdsDeposited : null, Validators.required],
+        headOfIncome: [item ? item.headOfIncome : '', Validators.required],
+      });
+    }
   }
 
   changed() {
@@ -127,17 +141,19 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   save() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.salaryForm.valid) {
       if (this.showHeadOfIncome === 'TDTS') {
-        this.Copy_ITR_JSON.taxPaid.otherThanSalary16A = this.salaryForm.value.salaryArray;
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = this.salaryForm.value.salaryArray;
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
         this.onSave.emit();
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       } else if (this.showHeadOfIncome === 'TDTSP') {
-        this.Copy_ITR_JSON.taxPaid.otherThanSalary26QB = this.salaryForm.value.salaryArray;
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB = this.salaryForm.value.salaryArray;
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
         this.onSave.emit();
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
@@ -157,17 +173,8 @@ export class TdsOtherThanSalaryComponent implements OnInit {
 
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid) {
-      salaryArray.push(this.createDonationForm(item));
-      this.changed();
-    } else {
-      salaryArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
-    }
+    salaryArray.push(this.createForm(item));
+    this.changed();
   }
 
   deleteSalaryArray() {
