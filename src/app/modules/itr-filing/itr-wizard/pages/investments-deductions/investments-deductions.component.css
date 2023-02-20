@@ -67,8 +67,15 @@ tr:nth-child(even) {
 .upload-doc {
   margin-left: 40px;
 }
+
 @media screen and (max-width: 1024px) {
   .upload-doc {
-      display: none !important;
+    display: none !important;
   }
+}
+
+
+.space-in {
+  border: 1px solid gray;
+  margin: 10px;
 }
