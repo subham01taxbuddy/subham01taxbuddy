@@ -416,6 +416,7 @@ export class HousePropertyComponent implements OnInit {
     this.chekIsSOPAdded();
     this.housePropertyForm = this.createHousePropertyForm();
     this.housePropertyForm.controls['country'].setValue('91');
+    this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
   }
 
   editHouseProperty(index) {
