@@ -3,6 +3,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -13,6 +14,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 export class CapitalGainComponent implements OnInit {
   step = 0;
   loading = false;
+  showList = true;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   @Output() saveAndNext = new EventEmitter<any>();
@@ -22,12 +24,47 @@ export class CapitalGainComponent implements OnInit {
   isEditBonds: boolean;
   isEditZeroCouponBonds: boolean;
   isEditOtherAssets: boolean;
+  topicList = [];
 
   constructor(
+    private router: Router,
     public utilsService: UtilsService,
     public matDialog: MatDialog) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.topicList = [
+      {
+        label: 'Land & Building',
+        path: 'lab',
+        type: 'land'
+      },
+      {
+        label: 'Listed Securities (Equity Shares / Equity Mutual Funds)',
+        path: 'listed',
+        type: 'listed'
+      },
+      {
+        label: 'Unlisted Securities (Shares not listed)',
+        path: 'unlisted',
+        type: 'unlisted'
+      },
+      {
+        label: 'Bonds & Debentures',
+        path: 'bonds',
+        type: 'bonds'
+      },
+      {
+        label: 'Zero Coupon Bonds',
+        path: 'zcb',
+        type: 'zcb'
+      },
+      {
+        label: 'Any Other Assets (Eg. Gold, Debt, Mutual Funds, Etc)',
+        path: 'other',
+        type: 'other'
+      }
+    ];
   }
 
   ngOnInit() {
@@ -54,9 +91,16 @@ export class CapitalGainComponent implements OnInit {
     }
   }
 
+  gotoSection(path) {
+    this.showList = false;
+    let basePath = '/itr-filing/itr/capital-gain/';
+    this.router.navigate([basePath + path]);
+  }
+
   editForm(type) {
     if (type === 'land') {
       this.isEditLand = true;
+      this.router.navigate(['/itr-filing/itr/capital-gain/lab']);
     } else if (type === 'listed') {
       this.isEditListed = true;
     } else if (type === 'unlisted') {
@@ -75,7 +119,7 @@ export class CapitalGainComponent implements OnInit {
   }
 
   saveAll() {
-   
+
   }
 
 }
