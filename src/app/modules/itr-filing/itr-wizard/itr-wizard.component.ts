@@ -17,6 +17,7 @@ import { OtherInformationComponent } from './components/other-information/other-
 import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-incomes.component";
 import {OtherIncomeComponent} from "../other-income/other-income.component";
 import {Subscription} from "rxjs";
+import {WizardNavigation} from "../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -83,7 +84,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;
     // }
-    const child : OtherIncomeComponent = componentRef;
+    const child : WizardNavigation = componentRef;
     child.saveAndNext.subscribe( () => {
       this.gotoSources();
     });

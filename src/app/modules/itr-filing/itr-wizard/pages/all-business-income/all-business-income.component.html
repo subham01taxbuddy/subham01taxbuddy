@@ -28,11 +28,12 @@
         Balance Sheet </mat-panel-title>
       <div class="card__row edit clearfix isShow">
         <button class="edit_btn" (click)="$event.stopPropagation();editForm('personal')"><mat-icon>
-          edit_square
-        </mat-icon>Edit </button>
+          
+          {{ sheetData?.editForm ? 'highlight_off':'edit_square' }}
+        </mat-icon> {{ sheetData?.editForm ? 'Cancel':'Edit' }} </button>
       </div>
     </mat-expansion-panel-header>
-    <app-balance-sheet></app-balance-sheet>
+    <app-balance-sheet [sheetData]="sheetData"></app-balance-sheet>
   </mat-expansion-panel>
 
 </mat-accordion>

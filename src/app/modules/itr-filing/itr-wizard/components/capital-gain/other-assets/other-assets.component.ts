@@ -1,10 +1,9 @@
-import { Improvement } from './../../../../modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { Improvement, ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { InvestmentDialogComponent } from '../investment-dialog/investment-dialog.component';
 import { OtherAssetsDialogComponent } from './other-assets-dialog/other-assets-dialog.component';
