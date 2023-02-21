@@ -1,48 +1,94 @@
-<h1 mat-dialog-title> Cost Of Improvement Details</h1>
-
-<mat-dialog-content>
-  <form [formGroup]="improvementForm">
-    <div class="card__row">
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <mat-select placeholder="Select Asset Srn" name="selectSrn" formControlName="srn" 
-          (selectionChange)="assetSelected()" required>
-            <mat-option *ngFor="let data of data.assetDetails" [value]="data.srn">
-              {{ data.srn }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <mat-select placeholder="Year of Improvement" name="financialYearOfImprovement"
-            formControlName="financialYearOfImprovement" (selectionChange)="calculateIndexCost()" required>
-            <mat-option [value]="year" *ngFor="let year of improvementYears"> {{year}} </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <input matInput digitsOnly formControlName="costOfImprovement" placeholder="Cost Of Improvement"
-            name="costOfImprovement" class="input-field" maxlength="14" (blur)="calculateIndexCost()"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-
-        </mat-form-field>
-      </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <input matInput digitsOnly formControlName="indexCostOfImprovement"
-            placeholder="Cost Of Improvement with Indexation" name="indexCostOfImprovement" class="input-field"
-            maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="row dialog-button">
-      <div class="sub_btn top-space">
-        <button type="submit" class="tbd-btn" (click)="saveDetails()">Save</button>
-        <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
+<form [formGroup]="improvementForm" style="padding: 0 40px">
+  <!-- cost-of-improvement yes/no  -->
+  <div class="card__row flex flex-col gap-[10px]">
+    <div class="card__row card__row" style="padding: 0px 15px">
+      <div class="flex gap-[25px] flex-col">
+        <!-- co-owner yes-no selection  -->
+        <div class="card__col-xs-12 flex justify-between items-center">
+          <mat-label
+            ><strong>Is the property jointly owned? *</strong>
+          </mat-label>
+          <mat-radio-group
+            name="isImprovement"
+            (change)="haveImprovement()"
+            [formControl]="isImprovement"
+          >
+            <mat-radio-button
+              [value]="true"
+              style="margin-left: 0px"
+              labelPosition="before"
+              >Yes </mat-radio-button
+            >&nbsp;&nbsp;&nbsp;
+            <mat-radio-button [value]="false" labelPosition="before"
+              >No</mat-radio-button
+            >
+          </mat-radio-group>
+          <!-- add-more-button  -->
+          <div>
+            <button
+              *ngIf="isImprovement.value"
+              type="button"
+              size="12px"
+              class="btn"
+              (click)="addMoreImprovement()"
+            >
+              <i class="fa fa-plus-square" aria-hidden="true"></i> Add
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </form>
-</mat-dialog-content>
+  </div>
+
+  <div class="card__row" *ngIf="isImprovement.value">
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-label>Year Of Improvement</mat-label>
+      <mat-form-field class="input-field-width" appearance="outline">
+        <mat-select
+          placeholder="Year of Improvement"
+          name="financialYearOfImprovement"
+          formControlName="financialYearOfImprovement"
+          (selectionChange)="calculateIndexCost()"
+          required
+        >
+          <mat-option [value]="year" *ngFor="let year of improvementYears">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-label>Cost of Improvement</mat-label>
+      <mat-form-field class="input-field-width" appearance="outline">
+        <input
+          matInput
+          digitsOnly
+          formControlName="costOfImprovement"
+          placeholder="Cost Of Improvement"
+          name="costOfImprovement"
+          class="input-field"
+          maxlength="14"
+          (blur)="calculateIndexCost()"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+        />
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-label>Cost of Improvement with Indexation</mat-label>
+      <mat-form-field class="input-field-width" appearance="outline">
+        <input
+          matInput
+          digitsOnly
+          formControlName="indexCostOfImprovement"
+          placeholder="Cost Of Improvement with Indexation"
+          name="indexCostOfImprovement"
+          class="input-field"
+          maxlength="14"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          [disabled]
+        />
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+<br />

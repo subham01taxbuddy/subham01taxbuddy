@@ -3,32 +3,43 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Improvement, ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  Improvement,
+  ITR_JSON,
+  NewCapitalGain,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { InvestmentDialogComponent } from '../investment-dialog/investment-dialog.component';
 import { OtherAssetsDialogComponent } from './other-assets-dialog/other-assets-dialog.component';
 import { OtherImprovementDialogComponent } from './other-improvement-dialog/other-improvement-dialog.component';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-other-assets',
   templateUrl: './other-assets.component.html',
-  styleUrls: ['./other-assets.component.scss']
+  styleUrls: ['./other-assets.component.scss'],
 })
 export class OtherAssetsComponent implements OnInit {
   public otherAssetsGridOptions: GridOptions;
   public improvementGridOptions: GridOptions;
   public deductionGridOptions: GridOptions;
   loading = false;
-  goldCg: NewCapitalGain;
+  @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
   totalCg = 0;
   canAddDeductions = false;
+  step = 0;
 
-  constructor(public matDialog: MatDialog,
+  constructor(
+    public matDialog: MatDialog,
     public utilsService: UtilsService,
-    private itrMsService: ItrMsService) {
+    private itrMsService: ItrMsService
+  ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let listedData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'GOLD');
+    let listedData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'GOLD'
+    );
+
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       this.clearNullImprovements();
@@ -42,8 +53,8 @@ export class OtherAssetsComponent implements OnInit {
         assetDetails: [],
         improvement: [],
         deduction: [],
-        buyersDetails: []
-      }
+        buyersDetails: [],
+      };
     }
     this.otherAssetsCallInConstructor();
     this.improvementCallInConstructor();
@@ -52,49 +63,54 @@ export class OtherAssetsComponent implements OnInit {
 
   calculateTotalCg() {
     this.totalCg = 0;
-    this.goldCg.assetDetails.forEach(item => {
+    this.goldCg.assetDetails.forEach((item) => {
       this.totalCg += item.capitalGain;
     });
-    this.canAddDeductions = this.totalCg > 0 && this.goldCg.deduction?.length === 0;
+    this.canAddDeductions =
+      this.totalCg > 0 && this.goldCg.deduction?.length === 0;
   }
 
   clearNullImprovements() {
-    this.goldCg.improvement.forEach(imp => {
-      if(imp.financialYearOfImprovement == null || !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)){
+    this.goldCg.improvement.forEach((imp) => {
+      if (
+        imp.financialYearOfImprovement == null ||
+        !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)
+      ) {
         this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
       }
     });
   }
 
   ngOnInit() {
-    console.log('INSIDE OTHER')
+    console.log('INSIDE OTHER');
   }
 
   addMore(mode, type, rowIndex, assetDetails?) {
     const dialogRef = this.matDialog.open(OtherAssetsDialogComponent, {
-      data: { mode: mode, assetType: type, rowIndex:rowIndex, assetDetails: assetDetails },
+      data: {
+        mode: mode,
+        assetType: type,
+        rowIndex: rowIndex,
+        assetDetails: assetDetails,
+      },
       closeOnNavigation: true,
       disableClose: false,
-      width: '700px'
+      width: '700px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
           this.goldCg.assetDetails.push(result.cgObject);
-          this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails)
-
+          this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
         } else {
-
           this.goldCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
-          this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails)
+          this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
         }
-        this.calculateCg()
+        this.calculateCg();
       }
     });
-
-
   }
 
   otherAssetsCallInConstructor() {
@@ -107,9 +123,9 @@ export class OtherAssetsComponent implements OnInit {
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       defaultColDef: {
-        resizable: true
+        resizable: true,
       },
-      suppressRowTransform: true
+      suppressRowTransform: true,
     };
   }
 
@@ -124,7 +140,6 @@ export class OtherAssetsComponent implements OnInit {
         field: 'srn',
         editable: false,
         suppressMovable: true,
-
       },
       {
         headerName: 'Buy Date / Date of Acquisition',
@@ -132,8 +147,10 @@ export class OtherAssetsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         cellRenderer: (params) => {
-          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
-        }
+          return params.data.purchaseDate
+            ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
+            : '';
+        },
       },
       {
         headerName: 'Sale Date / Date of Transfer',
@@ -141,8 +158,10 @@ export class OtherAssetsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         cellRenderer: (params) => {
-          return params.data.sellDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
-        }
+          return params.data.sellDate
+            ? new Date(params.data.sellDate).toLocaleDateString('en-IN')
+            : '';
+        },
       },
       {
         headerName: 'Buy Value',
@@ -177,7 +196,9 @@ export class OtherAssetsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.capitalGain ? params.data.capitalGain.toLocaleString('en-IN') : 0;
+          return params.data.capitalGain
+            ? params.data.capitalGain.toLocaleString('en-IN')
+            : 0;
         },
       },
       {
@@ -192,12 +213,12 @@ export class OtherAssetsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
       },
       {
@@ -212,14 +233,14 @@ export class OtherAssetsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
-      }
+      },
     ];
   }
 
@@ -228,12 +249,12 @@ export class OtherAssetsComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          console.log('DATA FOR DELETE Asset:', params.data)
+          console.log('DATA FOR DELETE Asset:', params.data);
           this.deleteAsset(params.rowIndex);
           break;
         }
         case 'edit': {
-          this.addMore('EDIT', 'GOLD', params.rowIndex, params.data)
+          this.addMore('EDIT', 'GOLD', params.rowIndex, params.data);
           break;
         }
       }
@@ -242,19 +263,19 @@ export class OtherAssetsComponent implements OnInit {
 
   deleteAsset(i) {
     //delete improvement for asset
-    this.goldCg.improvement.forEach(imp => {
-      if(imp.srn == this.goldCg.assetDetails[i].srn){
+    this.goldCg.improvement.forEach((imp) => {
+      if (imp.srn == this.goldCg.assetDetails[i].srn) {
         this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
       }
     });
-    this.goldCg.deduction.forEach(ded => {
-      if(parseInt(ded.srn) == this.goldCg.assetDetails[i].srn){
+    this.goldCg.deduction.forEach((ded) => {
+      if (parseInt(ded.srn) == this.goldCg.assetDetails[i].srn) {
         this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
       }
     });
     this.goldCg.assetDetails.splice(i, 1);
-    if(this.goldCg.assetDetails.length === 0) {
-      //remove deductions 
+    if (this.goldCg.assetDetails.length === 0) {
+      //remove deductions
       this.goldCg.deduction = [];
       this.goldCg.improvement = [];
     }
@@ -263,27 +284,30 @@ export class OtherAssetsComponent implements OnInit {
     this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
-
   addImprovement(mode, improvement?) {
     if (this.goldCg.assetDetails.length <= 0) {
-      this.utilsService.showSnackBar('Please enter asset details first')
+      this.utilsService.showSnackBar('Please enter asset details first');
       return;
     }
     const dialogRef = this.matDialog.open(OtherImprovementDialogComponent, {
-      data: { mode: mode, improvement: improvement, assetDetails: this.goldCg.assetDetails },
+      data: {
+        mode: mode,
+        improvement: improvement,
+        assetDetails: this.goldCg.assetDetails,
+      },
       closeOnNavigation: true,
       disableClose: false,
-      width: '700px'
+      width: '700px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
           this.goldCg.improvement.push(result);
           // this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
         } else {
-          this.goldCg.improvement.splice((improvement.id - 1), 1, result);
+          this.goldCg.improvement.splice(improvement.id - 1, 1, result);
           // this.improvementGridOptions.api?.setRowData(this.goldCg.improvement)
         }
         this.calculateCg();
@@ -291,8 +315,6 @@ export class OtherAssetsComponent implements OnInit {
         this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
       }
     });
-
-
   }
 
   improvementCallInConstructor() {
@@ -305,35 +327,40 @@ export class OtherAssetsComponent implements OnInit {
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       defaultColDef: {
-        resizable: true
+        resizable: true,
       },
-      suppressRowTransform: true
+      suppressRowTransform: true,
     };
   }
 
   calculateIndexCost(improvement: Improvement, index) {
     let req = {
-      "cost": improvement.costOfImprovement,
-      "purchaseOrImprovementFinancialYear": improvement.financialYearOfImprovement,
-      "assetType": "GOLD",
+      cost: improvement.costOfImprovement,
+      purchaseOrImprovementFinancialYear:
+        improvement.financialYearOfImprovement,
+      assetType: 'GOLD',
       // "buyDate": this.immovableForm.controls['purchaseDate'].value,
       // "sellDate": this.immovableForm.controls['sellDate'].value
-    }
+    };
     const param = `/calculate/indexed-cost`;
     this.itrMsService.postMethod(param, req).subscribe((res: any) => {
       console.log('INDEX COST : ', res);
-      improvement.indexCostOfImprovement = res.data.costOfAcquisitionOrImprovement;
+      improvement.indexCostOfImprovement =
+        res.data.costOfAcquisitionOrImprovement;
       this.goldCg.improvement[index] = improvement;
       this.improvementGridOptions?.api.setRowData(this.goldCg.improvement);
-    })
+    });
   }
 
   improvementCreateRowData() {
     let index = 0;
-    this.goldCg.improvement.forEach(imp => {
-      if(imp.financialYearOfImprovement == null || !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)){
+    this.goldCg.improvement.forEach((imp) => {
+      if (
+        imp.financialYearOfImprovement == null ||
+        !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)
+      ) {
         this.goldCg.improvement.splice(index, 1);
-      }else{
+      } else {
         //calculate cost of improvement
         this.calculateIndexCost(imp, index);
       }
@@ -349,7 +376,6 @@ export class OtherAssetsComponent implements OnInit {
         field: 'srn',
         editable: false,
         suppressMovable: true,
-
       },
       {
         headerName: 'Year Of Improvement',
@@ -381,12 +407,12 @@ export class OtherAssetsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
       },
       {
@@ -401,14 +427,14 @@ export class OtherAssetsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
-      }
+      },
     ];
   }
 
@@ -417,12 +443,12 @@ export class OtherAssetsComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          console.log('DATA FOR DELETE INVESTMENT:', params.data);
           this.deleteImprovement(params.rowIndex);
           break;
         }
         case 'edit': {
-          this.addImprovement('EDIT', params.data)
+          this.addImprovement('EDIT', params.data);
           break;
         }
       }
@@ -433,9 +459,8 @@ export class OtherAssetsComponent implements OnInit {
     this.goldCg.improvement.splice(i, 1);
     this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
     this.clearNullImprovements();
-    this.calculateCg()
+    this.calculateCg();
   }
-
 
   addDeduction(mode, gridApi, rowIndex, investment?) {
     if (this.goldCg.assetDetails.length > 0) {
@@ -445,32 +470,33 @@ export class OtherAssetsComponent implements OnInit {
         mode: mode,
         rowIndex: rowIndex,
         investment: investment,
-        assets: assets
+        assets: assets,
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
         data: data,
         closeOnNavigation: true,
         disableClose: false,
-        width: '700px'
+        width: '700px',
       });
 
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().subscribe((result) => {
         console.log('Result add CG=', result);
         if (result !== undefined) {
           if (mode === 'ADD') {
             this.goldCg.deduction.push(result.deduction);
             this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
-
           } else if (mode === 'EDIT') {
             this.goldCg.deduction.splice(result.rowIndex, 1, result.deduction);
-            gridApi.setRowData(this.goldCg.deduction)
+            gridApi.setRowData(this.goldCg.deduction);
           }
           this.calculateTotalCg();
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
         }
       });
     } else {
-      this.utilsService.showSnackBar('Please add asset details first against this deduction')
+      this.utilsService.showSnackBar(
+        'Please add asset details first against this deduction'
+      );
     }
   }
 
@@ -484,12 +510,11 @@ export class OtherAssetsComponent implements OnInit {
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       defaultColDef: {
-        resizable: true
+        resizable: true,
       },
-      suppressRowTransform: true
+      suppressRowTransform: true,
     };
   }
-
 
   deductionCreateRowData() {
     return this.goldCg.deduction;
@@ -508,8 +533,10 @@ export class OtherAssetsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         cellRenderer: (params) => {
-          return params.data?.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
-        }
+          return params.data?.purchaseDate
+            ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
+            : '';
+        },
       },
       {
         headerName: 'Cost of New Asset',
@@ -542,12 +569,12 @@ export class OtherAssetsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
       },
       {
@@ -562,14 +589,14 @@ export class OtherAssetsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
-      }
+      },
     ];
   }
 
@@ -578,12 +605,12 @@ export class OtherAssetsComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          console.log('DATA FOR DELETE INVESTMENT:', params.data);
           this.deleteDeduction(params.rowIndex);
           break;
         }
         case 'edit': {
-          this.addDeduction('EDIT', params.api, params.rowIndex, params.data)
+          this.addDeduction('EDIT', params.api, params.rowIndex, params.data);
           break;
         }
       }
@@ -592,8 +619,7 @@ export class OtherAssetsComponent implements OnInit {
 
   deleteDeduction(i) {
     this.goldCg.deduction.splice(i, 1);
-    this.deductionGridOptions.api?.setRowData(this.goldCg.deduction)
-
+    this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
   saveCg() {
@@ -601,8 +627,10 @@ export class OtherAssetsComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    this.loading = true
-    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'GOLD');
+    this.loading = true;
+    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
+      (item) => item.assetType !== 'GOLD'
+    );
     if (this.goldCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain.push(this.goldCg);
     }
@@ -611,10 +639,13 @@ export class OtherAssetsComponent implements OnInit {
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
       console.log(result);
       this.ITR_JSON = result;
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Other Assets Saved Successfully')
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+      this.utilsService.showSnackBar('Other Assets Saved Successfully');
       this.loading = false;
-    })
+    });
     console.log('GOLD:', this.goldCg);
   }
 
@@ -622,43 +653,55 @@ export class OtherAssetsComponent implements OnInit {
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
-      assessmentYear: "2022-2023",
-      assesseeType: "INDIVIDUAL",
-      residentialStatus: "RESIDENT",
+      assessmentYear: '2022-2023',
+      assesseeType: 'INDIVIDUAL',
+      residentialStatus: 'RESIDENT',
       assetType: 'GOLD',
       assetDetails: this.goldCg.assetDetails,
       improvement: [],
       deduction: this.goldCg.deduction,
-    }
-    this.goldCg.assetDetails.forEach(asset => {
+    };
+    this.goldCg.assetDetails.forEach((asset) => {
       //find improvement
-      let improvements = this.goldCg.improvement.filter(imp => (imp.srn == asset.srn))
-      if(!improvements || improvements.length == 0){
+      let improvements = this.goldCg.improvement.filter(
+        (imp) => imp.srn == asset.srn
+      );
+      if (!improvements || improvements.length == 0) {
         let improvement = {
           indexCostOfImprovement: 0,
           id: asset.srn,
-          dateOfImprovement:"",
-          costOfImprovement:0,
-          financialYearOfImprovement:null,
-          srn:asset.srn
-        }
+          dateOfImprovement: '',
+          costOfImprovement: 0,
+          financialYearOfImprovement: null,
+          srn: asset.srn,
+        };
         request.improvement.push(improvement);
       } else {
         request.improvement = request.improvement.concat(improvements);
       }
     });
-    
 
-    this.itrMsService.postMethod(param, request).subscribe((res: any) => {
-      this.loading = false;
-      console.log('Single CG result:', res);
-      this.goldCg.assetDetails = res.assetDetails;
-      // this.goldCg.improvement = res.improvement;
-      this.goldCg.deduction = res.deduction;
-      this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-      this.calculateTotalCg();
-    }, error => {
-      this.loading = false;
-    })
+    this.itrMsService.postMethod(param, request).subscribe(
+      (res: any) => {
+        this.loading = false;
+        console.log('Single CG result:', res);
+        this.goldCg.assetDetails = res.assetDetails;
+        // this.goldCg.improvement = res.improvement;
+        this.goldCg.deduction = res.deduction;
+        this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
+        this.calculateTotalCg();
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
   }
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  editForm() {}
+
+  closed() {}
 }
