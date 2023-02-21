@@ -11,7 +11,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
   styleUrls: ['./capital-gain.component.scss']
 })
 export class CapitalGainComponent implements OnInit {
-  step = 0;
+  step = 4;
   loading = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -22,6 +22,8 @@ export class CapitalGainComponent implements OnInit {
   isEditBonds: boolean;
   isEditZeroCouponBonds: boolean;
   isEditOtherAssets: boolean;
+  isAddBonds: number;
+  isAddZeroCouponBonds: number;
 
   constructor(
     public utilsService: UtilsService,
@@ -36,6 +38,14 @@ export class CapitalGainComponent implements OnInit {
 
   setStep(index: number) {
     this.step = index;
+  }
+
+  addMore(type) {
+    if (type === 'bonds') {
+      this.isAddBonds = Math.random();
+    } else if (type === 'zeroCouponBonds') {
+      this.isAddZeroCouponBonds = Math.random();
+    }
   }
 
   closed(type) {
@@ -61,10 +71,6 @@ export class CapitalGainComponent implements OnInit {
       this.isEditListed = true;
     } else if (type === 'unlisted') {
       this.isEditUnlisted = true;
-    } else if (type === 'bonds') {
-      this.isEditBonds = true;
-    } else if (type === 'zeroCouponBonds') {
-      this.isEditZeroCouponBonds = true;
     } else if (type === 'otherAssets') {
       this.isEditOtherAssets = true;
     }
@@ -75,7 +81,7 @@ export class CapitalGainComponent implements OnInit {
   }
 
   saveAll() {
-   
+
   }
 
 }

@@ -1,0 +1,18 @@
+.hide {
+    .mat-select-trigger {
+        .mat-select-arrow-wrapper {
+            display: none;
+        }
+    }
+}
+
+.isDeduction {
+    padding-left: 60px;
+    font-weight: 400;
+    font-size: 22px;
+    color: #FF6B00;
+}
+
+.separation{
+    border-top: 1px solid gray;
+}
