@@ -9,6 +9,9 @@
     </span>
   </div>
 
+  <div>
+    <app-listed-unlisted-dialog></app-listed-unlisted-dialog>
+  </div>
   <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
     <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham" [gridOptions]="listedGridOptions"
       (rowClicked)="onListedRowClicked($event)">
@@ -24,6 +27,9 @@
           aria-hidden="true"></i>
       </button>
     </span>
+  </div>
+  <div>
+    <app-security-deduction></app-security-deduction>
   </div>
 
   <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
