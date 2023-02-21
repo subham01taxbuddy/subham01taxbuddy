@@ -29,6 +29,19 @@ import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-inco
 import { SummaryComponent } from './summary/summary.component';
 import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
 import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
+import {
+  LandAndBuildingComponent
+} from "./itr-wizard/components/capital-gain/land-and-building/land-and-building.component";
+import {
+  ListedUnlistedDialogComponent
+} from "./itr-wizard/components/capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component";
+import {BondsComponent} from "./itr-wizard/components/capital-gain/bonds/bonds.component";
+import {
+  UnlistedSharesComponent
+} from "./itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component";
+import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
+import {OtherAssetsComponent} from "./itr-wizard/components/capital-gain/other-assets/other-assets.component";
+import {EquityMfComponent} from "./itr-wizard/components/capital-gain/equity-mf/equity-mf.component";
 
 const routes: Routes = [
   {
@@ -63,7 +76,18 @@ const routes: Routes = [
       },
       { path: 'house-property', component: HousePropertyComponent },
       { path: 'business', component: AllBusinessIncomeComponent },
-      { path: 'capital-gain', component: CapitalGainComponent },
+      {
+        path: 'capital-gain',
+        component: CapitalGainComponent,
+        children: [
+          { path: 'lab', component: LandAndBuildingComponent },
+          { path: 'listed', component: EquityMfComponent },
+          { path: 'unlisted', component: EquityMfComponent },
+          { path: 'bonds', component: BondsComponent },
+          { path: 'zcb', component: BondsComponent },
+          { path: 'other', component: OtherAssetsComponent },
+        ]
+      },
       { path: 'future-options', component: SpeculativeIncomeComponent },
       { path: 'nri', component: ForeignIncomeComponent },
       { path: 'eri', component: AddClientsComponent },
