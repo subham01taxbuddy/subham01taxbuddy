@@ -7,36 +7,47 @@
   border-radius: 4px;
 }
 
+table {
+  width: 100%;
+  margin: 0 25px 25px 25px;
+}
+
 .table-responsive {
   overflow-x: auto;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-  border: 1px solid #ddd;
+/* tr:nth-child(even) {
+  background-color: #f2f2f2;
+} */
 
-}
-
-th {
-  text-align: left;
+/* th {
   padding: 5px;
   font-size: 12px;
-  border: 1px solid #ddd;
 }
 
 td {
-  text-align: left;
   padding: 5px;
   font-size: 12px;
-  border: 1px solid #ddd;
-}
+} */
 
-tr:nth-child(even) {
-  background-color: #f2f2f2
+mat-form-field,
+th,
+thead,
+tr,
+td {
+  padding: 5px;
+  font-size: 10px;
+  height: 10px;
 }
 
 .invalid {
   border: 1px solid #f00;
+}
+
+.mat-accordion > .mat-expansion-panel-spacing:first-child {
+  margin-top: 15px;
+}
+
+.mat-radio-button {
+  margin-left: 16px;
 }
