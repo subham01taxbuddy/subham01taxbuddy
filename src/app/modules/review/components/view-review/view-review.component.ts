@@ -338,7 +338,7 @@ export class ViewReviewComponent implements OnInit {
              "matchedUserId":data.userId
               },
              "pathParameters":{
-              "id": data.id},
+              "id": this.data.leadData.id},
               "environment": environment.environment
         }
         this.userMsService.putMethodAWSURL(param,reqBody).subscribe((response: any) => {
