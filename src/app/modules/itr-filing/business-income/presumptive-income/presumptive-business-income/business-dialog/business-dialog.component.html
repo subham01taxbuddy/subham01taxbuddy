@@ -5,10 +5,13 @@
     <form [formGroup]="businessForm" style="margin-top: 20px">
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <mat-label>Nature of Business</mat-label>
+                </div>
                 <mat-form-field class="input-field-width">
                     <mat-select placeholder="Nature of Business" formControlName="natureOfBusiness"
                         name="natureOfBusiness" matTooltip="{{getFullName()}}">
-                        <mat-option *ngFor="let business of natureOfBusinessDropdown" [value]="business.code"
+                        <mat-option *ngFor="let business of natureOfBusinessDropdown" [value]="business.label"
                             [disabled]="business.disabled">
                             {{business.label}}-{{business.code}}
                         </mat-option></mat-select>
@@ -18,6 +21,9 @@
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <mat-label>Trade of Business</mat-label>
+                </div>
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" placeholder="Trade of Business" formControlName="tradeName"
                         maxlength="30">
@@ -25,8 +31,14 @@
                         trade of business</mat-error>
                 </mat-form-field>
             </div>
-
+            <div class="card__col-xs-12 card__col-sm-12" style="margin-bottom: 10px; margin-top: 10px;">
+                <h4>Gross Turn Over of the year - Received in Bank</h4>
+            </div>
+            
             <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <mat-label>Receipt received in bank</mat-label>
+                </div>
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" digitsOnly placeholder="Receipt received in bank"
                         matTooltip="Total collection from client received in bank (including cheque)"
@@ -38,6 +50,9 @@
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <mat-label>presumptive income at 6%</mat-label>
+                </div>
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" placeholder="presumptive income at 6%"
                         formControlName="preIncome" name="preIncome" maxlength="14">
@@ -48,8 +63,13 @@
 
                 </mat-form-field>
             </div>
-
+            <div class="card__col-xs-12 card__col-sm-12" style=" margin-bottom: 10px; margin-top: 10px;">
+                <h4>Gross Turn Over of the year - Received in Other Mode </h4>
+            </div>
             <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <mat-label>Receipt received in Cash</mat-label>
+                </div>
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" name="receivedInCash" digitsOnly
                         placeholder="Receipt received in any other mode" formControlName="receivedInCash"
@@ -61,6 +81,9 @@
             </div>
 
             <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-6">
+                    <mat-label>Presumptive income at 8%</mat-label>
+                </div>
                 <mat-form-field class="input-field-width">
                     <input matInput class="input-field" name="minimumPresumptiveIncome"
                         placeholder="Presumptive income at 8%" formControlName="minimumPresumptiveIncome" maxlength="14"

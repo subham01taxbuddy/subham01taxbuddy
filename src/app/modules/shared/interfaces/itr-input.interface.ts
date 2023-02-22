@@ -400,6 +400,7 @@ export interface businessIncome {
     presumptiveIncome: any;
     periodOfHolding: any;
     minimumPresumptiveIncome: any;
+    incomes:any;
 }
 
 export interface professionalIncome {

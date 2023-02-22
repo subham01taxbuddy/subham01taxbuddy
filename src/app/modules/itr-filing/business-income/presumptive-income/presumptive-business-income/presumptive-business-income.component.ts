@@ -1,3 +1,4 @@
+import { Incomes } from './../../../../shared/interfaces/itr-input.interface';
 import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +18,7 @@ const businessData: businessIncome[] = [{
   presumptiveIncome: null,
   periodOfHolding: null,
   minimumPresumptiveIncome: null,
+  incomes:[],
 }]
 
 @Component({
@@ -36,6 +38,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     presumptiveIncome: null,
     periodOfHolding: null,
     minimumPresumptiveIncome: null,
+    incomes:null
   }
   loading: boolean;
   natureOfBusinessList: [];
@@ -81,31 +84,54 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     }
   }
 
-//   displayedColumns: string[] = ['select','Profession', 'TradeName', 'BusinessDescription'];
-//   dataSource = new MatTableDataSource<businessIncome>(businessData);
-//   selection = new SelectionModel<businessIncome>(true, []);
-  
-//   isAllSelected() {
-//     const numSelected = this.selection.selected.length;
-//     const numRows = this.dataSource.data.length;
-//     return numSelected === numRows;
-//   }
-  
-//   masterToggle() {
-//     this.isAllSelected() ?
-//         this.selection.clear() :
-//         this.dataSource.data.forEach(row => this.selection.select(row));
-//   }
-//   removeSelectedRows() {
-//     this.selection.selected.forEach(item => {
-//      let index: number = this.dataSource.data.findIndex(d => d === item);
-//      console.log(this.dataSource.data.findIndex(d => d === item));
-//      this.dataSource.data.splice(index,1);
+  getByBank(item,incomeType,incomeSubType){
+    if (incomeSubType == 'receipts'){
+      if(item.incomeType==incomeType){
+        return item.receipts;
+      }
+      }else if (incomeSubType == 'presumptiveIncome'){
+      if(item.incomeType==incomeType){
+        return item.presumptiveIncome;
+      }
+    }
+  }
+  getByCash(item,incomeType,incomeSubType){
+  if (incomeSubType == 'receipts'){
+    if(item.incomeType==incomeType){
+      return item.receipts;
+    }
+    }else if (incomeSubType == 'presumptiveIncome'){
+    if(item.incomeType==incomeType){
+      return item.presumptiveIncome;
+    }
+  }
+}
 
-//      this.dataSource = new MatTableDataSource<businessIncome>(this.dataSource.data);
-//    });
-//    this.selection = new SelectionModel<businessIncome>(true, []);
-//  }
+  displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'inbank','presumptiveIncomebank','incash','presumptiveIncomecash'];
+  dataSource = new MatTableDataSource<businessIncome>();
+  selection = new SelectionModel<businessIncome>(true, []);
+  
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  removeSelectedRows() {
+    this.selection.selected.forEach(item => {
+     let index: number = this.dataSource.data.findIndex(d => d === item);
+     console.log(this.dataSource.data.findIndex(d => d === item));
+     this.dataSource.data.splice(index,1);
+
+     this.dataSource = new MatTableDataSource<businessIncome>(this.dataSource.data);
+   });
+   this.selection = new SelectionModel<businessIncome>(true, []);
+ }
 
   getMastersData() {
     this.loading = true;
@@ -287,14 +313,19 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log('result',result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.businessGridOptions.rowData.push(result);
-          this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
+          this.dataSource.data.push(result)
+          this.dataSource = new MatTableDataSource(this.dataSource.data) 
+          // this.businessGridOptions.rowData.push(result);
+          // this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
         }
         if (mode === 'EDIT') {
-          this.businessGridOptions.rowData[index] = result;
-          this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
+          this.dataSource.data.push(result)
+          this.dataSource = new MatTableDataSource(this.dataSource.data)
+          // this.businessGridOptions.rowData[index] = result;
+          // this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
         }
       }
     });

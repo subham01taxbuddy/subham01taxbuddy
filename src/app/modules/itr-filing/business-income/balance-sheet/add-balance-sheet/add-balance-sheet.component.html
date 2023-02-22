@@ -1,13 +1,14 @@
 <div *ngIf="data.type==='balance'">
     <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
     <div>
-        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Balance sheet Income':'Update Balance
-            sheet
-            Income'}}
+        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Balance sheet Income':'Update Balance sheet Income'}}
         </div>
         <form [formGroup]="balanceGridForm" style="margin-top: 20px">
             <div class="card__row">
                 <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="card__col-xs-12 card__col-sm-6">
+                        <mat-label>Natur of Profession</mat-label>
+                    </div>
                     <mat-form-field class="input-field-width">
                         <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                             name="natureOfBusiness">
@@ -22,6 +23,9 @@
                 </div>
 
                 <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="card__col-xs-12 card__col-sm-6">
+                        <mat-label>Trade Name</mat-label>
+                    </div>
                     <mat-form-field class="input-field-width">
                         <input matInput class="input-field" placeholder="Trade Name" formControlName="tradeName"
                             maxlength="30">
@@ -30,7 +34,10 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-12">
+                    <div class="card__col-xs-12 card__col-sm-8" style="margin-bottom: 10px; margin-top: 10px;">
+                        <mat-label>Business Description</mat-label>
+                    </div>
                     <mat-form-field class="input-field-width">
                         <input matInput class="input-field" placeholder="Business Description"
                             formControlName="businessDescription" maxlength="14">
@@ -40,11 +47,13 @@
                     </mat-form-field>
                 </div>
 
-                <div class="row dialog-button">
-                    <div class="sub_btn top-space">
+                <div class="card__col-xs-12 card__col-sm-6" style="text-align: center;">
+                    <div class="row dialog-button" >
+                        <div class="sub_btn top-space" >
                         <button type="submit" class="tbd-btn" [disabled]="balanceGridForm.invalid"
                             (click)="saveBalanceGridDetails()">Save</button>
                         <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,8 +64,7 @@
 <div *ngIf="data.type==='depreciation'">
     <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
     <div>
-        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Depreciation Details':'Update
-            Depreciation Details'}}
+        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Depreciation Details':'Update Depreciation Details'}}
         </div>
         <form [formGroup]="depreciationForm" style="margin-top: 20px">
             <div class="card__row">
