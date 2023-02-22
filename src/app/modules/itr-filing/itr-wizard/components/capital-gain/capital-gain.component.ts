@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from "@angular/router";
+import {Subscription} from "rxjs";
+import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 
 
 @Component({
@@ -11,13 +13,12 @@ import { Router } from "@angular/router";
   templateUrl: './capital-gain.component.html',
   styleUrls: ['./capital-gain.component.scss']
 })
-export class CapitalGainComponent implements OnInit {
+export class CapitalGainComponent extends WizardNavigation implements OnInit {
   step = 4;
   loading = false;
   showList = true;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  @Output() saveAndNext = new EventEmitter<any>();
   isEditLand: boolean;
   isEditListed: boolean;
   isEditUnlisted: boolean;
@@ -30,9 +31,15 @@ export class CapitalGainComponent implements OnInit {
     private router: Router,
     public utilsService: UtilsService,
     public matDialog: MatDialog) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    this.initList();
+  }
+
+  initList() {
+    this.showList = true;
     this.topicList = [
       {
         label: 'Land & Building',
@@ -99,10 +106,11 @@ export class CapitalGainComponent implements OnInit {
     }
   }
 
-  gotoSection(path, type) {
+  gotoSection(topic) {
     this.showList = false;
     let basePath = '/itr-filing/itr/capital-gain/';
-    this.router.navigate([basePath + path], { queryParams: { bondType: type } });
+    this.router.navigate([basePath + topic.path], { queryParams: { bondType: topic.type } });
+    this.nextBreadcrumb.emit(topic.label);
   }
 
   editForm(type) {
@@ -124,6 +132,27 @@ export class CapitalGainComponent implements OnInit {
 
   saveAll() {
 
+  }
+
+  subscription: Subscription
+
+  subscribeToEmmiter(componentRef){
+    //this may not be needed for us
+    // if (!(componentRef instanceof OtherIncomeComponent)){
+    //   return;
+    // }
+    const child : WizardNavigation = componentRef;
+    child.saveAndNext.subscribe( () => {
+      this.showList = true;
+      this.initList();
+      this.nextBreadcrumb.emit(null);
+    });
+  }
+
+  unsubscribe(){
+    if (this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
 
 }

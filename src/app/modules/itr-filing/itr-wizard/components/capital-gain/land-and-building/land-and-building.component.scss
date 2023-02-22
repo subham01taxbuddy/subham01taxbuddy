@@ -1,0 +1,65 @@
+.title {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 150%;
+  /* identical to box height, or 22px */
+
+  text-align: center;
+
+  color: #858383;
+
+}
+
+.value {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 150%;
+  /* identical to box height, or 30px */
+
+  text-align: center;
+
+  color: #000000;
+
+}
+
+.pageTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 150%;
+  /* identical to box height, or 39px */
+
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+
+}
+
+.delete-btn {
+  background: #FFE1E1;
+  border: 1px solid #E20000;
+  border-radius: 6px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 150%;
+  /* identical to box height, or 30px */
+
+  text-align: center;
+
+  color: #E20000;
+
+}
+
+.delete-btn:disabled {
+  background: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  color: #BDBDBD;
+}
+

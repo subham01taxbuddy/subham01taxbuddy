@@ -7,13 +7,14 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-zero-coupon-bonds',
   templateUrl: './zero-coupon-bonds.component.html',
   styleUrls: ['./zero-coupon-bonds.component.scss']
 })
-export class ZeroCouponBondsComponent implements OnInit {
+export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit {
   step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: FormGroup;
@@ -38,7 +39,9 @@ export class ZeroCouponBondsComponent implements OnInit {
     private toastMsgService: ToastMessageService,
     private activateRoute: ActivatedRoute,
 
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     if (this.activateRoute.snapshot.queryParams['bondType']) {
@@ -380,7 +383,7 @@ export class ZeroCouponBondsComponent implements OnInit {
   }
 
   goBack() {
-    // this.saveAndNext.emit(true);
+    this.saveAndNext.emit(false);
   }
 
   saveAll() {

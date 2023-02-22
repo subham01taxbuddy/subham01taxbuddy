@@ -109,7 +109,7 @@ import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/s
     SharedModule,
     PagesModule,
     NgxDocViewerModule,
-    NgxPaginationModule
+    NgxPaginationModule,
     // NgxExtendedPdfViewerModule
   ],
   providers: [
@@ -221,7 +221,7 @@ import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/s
     ListedUnlistedDialogComponent,
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent],
-
+    OtherImprovementDialogComponent,
+  ],
 })
 export class ItrFilingModule {}

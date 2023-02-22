@@ -26,63 +26,81 @@
     <div style="padding: 0 24px 24px 24px">
       <form [formGroup]="housePropertyForm">
         <!-- type-of-hp selection  -->
-        <div class="card__row" *ngIf="hpView === 'TABLE'">
-          <!-- add-more-hp-button  -->
-          <div style="text-align: right">
-            <button class="btn" (click)="addHousingIncome()">
-              Add House Property&nbsp;&nbsp;
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </button>
-          </div>
+        <div
+          class="card__row"
+          *ngIf="hpView === 'TABLE'"
+          style="height: 100%; position: relative"
+        >
+          <div>
+            <!-- add-more-hp-button  -->
+            <div style="text-align: right">
+              <button class="btn" (click)="addHousingIncome()">
+                Add House Property&nbsp;&nbsp;
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+            </div>
 
-          <div
-            class="card"
-            style="padding: 25px"
-            *ngFor="let house of ITR_JSON.houseProperties; let i = index"
-            hideToggle
-          >
             <div
-              class="flex justify-between"
-              (click)="editHouseProperty(i)"
-              style="cursor: pointer"
+              class="card"
+              style="padding: 25px"
+              *ngFor="let house of ITR_JSON.houseProperties; let i = index"
+              hideToggle
             >
-              <!-- checkbox  -->
-              <div class="flex justify-between gap-[50px]">
-                <div class="custom-control custom-checkbox">
-                  <input
-                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                    type="checkbox"
-                    (click)="activeTenant = [i]"
-                    (click)="$event.stopPropagation()"
-                  />
+              <div
+                class="flex justify-between"
+                (click)="editHouseProperty(i)"
+                style="cursor: pointer"
+              >
+                <!-- checkbox  -->
+                <div class="flex justify-between gap-[50px]">
+                  <div class="custom-control custom-checkbox">
+                    <input
+                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                      (click)="activeTenant = [i]"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </div>
+                  <!-- title  -->
+                  <div class="card__title">
+                    {{
+                      house.propertyType === "SOP"
+                        ? "Self occupied"
+                        : house.propertyType === "LOP"
+                        ? "Let out"
+                        : house.propertyType === "DLOP"
+                        ? "Vacant"
+                        : ""
+                    }}
+                  </div>
                 </div>
-                <!-- title  -->
-                <div class="card__title">
-                  {{
-                    house.propertyType === "SOP"
-                      ? "Self occupied"
-                      : house.propertyType === "LOP"
-                      ? "Let out"
-                      : house.propertyType === "DLOP"
-                      ? "Vacant"
-                      : ""
-                  }}
-                </div>
+                <!-- description  -->
+                <div>{{ house.city }}, {{ house.pinCode }}</div>
+                <!-- right icon  -->
+                <mat-icon>arrow_forward_ios</mat-icon>
               </div>
-              <!-- description  -->
-              <div>{{ house.city }}, {{ house.pinCode }}</div>
-              <!-- right icon  -->
-              <mat-icon>arrow_forward_ios</mat-icon>
+            </div>
+            <div>
+              <button
+                class="btn"
+                style="cursor: pointer"
+                (click)="deleteHpDetails(active)"
+              >
+                Delete
+              </button>
             </div>
           </div>
+          <br />
+          <hr />
           <div>
-            <button
-              class="btn"
-              style="cursor: pointer"
-              (click)="deleteHpDetails(active)"
-            >
-              Delete
-            </button>
+            <!-- page-navigation-buttons  -->
+            <div class="flex justify-between items-center">
+              <div>
+                <button class="btn" (click)="goBack()">
+                  Back to Source page
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- <div class="card__col-xs-12" style="padding-top: 10px">
@@ -1417,12 +1435,10 @@
             </div>
           </div>
           <!-- action buttons  -->
-          <div class="card__row flex gap-[10px] self-end">
+          <div class="flex justify-between">
             <!-- <a class="btn btn-cancel">Cancel</a> -->
-            <button class="tbd-btn-secondary" (click)="cancelHpForm()">
-              Cancel
-            </button>
-            <button class="tbd-btn" (click)="saveHouseProperty()">Save</button>
+            <button class="btn" (click)="cancelHpForm()">Cancel</button>
+            <button class="btn" (click)="saveHouseProperty()">Save</button>
           </div>
         </div>
       </form>

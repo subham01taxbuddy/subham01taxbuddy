@@ -8,7 +8,7 @@ import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
   styleUrls: ['./all-business-income.component.scss']
 })
 export class AllBusinessIncomeComponent extends WizardNavigation implements OnInit {
-  step = 0;
+  step = -1;
   hideOutlet: boolean = true;
   isEditCustomer: boolean;
   isEditOther: boolean;
