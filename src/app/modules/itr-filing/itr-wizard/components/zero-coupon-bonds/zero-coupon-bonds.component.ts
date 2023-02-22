@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -14,7 +15,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ZeroCouponBondsComponent implements OnInit {
   @Input() isAdd: Number;
-  @Input() bondType: String;
+  // @Input() bondType: String;
   @Output() onSave = new EventEmitter();
   bondsForm: FormGroup;
   deductionForm: FormGroup;
@@ -29,13 +30,19 @@ export class ZeroCouponBondsComponent implements OnInit {
     { name: 'LTCG', value: 'LONG' }
   ];
   isDisable: boolean;
+  bondType: any;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
+    private activateRoute: ActivatedRoute,
 
-  ) { }
+  ) { 
+    if (this.activateRoute.snapshot.queryParams['bondType']) {
+      this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
+    }
+  }
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
