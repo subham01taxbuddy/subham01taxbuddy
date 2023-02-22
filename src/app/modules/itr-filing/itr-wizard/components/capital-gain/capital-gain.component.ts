@@ -19,7 +19,6 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
   showList = true;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  @Output() saveAndNext = new EventEmitter<any>();
   isEditLand: boolean;
   isEditListed: boolean;
   isEditUnlisted: boolean;
