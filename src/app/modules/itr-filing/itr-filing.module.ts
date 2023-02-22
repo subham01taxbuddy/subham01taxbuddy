@@ -1,6 +1,3 @@
-import { AddImmovableDialogComponent } from './capital-gain/more-info/schedule-al/add-immovable-dialog/add-immovable-dialog.component';
-import { ScheduleALComponent } from './capital-gain/more-info/schedule-al/schedule-al.component';
-import { MoreInfoComponent } from './capital-gain/more-info/more-info.component';
 import { AddClientDialogComponent } from './add-client-dialog/add-client-dialog.component';
 import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
 import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
@@ -48,18 +45,6 @@ import { PrefillDataComponent } from './itr-wizard/pages/prefill-id/components/p
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
-import { CapitalGainComponent } from './capital-gain/capital-gain.component';
-import { LandAndBuildingComponent } from './capital-gain/land-and-building/land-and-building.component';
-import { LabFormComponent } from './capital-gain/land-and-building/lab-form/lab-form.component';
-import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/add-investment-dialog/add-investment-dialog.component';
-import { EquityMfComponent } from './capital-gain/equity-mf/equity-mf.component';
-import { ListedUnlistedDialogComponent } from './capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component';
-import { InvestmentDialogComponent } from './capital-gain/investment-dialog/investment-dialog.component';
-import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-assets-dialog/other-assets-dialog.component';
-import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.component';
-import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
-import { BondsDebentureComponent } from './capital-gain/bonds-debenture/bonds-debenture.component';
-import { BondsComponent } from './capital-gain/bonds/bonds.component';
 import { BusinessIncomeComponent } from './business-income/business-income.component';
 import { PresumptiveIncomeComponent } from './business-income/presumptive-income/presumptive-income.component';
 import { PresumptiveBusinessIncomeComponent } from './business-income/presumptive-income/presumptive-business-income/presumptive-business-income.component';
@@ -92,6 +77,24 @@ import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-pai
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
+import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
+import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
+import { LandAndBuildingComponent } from './itr-wizard/components/capital-gain/land-and-building/land-and-building.component';
+import { LabFormComponent } from './itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component';
+import { AddInvestmentDialogComponent } from './itr-wizard/components/capital-gain/land-and-building/add-investment-dialog/add-investment-dialog.component';
+import { EquityMfComponent } from './itr-wizard/components/capital-gain/equity-mf/equity-mf.component';
+import { ListedUnlistedDialogComponent } from './itr-wizard/components/capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component';
+import { InvestmentDialogComponent } from './itr-wizard/components/capital-gain/investment-dialog/investment-dialog.component';
+import { OtherAssetsComponent } from './itr-wizard/components/capital-gain/other-assets/other-assets.component';
+import { OtherAssetsDialogComponent } from './itr-wizard/components/capital-gain/other-assets/other-assets-dialog/other-assets-dialog.component';
+import { OtherImprovementDialogComponent } from './itr-wizard/components/capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
+import { BondsDebentureComponent } from './itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component';
+import { BondsComponent } from './itr-wizard/components/capital-gain/bonds/bonds.component';
+import { MoreInfoComponent } from './itr-wizard/components/capital-gain/more-info/more-info.component';
+import { ScheduleALComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/schedule-al.component';
+import { AddImmovableDialogComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-immovable-dialog/add-immovable-dialog.component';
+import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
+import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain/equity-mf/security-deduction/security-deduction.component';
 
 @NgModule({
   imports: [
@@ -197,6 +200,9 @@ import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.com
     AdvanceTaxPaidComponent,
     AllBusinessIncomeComponent,
     AddClientsComponent,
+    ZeroCouponBondsComponent,
+    AllSalaryIncomeComponent,
+    SecurityDeductionComponent,
   ],
   exports: [
     CustomerProfileComponent

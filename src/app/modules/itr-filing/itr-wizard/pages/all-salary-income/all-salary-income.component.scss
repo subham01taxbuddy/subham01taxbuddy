@@ -1,0 +1,66 @@
+.save-btn {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  float: right;
+}
+
+.subTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 150%;
+
+  text-align: right;
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+}
+
+.employerTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 21.2451px;
+  line-height: 150%;
+  /* identical to box height, or 32px */
+
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+}
+
+.mat-icon {
+  color: #00AECA;
+  float: right;
+}
+
+.mat-expansion-panel-header-title {
+  display: block;
+  margin-right: 0px;
+}
+
+.delete-btn {
+  background: #FFE1E1;
+  border: 1px solid #E20000;
+  border-radius: 6px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 150%;
+  /* identical to box height, or 30px */
+
+  text-align: center;
+
+  color: #E20000;
+
+}
+
+.delete-btn:disabled {
+  background: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  color: #BDBDBD;
+}

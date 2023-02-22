@@ -6,14 +6,14 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Location } from '@angular/common';
+import {WizardNavigation} from "../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-other-income',
   templateUrl: './other-income.component.html',
   styleUrls: ['./other-income.component.css']
 })
-export class OtherIncomeComponent implements OnInit {
-  @Output() saveAndNext = new EventEmitter<any>();
+export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
@@ -136,7 +136,9 @@ export class OtherIncomeComponent implements OnInit {
   private isEditExemptIncome: boolean = false;
   constructor(public utilsService: UtilsService,
     private itrMsService: ItrMsService, public fb: FormBuilder,
-              private location: Location) { }
+              private location: Location) {
+    super();
+  }
 
   ngOnInit() {
 
