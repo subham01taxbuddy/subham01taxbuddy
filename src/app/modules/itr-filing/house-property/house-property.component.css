@@ -51,3 +51,7 @@ td {
 .mat-radio-button {
   margin-left: 16px;
 }
+
+.mat-expansion-panel-content > .mat-expansion-panel-body {
+  height: 100vh;
+}

@@ -108,7 +108,7 @@ import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain
     SharedModule,
     PagesModule,
     NgxDocViewerModule,
-    NgxPaginationModule
+    NgxPaginationModule,
     // NgxExtendedPdfViewerModule
   ],
   providers: [
@@ -202,11 +202,8 @@ import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain
     AddClientsComponent,
     ZeroCouponBondsComponent,
     AllSalaryIncomeComponent,
-    SecurityDeductionComponent,
   ],
-  exports: [
-    CustomerProfileComponent
-  ],
+  exports: [CustomerProfileComponent],
   entryComponents: [
     ReviseReturnDialogComponent,
     UpdateManualFilingComponent,
@@ -219,7 +216,7 @@ import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain
     ListedUnlistedDialogComponent,
     InvestmentDialogComponent,
     OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent],
-
+    OtherImprovementDialogComponent,
+  ],
 })
 export class ItrFilingModule {}
