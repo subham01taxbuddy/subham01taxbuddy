@@ -1,4 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { inject } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -24,15 +25,8 @@ export class OtherAssetsDialogComponent implements OnInit {
     // let digit = num * 100
     this.assetDetailsForm = this.fb.group({
       srn: [this.data.rowIndex],
-      sellDate: ['', [Validators.required]],
-      sellValue: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithoutDecimal),
-        ],
-      ],
       purchaseDate: ['', [Validators.required]],
+      sellDate: ['', [Validators.required]],
       purchaseCost: [
         '',
         [
@@ -40,17 +34,22 @@ export class OtherAssetsDialogComponent implements OnInit {
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ],
       ],
+      sellValue: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithoutDecimal),
+        ],
+      ],
+
       sellExpense: [''],
+      capitalGain: 0,
       gainType: [''],
       algorithm: 'cgProperty',
       stampDutyValue: 0,
       valueInConsideration: 0,
       indexCostOfAcquisition: 0,
-      capitalGain: 0,
     });
-    if (this.data.mode === 'EDIT') {
-      this.assetDetailsForm.patchValue(this.data.assetDetails);
-    }
   }
 
   calculateGainType() {
@@ -71,10 +70,7 @@ export class OtherAssetsDialogComponent implements OnInit {
   saveDetails() {
     let result = {
       cgObject: this.assetDetailsForm.value,
-      rowIndex: this.data.rowIndex,
     };
     console.log(result);
   }
-
-
 }

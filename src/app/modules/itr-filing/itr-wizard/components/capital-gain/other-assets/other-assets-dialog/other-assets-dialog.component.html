@@ -2,12 +2,12 @@
   <div class="flex" style="flex-direction: row">
     <mat-checkbox style="padding: 10px 25px 0 0"></mat-checkbox>
     <div class="card__row">
+      <!-- buy-date  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label> Buy Date / Date of Acquisition </mat-label>
         <mat-form-field appearance="outline">
           <input
             matInput
-            readonly
             formControlName="purchaseDate"
             name="purchaseDate"
             [matDatepicker]="purchaseDate"
@@ -22,12 +22,12 @@
           <mat-datepicker #purchaseDate></mat-datepicker>
         </mat-form-field>
       </div>
+      <!-- sale-date  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label>Sale Date/Date of Transfer</mat-label>
         <mat-form-field appearance="outline">
           <input
             matInput
-            readonly
             formControlName="sellDate"
             name="sellDate"
             [matDatepicker]="sellDate"
@@ -42,6 +42,7 @@
           <mat-datepicker #sellDate></mat-datepicker>
         </mat-form-field>
       </div>
+      <!-- buy-value  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label> Buy Value</mat-label>
         <mat-form-field class="input-field-width" appearance="outline">
@@ -63,6 +64,7 @@
           >
         </mat-form-field>
       </div>
+      <!-- sale-value  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label>Sale Value</mat-label>
         <mat-form-field class="input-field-width" appearance="outline">
@@ -82,6 +84,7 @@
           >
         </mat-form-field>
       </div>
+      <!-- expenses  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label>Expenses</mat-label>
         <mat-form-field class="input-field-width" appearance="outline">
@@ -102,6 +105,7 @@
           >
         </mat-form-field>
       </div>
+      <!-- type-of-gain  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label>Type of Gain </mat-label>
         <mat-form-field class="input-field-width" appearance="outline">
@@ -114,11 +118,11 @@
             class="input-field"
             maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            [(ngModel)]="assetDetailsForm.controls['gainType']"
             [disabled]
           />
         </mat-form-field>
       </div>
+      <!-- gain-amount  -->
       <div class="card__col-xs-12 card__col-sm-3">
         <mat-label>Gain Amount</mat-label>
         <mat-form-field class="input-field-width" appearance="outline">
@@ -131,7 +135,6 @@
             class="input-field"
             maxlength="14"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            [(ngModel)]="assetDetailsForm.controls['capitalGain']"
             [disabled]
           />
         </mat-form-field>

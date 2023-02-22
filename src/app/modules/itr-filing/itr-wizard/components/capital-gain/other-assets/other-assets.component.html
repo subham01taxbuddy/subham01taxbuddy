@@ -13,30 +13,29 @@
       hideToggle
       class="hide-close"
     >
-      <mat-expansion-panel-header class="flex space-between">
+      <mat-expansion-panel-header class="flex justify-between items-center">
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
           Other Assets
         </mat-panel-title>
-        <div class="clearfix isShow">
+        <div class="edit clearfix isShow">
           <button
-            class="btn"
+            class="flex items-center btn gap-[5px]"
+            style="flex-direction: row"
             (click)="$event.stopPropagation()"
             (click)="addMore('ADD', 'GOLD', goldCg.assetDetails.length)"
           >
-            <div class="flex justify-between items-center">
-              <mat-icon> edit_square </mat-icon>
-              <span> + Add Other Assets</span>
-            </div>
+            <mat-icon> edit_square </mat-icon>
+            <p>Add Other Assets</p>
           </button>
         </div>
       </mat-expansion-panel-header>
       <div class="card flex gap-[25px]">
-        <div>
+        <form>
           <app-other-assets-dialog></app-other-assets-dialog>
           <br />
           <app-other-improvement-dialog></app-other-improvement-dialog>
-        </div>
+        </form>
         <div>
           <div class="flex justify-between items-center">
             <div>
