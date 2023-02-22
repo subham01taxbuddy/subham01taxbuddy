@@ -1,0 +1,55 @@
+.hide {
+    .mat-select-trigger {
+        .mat-select-arrow-wrapper {
+            display: none;
+        }
+    }
+}
+
+.isDeduction {
+    font-weight: 500;
+    font-size: 22px;
+    color: #FF6B00;
+}
+
+.separation {
+    border-top: 1px solid gray;
+}
+
+.head-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 11px;
+    color: #000000;
+}
+
+.tds-on {
+    display: inline-flex;
+}
+
+.tds-title {
+    padding: 10px;
+    font-size: 21px;
+    color: #FF6B00;
+    font-weight: 500;
+}
+
+.upload-data {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    margin: 6px 0;
+
+    label {
+        color:#07070C;   
+    }
+
+    .upload {
+        border: 1px solid #00AECA;
+        color: #00AECA;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+}
