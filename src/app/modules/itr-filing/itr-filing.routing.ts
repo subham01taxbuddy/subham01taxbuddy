@@ -43,6 +43,7 @@ import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bond
 import {OtherAssetsComponent} from "./itr-wizard/components/capital-gain/other-assets/other-assets.component";
 import {EquityMfComponent} from "./itr-wizard/components/capital-gain/equity-mf/equity-mf.component";
 import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
+import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';
 
 const routes: Routes = [
   {
@@ -82,8 +83,8 @@ const routes: Routes = [
         component: CapitalGainComponent,
         children: [
           { path: 'lab', component: LandAndBuildingComponent },
-          { path: 'listed', component: EquityMfComponent },
-          { path: 'unlisted', component: EquityMfComponent },
+          { path: 'listed', component: SharesAndEquityComponent },
+          { path: 'unlisted', component: SharesAndEquityComponent },
           { path: 'bonds', component: ZeroCouponBondsComponent },
           { path: 'zcb', component: ZeroCouponBondsComponent },
           { path: 'other', component: OtherAssetsComponent },
