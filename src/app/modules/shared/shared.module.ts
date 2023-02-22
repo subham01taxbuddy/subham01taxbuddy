@@ -1,6 +1,6 @@
 
 import { MatDialog, MatDialogContent, MatDialogModule } from '@angular/material/dialog';
-import { KommunicateDialogComponent } from '../../pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
+import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpperCaseDirective, InputDataMaskDirective, CapitalizeFirstDirective, } from './input-data-mask.directive';
@@ -39,7 +39,6 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
 import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-app-dialog.component';
 import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
-import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import {Schedules} from "./interfaces/schedules";
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
