@@ -3,7 +3,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
 import {Subscription} from "rxjs";
 import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 
@@ -14,11 +14,12 @@ import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
   styleUrls: ['./capital-gain.component.scss']
 })
 export class CapitalGainComponent extends WizardNavigation implements OnInit {
-  step = 0;
+  step = 4;
   loading = false;
   showList = true;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
+  @Output() saveAndNext = new EventEmitter<any>();
   isEditLand: boolean;
   isEditListed: boolean;
   isEditUnlisted: boolean;
@@ -63,8 +64,8 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
       },
       {
         label: 'Zero Coupon Bonds',
-        path: 'zcb',
-        type: 'zcb'
+        path: 'bonds',
+        type: 'zeroCouponBonds'
       },
       {
         label: 'Any Other Assets (Eg. Gold, Debt, Mutual Funds, Etc)',
@@ -80,6 +81,14 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
 
   setStep(index: number) {
     this.step = index;
+  }
+
+  addMore(type) {
+    // if (type === 'bonds') {
+    //   this.isAddBonds = Math.random();
+    // } else if (type === 'zeroCouponBonds') {
+    //   this.isAddZeroCouponBonds = Math.random();
+    // }
   }
 
   closed(type) {
@@ -101,7 +110,7 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
   gotoSection(topic) {
     this.showList = false;
     let basePath = '/itr-filing/itr/capital-gain/';
-    this.router.navigate([basePath + topic.path]);
+    this.router.navigate([basePath + topic.path], { queryParams: { bondType: topic.type } });
     this.nextBreadcrumb.emit(topic.label);
   }
 
@@ -113,10 +122,6 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
       this.isEditListed = true;
     } else if (type === 'unlisted') {
       this.isEditUnlisted = true;
-    } else if (type === 'bonds') {
-      this.isEditBonds = true;
-    } else if (type === 'zeroCouponBonds') {
-      this.isEditZeroCouponBonds = true;
     } else if (type === 'otherAssets') {
       this.isEditOtherAssets = true;
     }

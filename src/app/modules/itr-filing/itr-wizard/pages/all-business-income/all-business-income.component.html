@@ -1,53 +1,86 @@
 <div *ngIf="hideOutlet">
   <h3 class="personal-info">Business Income:</h3>
   <mat-accordion class="headers-align">
-    <mat-expansion-panel hideToggle
-                         class="hide-close">
-      <mat-expansion-panel-header (click)="addPresumptiveIncome()">
+    <mat-expansion-panel hideToggle class="hide-close">
+      <mat-expansion-panel-header (click)="$event.stopPropagation(); editForm('customer')">
         <mat-panel-title>
-          <mat-icon>
-            arrow_forward_ios
-          </mat-icon>
+          <mat-icon> arrow_forward_ios </mat-icon>
           Presumptive Income
         </mat-panel-title>
       </mat-expansion-panel-header>
+      <app-presumptive-income></app-presumptive-income>
     </mat-expansion-panel>
 
-    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (closed)="closed('personal')" hideToggle
-                         class="hide-close">
+    <mat-expansion-panel
+      [expanded]="step === 0"
+      (opened)="setStep(0)"
+      (closed)="closed('customer')"
+      hideToggle
+      class="hide-close"
+    >
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <mat-icon>
-            arrow_forward_ios
-          </mat-icon>
-          Balance Sheet </mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Profit & Loss A/C
+        </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button class="edit_btn" (click)="$event.stopPropagation();editForm('personal')"><mat-icon>
+          <button
+            class="edit_btn"
+            (click)="$event.stopPropagation(); editForm('customer')"
+          >
+            <mat-icon> edit_square </mat-icon>Edit
+          </button>
+        </div>
+      </mat-expansion-panel-header>
+      <app-profit-loss-ac></app-profit-loss-ac>
+    </mat-expansion-panel>
 
-            {{ sheetData?.editForm ? 'highlight_off':'edit_square' }}
-          </mat-icon> {{ sheetData?.editForm ? 'Cancel':'Edit' }} </button>
+    <mat-expansion-panel
+      [expanded]="step === 1"
+      (opened)="setStep(1)"
+      (closed)="closed('personal')"
+      hideToggle
+      class="hide-close"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Balance Sheet
+        </mat-panel-title>
+        <div class="card__row edit clearfix isShow">
+          <button
+            class="edit_btn"
+            (click)="$event.stopPropagation(); editForm('personal')">
+            <mat-icon>
+              {{ sheetData?.editForm ? "highlight_off" : "edit_square" }}
+            </mat-icon>
+            {{ sheetData?.editForm ? "Cancel" : "Edit" }}
+          </button>
         </div>
       </mat-expansion-panel-header>
       <app-balance-sheet [sheetData]="sheetData"></app-balance-sheet>
     </mat-expansion-panel>
 
+    <div *ngIf="!hideOutlet">
+      <h3 class="personal-info">Presumptive Income:</h3>
+      <app-presumptive-income></app-presumptive-income>
+    </div>
+
+    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+      <button
+        class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+      >
+        <mat-icon>keyboard_backspace</mat-icon>
+        <span class="font-semibold" (click)="gotoSources()"
+          >&nbsp;Back to Source Page</span
+        >
+      </button>
+
+      <button
+        class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+      >
+        <span class="font-semibold">Save All</span>
+      </button>
+    </div>
   </mat-accordion>
 </div>
-
-<div *ngIf="!hideOutlet">
-  <h3 class="personal-info">Presumptive Income:</h3>
-  <app-presumptive-income></app-presumptive-income>
-</div>
-
-<div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
-  <button
-    class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"><mat-icon>keyboard_backspace</mat-icon>
-    <span class="font-semibold" (click)="gotoSources()">&nbsp;Back to Source Page</span>
-  </button>
-
-  <button
-    class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
-    <span class="font-semibold">Save All</span>
-  </button>
-</div>
-
