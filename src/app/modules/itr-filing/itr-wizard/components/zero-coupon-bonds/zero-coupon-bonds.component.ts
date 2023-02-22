@@ -14,8 +14,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./zero-coupon-bonds.component.scss']
 })
 export class ZeroCouponBondsComponent implements OnInit {
-  @Input() isAdd: Number;
-  // @Input() bondType: String;
+  step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: FormGroup;
   deductionForm: FormGroup;
@@ -31,6 +30,7 @@ export class ZeroCouponBondsComponent implements OnInit {
   ];
   isDisable: boolean;
   bondType: any;
+  title: string;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -38,17 +38,17 @@ export class ZeroCouponBondsComponent implements OnInit {
     private toastMsgService: ToastMessageService,
     private activateRoute: ActivatedRoute,
 
-  ) { 
-    if (this.activateRoute.snapshot.queryParams['bondType']) {
-      this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
-    }
-  }
+  ) { }
 
   ngOnInit(): void {
+    if (this.activateRoute.snapshot.queryParams['bondType']) {
+      this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
+      this.bondType === 'bonds' ? this.title = ' Bonds & Debenture' : this.title = 'Zero Coupon Bonds';
+    }
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
-      itemsPerPage: 3,
+      itemsPerPage: 2,
       currentPage: 1,
     };
 
@@ -94,14 +94,6 @@ export class ZeroCouponBondsComponent implements OnInit {
     }
     this.bondsForm.disable();
     this.deductionForm.disable();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    setTimeout(() => {
-      if (this.isAdd) {
-        this.addMore();
-      }
-    }, 1000);
   }
 
   addMore() {
@@ -256,7 +248,7 @@ export class ZeroCouponBondsComponent implements OnInit {
   }
 
 
-  saveAll(type?) {
+  save(type?) {
     if (type === 'bonds') {
       if (this.getBondsCg() <= 0) {
         this.deduction = false;
@@ -387,5 +379,12 @@ export class ZeroCouponBondsComponent implements OnInit {
     }
   }
 
+  goBack() {
+    // this.saveAndNext.emit(true);
+  }
+
+  saveAll() {
+    this.save();
+  }
 
 }
