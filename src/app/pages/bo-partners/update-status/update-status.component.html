@@ -1,0 +1,27 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="row">
+    <h1 mat-dialog-title>{{data.mode}} <span *ngIf="data.mode === 'Update Status'">For {{this.data.partnerName}</span>
+            <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i
+                class="fa fa-close"></i></button>          
+    </h1>
+
+</div>
+<mat-dialog-content>
+  <form>
+      <div class="card__col-xs-4 card__col-sm-14" >
+          <mat-form-field appearance="outline">
+              <mat-label>Select Status </mat-label>
+              <mat-select placeholder="Select Status" >
+                  <mat-option *ngFor="let status of boStatus">
+                      {{ status }}
+                  </mat-option>
+              </mat-select>
+            </mat-form-field>
+      </div>
+
+      <div class="card__col-xs-4 card__col-sm-14">
+          <button mat-raised-button color="primary" (click)="addStatus()" tabindex="1">  Update </button>
+      </div>
+  </form>
+
+</mat-dialog-content>
