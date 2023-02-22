@@ -77,6 +77,7 @@ import { AdvanceTaxPaidComponent } from './itr-wizard/components/advance-tax-pai
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 import { TaxesPaidComponent } from './itr-wizard/pages/taxes-paid/taxes-paid.component';
+import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
 import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
 import { LandAndBuildingComponent } from './itr-wizard/components/capital-gain/land-and-building/land-and-building.component';
 import { LabFormComponent } from './itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component';
@@ -93,6 +94,7 @@ import { MoreInfoComponent } from './itr-wizard/components/capital-gain/more-inf
 import { ScheduleALComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/schedule-al.component';
 import { AddImmovableDialogComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-immovable-dialog/add-immovable-dialog.component';
 import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
+import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain/equity-mf/security-deduction/security-deduction.component';
 
 @NgModule({
   imports: [
@@ -199,6 +201,8 @@ import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bo
     AllBusinessIncomeComponent,
     AddClientsComponent,
     ZeroCouponBondsComponent,
+    AllSalaryIncomeComponent,
+    SecurityDeductionComponent,
   ],
   exports: [
     CustomerProfileComponent
