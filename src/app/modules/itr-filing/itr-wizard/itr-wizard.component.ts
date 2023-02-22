@@ -18,6 +18,7 @@ import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-inco
 import {OtherIncomeComponent} from "../other-income/other-income.component";
 import {Subscription} from "rxjs";
 import {WizardNavigation} from "../../itr-shared/WizardNavigation";
+import {CapitalGainComponent} from "./components/capital-gain/capital-gain.component";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -77,7 +78,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
-  subscription: Subscription
+  subscription: Subscription;
+  breadcrumb: String;
+  breadcrumbComponent: WizardNavigation;
 
   subscribeToEmmiter(componentRef){
     //this may not be needed for us
@@ -87,6 +90,11 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     const child : WizardNavigation = componentRef;
     child.saveAndNext.subscribe( () => {
       this.gotoSources();
+    });
+    child.nextBreadcrumb.subscribe((breadcrumb)=> {
+      this.breadcrumb = breadcrumb;
+      this.breadcrumbComponent = child;
+      console.log(breadcrumb);
     });
   }
 
@@ -102,6 +110,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   showPrefillView() {
+    this.breadcrumb = null;
     if(this.router.url !== '/itr-filing/itr') {
       // while(this.router.url !== '/itr-filing/itr') {
         this.location.back();
@@ -113,6 +122,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   gotoSummary() {
+    this.breadcrumb = null;
     this.showIncomeSources = false;
     this.selectedSchedule = 'Summary';
     this.router.navigate(['/itr-filing/itr/summary']);
@@ -120,12 +130,23 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   gotoSchedule(schedule) {
     this.showIncomeSources = false;
+    this.breadcrumb = null;
     this.selectedSchedule = this.schedules.getTitle(schedule);
     let navigationPath = this.schedules.getNavigationPath(schedule);
     this.router.navigate(['/itr-filing/' +navigationPath]);
   }
 
+  gotoCgSchedule() {
+    if(this.breadcrumb) {
+      this.breadcrumb = null;
+      this.location.back();
+      this.gotoSchedule(this.schedules.CAPITAL_GAIN);
+      (this.breadcrumbComponent as CapitalGainComponent).initList();
+    }
+  }
+
   gotoSources() {
+    this.breadcrumb = null;
     this.location.back();
     this.showIncomeSources = true;
     this.showPrefill = false;

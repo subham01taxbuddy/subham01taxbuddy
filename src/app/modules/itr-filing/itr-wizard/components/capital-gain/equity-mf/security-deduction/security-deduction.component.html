@@ -1,1 +1,68 @@
-<p>security-deduction works!</p>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+&nbsp;
+<mat-card>
+<mat-dialog-content>
+  <form [formGroup]="deductionForm">
+
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-label>Type of Deduction</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input matInput formControlName="typeOfDeduction" placeholder="Type of Deduction"
+            name="typeOfDeduction" class="input-field">
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-label>Purchase Date of New Asset</mat-label>
+        <mat-form-field  appearance="outline">
+          <input matInput formControlName="purchaseDateofNewAsset" name="purchaseDateofNewAsset" readonly [matDatepicker]="purchaseDateofNewAsset"
+            placeholder="DD/MM/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="purchaseDateofNewAsset"></mat-datepicker-toggle>
+          <mat-datepicker #purchaseDateofNewAsset></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-label>Cost of New Asset</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input matInput formControlName="costofNewAsset" placeholder="Cost of New Asset" name="costofNewAsset"
+            class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <mat-error *ngIf="deductionForm.controls['costofNewAsset'].hasError('pattern')">Enter
+            valid amount.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-label>Amount deposited in CGAS before due date</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input matInput formControlName="amountDepositedInCGAS" placeholder="Amount deposited in CGAS before due date" name="amountDepositedInCGAS"
+            class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <mat-error *ngIf="deductionForm.controls['amountDepositedInCGAS'].hasError('pattern')">Enter
+            valid amount.</mat-error>
+        </mat-form-field>
+      </div>
+    
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-label>Amount of Deduction Claimed</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input matInput  formControlName="amountofDeductionClaimed" placeholder="Amount of Deduction Claimed"
+            name="amountofDeductionClaimed" class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <mat-error *ngIf="deductionForm.controls['amountofDeductionClaimed'].hasError('pattern')">Enter
+            valid amount.</mat-error>
+        </mat-form-field>
+      </div>
+    </div> 
+    <div class="row dialog-button">
+      <div class="sub_btn top-space">
+        <button type="submit" class="tbd-btn" (click)="saveDetails()">Save</button>
+        <button class="tbd-btn-secondary" (click)="clearDetails()" mat-dialog-close>Cancel</button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+</mat-card>

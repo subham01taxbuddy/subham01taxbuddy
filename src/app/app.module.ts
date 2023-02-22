@@ -37,7 +37,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     RouterModule.forRoot(appRoutes),
     PagesModule,
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   providers: [
     NavbarService,

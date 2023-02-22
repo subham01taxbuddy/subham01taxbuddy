@@ -268,6 +268,7 @@ export interface BuyersDetails {
     amount: number;
     address: string;
     pin: string;
+    city: string;
     state: string;
     country: string;
 }
@@ -400,6 +401,7 @@ export interface businessIncome {
     presumptiveIncome: any;
     periodOfHolding: any;
     minimumPresumptiveIncome: any;
+    incomes:any;
 }
 
 export interface professionalIncome {

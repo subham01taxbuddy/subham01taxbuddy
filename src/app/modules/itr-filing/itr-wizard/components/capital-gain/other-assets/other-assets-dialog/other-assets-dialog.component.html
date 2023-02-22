@@ -1,58 +1,144 @@
-<h1 mat-dialog-title> Details For Other Assets</h1>
-
-<mat-dialog-content>
-  <form [formGroup]="assetDetailsForm">
+<form [formGroup]="assetDetailsForm" style="padding-top: 25px">
+  <div class="flex" style="flex-direction: row">
+    <mat-checkbox style="padding: 10px 25px 0 0"></mat-checkbox>
     <div class="card__row">
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field>
-          <input matInput readonly formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
-            placeholder="Buy Date / Date of Acquisition" (blur)="calculateGainType()"
-            (dateChange)="calculateGainType()">
-          <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+      <!-- buy-date  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label> Buy Date / Date of Acquisition </mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            formControlName="purchaseDate"
+            name="purchaseDate"
+            [matDatepicker]="purchaseDate"
+            placeholder="Buy Date / Date of Acquisition"
+            (blur)="calculateGainType()"
+            (dateChange)="calculateGainType()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="purchaseDate"
+          ></mat-datepicker-toggle>
           <mat-datepicker #purchaseDate></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field>
-          <input matInput readonly formControlName="sellDate" name="sellDate" [matDatepicker]="sellDate"
-            placeholder="Sale Date/Date of Transfer" (blur)="calculateGainType()" (dateChange)="calculateGainType()">
-          <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
+      <!-- sale-date  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label>Sale Date/Date of Transfer</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            formControlName="sellDate"
+            name="sellDate"
+            [matDatepicker]="sellDate"
+            placeholder="Sale Date/Date of Transfer"
+            (blur)="calculateGainType()"
+            (dateChange)="calculateGainType()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="sellDate"
+          ></mat-datepicker-toggle>
           <mat-datepicker #sellDate></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <input matInput digitsOnly formControlName="purchaseCost" placeholder="Buy Value" name="purchaseCost"
-            class="input-field" maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-          <mat-error *ngIf="assetDetailsForm.controls['purchaseCost'].hasError('pattern')">Enter
-            valid amount.</mat-error>
+      <!-- buy-value  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label> Buy Value</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input
+            matInput
+            digitsOnly
+            formControlName="purchaseCost"
+            placeholder="Buy Value"
+            name="purchaseCost"
+            class="input-field"
+            maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          />
+          <mat-error
+            *ngIf="
+              assetDetailsForm.controls['purchaseCost'].hasError('pattern')
+            "
+            >Enter valid amount.</mat-error
+          >
         </mat-form-field>
       </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <input matInput digitsOnly formControlName="sellValue" placeholder="Sell Value" name="sellValue"
-            class="input-field" maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-          <mat-error *ngIf="assetDetailsForm.controls['sellValue'].hasError('pattern')">Enter
-            valid amount.</mat-error>
+      <!-- sale-value  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label>Sale Value</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input
+            matInput
+            digitsOnly
+            formControlName="sellValue"
+            placeholder="Sell Value"
+            name="sellValue"
+            class="input-field"
+            maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          />
+          <mat-error
+            *ngIf="assetDetailsForm.controls['sellValue'].hasError('pattern')"
+            >Enter valid amount.</mat-error
+          >
         </mat-form-field>
       </div>
-      <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <input matInput digitsOnly formControlName="sellExpense" placeholder="Expenses" name="sellExpense"
-            class="input-field" maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-          <mat-error *ngIf="assetDetailsForm.controls['sellExpense'].hasError('pattern')">Enter
-            valid amount.</mat-error>
+      <!-- expenses  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label>Expenses</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input
+            matInput
+            digitsOnly
+            formControlName="sellExpense"
+            placeholder="Expenses"
+            name="sellExpense"
+            class="input-field"
+            maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            (click)="saveDetails()"
+          />
+          <mat-error
+            *ngIf="assetDetailsForm.controls['sellExpense'].hasError('pattern')"
+            >Enter valid amount.</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <!-- type-of-gain  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label>Type of Gain </mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input
+            matInput
+            digitsOnly
+            formControlName="gainType"
+            placeholder="Type of Gain"
+            name="gainType"
+            class="input-field"
+            maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            [disabled]
+          />
+        </mat-form-field>
+      </div>
+      <!-- gain-amount  -->
+      <div class="card__col-xs-12 card__col-sm-3">
+        <mat-label>Gain Amount</mat-label>
+        <mat-form-field class="input-field-width" appearance="outline">
+          <input
+            matInput
+            digitsOnly
+            formControlName="capitalGain"
+            placeholder="capitalGain"
+            name="capitalGain"
+            class="input-field"
+            maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            [disabled]
+          />
         </mat-form-field>
       </div>
     </div>
-    <div class="row dialog-button">
-      <div class="sub_btn top-space">
-        <button type="submit" class="tbd-btn" (click)="saveDetails()">Save</button>
-        <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
-      </div>
-    </div>
-  </form>
-</mat-dialog-content>
+  </div>
+</form>

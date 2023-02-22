@@ -1,11 +1,19 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions } from 'ag-grid-community';
 import { ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
 
+const professionalData: professionalIncome [] = [{
+  natureOfBusiness: null,
+  tradeName: null,
+  receipts: null,
+  presumptiveIncome: null,
+}]
 @Component({
   selector: 'app-presumptive-professional-income',
   templateUrl: './presumptive-professional-income.component.html',
@@ -63,6 +71,32 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       this.getProfessionalTableData([]);
     }
   }
+  
+  displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'receipts','presumptiveIncome'];
+  dataSource = new MatTableDataSource<professionalIncome>();
+  selection = new SelectionModel<professionalIncome>(true, []);
+  
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  removeSelectedRows() {
+    this.selection.selected.forEach(item => {
+     let index: number = this.dataSource.data.findIndex(d => d === item);
+     console.log(this.dataSource.data.findIndex(d => d === item));
+     this.dataSource.data.splice(index,1);
+
+     this.dataSource = new MatTableDataSource<professionalIncome>(this.dataSource.data);
+   });
+   this.selection = new SelectionModel<professionalIncome>(true, []);
+ }
 
   getMastersData() {
     this.loading = true;
@@ -211,8 +245,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.professionalGridOptions.rowData.push(result);
-          this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+          this.dataSource.data.push(result)
+          this.dataSource = new MatTableDataSource(this.dataSource.data)
+          // this.professionalGridOptions.rowData.push(result);
+          // this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
         }
         if (mode === 'EDIT') {
           this.professionalGridOptions.rowData[index] = result;

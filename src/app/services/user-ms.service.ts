@@ -115,6 +115,11 @@ export class UserMsService {
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.post<T>(`${environment.amazonaws_url}${param[0]}`, param[1], { headers: this.headers });
   }
+  putMethodAWSURL<T>(...param: any): Observable<any> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.put<T>(`${environment.amazonaws_url}${param[0]}`, param[1], { headers: this.headers });
+  }
 
   uploadFile(file: File): Observable<any> {
     const data = new FormData();
