@@ -15,13 +15,14 @@ import { OtherImprovementDialogComponent } from './other-improvement-dialog/othe
 import { Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
+import {WizardNavigation} from "../../../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-other-assets',
   templateUrl: './other-assets.component.html',
   styleUrls: ['./other-assets.component.scss'],
 })
-export class OtherAssetsComponent implements OnInit {
+export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   public otherAssetsGridOptions: GridOptions;
   public improvementGridOptions: GridOptions;
   public deductionGridOptions: GridOptions;
@@ -41,6 +42,7 @@ export class OtherAssetsComponent implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService
   ) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let listedData = this.ITR_JSON.capitalGain?.filter(
       (item) => item.assetType === 'GOLD'
@@ -710,4 +712,8 @@ export class OtherAssetsComponent implements OnInit {
   editForm() {}
 
   closed() {}
+
+  goBack() {
+    this.saveAndNext.emit(false);
+  }
 }
