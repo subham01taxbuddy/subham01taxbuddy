@@ -13,6 +13,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class OtherAssetsDialogComponent implements OnInit {
   assetDetailsForm!: FormGroup;
+  assetType = 'GOLD';
   constructor(
     public fb: FormBuilder,
     public dialogRef: MatDialogRef<OtherAssetsDialogComponent>,
@@ -54,7 +55,7 @@ export class OtherAssetsDialogComponent implements OnInit {
 
   calculateGainType() {
     let req = {
-      assetType: this.data.assetType,
+      assetType: this.assetType,
       buyDate: this.assetDetailsForm.controls['purchaseDate'].value,
       sellDate: this.assetDetailsForm.controls['sellDate'].value,
     };

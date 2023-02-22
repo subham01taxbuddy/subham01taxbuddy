@@ -78,6 +78,7 @@
         <div class="card__row">
           <form [formGroup]="">
             <div class="card__row">
+              <!-- type-of-deduction  -->
               <div class="card__col-xs-12 card__col-sm-4">
                 <mat-label>Type of Deduction</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
@@ -101,15 +102,16 @@
                   > -->
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-4">
-                <mat-label>Purchase Date of New Asset</mat-label>
+              <!-- buy-date  -->
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label> Buy Date / Date of Acquisition </mat-label>
                 <mat-form-field appearance="outline">
                   <input
                     matInput
-                    readonly
                     formControlName="purchaseDate"
                     name="purchaseDate"
-                    placeholder="Date Of Purchase"
+                    [matDatepicker]="purchaseDate"
+                    placeholder="Buy Date / Date of Acquisition"
                   />
                   <mat-datepicker-toggle
                     matSuffix
@@ -118,6 +120,7 @@
                   <mat-datepicker #purchaseDate></mat-datepicker>
                 </mat-form-field>
               </div>
+              <!-- cost-of-new-asset  -->
               <div class="card__col-xs-12 card__col-sm-4">
                 <mat-label>Cost of New Asset</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
@@ -139,6 +142,7 @@
                   > -->
                 </mat-form-field>
               </div>
+              <!-- CGAS Deposit  -->
               <div class="card__col-xs-12 card__col-sm-4">
                 <mat-label>Amount deposited in CGAS before due date</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
@@ -160,6 +164,7 @@
                   > -->
                 </mat-form-field>
               </div>
+              <!-- deduction claimed  -->
               <div class="card__col-xs-12 card__col-sm-4">
                 <mat-label>Amount of Deduction Claimed</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">

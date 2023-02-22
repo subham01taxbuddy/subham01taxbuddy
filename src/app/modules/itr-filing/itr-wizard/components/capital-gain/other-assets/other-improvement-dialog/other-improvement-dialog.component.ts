@@ -5,6 +5,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { FormControl } from '@angular/forms';
 import { FormArray } from '@angular/forms';
+import { Input } from '@angular/core';
+import {
+  Improvement,
+  NewCapitalGain,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-other-improvement-dialog',
@@ -29,7 +34,7 @@ export class OtherImprovementDialogComponent implements OnInit {
   ngOnInit() {
     console.log('On Inti');
     this.improvementForm = this.fb.group({
-      srn: ['', [Validators.required]],
+      // srn: ['', [Validators.required]],
       financialYearOfImprovement: ['', [Validators.required]],
       costOfImprovement: [
         '',
