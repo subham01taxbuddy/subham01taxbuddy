@@ -20,37 +20,39 @@
         </mat-panel-title>
         <div class="edit clearfix isShow">
           <button
-            class="flex items-center btn gap-[5px]"
+            class="flex items-center btn gap-[15px]"
             style="flex-direction: row"
             (click)="$event.stopPropagation()"
             (click)="addMore('ADD', 'GOLD', goldCg.assetDetails.length)"
           >
-            <mat-icon> edit_square </mat-icon>
-            <p>Add Other Assets</p>
+            <mat-icon [inline]="true"> edit_square </mat-icon>
+            <span>Add Other Assets</span>
           </button>
         </div>
       </mat-expansion-panel-header>
       <div class="card flex gap-[25px]">
-        <form>
-          <app-other-assets-dialog></app-other-assets-dialog>
-          <br />
-          <app-other-improvement-dialog></app-other-improvement-dialog>
-        </form>
         <div>
-          <div class="flex justify-between items-center">
-            <div>
-              <button class="btn">DELETE</button>
-            </div>
-            <div>
-              <mat-paginator
-                [length]="200"
-                [pageSizeOptions]="[10, 50, 100]"
-                aria-label="Select page"
-              >
-              </mat-paginator>
-            </div>
-            <div>
-              <button class="btn">SAVE</button>
+          <div>
+            <app-other-assets-dialog></app-other-assets-dialog>
+            <br />
+            <app-other-improvement-dialog></app-other-improvement-dialog>
+          </div>
+          <div>
+            <div class="flex justify-between items-center">
+              <div>
+                <button class="btn">DELETE</button>
+              </div>
+              <div>
+                <mat-paginator
+                  [length]="200"
+                  [pageSizeOptions]="[10, 50, 100]"
+                  aria-label="Select page"
+                >
+                </mat-paginator>
+              </div>
+              <div>
+                <button class="btn" (click)="saveCg()">SAVE</button>
+              </div>
             </div>
           </div>
         </div>
@@ -218,7 +220,7 @@
   </div>
 </div>
 
-<div style="padding-top: 20px">
+<!-- <div style="padding-top: 20px">
   <div class="card__title" style="padding: 10px; font-size: 20px">
     Other Assets
     <span style="float: right">
@@ -295,4 +297,4 @@
 
 <div class="pull-right">
   <button class="tbd-btn" (click)="saveCg()">Save</button>
-</div>
+</div> -->

@@ -13,6 +13,8 @@ import { InvestmentDialogComponent } from '../investment-dialog/investment-dialo
 import { OtherAssetsDialogComponent } from './other-assets-dialog/other-assets-dialog.component';
 import { OtherImprovementDialogComponent } from './other-improvement-dialog/other-improvement-dialog.component';
 import { Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-other-assets',
@@ -29,6 +31,10 @@ export class OtherAssetsComponent implements OnInit {
   totalCg = 0;
   canAddDeductions = false;
   step = 0;
+  components: any = {
+    OtherImprovementDialogComponent: OtherImprovementDialogComponent,
+    OtherAssetsDialogComponent: OtherAssetsDialogComponent,
+  };
 
   constructor(
     public matDialog: MatDialog,
