@@ -1,17 +1,24 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import {Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
+import {LabFormComponent} from "./lab-form/lab-form.component";
+import {WizardNavigation} from "../../../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-land-and-building',
   templateUrl: './land-and-building.component.html',
   styleUrls: ['./land-and-building.component.scss']
 })
-export class LandAndBuildingComponent implements OnInit, OnChanges {
+export class LandAndBuildingComponent extends WizardNavigation implements OnInit, OnChanges {
+
+  @ViewChild(LabFormComponent) labFormComponent;
+
   loading = false;
   ITR_JSON: ITR_JSON;
   labData: NewCapitalGain[] = [];
@@ -20,19 +27,34 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   assestTypesDropdown = [];
   labView: string = "FORM";
 
-  public capitalGainGridOptions: GridOptions;
   public investmentGridOptions: GridOptions;
   showInvestmentTable = false;
 
+  propertiesForm: FormGroup;
+  properties = [];
   data: any
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    public matDialog: MatDialog) {
+    public matDialog: MatDialog,
+              private fb: FormBuilder,
+    private location: Location) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.cgCallInConstructor([]);
+    this.labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
     this.getAssetDetails();
-    
+    this.cgCreateRowData();
+
+    let array = [];
+    this.properties.forEach(prop => {
+      array.push(fb.group({
+          index: prop.id -1,
+          selected: false
+        }));
+    })
+    this.propertiesForm = fb.group({
+      propertiesArray: fb.array(array)
+    });
 
     // TODO Add this in edit or add section
     this.data = {
@@ -43,6 +65,21 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     };
 
   }
+
+  isPropertySelected() {
+    let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
+    let selected = array.controls.filter((control: FormGroup) => control.controls['selected'].value === true);
+    return selected.length > 0;
+  }
+
+  get getPropertiesArrayForForm() {
+    return <FormArray>this.propertiesForm.get('propertiesArray');
+  }
+  updatePropertySelection(event, id) {
+    let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
+    let selected = array.controls.filter((control: FormGroup) => control.controls['index'].value === id-1)[0];
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     console.log('+++++++++', changes)
   }
@@ -60,19 +97,27 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   addCapitalGain(mode, assetSelected) {
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('Edit CG:', assetSelected);
+    let assetDetails = null;
+    if(mode === 'EDIT') {
+      let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
+      let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
+      if (selectedTypeList) {
+        assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn === assetSelected.srn))[0];
+      }
+    }
     this.labView = 'FORM';
     this.data = {
       assetDetails: [],
       ITR_JSON: this.ITR_JSON,
       mode: mode,
-      assetSelected: assetSelected,
+      assetSelected: assetDetails,
     };
   }
 
   cgCreateRowData() {
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.isExmptAvail = false;
-    const data = [];
+    this.properties = [];
     const dataToReturn = [];
     let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
     for (let i = 0; labData && i < labData[0]?.assetDetails?.length; i++) {
@@ -94,10 +139,11 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       for (let j = 0; j < deductions?.length; j++) {
         totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
       }
-      
 
-      data.push({
+
+      this.properties.push({
         id: i + 1,
+        srn: assetDetails.srn,
         assetType: labData[0].assetType,
         description: assetDetails.description,
         sellDate: assetDetails.sellDate,
@@ -118,9 +164,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       });
       console.log('row', assetDetails, costOfImprovement);
     }
-
-    
-    return data;
   }
 
 
@@ -130,8 +173,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log('Asset Details =', result);
       this.assestTypesDropdown = result;
-      this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
-      this.capitalGainGridOptions.api?.setColumnDefs(this.cgCreateColoumnDef(this.assestTypesDropdown));
+      this.cgCreateRowData();
       if (this.ITR_JSON.capitalGain?.length > 0) {
         //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
         // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
@@ -142,249 +184,37 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
 
   }
 
-  cgCreateColoumnDef(assestTypesDropdown) {
-    return [
-      {
-        headerName: 'Sr. No.',
-        field: 'id',
-        suppressMovable: true,
-        width: 70,
-        pinned: 'left',
-      },
-      {
-        headerName: 'Address Of property',
-        field: 'address',
-        editable: false,
-        suppressMovable: true,
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      },
-      {
-        headerName: 'Pin Code',
-        field: 'pin',
-        editable: false,
-        suppressMovable: true,
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      },
-      {
-        headerName: 'Full Value Consideration',
-        field: 'valueInConsideration',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.valueInConsideration ? params.data.valueInConsideration.toLocaleString('en-IN') : params.data.valueInConsideration;
-        },
-      },
-      {
-        headerName: 'Cost of Acquisition',
-        field: 'costOfAcquisition',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.costOfAcquisition ? params.data.costOfAcquisition.toLocaleString('en-IN') : params.data.costOfAcquisition;
-        },
-      },
-      {
-        headerName: 'Cost Of Improvements',
-        field: 'improvements',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Expenses',
-        field: 'sellExpense',
-        editable: false,
-        suppressMovable: true,
-        // valueGetter: function nameFromCode(params) {
-        //   return params.data.totalCost ? params.data.totalCost.toLocaleString('en-IN') : params.data.totalCost;
-        // },
-      },
-      {
-        headerName: 'Deductions',
-        field: 'deductions',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
-        },
-      },
-      {
-        headerName: 'Type of Gain',
-        field: 'gainType',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-        },
-      },
-      {
-        headerName: 'Total Capital Gain',
-        field: 'cgIncome',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.cgIncome ? params.data.cgIncome.toLocaleString('en-IN') : params.data.cgIncome;
-        },
-      },
-      {
-        headerName: 'Edit',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        sortable: true,
-        width: 70,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Edit">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>`;
-
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      },
-      {
-        headerName: 'Delete',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        width: 70,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Delete">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      }
-    ];
-  }
-
-  public onCgRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          this.deleteCapitalGain(params.data);
-          break;
-        }
-        case 'edit': {
-          //let cgObject = this.ITR_JSON.capitalGain[params.data.id-1];
-          console.log('dtaa', params.data);
-          this.addCapitalGain('EDIT', JSON.parse(params.data.assetSelected));
-          break;
-        }
-      }
-    }
-  }
-
-  cgCallInConstructor(assestTypesDropdown) {
-    this.capitalGainGridOptions = <GridOptions>{
-      rowData: this.cgCreateRowData(),
-      columnDefs: this.cgCreateColoumnDef(assestTypesDropdown),
-      onGridReady: () => {
-        this.capitalGainGridOptions.api.sizeColumnsToFit();
-      },
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      defaultColDef: {
-        resizable: true
-      },
-      suppressRowTransform: true
-    };
-  }
-
   cancelForm(event) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.cgCallInConstructor([]);
-    this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
     this.labView = event.view;
   }
 
-  deleteCapitalGain(assetSelected) {
+  deleteCapitalGain() {
+    let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
+    let selected = array.controls.filter((control: FormGroup) => control.controls['selected'].value === true);
+
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
-    let selectedObject = JSON.parse(assetSelected.assetSelected);
-    let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
-    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
-    if(selectedTypeList){
-      selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.deduction = selectedTypeList.deduction?.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.improvement = selectedTypeList.improvement?.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(itm => (itm.srn !== selectedObject.srn));
-    }
-    this.Copy_ITR_JSON.capitalGain = filtered;
-    if(selectedTypeList && selectedTypeList.assetDetails.length > 0) {
-      this.Copy_ITR_JSON.capitalGain.push(selectedTypeList);
-    }
+    selected.forEach(selectedProp => {
+      let assetSelected = this.properties[selectedProp.value.index];
+      let selectedObject = JSON.parse(assetSelected.assetSelected);
+      let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
+      let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
+      if (selectedTypeList) {
+        selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
+        selectedTypeList.deduction = selectedTypeList.deduction?.filter(itm => (itm.srn !== selectedObject.srn));
+        selectedTypeList.improvement = selectedTypeList.improvement?.filter(itm => (itm.srn !== selectedObject.srn));
+        selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(itm => (itm.srn !== selectedObject.srn));
+      }
+      this.Copy_ITR_JSON.capitalGain = filtered;
+      if (selectedTypeList && selectedTypeList.assetDetails.length > 0) {
+        this.Copy_ITR_JSON.capitalGain.push(selectedTypeList);
+      }
+    });
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
@@ -395,7 +225,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       console.log('Capital gain save result=', result);
       this.utilsService.smoothScrollToTop();
 
-      this.capitalGainGridOptions.api.setRowData(this.cgCreateRowData());
+      this.cgCreateRowData();
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
@@ -403,5 +233,10 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       this.utilsService.smoothScrollToTop();
     });
 
+  }
+
+  goBack() {
+    this.location.back();
+    this.saveAndNext.emit(false);
   }
 }

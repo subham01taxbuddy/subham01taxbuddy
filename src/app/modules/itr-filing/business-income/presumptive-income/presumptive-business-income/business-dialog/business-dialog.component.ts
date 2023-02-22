@@ -51,21 +51,22 @@ export class BusinessDialogComponent implements OnInit {
     let bank = obj?.incomes?.filter(item => (item.incomeType === 'BANK'));
     let cash = obj?.incomes?.filter(item => (item.incomeType === 'CASH'));
     this.businessForm = this.formBuilder.group({
-      id: [obj.id || null],
+      id: [obj?.id || null],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required]],
-      receipts: [bank[0] ? bank[0].receipts : null, Validators.required],
-      preIncome:[bank[0] ? bank[0].presumptiveIncome : null, [Validators.required, Validators.min(this.amountSix)]],
+      receipts: [bank && bank[0] ? bank[0].receipts : null, Validators.required],
+      preIncome:[bank && bank[0] ? bank[0].presumptiveIncome : null, [Validators.required, Validators.min(this.amountSix)]],
       presumptiveIncome: [null],
-      receivedInCash: [cash[0] ? cash[0].receipts : null, Validators.required],
-      minimumPresumptiveIncome: [cash[0] ? cash[0].presumptiveIncome : null, [Validators.required, Validators.min(this.amountSix)]],
+      receivedInCash: [cash && cash[0] ? cash[0].receipts : null, Validators.required],
+      minimumPresumptiveIncome: [cash && cash[0] ? cash[0].presumptiveIncome : null, [Validators.required, Validators.min(this.amountSix)]],
     });
+    console.log(this.businessForm);
   }
 
-  getFullName() {
-    let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm.controls['natureOfBusiness'].value);
-    return business[0] ? business[0].label + '-' + business[0].code : null;
-  }
+  // getFullName() {
+    // let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm.controls['natureOfBusiness'].value);
+    // return business[0] ? business[0].label + '-' + business[0].code : null;
+  // }
 
   calculateSixPer() {
     this.amountSix = 0;
@@ -132,12 +133,12 @@ export class BusinessDialogComponent implements OnInit {
         // minimumPresumptiveIncome: this.businessForm.controls['preIncome'].value
       });
       this.dialogRef.close(localPresumptiveIncome);
-      
+
     } else {
       $('input.ng-invalid').first().focus();
     }
-    
-    
+
+
   }
 
   cancel() {

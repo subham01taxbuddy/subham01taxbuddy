@@ -7,7 +7,7 @@
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
                     <mat-select placeholder="Nature of Business" formControlName="natureOfBusiness"
-                        name="natureOfBusiness" matTooltip="{{getFullName()}}">
+                        name="natureOfBusiness">
                         <mat-option *ngFor="let business of natureOfBusinessDropdown" [value]="business.code"
                             [disabled]="business.disabled">
                             {{business.label}}-{{business.code}}

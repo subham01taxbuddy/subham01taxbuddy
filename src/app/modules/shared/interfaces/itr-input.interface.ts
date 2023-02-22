@@ -268,6 +268,7 @@ export interface BuyersDetails {
     amount: number;
     address: string;
     pin: string;
+    city: string;
     state: string;
     country: string;
 }

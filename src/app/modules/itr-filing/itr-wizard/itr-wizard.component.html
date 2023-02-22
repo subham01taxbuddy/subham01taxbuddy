@@ -17,7 +17,11 @@
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span [ngClass]="!showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</span>
+        <span (click)="gotoCgSchedule()" [ngClass]="breadcrumb ? 'capitalize text-color-brands' : !showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</span>
+      </div>
+      <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
+        <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
+        <span [ngClass]="breadcrumb ? 'capitalize' : 'capitalize text-color-brands'">{{breadcrumb}}</span>
       </div>
     </div>
     <div *ngIf="showPrefill">
