@@ -12,7 +12,7 @@ import { DelayComponent } from './delay/delay.component';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { AddClientsComponent} from './itr-wizard/components/add-clients/add-clients.component';
+import { AddClientsComponent } from './itr-wizard/components/add-clients/add-clients.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
@@ -26,8 +26,8 @@ import { BusinessComponent } from './business/business.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
-import {SummaryComponent} from "./summary/summary.component";
-import {AllSalaryIncomeComponent} from "./itr-wizard/pages/all-salary-income/all-salary-income.component";
+import { SummaryComponent } from './summary/summary.component';
+import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
 import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
 import {
   LandAndBuildingComponent
@@ -42,6 +42,7 @@ import {
 import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
 import {OtherAssetsComponent} from "./itr-wizard/components/capital-gain/other-assets/other-assets.component";
 import {EquityMfComponent} from "./itr-wizard/components/capital-gain/equity-mf/equity-mf.component";
+import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
 
 const routes: Routes = [
   {
@@ -69,9 +70,10 @@ const routes: Routes = [
         component: AllSalaryIncomeComponent,
         children: [
           {
-            path: 'details', component: SalaryComponent
-          }
-        ]
+            path: 'details',
+            component: SalaryComponent,
+          },
+        ],
       },
       { path: 'house-property', component: HousePropertyComponent },
       { path: 'business', component: AllBusinessIncomeComponent },
@@ -82,8 +84,8 @@ const routes: Routes = [
           { path: 'lab', component: LandAndBuildingComponent },
           { path: 'listed', component: EquityMfComponent },
           { path: 'unlisted', component: EquityMfComponent },
-          { path: 'bonds', component: BondsComponent },
-          { path: 'zcb', component: BondsComponent },
+          { path: 'bonds', component: ZeroCouponBondsComponent },
+          { path: 'zcb', component: ZeroCouponBondsComponent },
           { path: 'other', component: OtherAssetsComponent },
         ]
       },

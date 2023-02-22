@@ -7,9 +7,10 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import {OtherIncomeComponent} from "../../../other-income/other-income.component";
-import {AddClientsComponent} from "../../components/add-clients/add-clients.component";
-import {Subscription} from "rxjs";
+import { OtherIncomeComponent } from '../../../other-income/other-income.component';
+import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
+import { Subscription } from 'rxjs';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-prefill-id',
@@ -23,6 +24,8 @@ export class PrefillIdComponent implements OnInit {
   uploadDoc: any;
   loading = false;
   showEriView = false;
+  navigationData: any;
+  ITR_JSON: ITR_JSON;
 
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
@@ -33,7 +36,9 @@ export class PrefillIdComponent implements OnInit {
     private itrMsService: ItrMsService,
     private utilsService: UtilsService,
     public dialogRef: MatDialogRef<PrefillIdComponent>
-  ) {}
+  ) {
+    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+  }
 
   ngOnInit(): void {
     console.log();
@@ -41,22 +46,22 @@ export class PrefillIdComponent implements OnInit {
 
   subscription: Subscription;
 
-  subscribeToEmmiter(componentRef){
+  subscribeToEmmiter(componentRef) {
     //this may not be needed for us
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;
     // }
-    const child : AddClientsComponent = componentRef;
-    child.skipAddClient.subscribe( () => {
+    const child: AddClientsComponent = componentRef;
+    child.skipAddClient.subscribe(() => {
       this.skipToSources();
     });
-    child.completeAddClient.subscribe( () => {
+    child.completeAddClient.subscribe(() => {
       this.showPrefillView();
     });
   }
 
-  unsubscribe(){
-    if (this.subscription){
+  unsubscribe() {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
