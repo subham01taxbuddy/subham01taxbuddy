@@ -7,15 +7,16 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-shares-and-equity',
   templateUrl: './shares-and-equity.component.html',
   styleUrls: ['./shares-and-equity.component.scss']
 })
-export class SharesAndEquityComponent implements OnInit {
+export class SharesAndEquityComponent extends WizardNavigation implements OnInit {
   step = 1;
-  @Output() onSave = new EventEmitter();
+  // @Output() onSave = new EventEmitter();
   securitiesForm: FormGroup;
   deductionForm: FormGroup;
   Copy_ITR_JSON: ITR_JSON;
@@ -38,7 +39,9 @@ export class SharesAndEquityComponent implements OnInit {
     private toastMsgService: ToastMessageService,
     private activateRoute: ActivatedRoute,
 
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     if (this.activateRoute.snapshot.queryParams['bondType']) {
@@ -273,7 +276,7 @@ export class SharesAndEquityComponent implements OnInit {
   }
 
   goBack() {
-    // this.saveAndNext.emit(true);
+    this.saveAndNext.emit(false);
   }
 
   saveAll() {
