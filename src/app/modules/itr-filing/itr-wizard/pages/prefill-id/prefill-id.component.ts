@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -26,16 +26,14 @@ export class PrefillIdComponent implements OnInit {
   showEriView = false;
   navigationData: any;
   ITR_JSON: ITR_JSON;
-
+  @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private router: Router,
     private toastMessageService: ToastMessageService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
-    public dialogRef: MatDialogRef<PrefillIdComponent>
+    private utilsService: UtilsService
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -130,7 +128,6 @@ export class PrefillIdComponent implements OnInit {
           this.utilsService.showSnackBar(res.message);
           //prefill uploaded successfully, fetch ITR again
           this.fetchUpdatedITR();
-          this.dialogRef.close();
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
             this.utilsService.showSnackBar(res.errors[0].desc);

@@ -54,11 +54,15 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   selectedSchedule = '';
 
   componentsList = [];
+  navigationData: any;
 
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService,
               private router: Router, private location: Location,
               private cdRef: ChangeDetectorRef,
-              private schedules: Schedules) { }
+              private schedules: Schedules) {
+
+    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+  }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
