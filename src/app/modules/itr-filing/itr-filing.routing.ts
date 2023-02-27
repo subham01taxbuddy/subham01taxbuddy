@@ -35,15 +35,18 @@ import {
 import {
   ListedUnlistedDialogComponent
 } from "./itr-wizard/components/capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component";
-import {BondsComponent} from "./itr-wizard/components/capital-gain/bonds/bonds.component";
+import { BondsComponent } from "./itr-wizard/components/capital-gain/bonds/bonds.component";
 import {
   UnlistedSharesComponent
 } from "./itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component";
-import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
-import {OtherAssetsComponent} from "./itr-wizard/components/capital-gain/other-assets/other-assets.component";
-import {EquityMfComponent} from "./itr-wizard/components/capital-gain/equity-mf/equity-mf.component";
+import { BondsDebentureComponent } from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
+import { OtherAssetsComponent } from "./itr-wizard/components/capital-gain/other-assets/other-assets.component";
+import { EquityMfComponent } from "./itr-wizard/components/capital-gain/equity-mf/equity-mf.component";
 import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
 import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';
+import { MoreInfoComponent } from './itr-wizard/components/capital-gain/more-info/more-info.component';
+import { ScheduleALComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/schedule-al.component';
+import { MoreInformationComponent } from './itr-wizard/pages/more-information/more-information.component';
 
 const routes: Routes = [
   {
@@ -90,6 +93,13 @@ const routes: Routes = [
           { path: 'other', component: OtherAssetsComponent },
         ]
       },
+      {
+        path: 'more-info', component: MoreInformationComponent,
+        children: [
+          { path: 'schedule-al', component: ScheduleALComponent },
+          { path: 'schedule-cfl', component: MoreInfoComponent }
+        ]
+      },
       { path: 'future-options', component: SpeculativeIncomeComponent },
       { path: 'nri', component: ForeignIncomeComponent },
       { path: 'eri', component: AddClientsComponent },
@@ -112,4 +122,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ItrFilingRoutingModule {}
+export class ItrFilingRoutingModule { }

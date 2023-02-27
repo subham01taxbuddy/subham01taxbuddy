@@ -10,7 +10,7 @@ export class Schedules {
   public CAPITAL_GAIN = 'capitalGain';
   public SPECULATIVE_INCOME = 'speculativeIncome';
   public FOREIGN_INCOME = 'foreignIncome';
-
+  public MORE_INFORMATION = 'moreInformation'
 
   titleMap: any = {};
   pathMap: any = {};
@@ -20,6 +20,7 @@ export class Schedules {
     this.titleMap[this.OTHER_SOURCES] = 'Other Sources of Income';
     this.titleMap[this.INVESTMENTS_DEDUCTIONS] = 'Investments/Deductions';
     this.titleMap[this.TAXES_PAID] = 'Taxes Paid';
+    this.titleMap[this.MORE_INFORMATION] = 'More Information';
     this.titleMap[this.DECLARATION] = 'Declaration/Errors';
     this.titleMap[this.SALARY] = 'Salary';
     this.titleMap[this.HOUSE_PROPERTY] = 'House Property';
@@ -32,6 +33,7 @@ export class Schedules {
     this.pathMap[this.OTHER_SOURCES] = '/itr/other-income';
     this.pathMap[this.INVESTMENTS_DEDUCTIONS] = '/itr/investments-deductions';
     this.pathMap[this.TAXES_PAID] = '/itr/taxes-paid';
+    this.pathMap[this.MORE_INFORMATION]='/itr/more-info';
     this.pathMap[this.DECLARATION] = '/itr/declaration';
     this.pathMap[this.SALARY] = '/itr/salary';
     this.pathMap[this.HOUSE_PROPERTY] = '/itr/house-property';
