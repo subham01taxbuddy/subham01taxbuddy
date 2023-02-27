@@ -24,7 +24,6 @@ export class PrefillIdComponent implements OnInit {
   uploadDoc: any;
   loading = false;
   showEriView = false;
-  navigationData: any;
   ITR_JSON: ITR_JSON;
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
@@ -35,7 +34,6 @@ export class PrefillIdComponent implements OnInit {
     private itrMsService: ItrMsService,
     private utilsService: UtilsService
   ) {
-    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
 
   ngOnInit(): void {

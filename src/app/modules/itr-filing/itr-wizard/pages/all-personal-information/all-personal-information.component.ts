@@ -1,5 +1,4 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {SourceOfIncomesComponent} from "../source-of-incomes/source-of-incomes.component";
 import {CustomerProfileComponent} from "../../components/customer-profile/customer-profile.component";
 import {PersonalInformationComponent} from "../../components/personal-information/personal-information.component";
 import {OtherInformationComponent} from "../../components/other-information/other-information.component";
@@ -22,8 +21,11 @@ export class AllPersonalInformationComponent implements OnInit {
   isEditCustomer: boolean;
   isEditOther: boolean;
   isEditPersonal: boolean;
+  navigationData: any;
 
-  constructor() { }
+  constructor() {
+    this.navigationData = history.state;
+  }
 
   ngOnInit(): void {
   }

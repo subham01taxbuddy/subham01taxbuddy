@@ -95,7 +95,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     child.saveAndNext.subscribe( () => {
       this.gotoSources();
     });
-    child.nextBreadcrumb.subscribe((breadcrumb)=> {
+    child.nextBreadcrumb?.subscribe((breadcrumb)=> {
       this.breadcrumb = breadcrumb;
       this.breadcrumbComponent = child;
       console.log(breadcrumb);
@@ -137,7 +137,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.breadcrumb = null;
     this.selectedSchedule = this.schedules.getTitle(schedule);
     let navigationPath = this.schedules.getNavigationPath(schedule);
-    this.router.navigate(['/itr-filing/' +navigationPath]);
+    this.router.navigate(['/itr-filing/' +navigationPath], {
+      state: this.navigationData
+    });
   }
 
   gotoCgSchedule() {
