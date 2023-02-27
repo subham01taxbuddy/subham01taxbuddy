@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
@@ -7,7 +7,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
+import { WizardNavigation } from "../../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-shares-and-equity',
@@ -32,6 +32,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
   isDisable: boolean;
   bondType: any;
   title: string;
+  buyDateBefore31stJan: boolean;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -58,7 +59,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
     this.securitiesForm = this.initForm();
     this.deductionForm = this.initDeductionForm();
 
-    this.addMoreBondsData();
+    this.addMoreData();
     this.securitiesForm.disable();
     this.deductionForm.disable();
 
@@ -67,7 +68,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
   addMore() {
     const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
     if (securitiesArray.valid) {
-      this.addMoreBondsData();
+      this.addMoreData();
     } else {
       securitiesArray.controls.forEach(element => {
         if ((element as FormGroup).invalid) {
@@ -120,7 +121,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
   }
 
 
-  addMoreBondsData(item?) {
+  addMoreData(item?) {
     const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
     securitiesArray.push(this.createForm(securitiesArray.length, item));
   }
@@ -143,56 +144,84 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  getGainType(bonds) {
-    if (bonds.controls['purchaseDate'].value && bonds.controls['sellDate'].value) {
-      let param = '/calculate/indexed-cost';
-      let purchaseDate = bonds.controls['purchaseDate'].value;
-      let sellDate = bonds.controls['sellDate'].value;
-      let request = {
-        "assetType": 'BONDS',
-        "buyDate": moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-        "sellDate": moment(new Date(sellDate)).format('YYYY-MM-DD')
-      };
-      this.loading = true;
-      this.itrMsService.postMethod(param, request).subscribe((result: any) => {
-        if (result.success) {
-          bonds.controls['gainType'].setValue(result.data.capitalGainType);
-          this.loading = false;
-        } else {
-          this.loading = false;
-          this.toastMsgService.alert("error", "failed to calculate Type of gain.")
+  calculateGainType(securities) {
+    if (securities.controls['purchaseDate'].valid) {
+      this.buyDateBefore31stJan = new Date(securities.controls['purchaseDate'].value) < new Date('02/01/2018');
+      if (!this.buyDateBefore31stJan) {
+        securities.controls['isinCode'].setValue('');
+        securities.controls['nameOfTheUnits'].setValue('');
+        securities.controls['fmvAsOn31Jan2018'].setValue('');
+      }
+    }
+    if (securities.controls['purchaseDate'].value && securities.controls['sellDate'].value) {
+      let req = {
+        "assetType": this.bondType === 'listed' ? 'EQUITY_SHARES_LISTED' : 'EQUITY_SHARES_UNLISTED',
+        "buyDate": securities.controls['purchaseDate'].value,
+        "sellDate": securities.controls['sellDate'].value
+      }
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        securities.controls['gainType'].setValue(res.data.capitalGainType);
+        if (res.data.capitalGainType === 'SHORT') {
+          securities.controls['isinCode'].setValue('');
+          securities.controls['nameOfTheUnits'].setValue('');
+          securities.controls['fmvAsOn31Jan2018'].setValue('');
         }
-      }, error => {
-        this.loading = false;
-        this.toastMsgService.alert("error", "failed to calculate Type of gain.")
-      });
+      })
     }
   }
 
-  calculateTotalCG(bonds) {
-    if (bonds.valid) {
+  calculateFMV(securities) {
+    if (securities.controls['isinCode'].valid && securities.controls['purchaseDate'].value && securities.controls['sellDate'].value) {
+      let req = {
+        "assetType": this.bondType === 'listed' ? 'EQUITY_SHARES_LISTED' : 'EQUITY_SHARES_UNLISTED',
+        "buyDate": securities.controls['purchaseDate'].value,
+        "sellDate": securities.controls['sellDate'].value
+      }
+      const param = `/capital-gain/fmv?isinCode=${securities.controls['isinCode'].value}`;
+      this.itrMsService.getMethod(param, req).subscribe((res: any) => {
+        console.log('FMV : ', res);
+        if (res.success) {
+          securities.controls['nameOfTheUnits'].setValue(res.data.name);
+          securities.controls['fmvAsOn31Jan2018'].setValue(res.data.fmvAsOn31stJan2018);
+        }
+      })
+    }
+  }
+
+  calculateTotalCG(securities) {
+    if (securities.valid) {
       const param = '/singleCgCalculate';
       let request = {
         assessmentYear: "2022-2023",
         assesseeType: "INDIVIDUAL",
         residentialStatus: "RESIDENT",
-        assetType: 'BONDS',
-        assetDetails: [bonds.getRawValue()],
+        assetType: this.bondType === 'listed' ? 'EQUITY_SHARES_LISTED' : 'EQUITY_SHARES_UNLISTED',
+        assetDetails: [securities.getRawValue()],
 
         "improvement": [
           {
-            "srn": bonds.controls['srn'].value,
+            "srn": securities.controls['srn'].value,
             "dateOfImprovement": "",
-            "costOfImprovement": bonds.controls['costOfImprovement'].value,
+            "costOfImprovement": securities.controls['costOfImprovement'].value,
           }
         ],
+        "buyersDetails": [{
+          "name": "Ashish",
+          "pan": "AKRPH1618L",
+          "share": 100,
+          "amount": 1000,
+          "address": "majale",
+          "pin": "416109"
+        }],
+        "deduction": this.deductionForm.invalid || (this.getBondsCg() <= 0) ? [] : [this.deductionForm.getRawValue()],
       }
       this.itrMsService.postMethod(param, request).subscribe((res: any) => {
         this.loading = false;
         if (res.assetDetails[0].capitalGain) {
-          bonds.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
+          securities.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
         } else {
-          bonds.controls['capitalGain'].setValue(0);
+          securities.controls['capitalGain'].setValue(0);
         }
       }, error => {
         this.loading = false;
@@ -200,6 +229,8 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
       })
     }
   }
+
+ 
 
   getBondsCg() {
     let totalCg = 0;
