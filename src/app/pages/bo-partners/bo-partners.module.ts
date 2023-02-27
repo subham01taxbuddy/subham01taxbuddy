@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { UpdateStatusComponent } from './update-status/update-status.component';
 import { ViewDocumentsComponent } from './view-documents/view-documents.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   imports: [
@@ -14,9 +15,9 @@ import { ViewDocumentsComponent } from './view-documents/view-documents.componen
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
     BoPartnersRoutes,
     NgxLoadingModule.forRoot({}),
-    
   ],
   declarations: [
     BoPartnersComponent,
@@ -27,6 +28,6 @@ import { ViewDocumentsComponent } from './view-documents/view-documents.componen
     BoPartnersComponent,
     UpdateStatusComponent,
     ViewDocumentsComponent,
-  ]
+  ],
 })
-export class BoPartnersModule { }
+export class BoPartnersModule {}
