@@ -15,7 +15,7 @@ import { OtherImprovementDialogComponent } from './other-improvement-dialog/othe
 import { Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
-import {WizardNavigation} from "../../../../../itr-shared/WizardNavigation";
+import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 
 @Component({
   selector: 'app-other-assets',
@@ -32,10 +32,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   totalCg = 0;
   canAddDeductions = false;
   step = 0;
-  components: any = {
-    OtherImprovementDialogComponent: OtherImprovementDialogComponent,
-    OtherAssetsDialogComponent: OtherAssetsDialogComponent,
-  };
+  isAddOtherAssets: Number;
+  isAddOtherAssetsImprovement: Number;
 
   constructor(
     public matDialog: MatDialog,
@@ -715,5 +713,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   goBack() {
     this.saveAndNext.emit(false);
+  }
+
+  addOtherAssets(type, improvements) {
+    if (type === 'otherAssets' && improvements === 'improvements') {
+      this.isAddOtherAssets = Math.random();
+      this.isAddOtherAssetsImprovement = Math.random();
+    }
   }
 }
