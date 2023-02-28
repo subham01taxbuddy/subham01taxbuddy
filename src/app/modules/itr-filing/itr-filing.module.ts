@@ -97,6 +97,7 @@ import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bo
 import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain/equity-mf/security-deduction/security-deduction.component';
 import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';
 import { MoreInformationComponent } from './itr-wizard/pages/more-information/more-information.component';
+import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-gain/other-assets/other-asset-improvement/other-asset-improvement.component';
 
 @NgModule({
   imports: [
@@ -207,6 +208,7 @@ import { MoreInformationComponent } from './itr-wizard/pages/more-information/mo
     SecurityDeductionComponent,
     SharesAndEquityComponent,
     MoreInformationComponent,
+    OtherAssetImprovementComponent,
   ],
   exports: [
     CustomerProfileComponent
