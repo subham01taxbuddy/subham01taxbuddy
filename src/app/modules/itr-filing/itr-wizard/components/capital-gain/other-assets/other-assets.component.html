@@ -22,8 +22,10 @@
           <button
             class="flex items-center btn gap-[15px]"
             style="flex-direction: row"
-            (click)="$event.stopPropagation()"
-            (click)="addMore('ADD', 'GOLD', goldCg.assetDetails.length)"
+            (click)="
+              $event.stopPropagation();
+              addOtherAssets('otherAssets', 'improvements')
+            "
           >
             <mat-icon [inline]="true"> edit_square </mat-icon>
             <span>Add Other Assets</span>
@@ -33,9 +35,13 @@
       <div class="card flex gap-[25px]">
         <div>
           <div>
-            <app-other-assets-dialog></app-other-assets-dialog>
+            <app-other-assets-dialog
+              [isAddOtherAssets]="isAddOtherAssets"
+            ></app-other-assets-dialog>
             <br />
-            <app-other-improvement-dialog></app-other-improvement-dialog>
+            <app-other-improvement-dialog
+              [isAddOtherAssetsImprovement]="isAddOtherAssetsImprovement"
+            ></app-other-improvement-dialog>
           </div>
           <div>
             <div class="flex justify-between items-center">
@@ -211,7 +217,9 @@
   <!-- page-navigation-buttons  -->
   <div class="flex justify-between items-center">
     <div>
-      <button class="btn" (click)="goBack()">Back to Capital Gain Topics</button>
+      <button class="btn" (click)="goBack()">
+        Back to Capital Gain Topics
+      </button>
     </div>
 
     <div>

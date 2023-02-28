@@ -54,6 +54,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   selectedSchedule = '';
 
   componentsList = [];
+  navigationData: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -61,7 +62,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     private router: Router, private location: Location,
     private cdRef: ChangeDetectorRef,
     private schedules: Schedules
-  ) { }
+  ) {
+
+    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+  }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -94,7 +98,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     child.saveAndNext.subscribe(() => {
       this.gotoSources();
     });
-    child.nextBreadcrumb.subscribe((breadcrumb) => {
+    child.nextBreadcrumb?.subscribe((breadcrumb) => {
       this.breadcrumb = breadcrumb;
       this.breadcrumbComponent = child;
       console.log(breadcrumb);
@@ -136,7 +140,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.breadcrumb = null;
     this.selectedSchedule = this.schedules.getTitle(schedule);
     let navigationPath = this.schedules.getNavigationPath(schedule);
-    this.router.navigate(['/itr-filing/' + navigationPath]);
+    this.router.navigate(['/itr-filing/' + navigationPath], {
+      state: this.navigationData
+    });
   }
 
   gotoCgSchedule() {
