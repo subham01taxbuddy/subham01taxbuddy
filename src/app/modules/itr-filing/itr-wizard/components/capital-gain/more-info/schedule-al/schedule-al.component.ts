@@ -1,14 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Immovable, ITR_JSON, MovableAsset } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { AddImmovableDialogComponent } from './add-immovable-dialog/add-immovable-dialog.component';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -34,220 +33,214 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 
-export class ScheduleALComponent implements OnInit {
-  @Output() cancelForm = new EventEmitter<any>();
-
-  loading = false;
-  
-  ITR_JSON: ITR_JSON;
+export class ScheduleALComponent extends WizardNavigation implements OnInit {
+  step = 1;
+  @Output() onSave = new EventEmitter();
   Copy_ITR_JSON: ITR_JSON;
-  
-  saveBusy = false;
-  countriesDropdown = AppConstants.countriesDropdown;
-  stateDropdown = AppConstants.stateDropdown;
-  // data: any; // TODO use input output to decide view edit or add
-  @Input() data: any;
-  movableAssets?: MovableAsset;
-  immovableAssets?: Immovable[];
+  ITR_JSON: ITR_JSON;
+  loading: boolean = false;
+  config: any;
+  immovableAssetForm: FormGroup;
   movableAssetsForm: FormGroup;
-  immovableAssetsForm: FormGroup;
 
-  constructor(private fb: FormBuilder,
-    private itrMsService: ItrMsService, public utilsService: UtilsService,
-    public matDialog: MatDialog,
-    public snackBar: MatSnackBar,
-  ) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    let movable: MovableAsset = {
-      jwelleryAmount: 0,
-      artWorkAmount:0,
-      vehicleAmount:0,
-      bankAmount:0,
-      shareAmount:0,
-      insuranceAmount:0,
-      loanAmount:0,
-      cashInHand:0,
-      assetLiability:0
-    }
-    //this.movableAssets = this.ITR_JSON.movableAssets;
-    // console.log('constructor object', this.Copy_ITR_JSON);
+  countryDropdown = AppConstants.countriesDropdown;
+  stateDropdown = [];
+  stateDropdownMaster = AppConstants.stateDropdown;
 
-    if(!this.ITR_JSON.movableAsset || this.ITR_JSON.movableAsset.length == 0){
-      this.movableAssets = movable;
-    } else {
-      this.movableAssets = this.ITR_JSON.movableAsset[0];
-    }
-    this.createMovableAssetsForm();
-    
-  }
-
-  createMovableAssetsForm() {
-    this.movableAssetsForm = this.fb.group({
-      jwelleryAmount: [this.movableAssets?.jwelleryAmount],
-      artWorkAmount: [this.movableAssets?.artWorkAmount],
-      vehicleAmount: [this.movableAssets?.vehicleAmount],
-      bankAmount: [this.movableAssets?.bankAmount],
-      shareAmount: [this.movableAssets?.shareAmount],
-      insuranceAmount: [this.movableAssets?.insuranceAmount],
-      loanAmount: [this.movableAssets?.loanAmount],
-      cashInHand: [this.movableAssets?.cashInHand],
-      assetLiability: [this.movableAssets?.assetLiability]
-    });
-  }
-
-  get getImmovableAssetsArrayForImmovable() {
-    return <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
+  constructor(
+    public fb: FormBuilder,
+    private utilsService: UtilsService,
+    private itrMsService: ItrMsService,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+    super();
   }
 
   ngOnInit() {
-    let immovable = {
-      description:  null,
-      flatNo: null,
-      premisesName: null,
-      road: null,
-      area: null,
-      city: null,
-      state: null,
-      country: null,
-      pinCode: null,
-      amount: null
-    }
-    
-    this.immovableAssetsForm = this.createFormArray();
-    const immovableAssetsArray = <FormArray>this.immovableAssetsForm.controls['immovableAssetsArray'];
-
-    this.immovableAssets = [];
-    console.log('init object', this.Copy_ITR_JSON);
-    if(this.Copy_ITR_JSON.immovableAsset) {
-      this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
-        // this.immovableAssetsForm = this.createImmovableAssetsForm(obj);
-        immovableAssetsArray.push(this.createImmovableAssetsForm(obj));
-        // this.updateDataByPincode(this.Copy_ITR_JSON.immovableAsset.indexOf(obj));
-      });
-    } 
-
-    
-  }
-
-  async updateDataByPincode(index) {
-    console.log('pin index',index);
-    const assetDetails = (this.immovableAssetsForm.controls['immovableAssetsArray'] as FormArray).controls[index] as FormGroup;
-    let pincode = assetDetails.controls['pinCode'];
-    console.log('pin', pincode.value);
-    await this.utilsService.getPincodeData(pincode).then(result => {
-      console.log('pindata', result);
-      assetDetails.controls['city'].setValue(result.city);
-      assetDetails.controls['country'].setValue(result.countryCode);
-      assetDetails.controls['state'].setValue(result.stateCode);
-    });
-    
-  }
-
-  getState(stateCode) {
-    console.log('state called', stateCode);
-    let state = this.stateDropdown.filter(state => state.stateCode === stateCode)[0];
-    return state ? state.stateName : '';
-  }
-
-  getCountry(countryCode) {
-    console.log('country called', countryCode);
-    let country = this.countriesDropdown.filter(country => country.countryCode === countryCode)[0];
-    return country ? country.countryName : '';
-  }
-
-  createFormArray() {
-    return this.fb.group({
-      immovableAssetsArray: this.fb.array([])
-    });
-  }
-
-  createImmovableAssetsForm(obj: Immovable): FormGroup {
-    return this.fb.group({
-      description: [obj.description || null],
-      flatNo: [obj.flatNo || null],
-      premisesName: [obj.premisesName || null],
-      road: [obj.road || null],
-      area: [obj.area || null],
-      city: [obj.city || null],
-      state: [obj.state|| null],
-      country: [obj.country || '91'],
-      pinCode: [obj.pinCode || '', [Validators.required, Validators.pattern(AppConstants.PINCode), Validators.maxLength(6), Validators.minLength(6)]],
-      amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]]
-    });
-  }
-
-  removeMovableAssets() {
-    this.movableAssets = null;
-    this.createMovableAssetsForm();
-  }
-
-  removeImmovableAsset(index) {
-    const immovable = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
-    immovable.removeAt(index);
-    this.immovableAssets.splice(index,1);
-  }
-
-  saveAssets() {
-    //re-intialise the ITR objects
+    // this.immovableAssetForm = this.createImmovableAssetForm();
+    this.stateDropdown = this.stateDropdownMaster;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.config = {
+      itemsPerPage: 2,
+      currentPage: 1,
+    };
 
-    Object.assign(this.movableAssets, this.movableAssetsForm.value);
-    this.Copy_ITR_JSON.movableAsset = [];
-    this.Copy_ITR_JSON.movableAsset.push(this.movableAssets);
-    this.Copy_ITR_JSON.immovableAsset = this.immovableAssets;
-    console.log('updated object', this.Copy_ITR_JSON);
-    this.loading = true;
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Assets & Liabilities added successfully');
-      console.log('Assets & Liabilities save result=', result);
-      // this.dialogRef.close(this.ITR_JSON); // TODO send data to table back
-      this.utilsService.smoothScrollToTop();
-      this.saveBusy = false;
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
-    }, error => {
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to add Assets & Liabilities, please try again.');
-      this.utilsService.smoothScrollToTop();
-      this.saveBusy = false;
-    });
-  }
+    this.immovableAssetForm = this.initForm();
 
-  addImmovableAsset() {
-    
-    const dialogRef = this.matDialog.open(AddImmovableDialogComponent, {
-      data: null,
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add CG=', result);
-      if (result !== undefined) {
-        console.log(result);
-        this.immovableAssets.push(result);
-        const immovableAssetsArray = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
-        immovableAssetsArray.push(this.createImmovableAssetsForm(result));
-        return;
-      }
-    });
-  }
-
-  cancelCgForm() {
-    this.immovableAssetsForm.reset();
-    this.immovableAssetsForm.controls['immovableAssetsArray'] = this.fb.array([]);
-    if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-      this.ITR_JSON.capitalGain instanceof Array && this.ITR_JSON.capitalGain.length > 0) {
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+    if (this.Copy_ITR_JSON.immovableAsset) {
+      this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
+        this.addMoreAssetsData(obj);
+      });
     } else {
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+      this.addMoreAssetsData();
     }
-    this.utilsService.smoothScrollToTop();
+    if (this.Copy_ITR_JSON.movableAsset) {
+      this.Copy_ITR_JSON.movableAsset.forEach(obj => {
+        this.createMovableAssetsForm(obj);
+      });
+    } else {
+      this.createMovableAssetsForm();
+    }
+
+    this.immovableAssetForm.disable();
+    this.movableAssetsForm.disable();
+  }
+
+  initForm() {
+    return this.fb.group({
+      immovableAssetArray: this.fb.array([]),
+    })
+  }
+
+  createImmovableAssetForm(srn, item?): FormGroup {
+    return this.fb.group({
+      hasEdit: [item ? item.hasEdit : false],
+      srn: [item ? item.srn : srn],
+      description: [item ? item.description : ''],
+      amount: [item ? item.amount : null, Validators.required],
+      flatNo: [item ? item.flatNo : '', Validators.required],
+      premisesName: [item ? item.premisesName : ''],
+      road: [item ? item.road : ''],
+      area: [item ? item.area : '', Validators.required],
+      state: [item ? item.state : '', Validators.required],
+      country: [item ? item.country : '91', Validators.required],
+      city: [item ? item.city : '', Validators.required],
+      pinCode: [item ? item.pinCode : '', Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.required, Validators.pattern(AppConstants.PINCode)])]
+    });
+  }
+
+  createMovableAssetsForm(item?) {
+    this.movableAssetsForm = this.fb.group({
+      hasEdit: [item ? item.hasEdit : false],
+      jwelleryAmount: [item ? item.jwelleryAmount : null],
+      artWorkAmount: [item ? item.artWorkAmount : null],
+      vehicleAmount: [item ? item.vehicleAmount : null],
+      bankAmount: [item ? item.bankAmount : null],
+      shareAmount: [item ? item.shareAmount : null],
+      insuranceAmount: [item ? item.insuranceAmount : null],
+      loanAmount: [item ? item.loanAmount : null],
+      cashInHand: [item ? item.cashInHand : null],
+      assetLiability: [item ? item.assetLiability : null]
+    });
+  }
+
+  async updateDataByPincode(immovableAssets) {
+    let pincode = immovableAssets.controls['pinCode'].value;
+    await this.utilsService.getPincodeData(pincode).then(result => {
+      immovableAssets.controls['city'].setValue(result.city);
+      immovableAssets.controls['country'].setValue(result.countryCode);
+      immovableAssets.controls['state'].setValue(result.stateCode);
+    });
+  }
+
+  addMore() {
+    const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+    if (immovableAssetArray.valid) {
+      this.addMoreAssetsData();
+    } else {
+      immovableAssetArray.controls.forEach(element => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
+    }
+  }
+
+  editAssetForm(i, type) {
+    if (type === 'immovable') {
+      ((this.immovableAssetForm.controls['immovableAssetArray'] as FormGroup).controls[i] as FormGroup).enable();
+    } else if (type === 'movable') {
+      this.movableAssetsForm.enable();
+    }
+  }
+
+  get immovableAssetArray() {
+    return <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+  }
+
+
+  addMoreAssetsData(item?) {
+    const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+    immovableAssetArray.push(this.createImmovableAssetForm(immovableAssetArray.length, item));
+  }
+
+
+  deleteImmovableAssetsArray() {
+    const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+    immovableAssetArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        immovableAssetArray.removeAt(index);
+      }
+    })
+  }
+
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  saveImmovableAssets() {
+    if (this.immovableAssetForm.valid) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+
+      this.Copy_ITR_JSON.immovableAsset = [];
+      this.Copy_ITR_JSON.immovableAsset = immovableAssetArray.getRawValue();
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      this.loading = true;
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Immovable Properties Saved Successfully');
+        this.loading = false;
+        this.utilsService.smoothScrollToTop();
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Failed to Save Immovable Properties');
+        this.loading = false;
+        this.utilsService.smoothScrollToTop();
+      });
+    }
+  }
+
+  saveMovableAssets() {
+    if (this.movableAssetsForm) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+      this.Copy_ITR_JSON.movableAsset = [];
+      this.Copy_ITR_JSON.movableAsset.push(this.movableAssetsForm.getRawValue());
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+
+      this.loading = true;
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Movable Properties Saved Successfully');
+        this.loading = false;
+        this.utilsService.smoothScrollToTop();
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Failed to Save Movable Properties');
+        this.loading = false;
+        this.utilsService.smoothScrollToTop();
+      });
+    }
+  }
+
+  goBack() {
+    this.saveAndNext.emit(false);
+  }
+
+  saveAll() {
+    this.saveImmovableAssets();
+    this.saveMovableAssets();
+    this.saveAndNext.emit(true);
   }
 }

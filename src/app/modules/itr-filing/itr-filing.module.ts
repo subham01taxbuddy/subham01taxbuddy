@@ -92,7 +92,6 @@ import { BondsDebentureComponent } from './itr-wizard/components/capital-gain/bo
 import { BondsComponent } from './itr-wizard/components/capital-gain/bonds/bonds.component';
 import { MoreInfoComponent } from './itr-wizard/components/capital-gain/more-info/more-info.component';
 import { ScheduleALComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/schedule-al.component';
-import { AddImmovableDialogComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-immovable-dialog/add-immovable-dialog.component';
 import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
 import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain/equity-mf/security-deduction/security-deduction.component';
 import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';
@@ -173,7 +172,6 @@ import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-
     OtherImprovementDialogComponent,
     MoreInfoComponent,
     ScheduleALComponent,
-    AddImmovableDialogComponent,
     BondsDebentureComponent,
     BondsComponent,
     BusinessIncomeComponent,
