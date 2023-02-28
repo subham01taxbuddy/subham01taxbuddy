@@ -2,7 +2,7 @@ import { BusinessIncomeComponent } from './../business-income/business-income.co
 import { HousePropertyComponent } from './../house-property/house-property.component';
 import { SalaryComponent } from './../salary/salary.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
-import {Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -11,14 +11,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
-import {NavigationEnd, Router} from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { Location } from '@angular/common';
 import { OtherInformationComponent } from './components/other-information/other-information.component';
-import {SourceOfIncomesComponent} from "./pages/source-of-incomes/source-of-incomes.component";
-import {OtherIncomeComponent} from "../other-income/other-income.component";
-import {Subscription} from "rxjs";
-import {WizardNavigation} from "../../itr-shared/WizardNavigation";
-import {CapitalGainComponent} from "./components/capital-gain/capital-gain.component";
+import { SourceOfIncomesComponent } from "./pages/source-of-incomes/source-of-incomes.component";
+import { OtherIncomeComponent } from "../other-income/other-income.component";
+import { Subscription } from "rxjs";
+import { WizardNavigation } from "../../itr-shared/WizardNavigation";
+import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -54,11 +54,18 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   selectedSchedule = '';
 
   componentsList = [];
+  navigationData: any;
 
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService,
-              private router: Router, private location: Location,
-              private cdRef: ChangeDetectorRef,
-              private schedules: Schedules) { }
+  constructor(
+    private itrMsService: ItrMsService,
+    public utilsService: UtilsService,
+    private router: Router, private location: Location,
+    private cdRef: ChangeDetectorRef,
+    private schedules: Schedules
+  ) {
+
+    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+  }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -69,7 +76,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.componentsList.push(this.schedules.TAXES_PAID);
     this.componentsList.push(this.schedules.DECLARATION);
     //for preventing going to specific schedule without initialization
-    if(this.router.url.startsWith('/itr-filing/itr') && this.router.url !== '/itr-filing/itr' && !this.showIncomeSources) {
+    if (this.router.url.startsWith('/itr-filing/itr') && this.router.url !== '/itr-filing/itr' && !this.showIncomeSources) {
       this.router.navigate(['/itr-filing/itr']);
     }
   }
@@ -82,24 +89,24 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   breadcrumb: String;
   breadcrumbComponent: WizardNavigation;
 
-  subscribeToEmmiter(componentRef){
+  subscribeToEmmiter(componentRef) {
     //this may not be needed for us
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;
     // }
-    const child : WizardNavigation = componentRef;
-    child.saveAndNext.subscribe( () => {
+    const child: WizardNavigation = componentRef;
+    child.saveAndNext.subscribe(() => {
       this.gotoSources();
     });
-    child.nextBreadcrumb.subscribe((breadcrumb)=> {
+    child.nextBreadcrumb?.subscribe((breadcrumb) => {
       this.breadcrumb = breadcrumb;
       this.breadcrumbComponent = child;
       console.log(breadcrumb);
     });
   }
 
-  unsubscribe(){
-    if (this.subscription){
+  unsubscribe() {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
@@ -111,9 +118,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   showPrefillView() {
     this.breadcrumb = null;
-    if(this.router.url !== '/itr-filing/itr') {
+    if (this.router.url !== '/itr-filing/itr') {
       // while(this.router.url !== '/itr-filing/itr') {
-        this.location.back();
+      this.location.back();
       // }
     }
     this.showPrefill = true;
@@ -133,11 +140,13 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.breadcrumb = null;
     this.selectedSchedule = this.schedules.getTitle(schedule);
     let navigationPath = this.schedules.getNavigationPath(schedule);
-    this.router.navigate(['/itr-filing/' +navigationPath]);
+    this.router.navigate(['/itr-filing/' + navigationPath], {
+      state: this.navigationData
+    });
   }
 
   gotoCgSchedule() {
-    if(this.breadcrumb) {
+    if (this.breadcrumb) {
       this.breadcrumb = null;
       this.location.back();
       this.gotoSchedule(this.schedules.CAPITAL_GAIN);
@@ -154,29 +163,36 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   updateSchedules(scheduleInfoEvent) {
-    if(scheduleInfoEvent.schedule.selected) {
+    if (scheduleInfoEvent.schedule.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
-      if(this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
+      if (this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
         //for future options, it shall be added inside capital gain
-        if(scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-          if(this.componentsList.indexOf(this.schedules.CAPITAL_GAIN) < 0) {
+        if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+          if (this.componentsList.indexOf(this.schedules.CAPITAL_GAIN) < 0) {
             this.componentsList.splice(index, 0, this.schedules.CAPITAL_GAIN);
           }
         } else {
-          this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+          //for add more info when capital gain is selected
+          if (scheduleInfoEvent.schedule.schedule === 'capitalGain') {
+            this.componentsList.splice(index, 0, this.schedules.MORE_INFORMATION);
+            this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+          } else {
+            this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+          }
         }
       }
     } else {
       //for removing future options, check if capital gain is there, if not remove
-      if(scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-        let cgSource = scheduleInfoEvent.sources.filter(item=> item.schedule === this.schedules.CAPITAL_GAIN)[0];
-        if(!cgSource.selected) {
+      if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+        let cgSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.CAPITAL_GAIN)[0];
+        if (!cgSource.selected) {
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
         }
-      } else if(scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
-        let spSource = scheduleInfoEvent.sources.filter(item=> item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
-        if(!spSource.selected) {
+      } else if (scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
+        let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
+        if (!spSource.selected) {
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.MORE_INFORMATION);
         }
       } else {
         this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);
@@ -229,11 +245,11 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   incomeTabChanged(event: MatTabChangeEvent) {
     console.log(event);
-    if(event.tab.textLabel.toString() === 'Salary Income') {
+    if (event.tab.textLabel.toString() === 'Salary Income') {
       this.salaryComponent.tabChanged();
-    } else if(event.tab.textLabel.toString() === 'House Property') {
+    } else if (event.tab.textLabel.toString() === 'House Property') {
       this.housePropertyComponent.tabChanged();
-    } else if(event.tab.textLabel.toString() === 'Business Income') {
+    } else if (event.tab.textLabel.toString() === 'Business Income') {
       this.businessComponent.tabChanged();
     }
   }

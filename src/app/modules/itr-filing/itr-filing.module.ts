@@ -96,6 +96,7 @@ import { AddImmovableDialogComponent } from './itr-wizard/components/capital-gai
 import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
 import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain/equity-mf/security-deduction/security-deduction.component';
 import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';
+import { MoreInformationComponent } from './itr-wizard/pages/more-information/more-information.component';
 
 @NgModule({
   imports: [
@@ -205,6 +206,7 @@ import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/s
     AllSalaryIncomeComponent,
     SecurityDeductionComponent,
     SharesAndEquityComponent,
+    MoreInformationComponent,
   ],
   exports: [
     CustomerProfileComponent
