@@ -63,22 +63,26 @@ export interface ITR_JSON {
     unlistedSharesDetails: UnlistedSharesDetails[];
     dateOfDividendIncome: string;
     lastVisitedURL: string;
-    seventhProviso139: SeventhProviso139,
+    seventhProviso139: SeventhProviso139;
     depPayInvClmUndDednVIA: string;
     regime: string;
     previousYearRegime: string;
     dividendIncomes?: any[];
     exemptIncomes?: any[];
     jurisdictions?: Jurisdictions[],
-    conditionsResStatus?: any,
-    movableAsset?: MovableAsset[],
-    immovableAsset?: Immovable[],
-    bondsDeduction?: Deduction[],
-    carryForwordLosses?: CarryForwardLosses[],
-    currentYearLosses?: CurrentYearLosses,
-    adjustmentofLossesInScheduleBFLA?: AdjustmentofLossesInScheduleBFLA,
-    totalOfEarlierYearLosses?: TotalOfEarlierYearLosses,
-    totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears
+    conditionsResStatus?: any;
+    movableAsset?: MovableAsset[];
+    immovableAsset?: Immovable[];
+    bondsDeduction?: Deduction[];
+    carryForwordLosses?: CarryForwardLosses[];
+    currentYearLosses?: CurrentYearLosses;
+    adjustmentofLossesInScheduleBFLA?: AdjustmentofLossesInScheduleBFLA;
+    totalOfEarlierYearLosses?: TotalOfEarlierYearLosses;
+    totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears;
+
+    prefillDate: string;
+    prefillData: any;
+    prefillDataSource: string;
 }
 export interface DirectorInCompany {
     companyName: string;

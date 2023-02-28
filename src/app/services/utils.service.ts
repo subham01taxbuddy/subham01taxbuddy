@@ -349,7 +349,10 @@ export class UtilsService {
             declaration: undefined,
             disability: undefined,
             movableAsset: [],
-            immovableAsset: []
+            immovableAsset: [],
+            prefillDate: null,
+            prefillData: null,
+            prefillDataSource: null
         };
 
         return ITR_JSON;

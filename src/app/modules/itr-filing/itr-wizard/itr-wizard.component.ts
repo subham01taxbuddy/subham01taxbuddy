@@ -79,7 +79,14 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if (this.router.url.startsWith('/itr-filing/itr') && this.router.url !== '/itr-filing/itr' && !this.showIncomeSources) {
       this.router.navigate(['/itr-filing/itr']);
     }
+
+    //check if prefill data is available, hide prefill view
+    if(this.ITR_JSON.prefillData){
+      this.showPrefill = false;
+      this.showIncomeSources = true;
+    }
   }
+
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -200,26 +207,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  previousTab(tab) {
-    // if (tab === 'personal') {
-    //   this.progressBarValue = 20;
-    //   this.tabIndex = 0;
-    // } else if (tab === 'income') {
-    //   this.progressBarValue = 40;
-    //   this.tabIndex = 1;
-    // } else if (tab === 'taxSaving') {
-    //   this.progressBarValue = 60;
-    //   this.tabIndex = 2;
-    // } else if (tab === 'insurance') {
-    //   this.progressBarValue = 80;
-    //   this.tabIndex = 3;
-    // } else if (tab === 'taxPlaner') {
-    //   this.progressBarValue = 0;
-    //   // this.router.navigate(['/save-tax/tax-planner']);
-    //   this.router.navigate(['/tax-planner']);
-    // }
-  }
-
   saveAndNext(event) {
     // need to check
     console.log('save and next function', event)
@@ -234,23 +221,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
       }
     } else {
       this.stepper.next();
-    }
-  }
-
-  tabChanged(tab) {
-    this.tabIndex = tab.selectedIndex;
-    this.getDocuments();
-    console.log('tab changed', this.tabIndex)
-  }
-
-  incomeTabChanged(event: MatTabChangeEvent) {
-    console.log(event);
-    if (event.tab.textLabel.toString() === 'Salary Income') {
-      this.salaryComponent.tabChanged();
-    } else if (event.tab.textLabel.toString() === 'House Property') {
-      this.housePropertyComponent.tabChanged();
-    } else if (event.tab.textLabel.toString() === 'Business Income') {
-      this.businessComponent.tabChanged();
     }
   }
 
