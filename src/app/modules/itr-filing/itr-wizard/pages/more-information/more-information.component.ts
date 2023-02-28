@@ -13,7 +13,6 @@ import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
   styleUrls: ['./more-information.component.scss']
 })
 export class MoreInformationComponent extends WizardNavigation implements OnInit {
-  step = 1;
   loading = false;
   showList = true;
   ITR_JSON: ITR_JSON;
@@ -55,18 +54,6 @@ export class MoreInformationComponent extends WizardNavigation implements OnInit
 
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
-  }
-
-  setStep(index: number) {
-    this.step = index;
-  }
-
-  addMore(type) {
-    // if (type === 'bonds') {
-    //   this.isAddBonds = Math.random();
-    // } else if (type === 'zeroCouponBonds') {
-    //   this.isAddZeroCouponBonds = Math.random();
-    // }
   }
 
   gotoSection(topic) {
