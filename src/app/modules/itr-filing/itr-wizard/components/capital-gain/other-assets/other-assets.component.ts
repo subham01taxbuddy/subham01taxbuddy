@@ -32,7 +32,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   totalCg = 0;
   canAddDeductions = false;
   step = 0;
-  isAddOtherAssets: Number;
+
   isAddOtherAssetsImprovement: Number;
 
   constructor(

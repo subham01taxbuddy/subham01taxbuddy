@@ -168,6 +168,7 @@
                     maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     [disabled]
+                    (click)="calculateCg()"
                   />
                 </mat-form-field>
               </div>
