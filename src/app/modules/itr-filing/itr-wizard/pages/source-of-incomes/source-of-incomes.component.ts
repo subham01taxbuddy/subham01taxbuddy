@@ -17,7 +17,6 @@ export class SourceOfIncomesComponent implements OnInit {
   constructor(private schedules: Schedules) {
   }
   ngOnInit(): void {
-    let sources = sessionStorage.getItem('incomeSources');
     let ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
     this.sourcesList = [
@@ -51,6 +50,15 @@ export class SourceOfIncomesComponent implements OnInit {
       //   name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
       // }
     ];
+    this.sourcesList.forEach(source => {
+      if(source.selected) {
+        let event = {
+          schedule : source,
+          sources: this.sourcesList
+        }
+        this.scheduleSelected.emit(event);
+      }
+    });
   }
 
   sourcesUpdated(source) {
