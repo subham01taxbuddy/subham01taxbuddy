@@ -1,5 +1,11 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -20,7 +26,11 @@ export class OtherImprovementDialogComponent implements OnInit {
   financialyears = [];
   improvementYears = [];
   improvementForm!: FormGroup;
-  isImprovement = new FormControl(false);
+  isImprovement = new FormControl();
+  improvements = new FormControl();
+
+  @Input() isAddOtherAssetsImprovement: Number;
+  config: any;
 
   constructor(
     public fb: FormBuilder,
@@ -33,22 +43,32 @@ export class OtherImprovementDialogComponent implements OnInit {
 
   ngOnInit() {
     console.log('On Inti');
-    this.improvementForm = this.fb.group({
-      // srn: ['', [Validators.required]],
-      financialYearOfImprovement: ['', [Validators.required]],
-      costOfImprovement: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithoutDecimal),
-        ],
-      ],
-      indexCostOfImprovement: [''],
-    });
-    if (this.data.mode === 'EDIT') {
-      this.improvementForm.patchValue(this.data.improvement);
-      this.assetSelected();
-    }
+    // this.improvementForm = this.fb.group({
+    //   // srn: ['', [Validators.required]],
+    //   financialYearOfImprovement: ['', [Validators.required]],
+    //   costOfImprovement: [
+    //     '',
+    //     [
+    //       Validators.required,
+    //       Validators.pattern(AppConstants.amountWithoutDecimal),
+    //     ],
+    //   ],
+    //   indexCostOfImprovement: [''],
+    // });
+    // if (this.data.mode === 'EDIT') {
+    //   this.improvementForm.patchValue(this.data.improvement);
+    //   this.assetSelected();
+    // }
+
+    this.improvementForm = this.inItForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      if (this.isAddOtherAssetsImprovement) {
+        this.addMoreImprovement();
+      }
+    }, 1000);
   }
 
   assetSelected() {
@@ -108,9 +128,9 @@ export class OtherImprovementDialogComponent implements OnInit {
     }
   }
 
-  haveImprovement() {
+  haveImprovement(item?) {
     console.log('improvement===', this.isImprovement.value);
-    const improvements = <FormArray>this.improvementForm.get('isImprovement');
+    const improvements = <FormArray>this.improvementForm.get('improvements');
     if (this.isImprovement.value) {
       improvements.push(this.createImprovementForm());
     } else {
@@ -126,6 +146,15 @@ export class OtherImprovementDialogComponent implements OnInit {
     }
   }
 
+  addMoreImprovement(item?) {
+    const improvements = <FormArray>this.improvementForm.get('improvements');
+    if (improvements.valid) {
+      improvements.push(this.createImprovementForm());
+    } else {
+      console.log('improvements');
+    }
+  }
+
   createImprovementForm(
     obj: {
       financialYearOfImprovement?: string;
@@ -138,7 +167,7 @@ export class OtherImprovementDialogComponent implements OnInit {
         obj.financialYearOfImprovement || '',
         [Validators.required],
       ],
-      costOfImprovement: [obj.costOfImprovement || '', [Validators.required]],
+      costOfImprovement: [obj.costOfImprovement || 0, [Validators.required]],
       indexCostOfImprovement: [
         obj.indexCostOfImprovement || 0,
         [Validators.required],
@@ -146,12 +175,13 @@ export class OtherImprovementDialogComponent implements OnInit {
     });
   }
 
-  addMoreImprovement() {
-    const coOwner = <FormArray>this.improvementForm.get('isImprovement');
-    if (coOwner.valid) {
-      coOwner.push(this.createImprovementForm());
-    } else {
-      console.log('add above details first');
-    }
+  get getOtherAssetsImprovement() {
+    return <FormArray>this.improvementForm.get('improvements');
+  }
+
+  inItForm() {
+    return this.fb.group({
+      improvementForm: this.fb.array(['']),
+    });
   }
 }
