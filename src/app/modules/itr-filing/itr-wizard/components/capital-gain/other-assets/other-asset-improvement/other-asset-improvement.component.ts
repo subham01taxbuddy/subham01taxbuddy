@@ -37,9 +37,44 @@ export class OtherAssetImprovementComponent implements OnInit {
   ngOnInit() {
     console.log('On Inti');
     this.OtherAsssetImprovementForm = this.fb.group({
-      otherAssetsArrays: this.fb.array([]),
+      otherAssetsArray: this.fb.array([
+        this.fb.group({
+          // srn: [this.data.rowIndex],
+          hasEdit: ['', false],
+          purchaseDate: ['', [Validators.required]],
+          sellDate: ['', [Validators.required]],
+          purchaseCost: [
+            '',
+            [
+              Validators.required,
+              Validators.pattern(AppConstants.amountWithoutDecimal),
+            ],
+          ],
+          sellValue: [
+            '',
+            [
+              Validators.required,
+              Validators.pattern(AppConstants.amountWithoutDecimal),
+            ],
+          ],
+
+          sellExpense: [''],
+          capitalGain: 0,
+          gainType: [''],
+          algorithm: 'cgProperty',
+          stampDutyValue: 0,
+          valueInConsideration: 0,
+          indexCostOfAcquisition: 0,
+        }),
+
+        this.fb.group({
+          isImprovement: [false, [Validators.required]],
+          financialYearOfImprovement: ['', [Validators.required]],
+          costOfImprovement: [0, [Validators.required]],
+          indexCostOfImprovement: [0, [Validators.required]],
+        }),
+      ]),
       // srn: ['', [Validators.required]],
-      improvements: this.fb.array([]),
     });
 
     this.addMoreOtherAssetsForm();
@@ -49,7 +84,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       currentPage: 1,
     };
 
-    this.getOtherAssetsArray.disable();
+    this.OtherAsssetImprovementForm.disable();
 
     // if (this.data.mode === 'EDIT') {
     //   this.improvementForm.patchValue(this.data.improvement);
@@ -66,14 +101,21 @@ export class OtherAssetImprovementComponent implements OnInit {
     }, 1000);
   }
 
+  createOtherAssetsAndImprovementForm() {
+    this.fb.group({
+      OtherAssetsArray: this.fb.array([]),
+      improvements: this.fb.array([]),
+    });
+  }
+
   get getOtherAssetsArray() {
-    return this.OtherAsssetImprovementForm.get(
-      'otherAssetsArrays'
-    ) as FormArray;
+    return this.OtherAsssetImprovementForm.get('otherAssetsArray') as FormArray;
   }
 
   get getOtherAssetsImprovement() {
-    return this.OtherAsssetImprovementForm.get('improvements') as FormArray;
+    return this.OtherAsssetImprovementForm.get('otherAssetsArray').get(
+      'improvementsArray'
+    ) as FormArray;
   }
 
   isAddMoreOtherAssets() {
@@ -99,7 +141,7 @@ export class OtherAssetImprovementComponent implements OnInit {
     return this.fb.array([
       {
         // srn: [this.data.rowIndex],
-        hasEdit: [item ? item.hasEdit : false],
+        hasEdit: ['', false],
         purchaseDate: [item ? item.purchaseDate : '', [Validators.required]],
         sellDate: [item ? item.sellDate : '', [Validators.required]],
         purchaseCost: [
@@ -131,14 +173,20 @@ export class OtherAssetImprovementComponent implements OnInit {
   calculateGainType(i) {
     let req = {
       assetType: this.assetType,
-      buyDate:
-        this.OtherAsssetImprovementForm.get('otherAssetsArrays').get(
-          'purchaseDate'
-        ),
-      sellDate:
-        this.OtherAsssetImprovementForm.get('otherAssetsArrays').get(
-          'sellDate'
-        ),
+      buyDate: (
+        (
+          this.OtherAsssetImprovementForm.controls[
+            'otherAssetsArray'
+          ] as FormArray
+        ).controls[0] as FormArray
+      ).controls['purchaseDate'].value,
+      sellDate: (
+        (
+          this.OtherAsssetImprovementForm.controls[
+            'otherAssetsArray'
+          ] as FormArray
+        ).controls[0] as FormArray
+      ).controls['sellDate'].value,
     };
 
     console.log(req.buyDate);
@@ -147,9 +195,13 @@ export class OtherAssetImprovementComponent implements OnInit {
     const param = `/calculate/indexed-cost`;
     this.itrMsService.postMethod(param, req).subscribe((res: any) => {
       console.log('GAIN Type : ', res);
-      this.getOtherAssetsArray.controls['gainType']?.setValue(
-        res.data.capitalGainType
-      );
+      (
+        (
+          this.OtherAsssetImprovementForm.controls[
+            'otherAssetsArray'
+          ] as FormArray
+        ).controls[0] as FormArray
+      ).controls['gainType']?.setValue(res.data.capitalGainType);
     });
   }
 
@@ -193,16 +245,40 @@ export class OtherAssetImprovementComponent implements OnInit {
     });
   }
 
-  // calculateIndexCost() {
-  //   let selectedAsset = this.improvementForm.controls['srn'].value;
-  //   let assetDetails = this.data.assetDetails.filter(
-  //     (item) => item.srn === selectedAsset
-  //   )[0];
+  // calculateIndexCost(i) {
+  //   // let selectedAsset = this.improvementForm.controls['srn'].value;
+  //   // let assetDetails = this.data.assetDetails.filter(
+  //   //   (item) => item.srn === selectedAsset
+  //   // )[0];
+  //   let assetDetails = (
+  //     (
+  //       (
+  //         this.OtherAsssetImprovementForm.controls[
+  //           'otherAssetsArray'
+  //         ] as FormArray
+  //       ).controls[i] as FormArray
+  //     ).controls[0] as FormArray
+  //   ).controls['gainType'].value;
   //   if (assetDetails.gainType === 'LONG') {
   //     let req = {
-  //       cost: this.improvementForm.controls['costOfImprovement'].value,
-  //       purchaseOrImprovementFinancialYear:
-  //         this.improvementForm.controls['financialYearOfImprovement'].value,
+  //       cost: (
+  //         (
+  //           (
+  //             this.OtherAsssetImprovementForm.controls[
+  //               'otherAssetsArray'
+  //             ] as FormArray
+  //           ).controls[i] as FormArray
+  //         ).controls[1] as FormArray
+  //       ).controls['costOfImprovement'].value,
+  //       purchaseOrImprovementFinancialYear: (
+  //         (
+  //           (
+  //             this.OtherAsssetImprovementForm.controls[
+  //               'otherAssetsArray'
+  //             ] as FormArray
+  //           ).controls[i] as FormArray
+  //         ).controls[1] as FormArray
+  //       ).controls['costOfImprovement'].value,
   //       assetType: 'GOLD',
   //       // "buyDate": this.immovableForm.controls['purchaseDate'].value,
   //       // "sellDate": this.immovableForm.controls['sellDate'].value
@@ -282,6 +358,10 @@ export class OtherAssetImprovementComponent implements OnInit {
   editOtherAsset(i) {
     const editOtherAsset = this.getOtherAssetsArray;
     editOtherAsset.enable(i);
+    console.log(
+      (this.getOtherAssetsArray.controls[0] as FormArray).controls[0]
+    );
+    console.log(this.getOtherAssetsImprovement);
   }
   deleteOtherAsset(index) {
     console.log('Remove Index', index);
