@@ -1,7 +1,3 @@
-*{
-  font-family: Poppins;
-}
-
 /*ag grid css changes start*/
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
@@ -35,6 +31,10 @@
   padding-bottom: 15px;
 }
 /*ag grid css changes end*/
+
+*{
+  font-family: Poppins;
+}
 
 /*CSS changes by Sushma Start */
 /*
