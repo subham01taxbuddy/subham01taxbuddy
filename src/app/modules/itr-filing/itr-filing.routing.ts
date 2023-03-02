@@ -47,6 +47,7 @@ import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/s
 import { MoreInfoComponent } from './itr-wizard/components/capital-gain/more-info/more-info.component';
 import { ScheduleALComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/schedule-al.component';
 import { MoreInformationComponent } from './itr-wizard/pages/more-information/more-information.component';
+import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 
 const routes: Routes = [
   {
@@ -97,7 +98,7 @@ const routes: Routes = [
         path: 'more-info', component: MoreInformationComponent,
         children: [
           { path: 'schedule-al', component: ScheduleALComponent },
-          { path: 'schedule-cfl', component: MoreInfoComponent }
+          { path: 'schedule-cfl', component: ScheduleCflComponent }
         ]
       },
       { path: 'future-options', component: SpeculativeIncomeComponent },
