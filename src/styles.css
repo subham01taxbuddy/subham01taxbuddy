@@ -8290,3 +8290,9 @@ fr\] {
 .tbd-btn:hover {
   background-color: #04a3bc;
 }
+
+.ngxImageZoomContainer {
+  width: auto !important;
+  height: auto !important;
+  /*sc: scroll !important;*/
+}
