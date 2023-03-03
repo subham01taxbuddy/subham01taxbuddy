@@ -151,16 +151,15 @@
                     <div class="tds-on"
                         *ngFor="let securities of getSecuritiesArray.controls | paginate:config ;let i=index"
                         [formGroupName]="fieldGlobalIndex(i)">
-
                         <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
                         </mat-checkbox>
                         <div class="card__col-xs-12 card__col-sm-12">
 
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Buy/Sell Quantity</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field appearance="outline">
                                     <input matInput formControlName="sellOrBuyQuantity" placeholder="Sell/Buy Quantity"
-                                        name="sellOrBuyQuantity" class="input-field" maxlength="14"
+                                        name="sellOrBuyQuantity" maxlength="14" (change)="calculateTotalCG(securities)"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['sellOrBuyQuantity'].hasError('pattern')">Enter
@@ -172,7 +171,7 @@
                                 <mat-form-field appearance="outline">
                                     <input matInput formControlName="sellDate" name="sellDate" readonly
                                         [matDatepicker]="sellDate" placeholder="DD/MM/YYYY"
-                                        (dateChange)="calculateGainType(securities);calculateFMV(securities)">
+                                        (dateChange)="calculateGainType(securities);calculateFMV(securities);calculateTotalCG(securities)">
                                     <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
                                     <mat-datepicker #sellDate></mat-datepicker>
                                     <mat-error
@@ -182,11 +181,10 @@
                             </div>
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Sale Price</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
-                                    <input matInput class="input-field" formControlName="sellValuePerUnit"
-                                        placeholder="Sale Price" name="sellValuePerUnit" class="input-field"
-                                        maxlength="14"
-                                        (blur)="assetDetailsForm.controls['sellValue'].setValue(assetDetailsForm.controls['sellValuePerUnit'].value * assetDetailsForm.controls['sellOrBuyQuantity'].value)"
+                                <mat-form-field appearance="outline">
+                                    <input matInput formControlName="sellValuePerUnit" placeholder="Sale Price"
+                                        name="sellValuePerUnit" maxlength="14" (change)="calculateTotalCG(securities)"
+                                        (blur)="securitiesForm.controls['securitiesArray'].controls[i].controls['sellValue'].setValue(securitiesForm.controls['securitiesArray'].controls[i].controls['sellValuePerUnit'].value * securitiesForm.controls['securitiesArray'].controls[i].controls['sellOrBuyQuantity'].value)"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['sellValuePerUnit'].hasError('pattern')">Enter
@@ -195,9 +193,10 @@
                             </div>
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Sale Value</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field appearance="outline">
                                     <input matInput formControlName="sellValue" placeholder="Sale Value"
-                                        name="sellValue" class="input-field" maxlength="14" required
+                                        name="sellValue" maxlength="14" required
+                                        (change)="calculateTotalCG(securities);calculateDeductionGain()"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['sellValue'].hasError('pattern')">Enter
@@ -209,17 +208,18 @@
                                 <mat-form-field appearance="outline">
                                     <input matInput formControlName="purchaseDate" name="purchaseDate"
                                         [matDatepicker]="purchaseDate" placeholder="DD/MM/YYYY" readonly
-                                        (dateChange)="calculateGainType(securities);calculateFMV(securities)">
+                                        (dateChange)="calculateGainType(securities);calculateFMV(securities);calculateTotalCG(securities)">
                                     <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                                     <mat-datepicker #purchaseDate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Buy Price</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field appearance="outline">
                                     <input matInput formControlName="purchaseValuePerUnit" placeholder="Buy Price"
-                                        name="purchaseValuePerUnit" class="input-field" maxlength="14"
-                                        (blur)="assetDetailsForm.controls['purchaseCost'].setValue(assetDetailsForm.controls['purchaseValuePerUnit'].value * assetDetailsForm.controls['sellOrBuyQuantity'].value)"
+                                        name="purchaseValuePerUnit" maxlength="14"
+                                        (change)="calculateTotalCG(securities)"
+                                        (blur)="securitiesForm.controls['securitiesArray'].controls[i].controls['purchaseCost'].setValue(securitiesForm.controls['securitiesArray'].controls[i].controls['purchaseValuePerUnit'].value * securitiesForm.controls['securitiesArray'].controls[i].controls['sellOrBuyQuantity'].value)"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['purchaseValuePerUnit'].hasError('pattern')">Enter
@@ -228,9 +228,9 @@
                             </div>
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Buy Value</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field appearance="outline">
                                     <input matInput formControlName="purchaseCost" placeholder="Buy Value"
-                                        name="purchaseCost" class="input-field" maxlength="14"
+                                        name="purchaseCost" maxlength="14" (change)="calculateTotalCG(securities)"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['purchaseCost'].hasError('pattern')">Enter
@@ -239,9 +239,10 @@
                             </div>
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Expenses</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field appearance="outline">
                                     <input matInput formControlName="sellExpense" placeholder="Expenses"
-                                        name="sellExpense" class="input-field" maxlength="14"
+                                        name="sellExpense" maxlength="14"
+                                        (change)="calculateTotalCG(securities);calculateDeductionGain()"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['sellExpense'].hasError('pattern')">Enter
@@ -260,38 +261,38 @@
                                 </mat-form-field>
                             </div>
 
-                            <!-- <div *ngIf="buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'"> -->
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>ISIN Code</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
-                                    <input matInput formControlName="isinCode" placeholder="ISIN Code" name="isinCode"
-                                        class="input-field" (blur)="calculateFMV(securities)">
-                                </mat-form-field>
+                            <div *ngIf="buyDateBefore31stJan && this.bondType === 'listed'">
+                                <div class="card__col-xs-12 card__col-sm-3">
+                                    <mat-label>ISIN Code</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <input matInput formControlName="isinCode" placeholder="ISIN Code"
+                                            name="isinCode" (blur)="calculateFMV(securities)"
+                                            (change)="calculateTotalCG(securities)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-3">
+                                    <mat-label>Name of the Shares/Units</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <input matInput formControlName="nameOfTheUnits" placeholder="Adani"
+                                            (change)="calculateTotalCG(securities)" name="nameOfTheUnits">
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-3">
+                                    <mat-label>FMV as on 31st Jan 2018</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV"
+                                            name="fmvAsOn31Jan2018" (change)="calculateTotalCG(securities)">
+                                    </mat-form-field>
+                                </div>
                             </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Name of the Shares/Units</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
-                                    <input matInput formControlName="nameOfTheUnits" placeholder="Adani"
-                                        name="nameOfTheUnits" class="input-field">
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>FMV as on 31st Jan 2018</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
-                                    <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV"
-                                        name="fmvAsOn31Jan2018" class="input-field">
-                                </mat-form-field>
-                            </div>
-                            <!-- </div> -->
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <!-- ngIf="this.data.assetType === 'EQUITY_SHARES_UNLISTED'" -->
+                            <div class="card__col-xs-12 card__col-sm-3" *ngIf="this.bondType === 'listed'">
                                 <mat-label>Cost of Acquisition</mat-label>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field appearance="outline">
                                     <input matInput formControlName="indexCostOfAcquisition"
-                                        placeholder="Cost of Acquisition" name="indexCostOfAcquisition"
-                                        class="input-field" maxlength="14"
+                                        placeholder="Cost of Acquisition" name="indexCostOfAcquisition" maxlength="14"
                                         matTooltip="Cost of acquisition(as per grandfathering)"
                                         matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                        (change)="calculateTotalCG(securities)"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <mat-error
                                         *ngIf="securitiesForm.controls['securitiesArray'].controls[i].controls['indexCostOfAcquisition'].hasError('pattern')">Enter
@@ -301,7 +302,7 @@
                             <div class="card__col-xs-12 card__col-sm-3">
                                 <mat-label>Gain Amount*</mat-label>
                                 <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" name="assets[i]" placeholder="capitalGain"
+                                    <input matInput name="assets[i]" placeholder="capitalGain"
                                         formControlName="capitalGain" maxlength="14" readonly
                                         (change)="calculateDeductionGain()">
                                     <mat-error
@@ -369,8 +370,7 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Type of Deduction*</mat-label>
                     <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly placeholder="" formControlName="underSection"
-                            name="underSection">
+                        <input matInput readonly placeholder="" formControlName="underSection" name="underSection">
                         <mat-error *ngIf="deductionForm.controls['underSection'].hasError('required')">Please enter
                             type of
                             deduction</mat-error>
@@ -379,8 +379,8 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Purchase Date of New Asset*</mat-label>
                     <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly placeholder="Purchase date of new asset"
-                            formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate">
+                        <input matInput readonly placeholder="Purchase date of new asset" formControlName="purchaseDate"
+                            name="purchaseDate" [matDatepicker]="purchaseDate">
                         <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                         <mat-datepicker #purchaseDate></mat-datepicker>
                         <mat-error *ngIf="deductionForm.controls['purchaseDate'].hasError('required')">Please select
@@ -390,9 +390,8 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Cost of New Asset*</mat-label>
                     <mat-form-field appearance="outline">
-                        <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
-                            (change)="calculateDeductionGain()" formControlName="costOfNewAssets" required
-                            maxlength="14">
+                        <input matInput digitsOnly placeholder="cost of new asset" (change)="calculateDeductionGain()"
+                            formControlName="costOfNewAssets" required maxlength="14">
                         <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError('required')">Please
                             enter cost
                             of
@@ -402,8 +401,7 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Amount deposited on CGAS*</mat-label>
                     <mat-form-field appearance="outline">
-                        <input matInput digitsOnly class="input-field"
-                            placeholder="Amount deposited on CGAS before due date"
+                        <input matInput digitsOnly placeholder="Amount deposited on CGAS before due date"
                             formControlName="investmentInCGAccount" required maxlength="14"
                             matTooltip="Amount deposited on CGAS before due date" (change)="calculateDeductionGain()"
                             matTooltipClass="tab-tooltip" matTooltipPosition="above">
@@ -416,7 +414,7 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Amount of Deduction Claimed*</mat-label>
                     <mat-form-field appearance="outline">
-                        <input matInput readonly class="input-field" placeholder="Amount of deduction claimed"
+                        <input matInput readonly placeholder="Amount of deduction claimed"
                             formControlName="totalDeductionClaimed" maxlength="14">
                         <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('required')">Please
                             enter
