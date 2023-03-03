@@ -1,7 +1,11 @@
 import { data } from 'jquery';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ChatOptionsDialogComponent } from 'src/app/modules/tasks/components/chat-options/chat-options-dialog.component';
@@ -11,22 +15,31 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { HttpClient } from '@angular/common/http';
+import { defineLocale } from 'moment';
+import { defined } from 'highcharts';
 
 @Component({
   selector: 'app-view-review',
   templateUrl: './view-review.component.html',
-  styleUrls: ['./view-review.component.scss']
+  styleUrls: ['./view-review.component.scss'],
 })
 export class ViewReviewComponent implements OnInit {
   reviewGridOptions: GridOptions;
   loading!: boolean;
-  userInfo :any;
-  userId : any;
+  userInfo: any;
+  userId: any;
+  mobileNo: string = '';
+  currentUserId: number = 0;
+  user_data: any = [];
   sourceList: any[] = AppConstants.sourceList;
+  platformList: any[] = AppConstants.platformList;
   isDataById: boolean;
   userDetails: any;
   waChatLink = null;
   loggedSmeInfo: any;
+  selectPlatform: any = 'All';
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private reviewService: ReviewService,
@@ -34,20 +47,21 @@ export class ViewReviewComponent implements OnInit {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    public dialogRef: MatDialogRef<ViewReviewComponent>,
+    public http: HttpClient,
+    public dialogRef: MatDialogRef<ViewReviewComponent>
   ) {
-    this.loggedSmeInfo = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.loggedSmeInfo = JSON.parse(
+      sessionStorage.getItem('LOGGED_IN_SME_INFO')
+    );
     this.reviewGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reviewColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: params => {
-      },
+      onGridReady: (params) => {},
 
       sortable: true,
     };
-
   }
 
   ngOnInit(): void {
@@ -58,48 +72,56 @@ export class ViewReviewComponent implements OnInit {
   viewReviewById() {
     var param = `review/byid`;
     const requestBody = {
-      "id": this.data.leadData.id,
-      "environment": environment.environment
-    }
+      id: this.data.leadData.id,
+      environment: environment.environment,
+    };
     this.loading = true;
-    this.reviewService.postMethod(param, requestBody).subscribe((response: any) => {
-      if (response.success) {
-        this.loading = false;
-        this.isDataById = true;
-        this.userDetails = response.body;
-        if (this.userDetails.sourcePlatform != 'Kommunicate') {
-          this.getReview();
+    this.reviewService.postMethod(param, requestBody).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.loading = false;
+          this.isDataById = true;
+          this.userDetails = response.body;
+          if (this.userDetails.sourcePlatform != 'Kommunicate') {
+            this.getReview();
+          }
+        } else {
+          this.isDataById = false;
+          this.loading = false;
         }
-      } else {
-        this.isDataById = false;
-        this.loading = false;
-      }
-    },
-      error => {
+      },
+      (error) => {
         this.isDataById = null;
         this.loading = false;
-      })
+      }
+    );
   }
 
   getWhatsAppLink() {
     this.loading = true;
     let paramWa = `/kommunicate/whatsApp-chat-link?userId=${this.loggedSmeInfo[0].userId}`;
-    this.userMsService.getMethod(paramWa).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        this.waChatLink = response.data.whatsAppChatLink;
-      } else {
+    this.userMsService.getMethod(paramWa).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.waChatLink = response.data.whatsAppChatLink;
+        } else {
+        }
+      },
+      (error) => {
+        this.loading = false;
       }
-    }, error => {
-      this.loading = false;
-    });
+    );
   }
 
   openKommunicateDashboard(type) {
-    if (type = 'kommunicate') {
-      window.open(`https://dashboard.kommunicate.io/conversations/${this.data.leadData.groupId}`, "_blank");
+    if ((type = 'kommunicate')) {
+      window.open(
+        `https://dashboard.kommunicate.io/conversations/${this.data.leadData.groupId}`,
+        '_blank'
+      );
     }
-    if (type = 'NotKommunicate') {
+    if ((type = 'NotKommunicate')) {
       console.log(this.waChatLink);
       if (this.waChatLink) {
         window.open(this.waChatLink);
@@ -111,22 +133,24 @@ export class ViewReviewComponent implements OnInit {
     var param = `review/users`;
     this.loading = true;
     const reqBody = {
-      "reviewId": this.data.leadData.id,
-      "environment": environment.environment
-    }
-    this.reviewService.postMethod(param, reqBody).subscribe(response => {
-      if (response instanceof Array && response.length > 0) {
+      reviewId: this.data.leadData.id,
+      environment: environment.environment,
+    };
+    this.reviewService.postMethod(param, reqBody).subscribe(
+      (response) => {
+        if (response instanceof Array && response.length > 0) {
+          this.loading = false;
+          this.userInfo = response;
+          this.reviewGridOptions.api?.setRowData(this.createRowData(response));
+        } else {
+          this.loading = false;
+          this.reviewGridOptions.api?.setRowData(this.createRowData([]));
+        }
+      },
+      (error) => {
         this.loading = false;
-        this.userInfo = response;
-        this.reviewGridOptions.api?.setRowData(this.createRowData(response));
-      } else {
-        this.loading = false;
-        this.reviewGridOptions.api?.setRowData(this.createRowData([]));
       }
-    },
-      error => {
-        this.loading = false;
-      })
+    );
   }
 
   reviewColumnDef() {
@@ -137,10 +161,10 @@ export class ViewReviewComponent implements OnInit {
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -156,10 +180,10 @@ export class ViewReviewComponent implements OnInit {
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -175,10 +199,10 @@ export class ViewReviewComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -194,10 +218,10 @@ export class ViewReviewComponent implements OnInit {
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -213,10 +237,10 @@ export class ViewReviewComponent implements OnInit {
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -236,8 +260,7 @@ export class ViewReviewComponent implements OnInit {
           return `<button type="radio" class="action_icon add_button" title="review given by this user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-circle-o" aria-hidden="true" data-action-type="radio" ></i>
-           </button>`
-          
+           </button>`;
         },
       },
       {
@@ -256,13 +279,14 @@ export class ViewReviewComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
-    ]
+    ];
   }
 
   createRowData(data: any) {
@@ -273,10 +297,10 @@ export class ViewReviewComponent implements OnInit {
         lName: data[i].lName,
         mobileNumber: data[i].mobileNumber,
         email_address: data[i].email_address,
-        userId :data[i].userId,
-        id:data[i].id,
+        userId: data[i].userId,
+        id: data[i].id,
         filer: data[i].filer,
-      })
+      });
       userArray.push(userInfo);
     }
     return userArray;
@@ -290,9 +314,9 @@ export class ViewReviewComponent implements OnInit {
           this.call(params.data);
           break;
         }
-      };
-      switch(actionType){
-        case 'radio':{
+      }
+      switch (actionType) {
+        case 'radio': {
           this.radioValue(params.data);
         }
       }
@@ -303,60 +327,87 @@ export class ViewReviewComponent implements OnInit {
     this.loading = true;
     const param = `/prod/call-support/call`;
     const reqBody = {
-      "agent_number": this.loggedSmeInfo[0].mobileNumber,
-      "customer_number": data.mobileNumber
-    }
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success) {
-        if (result.success.status) {
-          this._toastMessageService.alert("success", result.success.message)
+      agent_number: this.loggedSmeInfo[0].mobileNumber,
+      customer_number: data.mobileNumber,
+    };
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
+      (result: any) => {
+        this.loading = false;
+        if (result.success) {
+          if (result.success.status) {
+            this._toastMessageService.alert('success', result.success.message);
+          }
+        } else {
+          this._toastMessageService.alert('error', result.error);
+          this.loading = false;
         }
-      } else {
-        this._toastMessageService.alert("error", result.error)
+      },
+      (error) => {
+        this.utilsService.showSnackBar(
+          'Error while making call, Please try again.'
+        );
         this.loading = false;
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+    );
   }
-  
-  radioValue(data){
+
+  radioValue(data) {
     this.loading = true;
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title:'Matched User ?',
-        message: 'Are you sure you Review Given By this User?.'
-      }
+        title: 'Matched User ?',
+        message: 'Are you sure you Review Given By this User?.',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES'){
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'YES') {
         const param = `/prod/review/byid`;
         const reqBody = {
-          body:{
-             "matchedUserId":data.userId
-              },
-             "pathParameters":{
-              "id": this.data.leadData.id},
-              "environment": environment.environment
-        }
-        this.userMsService.putMethodAWSURL(param,reqBody).subscribe((response: any) => {
-          this.loading = false;
-          if (response.success){
-             this._toastMessageService.alert("success", response.message)
-             this.loading=false;
+          body: {
+            matchedUserId: data.userId,
+          },
+          pathParameters: {
+            id: this.data.leadData.id,
+          },
+          environment: environment.environment,
+        };
+        this.userMsService.putMethodAWSURL(param, reqBody).subscribe(
+          (response: any) => {
+            this.loading = false;
+            if (response.success) {
+              this._toastMessageService.alert('success', response.message);
+              this.loading = false;
             } else {
-             this._toastMessageService.alert("error", response.message)
-             this.loading=false;
+              this._toastMessageService.alert('error', response.message);
+              this.loading = false;
             }
-        }, error => {
-          this.utilsService.showSnackBar('Error while making Match, Please try again.');
-          this.loading = false;
-        })
-
+          },
+          (error) => {
+            this.utilsService.showSnackBar(
+              'Error while making Match, Please try again.'
+            );
+            this.loading = false;
+          }
+        );
       }
-      });
-}
+    });
+  }
 
+  saveRecord() {
+    if (
+      this.userDetails.sourcePlatform === 'Play Store' ||
+      this.userDetails.sourcePlatform === 'Apple Store' ||
+      this.userDetails.sourcePlatform === 'Google Workspace'
+    ) {
+      const param = `/review/match-user`;
+      const param2 = {
+        reviewId: this.userDetails.id,
+        mobileNumber: this.mobileNo,
+        environment: environment.environment,
+      };
+      this.reviewService.postMethod(param, param2).subscribe((result) => {
+        console.log('Save User Data:', result);
+      });
+    }
+  }
 }

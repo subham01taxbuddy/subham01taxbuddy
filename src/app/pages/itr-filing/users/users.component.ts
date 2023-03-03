@@ -12,33 +12,51 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
-
 export class UsersComponent implements OnInit {
   loading: boolean = false;
-  searchVal: string = "";
+  searchVal: string = '';
   currentUserId: number = 0;
   user_data: any = [];
   services: any = [];
   active_subscriptions: any = [];
-  searchMenus = [{
-    value: 'fName', name: 'First Name'
-  }, {
-    value: 'lName', name: 'Last Name'
-  }, {
-    value: 'emailAddress', name: 'Email Id'
-  }, {
-    value: 'mobileNumber', name: 'Mobile Number'
-  }, {
-    value: 'panNumber', name: 'PAN Number'
-  }, {
-    value: 'userId', name: 'User Id'
-  }];
+  searchMenus = [
+    {
+      value: 'fName',
+      name: 'First Name',
+    },
+    {
+      value: 'lName',
+      name: 'Last Name',
+    },
+    {
+      value: 'emailAddress',
+      name: 'Email Id',
+    },
+    {
+      value: 'mobileNumber',
+      name: 'Mobile Number',
+    },
+    {
+      value: 'panNumber',
+      name: 'PAN Number',
+    },
+    {
+      value: 'userId',
+      name: 'User Id',
+    },
+  ];
   ITR_JSON: ITR_JSON;
 
-  constructor(navbarService: NavbarService, public router: Router, public http: HttpClient, private itrMsService: ItrMsService,
-    public _toastMessageService: ToastMessageService, private datePipe: DatePipe, private utilsService: UtilsService,
+  constructor(
+    navbarService: NavbarService,
+    public router: Router,
+    public http: HttpClient,
+    private itrMsService: ItrMsService,
+    public _toastMessageService: ToastMessageService,
+    private datePipe: DatePipe,
+    private utilsService: UtilsService
   ) {
     NavbarService.getInstance(null).component_link_2 = 'activate-package';
     NavbarService.getInstance(null).component_link_3 = '';
@@ -53,15 +71,15 @@ export class UsersComponent implements OnInit {
     }
   }
 
-
   clearValue() {
-    this.searchVal = "";
+    this.searchVal = '';
     this.currentUserId = 0;
   }
 
   advanceSearch(key) {
+    debugger;
     this.user_data = [];
-    if (this.searchVal !== "") {
+    if (this.searchVal !== '') {
       this.getUserSearchList(key, this.searchVal);
     }
   }
@@ -70,19 +88,27 @@ export class UsersComponent implements OnInit {
     this.loading = true;
     return new Promise((resolve, reject) => {
       this.user_data = [];
-      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
-        console.log("Search result:", res)
-        if (Array.isArray(res.records)) {
-          this.user_data = res.records;
-        }
-        this.loading = false;
-        return resolve(true)
-      }, err => {
-        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
-        this.loading = false;
-        return resolve(false)
-      });
+      NavbarService.getInstance(this.http)
+        .getUserSearchList(key, searchValue)
+        .subscribe(
+          (res) => {
+            console.log('Search result:', res);
+            if (Array.isArray(res.records)) {
+              this.user_data = res.records;
+            }
+            this.loading = false;
+            return resolve(true);
+          },
+          (err) => {
+            //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+            this._toastMessageService.alert(
+              'error',
+              this.utilsService.showErrorMsg(err.error.status)
+            );
+            this.loading = false;
+            return resolve(false);
+          }
+        );
     });
   }
 
