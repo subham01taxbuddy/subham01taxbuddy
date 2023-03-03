@@ -44,7 +44,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     if (natureOfBusiness) {
       this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44ADA');
     } else {
-      this.getMastersData();
+      // this.getMastersData();
+      this.dataSource;
     }
   }
 
@@ -62,13 +63,20 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
             businessArray.push(incomeDetails[i]);
           }
         });
-        this.getProfessionalTableData(businessArray);
+        // this.getProfessionalTableData(businessArray);
+        this.dataSource = new MatTableDataSource(businessArray)
       }
       else {
-        this.getProfessionalTableData([]);
+        // this.getProfessionalTableData([]);
+        localStorage.setItem('data',JSON.stringify(professionalData));
+        var parsedData = JSON.parse(localStorage.getItem('data'));
+        this.dataSource = new MatTableDataSource(parsedData);
       }
     } else {
-      this.getProfessionalTableData([]);
+      // this.getProfessionalTableData([]);
+      localStorage.setItem('data',JSON.stringify(professionalData));
+      var parsedData = JSON.parse(localStorage.getItem('data'));
+      this.dataSource = new MatTableDataSource(parsedData);
     }
   }
   
@@ -204,37 +212,61 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
 
-  public onProfessionalRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          this.deleteProfession(params.rowIndex);
-          break;
-        }
-        case 'edit': {
-          this.addEditProfessionalRow('EDIT', params.data, params.rowIndex);
-          break;
-        }
-      }
-    }
-  }
+  // public onProfessionalRowClicked(params) {
+  //   if (params.event.target !== undefined) {
+  //     const actionType = params.event.target.getAttribute('data-action-type');
+  //     switch (actionType) {
+  //       case 'remove': {
+  //         this.deleteProfession(params.rowIndex);
+  //         break;
+  //       }
+  //       case 'edit': {
+  //         this.addEditProfessionalRow('EDIT', params.data, params.rowIndex);
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
   deleteProfession(index) {
     this.professionalGridOptions.rowData.splice(index, 1);
     this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
   }
 
-  addEditProfessionalRow(mode, data: any, index?) {
+  addProfessionalRow(mode, data: any, index?) {
     if (mode === 'ADD') {
-      const length = this.professionalGridOptions.rowData.length;
+      const length = this.dataSource.data.length;
     }
-
     const dialogRef = this.matDialog.open(ProfessionalDialogComponent, {
       data: {
         mode: mode,
-        data: data,
-        natureList: this.professionalGridOptions.rowData,
+        data: this.dataSource.data,
+        natureList: this.dataSource.data,
+      },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px'
+    });
+      dialogRef.afterClosed().subscribe(result => {
+      console.log('Result add CG=', result);
+      if (result !== undefined) {
+        if (mode === 'ADD') {
+          this.dataSource.data.push(result)
+          this.dataSource = new MatTableDataSource(this.dataSource.data)
+          // this.professionalGridOptions.rowData.push(result);
+          // this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+        }
+      }
+    });
+
+  }
+
+  editProfessionalRow(mode, data: any, index?) {
+    const dialogRef = this.matDialog.open(ProfessionalDialogComponent, {
+      data: {
+        mode: mode,
+        data: this.selection.selected[0],
+        natureList: this.dataSource.data,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -244,15 +276,13 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('Result add CG=', result);
       if (result !== undefined) {
-        if (mode === 'ADD') {
-          this.dataSource.data.push(result)
-          this.dataSource = new MatTableDataSource(this.dataSource.data)
-          // this.professionalGridOptions.rowData.push(result);
-          // this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
-        }
         if (mode === 'EDIT') {
-          this.professionalGridOptions.rowData[index] = result;
-          this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+          let itemIndex = this.dataSource.data.findIndex(item=> item.tradeName == this.selection.selected[0].tradeName )
+          this.dataSource.data[itemIndex]=result;
+          this.dataSource = new MatTableDataSource(this.dataSource.data)
+          this.selection.clear();
+          // this.professionalGridOptions.rowData[index] = result;
+          // this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
         }
       }
     });
@@ -268,7 +298,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     let presBusinessIncome = [];
-    this.professionalGridOptions.rowData.forEach(element => {
+    this.dataSource.data.forEach(element => {
       let isAdded = false;
       presBusinessIncome.forEach(data => {
         if (data.natureOfBusiness == element.natureOfBusiness) {

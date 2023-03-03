@@ -1,4 +1,4 @@
-<div style="overflow: hidden;">
+<!-- <div style="overflow: hidden;">
     <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
     <div class="card__row" style="margin-bottom: 10px;">
         <div class="">
@@ -25,4 +25,128 @@
                 <button class="tbd-btn-secondary" (click)="closeDepreciationDialog()" mat-dialog-close>Close</button>
             </div>
         </div>
+    </div>
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+    <div>
+        <div class="row dialog-button">
+            <div class="sub_btn top-space" style="text-align: right;">
+                <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>
+                    <i class="fa fa-close"></i></button>
+            </div>
+        </div>
+        <!-- <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Depreciation Details':'Update Depreciation Details'}}
+        </div> -->
+        <div class="">
+            <div class="card__col-xs-12 card__col-sm-10">
+                <b style="font-size: 14px;">Add depreciation details in case of fixed assets </b>
+            </div>
+            <div class="edit clearfix notes card__col-lg-2">
+                <button type="button" class="edit_btn" [disabled]="depreciationForm.invalid" (click)="addMore()">
+                    <i class="fa fa-plus"></i>Add
+                </button>
+            </div>
+         </div>
+        <form [formGroup]="depreciationForm" style="margin-top: 20px">
+            <div formArrayName="depreciationArray">
+                <div class="tds-on" *ngFor="let depreciation of getDepreciationArray.controls | paginate:config ;let i=index"
+                                [formGroupName]="fieldGlobalIndex(i)"> 
+                    <div class="card__row">
+                            <div class="card__col-xs-12 card__col-sm-1">
+                                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml-5">
+                                </mat-checkbox>
+                            </div>
+                        <div class="card__col-xs-12 card__col-sm-10">
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-4">
+                                     <mat-form-field class="input-field-width">
+                                        <input matInput class="input-field" placeholder="description" formControlName="description"
+                                            maxlength="30">
+                                        <mat-error *ngIf="depreciationForm.controls['depreciationArray'].controls[i].controls['description'].hasError('required')">Please enter
+                                        description</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="card__col-xs-12 card__col-sm-4">
+                                    <mat-form-field class="input-field-width">
+                                        <mat-select placeholder="Asset Type" formControlName="assetType" name="assetType" (selectionChange)="saveDepreciationDetails(depreciationForm.controls['depreciationArray'].controls[i])">
+                                        <mat-option *ngFor="let type of assetTypeList" [value]="type.key">
+                                        {{type.value}}
+                                        </mat-option></mat-select>
+                                        <mat-error *ngIf="depreciationForm.controls['depreciationArray'].controls[i].controls['assetType'].hasError('required')">Please
+                                        select Asset Type</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                    <div class="card__col-xs-12 card__col-sm-4">
+                                        <mat-form-field class="input-field-width">
+                                            <input matInput class="input-field" placeholder="bookValue" formControlName="bookValue"
+                                                maxlength="14" (blur)="saveDepreciationDetails(depreciationForm.controls['depreciationArray'].controls[i])">
+                                            <mat-error *ngIf="depreciationForm.controls['depreciationArray'].controls[i].controls['bookValue'].hasError('required')">Please
+                                                enter
+                                                book value</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                <div class="card__col-xs-12 card__col-sm-4">
+                                    <mat-form-field class="input-field-width">
+                                        <mat-select placeholder="Depreciation Rate" formControlName="depreciationRate"
+                                            name="depreciationRate" (selectionChange)="saveDepreciationDetails(depreciationForm.controls['depreciationArray'].controls[i])">
+                                            <mat-option *ngFor="let rate of depreciationRateList" [value]="rate.key">
+                                                {{rate.value}} </mat-option></mat-select>
+                                        <mat-error *ngIf="depreciationForm.controls['depreciationArray'].controls[i].controls['depreciationRate'].hasError('required')">Please
+                                            select Depreciation Rate</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-4">
+                                    <mat-form-field class="input-field-width">
+                                        <input matInput class="input-field" placeholder="depreciation amount" formControlName="depreciationAmount"
+                                            maxlength="14">
+                                        <mat-error *ngIf="depreciationForm.controls['depreciationArray'].controls[i].controls['depreciationAmount'].hasError('required')">Please
+                                            </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-4">
+                                    <mat-form-field class="input-field-width">
+                                        <input matInput class="input-field" placeholder="closing fixed asset amount" formControlName="fixedAssetClosingAmount"
+                                            maxlength="14">
+                                        <mat-error *ngIf="depreciationForm.controls['depreciationArray'].controls[i].hasError('required')">Please
+                                            </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+              
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-1">
+                            <div class="edit-head">
+                                <button type="button" class="edit-donation" (click)="edit(i,depreciationForm.controls['depreciationArray'].controls[i])" 
+                                [disabled]="!depreciationForm.controls['depreciationArray'].controls[i].controls['hasEdit'].value"><mat-icon>
+                                        edit_square
+                                    </mat-icon>Edit </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="display-flex">
+                    <div class="card__col-xs-12">
+                        <div class="card__col-sm-3">
+                            <button type="submit" class="tbd-btn-secondary" (click)="deleteDepreciationArray()"><i
+                                    class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
+                        </div>
+                        <div class="card__col-sm-6 txt-center">
+                            <table>
+                                <tr *ngFor="let item of getDepreciationArray.controls | paginate:config"></tr>
+                            </table>
+                            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                        </div>
+                        <div class="card__col-sm-3" style="text-align: right;">
+                            <button class="tbd-btn save-btn" (click)="save()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+                
     </div>

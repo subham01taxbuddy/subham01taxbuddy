@@ -50,6 +50,7 @@ import { MoreInformationComponent } from './itr-wizard/pages/more-information/mo
 import {PresumptiveIncomeComponent} from "./business-income/presumptive-income/presumptive-income.component";
 import {BalanceSheetComponent} from "./business-income/balance-sheet/balance-sheet.component";
 import {ProfitLossAcComponent} from "./business-income/profit-loss-ac/profit-loss-ac.component";
+import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 
 const routes: Routes = [
   {
@@ -108,7 +109,7 @@ const routes: Routes = [
         path: 'more-info', component: MoreInformationComponent,
         children: [
           { path: 'schedule-al', component: ScheduleALComponent },
-          { path: 'schedule-cfl', component: MoreInfoComponent }
+          { path: 'schedule-cfl', component: ScheduleCflComponent }
         ]
       },
       { path: 'nri', component: ForeignIncomeComponent },

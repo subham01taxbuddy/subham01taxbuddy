@@ -26,7 +26,7 @@ export class BusinessDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<BusinessDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log("DATA", data)
+    console.log("DATA1", data)
   }
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class BusinessDialogComponent implements OnInit {
     let bank = obj?.incomes?.filter(item => (item.incomeType === 'BANK'));
     let cash = obj?.incomes?.filter(item => (item.incomeType === 'CASH'));
     this.businessForm = this.formBuilder.group({
-      id: [obj?.id || null],
+      id: [obj?.id || Date.now()],
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required]],
       receipts: [bank && bank[0] ? bank[0].receipts : null, Validators.required],
@@ -63,10 +63,10 @@ export class BusinessDialogComponent implements OnInit {
     console.log(this.businessForm);
   }
 
-  // getFullName() {
-    // let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm.controls['natureOfBusiness'].value);
-    // return business[0] ? business[0].label + '-' + business[0].code : null;
-  // }
+  getFullName() {
+    let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm.controls['natureOfBusiness'].value);
+    return business[0] ? business[0].label + '-' + business[0].code : null;
+  }
 
   calculateSixPer() {
     this.amountSix = 0;

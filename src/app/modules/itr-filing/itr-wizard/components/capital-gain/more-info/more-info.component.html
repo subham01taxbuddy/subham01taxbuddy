@@ -1,9 +1,6 @@
 <!-- <div class="container"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <mat-tab-group>
-  <mat-tab label="Schedule AL">
-    <app-schedule-al (saveAndNext)="saveAndNext($event)"></app-schedule-al>
-  </mat-tab>
   <mat-tab label="Losses to be carried forward(CFL)">
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-12">
@@ -16,7 +13,6 @@
           <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
             [gridOptions]="scheduleCFLLoss" [rowHeight]="rowHeight" (rowClicked)="onRowClicked($event)">
           </ag-grid-angular>
-
         </div>
         <div class="btn-cfl">
           <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left"

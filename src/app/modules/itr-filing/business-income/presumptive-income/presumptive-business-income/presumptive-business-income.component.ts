@@ -1,4 +1,4 @@
-import { Incomes } from './../../../../shared/interfaces/itr-input.interface';
+import { Incomes, NewPresumptiveIncomes } from './../../../../shared/interfaces/itr-input.interface';
 import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,6 +19,12 @@ const businessData: businessIncome[] = [{
   periodOfHolding: null,
   minimumPresumptiveIncome: null,
   incomes:[],
+  businessType:null,
+  label:null,
+  salaryInterestAmount:null,
+  taxableIncome:null,
+  exemptIncome:null
+  
 }]
 
 @Component({
@@ -38,7 +44,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     presumptiveIncome: null,
     periodOfHolding: null,
     minimumPresumptiveIncome: null,
-    incomes:null
+    incomes:null,
+    businessType:null,
+    label:null,
+    salaryInterestAmount:null,
+    taxableIncome:null,
+    exemptIncome:null
   }
   loading: boolean;
   natureOfBusinessList: [];
@@ -55,7 +66,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     if (natureOfBusiness) {
       this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44AD');
     } else {
-      this.getMastersData();
+      this.dataSource;
     }
     
   }
@@ -64,6 +75,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
       let incomeDetails;
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
+      console.log("data from session storage",data)
       if (data.length > 0) {
         // let businessArray = [];
         // data.forEach((obj: any) => {
@@ -74,13 +86,21 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         //     businessArray.push(incomeDetails[i]);
         //   }
         // });
-        this.getBusinessTableData(data);
+
+        // this.getBusinessTableData(data);
+        this.dataSource = new MatTableDataSource(data);
       }
       else {
-        this.getBusinessTableData([]);
+        // this.getBusinessTableData([]);
+        localStorage.setItem('data',JSON.stringify(businessData));
+        var parsedData = JSON.parse(localStorage.getItem('data'));
+        this.dataSource = new MatTableDataSource(parsedData);
       }
     } else {
-      this.getBusinessTableData([]);
+      // this.getBusinessTableData([]);
+      localStorage.setItem('data',JSON.stringify(businessData));
+      var parsedData = JSON.parse(localStorage.getItem('data'));
+      this.dataSource = new MatTableDataSource(parsedData);
     }
   }
 
@@ -275,37 +295,33 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     ];
   }
 
-  public onBusinessRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          this.deleteBusiness(params.rowIndex);
-          break;
-        }
-        case 'edit': {
-          this.addEditBusinessRow('EDIT', params.data, params.rowIndex);
-          break;
-        }
-      }
-    }
-  }
+  // public onBusinessRowClicked(params) {
+  //   if (params.event.target !== undefined) {
+  //     const actionType = params.event.target.getAttribute('data-action-type');
+  //     switch (actionType) {
+  //       case 'remove': {
+  //         this.deleteBusiness(params.rowIndex);
+  //         break;
+  //       }
+  //       case 'edit': {
+  //         this.addEditBusinessRow('EDIT', params.data, params.rowIndex);
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
   deleteBusiness(index) {
     this.businessGridOptions.rowData.splice(index, 1);
     this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
   }
 
-  addEditBusinessRow(mode, data: any, index?) {
-    if (mode === 'ADD') {
-      const length = this.businessGridOptions.rowData.length;
-    }
-
+  addBusinessRow(mode, data: any, index?) {
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
       data: {
         mode: mode,
-        data: this.businessGridOptions.rowData[index],
-        natureList: this.businessGridOptions.rowData,
+        data: this.dataSource.data,
+        natureList: this.dataSource.data,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -313,21 +329,45 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('result',result);
+      console.log('result add',result);
       if (result !== undefined) {
         if (mode === 'ADD') {
           this.dataSource.data.push(result)
           this.dataSource = new MatTableDataSource(this.dataSource.data) 
           // this.businessGridOptions.rowData.push(result);
           // this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
+        }else {
+          this.loading = false;
+           this.utilsService.showSnackBar('Failed ')
         }
-        if (mode === 'EDIT') {
-          this.dataSource.data.push(result)
+        
+      }
+    });
+  }
+
+  editBusinessRow(mode, data: any, index?) {
+    const dialogRef = this.matDialog.open(BusinessDialogComponent, {
+      data: {
+        mode: mode,
+        data: this.selection.selected[0],
+        natureList: this.dataSource.data,
+      },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('result edit',result);
+          if (mode === 'EDIT') {
+            let itemIndex = this.dataSource.data.findIndex(item=> item.tradeName == this.selection.selected[0].tradeName )
+          this.dataSource.data[itemIndex]=result;
+          // this.dataSource.data.push(result)
           this.dataSource = new MatTableDataSource(this.dataSource.data)
           // this.businessGridOptions.rowData[index] = result;
           // this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
         }
-      }
+      
     });
   }
 
@@ -382,10 +422,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     // console.log("presBusinessIncome", presBusinessIncome)
 
     if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = this.businessGridOptions.rowData;
+      this.Copy_ITR_JSON.business.presumptiveIncomes = this.dataSource.data;
     } else {
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "BUSINESS");
-      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(this.businessGridOptions.rowData)
+      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(this.dataSource.data)
     }
     console.log(this.Copy_ITR_JSON);
 
