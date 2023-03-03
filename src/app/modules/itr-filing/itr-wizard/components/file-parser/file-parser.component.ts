@@ -240,6 +240,7 @@ export class FileParserComponent implements OnInit {
             });
           this.ITR_JSON.business.profitLossACIncomes = profitLossIncome;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          this.newDataAvailable.emit(true);
         } else {
           this.utilService.showSnackBar('Response is null, try after some time.');
         }
