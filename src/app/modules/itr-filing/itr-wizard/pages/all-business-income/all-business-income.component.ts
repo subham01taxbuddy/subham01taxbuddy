@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Subscription} from "rxjs";
 import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-all-business-income',
@@ -14,12 +15,17 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
   isEditOther: boolean;
   isEditPersonal: boolean;
 
-  constructor() {
+  constructor(private router: Router) {
     super();
   }
 
   ngOnInit(): void {
   }
+
+  initList() {
+    this.hideOutlet = true;
+  }
+
  setStep(index: number) {
     this.step = index;
   }
@@ -47,8 +53,21 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
     }
   }
 
-  addPresumptiveIncome() {
+  addIncomeDetails(type) {
     this.hideOutlet = false;
+
+    this.router.navigate(['/itr-filing/itr/business/' + type]);
+    switch (type) {
+      case 'presumptive' : {
+        this.nextBreadcrumb.emit('Presumptive Income');
+        break;
+      }
+      case 'balance-sheet' : {
+        this.nextBreadcrumb.emit('Balance Sheet');
+        break;
+      }
+    }
+
   }
 
   gotoSources() {
@@ -57,7 +76,7 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
 
   subscription: Subscription
 
-  subscribeToEmmiter(componentRef){
+  subscribeToEmitter(componentRef){
     //this may not be needed for us
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;

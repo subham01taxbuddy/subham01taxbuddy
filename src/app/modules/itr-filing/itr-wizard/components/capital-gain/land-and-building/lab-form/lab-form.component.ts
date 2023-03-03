@@ -258,6 +258,7 @@ export class LabFormComponent implements OnInit {
   addMissingKeys(cgObject: NewCapitalGain) {
     let assetDetails = {
       srn: this.currentCgIndex,
+      brokerName: '',
       sellOrBuyQuantity: 0,
       sellDate: null,
       sellValuePerUnit: 0,

@@ -1,9 +1,18 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<mat-tab-group>
-    <mat-tab label="Non-Speculative Income">
+<div>
+  <app-file-parser (newDataAvailable)="reloadData()"></app-file-parser>
+</div>
+<mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Non-Speculative Income</mat-panel-title>
+      </mat-expansion-panel-header>
         <app-non-speculative-income (saveAndNext)="saveAndNext($event)"></app-non-speculative-income>
-    </mat-tab>
-    <mat-tab label="Speculative Income">
-        <app-speculative-income (saveAndNext)="saveAndNext($event)"></app-speculative-income>
-    </mat-tab>
-</mat-tab-group>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Speculative Income</mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-speculative-income (saveAndNext)="saveAndNext($event)"></app-speculative-income>
+    </mat-expansion-panel>
+</mat-accordion>

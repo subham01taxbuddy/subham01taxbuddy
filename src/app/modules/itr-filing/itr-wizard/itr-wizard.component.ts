@@ -19,6 +19,7 @@ import { OtherIncomeComponent } from "../other-income/other-income.component";
 import { Subscription } from "rxjs";
 import { WizardNavigation } from "../../itr-shared/WizardNavigation";
 import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
+import {AllBusinessIncomeComponent} from "./pages/all-business-income/all-business-income.component";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -139,10 +140,16 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   gotoCgSchedule() {
     if (this.breadcrumb) {
-      this.breadcrumb = null;
       this.location.back();
-      this.gotoSchedule(this.schedules.CAPITAL_GAIN);
-      (this.breadcrumbComponent as CapitalGainComponent).initList();
+      let lastBreadcrumb = this.breadcrumb;
+      this.breadcrumb = null;
+      if(this.breadcrumbComponent instanceof CapitalGainComponent) {
+        this.gotoSchedule(this.schedules.CAPITAL_GAIN);
+        (this.breadcrumbComponent as CapitalGainComponent).initList();
+      } else if(this.breadcrumbComponent instanceof AllBusinessIncomeComponent) {
+        this.gotoSchedule(this.schedules.BUSINESS_INCOME);
+        (this.breadcrumbComponent as AllBusinessIncomeComponent).initList();
+      }
     }
   }
 

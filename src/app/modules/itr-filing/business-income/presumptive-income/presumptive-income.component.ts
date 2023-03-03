@@ -1,18 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import {Subscription} from "rxjs";
+import {WizardNavigation} from "../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-presumptive-income',
   templateUrl: './presumptive-income.component.html',
   styleUrls: ['./presumptive-income.component.scss']
 })
-export class PresumptiveIncomeComponent implements OnInit {
+export class PresumptiveIncomeComponent extends WizardNavigation implements OnInit {
   step = 0;
   hide: boolean = true;
   isEditCustomer: boolean;
   isEditOther: boolean;
   isEditPersonal: boolean;
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
   }
@@ -40,4 +44,22 @@ export class PresumptiveIncomeComponent implements OnInit {
     }
   }
 
+  subscription: Subscription
+
+  subscribeToEmitter(componentRef){
+    //this may not be needed for us
+    // if (!(componentRef instanceof OtherIncomeComponent)){
+    //   return;
+    // }
+    const child : WizardNavigation = componentRef;
+    child.saveAndNext.subscribe( () => {
+      //this.gotoSources();
+    });
+  }
+
+  unsubscribe(){
+    if (this.subscription){
+      this.subscription.unsubscribe();
+    }
+  }
 }

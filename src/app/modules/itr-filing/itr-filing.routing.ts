@@ -47,6 +47,9 @@ import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/s
 import { MoreInfoComponent } from './itr-wizard/components/capital-gain/more-info/more-info.component';
 import { ScheduleALComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/schedule-al.component';
 import { MoreInformationComponent } from './itr-wizard/pages/more-information/more-information.component';
+import {PresumptiveIncomeComponent} from "./business-income/presumptive-income/presumptive-income.component";
+import {BalanceSheetComponent} from "./business-income/balance-sheet/balance-sheet.component";
+import {ProfitLossAcComponent} from "./business-income/profit-loss-ac/profit-loss-ac.component";
 
 const routes: Routes = [
   {
@@ -80,7 +83,15 @@ const routes: Routes = [
         ],
       },
       { path: 'house-property', component: HousePropertyComponent },
-      { path: 'business', component: AllBusinessIncomeComponent },
+      {
+        path: 'business',
+        component: AllBusinessIncomeComponent,
+        children: [
+          { path: 'presumptive', component: PresumptiveIncomeComponent },
+          { path: 'balance-sheet', component: BalanceSheetComponent },
+          { path: 'pnlaccounts', component: ProfitLossAcComponent }
+        ]
+      },
       {
         path: 'capital-gain',
         component: CapitalGainComponent,
@@ -100,7 +111,6 @@ const routes: Routes = [
           { path: 'schedule-cfl', component: MoreInfoComponent }
         ]
       },
-      { path: 'future-options', component: SpeculativeIncomeComponent },
       { path: 'nri', component: ForeignIncomeComponent },
       { path: 'eri', component: AddClientsComponent },
       { path: 'summary', component: SummaryComponent },

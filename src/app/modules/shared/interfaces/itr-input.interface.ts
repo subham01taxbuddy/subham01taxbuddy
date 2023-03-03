@@ -209,6 +209,7 @@ export interface NewCapitalGain {
 }
 
 export interface AssetDetails {
+    brokerName: String;
     capitalGain: number;
     srn: number;
     id: string;
