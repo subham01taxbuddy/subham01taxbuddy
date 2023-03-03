@@ -428,6 +428,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(this.dataSource.data)
     }
     console.log(this.Copy_ITR_JSON);
+    
 
     this.utilsService.saveItrObject( this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
