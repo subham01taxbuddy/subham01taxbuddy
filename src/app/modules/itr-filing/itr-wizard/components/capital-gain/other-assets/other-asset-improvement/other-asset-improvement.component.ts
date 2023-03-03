@@ -11,6 +11,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { withLatestFrom } from 'rxjs';
 @Component({
   selector: 'app-other-asset-improvement',
   templateUrl: './other-asset-improvement.component.html',
@@ -23,7 +24,7 @@ export class OtherAssetImprovementComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   financialyears = [];
   improvementYears = [];
-  isImprovement = new FormControl();
+  isImprovement = new FormControl(false);
   OtherAsssetImprovementForm!: FormGroup;
 
   loading: boolean = false;
@@ -167,48 +168,44 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   createOtherAssetsForm(item?) {
     return this.fb.group({
-      otherAssetsArray: this.fb.array([
-        {
-          // srn: [this.data.rowIndex],
-          hasEdit: ['', false],
-          purchaseDate: ['', [Validators.required]],
-          sellDate: ['', [Validators.required]],
-          purchaseCost: [
-            '',
-            [
-              Validators.required,
-              Validators.pattern(AppConstants.amountWithoutDecimal),
-            ],
+      otherAssetsArray: this.fb.group({
+        // srn: [this.data.rowIndex],
+        hasEdit: ['', false],
+        purchaseDate: ['', [Validators.required]],
+        sellDate: ['', [Validators.required]],
+        purchaseCost: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(AppConstants.amountWithoutDecimal),
           ],
-          sellValue: [
-            '',
-            [
-              Validators.required,
-              Validators.pattern(AppConstants.amountWithoutDecimal),
-            ],
+        ],
+        sellValue: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(AppConstants.amountWithoutDecimal),
           ],
+        ],
 
-          sellExpense: [''],
-          capitalGain: 0,
-          gainType: [''],
-          algorithm: 'cgProperty',
-          stampDutyValue: 0,
-          valueInConsideration: 0,
-          indexCostOfAcquisition: 0,
-        },
-      ]),
+        sellExpense: [''],
+        capitalGain: 0,
+        gainType: [''],
+        algorithm: 'cgProperty',
+        stampDutyValue: 0,
+        valueInConsideration: 0,
+        indexCostOfAcquisition: 0,
+      }),
 
-      improvementsArray: this.fb.array([
-        {
-          financialYearOfImprovement: ['', [Validators.required]],
-          costOfImprovement: [0, [Validators.required]],
-          indexCostOfImprovement: [0, [Validators.required]],
-        },
-      ]),
+      improvementsArray: this.fb.group({
+        financialYearOfImprovement: ['', [Validators.required]],
+        costOfImprovement: [0, [Validators.required]],
+        indexCostOfImprovement: [0, [Validators.required]],
+      }),
     });
   }
 
-  calculateCg() {
+  calculateCg(i) {
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
@@ -244,17 +241,23 @@ export class OtherAssetImprovementComponent implements OnInit {
         this.loading = false;
         console.log('Single CG result:', res);
         this.goldCg.assetDetails = res.assetDetails;
-        // this.goldCg.improvement = res.improvement;
+        this.goldCg.improvement = res.improvement;
         this.goldCg.deduction = res.deduction;
         // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
         // this.calculateTotalCg();
+
         (
-          (
-            this.OtherAsssetImprovementForm.controls[
-              'otherAssetsArray'
-            ] as FormArray
-          ).controls[0] as FormArray
-        ).controls['capitalGain']?.setValue(res.assetDetails[0].capitalGain);
+          (this.getOtherAssets.controls[i] as FormGroup).controls[
+            'otherAssetsArray'
+          ] as FormGroup
+        ).controls['capitalGain']?.setValue(res.assetDetails[i].capitalGain);
+
+        // (
+        //   (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
+        //     .controls[0] as FormArray
+        // ).controls['otherAssetsArray'].controls[0].controls[
+        //   'capitalGain'
+        // ]?.setValue(res.data[i].capitalGain);
       },
       (error) => {
         this.loading = false;
@@ -266,13 +269,16 @@ export class OtherAssetImprovementComponent implements OnInit {
     let req = {
       assetType: this.assetType,
       buyDate: (
-        (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
-          .controls[0] as FormArray
-      ).controls['otherAssetsArray'].controls[0].controls['purchaseDate'],
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).controls['purchaseDate'].value,
+
       sellDate: (
-        (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
-          .controls[0] as FormArray
-      ).controls['otherAssetsArray'].controls[0].controls['SellDate'],
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).controls['sellDate'].value,
     };
 
     console.log(req.buyDate);
@@ -283,27 +289,11 @@ export class OtherAssetImprovementComponent implements OnInit {
       console.log('GAIN Type : ', res);
 
       (
-        (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
-          .controls[0] as FormArray
-      ).controls['otherAssetsArray'].controls[0].controls['gainType']?.setValue(
-        res.data.capitalGainType
-      );
-    });
-  }
-
-  saveDetails() {
-    let result = {
-      cgObject: (
-        this.OtherAsssetImprovementForm.controls[
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
           'otherAssetsArray'
-        ] as FormArray
-      ).controls[0].value,
-    };
-    console.log(result.cgObject);
-
-    if (result !== undefined) {
-      this.goldCg.assetDetails?.push(result.cgObject);
-    }
+        ] as FormGroup
+      ).controls['gainType']?.setValue(res.data.capitalGainType);
+    });
   }
 
   //  IMPROVEMENTS --------------------------------------------
@@ -344,63 +334,51 @@ export class OtherAssetImprovementComponent implements OnInit {
     // let assetDetails = this.data.assetDetails.filter(
     //   (item) => item.srn === selectedAsset
     // )[0];
+
     let assetDetails = (
-      (
-        this.OtherAsssetImprovementForm.controls[
-          'otherAssetsArray'
-        ] as FormArray
-      ).controls[0] as FormArray
+      (this.getOtherAssets.controls[i] as FormGroup).controls[
+        'otherAssetsArray'
+      ] as FormGroup
     ).controls['gainType'].value;
 
-    if (assetDetails.gainType === 'LONG') {
+    if (assetDetails == 'LONG') {
       let req = {
         cost: (
-          (
-            this.OtherAsssetImprovementForm.controls[
-              'otherAssetsArray'
-            ] as FormArray
-          ).controls[1] as FormArray
-        ).controls['improvementsArray'].controls['costOfImprovement'].value,
+          (this.getOtherAssets.controls[i] as FormGroup).controls[
+            'improvementsArray'
+          ] as FormGroup
+        ).controls['costOfImprovement'].value,
+
         purchaseOrImprovementFinancialYear: (
-          (
-            this.OtherAsssetImprovementForm.controls[
-              'otherAssetsArray'
-            ] as FormArray
-          ).controls[1] as FormArray
-        ).controls['improvementsArray'].controls['financialYearOfImprovement']
-          .value,
+          (this.getOtherAssets.controls[i] as FormGroup).controls[
+            'improvementsArray'
+          ] as FormGroup
+        ).controls['financialYearOfImprovement'].value,
+
         assetType: this.goldCg.assetType,
 
         // "buyDate": this.immovableForm.controls['purchaseDate'].value,
         // "sellDate": this.immovableForm.controls['sellDate'].value
       };
 
-      console.log(req.cost);
-      console.log(req.purchaseOrImprovementFinancialYear);
-
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST : ', res);
+
         (
-          (
-            this.OtherAsssetImprovementForm.controls[
-              'otherAssetsArray'
-            ] as FormArray
-          ).controls[1] as FormArray
-        ).controls['improvementsArray'].controls[
-          'indexCostOfImprovement'
-        ]?.setValue(res.data.costOfAcquisitionOrImprovement);
+          (this.getOtherAssets.controls[i] as FormGroup).controls[
+            'improvementsArray'
+          ] as FormGroup
+        ).controls['indexCostOfImprovement']?.setValue(
+          res.data.costOfAcquisitionOrImprovement
+        );
       });
     } else {
       (
-        (
-          this.OtherAsssetImprovementForm.controls[
-            'otherAssetsArray'
-          ] as FormArray
-        ).controls[1] as FormArray
-      ).controls['improvementsArray'].controls[
-        'indexCostOfImprovement'
-      ]?.setValue(null);
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'improvementsArray'
+        ] as FormGroup
+      ).controls['indexCostOfImprovement']?.setValue(null);
     }
   }
 
@@ -465,21 +443,47 @@ export class OtherAssetImprovementComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
+  saveDetails(i) {
+    let result = {
+      cgObject: (
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).value,
+
+      improve: (
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'improvementsArray'
+        ] as FormGroup
+      ).value,
+    };
+    console.log(result.improve);
+
+    if (result !== undefined) {
+      this.goldCg.assetDetails?.push(result.cgObject);
+      this.goldCg.improvement?.push(result.improve);
+    }
+  }
+
   saveCg() {}
 
   editOtherAsset(i) {
     this.OtherAsssetImprovementForm.enable();
-    console.log(i);
-    console.log(this.getOtherAssets.controls);
+    // console.log(i);
 
-    // console.log(
-    //   (
-    //     (
-    //       (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
-    //         .controls['otherAssetsArray'] as FormArray
-    //     ).controls[0] as FormArray
-    //   ).controls['otherAssetsArrays'].controls[0].controls['purchaseDate']
-    // );
+    console.log(
+      (
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).controls['gainType'].value
+    );
+
+    console.log(
+      (this.getOtherAssets.controls[i] as FormGroup).controls[
+        'improvementsArray'
+      ] as FormGroup
+    );
   }
 
   deleteOtherAsset(index) {

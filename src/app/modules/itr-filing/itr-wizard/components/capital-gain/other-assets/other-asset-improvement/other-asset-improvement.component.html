@@ -18,7 +18,7 @@
           <div class="card flex" style="flex-direction: row">
             <div class="flex flex-col">
               <!-- otherAssets  -->
-              <div formArrayName="otherAssetsArray">
+              <div formGroupName="otherAssetsArray">
                 <div class="flex">
                   <div>
                     <mat-checkbox
@@ -89,13 +89,13 @@
                         />
 
                         <!-- <mat-error
-                              *ngIf="
-                                getOtherAssetsArray.controls['purchaseCost'].hasError(
-                                  'pattern'
-                                )
-                              "
-                              >Enter valid amount.</mat-error
-                            > -->
+                                *ngIf="
+                                  getOtherAssetsArray.controls['purchaseCost'].hasError(
+                                    'pattern'
+                                  )
+                                "
+                                >Enter valid amount.</mat-error
+                              > -->
                       </mat-form-field>
                     </div>
                     <!-- sale-value  -->
@@ -117,13 +117,13 @@
                         />
 
                         <!-- <mat-error
-                                *ngIf="
-                                  assetDetailsForm.controls['otherAssetsArrays'].controls[
-                                    'sellValue'
-                                  ].hasError('pattern')
-                                "
-                                >Enter valid amount.</mat-error
-                              > -->
+                                  *ngIf="
+                                    assetDetailsForm.controls['otherAssetsArrays'].controls[
+                                      'sellValue'
+                                    ].hasError('pattern')
+                                  "
+                                  >Enter valid amount.</mat-error
+                                > -->
                       </mat-form-field>
                     </div>
                     <!-- expenses  -->
@@ -142,14 +142,14 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                          (click)="saveDetails()"
+                          (click)="saveDetails(i)"
                         />
                         <!-- <mat-error
-                                *ngIf="
-                                  assetDetailsForm.controls['sellExpense'].hasError('pattern')
-                                "
-                                >Enter valid amount.</mat-error
-                              > -->
+                                  *ngIf="
+                                    assetDetailsForm.controls['sellExpense'].hasError('pattern')
+                                  "
+                                  >Enter valid amount.</mat-error
+                                > -->
                       </mat-form-field>
                     </div>
                     <!-- type-of-gain  -->
@@ -189,7 +189,7 @@
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           [disabled]
-                          (click)="calculateCg()"
+                          (click)="calculateCg(i)"
                         />
                       </mat-form-field>
                     </div>
@@ -198,7 +198,7 @@
               </div>
 
               <!-- cost-of-improvement  -->
-              <div formArrayName="improvementsArray">
+              <div formGroupName="improvementsArray">
                 <div class="flex flex-col">
                   <div style="padding: 0px 25px">
                     <!-- cost-of-improvement yes/no  -->
@@ -244,9 +244,6 @@
                               placeholder="Year of Improvement"
                               name="financialYearOfImprovement"
                               formControlName="financialYearOfImprovement"
-                              (selectionChange)="calculateIndexCost(i)"
-                              (click)="calculateIndexCost(i)"
-                              (blur)="calculateIndexCost(i)"
                               required
                             >
                               <mat-option
@@ -272,8 +269,6 @@
                               name="costOfImprovement"
                               class="input-field"
                               maxlength="14"
-                              (blur)="calculateIndexCost(i)"
-                              (click)="calculateIndexCost(i)"
                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             />
                           </mat-form-field>
@@ -295,7 +290,8 @@
                               class="input-field"
                               maxlength="14"
                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                              [disabled]
+                              (click)="calculateIndexCost(i)"
+                              (click)="saveDetails(i)"
                             />
                           </mat-form-field>
                         </div>
