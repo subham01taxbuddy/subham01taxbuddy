@@ -64,22 +64,26 @@ export interface ITR_JSON {
     unlistedSharesDetails: UnlistedSharesDetails[];
     dateOfDividendIncome: string;
     lastVisitedURL: string;
-    seventhProviso139: SeventhProviso139,
+    seventhProviso139: SeventhProviso139;
     depPayInvClmUndDednVIA: string;
     regime: string;
     previousYearRegime: string;
     dividendIncomes?: any[];
     exemptIncomes?: any[];
     jurisdictions?: Jurisdictions[],
-    conditionsResStatus?: any,
-    movableAsset?: MovableAsset[],
-    immovableAsset?: Immovable[],
-    bondsDeduction?: Deduction[],
-    carryForwordLosses?: CarryForwardLosses[],
-    currentYearLosses?: CurrentYearLosses,
-    adjustmentofLossesInScheduleBFLA?: AdjustmentofLossesInScheduleBFLA,
-    totalOfEarlierYearLosses?: TotalOfEarlierYearLosses,
-    totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears
+    conditionsResStatus?: any;
+    movableAsset?: MovableAsset[];
+    immovableAsset?: Immovable[];
+    bondsDeduction?: Deduction[];
+    carryForwordLosses?: CarryForwardLosses[];
+    currentYearLosses?: CurrentYearLosses;
+    adjustmentofLossesInScheduleBFLA?: AdjustmentofLossesInScheduleBFLA;
+    totalOfEarlierYearLosses?: TotalOfEarlierYearLosses;
+    totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears;
+
+    prefillDate: string;
+    prefillData: any;
+    prefillDataSource: string;
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -163,20 +167,20 @@ export interface HouseProperties {
 }
 
 export interface PresumptiveIncomes {
-  businessType: string;
-  natureOfBusiness: string;
-  tradeName: string;
-  incomes: Incomes[];
-  taxableIncome: number;
-  exemptIncome: number;
+    businessType: string;
+    natureOfBusiness: string;
+    tradeName: string;
+    incomes: Incomes[];
+    taxableIncome: number;
+    exemptIncome: number;
 }
 
 export interface Incomes {
-  incomeType: string;
-  receipts: number;
-  presumptiveIncome: number;
-  periodOfHolding: number;
-  minimumPresumptiveIncome: number;
+    incomeType: string;
+    receipts: number;
+    presumptiveIncome: number;
+    periodOfHolding: number;
+    minimumPresumptiveIncome: number;
 }
 
 export interface Tenant {
@@ -395,14 +399,14 @@ export interface Immovable {
 }
 
 export interface businessIncome {
-    id:number;
+    id: number;
     natureOfBusiness: any;
     tradeName: any;
     receipts: any;
     presumptiveIncome: any;
     periodOfHolding: any;
     minimumPresumptiveIncome: any;
-    incomes:any;
+    incomes: any;
     businessType:any,
     label:any,
     salaryInterestAmount:any,
@@ -644,7 +648,7 @@ export interface CarryForwardLosses {
 
 export interface NewBusiness {
     presumptiveIncomes: NewPresumptiveIncomes[];
-    profitLossACIncomes:ProfitLossACIncomes[];
+    profitLossACIncomes: ProfitLossACIncomes[];
     financialParticulars: NewFinancialParticulars;
     fixedAssetsDetails: FixedAssetsDetails[];
     businessDescription: BusinessDescription[];
@@ -702,7 +706,7 @@ export interface ProfitLossIncomes {
 export interface NewExpenses {
     expenseType: string;
     expenseAmount: Number;
-    description:any;
+    description: any;
 }
 export interface NewFinancialParticulars {
     id: Number;
@@ -755,9 +759,9 @@ export interface CurrentYearLosses {
     businessLoss: number
 }
 export interface PastYearLosses {
+    hasEdit: boolean;
     dateofFilling: any;
     pastYear: number;
-
     assessmentPastYear: string;
     housePropertyLoss: number;
     LTCGLoss: number;
@@ -777,7 +781,7 @@ export interface PastYearLosses {
     totalLoss: number;
 }
 
-export interface AdjustmentofLossesInScheduleBFLA{
+export interface AdjustmentofLossesInScheduleBFLA {
     housePropertyLoss: number;
     STCGLoss: number;
     LTCGLoss: number;
@@ -785,7 +789,7 @@ export interface AdjustmentofLossesInScheduleBFLA{
     speculativeBusinessLoss: number;
     broughtForwordBusinessLoss: number;
 }
-export interface TotalOfEarlierYearLosses{
+export interface TotalOfEarlierYearLosses {
     housePropertyLoss: number;
     STCGLoss: number;
     LTCGLoss: number;
@@ -793,7 +797,7 @@ export interface TotalOfEarlierYearLosses{
     speculativeBusinessLoss: number;
     broughtForwordBusinessLoss: number;
 }
-export interface TotalLossCarriedForwardedToFutureYears{
+export interface TotalLossCarriedForwardedToFutureYears {
     housePropertyLoss: number;
     STCGLoss: number;
     LTCGLoss: number;

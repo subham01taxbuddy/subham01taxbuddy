@@ -107,7 +107,8 @@
             <div class="space-in">
             </div>
             <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
-                <!-- <app-upload-doc  (onSave)="saveAll()"></app-upload-doc> -->
+              <app-upload-doc [userId]="ITR_JSON.userId"></app-upload-doc>
+
             </div>
         </div>
     </form>
@@ -148,7 +149,7 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-   
+
     <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
         <button
             class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"

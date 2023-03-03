@@ -52,6 +52,7 @@ export class MoreInfoComponent implements OnInit {
 
   createPastYearLoss(year) {
     return {
+      hasEdit:false,
       pastYear: null,
       assessmentPastYear: year,
       dateofFilling: '',

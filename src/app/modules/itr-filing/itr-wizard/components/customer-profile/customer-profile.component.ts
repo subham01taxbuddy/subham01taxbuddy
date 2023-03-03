@@ -56,6 +56,7 @@ export const MY_FORMATS = {
 export class CustomerProfileComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
   @Input() isEditCustomer = false;
+  @Input() navigationData: any;
   loading: boolean = false;
   imageLoader: boolean = false;
   customerProfileForm: FormGroup;
@@ -123,7 +124,6 @@ export class CustomerProfileComponent implements OnInit {
 
   filePath = 'ITR/';
   loggedInUserData: any;
-  navigationData: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -137,8 +137,6 @@ export class CustomerProfileComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
-    console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
-    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
 
   ngOnInit() {
@@ -150,6 +148,7 @@ export class CustomerProfileComponent implements OnInit {
     this.getDocuments();
     this.getSmeList();
 
+    console.log('nav data', this.navigationData);
   }
 
   ngOnChanges(changes: SimpleChanges) {

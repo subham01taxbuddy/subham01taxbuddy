@@ -14,7 +14,7 @@ import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
   styleUrls: ['./capital-gain.component.scss']
 })
 export class CapitalGainComponent extends WizardNavigation implements OnInit {
-  step = 4;
+  step = 1;
   loading = false;
   showList = true;
   ITR_JSON: ITR_JSON;
@@ -136,7 +136,7 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
 
   subscription: Subscription
 
-  subscribeToEmmiter(componentRef){
+  subscribeToEmitter(componentRef){
     //this may not be needed for us
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;
