@@ -118,6 +118,9 @@ export class FileParserComponent implements OnInit {
           selectedBroker.filesUploaded.push(this.uploadDoc.name);
           //fetch uploaded files data converted to ITR compatible
           //TODO:Ashwini: adding dummy data till the time api is ready
+          if(!this.ITR_JSON.capitalGain) {
+            this.ITR_JSON.capitalGain = [];
+          }
           let dummyEquity: NewCapitalGain = {
               assessmentYear: '2022-2023',
               assetType: 'EQUITY_SHARES_LISTED',
