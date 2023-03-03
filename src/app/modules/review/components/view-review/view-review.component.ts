@@ -75,7 +75,7 @@ export class ViewReviewComponent implements OnInit {
       id: this.data.leadData.id,
       environment: environment.environment,
     };
-    this.loading = true;
+    this.loading = false;
     this.reviewService.postMethod(param, requestBody).subscribe(
       (response: any) => {
         if (response.success) {
@@ -131,7 +131,7 @@ export class ViewReviewComponent implements OnInit {
 
   getReview() {
     var param = `review/users`;
-    this.loading = true;
+    this.loading = false;
     const reqBody = {
       reviewId: this.data.leadData.id,
       environment: environment.environment,
@@ -324,7 +324,7 @@ export class ViewReviewComponent implements OnInit {
   }
 
   call(data) {
-    this.loading = true;
+    this.loading = false;
     const param = `/prod/call-support/call`;
     const reqBody = {
       agent_number: this.loggedSmeInfo[0].mobileNumber,
@@ -407,6 +407,13 @@ export class ViewReviewComponent implements OnInit {
       };
       this.reviewService.postMethod(param, param2).subscribe((result) => {
         console.log('Save User Data:', result);
+        if (result.success) {
+          this._toastMessageService.alert('success', 'User added successfully');
+          this.loading = false;
+        } else {
+          this._toastMessageService.alert('error', 'Failed to add user');
+          this.loading = false;
+        }
       });
     }
   }

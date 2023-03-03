@@ -401,7 +401,7 @@ export class ReviewListComponent implements OnInit {
     } else {
       var param = `review?environment=${environment.environment}&${pagination}`;
     }
-    this.loading = true;
+    this.loading = false;
     this.reviewService.getMethod(param).subscribe(
       (response: any) => {
         if (
