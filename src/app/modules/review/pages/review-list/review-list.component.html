@@ -1,21 +1,25 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 
 <div class="main clearfix">
   <div class="content content_full">
     <div class="content__container">
       <div class="card">
-
         <div class="card__row">
           <div class="card__col-xs-12">
-            <div class="card__col-sm-12 card__col-md-2" style="margin-top: 20px;">
-              Total Count: <b>{{config.totalItems}}</b>
-            </div>
-
             <div class="filter__col card__col-sm-12 card__col-md-3">
               <mat-form-field appearance="outline">
                 <mat-label>Select Platform</mat-label>
-                <mat-select placeholder="Select Platform" [(ngModel)]="selectPlatform">
-                  <mat-option *ngFor="let platform of platformList" [value]="platform.value">
+                <mat-select
+                  placeholder="Select Platform"
+                  [(ngModel)]="selectPlatform"
+                >
+                  <mat-option
+                    *ngFor="let platform of platformList"
+                    [value]="platform.value"
+                  >
                     {{ platform.label }}
                   </mat-option>
                 </mat-select>
@@ -25,8 +29,14 @@
             <div class="filter__col card__col-sm-12 card__col-md-3">
               <mat-form-field appearance="outline">
                 <mat-label>Select Status</mat-label>
-                <mat-select placeholder="Select Status" [(ngModel)]="selectStatus">
-                  <mat-option *ngFor="let status of statusList" [value]="status.value">
+                <mat-select
+                  placeholder="Select Status"
+                  [(ngModel)]="selectStatus"
+                >
+                  <mat-option
+                    *ngFor="let status of statusList"
+                    [value]="status.value"
+                  >
                     {{ status.label }}
                   </mat-option>
                 </mat-select>
@@ -34,28 +44,40 @@
             </div>
 
             <div class="filter__col card__col-sm-12 card__col-md-2">
-              <button class="tbd-btn" (click)="this.getReview('0')"><i class="fa fa-search"
-                  aria-hidden="true"></i>&nbsp;Search</button>
+              <button class="tbd-btn" (click)="this.getReview('0')">
+                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+              </button>
             </div>
 
             <div class="card__col-md-2 card__col-sm-12 pull-right">
-              <a class="btn btn_stroke filter__add-link search" (click)="addReview('Add Review','Add', '')">Add Review</a>
+              <a
+                class="btn btn_stroke filter__add-link search"
+                (click)="addReview('Add Review', 'Add', '')"
+                >Add Review</a
+              >
             </div>
           </div>
+          <p style="float: right">
+            Total Count: <b>{{ config.totalItems }}</b>
+          </p>
         </div>
 
         <div class="card__row">
           <table>
-            <tr *ngFor="let item of userInfo | paginate:config"></tr>
+            <tr *ngFor="let item of userInfo | paginate : config"></tr>
           </table>
 
-          <ag-grid-angular class="ag-theme-balham" [gridOptions]="reviewGridOptions"
-            (rowClicked)="onRowClicked($event)">
+          <ag-grid-angular
+            class="ag-theme-balham"
+            [gridOptions]="reviewGridOptions"
+            (rowClicked)="onRowClicked($event)"
+          >
           </ag-grid-angular>
 
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
         </div>
-
       </div>
     </div>
   </div>
