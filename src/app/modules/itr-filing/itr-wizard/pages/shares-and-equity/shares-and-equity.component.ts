@@ -57,8 +57,46 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
 
     this.securitiesForm = this.initForm();
     this.deductionForm = this.initDeductionForm();
+    if (this.Copy_ITR_JSON.capitalGain) {
+      let assetDetails;
+      let data;
+      if (this.bondType === 'listed') {
+        data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "EQUITY_SHARES_LISTED");
+      } else if (this.bondType === 'unlisted') {
+        data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "EQUITY_SHARES_UNLISTED");
+      }
+      if (data.length > 0) {
+        data.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
 
-    this.addMoreData();
+              this.addMoreData(element);
+            }
+          })
+          if (obj.deduction) {
+            obj.deduction.forEach((element: any) => {
+              this.deductionForm = this.initDeductionForm(element);
+            });
+          } else {
+            this.deductionForm = this.initDeductionForm();
+          }
+          if (this.getSecuritiesCg() <= 0) {
+            this.deduction = false;
+            this.isDisable = true;
+          } else {
+            this.isDisable = false;
+          }
+        });
+      } else {
+        this.addMoreData();
+      }
+    } else {
+      this.addMoreData();
+    }
+
     this.securitiesForm.disable();
     this.deductionForm.disable();
 
@@ -88,6 +126,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       srn: [item ? item.srn : srn],
+      brokerName: [item ? item.brokerName : ''],
       sellOrBuyQuantity: [item ? item.sellOrBuyQuantity : null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       sellDate: [item ? item.sellDate : null, [Validators.required]],
       sellValuePerUnit: [item ? item.sellValuePerUnit : null, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
@@ -202,18 +241,11 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
           {
             "srn": securities.controls['srn'].value,
             "dateOfImprovement": "",
-            "costOfImprovement": securities.controls['costOfImprovement'].value,
+            "costOfImprovement": 0,
           }
         ],
-        "buyersDetails": [{
-          "name": "Ashish",
-          "pan": "AKRPH1618L",
-          "share": 100,
-          "amount": 1000,
-          "address": "majale",
-          "pin": "416109"
-        }],
-        "deduction": this.deductionForm.invalid || (this.getBondsCg() <= 0) ? [] : [this.deductionForm.getRawValue()],
+
+        "deduction": this.deductionForm.invalid || (this.getSecuritiesCg() <= 0) ? [] : [this.deductionForm.getRawValue()],
       }
       this.itrMsService.postMethod(param, request).subscribe((res: any) => {
         this.loading = false;
@@ -229,9 +261,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
     }
   }
 
-
-
-  getBondsCg() {
+  getSecuritiesCg() {
     let totalCg = 0;
     const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
     securitiesArray.controls.forEach((element) => {
@@ -242,7 +272,75 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
 
 
   save(type?) {
+    if (type === 'securities') {
+      if (this.getSecuritiesCg() <= 0) {
+        this.deduction = false;
+        this.isDisable = true;
+      } else {
+        this.isDisable = false;
+      }
+    }
 
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    if (this.securitiesForm.valid || this.deductionForm.valid) {
+      if (!this.Copy_ITR_JSON.capitalGain) {
+        this.Copy_ITR_JSON.capitalGain = []
+      }
+      let securitiesIndex;
+      if (this.bondType === 'listed') {
+        securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(element => element.assetType === 'EQUITY_SHARES_LISTED')
+      } else if (this.bondType === 'unlisted') {
+        securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(element => element.assetType === 'EQUITY_SHARES_UNLISTED')
+      }
+      const securitiesImprovement = [];
+      const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
+      securitiesArray.controls.forEach(element => {
+        securitiesImprovement.push({
+          "srn": (element as FormGroup).controls['srn'].value,
+          "dateOfImprovement": null,
+          "costOfImprovement": 0
+        })
+      });
+
+      if (!securitiesArray.value) {
+        this.deductionForm.value([]);
+      }
+      const securitiesData = {
+        "assessmentYear": "",
+        "assesseeType": "",
+        "residentialStatus": "",
+        assetType: this.bondType === 'listed' ? 'EQUITY_SHARES_LISTED' : 'EQUITY_SHARES_UNLISTED',
+        "deduction": this.deductionForm.invalid || (this.getSecuritiesCg() <= 0) ? [] : [this.deductionForm.getRawValue()],
+        "improvement": securitiesImprovement,
+        "buyersDetails": [],
+        "assetDetails": securitiesArray.getRawValue()
+      }
+      console.log("securitiesData", securitiesData)
+
+      if (securitiesIndex >= 0) {
+        if (securitiesData.assetDetails.length > 0) {
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = securitiesData;
+        } else {
+          this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
+        }
+      } else {
+        if (securitiesData.assetDetails.length > 0) {
+          this.Copy_ITR_JSON.capitalGain?.push(securitiesData);
+        }
+      }
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Securities data added successfully');
+        this.utilsService.smoothScrollToTop();
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Failed to add Securities data, please try again.');
+        this.utilsService.smoothScrollToTop();
+      });
+    }
   }
 
   initDeductionForm(obj?): FormGroup {

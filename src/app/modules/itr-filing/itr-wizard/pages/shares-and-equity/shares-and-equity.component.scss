@@ -42,7 +42,7 @@
     margin: 6px 0;
 
     label {
-        color:#07070C;   
+        color: #07070C;
     }
 
     .upload {
@@ -52,4 +52,43 @@
         padding: 5px;
     }
 
+}
+
+.mat-form-field {
+    width: 90%;
+    background: #FFFFFF;
+    border-radius: 6.62375px;
+
+    .mat-form-field-wrapper {
+        // padding-bottom: 0px !important;
+
+        .mat-form-field-flex {
+            .mat-form-field-infix {
+                padding: 0.4em 0 !important;
+                margin-bottom: 5px;
+
+                .mat-input-element {
+                    font-weight: 400;
+                    font-size: 12.6259px;
+                    line-height: 14px;
+                    color: #9A9AAF;
+                }
+
+                .mat-select {
+                    .mat-select-trigger {
+                        .mat-select-value {
+                            .mat-select-value-text {
+                                .mat-select-min-line {
+                                    font-weight: 400;
+                                    font-size: 12.6259px;
+                                    line-height: 14px;
+                                    color: #9A9AAF;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
