@@ -48,12 +48,12 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
       this.bondType === 'listed' ? this.title = ' Listed Securities (Equity Shares/ Equity Mutual Funds)' : this.title = 'Unlisted Securities (Shares not listed)';
     }
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
     };
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
     this.securitiesForm = this.initForm();
     this.deductionForm = this.initDeductionForm();
@@ -99,6 +99,54 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
 
     this.securitiesForm.disable();
     this.deductionForm.disable();
+
+  }
+
+  getFileParserData() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
+    this.securitiesForm = this.initForm();
+    this.deductionForm = this.initDeductionForm();
+    if (this.Copy_ITR_JSON.capitalGain) {
+      let assetDetails;
+      let data;
+      if (this.bondType === 'listed') {
+        data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "EQUITY_SHARES_LISTED");
+      } else if (this.bondType === 'unlisted') {
+        data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "EQUITY_SHARES_UNLISTED");
+      }
+      if (data.length > 0) {
+        data.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+
+              this.addMoreData(element);
+            }
+          })
+          if (obj.deduction) {
+            obj.deduction.forEach((element: any) => {
+              this.deductionForm = this.initDeductionForm(element);
+            });
+          } else {
+            this.deductionForm = this.initDeductionForm();
+          }
+          if (this.getSecuritiesCg() <= 0) {
+            this.deduction = false;
+            this.isDisable = true;
+          } else {
+            this.isDisable = false;
+          }
+        });
+      } else {
+        this.addMoreData();
+      }
+    } else {
+      this.addMoreData();
+    }
 
   }
 
