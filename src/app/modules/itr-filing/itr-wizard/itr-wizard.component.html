@@ -25,7 +25,7 @@
       </div>
     </div>
     <div *ngIf="showPrefill">
-      <app-prefill-id (skipPrefill)="skipPrefill($event)"></app-prefill-id>
+      <app-prefill-id [data]="navigationData" (skipPrefill)="skipPrefill($event)"></app-prefill-id>
     </div>
     <div *ngIf="showIncomeSources">
       <app-source-of-incomes (scheduleSelected)="updateSchedules($event)"></app-source-of-incomes>

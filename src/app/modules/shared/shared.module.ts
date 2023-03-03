@@ -41,6 +41,7 @@ import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/
 import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
 import {Schedules} from "./interfaces/schedules";
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import {NgxImageZoomModule} from "ngx-image-zoom";
 
 
 @NgModule({
@@ -89,7 +90,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
         AgGridModule.withComponents([CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent, AgTooltipComponent
             /* CheckboxRenderer */]),  //MatSelectComponent,
         NgxPaginationModule,
-        // NgxImageZoomModule.forRoot(),
+        NgxImageZoomModule,
         NgxDocViewerModule,
         NgxLoadingModule.forRoot({}),
         ShimmerModule,

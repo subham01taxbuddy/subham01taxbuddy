@@ -1834,6 +1834,7 @@ export class DocumentUploadComponent implements OnInit {
   selectedFileType = null;
 
   @Output() uploadDocument = new EventEmitter<any>();
+  @Output() openDocument = new EventEmitter<any>();
   @Input() userId!: any;
 
   ngOnInit() {
@@ -1993,6 +1994,13 @@ export class DocumentUploadComponent implements OnInit {
   // }
 
   clearDocVal() {
+    console.log('selected=>', this.getSelectedItems(), this.selectedFileType);
+    let event = {
+      path: this.getSelectedItems(),
+      type: this.selectedFileType
+    };
+    this.openDocument.emit(event);
+
     this.uploadDoc = null;
     this.filePassword = '';
     this.isPassProtected = false;

@@ -21,8 +21,8 @@
           </h2>
 
           <div class="flex flex-col items-center">
-            <div>
-              <!-- *ngIf="!navigationData?.eriClientValidUpto"  -->
+            <div *ngIf="!data?.eriClientValidUpto">
+              <!--   -->
               <button
                 class="btn skip normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
                 (click)="addClient()"
@@ -31,10 +31,10 @@
               </button>
             </div>
 
-            <div style="font-size: 12px">
-              <!-- *ngIf="navigationData?.eriClientValidUpto"  -->
+            <div *ngIf="data?.eriClientValidUpto" style="font-size: 12px">
+
               Client added, valid upto
-              {{ navigationData?.eriClientValidUpto | date }}
+              {{ data?.eriClientValidUpto | date }}
             </div>
           </div>
         </div>
@@ -101,8 +101,7 @@
                         Start
                       </button>
                     </div>
-                    <div style="font-size: 12px">
-                      <!-- *ngIf="this.ITR_JSON?.prefillDate" -->
+                    <div *ngIf="ITR_JSON?.prefillDate !== null" style="font-size: 12px">
                       Last
                       {{
                         this.ITR_JSON?.prefillDataSource === "UPLOAD"
@@ -165,8 +164,8 @@
                         Upload
                       </button>
                     </div>
-                    <div style="font-size: 12px">
-                      <!-- *ngIf="this.ITR_JSON?.prefillDate" -->
+                    <div *ngIf="ITR_JSON?.prefillDate !== null" style="font-size: 12px">
+                      <!--  -->
                       Last
                       {{
                         this.ITR_JSON?.prefillDataSource === "UPLOAD"

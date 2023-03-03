@@ -1,6 +1,23 @@
-<ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="1"
-    [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
-</ngx-image-zoom>
+<!--<lib-ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="2"-->
+<!--    [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">-->
+<!--</lib-ngx-image-zoom>-->
+
+<div
+  *ngIf="viewer !== 'DOC'"
+  class="modal-photo-details__photo"
+  [ngStyle]="{width: zoomContainerWidth+'px', height: zoomContainerHeight+'px'}"
+  (click)="isZoomActive = true"
+  (mouseleave)="isZoomActive = false"
+  @fadeIn
+>
+  <lib-ngx-image-zoom
+    [magnification]="0.2"
+    [thumbImage]="docUrl"
+    [fullImage]="docUrl"
+    [enableLens]="true"
+    [enableScrollZoom]="true"
+  ></lib-ngx-image-zoom>
+</div>
 
 <ngx-doc-viewer *ngIf="viewer === 'DOC'" [url]="docUrl" viewer="google" style="width:100%;height:93vh;">
 </ngx-doc-viewer>

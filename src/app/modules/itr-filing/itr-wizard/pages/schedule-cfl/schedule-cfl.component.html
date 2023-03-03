@@ -1,0 +1,135 @@
+<form [formGroup]="cflForm">
+    <table class="table table-bordered" style="border: 1px solid #bdc3c7; width: 100%;">
+        <thead class="table-header">
+            <tr class="table-head">
+                <th class="" rowspan="2">Action</th>
+                <th class="" rowspan="2">Assessment Year</th>
+                <th class="" rowspan="2">Date of Filing</th>
+                <th class="" rowspan="2">House Property Loss</th>
+                <th class="" colspan="2">Business & Speculative income</th>
+                <th class="" colspan="2"> Capital Gain Loss</th>
+            </tr>
+            <tr>
+                <th class="">Brought Forward<br> Business Loss</th>
+                <th class=""> Loss from <br>Speculative Business</th>
+                <th class=""> Short Term <br>Capital Loss</th>
+                <th class=""> Long Term <br>Capital Loss</th>
+            </tr>
+        </thead>
+        <tbody formArrayName="cflArray">
+            <tr class="tds-on" *ngFor="let cfl of getCflArray.controls;let i=index" [formGroupName]="i">
+                <td>
+                    <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="">
+                    </mat-checkbox>
+                </td>
+                <td class="total-losses">
+                    {{cflForm.controls['cflArray'].controls[i].controls['assessmentPastYear'].value}}
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="DD/MM/YYYY" readonly name="dateofFilling[i]" [max]="today"
+                            [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateofFilling">
+                        <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
+                        <mat-datepicker #dateofFilling></mat-datepicker>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" name="housePropertyLoss[i]" maxlength="14"
+                            (change)="calculateTotalLosses()" formControlName="housePropertyLoss">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" name="broughtForwordBusinessLoss[i]" maxlength="14"
+                            formControlName="broughtForwordBusinessLoss" (change)="calculateTotalLosses()">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" name="speculativeBusinessLoss[i]" maxlength="14"
+                            formControlName="speculativeBusinessLoss" (change)="calculateTotalLosses()">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" name="STCGLoss[i]" maxlength="14" formControlName="STCGLoss"
+                            (change)="calculateTotalLosses()">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" name="LTCGLoss[i]" maxlength="14" formControlName="LTCGLoss"
+                            (change)="calculateTotalLosses()">
+                    </mat-form-field>
+                </td>
+            </tr>
+        </tbody>
+        <hr>
+        <tbody>
+            <tr>
+                <td></td>
+                <td class="total-losses">
+                    Total of earlier year losses
+                </td>
+                <td></td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" readonly name="totalHPLoss" formControlName="totalHPLoss"
+                            maxlength="14">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" name="totalBFBusinessLoss"
+                            formControlName="totalBFBusinessLoss" readonly maxlength="14">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" readonly name="totalSIBusinessLoss"
+                            formControlName="totalSIBusinessLoss" maxlength="14">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" readonly name="totalSTCGLoss"
+                            formControlName="totalSTCGLoss" maxlength="14">
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <input matInput class="input-field" readonly name="totalLTCGLoss"
+                            formControlName="totalLTCGLoss" maxlength="14">
+                    </mat-form-field>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="display-flex">
+        <div class="card__col-xs-12">
+            <div class="card__col-sm-6">
+                <button type="submit" class="tbd-btn-secondary" (click)="deleteCflArray()"><i class="fa fa-close"
+                        aria-hidden="true">&nbsp;</i>Clear</button>
+            </div>
+
+            <div class="card__col-sm-6" style="text-align: right;">
+                <button type="submit" class="tbd-btn save-btn" (click)="save()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+        <button
+            class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
+            <mat-icon>keyboard_backspace</mat-icon>
+            <span class="font-semibold" (click)="goBack()">&nbsp;Back to More Info List</span>
+        </button>
+
+        <button
+            class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
+            <span class="font-semibold" (click)="saveAll()">Save All</span>
+        </button>
+    </div>
+
+</form>

@@ -1,8 +1,22 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { inject } from '@angular/core/testing';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -12,8 +26,14 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./other-assets-dialog.component.scss'],
 })
 export class OtherAssetsDialogComponent implements OnInit {
+  @Input() isAddOtherAssets: Number;
   assetDetailsForm!: FormGroup;
   assetType = 'GOLD';
+  config: any;
+  ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
+  otherAssetsArrays = new FormControl();
+
   constructor(
     public fb: FormBuilder,
     public dialogRef: MatDialogRef<OtherAssetsDialogComponent>,
@@ -24,19 +44,87 @@ export class OtherAssetsDialogComponent implements OnInit {
   ngOnInit() {
     // let num: any = Math.random().toFixed(2);
     // let digit = num * 100
-    this.assetDetailsForm = this.fb.group({
-      srn: [this.data.rowIndex],
-      purchaseDate: ['', [Validators.required]],
-      sellDate: ['', [Validators.required]],
+    // this.assetDetailsForm = this.fb.group({
+    //   srn: [this.data.rowIndex],
+    //   purchaseDate: ['', [Validators.required]],
+    //   sellDate: ['', [Validators.required]],
+    //   purchaseCost: [
+    //     '',
+    //     [
+    //       Validators.required,
+    //       Validators.pattern(AppConstants.amountWithoutDecimal),
+    //     ],
+    //   ],
+    //   sellValue: [
+    //     '',
+    //     [
+    //       Validators.required,
+    //       Validators.pattern(AppConstants.amountWithoutDecimal),
+    //     ],
+    //   ],
+
+    //   sellExpense: [''],
+    //   capitalGain: 0,
+    //   gainType: [''],
+    //   algorithm: 'cgProperty',
+    //   stampDutyValue: 0,
+    //   valueInConsideration: 0,
+    //   indexCostOfAcquisition: 0,
+    // });
+
+    this.assetDetailsForm = this.inItForm();
+  }
+
+  get getOtherAssetsArray(): FormArray {
+    return <FormArray>this.assetDetailsForm.get('otherAssetsArrays');
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      if (this.isAddOtherAssets) {
+        this.isAddMoreOtherAssets();
+      }
+    }, 1000);
+  }
+
+  isAddMoreOtherAssets() {
+    const otherAssetDetailsArray = <FormArray>(
+      this.assetDetailsForm.get('otherAssetsArrays')
+    );
+    if (otherAssetDetailsArray.valid) {
+      this.addMoreOtherAssetsForm();
+    } else {
+      otherAssetDetailsArray.controls.forEach((element) => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
+    }
+  }
+
+  addMoreOtherAssetsForm(item?) {
+    const otherAssetsArray = <FormArray>(
+      this.assetDetailsForm.get('otherAssetsArrays')
+    );
+    otherAssetsArray.push(this.createOtherAssetsForm(item));
+  }
+
+  createOtherAssetsForm(item?): FormGroup {
+    return this.fb.group({
+      // hasEdit: [item ? item.hasEdit : false],
+      // srn: [this.data.rowIndex],
+      purchaseDate: [item ? item.purchaseDate : '', [Validators.required]],
+      sellDate: [item ? item.sellDate : '', [Validators.required]],
       purchaseCost: [
-        '',
+        item ? item.purchaseCost : '',
         [
           Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ],
       ],
       sellValue: [
-        '',
+        item ? item.sellValue : '',
         [
           Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
@@ -50,6 +138,12 @@ export class OtherAssetsDialogComponent implements OnInit {
       stampDutyValue: 0,
       valueInConsideration: 0,
       indexCostOfAcquisition: 0,
+    });
+  }
+
+  inItForm() {
+    return this.fb.group({
+      assetDetailsForm: this.fb.array([]),
     });
   }
 

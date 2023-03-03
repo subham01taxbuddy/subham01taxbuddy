@@ -1,35 +1,42 @@
-.itarium-mat-error {
-    font-style: italic;
-    margin-top: -18px;
-    text-align: right;
+.schedule-header {
+    font-weight: 500;
+    font-size: 21.2451px;
+    line-height: 150%;
+    letter-spacing: -0.022em;
+    color: #1E1E1E;
+    margin-bottom: 11px;
 }
 
-.table-header {
-    background:#f5f7f7;
-    border-color: #bdc3c7;
-    border-width: 1px;   
+.description {
+    width: 95%;
 }
 
-table th, table td {
-    border-left: 1px solid #bdc3c7;
-    border-right: 1px solid #bdc3c7;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    vertical-align: middle;
-    color: rgba(0, 0, 0, 0.54);
+.movable-assets {
+    width: 100%;
 }
 
-.text-style {
-    background: #bdc3c7;
-    font-weight: 600;
-    padding: 10px;
+.tds-on {
+    display: inline-flex;
 }
 
-.top {
-    margin-top: 21px;
+.isDeduction {
+    font-weight: 500;
+    font-size: 22px;
+    color: #FF6B00;
 }
 
-.invalid {
-    border: 1px solid #f00;
+.edit-assets {
+    width: 50px;
+}
+
+.mb-16 {
+    margin-bottom: 16px;
+}
+
+.financial-assets {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 14px;
+    letter-spacing: -0.009em;
+    color: #07070C;
 }
