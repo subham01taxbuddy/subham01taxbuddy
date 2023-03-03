@@ -56,7 +56,7 @@ export class BalanceSheetComponent implements OnInit {
   @Input() sheetData:any;
 
   ngOnInit(): void {
-    this.getBalanceSheetTableData(this.ITR_JSON?.business?.businessDescription);
+    this.dataSource= new MatTableDataSource(this.ITR_JSON?.business?.businessDescription);
     this.initForm(this.ITR_JSON.business?.financialParticulars);
     this.calculateTotal1();
     this.calculateTotal2();
@@ -181,39 +181,34 @@ export class BalanceSheetComponent implements OnInit {
   }
 
 
-  public onBalanceSheetRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          this.deleteBalanceSheet(params.rowIndex);
-          break;
-        }
-        case 'edit': {
-          this.addEditBalanceSheetRow('EDIT', params.data, 'balance', params.rowIndex);
-          break;
-        }
-      }
-    }
-  }
+  // public onBalanceSheetRowClicked(params) {
+  //   if (params.event.target !== undefined) {
+  //     const actionType = params.event.target.getAttribute('data-action-type');
+  //     switch (actionType) {
+  //       case 'remove': {
+  //         this.deleteBalanceSheet(params.rowIndex);
+  //         break;
+  //       }
+  //       case 'edit': {
+  //         this.addEditBalanceSheetRow('EDIT', params.data, 'balance', params.rowIndex);
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
   deleteBalanceSheet(index) {
     this.balanceSheetGridOptions.rowData.splice(index, 1);
     this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
   }
 
-  addEditBalanceSheetRow(mode, data: any, type, index?) {
-    if (mode === 'ADD') {
-      const length = this.balanceSheetGridOptions.rowData.length;
-      data.id = length + 1;
-    }
-
+  addBalanceSheetRow(mode, data: any, type, index?) {
     const dialogRef = this.matDialog.open(AddBalanceSheetComponent, {
       data: {
         mode: mode,
-        data: data,
+        data: this.dataSource.data,
         type: type,
-        natureList: this.balanceSheetGridOptions.rowData
+        natureList: this.dataSource.data
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -225,14 +220,38 @@ export class BalanceSheetComponent implements OnInit {
       if (result !== undefined) {
         if (mode === 'ADD') {
           //  balanceSheetData.push(result)
-           this.dataSource.data.push(result)
+          this.dataSource.data.push(result)
           this.dataSource = new MatTableDataSource(this.dataSource.data) 
           // this.balanceSheetGridOptions.rowData.push(result);
           // this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
         }
-        if (mode === 'EDIT') {
-          this.balanceSheetGridOptions.rowData[index] = result;
-          this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
+        
+      }
+    });
+
+  }
+  editBalanceSheetRow(mode, data: any, type, index?) {
+    const dialogRef = this.matDialog.open(AddBalanceSheetComponent, {
+      data: {
+        mode: mode,
+        data: this.selection.selected[0],
+        type: type,
+        natureList: this.dataSource.data
+      },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('balanceSheetData=', result);
+      if (result !== undefined) {
+       if (mode === 'EDIT') {
+        let itemIndex = this.dataSource.data.findIndex(item=> item.tradeName == this.selection.selected[0].tradeName )
+        this.dataSource.data[itemIndex]=result;
+        this.dataSource = new MatTableDataSource(this.dataSource.data)
+          // this.balanceSheetGridOptions.rowData[index] = result;
+          // this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
         }
       }
     });
@@ -344,7 +363,7 @@ export class BalanceSheetComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.Copy_ITR_JSON.business.businessDescription = this.dataSource.data;
-    this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.getRawValue();
+    this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.value;
     this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
 
     console.log(this.Copy_ITR_JSON);

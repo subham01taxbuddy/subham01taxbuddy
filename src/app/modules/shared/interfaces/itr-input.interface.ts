@@ -1,5 +1,6 @@
 
 export interface ITR_JSON {
+    fixedAssetsDetails?: FixedAssetsDetails[];
     zeroBonds?: any;
     bonds?: any;
     ackStatus: string;
@@ -402,6 +403,11 @@ export interface businessIncome {
     periodOfHolding: any;
     minimumPresumptiveIncome: any;
     incomes:any;
+    businessType:any,
+    label:any,
+    salaryInterestAmount:any,
+    taxableIncome:any,
+    exemptIncome:any;
 }
 
 export interface professionalIncome {
@@ -652,7 +658,11 @@ export interface NewPresumptiveIncomes {
     salaryInterestAmount: any;
     taxableIncome: any;
     exemptIncome: any;
-    incomes: NewIncomes[]
+    incomes: NewIncomes[],
+    receipts: any,
+    presumptiveIncome: any,
+    minimumPresumptiveIncome: any,
+    periodOfHolding: any,
 }
 
 export interface NewIncomes {
@@ -718,6 +728,7 @@ export interface NewFinancialParticulars {
 }
 
 export interface FixedAssetsDetails {
+    hasEdit:boolean;
     id: Number;
     assetType: string;
     description: string;

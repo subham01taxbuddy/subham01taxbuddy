@@ -3,14 +3,20 @@
     <div class="card__row" style="margin-bottom: 10px; margin-top :10px; 
     margin-left: 20px; margin-right: 15px;">
         <div class="">
-            <div class="card__col-xs-12 card__col-sm-10">
+            <div class="card__col-xs-12 card__col-sm-6">
                 <b style="font-size: 14px;">Professional Income 44ADA </b>
             </div>
-            <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
+            <div class="card__col-xs-12 card__col-sm-5" style="text-align: right;">
                 <button class="tbd-btn-small" style="text-align: right;"
-                    (click)="addEditProfessionalRow('ADD', professionalData)">
+                    (click)="addProfessionalRow('ADD', professionalData)">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     Add More Professional Income&nbsp;&nbsp;
+                </button>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-1" style="text-align: right;">
+                <button class="tbd-btn-small" style="text-align: right;"
+                    (click)="editProfessionalRow('EDIT', professionalData)" [disabled]="this.selection.selected.length > 1 || this.selection.selected.length === 0" >
+                          Edit&nbsp;&nbsp;
                 </button>
             </div>
         </div>
