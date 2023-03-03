@@ -9,8 +9,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { FormControl } from '@angular/forms';
-import { FormArray } from '@angular/forms';
+import { FormControl, FormArray } from '@angular/forms';
 import { Input } from '@angular/core';
 import {
   Improvement,
@@ -26,8 +25,8 @@ export class OtherImprovementDialogComponent implements OnInit {
   financialyears = [];
   improvementYears = [];
   improvementForm!: FormGroup;
+  improvements: FormArray;
   isImprovement = new FormControl();
-  improvements = new FormControl();
 
   @Input() isAddOtherAssetsImprovement: Number;
   config: any;
@@ -43,30 +42,21 @@ export class OtherImprovementDialogComponent implements OnInit {
 
   ngOnInit() {
     console.log('On Inti');
-    // this.improvementForm = this.fb.group({
-    //   // srn: ['', [Validators.required]],
-    //   financialYearOfImprovement: ['', [Validators.required]],
-    //   costOfImprovement: [
-    //     '',
-    //     [
-    //       Validators.required,
-    //       Validators.pattern(AppConstants.amountWithoutDecimal),
-    //     ],
-    //   ],
-    //   indexCostOfImprovement: [''],
-    // });
+    this.improvementForm = this.fb.group({
+      isImprovement: ['', [Validators.required]],
+      // srn: ['', [Validators.required]],
+      improvements: this.fb.array([]),
+    });
     // if (this.data.mode === 'EDIT') {
     //   this.improvementForm.patchValue(this.data.improvement);
     //   this.assetSelected();
     // }
-
-    this.improvementForm = this.inItForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
       if (this.isAddOtherAssetsImprovement) {
-        this.addMoreImprovement();
+        this.haveImprovement();
       }
     }, 1000);
   }
@@ -131,7 +121,7 @@ export class OtherImprovementDialogComponent implements OnInit {
   haveImprovement(item?) {
     console.log('improvement===', this.isImprovement.value);
     const improvements = <FormArray>this.improvementForm.get('improvements');
-    if (this.isImprovement.value) {
+    if (improvements.valid || improvements === null) {
       improvements.push(this.createImprovementForm());
     } else {
       console.log('isImprovement==', this.isImprovement);
@@ -140,29 +130,32 @@ export class OtherImprovementDialogComponent implements OnInit {
       // this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].percentage.value))) {
       // this.confirmationDialog('CONFIRM_COOWNER_DELETE');
       // } else {
-      this.isImprovement.setValue(false);
-      this.improvementForm.controls['isImprovement'] = this.fb.array([]);
+      // this.isImprovement.setValue(false);
+      // this.improvementForm.controls['isImprovement'] = this.fb.array([]);
       // }
     }
   }
 
-  addMoreImprovement(item?) {
-    const improvements = <FormArray>this.improvementForm.get('improvements');
-    if (improvements.valid) {
-      improvements.push(this.createImprovementForm());
-    } else {
-      console.log('improvements');
-    }
-  }
+  // addMoreImprovement(item?) {
+  //   const improvements = this.improvementForm.get('improvements') as FormArray;
+
+  //   if (improvements === null || improvements.valid) {
+  //     improvements.push(this.createImprovementForm());
+  //   } else {
+  //     console.log('improvements');
+  //   }
+  // }
 
   createImprovementForm(
     obj: {
+      isImprovement?: boolean;
       financialYearOfImprovement?: string;
       costOfImprovement?: number;
       indexCostOfImprovement?: number;
     } = {}
   ): FormGroup {
     return this.fb.group({
+      isImprovement: [false, [Validators.required]],
       financialYearOfImprovement: [
         obj.financialYearOfImprovement || '',
         [Validators.required],
@@ -177,11 +170,5 @@ export class OtherImprovementDialogComponent implements OnInit {
 
   get getOtherAssetsImprovement() {
     return <FormArray>this.improvementForm.get('improvements');
-  }
-
-  inItForm() {
-    return this.fb.group({
-      improvementForm: this.fb.array(['']),
-    });
   }
 }

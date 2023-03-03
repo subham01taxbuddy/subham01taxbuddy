@@ -32,7 +32,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   totalCg = 0;
   canAddDeductions = false;
   step = 0;
-  isAddOtherAssets: Number;
+
   isAddOtherAssetsImprovement: Number;
 
   constructor(
@@ -715,9 +715,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
-  addOtherAssets(type, improvements) {
-    if (type === 'otherAssets' && improvements === 'improvements') {
-      this.isAddOtherAssets = Math.random();
+  addOtherAssets(type) {
+    if (type === 'otherAssets') {
       this.isAddOtherAssetsImprovement = Math.random();
     }
   }

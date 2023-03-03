@@ -97,6 +97,7 @@ import { SecurityDeductionComponent } from './itr-wizard/components/capital-gain
 import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';
 import { MoreInformationComponent } from './itr-wizard/pages/more-information/more-information.component';
 import { FileParserComponent } from './itr-wizard/components/file-parser/file-parser.component';
+import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-gain/other-assets/other-asset-improvement/other-asset-improvement.component';
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 
 @NgModule({
@@ -207,12 +208,12 @@ import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-c
     SecurityDeductionComponent,
     SharesAndEquityComponent,
     MoreInformationComponent,
+    OtherAssetImprovementComponent,
     FileParserComponent,
     ScheduleCflComponent,
   ],
-  exports: [
-    CustomerProfileComponent
-  ],
+
+  exports: [CustomerProfileComponent],
   entryComponents: [
     ReviseReturnDialogComponent,
     UpdateManualFilingComponent,

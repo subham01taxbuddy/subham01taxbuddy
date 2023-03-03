@@ -1,9 +1,16 @@
-
-import { MatDialog, MatDialogContent, MatDialogModule } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogContent,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UpperCaseDirective, InputDataMaskDirective, CapitalizeFirstDirective, } from './input-data-mask.directive';
+import {
+  UpperCaseDirective,
+  InputDataMaskDirective,
+  CapitalizeFirstDirective,
+} from './input-data-mask.directive';
 import { AgGridModule } from 'ag-grid-angular';
 import { CustomDateComponent } from './date.component';
 import { MatSelectComponent } from './mat-select.component';
@@ -39,111 +46,118 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
 import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-app-dialog.component';
 import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
-import {Schedules} from "./interfaces/schedules";
+import { Schedules } from './interfaces/schedules';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import {NgxImageZoomModule} from "ngx-image-zoom";
-
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 @NgModule({
-    declarations: [
-        UpperCaseDirective,
-        CapitalizeFirstDirective,
-        InputDataMaskDirective,
-        CustomDateComponent,
-        MatSelectComponent,
-        MatInputComponent,
-        AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
-        UserNotesComponent,
-        AddCallLogComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
-        KommunicateDialogComponent,
-        ItrActionsComponent,
-        DocumentViewerComponent,
-        FyDropDownComponent,
-        ChangeStatusComponent,
-        SmeListDropDownComponent,
-        CallReassignmentComponent,
-        LayoutComponent,
-        SidebarComponent,
-        NavbarComponent,
-        DirectCallingComponent,
-        KnowlarityNotificationComponent,
-        UpdateManualFilingDialogComponent,
-        CurrencyPipe,
-        DigitsOnlyDirective,
-        AgTooltipComponent,
-        NumbersOnlyDirective,
-        ConfirmDialogComponent,
-
-
-    ],
-    imports: [
-        CommonModule,
-        MaterialModule,
-        MatBottomSheetModule,
-        RouterModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MaterialModule,
-        AgGridModule.withComponents([CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent, AgTooltipComponent
-            /* CheckboxRenderer */]),  //MatSelectComponent,
-        NgxPaginationModule,
-        NgxImageZoomModule,
-        NgxDocViewerModule,
-        NgxLoadingModule.forRoot({}),
-        ShimmerModule,
-        MatDialogModule,
-
-    ],
-    exports: [
-        CommonModule,
-        UpperCaseDirective,
-        CapitalizeFirstDirective,
-        InputDataMaskDirective,
-        MaterialModule,
-        CustomDateComponent,
-        MatSelectComponent,
-        AgGridModule,
-        MatInputComponent,
-        AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
-        UserNotesComponent,
-        AddCallLogComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
-        KommunicateDialogComponent,
-        ItrActionsComponent,
-        DocumentViewerComponent,
-        FyDropDownComponent,
-        ChangeStatusComponent,
-        SmeListDropDownComponent,
-        CallReassignmentComponent,
-        NgxLoadingModule,
-        LayoutComponent,
-        KnowlarityNotificationComponent,
-        UpdateManualFilingDialogComponent,
-        CurrencyPipe,
-        ShimmerModule,
-        DigitsOnlyDirective,
-        AgTooltipComponent,
-        NumbersOnlyDirective,
-        Schedules
-
-    ],
-    providers: [StorageService, Schedules],
-    entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
-        KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent,
-        UpdateManualFilingDialogComponent, AgTooltipComponent]
+  declarations: [
+    UpperCaseDirective,
+    CapitalizeFirstDirective,
+    InputDataMaskDirective,
+    CustomDateComponent,
+    MatSelectComponent,
+    MatInputComponent,
+    AgGridMaterialSelectEditorComponent,
+    WhatsAppDialogComponent,
+    UserNotesComponent,
+    AddCallLogComponent,
+    FilingStatusDialogComponent,
+    UpdateStatusComponent,
+    KommunicateDialogComponent,
+    ItrActionsComponent,
+    DocumentViewerComponent,
+    FyDropDownComponent,
+    ChangeStatusComponent,
+    SmeListDropDownComponent,
+    CallReassignmentComponent,
+    LayoutComponent,
+    SidebarComponent,
+    NavbarComponent,
+    DirectCallingComponent,
+    KnowlarityNotificationComponent,
+    UpdateManualFilingDialogComponent,
+    CurrencyPipe,
+    DigitsOnlyDirective,
+    AgTooltipComponent,
+    NumbersOnlyDirective,
+    ConfirmDialogComponent,
+  ],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    MatBottomSheetModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    AgGridModule.withComponents([
+      CustomDateComponent,
+      AgGridMaterialSelectEditorComponent,
+      MatInputComponent,
+      AgTooltipComponent,
+      /* CheckboxRenderer */
+    ]), //MatSelectComponent,
+    NgxPaginationModule,
+    NgxImageZoomModule,
+    NgxDocViewerModule,
+    NgxLoadingModule.forRoot({}),
+    ShimmerModule,
+    MatDialogModule,
+  ],
+  exports: [
+    CommonModule,
+    UpperCaseDirective,
+    CapitalizeFirstDirective,
+    InputDataMaskDirective,
+    MaterialModule,
+    CustomDateComponent,
+    MatSelectComponent,
+    AgGridModule,
+    MatInputComponent,
+    AgGridMaterialSelectEditorComponent,
+    WhatsAppDialogComponent,
+    UserNotesComponent,
+    AddCallLogComponent,
+    FilingStatusDialogComponent,
+    UpdateStatusComponent,
+    KommunicateDialogComponent,
+    ItrActionsComponent,
+    DocumentViewerComponent,
+    FyDropDownComponent,
+    ChangeStatusComponent,
+    SmeListDropDownComponent,
+    CallReassignmentComponent,
+    NgxLoadingModule,
+    LayoutComponent,
+    KnowlarityNotificationComponent,
+    UpdateManualFilingDialogComponent,
+    CurrencyPipe,
+    ShimmerModule,
+    DigitsOnlyDirective,
+    AgTooltipComponent,
+    NumbersOnlyDirective,
+    Schedules,
+  ],
+  providers: [StorageService, Schedules],
+  entryComponents: [
+    WhatsAppDialogComponent,
+    UserNotesComponent,
+    AddCallLogComponent,
+    FilingStatusDialogComponent,
+    KommunicateDialogComponent,
+    ItrActionsComponent,
+    ChangeStatusComponent,
+    CallReassignmentComponent,
+    UpdateManualFilingDialogComponent,
+    AgTooltipComponent,
+  ],
 })
 export class SharedModule {
-    static forRoot(): ModuleWithProviders<SharedModule> {
-        return {
-            ngModule: SharedModule,
-            providers: [
-
-            ]
-        };
-    }
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [],
+    };
+  }
 }

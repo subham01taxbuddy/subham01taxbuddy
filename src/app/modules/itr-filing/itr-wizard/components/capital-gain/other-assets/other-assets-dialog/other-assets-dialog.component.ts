@@ -32,7 +32,6 @@ export class OtherAssetsDialogComponent implements OnInit {
   config: any;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  otherAssetsArrays = new FormControl();
 
   constructor(
     public fb: FormBuilder,
@@ -44,39 +43,16 @@ export class OtherAssetsDialogComponent implements OnInit {
   ngOnInit() {
     // let num: any = Math.random().toFixed(2);
     // let digit = num * 100
-    // this.assetDetailsForm = this.fb.group({
-    //   srn: [this.data.rowIndex],
-    //   purchaseDate: ['', [Validators.required]],
-    //   sellDate: ['', [Validators.required]],
-    //   purchaseCost: [
-    //     '',
-    //     [
-    //       Validators.required,
-    //       Validators.pattern(AppConstants.amountWithoutDecimal),
-    //     ],
-    //   ],
-    //   sellValue: [
-    //     '',
-    //     [
-    //       Validators.required,
-    //       Validators.pattern(AppConstants.amountWithoutDecimal),
-    //     ],
-    //   ],
+    this.assetDetailsForm = this.fb.group({
+      // srn: [this.data.rowIndex],
+      otherAssetsArrays: this.fb.array([]),
+    });
 
-    //   sellExpense: [''],
-    //   capitalGain: 0,
-    //   gainType: [''],
-    //   algorithm: 'cgProperty',
-    //   stampDutyValue: 0,
-    //   valueInConsideration: 0,
-    //   indexCostOfAcquisition: 0,
-    // });
-
-    this.assetDetailsForm = this.inItForm();
+    this.addMoreOtherAssetsForm();
   }
 
   get getOtherAssetsArray(): FormArray {
-    return <FormArray>this.assetDetailsForm.get('otherAssetsArrays');
+    return this.assetDetailsForm.get('otherAssetsArrays') as FormArray;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -112,38 +88,36 @@ export class OtherAssetsDialogComponent implements OnInit {
 
   createOtherAssetsForm(item?): FormGroup {
     return this.fb.group({
-      // hasEdit: [item ? item.hasEdit : false],
-      // srn: [this.data.rowIndex],
-      purchaseDate: [item ? item.purchaseDate : '', [Validators.required]],
-      sellDate: [item ? item.sellDate : '', [Validators.required]],
-      purchaseCost: [
-        item ? item.purchaseCost : '',
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithoutDecimal),
-        ],
-      ],
-      sellValue: [
-        item ? item.sellValue : '',
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithoutDecimal),
-        ],
-      ],
+      otherAssetsArrays: this.fb.array([
+        {
+          // srn: [this.data.rowIndex],
+          hasEdit: [item ? item.hasEdit : false],
+          purchaseDate: [item ? item.purchaseDate : '', [Validators.required]],
+          sellDate: [item ? item.sellDate : '', [Validators.required]],
+          purchaseCost: [
+            item ? item.purchaseCost : '',
+            [
+              Validators.required,
+              Validators.pattern(AppConstants.amountWithoutDecimal),
+            ],
+          ],
+          sellValue: [
+            item ? item.sellValue : '',
+            [
+              Validators.required,
+              Validators.pattern(AppConstants.amountWithoutDecimal),
+            ],
+          ],
 
-      sellExpense: [''],
-      capitalGain: 0,
-      gainType: [''],
-      algorithm: 'cgProperty',
-      stampDutyValue: 0,
-      valueInConsideration: 0,
-      indexCostOfAcquisition: 0,
-    });
-  }
-
-  inItForm() {
-    return this.fb.group({
-      assetDetailsForm: this.fb.array([]),
+          sellExpense: [''],
+          capitalGain: 0,
+          gainType: [''],
+          algorithm: 'cgProperty',
+          stampDutyValue: 0,
+          valueInConsideration: 0,
+          indexCostOfAcquisition: 0,
+        },
+      ]),
     });
   }
 
