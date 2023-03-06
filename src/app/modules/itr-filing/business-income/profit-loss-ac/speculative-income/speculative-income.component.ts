@@ -134,7 +134,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       } else {
         // specBusiness[0].incomes = this.specIncomeForm.controls['specIncomesArray'].value;
         let businessIncomes = this.Copy_ITR_JSON.business.profitLossACIncomes.filter(item => item.businessType != 'SPECULATIVEINCOME');
-        let specIncome = (this.specIncomeForm.controls['specIncomesArray'] as FormArray).controls.forEach((form: FormGroup) => {
+        (this.specIncomeForm.controls['specIncomesArray'] as FormArray).controls.forEach((form: FormGroup) => {
           specBusiness[0].incomes.push(form.value);
         });
 

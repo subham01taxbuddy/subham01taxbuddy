@@ -15,6 +15,10 @@ import { AddUpdateTradingComponent } from './add-update-trading/add-update-tradi
 })
 export class NonSpeculativeIncomeComponent implements OnInit {
   public tradingGridOptions: GridOptions;
+  nonspecIncomeFormArray: FormArray;
+  nonspecIncomeForm: FormGroup;
+  config: any;
+
   profitLossForm: FormGroup;
   newExpenses: NewExpenses = {
     expenseType: null,
@@ -23,7 +27,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   expenseTypeList: any[] = [
-    { key: 'TRADING_EXPENSES', value: 'Trading Expenses' },
+    // { key: 'TRADING_EXPENSES', value: 'Trading Expenses' },
     { key: 'ELECTRICITY', value: 'Electricity' },
     { key: 'INTERNET', value: 'Internet' },
     { key: 'MOBILE', value: 'Mobile' },
@@ -59,11 +63,22 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.config = {
+      itemsPerPage: 2,
+      currentPage: 1,
+    };
     this.initForm();
+    this.nonspecIncomeFormArray = new FormArray([]);
     if (this.Copy_ITR_JSON.business.profitLossACIncomes) {
       let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType === "NONSPECULATIVEINCOME");
       if (data.length > 0) {
-        this.getTradingTableData(data[0].incomes);
+        let index = 0;
+        data[0].incomes.forEach(item => {
+          let form = this.createNonSpecIncomeForm(index, item);
+          form.disable();
+          this.nonspecIncomeFormArray.push(form);
+        });
+
         this.profitLossForm.controls['grossProfit'].setValue(data[0].totalgrossProfitFromNonSpeculativeIncome);
         this.profitLossForm.controls['netProfit'].setValue(data[0].netProfitfromNonSpeculativeIncome);
         let expenseList = data[0].expenses
@@ -71,11 +86,65 @@ export class NonSpeculativeIncomeComponent implements OnInit {
           this.addExpenseForm(element);
         })
       } else {
-        this.getTradingTableData([this.tradingData]);
+        let form = this.createNonSpecIncomeForm(0, null);
+        form.enable();
+        this.nonspecIncomeFormArray.push(form);
       }
     } else {
-      this.getTradingTableData([this.tradingData]);
+      let form = this.createNonSpecIncomeForm(0, null);
+      form.enable();
+      this.nonspecIncomeFormArray.push(form);
     }
+    this.nonspecIncomeForm = this.formBuilder.group({
+      nonspecIncomesArray: this.nonspecIncomeFormArray
+    });
+  }
+
+  get getIncomeArray() {
+    return <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  createNonSpecIncomeForm(index, income: ProfitLossIncomes) {
+    return this.formBuilder.group({
+      index: [index],
+      hasEdit: [false],
+      brokerName: [income?.brokerName],
+      turnOver: [income?.turnOver],
+      grossProfit: [income?.grossProfit],
+      finishedGoodsClosingStock: [income?.finishedGoodsClosingStock],
+      finishedGoodsOpeningStock: [income?.finishedGoodsOpeningStock],
+      purchase: [income?.purchase],
+      netIncome: [0],
+      cogc:[0],
+      tradingExpense: [0]
+    });
+  }
+
+  editNonSpecIncomeForm(index) {
+    let specIncome = (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls[index] as FormGroup;
+    specIncome.enable();
+  }
+
+  calculateIncome(index) {
+    let totalExpenses = 0;
+    let specIncome = (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls[index] as FormGroup;
+    specIncome.controls['cogc'].setValue(
+      specIncome.controls['finishedGoodsOpeningStock'].value + specIncome.controls['purchase'].value - specIncome.controls['finishedGoodsClosingStock'].value
+    );
+    specIncome.controls['grossProfit'].setValue(
+      specIncome.controls['turnOver'].value - specIncome.controls['cogc'].value
+    );
+    specIncome.controls['netIncome'].setValue(
+      specIncome.controls['grossProfit'].value - specIncome.controls['tradingExpense'].value
+    );
   }
 
   initForm() {
@@ -88,6 +157,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
   initExpenseForm(obj: NewExpenses) {
     return this.formBuilder.group({
+      hasExpense: [false],
       expenseType: [obj.expenseType || null, [Validators.required]],
       expenseAmount: [obj.expenseAmount || null, [Validators.required]],
       description: [obj.description || null]
@@ -105,159 +175,27 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.changed();
   }
 
-  deleteExpenseForm(index) {
+  deleteExpenseForm() {
     const expenses = this.expenses;
-    expenses.removeAt(index)
+    let index = 0;
+    this.expenses.controls.forEach((form: FormGroup) => {
+      if(form.controls['hasExpenses'].value) {
+        expenses.removeAt(index);
+      }
+      index++;
+    });
     this.calculateNetProfit();
     this.changed();
   }
 
-  getTradingTableData(rowsData) {
-    this.tradingGridOptions = <GridOptions>{
-      rowData: rowsData,
-      columnDefs: this.createTradingColumnDef(rowsData),
-      onGridReady: () => {
-        this.tradingGridOptions.api.sizeColumnsToFit();
-      },
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      defaultColDef: {
-        resizable: true,
-        editable: false
-      },
-      suppressRowTransform: true
-    };
-  }
-
-  createTradingColumnDef(rowsData) {
-    return [
-      {
-        headerName: 'Sr. No',
-        field: 'id',
-        suppressMovable: true,
-        editable: false,
-        width: 50,
-      },
-      {
-        headerName: 'Turnover',
-        field: 'turnOver',
-        suppressMovable: true,
-        editable: false,
-        width: 150,
-        valueGetter: function nameFromCode(params) {
-          return params.data.turnOver ? params.data.turnOver.toLocaleString('en-IN') : params.data.turnOver;
-        },
-      },
-
-      {
-        headerName: 'Opening stock for finished goods',
-        field: 'finishedGoodsOpeningStock',
-        editable: false,
-        suppressMovable: true,
-        width: 220,
-        valueGetter: function nameFromCode(params) {
-          return params.data.finishedGoodsOpeningStock ? params.data.finishedGoodsOpeningStock.toLocaleString('en-IN') : params.data.finishedGoodsOpeningStock;
-        },
-      },
-
-      {
-        headerName: 'Closing stock for finished goods',
-        editable: false,
-        field: 'finishedGoodsClosingStock',
-        width: 200,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.finishedGoodsClosingStock ? params.data.finishedGoodsClosingStock.toLocaleString('en-IN') : params.data.finishedGoodsClosingStock;
-        },
-      },
-
-      {
-        headerName: 'Purchase',
-        field: 'purchase',
-        editable: false,
-        width: 150,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.purchase ? params.data.purchase.toLocaleString('en-IN') : params.data.purchase;
-        },
-      },
-      {
-        headerName: 'COGS (opening + purchase - closing)',
-        field: 'COGS',
-        editable: false,
-        width: 240,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.COGS ? params.data.COGS.toLocaleString('en-IN') : params.data.COGS;
-        },
-      },
-      {
-        headerName: 'Gross Profit (Turnover - COGS)',
-        field: 'grossProfit',
-        editable: false,
-        width: 200,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.grossProfit ? params.data.grossProfit.toLocaleString('en-IN') : params.data.grossProfit;
-        },
-      },
-
-      {
-        headerName: 'Actions',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        sortable: true,
-        pinned: 'right',
-        width: 80,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button"  title="Update Trading details" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: green">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>`;
-        },
-      },
-    ];
-  }
 
 
-  public onTradingRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'edit': {
-          this.addEditTradingRow('EDIT', params.data, params.rowIndex);
-          break;
-        }
-      }
-    }
-  }
 
-  addEditTradingRow(mode, data: any, index?) {
-    const dialogRef = this.matDialog.open(AddUpdateTradingComponent, {
-      data: {
-        mode: mode,
-        data: data
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px'
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Result trading=', result);
-      if (result !== undefined) {
-        if (mode === 'EDIT') {
-          this.profitLossForm.controls['grossProfit'].setValue(result.grossProfit)
-          this.tradingGridOptions.rowData[index] = result;
-          this.tradingGridOptions.api.setRowData(this.tradingGridOptions.rowData);
-          this.calculateNetProfit();
-        }
-      }
-    });
 
-  }
+
+
+
 
   calculateNetProfit() {
     this.profitLossForm.controls['netProfit'].setValue(0);
