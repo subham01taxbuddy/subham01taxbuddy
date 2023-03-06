@@ -45,7 +45,7 @@
   <br />
 
   <!-- deductions  -->
-  <div class="card">
+  <div class="card" style="padding-top: 25px">
     <!-- header  -->
     <div class="flex items-center justify-between">
       <div>
@@ -54,9 +54,6 @@
           (Applicable for any capital assets other than residential House
           Property)
         </div>
-      </div>
-      <div>
-        <button class="btn" (click)="addMoreDeductions()">+ Add More</button>
       </div>
     </div>
 
@@ -200,6 +197,7 @@
                   </div>
                 </div>
               </div>
+              
               <!-- edit Other Assets deduction -->
               <div class="edit-head">
                 <button
@@ -215,40 +213,39 @@
             <br />
             <br />
           </div>
-
-          <!-- footer  -->
-          <div class="flex items-center" style="padding-bottom: 10px">
-            <div class="card__col-xs-12">
-              <div class="card__col-sm-3">
-                <button
-                  type="submit"
-                  class="tbd-btn-secondary"
-                  (click)="deleteDeduction(index)"
-                >
-                  <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-                </button>
-              </div>
-              <div class="card__col-sm-6 txt-center">
-                <table>
-                  <tr
-                    *ngFor="
-                      let item of getDeductions?.controls | paginate : config
-                    "
-                  ></tr>
-                </table>
-                <pagination-controls
-                  (pageChange)="pageChanged($event)"
-                ></pagination-controls>
-              </div>
-              <div class="card__col-sm-3" style="text-align: right">
-                <button class="tbd-btn save-btn" (click)="saveCg()">
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </form>
+    </div>
+
+    <!-- footer  -->
+    <div
+      class="card__col-xs-12 flex items-center justify-between"
+      style="padding-bottom: 10px"
+    >
+      <div class="card__col-sm-3">
+        <button
+          type="submit"
+          class="tbd-btn-secondary"
+          (click)="deleteDeduction(index)"
+        >
+          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+        </button>
+      </div>
+      <!-- <div class="card__col-sm-6 txt-center">
+          <table>
+            <tr
+              *ngFor="
+                let item of getDeductions?.controls | paginate : config
+              "
+            ></tr>
+          </table>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </div> -->
+      <div class="card__col-sm-3" style="text-align: right">
+        <button class="tbd-btn save-btn" (click)="saveCg()">Save</button>
+      </div>
     </div>
   </div>
 

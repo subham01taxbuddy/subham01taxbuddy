@@ -77,36 +77,15 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       currentPage: 1,
     };
 
-    // this.getDeductions.disable();
-
     this.deductionForm = this.fb.group({ deductions: this.fb.array([]) });
 
-    this.addMoreDeductions();
-  }
-
-  addMoreDeductions() {
-    const deductionsArray = this.getDeductions;
-    if (deductionsArray.untouched) {
-      this.addDeductionForm();
-      console.log(this.deductionForm);
-    } else {
-      deductionsArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
-
-      this.utilsService.showSnackBar(
-        'Please fill all the required details for selected deduction first'
-      );
-    }
+    this.addDeductionForm();
+    this.getDeductions.disable();
   }
 
   addDeductionForm() {
     const deductionsArray = this.getDeductions;
     const deductionsArrayLength = deductionsArray.length;
-
     deductionsArray.insert(deductionsArrayLength, this.createDeductionForm());
   }
 
@@ -126,6 +105,10 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   editDeduction(i) {
     this.getDeductions.enable(i);
+    // console.log(
+    //   (this.deductionForm.get('deductions') as FormArray).controls[0]
+    // );
+    console.log(this.goldCg);
   }
 
   deleteDeduction(index) {
@@ -139,15 +122,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
-  pageChanged(event) {
-    this.config.currentPage = event;
-    console.log(this.getDeductions);
-  }
-
-  fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
   calculateTotalCg() {
     this.totalCg = 0;
     this.goldCg.assetDetails.forEach((item) => {
@@ -155,6 +129,15 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
     this.canAddDeductions =
       this.totalCg > 0 && this.goldCg.deduction?.length === 0;
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    console.log(this.getDeductions);
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
   clearNullImprovements() {
@@ -792,4 +775,25 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       this.isAddOtherAssetsImprovement = Math.random();
     }
   }
+
+  // addMoreDeductions() {
+  //   const deductionsArray = this.getDeductions;
+  //   if (deductionsArray.untouched) {
+  //     this.addDeductionForm();
+  //     console.log(this.deductionForm);
+  //   } else {
+  //     deductionsArray.controls.forEach((element) => {
+  //       if ((element as FormGroup).invalid) {
+  //         element.markAsDirty();
+  //         element.markAllAsTouched();
+  //       }
+  //     });
+
+  //     this.utilsService.showSnackBar(
+  //       'Please fill all the required details for selected deduction first'
+  //     );
+  //   }
+  // }
+
+  //
 }

@@ -65,51 +65,6 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.OtherAsssetImprovementForm = this.fb.group({
       otherAssets: this.fb.array([]),
     });
-    // this.OtherAsssetImprovementForm = this.fb.group({
-    //   otherAssets: this.fb.array([
-    //     this.fb.group({
-    //       otherAssetsArray: this.fb.array([
-    //         {
-    //           // srn: [this.data.rowIndex],
-    //           hasEdit: ['', false],
-    //           purchaseDate: ['', [Validators.required]],
-    //           sellDate: ['', [Validators.required]],
-    //           purchaseCost: [
-    //             '',
-    //             [
-    //               Validators.required,
-    //               Validators.pattern(AppConstants.amountWithoutDecimal),
-    //             ],
-    //           ],
-    //           sellValue: [
-    //             '',
-    //             [
-    //               Validators.required,
-    //               Validators.pattern(AppConstants.amountWithoutDecimal),
-    //             ],
-    //           ],
-
-    //           sellExpense: [''],
-    //           capitalGain: 0,
-    //           gainType: [''],
-    //           algorithm: 'cgProperty',
-    //           stampDutyValue: 0,
-    //           valueInConsideration: 0,
-    //           indexCostOfAcquisition: 0,
-    //         },
-    //       ]),
-
-    //       improvementsArray: this.fb.array([
-    //         {
-    //           financialYearOfImprovement: ['', [Validators.required]],
-    //           costOfImprovement: [0, [Validators.required]],
-    //           indexCostOfImprovement: [0, [Validators.required]],
-    //         },
-    //       ]),
-    //     }),
-    //   ]),
-    //   // srn: ['', [Validators.required]],
-    // });
 
     this.isAddMoreOtherAssets();
 
@@ -509,7 +464,7 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   editOtherAsset(i) {
-    this.OtherAsssetImprovementForm.enable();
+    this.OtherAsssetImprovementForm.enable(i);
     console.log(i);
     console.log(this.goldCg);
 
