@@ -170,7 +170,7 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                          [disabled]
+                          readonly
                         />
                       </mat-form-field>
                     </div>
@@ -190,7 +190,7 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                          [disabled]
+                          readonly
                           (click)="calculateCg(i)"
                         />
                       </mat-form-field>
@@ -294,6 +294,7 @@
                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                               (click)="calculateIndexCost(i)"
                               (click)="saveDetails(i)"
+                              readonly
                             />
                           </mat-form-field>
                         </div>

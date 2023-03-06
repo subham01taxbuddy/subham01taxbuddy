@@ -162,6 +162,10 @@ export class OtherAssetImprovementComponent implements OnInit {
           element.markAllAsTouched();
         }
       });
+
+      this.utilsService.showSnackBar(
+        'Please fill all required details for the existing asset first'
+      );
     }
   }
 
@@ -272,6 +276,8 @@ export class OtherAssetImprovementComponent implements OnInit {
         this.loading = false;
       }
     );
+
+    this.saveDetails(i);
   }
 
   calculateGainType(i) {
