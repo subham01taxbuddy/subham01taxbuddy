@@ -37,6 +37,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   tradingData: ProfitLossIncomes = {
     id: 0,
+    brokerName: '',
     incomeType: "NONSPECULATIVEINCOME",
     turnOver: 0,
     finishedGoodsOpeningStock: 0,

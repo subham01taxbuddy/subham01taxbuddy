@@ -693,6 +693,8 @@ export interface ProfitLossACIncomes {
 
 export interface ProfitLossIncomes {
     id: Number;
+
+    brokerName: string;
     incomeType: string;
     turnOver: Number;
     finishedGoodsOpeningStock?: Number;
