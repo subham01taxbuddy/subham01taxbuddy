@@ -1,0 +1,23 @@
+.upload-data {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  margin: 6px 0;
+
+  label {
+    color:#07070C;
+  }
+
+  .upload {
+    border: 1px solid #00AECA;
+    color: #00AECA;
+    border-radius: 4px;
+    padding: 5px;
+  }
+
+  .filename {
+    float: right;
+    margin-right: 24px;
+  }
+}

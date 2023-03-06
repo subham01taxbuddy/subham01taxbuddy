@@ -7,7 +7,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
+import { WizardNavigation } from "../../../../itr-shared/WizardNavigation";
 
 @Component({
   selector: 'app-zero-coupon-bonds',
@@ -78,7 +78,9 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
             }
           })
           if (obj.deduction) {
-            this.deductionForm = this.initDeductionForm(obj.deduction);
+            obj.deduction.forEach((element: any) => {
+              this.deductionForm = this.initDeductionForm(obj.deduction);
+            });
           } else {
             this.deductionForm = this.initDeductionForm();
           }

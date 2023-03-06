@@ -1,7 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div>
-    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Professional Income':'Update Professional
-        Income'}}
+    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Professional Income':'Update Professional Income'}}
     </div>
     <form [formGroup]="professionForm" style="margin-top: 20px">
         <div class="card__row">
@@ -9,7 +8,7 @@
                 <mat-form-field class="input-field-width">
                     <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                         name="natureOfBusiness" matTooltip="{{getFullName()}}">
-                        <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.code"
+                        <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.label"
                             [disabled]="profession.disabled">
                             {{profession.label}}-{{profession.code}}
                         </mat-option></mat-select>
