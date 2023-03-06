@@ -88,14 +88,14 @@
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
 
-                        <!-- <mat-error
-                                *ngIf="
-                                  getOtherAssetsArray.controls['purchaseCost'].hasError(
-                                    'pattern'
-                                  )
-                                "
-                                >Enter valid amount.</mat-error
-                              > -->
+                        <mat-error
+                          *ngIf="
+                            this.getOtherAssets.controls[i].controls[
+                              'otherAssetsArray'
+                            ].controls['purchaseCost'].hasError('pattern')
+                          "
+                          >Enter valid amount.</mat-error
+                        >
                       </mat-form-field>
                     </div>
                     <!-- sale-value  -->
@@ -116,14 +116,14 @@
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         />
 
-                        <!-- <mat-error
-                                  *ngIf="
-                                    assetDetailsForm.controls['otherAssetsArrays'].controls[
-                                      'sellValue'
-                                    ].hasError('pattern')
-                                  "
-                                  >Enter valid amount.</mat-error
-                                > -->
+                        <mat-error
+                          *ngIf="
+                            this.getOtherAssets.controls[i].controls[
+                              'otherAssetsArray'
+                            ].controls['sellValue'].hasError('pattern')
+                          "
+                          >Enter valid amount.</mat-error
+                        >
                       </mat-form-field>
                     </div>
                     <!-- expenses  -->
@@ -144,12 +144,14 @@
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           (click)="saveDetails(i)"
                         />
-                        <!-- <mat-error
-                                  *ngIf="
-                                    assetDetailsForm.controls['sellExpense'].hasError('pattern')
-                                  "
-                                  >Enter valid amount.</mat-error
-                                > -->
+                        <mat-error
+                          *ngIf="
+                            this.getOtherAssets.controls[i].controls[
+                              'otherAssetsArray'
+                            ].controls['sellExpense'].hasError('pattern')
+                          "
+                          >Enter valid amount.</mat-error
+                        >
                       </mat-form-field>
                     </div>
                     <!-- type-of-gain  -->

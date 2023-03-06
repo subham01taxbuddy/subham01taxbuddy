@@ -11,6 +11,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
 import { withLatestFrom } from 'rxjs';
 @Component({
   selector: 'app-other-asset-improvement',
@@ -32,7 +33,11 @@ export class OtherAssetImprovementComponent implements OnInit {
   @Input() goldCg: NewCapitalGain;
   @Input() isAddOtherAssetsImprovement: Number;
 
-  constructor(public fb: FormBuilder, private itrMsService: ItrMsService) {
+  constructor(
+    public fb: FormBuilder,
+    private itrMsService: ItrMsService,
+    public utilsService: UtilsService
+  ) {
     this.getImprovementYears();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let listedData = this.ITR_JSON.capitalGain?.filter(
@@ -147,23 +152,27 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   isAddMoreOtherAssets() {
     const otherAssetDetailsArray = this.getOtherAssets;
-    if (otherAssetDetailsArray) {
+    if (otherAssetDetailsArray.valid) {
       this.addMoreOtherAssetsForm();
       console.log(this.OtherAsssetImprovementForm);
+    } else {
+      otherAssetDetailsArray.controls.forEach((element) => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
     }
-    // else {
-    //   otherAssetDetailsArray.controls.forEach((element) => {
-    //     if ((element as FormGroup).invalid) {
-    //       element.markAsDirty();
-    //       element.markAllAsTouched();
-    //     }
-    //   });
-    // }
   }
 
   addMoreOtherAssetsForm(item?) {
     const otherAssetsArray = this.getOtherAssets;
-    otherAssetsArray.push(this.createOtherAssetsForm(item));
+    const otherAssetsArrayLength = otherAssetsArray.length;
+
+    otherAssetsArray.insert(
+      otherAssetsArrayLength,
+      this.createOtherAssetsForm(item)
+    );
   }
 
   createOtherAssetsForm(item?) {
@@ -232,7 +241,7 @@ export class OtherAssetImprovementComponent implements OnInit {
         };
         request.improvement.push(improvement);
       } else {
-        request.improvement = request.improvement.concat(improvements);
+        request.improvement = this.goldCg.improvement;
       }
     });
 
@@ -457,7 +466,7 @@ export class OtherAssetImprovementComponent implements OnInit {
         ] as FormGroup
       ).value,
     };
-    console.log(result.improve);
+    console.log(result.cgObject);
 
     if (result !== undefined) {
       this.goldCg.assetDetails?.push(result.cgObject);
@@ -465,25 +474,52 @@ export class OtherAssetImprovementComponent implements OnInit {
     }
   }
 
-  saveCg() {}
+  saveCg() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.loading = true;
+    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
+      (item) => item.assetType !== 'GOLD'
+    );
+    if (this.goldCg.assetDetails.length > 0) {
+      this.ITR_JSON.capitalGain.push(this.goldCg);
+    }
+
+    console.log('CG:', this.ITR_JSON.capitalGain);
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
+      console.log(result);
+      this.ITR_JSON = result;
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+      this.utilsService.showSnackBar('Other Assets Saved Successfully');
+      this.loading = false;
+    });
+    console.log('GOLD:', this.goldCg);
+    this.OtherAsssetImprovementForm.disable();
+  }
 
   editOtherAsset(i) {
     this.OtherAsssetImprovementForm.enable();
-    // console.log(i);
+    console.log(i);
+    console.log(this.goldCg);
 
-    console.log(
-      (
-        (this.getOtherAssets.controls[i] as FormGroup).controls[
-          'otherAssetsArray'
-        ] as FormGroup
-      ).controls['gainType'].value
-    );
+    // console.log(
+    //   (
+    //     (this.getOtherAssets.controls[i] as FormGroup).controls[
+    //       'otherAssetsArray'
+    //     ] as FormGroup
+    //   ).controls['gainType'].value
+    // );
 
-    console.log(
-      (this.getOtherAssets.controls[i] as FormGroup).controls[
-        'improvementsArray'
-      ] as FormGroup
-    );
+    // console.log(
+    //   (this.getOtherAssets.controls[i] as FormGroup).controls[
+    //     'improvementsArray'
+    //   ] as FormGroup
+    // );
   }
 
   deleteOtherAsset(index) {
