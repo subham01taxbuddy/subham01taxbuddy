@@ -1,21 +1,11 @@
-import { BusinessIncomeComponent } from './../business-income/business-income.component';
-import { HousePropertyComponent } from './../house-property/house-property.component';
-import { SalaryComponent } from './../salary/salary.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
 import { NavigationEnd, Router } from "@angular/router";
 import { Location } from '@angular/common';
-import { OtherInformationComponent } from './components/other-information/other-information.component';
-import { SourceOfIncomesComponent } from "./pages/source-of-incomes/source-of-incomes.component";
-import { OtherIncomeComponent } from "../other-income/other-income.component";
 import { Subscription } from "rxjs";
 import { WizardNavigation } from "../../itr-shared/WizardNavigation";
 import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
@@ -165,10 +155,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if (scheduleInfoEvent.schedule.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
       if (this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
-        //for future options, it shall be added inside capital gain
+        //for future options, it shall be added inside business income
         if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-          if (this.componentsList.indexOf(this.schedules.CAPITAL_GAIN) < 0) {
-            this.componentsList.splice(index, 0, this.schedules.CAPITAL_GAIN);
+          if (this.componentsList.indexOf(this.schedules.BUSINESS_INCOME) < 0) {
+            this.componentsList.splice(index, 0, this.schedules.BUSINESS_INCOME);
           }
         } else {
           //for add more info when capital gain is selected
@@ -183,16 +173,16 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     } else {
       //for removing future options, check if capital gain is there, if not remove
       if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-        let cgSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.CAPITAL_GAIN)[0];
+        let cgSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.BUSINESS_INCOME)[0];
         if (!cgSource.selected) {
-          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.BUSINESS_INCOME);
         }
       } else if (scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
-        let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
-        if (!spSource.selected) {
+        // let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
+        // if (!spSource.selected) {
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.MORE_INFORMATION);
-        }
+        // }
       } else {
         this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);
       }

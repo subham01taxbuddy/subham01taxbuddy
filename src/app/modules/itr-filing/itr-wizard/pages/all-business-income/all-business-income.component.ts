@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Subscription} from "rxjs";
 import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 import {Router} from "@angular/router";
+import {AppConstants} from "../../../../shared/constants";
 
 @Component({
   selector: 'app-all-business-income',
@@ -15,11 +16,16 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
   isEditOther: boolean;
   isEditPersonal: boolean;
 
+  isFnO = false;
   constructor(private router: Router) {
     super();
   }
 
   ngOnInit(): void {
+    let ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    let filtered = ITR_JSON.business?.profitLossACIncomes?.filter(acIncome => (acIncome.businessType === 'SPECULATIVEINCOME') ||
+      (acIncome.businessType === 'NONSPECULATIVEINCOME'))[0];
+    this.isFnO = filtered.length > 0;
   }
 
   initList() {
