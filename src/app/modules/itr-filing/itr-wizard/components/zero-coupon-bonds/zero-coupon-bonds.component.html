@@ -143,8 +143,9 @@
                     <div class="display-flex">
                         <div class="card__col-xs-12">
                             <div class="card__col-sm-3">
-                                <button type="submit" class="tbd-btn-secondary" (click)="deleteBondsArray()"><i
-                                        class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
+                                <button type="submit" mat-stroked-button color="warn" class=""
+                                    (click)="deleteBondsArray()"><i class="fa fa-trash"
+                                        aria-hidden="true">&nbsp;</i>Delete</button>
                             </div>
                             <div class="card__col-sm-6 txt-center">
                                 <table>
@@ -153,8 +154,8 @@
                                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                             </div>
                             <div class="card__col-sm-3" style="text-align: right;">
-                                <button type="submit" class="tbd-btn save-btn" [disabled]="bondsForm.invalid"
-                                    (click)="save('bonds')">Save</button>
+                                <button type="submit" mat-stroked-button class=""
+                                    [disabled]="bondsForm.invalid" (click)="save('bonds')">Save</button>
                             </div>
                         </div>
                     </div>
