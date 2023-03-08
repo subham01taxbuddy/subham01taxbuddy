@@ -35,7 +35,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   isAddOtherAssetsImprovement: Number;
   deductionForm!: FormGroup;
   config: any;
-  index: number[];
+  index: number;
 
   constructor(
     public matDialog: MatDialog,
@@ -59,8 +59,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         assesseeType: this.ITR_JSON.assesseeType,
         residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: 'GOLD',
-        assetDetails: [],
-        improvement: [],
+        assetDetails: [] || this.ITR_JSON.capitalGain[0].assetDetails,
+        improvement: [] || this.ITR_JSON.capitalGain[0].improvement,
         deduction: [],
         buyersDetails: [],
       };
@@ -718,8 +718,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       assesseeType: 'INDIVIDUAL',
       residentialStatus: 'RESIDENT',
       assetType: 'GOLD',
-      assetDetails: this.goldCg.assetDetails,
-      improvement: [],
+      assetDetails: [] || this.ITR_JSON.capitalGain[0].assetDetails,
+      improvement: [] || this.ITR_JSON.capitalGain[0].improvement,
       deduction: this.goldCg.deduction,
     };
     this.goldCg.assetDetails.forEach((asset) => {

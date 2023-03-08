@@ -192,12 +192,13 @@
                         maxlength="14"
                         readonly
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        (click)="calculateCg()"
                       />
                     </mat-form-field>
                   </div>
                 </div>
               </div>
-              
+
               <!-- edit Other Assets deduction -->
               <div class="edit-head">
                 <button

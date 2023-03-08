@@ -29,7 +29,7 @@ export class OtherAssetImprovementComponent implements OnInit {
   OtherAsssetImprovementForm!: FormGroup;
 
   loading: boolean = false;
-  index: number[];
+  index: number;
   @Input() goldCg: NewCapitalGain;
   @Input() isAddOtherAssetsImprovement: Number;
 
@@ -67,6 +67,7 @@ export class OtherAssetImprovementComponent implements OnInit {
     });
 
     this.isAddMoreOtherAssets();
+    console.log(this.index);
 
     this.config = {
       itemsPerPage: 2,
@@ -487,7 +488,7 @@ export class OtherAssetImprovementComponent implements OnInit {
     console.log('Remove Index', index);
     const deleteOtherAsset = this.getOtherAssets;
     deleteOtherAsset.removeAt(index);
-    // Condition is added because at least one tenant details is mandatory
+
     if (deleteOtherAsset.length === 0) {
       deleteOtherAsset.push(this.createOtherAssetsForm());
     }

@@ -25,6 +25,7 @@
                       color="primary"
                       name="hasEdit[i]"
                       formControlName="hasEdit"
+                      (click)="index = i"
                     >
                     </mat-checkbox>
                   </div>
@@ -311,6 +312,7 @@
                 type="button"
                 class="edit-donation"
                 (click)="editOtherAsset(i)"
+                (click)="index = i"
               >
                 <mat-icon> edit_square </mat-icon>Edit
               </button>
