@@ -22,4 +22,4 @@
   </div>
 </div>
 
-<router-outlet *ngIf="!showList" (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>
+<router-outlet *ngIf="!showList" (newDataAvailable)="initList()" (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>

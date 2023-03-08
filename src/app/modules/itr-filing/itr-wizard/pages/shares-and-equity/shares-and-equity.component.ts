@@ -69,12 +69,11 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
         data.forEach((obj: any) => {
           assetDetails = obj.assetDetails;
           assetDetails.forEach((element: any) => {
-            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
-            if (filterImp.length > 0) {
+            const filterImp = obj.improvement?.filter(data => data.srn == element.srn)
+            if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
-
-              this.addMoreData(element);
             }
+            this.addMoreData(element);
           })
           if (obj.deduction) {
             obj.deduction.forEach((element: any) => {
@@ -120,12 +119,11 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
         data.forEach((obj: any) => {
           assetDetails = obj.assetDetails;
           assetDetails.forEach((element: any) => {
-            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
-            if (filterImp.length > 0) {
+            const filterImp = obj.improvement?.filter(data => data.srn == element.srn)
+            if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
-
-              this.addMoreData(element);
             }
+            this.addMoreData(element);
           })
           if (obj.deduction) {
             obj.deduction.forEach((element: any) => {
