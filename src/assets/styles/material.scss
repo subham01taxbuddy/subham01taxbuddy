@@ -1,3 +1,194 @@
+@import "./variable";
+@import "~@angular/material/theming";
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+$fontConfig: (
+    display-4: mat-typography-level(112px, 112px, 300, "Poppins"),
+    display-3: mat-typography-level(56px, 56px, 400, "Poppins", 0.0089em),
+    display-2: mat-typography-level(45px, 48px, 400, "Poppins", 0),
+    display-1: mat-typography-level(34px, 40px, 400, "Poppins", 0.0074em),
+    headline: mat-typography-level(24px, 32px, 400, "Poppins", 0),
+    title: mat-typography-level(20px, 32px, 500, "Poppins", 0.0075em),
+    subheading-2: mat-typography-level(16px, 28px, 400, "Poppins", 0.0094em),
+    subheading-1: mat-typography-level(15px, 24px, 500, "Poppins", 0.0067em),
+    body-2: mat-typography-level(14px, 24px, 500, "Poppins", 0.0179em),
+    body-1: mat-typography-level(14px, 20px, 400, "Poppins", 0.0179em),
+    button: mat-typography-level(14px, 14px, 500, "Poppins", 0.0893em),
+    caption: mat-typography-level(12px, 20px, 400, "Poppins", 0.0333em),
+    input: mat-typography-level(inherit, 1.125, 400, "Poppins", 1.5px),
+);
+
+// Foreground Elements
+// Light Theme Text
+$darkText: #000;
+$darkPrimaryText: rgba($darkText, 0.87);
+$darkAccentText: rgba($darkPrimaryText, 0.54);
+$darkDisabledText: rgba($darkPrimaryText, 0.38);
+$darkDividers: rgba($darkPrimaryText, 0.12);
+$darkFocused: rgba($darkPrimaryText, 0.12);
+
+$matLightThemeForeground: (
+    base: $black,
+    divider: $darkDividers,
+    dividers: $darkDividers,
+    disabled: $darkDisabledText,
+    disabled-button: rgba($darkText, 0.26),
+    disabled-text: $darkDisabledText,
+    elevation: $black,
+    secondary-text: $darkAccentText,
+    hint-text: $darkDisabledText,
+    accent-text: $darkAccentText,
+    icon: $darkAccentText,
+    icons: $darkAccentText,
+    text: $darkPrimaryText,
+    slider-min: $darkPrimaryText,
+    slider-off: rgba($darkText, 0.26),
+    slider-off-active: $darkDisabledText,
+);
+
+// Dark Theme text
+$lightText: $white;
+$lightPrimaryText: $lightText;
+$lightAccentText: rgba($lightPrimaryText, 0.7);
+$lightDisabledText: rgba($lightPrimaryText, 0.5);
+$lightDividers: rgba($lightPrimaryText, 0.12);
+$lightFocused: rgba($lightPrimaryText, 0.12);
+
+$matDarkThemeForeground: (
+    base: $lightText,
+    divider: $lightDividers,
+    dividers: $lightDividers,
+    disabled: $lightDisabledText,
+    disabledButton: rgba($lightText, 0.3),
+    disabledText: $lightDisabledText,
+    elevation: $black,
+    hintText: $lightDisabledText,
+    secondary-text: $lightAccentText,
+    accentText: $lightAccentText,
+    icon: $lightText,
+    icons: $lightText,
+    text: $lightText,
+    slider-min: $lightText,
+    sliderff: rgba($lightText, 0.3),
+    slider-off-active: rgba($lightText, 0.3),
+);
+
+// Background config
+// Light bg
+$lightBackground: $lightBackground;
+$lightBgDarker5: darken($lightBackground, 5%);
+$lightBgDarker10: darken($lightBackground, 10%);
+$lightBgDarker20: darken($lightBackground, 20%);
+$lightBgDarker30: darken($lightBackground, 30%);
+$lightBgLighter5: lighten($lightBackground, 5%);
+$darkBgTooltip: lighten($darkBackground, 20%);
+$darkBgAlpha4: rgba($darkBackground, 0.04);
+$darkBgAlpha12: rgba($darkBackground, 0.12);
+
+$matLightThemeBackground: (
+    background: $lightBackground,
+    status-bar: $lightBgDarker20,
+    app-bar: $lightBgDarker5,
+    hover: $darkBgAlpha4,
+    card: $lightBgLighter5,
+    dialog: $lightBgLighter5,
+    tooltip: $darkBgTooltip,
+    disabled-button: $darkBgAlpha12,
+    raised-button: $lightBgLighter5,
+    focused-button: $darkFocused,
+    selected-button: $lightBgDarker20,
+    selected-disabled-button: $lightBgDarker30,
+    disabled-button-toggle: $lightBgDarker10,
+    unselected-chip: $lightBgDarker10,
+    disabled-list-option: $lightBgDarker10,
+);
+
+// Dark bg
+$darkBackground: $darkBackground;
+$darkBgLighter5: lighten($darkBackground, 5%);
+$darkBgLighter10: lighten($darkBackground, 10%);
+$darkBgLighter20: lighten($darkBackground, 20%);
+$darkBgLighter30: lighten($darkBackground, 30%);
+$lightBgAlpha4: rgba($lightBackground, 0.04);
+$lightBgAlpha12: rgba($lightBackground, 0.12);
+
+// Background palette for dark themes.
+$matDarkThemeBackground: (
+    background: $darkBackground,
+    status-bar: $darkBgLighter20,
+    app-bar: $darkBgLighter5,
+    hover: $lightBgAlpha4,
+    card: $darkBgLighter5,
+    dialog: $darkBgLighter5,
+    tooltip: $darkBgLighter20,
+    disabled-button: $lightBgAlpha12,
+    raised-button: $darkBgLighter5,
+    focused-button: $lightFocused,
+    selected-button: $darkBgLighter20,
+    selected-disabled-button: $darkBgLighter30,
+    disabled-button-toggle: $darkBgLighter10,
+    unselected-chip: $darkBgLighter20,
+    disabled-list-option: $darkBgLighter10,
+);
+
+// Compute font config
+@include mat-core($fontConfig);
+
+// Theme Config
+
+$matPrimary: (
+    main: $primaryColor,
+    lighter: $lighter,
+    darker: $darker,
+    200: $primaryColor,
+    // For slide toggle,
+    contrast: (main: $lightPrimaryText,
+        lighter: $darkPrimaryText,
+        darker: $lightPrimaryText,
+    ),
+);
+
+$themePrimary: mat-palette($matPrimary, main, lighter, darker);
+
+$matAccent: (
+    main: #118CB2,
+    lighter: #b3ebf2,
+    darker: #00a5c3,
+    200: #118CB2,
+    contrast: (main: $darkPrimaryText,
+        lighter: $darkPrimaryText,
+        darker: $lightPrimaryText,
+    ),
+);
+$themeAccent: mat-palette($matAccent, main, lighter, darker);
+
+$matWarn: (
+    main: $matWarnMain,
+    lighter: $matWarnLighter,
+    darker: $matWarnMain,
+    200: $matWarnMain,
+    contrast: (main: $lightPrimaryText,
+        lighter: $darkPrimaryText,
+        darker: $lightPrimaryText,
+    ),
+);
+$themeWarn: mat-palette($matWarn, main, lighter, darker);
+
+$theme: mat-light-theme($themePrimary, $themeAccent, $themeWarn);
+$altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
+
+// Theme Init
+@include angular-material-theme($theme);
+
+.theme-alternate {
+    @include angular-material-theme($altTheme);
+}
+
+// Specific component overrides, pieces that are not in line with the general theming
+
 /*CSS changes by Sushma Start */
 
 .txt-center {
@@ -252,4 +443,6 @@ mat-label {
     margin-left: 30px;
     color: #000000;
 }
+
+
 /*CSS changes by Sushma End */
