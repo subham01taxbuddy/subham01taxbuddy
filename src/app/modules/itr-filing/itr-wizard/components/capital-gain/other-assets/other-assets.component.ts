@@ -108,6 +108,58 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     // console.log(
     //   (this.deductionForm.get('deductions') as FormArray).controls[0]
     // );
+    console.log(this.getDeductions.controls[0].value);
+    console.log(this.deductionForm);
+  }
+
+  calculateDeduction(index?) {
+    this.loading = true;
+    const param = '/calculate/capital-gain/deduction';
+    let request = {
+      capitalGain: this.ITR_JSON.capitalGain[0].assetDetails[0].capitalGain,
+      capitalGainDeductions: [
+        {
+          deductionSection: 'SECTION_54F',
+          costOfNewAsset: (this.getDeductions.controls[0] as FormGroup)
+            .controls['costOfNewAsset'].value,
+          cgasDepositedAmount: (this.getDeductions.controls[0] as FormGroup)
+            .controls['CGASAmount'].value,
+          saleValue: this.ITR_JSON.capitalGain[0].assetDetails[0].sellValue,
+          expenses: this.ITR_JSON.capitalGain[0].assetDetails[0].sellExpense,
+        },
+      ],
+    };
+
+    this.itrMsService.postMethod(param, request).subscribe(
+      (res: any) => {
+        this.loading = false;
+        console.log('Deduction:', res);
+        // this.goldCg.assetDetails = res.assetDetails;
+        // this.goldCg.improvement = res.improvement;
+        // this.goldCg.deduction = res.deduction;
+        (this.getDeductions.controls[0] as FormGroup).controls[
+          'deductionClaimed'
+        ]?.setValue(res.data[0].deductionAmount);
+
+        this.goldCg.deduction?.push({
+          srn: '',
+          underSection: '54F',
+          orgAssestTransferDate: '',
+          costOfNewAssets: res.data[0].costOfNewAsset,
+          investmentInCGAccount: res.data[0].cgasDepositedAmount,
+          purchaseDate: (this.getDeductions.controls[0] as FormGroup).controls[
+            'purchaseDate'
+          ].value,
+          totalDeductionClaimed: res.data[0].deductionAmount,
+        });
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
+
+    this.calculateCg();
+
     console.log(this.goldCg);
   }
 
