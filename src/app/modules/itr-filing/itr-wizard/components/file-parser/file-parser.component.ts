@@ -34,7 +34,7 @@ export class FileParserComponent implements OnInit {
   initBrokerData() {
     this.brokerData = [
       {
-        name: '5 Paisa',
+        name: '5Paisa',
         label: '5 Paisa',
         filesUploaded: []
       },
@@ -44,12 +44,12 @@ export class FileParserComponent implements OnInit {
         filesUploaded: []
       },
       {
-        name: 'AngleOne',
-        label: 'AngleOne',
+        name: 'Angel One',
+        label: 'Angel One',
         filesUploaded: []
       },
       {
-        name: 'PayTm',
+        name: 'Paytm',
         label: 'PayTm',
         filesUploaded: []
       },
@@ -59,12 +59,12 @@ export class FileParserComponent implements OnInit {
         filesUploaded: []
       },
       {
-        name: 'Upstocks',
-        label: 'Upstocks',
+        name: 'Upstox',
+        label: 'Upstox',
         filesUploaded: []
       },
       {
-        name: 'Grow',
+        name: 'Groww',
         label: 'Grow (Both version)',
         filesUploaded: []
       },
@@ -126,7 +126,7 @@ export class FileParserComponent implements OnInit {
                 }
                 //filter out all other cg data except the one we get from cg statement
                 let otherCgData = this.ITR_JSON.capitalGain.filter((item: any) =>
-                  item.assetType === "EQUITY_SHARES_LISTED" ||
+                  item.assetType === "EQUITY_SHARES_LISTED" &&
                   item.assetType === "GOLD");
                 if(result.data.capitalGain){
                   result.data.capitalGain.forEach(cgObject => {

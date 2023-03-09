@@ -17,7 +17,30 @@
                         class="fa fa-plus"></i>Add</button>
             </div>
         </mat-expansion-panel-header>
-        <div class="card">
+        <div *ngIf="compactView">
+          <mat-accordion class="headers-align">
+            <mat-expansion-panel *ngFor="let securities of brokerList;" (click)="showBroker(securities.brokerName)">
+              <mat-expansion-panel-header class="card__row" (click)="showBroker(securities.brokerName)">
+                <div class="card__col-xs-12">
+                  <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="title">Broker Name</div>
+                    <div class="value">{{securities.brokerName}}</div>
+                  </div>
+                  <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="title">LTCG</div>
+                    <div class="value">{{securities.LTCG}}</div>
+                  </div>
+                  <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="title">STCG</div>
+                    <div class="value">{{securities.STCG}}</div>
+                  </div>
+                </div>
+              </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+          </mat-accordion>
+        </div>
+        <div class="card" *ngIf="!compactView">
             <form [formGroup]="securitiesForm">
                 <div formArrayName="securitiesArray">
 
@@ -204,6 +227,8 @@
                                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                             </div>
                             <div class="card__col-sm-3" style="text-align: right;">
+                                <button type="submit" class="tbd-btn"
+                                      (click)="showCompactView()">Back</button>
                                 <button type="submit" class="tbd-btn save-btn" [disabled]="securitiesForm.invalid"
                                     (click)="save('securities')">Save</button>
                             </div>
