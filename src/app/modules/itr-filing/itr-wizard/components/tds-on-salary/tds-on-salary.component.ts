@@ -53,7 +53,7 @@ export class TdsOnSalaryComponent implements OnInit {
   createForm(item?): FormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      deductorTAN: [item ? item.deductorTAN : '', [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)]],
+      deductorTAN: [item ? item.deductorTAN : '', [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)]],
       deductorName: [item ? item.deductorName : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
       totalTdsDeposited: [item ? item.totalTdsDeposited : null, Validators.required],

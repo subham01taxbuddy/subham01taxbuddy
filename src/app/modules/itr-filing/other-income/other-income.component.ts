@@ -24,7 +24,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     "label": "Interest from Saving Account",
   }, {
     "value": "FD_RD_INTEREST",
-    "label": "Interest from Deposits((Bank/ Post-Office/ Co-operative Society)",
+    "label": "Interest from Deposits(Bank/ Post-Office/ Co-operative Society)",
   }, {
     "value": "TAX_REFUND_INTEREST",
     "label": "Interest from Income tax refund",
@@ -52,7 +52,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     "id": null,
     "seqNum": 3,
     "value": "10(11)",
-    "label": "Sec 10(11) - Statutory Provident Fund received) ",
+    "label": "Sec 10(11) - Statutory Provident Fund received ",
     "detailed": false
   }, {
     "id": null,

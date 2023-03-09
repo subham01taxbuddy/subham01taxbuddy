@@ -146,6 +146,7 @@
                 placeholder="PAN of donee"
                 name="panNumber[i]"
                 class="input-field"
+                (blur)="checkDoneePAN(i)"
                 maxlength="10"
                 minlength="10"
                 required
@@ -170,12 +171,17 @@
               >
               <mat-error
                 *ngIf="
-                  generalDonationForm.controls['donationArray'].controls[
-                    i
-                  ].controls['panNumber'].hasError('pattern')
+                  generalDonationForm.controls['donationArray'].controls[i].
+                  controls['panNumber'].hasError('pattern')
                 "
               >
                 Enter valid PAN (e.g XXXXX1234X)</mat-error
+              >
+              <mat-error
+                *ngIf="generalDonationForm.controls['donationArray'].controls[i].
+                  controls['panNumber'].hasError('incorrect')"
+              >
+                Donee PAN can't be same as user PAN.</mat-error
               >
             </mat-form-field>
           </div>
@@ -205,9 +211,7 @@
               />
               <mat-error
                 *ngIf="
-                  generalDonationForm.controls['donationArray'].controls[
-                    i
-                  ].controls['pinCode'].hasError('pattern') ||
+                  generalDonationForm.controls['donationArray'].controls[i].controls['pinCode'].hasError('pattern') ||
                   generalDonationForm.controls['donationArray'].controls[
                     i
                   ].controls['pinCode'].hasError('minlength') ||

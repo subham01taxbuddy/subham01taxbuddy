@@ -370,7 +370,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
         securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(element => element.assetType === 'EQUITY_SHARES_UNLISTED')
       }
       const securitiesImprovement = [];
-      
+
       const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
       securitiesArray.controls.forEach(element => {
         securitiesImprovement.push({

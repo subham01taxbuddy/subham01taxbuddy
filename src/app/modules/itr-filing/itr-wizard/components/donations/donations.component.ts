@@ -629,15 +629,23 @@ export class DonationsComponent implements OnInit {
     this.loading = true;
 
     if (this.generalDonationForm.valid) {
-      this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
-      this.onSave.emit();
-      this.loading = false;
-      this.utilsService.showSnackBar('Donation data saved successfully.');
+      if (this.generalDonationForm.controls['panNumber'].value !== this.Copy_ITR_JSON.panNumber) {
+        this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+        this.onSave.emit();
+        this.loading = false;
+        this.utilsService.showSnackBar('Donation data saved successfully.');
+      } else {
+        this.utilsService.showSnackBar('PAN of donee can not be same as PAN of logged in user');
+      }
     } else {
       this.loading = false;
       this.utilsService.showSnackBar('Failed to save Donation data.');
     }
+  }
+
+  checkDoneePAN(i) {
+    ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['panNumber'].setErrors({ 'incorrect': true });
   }
 
   get getDonationArray() {
