@@ -65,6 +65,10 @@ export class PrefillIdComponent implements OnInit {
     this.skipPrefill.emit(null);
   }
 
+  proceedAfterUpload() {
+    this.skipPrefill.emit(null);
+  }
+
   showPrefillView() {
     this.showEriView = false;
   }

@@ -191,6 +191,7 @@
 
                 <button
                   class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
+                  [disabled]="!uploadDoc" (click)="proceedAfterUpload()"
                 >
                   <span class="font-semibold text-white">Proceed further</span>
                 </button>
