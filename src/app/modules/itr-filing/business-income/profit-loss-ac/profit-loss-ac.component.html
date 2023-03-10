@@ -2,16 +2,26 @@
 <div>
   <app-file-parser (newDataAvailable)="reloadData()"></app-file-parser>
 </div>
-<mat-accordion>
-    <mat-expansion-panel>
+<mat-accordion class="headers-align">
+    <mat-expansion-panel class="hide-close">
       <mat-expansion-panel-header>
-        <mat-panel-title>Non-Speculative Income</mat-panel-title>
+        <mat-panel-title>
+          <mat-icon>
+            arrow_forward_ios
+          </mat-icon>
+          Non-Speculative Income
+        </mat-panel-title>
       </mat-expansion-panel-header>
         <app-non-speculative-income (saveAndNext)="saveAndNext($event)"></app-non-speculative-income>
     </mat-expansion-panel>
-    <mat-expansion-panel>
+    <mat-expansion-panel class="hide-close">
       <mat-expansion-panel-header>
-        <mat-panel-title>Speculative Income</mat-panel-title>
+        <mat-panel-title>
+          <mat-icon>
+            arrow_forward_ios
+          </mat-icon>
+          Speculative Income
+        </mat-panel-title>
       </mat-expansion-panel-header>
       <app-speculative-income (saveAndNext)="saveAndNext($event)"></app-speculative-income>
     </mat-expansion-panel>

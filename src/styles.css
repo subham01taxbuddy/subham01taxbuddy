@@ -295,6 +295,194 @@ button {
 
 /*CSS changes by Sushma End */
 
+/* Rizwan CSS 06 March 2023 */
+.back-foot{
+  background-color:#F5F5FA;
+  position:fixed;
+  bottom:0px;
+  width:100%;
+  left:0px;
+}
+
+.lftBtn {
+    margin-left: 17%;
+    background-color: #ffffff;
+    color: #00AECA;
+    border: 1px solid #00AECA;
+    border-radius: 6px;
+    height: 50px;
+    width: 230px;
+    margin-top: 10px;
+    margin-bottom:20px;
+    font-weight: 500 !important;
+}
+.lftBtn:hover {
+  background-color: #00AECA;
+  border-color: #00AECA;
+  color: #ffffff;
+}
+
+.RhtBtn {
+  margin-right: 10%;
+  background-color: #00AECA;
+  border-color: #00AECA;
+  color: #ffffff;  
+  border-radius: 6px;
+  height: 50px;
+  width: 230px;
+  margin-top: 10px;
+  margin-bottom:20px;
+  font-weight: 500 !important;
+}
+.RhtBtn:hover {
+  background-color: #ffffff;
+  color: #00AECA;
+  border: 1px solid #00AECA;
+}
+
+.adjust {
+  margin-top: 3px;
+  margin-left: 45px;
+  float: left;
+}
+
+.icoAd {
+  float:left;
+  margin-top:3px;
+  margin-left:5px;
+}
+
+.item-act {
+  background-color:#F5F5FA;
+}
+
+.left-sidebar {
+  background-color: #ffffff!important;
+}
+.norTx {
+  color:#c1c1c1;
+}
+.actTx {
+  color:#00AECA;
+}
+
+.topSps {
+  margin-top:20px;
+}
+
+.add{
+  background-color: #EEFFE4;
+  color: #797979;
+  border-radius: 5px;
+  border:1px solid #797979;
+  margin-right: 28px;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+  margin-top: -25px;
+}
+
+.txHd {
+  font-weight: bold;
+  font-size: 18px;
+  width: 73%;
+}
+
+.dis_btn {
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    margin-right: 35px;
+}
+
+.chkSpc {
+    margin-top: 13px;
+    margin-left: 10px;
+}
+.whtAr {
+  margin-left: -35px;
+}
+
+.adIc {
+    padding-top: 0px;
+    float: left;
+    padding-right: 5px;
+}
+
+.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit {
+  background-color: #00aeca!important;
+  color: white!important;
+}
+
+mat-step-header .mat-step-label.mat-step-label-active {
+  color: #00aeca!important;
+}
+
+.mat-step-header .mat-step-icon {
+  background-color: #cccccc;
+  color: white!important;
+}
+.texAlSp {
+  margin-top: -25px;
+  margin-left: 15px;
+}
+.txrtSp {
+  margin-top: -35px;
+  margin-right: 32px;
+}
+/* .stepAlign {
+  margin-top: -25px;
+  background-color: #f5f5fa;
+} */
+.mat-horizontal-stepper-header-container {
+  margin-top: -25px;
+  background-color: #f5f5fa;
+}
+.mat-horizontal-content-container {
+  background-color: #f5f5fa;
+}
+.colorVer {
+  background-color: #1C78F6!important;
+}
+
+.sources-chip .mat-chip {
+  background-color: #FFFFFF;
+    border: 1.94547px solid #E3E3E3;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 19.4547px 29.1821px;
+    gap: 19.45px;
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 31px;
+    text-align: center;
+    color: #7E7E8F;
+    height: 60px;
+}
+
+.sources-back {
+  margin-top: -30px;
+  margin-left: 16px;
+}
+
+.alTxH {
+  margin:20px 0px 0px 43px;
+}
+
+.source-color {
+  color:#00AECA;
+  font-weight:500;
+}
+.spc-blw {
+  margin-bottom:150px;
+}
+
+/* Rizwan CSS 06 March 2023 Ends*/
 
 /*
 ! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com
@@ -543,7 +731,7 @@ html {
 }
 
 :root {
-  --p: 259 94% 51%;
+  --p: 188 100% 40%;
   --pf: 259 94% 41%;
   --sf: 314 100% 38%;
   --af: 174 60% 41%;
@@ -571,7 +759,7 @@ html {
   --sc: 0 0% 100%;
   --a: 174 60% 51%;
   --ac: 175 44% 15%;
-  --n: 219 14% 28%;
+  --n: 0 0% 80%;
   --nc: 0 0% 100%;
   --b1: 0 0% 100%;
   --b2: 0 0% 95%;
@@ -859,7 +1047,9 @@ select {
 .avatar.placeholder>div,
 .btn {
   align-items: center;
-  justify-content: center
+  justify-content: center;
+  margin-right: 30px!important;
+  border-radius: 5px!important;
 }
 
 .btn {
@@ -898,12 +1088,15 @@ select {
   transition-timing-function: cubic-bezier(.4, 0, .2, 1);
   -webkit-user-select: none;
   -moz-user-select: none;
-  user-select: none
+  user-select: none;
+  
 }
 
 .btn-disabled,
 .btn[disabled] {
-  pointer-events: none
+  pointer-events: none;
+  margin-right: 30px;
+    border-radius: 5px
 }
 
 .btn-square {
@@ -1900,7 +2093,7 @@ select {
 .checkbox-primary,
 .checkbox-primary:hover {
   --tw-border-opacity: 1;
-  border-color: hsl(var(--p)/var(--tw-border-opacity))
+  border-color: #cccccc;
 }
 
 .checkbox-primary:focus-visible {

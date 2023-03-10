@@ -1,25 +1,19 @@
-import { BusinessIncomeComponent } from './../business-income/business-income.component';
-import { HousePropertyComponent } from './../house-property/house-property.component';
-import { SalaryComponent } from './../salary/salary.component';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
 import { Schedules } from "../../shared/interfaces/schedules";
 import { NavigationEnd, Router } from "@angular/router";
 import { Location } from '@angular/common';
-import { OtherInformationComponent } from './components/other-information/other-information.component';
-import { SourceOfIncomesComponent } from "./pages/source-of-incomes/source-of-incomes.component";
-import { OtherIncomeComponent } from "../other-income/other-income.component";
 import { Subscription } from "rxjs";
 import { WizardNavigation } from "../../itr-shared/WizardNavigation";
 import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
 import {AllBusinessIncomeComponent} from "./pages/all-business-income/all-business-income.component";
+import {UserNotesComponent} from "../../shared/components/user-notes/user-notes.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ChatOptionsDialogComponent} from "../../tasks/components/chat-options/chat-options-dialog.component";
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -41,13 +35,16 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   componentsList = [];
   navigationData: any;
+  customerName = '';
 
   constructor(
     private itrMsService: ItrMsService,
+    private userMsService: UserMsService,
     public utilsService: UtilsService,
     private router: Router, private location: Location,
     private cdRef: ChangeDetectorRef,
-    private schedules: Schedules
+    private schedules: Schedules,
+    private matDialog: MatDialog
   ) {
 
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
@@ -70,6 +67,17 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if(this.ITR_JSON.prefillData){
       this.showPrefill = false;
       this.showIncomeSources = true;
+    }
+    this.getCustomerName();
+  }
+
+  getCustomerName() {
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
+      this.ITR_JSON.family.filter((item: any) => {
+        if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
+          this.customerName = item.fName + ' ' + item.mName + ' ' + item.lName;
+        }
+      });
     }
   }
 
@@ -165,10 +173,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if (scheduleInfoEvent.schedule.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
       if (this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
-        //for future options, it shall be added inside capital gain
+        //for future options, it shall be added inside business income
         if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-          if (this.componentsList.indexOf(this.schedules.CAPITAL_GAIN) < 0) {
-            this.componentsList.splice(index, 0, this.schedules.CAPITAL_GAIN);
+          if (this.componentsList.indexOf(this.schedules.BUSINESS_INCOME) < 0) {
+            this.componentsList.splice(index, 0, this.schedules.BUSINESS_INCOME);
           }
         } else {
           //for add more info when capital gain is selected
@@ -183,16 +191,16 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     } else {
       //for removing future options, check if capital gain is there, if not remove
       if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-        let cgSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.CAPITAL_GAIN)[0];
+        let cgSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.BUSINESS_INCOME)[0];
         if (!cgSource.selected) {
-          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+          this.componentsList = this.componentsList.filter(item => item !== this.schedules.BUSINESS_INCOME);
         }
       } else if (scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
-        let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
-        if (!spSource.selected) {
+        // let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
+        // if (!spSource.selected) {
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.MORE_INFORMATION);
-        }
+        // }
       } else {
         this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);
       }
@@ -216,4 +224,61 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  openNotesDialog() {
+    let disposable = this.matDialog.open(UserNotesComponent, {
+      width: '60vw',
+      height: '90vh',
+      data: {
+        title: 'Add Notes',
+        userId: this.ITR_JSON.userId,
+        clientName: this.ITR_JSON.family[0].fName + " " + this.ITR_JSON.family[0].lName,
+        serviceType: 'ITR'
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+  }
+
+  async startCalling() {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    if (!agentNumber) {
+      this.utilsService.showErrorMsg('You don\'t have calling role.');
+      return;
+    }
+    this.loading = true;
+    let customerNumber = this.ITR_JSON.contactNumber;
+    const param = `/prod/call-support/call`;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": customerNumber
+    }
+    console.log('reqBody:', reqBody)
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this.utilsService.showSnackBar(result.success.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
+    })
+  }
+
+  openChat() {
+    let disposable = this.matDialog.open(ChatOptionsDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: this.ITR_JSON.userId,
+        clientName: this.customerName,
+        serviceType: 'ITR'
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+
+  }
 }

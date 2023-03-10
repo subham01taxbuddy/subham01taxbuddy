@@ -58,7 +58,7 @@ export class SummaryComponent implements OnInit {
     "id": null,
     "seqNum": 3,
     "value": "10(11)",
-    "label": "Sec 10(11) - Statutory Provident Fund received) ",
+    "label": "Sec 10(11) - Statutory Provident Fund received ",
     "detailed": false
   }, {
     "id": null,
@@ -157,7 +157,7 @@ export class SummaryComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
     const param = '/tax';
-    
+
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
       // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
       console.log('result is=====', result);
@@ -459,7 +459,7 @@ export class SummaryComponent implements OnInit {
   }
 
   sendPdf(channel) {
-    // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both 
+    // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both
     this.loading = true;
     let itrId = this.ITR_JSON.itrId;
     let param = '/summary/send?itrId=' + itrId + '&channel=' + channel;

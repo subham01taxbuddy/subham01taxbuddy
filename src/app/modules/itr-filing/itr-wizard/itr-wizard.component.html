@@ -1,10 +1,12 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix whole-padding">
-  <h2 class="capitalize text-gray-1100 font-bold text-2xl leading-[35px] dark:text-gray-dark-1100 pb-[18px]">
-    ITR Filling Process
+  <h2 class="topSps capitalize text-gray-1100 font-bold text-2xl leading-[35px] dark:text-gray-dark-1100 pb-[18px]">
+    ITR Filing Process
   </h2>
   <div style="padding: 0 !important;">
-    <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
+    <div class="card__row">
+      <div class="card__col-lg-12">
+      <div class="card__col-lg-8 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
         <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" />
         <a [ngClass]="showPrefill ? 'capitalize' : 'capitalize text-color-brands'"
@@ -24,12 +26,31 @@
         <span [ngClass]="breadcrumb ? 'capitalize' : 'capitalize text-color-brands'">{{breadcrumb}}</span>
       </div>
     </div>
+      <div class="card__col-lg-4" style="text-align: right">
+        <div>
+          {{customerName}} :&nbsp;&nbsp;<span>{{ITR_JSON.panNumber}}</span>
+        </div>
+        <div>
+          <button class="action-buttons" title="Users notes" (click)="openNotesDialog()">
+            <i class="fa fa-sticky-note-o fa-1x"aria-hidden="true" style="color: green;"></i>
+          </button>
+          <button class="action-buttons" title="Chat with user" (click)="openChat()">
+            <i class="fa fa-weixin fa-1x"aria-hidden="true" style="color: green;"></i>
+          </button>
+          <button class="action-buttons" title="Call user"(click)="startCalling()">
+            <i class="fa fa-phone fa-1x"aria-hidden="true" style="color: green;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
     <div *ngIf="showPrefill">
       <app-prefill-id [data]="navigationData" (skipPrefill)="skipPrefill($event)"></app-prefill-id>
     </div>
     <div *ngIf="showIncomeSources">
       <app-source-of-incomes (scheduleSelected)="updateSchedules($event)"></app-source-of-incomes>
-      <div>
+      <!-- <div class="txHd alTxH">Enter <span color="source-color">Salary related Information below:</div> -->
+      <div class="spc-blw">
         <mat-accordion class="headers-align">
           <mat-expansion-panel *ngFor="let schedule of componentsList" hideToggle>
             <mat-expansion-panel-header (click)="gotoSchedule(schedule)">
@@ -43,16 +64,10 @@
       </div>
       <hr>
       <!-- action-buttons  -->
-      <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
-        <button (click)="showPrefillView()"
-          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
-          <span class="font-semibold">Back to Prefill Data</span>
-        </button>
+      <div class="flex justify-between p-[30px] back-foot">
+        <button (click)="showPrefillView()" class="lftBtn">Back to Prefill Data </button>
 
-        <button (click)="gotoSummary()"
-          class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
-          <span class="font-semibold">Go to Summary</span>
-        </button>
+        <button (click)="gotoSummary()" class="RhtBtn"><span class="adjust">Go to Summary</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
       </div>
 
     </div>

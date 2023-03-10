@@ -1,22 +1,107 @@
 <div style="overflow: hidden;">
-    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-    <div class="card__row">
-        <div class="">
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+  <div>
+    <form [formGroup]="specIncomeForm">
+        <div>
             <div class="card__col-xs-12 card__col-sm-10">
-                <b style="font-size: 14px;">Speculative Activity </b><br><br>
+                <b style="font-size: 14px;">Speculative Activity </b>
+              <button type="button" class="tbd-btn" style="float: right" (click)="addSpecIncomeForm()">+ Add More </button>
             </div>
+
         </div>
+
         <div class="card__col-xs-12 card__col-sm-12">
-            <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-                <ag-grid-angular style="width:90%; height: 100%;" class="ag-theme-balham cg-table"
-                    [gridOptions]="professionalGridOptions" (gridSizeChanged)="onGridSizeChanged($event)">
-                </ag-grid-angular>
+          <div formArrayName="specIncomesArray" style="height: 100%; padding-top: 5px; box-sizing: border-box;">
+            <div *ngFor="let income of getIncomeArray.controls | paginate:config ;let i=index"
+                 [formGroupName]="fieldGlobalIndex(i)">
+              <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+                  </mat-checkbox>
+<!--                    <mat-label>{{}}</mat-label>-->
+                  <mat-form-field appearance="none">
+                    <input formControlName="brokerName" matInput disabled
+                           name="brokerName[i]" class="input-field">
+                  </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-8">
+                  <div class="card__col-xs-12 card__col-sm-10">
+                    <mat-label>Net income from speculative income</mat-label>
+                    <mat-label>Gross Profit - Expenditure</mat-label>
+                    <!--                    <mat-label>10000</mat-label>-->
+                    <mat-form-field appearance="none">
+                      <input formControlName="netIncome" matInput disabled
+                             name="netIncome[i]" required class="input-field" maxlength="14" digitsOnly>
+                    </mat-form-field>
+                  </div>
+                  <div class="card__col-xs-12 card__col-sm-2">
+                    <div class="edit-head">
+                      <button type="button" class="edit-donation" (click)="editSpecIncomeForm(i)"><mat-icon>
+                        edit_square
+                      </mat-icon>Edit </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-12">
+
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <mat-label>Turnover from speculative activity</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="turnover"
+                      matInput name="turnover[i]" class="input-field"
+                      required type="number" trim (blur)="calculateNetIncome(i)">
+                  </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <mat-label>Gross Profit</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="grossProfit"
+                      matInput  name="grossProfit[i]" class="input-field"
+                      required type="number" trim (blur)="calculateNetIncome(i)">
+
+                  </mat-form-field>
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <mat-label>Expenditure, if any</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="expenditure"
+                      matInput name="expenditure[i]" class="input-field"
+                      required type="number" trim (blur)="calculateNetIncome(i)">
+                  </mat-form-field>
+                </div>
+
+
+
+
+
+
+
+              </div>
+              </div>
+
+
             </div>
+
+      </div>
         </div>
+      </form>
+  </div>
+  <div>
+    <div class="card__col-xs-12">
+      <div class="card__col-sm-6 txt-center">
+        <table>
+          <tr *ngFor="let item of getIncomeArray.controls | paginate:config"></tr>
+        </table>
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+      <div class="card__row" style="text-align: right;">
+          <button class="tbd-btn save-btn" (click)="onContinue()">&nbsp;&nbsp;Save </button>
+      </div>
     </div>
-</div>
-<div style="text-align: right;">
-    <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
-        &nbsp;&nbsp;Back</button>
-    <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Continue </button>
+  </div>
 </div>

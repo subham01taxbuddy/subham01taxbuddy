@@ -13,7 +13,7 @@
 
     <mat-expansion-panel
       hideToggle
-      class="hide-close"
+      class="hide-close" *ngIf="isFnO"
     >
       <mat-expansion-panel-header (click)="addIncomeDetails('pnlaccounts')">
         <mat-panel-title>

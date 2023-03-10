@@ -803,4 +803,13 @@ export class UtilsService {
         return this.itrMsService.getMethod(param);
     }
 
+    getCgSummary(userId, assessmentYear) {
+        const param = '/cg-summary';
+        let request = {
+          userId: userId,
+          assessmentYear: assessmentYear
+        }
+        return this.itrMsService.postMethod(param, request);
+    }
+
 }
