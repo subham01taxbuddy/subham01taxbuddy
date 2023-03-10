@@ -3,26 +3,8 @@
 <div class="main clearfix">
   <div class="content content_full">
     <div class="content__container">
-      <div class="card">
-        <div class="card__row">
-          <button class="tbd-btn" (click)="downloadCsv()">Download CSV export file</button>
-          <p style="float: right;"> Total Count: <b>{{smeList.length}}</b></p>
-          <br>
-        </div>
-
-        <div class="card__row">
-          <!-- <table>
-            <tr *ngFor="let item of smeList | paginate:config"></tr>
-          </table> -->
-          <ag-grid-angular class="ag-theme-balham pagination" [gridOptions]="smeListGridOptions"
-            (rowClicked)="onUsersRowClicked($event)" [suppressExcelExport]="true" [popupParent]="popupParent"
-            paginationPageSize=30 pagination=true>
-
-          </ag-grid-angular>
-
-          <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
-        </div>
-      </div>
+      <div>SME List placeholder</div>
+      <button class="tbd-btn" (click)="updateSME()">Update SME</button>
     </div>
   </div>
 </div>

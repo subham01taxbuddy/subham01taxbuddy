@@ -14,6 +14,7 @@ import { NgxPaginationModule } from "ngx-pagination";
 import { SmeManagementRoutingModule } from './sme-management.routing';
 import { SmeListComponent } from './pages/sme-list/sme-list.component';
 import { SmeLeftComponent } from './pages/sme-left/sme-left.component';
+import { UpdateSmeDialogComponent } from './components/update-sme-dialog/update-sme-dialog.component';
 
 @NgModule({
     imports: [
@@ -33,7 +34,8 @@ import { SmeLeftComponent } from './pages/sme-left/sme-left.component';
         SmeListComponent,
         CreateSmeComponent,
         AssignmentComponent,
-        SmeLeftComponent
+        SmeLeftComponent,
+        UpdateSmeDialogComponent
     ],
     entryComponents: []
 

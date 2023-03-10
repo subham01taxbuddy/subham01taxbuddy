@@ -4,6 +4,9 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {MatDialog} from "@angular/material/dialog";
+import {UserNotesComponent} from "../../../shared/components/user-notes/user-notes.component";
+import {UpdateSmeDialogComponent} from "../../components/update-sme-dialog/update-sme-dialog.component";
 
 @Component({
   selector: 'app-sme-list',
@@ -21,6 +24,7 @@ export class SmeListComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
+    private matDialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string) {
     this.smeListGridOptions = <GridOptions>{
       rowData: [],
@@ -302,7 +306,7 @@ export class SmeListComponent implements OnInit {
         if(existing.length === 0) {
           userArray.push(sme);
         }
-        
+
       } else {
         // console.log('non filtered' + userData[i].userId);
         let sme = {
@@ -352,6 +356,19 @@ export class SmeListComponent implements OnInit {
     }
   }
 
+  updateSME(){
+    let disposable = this.matDialog.open(UpdateSmeDialogComponent, {
+      width: '60vw',
+      height: '90vh',
+      data: {
+        title: 'Add Notes',
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+  }
+
   downloadCsv() {
     // console.log(this.smeListGridOptions.api.getDataAsCsv(this.getParams()));
     let content = this.smeListGridOptions.api.getDataAsCsv(this.getParams());
@@ -370,7 +387,7 @@ export class SmeListComponent implements OnInit {
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
-    }      
+    }
     this.smeListGridOptions.api.hideOverlay();
     //this.smeListGridOptions.api.exportDataAsCsv(this.getParams());
   }
