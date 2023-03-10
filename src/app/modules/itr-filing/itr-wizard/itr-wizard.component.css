@@ -3,3 +3,11 @@
     margin-right: 48px !important;
     border-radius: 2px;
 }
+
+.action-buttons {
+  border: none;
+  cursor: pointer;
+  float: right;
+  background: transparent;
+  padding-right: 15px;
+}

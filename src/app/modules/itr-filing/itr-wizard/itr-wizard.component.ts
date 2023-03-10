@@ -10,6 +10,10 @@ import { Subscription } from "rxjs";
 import { WizardNavigation } from "../../itr-shared/WizardNavigation";
 import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
 import {AllBusinessIncomeComponent} from "./pages/all-business-income/all-business-income.component";
+import {UserNotesComponent} from "../../shared/components/user-notes/user-notes.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ChatOptionsDialogComponent} from "../../tasks/components/chat-options/chat-options-dialog.component";
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -31,13 +35,16 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   componentsList = [];
   navigationData: any;
+  customerName = '';
 
   constructor(
     private itrMsService: ItrMsService,
+    private userMsService: UserMsService,
     public utilsService: UtilsService,
     private router: Router, private location: Location,
     private cdRef: ChangeDetectorRef,
-    private schedules: Schedules
+    private schedules: Schedules,
+    private matDialog: MatDialog
   ) {
 
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
@@ -60,6 +67,17 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if(this.ITR_JSON.prefillData){
       this.showPrefill = false;
       this.showIncomeSources = true;
+    }
+    this.getCustomerName();
+  }
+
+  getCustomerName() {
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
+      this.ITR_JSON.family.filter((item: any) => {
+        if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
+          this.customerName = item.fName + ' ' + item.mName + ' ' + item.lName;
+        }
+      });
     }
   }
 
@@ -206,4 +224,61 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  openNotesDialog() {
+    let disposable = this.matDialog.open(UserNotesComponent, {
+      width: '60vw',
+      height: '90vh',
+      data: {
+        title: 'Add Notes',
+        userId: this.ITR_JSON.userId,
+        clientName: this.ITR_JSON.family[0].fName + " " + this.ITR_JSON.family[0].lName,
+        serviceType: 'ITR'
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+  }
+
+  async startCalling() {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    if (!agentNumber) {
+      this.utilsService.showErrorMsg('You don\'t have calling role.');
+      return;
+    }
+    this.loading = true;
+    let customerNumber = this.ITR_JSON.contactNumber;
+    const param = `/prod/call-support/call`;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": customerNumber
+    }
+    console.log('reqBody:', reqBody)
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this.utilsService.showSnackBar(result.success.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
+    })
+  }
+
+  openChat() {
+    let disposable = this.matDialog.open(ChatOptionsDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: this.ITR_JSON.userId,
+        clientName: this.customerName,
+        serviceType: 'ITR'
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+
+  }
 }

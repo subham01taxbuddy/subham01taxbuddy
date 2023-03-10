@@ -4,7 +4,9 @@
     ITR Filling Process
   </h2>
   <div style="padding: 0 !important;">
-    <div class="flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
+    <div class="card__row">
+      <div class="card__col-lg-12">
+      <div class="card__col-lg-8 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
         <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" />
         <a [ngClass]="showPrefill ? 'capitalize' : 'capitalize text-color-brands'"
@@ -23,6 +25,24 @@
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
         <span [ngClass]="breadcrumb ? 'capitalize' : 'capitalize text-color-brands'">{{breadcrumb}}</span>
       </div>
+    </div>
+      <div class="card__col-lg-4" style="text-align: right">
+        <div>
+          {{customerName}} :&nbsp;&nbsp;<span>{{ITR_JSON.panNumber}}</span>
+        </div>
+        <div>
+          <button class="action-buttons" title="Users notes" (click)="openNotesDialog()">
+            <i class="fa fa-sticky-note-o fa-1x"aria-hidden="true" style="color: green;"></i>
+          </button>
+          <button class="action-buttons" title="Chat with user" (click)="openChat()">
+            <i class="fa fa-weixin fa-1x"aria-hidden="true" style="color: green;"></i>
+          </button>
+          <button class="action-buttons" title="Call user"(click)="startCalling()">
+            <i class="fa fa-phone fa-1x"aria-hidden="true" style="color: green;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
     </div>
     <div *ngIf="showPrefill">
       <app-prefill-id [data]="navigationData" (skipPrefill)="skipPrefill($event)"></app-prefill-id>
