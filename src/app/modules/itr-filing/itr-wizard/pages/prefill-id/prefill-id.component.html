@@ -7,24 +7,22 @@
   >
     <!-- main-div  -->
     <main
-      class="bg-white overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
+      class="overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
     *ngIf="!showEriView">
       <div>
-        <div
-          class="flex justify-between items-center rounded-2x1 bg-white px-[25px]"
+        <div class="flex justify-between items-center rounded-2x1 px-[25px]"
         >
           <!-- Prefill-Header  -->
-          <h2
-            class="capitalize text-gray-1100 font-bold text-2xl leading-[35px]"
-          >
-            Prefill
-          </h2>
+          
+          <div class="txHd">Please select download or import option to have your pre-filled
+          data to proceed further</div>
+        
 
           <div class="flex flex-col items-center">
             <div *ngIf="!data?.eriClientValidUpto">
               <!--   -->
               <button
-                class="btn skip normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
+                class="add normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
                 (click)="addClient()"
               >
                 <span class="font-semibold"> + Add Client </span>
@@ -43,47 +41,42 @@
         <div>
           <div
             *ngIf="!downloadPrefill"
-            class="rounded-2xl bg-neutral-bg overflow-scroll scrollbar-hide p-[25px] mb-[33px]"
+            class="rounded-2xl overflow-scroll scrollbar-hide p-[25px] mb-[33px]"
           >
             <div
               class="flex items-center justify-between pb-4 border-neutral border-b"
             >
-              <p class="text-subtitle-semibold font-semibold text-gray-1100">
+              <!-- <p class="text-subtitle-semibold font-semibold text-gray-1100">
                 Please select download or import option to have your pre-filled
                 data to proceed further
-              </p>
+              </p> -->
             </div>
 
             <!-- prefill options -->
-            <div class="p-7">
+            <div class="">
               <!-- prefill-options  -->
               <div class="flex flex-col gap-y-3 p-[25px] mb-[25px]">
                 <!-- download-prefill  -->
-                <div
-                  class="bg-gray-100 border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[27px] pl-[21px] pb-[30px] pr-[26px] lg:flex-row"
+                <div class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[5px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
                 >
                   <div
                     class="flex items-start flex-col lg:items-center gap-x-[14px] lg:flex-row"
                   >
                     <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
                       <input
-                        class="checkbox checkbox-primary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
                         type="checkbox"
                         [(ngModel)]="checked"
                         (click)="checkedOtp()"
                       />
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
-                      <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
-                      >
+                      <div class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left">
                         Download Prefill Data
                       </div>
-                      <div
-                        class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
-                      >
-                        <span class="text-xs text-color-brands"
-                          >Please select this option to download the prefill
+                      <div class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row">
+                        <span class="text">
+                          Please select this option to download the prefill
                           data of the user</span
                         >
                       </div>
@@ -114,14 +107,14 @@
                 </div>
                 <!-- upload-prefill  -->
                 <div
-                  class="bg-gray-100 border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[27px] pl-[21px] pb-[30px] pr-[26px] lg:flex-row"
+                  class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
                 >
                   <div
                     class="flex items-start flex-col lg:items-center gap-x-[14px] lg:flex-row"
                   >
                     <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
                       <input
-                        class="checkbox checkbox-primary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
                         type="checkbox"
                         [(ngModel)]="uploadChecked"
                         (click)="checkedOtp()"
@@ -129,14 +122,13 @@
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
-                      >
-                        Upload Prefill Data
+                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left">
+                      <i class="material-icons-outlined adIc">cloud_upload</i> Upload Prefill Data                     
                       </div>
                       <div
                         class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
                       >
-                        <span class="text-xs text-color-brands"
+                        <span class="text"
                           >Please select this option if you already have the
                           prefill and want to upload and parse it.</span
                         >
@@ -181,19 +173,13 @@
               <hr />
 
               <!-- action-buttona  -->
-              <div class="flex justify-between p-[30px]">
-                <button
-                  (click)="skipToSources()"
-                  class="btn skip normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
-                >
-                  <span class="font-semibold">Skip to Sources of Income</span>
+              <div class="flex justify-between p-[30px] back-foot">
+                <button (click)="skipToSources()" class="lftBtn">
+                  Skip to Sources of Income
                 </button>
 
-                <button
-                  class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
-                  [disabled]="!uploadDoc" (click)="proceedAfterUpload()"
-                >
-                  <span class="font-semibold text-white">Proceed further</span>
+                <button class="RhtBtn" [disabled]="!uploadDoc" (click)="proceedAfterUpload()">
+                  <span class="adjust">Proceed Further</span> <i class="material-icons icoAd">arrow_right_alt </i>
                 </button>
               </div>
             </div>

@@ -3,23 +3,23 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 <main
-  class="bg-white overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
+  class="overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
 >
   <!-- add-client-header  -->
   <div class="flex justify-between items-center">
-    <h1 class="headline">Add Client</h1>
-    <div class="flex flex-col gap-[10px] items-center">
-      <p>Client's Name</p>
-      <strong class="user-name"
+    <div class="headline texAlSp">Steps to Add Client:</div>
+    <div class="flex flex-col gap-[10px] items-center txrtSp">
+      <div>Client's Name: <b>{{ personalInfo.fName }} {{ personalInfo.lName }}</b></div>
+      <!-- <strong class="user-name"
         >{{ personalInfo.fName }} {{ personalInfo.lName }}</strong
-      >
+      > -->
     </div>
   </div>
 
   <!-- alert-message  -->
   <div class="p-[25px]">
     <div class="alert alert-warning" role="alert">
-      Add client now to avoid any further errors
+      <i class="material-icons-outlined adIc">warning</i> Add client now to avoid any further errors
     </div>
   </div>
 
@@ -39,7 +39,7 @@
                 [(ngModel)]="selectedOtpOption"
                 [ngModelOptions]="{ standalone: true }"
               >
-                <mat-radio-button value="A">Aadhaar OTP</mat-radio-button
+                <mat-radio-button checked value="A">Aadhaar OTP</mat-radio-button
                 >&nbsp;&nbsp;&nbsp;
                 <mat-radio-button value="E">E portal OTP</mat-radio-button>
               </mat-radio-group>
@@ -107,12 +107,12 @@
             <div style="padding: 0 0 25px 25px">
               <button
                 matStepperNext
-                class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
-                style="width: 27%"
+                class="colorVer btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+                style="width: 62%"
                 *ngIf="addClientForm.controls.panNumber.valid"
                 (click)="verifyPan()"
               >
-                <span class="font-semibold">Verify PAN</span>
+                <span class="font-semibold">Verify PAN </span>
               </button>
             </div>
           </div>
@@ -307,19 +307,15 @@
 
   <hr />
   <!-- action-buttons  -->
-  <div class="flex justify-between p-[30px]">
+  <div class="flex justify-between p-[30px] back-foot">
     <button
       (click)="skip()"
-      class="btn skip normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
+      class="lftBtn"
     >
       <span class="font-semibold">Skip to Sources of Income</span>
     </button>
 
-    <button
-      (click)="showPrefillView()"
-      class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7"
-    >
-      <span class="font-semibold text-white">Go to Prefill</span>
-    </button>
+    <button (click)="showPrefillView()" class="RhtBtn">
+    <span class="adjust">Go to Prefill Json</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
   </div>
 </main>
