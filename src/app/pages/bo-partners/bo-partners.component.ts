@@ -251,10 +251,10 @@ export class BoPartnersComponent implements OnInit {
         },
         valueGetter: (params) => {
           console.log(params.data);
-          var q1 = params.data.areaOfExpertise.incomeTaxBasic;
-          var q2 = params.data.areaOfExpertise.incomeTaxSpecial;
-          var q3 = params.data.areaOfExpertise.tdsFiling;
-          var q4 = params.data.areaOfExpertise.additional;
+          var q1 = params.data.areaOfExpertise?.incomeTaxBasic;
+          var q2 = params.data.areaOfExpertise?.incomeTaxSpecial;
+          var q3 = params.data.areaOfExpertise?.tdsFiling;
+          var q4 = params.data.areaOfExpertise?.additional;
           return q1 + ',' + q2 + ',' + q3 + ',' + q4;
         },
       },
@@ -424,10 +424,10 @@ export class BoPartnersComponent implements OnInit {
     });
 
     disposable.afterClosed().subscribe((result) => {
+      console.log('statusData:', result);
       if (result) {
         if (result.data === 'statusChanged') {
-          // this.searchParam.page = 0;
-          // this.search();
+          this.getBoPartners();
         }
       }
     });
