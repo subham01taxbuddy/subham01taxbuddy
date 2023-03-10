@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
   FormGroup,
   FormArray,
@@ -32,7 +32,6 @@ export class OtherAssetImprovementComponent implements OnInit {
   index: number;
   @Input() goldCg: NewCapitalGain;
   @Input() isAddOtherAssetsImprovement: Number;
-
   constructor(
     public fb: FormBuilder,
     private itrMsService: ItrMsService,
@@ -82,9 +81,20 @@ export class OtherAssetImprovementComponent implements OnInit {
     // }
   }
 
+  getImprovementYears() {
+    const param = `/capital-gain/improvement/financial-years`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      if (res.success) console.log('FY : ', res);
+      this.financialyears = res.data;
+      this.improvementYears = this.financialyears;
+      // sessionStorage.setItem('improvementYears', res.data)
+    });
+  }
+
   get getOtherAssets() {
     return this.OtherAsssetImprovementForm.get('otherAssets') as FormArray;
   }
+
   get getOtherAssetsArray() {
     return this.OtherAsssetImprovementForm.get('otherAssets').get(
       'otherAssetsArray'
@@ -125,17 +135,17 @@ export class OtherAssetImprovementComponent implements OnInit {
     }
   }
 
-  addMoreOtherAssetsForm(item?) {
+  addMoreOtherAssetsForm(index?) {
     const otherAssetsArray = this.getOtherAssets;
     const otherAssetsArrayLength = otherAssetsArray.length;
 
     otherAssetsArray.insert(
       otherAssetsArrayLength,
-      this.createOtherAssetsForm(item)
+      this.createOtherAssetsForm(index)
     );
   }
 
-  createOtherAssetsForm(item?) {
+  createOtherAssetsForm(index?) {
     return this.fb.group({
       otherAssetsArray: this.fb.group({
         // srn: [this.data.rowIndex],
@@ -171,132 +181,6 @@ export class OtherAssetImprovementComponent implements OnInit {
         costOfImprovement: [0, [Validators.required]],
         indexCostOfImprovement: [0, [Validators.required]],
       }),
-    });
-  }
-
-  calculateCg(i) {
-    this.loading = true;
-    const param = '/singleCgCalculate';
-    let request = {
-      assessmentYear: '2022-2023',
-      assesseeType: 'INDIVIDUAL',
-      residentialStatus: 'RESIDENT',
-      assetType: 'GOLD',
-      assetDetails: this.goldCg.assetDetails,
-      improvement: [],
-      deduction: this.goldCg.deduction,
-    };
-
-    this.goldCg.assetDetails.forEach((asset) => {
-      //find improvement
-      let improvements = this.goldCg.improvement;
-      if (!improvements || improvements.length == 0) {
-        let improvement = {
-          indexCostOfImprovement: 0,
-          id: asset.srn,
-          dateOfImprovement: '',
-          costOfImprovement: 0,
-          financialYearOfImprovement: null,
-          srn: asset.srn,
-        };
-        request.improvement.push(improvement);
-      } else {
-        request.improvement = this.goldCg.improvement;
-      }
-    });
-
-    this.itrMsService.postMethod(param, request).subscribe(
-      (res: any) => {
-        this.loading = false;
-        console.log('Single CG result:', res);
-        this.goldCg.assetDetails = res.assetDetails;
-        this.goldCg.improvement = res.improvement;
-        this.goldCg.deduction = res.deduction;
-        // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-        // this.calculateTotalCg();
-
-        (
-          (this.getOtherAssets.controls[i] as FormGroup).controls[
-            'otherAssetsArray'
-          ] as FormGroup
-        ).controls['capitalGain']?.setValue(res.assetDetails[i].capitalGain);
-
-        // (
-        //   (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
-        //     .controls[0] as FormArray
-        // ).controls['otherAssetsArray'].controls[0].controls[
-        //   'capitalGain'
-        // ]?.setValue(res.data[i].capitalGain);
-      },
-      (error) => {
-        this.loading = false;
-      }
-    );
-
-    this.saveDetails(i);
-  }
-
-  calculateGainType(i) {
-    let req = {
-      assetType: this.assetType,
-      buyDate: (
-        (this.getOtherAssets.controls[i] as FormGroup).controls[
-          'otherAssetsArray'
-        ] as FormGroup
-      ).controls['purchaseDate'].value,
-
-      sellDate: (
-        (this.getOtherAssets.controls[i] as FormGroup).controls[
-          'otherAssetsArray'
-        ] as FormGroup
-      ).controls['sellDate'].value,
-    };
-
-    console.log(req.buyDate);
-    console.log(req.sellDate);
-
-    const param = `/calculate/indexed-cost`;
-    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-      console.log('GAIN Type : ', res);
-
-      (
-        (this.getOtherAssets.controls[i] as FormGroup).controls[
-          'otherAssetsArray'
-        ] as FormGroup
-      ).controls['gainType']?.setValue(res.data.capitalGainType);
-    });
-  }
-
-  //  IMPROVEMENTS --------------------------------------------
-
-  // assetSelected() {
-  //   let selectedAsset = this.improvementForm.controls['srn'].value;
-  //   let assetDetails = this.data.assetDetails.filter(
-  //     (item) => item.srn === selectedAsset
-  //   )[0];
-  //   if (assetDetails.gainType === 'LONG') {
-  //     this.improvementForm.controls['indexCostOfImprovement'].enable();
-  //   } else {
-  //     this.improvementForm.controls['indexCostOfImprovement'].disable();
-  //   }
-  //   let purchaseDate = assetDetails.purchaseDate;
-  //   let purchaseYear = new Date(purchaseDate).getFullYear();
-  //   console.log(
-  //     this.financialyears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
-  //   );
-  //   console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-  //   this.improvementYears = this.financialyears.splice(
-  //     this.financialyears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
-  //   );
-  // }
-
-  getImprovementYears() {
-    const param = `/capital-gain/improvement/financial-years`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      if (res.success) console.log('FY : ', res);
-      this.financialyears = res.data;
-      this.improvementYears = this.financialyears;
-      // sessionStorage.setItem('improvementYears', res.data)
     });
   }
 
@@ -353,6 +237,205 @@ export class OtherAssetImprovementComponent implements OnInit {
     }
   }
 
+  calculateCg(index) {
+    this.loading = true;
+    const param = '/singleCgCalculate';
+    let request = {
+      assessmentYear: '2022-2023',
+      assesseeType: 'INDIVIDUAL',
+      residentialStatus: 'RESIDENT',
+      assetType: 'GOLD',
+      assetDetails: this.goldCg.assetDetails,
+      improvement: [],
+      deduction: this.goldCg.deduction,
+    };
+
+    this.goldCg.assetDetails.forEach((asset) => {
+      //find improvement
+      let improvements = this.goldCg.improvement;
+      if (!improvements || improvements.length == 0) {
+        let improvement = {
+          indexCostOfImprovement: 0,
+          id: asset.srn,
+          dateOfImprovement: '',
+          costOfImprovement: 0,
+          financialYearOfImprovement: null,
+          srn: asset.srn,
+        };
+        request.improvement.push(improvement);
+      } else {
+        // request.improvement = this.goldCg.improvement;
+      }
+    });
+
+    this.itrMsService.postMethod(param, request).subscribe(
+      (res: any) => {
+        this.loading = false;
+        console.log('Single CG result:', res);
+        this.goldCg.assetDetails = res.assetDetails;
+        this.goldCg.improvement = res.improvement;
+        this.goldCg.deduction = res.deduction;
+        // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
+        // this.calculateTotalCg();
+
+        (
+          (this.getOtherAssets.controls[index] as FormGroup).controls[
+            'otherAssetsArray'
+          ] as FormGroup
+        ).controls['capitalGain']?.setValue(
+          res.assetDetails[index].capitalGain
+        );
+
+        // (
+        //   (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
+        //     .controls[0] as FormArray
+        // ).controls['otherAssetsArray'].controls[0].controls[
+        //   'capitalGain'
+        // ]?.setValue(res.data[i].capitalGain);
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
+  }
+
+  calculateGainType(index) {
+    let req = {
+      assetType: this.assetType,
+      buyDate: (
+        (this.getOtherAssets.controls[index] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).controls['purchaseDate'].value,
+
+      sellDate: (
+        (this.getOtherAssets.controls[index] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).controls['sellDate'].value,
+    };
+
+    console.log(req.buyDate);
+    console.log(req.sellDate);
+
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('GAIN Type : ', res);
+
+      (
+        (this.getOtherAssets.controls[index] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).controls['gainType']?.setValue(res.data.capitalGainType);
+    });
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  saveDetails(i) {
+    let result = {
+      cgObject: (
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'otherAssetsArray'
+        ] as FormGroup
+      ).value,
+
+      improve: (
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'improvementsArray'
+        ] as FormGroup
+      ).value,
+    };
+    console.log(result.cgObject);
+
+    if (result !== undefined) {
+      this.goldCg.assetDetails?.push(result.cgObject);
+      this.goldCg.improvement?.push(result.improve);
+    }
+  }
+
+  // calculateTotalCg() {
+  //   this.totalCg = 0;
+  //   this.goldCg.assetDetails.forEach((item) => {
+  //     this.totalCg += item.capitalGain;
+  //   });
+  //   this.canAddDeductions =
+  //     this.totalCg > 0 && this.goldCg.deduction?.length === 0;
+  // }
+
+  saveCg() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.loading = true;
+    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
+      (item) => item.assetType !== 'GOLD'
+    );
+    if (this.goldCg.assetDetails.length > 0) {
+      this.ITR_JSON.capitalGain.push(this.goldCg);
+    }
+
+    console.log('CG:', this.ITR_JSON.capitalGain);
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
+      console.log(result);
+      this.ITR_JSON = result;
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+      this.utilsService.showSnackBar('Other Assets Saved Successfully');
+      this.loading = false;
+    });
+    console.log('GOLD:', this.goldCg);
+    this.OtherAsssetImprovementForm.disable();
+  }
+
+  editOtherAsset(i) {
+    this.OtherAsssetImprovementForm.enable(i);
+    console.log(i);
+    console.log(this.goldCg);
+  }
+
+  deleteOtherAsset(index) {
+    console.log('Remove Index', index);
+    const deleteOtherAsset = this.getOtherAssets;
+    deleteOtherAsset.removeAt(index);
+
+    if (deleteOtherAsset.length === 0) {
+      deleteOtherAsset.push(this.createOtherAssetsForm());
+    }
+  }
+
+  //  IMPROVEMENTS --------------------------------------------
+
+  // assetSelected() {
+  //   let selectedAsset = this.improvementForm.controls['srn'].value;
+  //   let assetDetails = this.data.assetDetails.filter(
+  //     (item) => item.srn === selectedAsset
+  //   )[0];
+  //   if (assetDetails.gainType === 'LONG') {
+  //     this.improvementForm.controls['indexCostOfImprovement'].enable();
+  //   } else {
+  //     this.improvementForm.controls['indexCostOfImprovement'].disable();
+  //   }
+  //   let purchaseDate = assetDetails.purchaseDate;
+  //   let purchaseYear = new Date(purchaseDate).getFullYear();
+  //   console.log(
+  //     this.financialyears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+  //   );
+  //   console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
+  //   this.improvementYears = this.financialyears.splice(
+  //     this.financialyears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+  //   );
+  // }
+
   // haveImprovement(item?) {
   //   // console.log('improvement===', this.improvement.value);
   //   // this.isImprovements = true;
@@ -405,92 +488,4 @@ export class OtherAssetImprovementComponent implements OnInit {
   //     ],
   //   });
   // }
-
-  pageChanged(event) {
-    this.config.currentPage = event;
-  }
-
-  fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  saveDetails(i) {
-    let result = {
-      cgObject: (
-        (this.getOtherAssets.controls[i] as FormGroup).controls[
-          'otherAssetsArray'
-        ] as FormGroup
-      ).value,
-
-      improve: (
-        (this.getOtherAssets.controls[i] as FormGroup).controls[
-          'improvementsArray'
-        ] as FormGroup
-      ).value,
-    };
-    console.log(result.cgObject);
-
-    if (result !== undefined) {
-      this.goldCg.assetDetails?.push(result.cgObject);
-      this.goldCg.improvement?.push(result.improve);
-    }
-  }
-
-  saveCg() {
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    this.loading = true;
-    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
-      (item) => item.assetType !== 'GOLD'
-    );
-    if (this.goldCg.assetDetails.length > 0) {
-      this.ITR_JSON.capitalGain.push(this.goldCg);
-    }
-
-    console.log('CG:', this.ITR_JSON.capitalGain);
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
-      console.log(result);
-      this.ITR_JSON = result;
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
-      );
-      this.utilsService.showSnackBar('Other Assets Saved Successfully');
-      this.loading = false;
-    });
-    console.log('GOLD:', this.goldCg);
-    this.OtherAsssetImprovementForm.disable();
-  }
-
-  editOtherAsset(i) {
-    this.OtherAsssetImprovementForm.enable(i);
-    console.log(i);
-    console.log(this.goldCg);
-
-    // console.log(
-    //   (
-    //     (this.getOtherAssets.controls[i] as FormGroup).controls[
-    //       'otherAssetsArray'
-    //     ] as FormGroup
-    //   ).controls['gainType'].value
-    // );
-
-    // console.log(
-    //   (this.getOtherAssets.controls[i] as FormGroup).controls[
-    //     'improvementsArray'
-    //   ] as FormGroup
-    // );
-  }
-
-  deleteOtherAsset(index) {
-    console.log('Remove Index', index);
-    const deleteOtherAsset = this.getOtherAssets;
-    deleteOtherAsset.removeAt(index);
-
-    if (deleteOtherAsset.length === 0) {
-      deleteOtherAsset.push(this.createOtherAssetsForm());
-    }
-  }
 }
