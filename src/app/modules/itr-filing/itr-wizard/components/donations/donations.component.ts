@@ -629,6 +629,7 @@ export class DonationsComponent implements OnInit {
     this.loading = true;
 
     if (this.generalDonationForm.valid) {
+      this.Copy_ITR_JSON.donations = [];
       this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
