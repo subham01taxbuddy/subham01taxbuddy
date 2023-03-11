@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { UserMsService } from 'src/app/services/user-ms.service';
+import * as moment from "moment/moment";
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -819,4 +820,15 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
+  setFilingDate() {
+    var id = this.customerProfileForm.controls['form10IEAckNo'].value;
+    var lastSix = id.substr(id.length - 6);
+    var day = lastSix.slice(0, 2);
+    var month = lastSix.slice(2, 4);
+    var year = lastSix.slice(4, 6);
+    let dateString = `20${year}-${month}-${day}`;
+    console.log(dateString, year, month, day);
+
+    this.customerProfileForm.controls['form10IEDate'].setValue(moment(dateString).toDate());
+  }
 }

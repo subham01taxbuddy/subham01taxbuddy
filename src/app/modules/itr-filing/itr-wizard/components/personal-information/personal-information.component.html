@@ -206,7 +206,7 @@
                 <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px; padding-left: 0;">
                     <mat-label>Acknowledgement Number</mat-label>
                     <mat-form-field appearance="outline">
-                        <input matInput maxlength="15" minlength="15"
+                        <input matInput maxlength="15" minlength="15" (blur)="setFilingDate()"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             disabled placeholder="Acknowledgement Number" digitsOnly formControlName="form10IEAckNo"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
