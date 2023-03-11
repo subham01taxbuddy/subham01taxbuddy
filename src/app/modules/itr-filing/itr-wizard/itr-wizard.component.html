@@ -12,12 +12,12 @@
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
-          Sources</span>
+        <a (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
+          Sources</a>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span (click)="gotoCgSchedule()" [ngClass]="breadcrumb ? 'capitalize text-color-brands' : !showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</span>
+        <a (click)="gotoCgSchedule()" [ngClass]="breadcrumb ? 'capitalize text-color-brands' : !showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</a>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />

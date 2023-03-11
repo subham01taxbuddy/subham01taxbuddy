@@ -4,10 +4,6 @@
         <div class="card__col-lg-6">
             <div class="card__title card__col-lg-8" style="padding:10px; font-size: 20px;">Investment/ Deduction Details
             </div>
-            <div class="edit clearfix notes card__col-lg-2">
-                <button class="edit_btn note" (click)="openNotesDialog()"><i class="fa fa-sticky-note-o fa-1x"
-                        aria-hidden="true" style="color: green;"></i>Notes </button>
-            </div>
         </div>
         <div class="card__col-lg-6"></div>
     </div>
@@ -98,7 +94,7 @@
                             </mat-form-field>
                         </div>
                         <div class="save_buttons clearfix">
-                            <button class="tbd-btn save-btn" [disabled]="" (click)="saveProfile('NEXT')">Save
+                            <button class="tbd-btn save-btn" [disabled]="" (click)="saveInvestmentDeductions()">Save
                             </button>
                         </div>
                     </div>

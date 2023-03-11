@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="card">
-    
+
     <form [formGroup]="customerProfileForm">
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-4">
@@ -137,7 +137,7 @@
                     <input matTooltip="Acknowledgement number maximum of 15 digit" matTooltipClass="tab-tooltip"
                         matTooltipPosition="above" matInput placeholder="Acknowledgement of Original ITR"
                         name="orgITRAckNum" digitsOnly class="input-field" maxlength="15" minlength="15"
-                        formControlName="orgITRAckNum" />
+                        formControlName="orgITRAckNum" (blur)="setFilingDate()"/>
                     <mat-error *ngIf="customerProfileForm.controls['orgITRAckNum'].hasError('required')">
                         Enter Acknowledgement number</mat-error>
                     <mat-error *ngIf="customerProfileForm.controls['orgITRAckNum'].hasError('minlength')">
