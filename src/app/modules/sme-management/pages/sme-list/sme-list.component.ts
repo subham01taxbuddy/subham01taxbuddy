@@ -369,6 +369,14 @@ export class SmeListComponent implements OnInit {
     });
   }
 
+  signIn(){
+    this.router.navigate(['/auth/sign-in']);
+  }
+
+  signUp() {
+    this.router.navigate(['/auth/sign-up']);
+  }
+
   downloadCsv() {
     // console.log(this.smeListGridOptions.api.getDataAsCsv(this.getParams()));
     let content = this.smeListGridOptions.api.getDataAsCsv(this.getParams());
