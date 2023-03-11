@@ -629,23 +629,33 @@ export class DonationsComponent implements OnInit {
     this.loading = true;
 
     if (this.generalDonationForm.valid) {
-      if (this.generalDonationForm.controls['panNumber'].value !== this.Copy_ITR_JSON.panNumber) {
-        this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
-        this.onSave.emit();
+      this.Copy_ITR_JSON.donations = this.generalDonationForm.value.donationArray;
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Donation data saved successfully.');
-      } else {
-        this.utilsService.showSnackBar('PAN of donee can not be same as PAN of logged in user');
-      }
+        this.utilsService.showSnackBar('Donations data updated successfully.');
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Failed to update Donation data.');
+        this.loading = false;
+      });
+
     } else {
       this.loading = false;
       this.utilsService.showSnackBar('Failed to save Donation data.');
     }
+
+
   }
 
-  checkDoneePAN(i) {
-    ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['panNumber'].setErrors({ 'incorrect': true });
+  checkDoneePAN(i, donation) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    if (this.ITR_JSON['panNumber'] === (donation.controls['panNumber'].value)) {
+      ((this.generalDonationForm.controls['donationArray'] as FormGroup).controls[i] as FormGroup).controls['panNumber'].setErrors({ 'incorrect': true });
+    }
   }
 
   get getDonationArray() {
