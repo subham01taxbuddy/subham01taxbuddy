@@ -546,6 +546,7 @@ export class InvestmentsDeductionsComponent extends WizardNavigation implements 
     "stateCode": "37",
     "status": true
   }];
+  isEditMedicalExpenses: boolean;
 
   constructor(
     private router: Router,
@@ -1285,8 +1286,13 @@ export class InvestmentsDeductionsComponent extends WizardNavigation implements 
     this.step = index;
   }
 
+  editForm(type) {
+    if (type === 'medicalExpenses') {
+      this.isEditMedicalExpenses = true;
+    }
+  }
+
   goBack() {
     this.saveAndNext.emit(false);
-    //this.router.navigate(['/itr-filing/itr']);
   }
 }

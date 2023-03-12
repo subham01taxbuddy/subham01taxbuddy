@@ -1,10 +1,5 @@
 import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  DoCheck,
+  Component, OnInit, Input, Output, EventEmitter, DoCheck, SimpleChanges,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -75,36 +70,32 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   ngOnInit(): void {
-    // this.getItrDocuments();
+    this.initForm();
+    this.setInvestmentsDeductionsValues();
+    this.isEditable();
+  }
+
+  initForm() {
     this.investmentDeductionForm = this.fb.group({
       selfPremium: [null, Validators.pattern(AppConstants.numericRegex)],
-      selfPreventiveCheckUp: [
-        null,
-        [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],
-      ],
-      selfMedicalExpenditure: [
-        null,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      selfPreventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
+      selfMedicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex),],
       premium: [null, Validators.pattern(AppConstants.numericRegex)],
-      preventiveCheckUp: [
-        null,
-        [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],
-      ],
+      preventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80eeb: [
-        null,
-        [Validators.pattern(AppConstants.numericRegex), Validators.max(150000)],
-      ],
+      us80eeb: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(150000)],],
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
       hasParentOverSixty: [null],
     });
-    this.setInvestmentsDeductionsValues();
+  }
 
-    this.isEditable();
+  ngOnChanges(changes: SimpleChanges) {
+    setTimeout(() => {
+      this.isEditable();
+    }, 1000);
   }
 
   isEditable() {
@@ -159,215 +150,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     }
   }
 
-  saveInvestmentDeductions() {
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    this.max5000Limit('SELF');
-    if (this.investmentDeductionForm.valid) {
-      Object.keys(this.investmentDeductionForm.controls).forEach(
-        (item: any) => {
-          if (
-            item === 'ELSS' ||
-            item === 'PENSION_FUND' ||
-            item === 'PS_EMPLOYEE' ||
-            item === 'PS_EMPLOYER' ||
-            item === 'PENSION_SCHEME'
-          ) {
-            this.addAndUpdateInvestment(item);
-          } else {
-            if (item === 'us80e') {
-              this.ITR_JSON.loans = this.ITR_JSON.loans?.filter(
-                (item: any) => item.loanType !== 'EDUCATION'
-              );
-              if (!this.ITR_JSON.loans) {
-                this.ITR_JSON.loans = [];
-              }
-              this.ITR_JSON.loans?.push({
-                loanType: 'EDUCATION',
-                name: null,
-                interestPaidPerAnum: Number(
-                  this.investmentDeductionForm.controls['us80e'].value
-                ),
-                principalPaidPerAnum: 0.0,
-                loanAmount: null,
-                details: null,
-              });
-            } else if (item === 'us80gg') {
-              this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter(
-                (item: any) => item.expenseType !== 'HOUSE_RENT_PAID'
-              );
-              if (!this.ITR_JSON.expenses) {
-                this.ITR_JSON.expenses = [];
-              }
-              if (!this.ITR_JSON.systemFlags.hraAvailed) {
-                this.ITR_JSON.expenses?.push({
-                  expenseType: 'HOUSE_RENT_PAID',
-                  expenseFor: null,
-                  details: null,
-                  amount: Number(
-                    this.investmentDeductionForm.controls['us80gg'].value
-                  ),
-                  noOfMonths: 0,
-                });
-              }
-            } else if (item === 'us80ggc') {
-              this.ITR_JSON.donations = this.ITR_JSON.donations?.filter(
-                (item: any) => item.donationType !== 'POLITICAL'
-              );
-              if (!this.ITR_JSON.donations) {
-                this.ITR_JSON.donations = [];
-              }
-              this.ITR_JSON.donations?.push({
-                details: '',
-                identifier: '',
-                panNumber: '',
-                schemeCode: '',
-                donationType: 'POLITICAL',
-                name: '',
-                amountInCash: 0,
-                amountOtherThanCash: Number(
-                  this.investmentDeductionForm.controls['us80ggc'].value
-                ),
-                address: '',
-                city: '',
-                pinCode: '',
-                state: '',
-              });
-            } else if (item === 'us80eeb') {
-              this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter(
-                (item: any) => item.expenseType !== 'ELECTRIC_VEHICLE'
-              );
-              if (!this.ITR_JSON.expenses) {
-                this.ITR_JSON.expenses = [];
-              }
-              this.ITR_JSON.expenses?.push({
-                expenseType: 'ELECTRIC_VEHICLE',
-                expenseFor: null,
-                details: null,
-                amount: Number(
-                  this.investmentDeductionForm.controls['us80eeb'].value
-                ),
-                noOfMonths: 0,
-              });
-            }
-          }
-        }
-      );
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter(
-        (item: any) => item.policyFor !== 'DEPENDANT'
-      );
-      if (!this.ITR_JSON.insurances) {
-        this.ITR_JSON.insurances = [];
-      }
-      if (
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['selfPremium'].value
-        ) ||
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
-        ) ||
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['selfMedicalExpenditure'].value
-        )
-      ) {
-        this.ITR_JSON.insurances?.push({
-          insuranceType: 'HEALTH',
-          typeOfPolicy: null,
-          policyFor: 'DEPENDANT',
-          premium: Number(
-            this.investmentDeductionForm.controls['selfPremium'].value
-          ),
-          medicalExpenditure:
-            this.userAge >= 60
-              ? Number(
-                  this.investmentDeductionForm.controls[
-                    'selfMedicalExpenditure'
-                  ].value
-                )
-              : 0,
-          preventiveCheckUp: Number(
-            this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
-          ),
-          sumAssured: null,
-          healthCover: null,
-        });
-      }
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter(
-        (item: any) => item.policyFor !== 'PARENTS'
-      );
-      if (!this.ITR_JSON.insurances) {
-        this.ITR_JSON.insurances = [];
-      }
-      if (
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['premium'].value
-        ) ||
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['preventiveCheckUp'].value
-        ) ||
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['medicalExpenditure'].value
-        )
-      ) {
-        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
-        this.ITR_JSON.insurances?.push({
-          insuranceType: 'HEALTH',
-          typeOfPolicy: null,
-          policyFor: 'PARENTS',
-          premium: Number(
-            this.investmentDeductionForm.controls['premium'].value
-          ),
-          medicalExpenditure: Number(
-            this.investmentDeductionForm.controls['medicalExpenditure'].value
-          ),
-          preventiveCheckUp: Number(
-            this.investmentDeductionForm.controls['preventiveCheckUp'].value
-          ),
-          sumAssured: null,
-          healthCover: null,
-        });
-      }
-      this.ITR_JSON.disabilities = [];
-      if (
-        this.selected80u !== '' &&
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['us80u'].value
-        )
-      ) {
-        this.ITR_JSON.disabilities?.push({
-          typeOfDisability: this.selected80u,
-          amount: this.investmentDeductionForm.controls['us80u'].value,
-        });
-      }
-      if (
-        this.selected80dd !== '' &&
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['us80dd'].value
-        )
-      ) {
-        this.ITR_JSON.disabilities?.push({
-          typeOfDisability: this.selected80dd,
-          amount: this.investmentDeductionForm.controls['us80dd'].value,
-        });
-      }
-      if (
-        this.selected80ddb !== '' &&
-        this.utilsService.isNonZero(
-          this.investmentDeductionForm.controls['us80ddb'].value
-        )
-      ) {
-        this.ITR_JSON.disabilities?.push({
-          typeOfDisability: this.selected80ddb,
-          amount: this.investmentDeductionForm.controls['us80ddb'].value,
-        });
-      }
-      // this.serviceCall('NEXT', this.ITR_JSON);
-    } else {
-      $('input.ng-invalid').first().focus();
-    }
-  }
 
   setInvestmentsDeductionsValues() {
     this.ITR_JSON.investments?.forEach((investment) => {
@@ -613,10 +396,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     }
   }
 
-  saveAndContinue() {
-    this.saveAndNext.emit(true);
-  }
-
   ngDoCheck() {
     if (this.selected80u !== '') {
       this.investmentDeductionForm.controls['us80u'].enable();
@@ -664,6 +443,228 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     ) {
       this.investmentDeductionForm.controls['premium'].setValue(null);
       this.investmentDeductionForm.controls['premium'].disable();
+    }
+  }
+
+  saveInvestmentDeductions() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.max5000Limit('SELF');
+    if (this.investmentDeductionForm.valid) {
+      Object.keys(this.investmentDeductionForm.controls).forEach(
+        (item: any) => {
+          if (
+            item === 'ELSS' ||
+            item === 'PENSION_FUND' ||
+            item === 'PS_EMPLOYEE' ||
+            item === 'PS_EMPLOYER' ||
+            item === 'PENSION_SCHEME'
+          ) {
+            this.addAndUpdateInvestment(item);
+          } else {
+            if (item === 'us80e') {
+              this.Copy_ITR_JSON.loans = this.Copy_ITR_JSON.loans?.filter(
+                (item: any) => item.loanType !== 'EDUCATION'
+              );
+              if (!this.Copy_ITR_JSON.loans) {
+                this.Copy_ITR_JSON.loans = [];
+              }
+              this.Copy_ITR_JSON.loans?.push({
+                loanType: 'EDUCATION',
+                name: null,
+                interestPaidPerAnum: Number(
+                  this.investmentDeductionForm.controls['us80e'].value
+                ),
+                principalPaidPerAnum: 0.0,
+                loanAmount: null,
+                details: null,
+              });
+            } else if (item === 'us80gg') {
+              this.Copy_ITR_JSON.expenses = this.Copy_ITR_JSON.expenses?.filter(
+                (item: any) => item.expenseType !== 'HOUSE_RENT_PAID'
+              );
+              if (!this.Copy_ITR_JSON.expenses) {
+                this.Copy_ITR_JSON.expenses = [];
+              }
+              if (!this.Copy_ITR_JSON.systemFlags.hraAvailed) {
+                this.Copy_ITR_JSON.expenses?.push({
+                  expenseType: 'HOUSE_RENT_PAID',
+                  expenseFor: null,
+                  details: null,
+                  amount: Number(
+                    this.investmentDeductionForm.controls['us80gg'].value
+                  ),
+                  noOfMonths: 0,
+                });
+              }
+            } else if (item === 'us80ggc') {
+              this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
+                (item: any) => item.donationType !== 'POLITICAL'
+              );
+              if (!this.Copy_ITR_JSON.donations) {
+                this.Copy_ITR_JSON.donations = [];
+              }
+              this.Copy_ITR_JSON.donations?.push({
+                details: '',
+                identifier: '',
+                panNumber: '',
+                schemeCode: '',
+                donationType: 'POLITICAL',
+                name: '',
+                amountInCash: 0,
+                amountOtherThanCash: Number(
+                  this.investmentDeductionForm.controls['us80ggc'].value
+                ),
+                address: '',
+                city: '',
+                pinCode: '',
+                state: '',
+              });
+            } else if (item === 'us80eeb') {
+              this.Copy_ITR_JSON.expenses = this.Copy_ITR_JSON.expenses?.filter(
+                (item: any) => item.expenseType !== 'ELECTRIC_VEHICLE'
+              );
+              if (!this.Copy_ITR_JSON.expenses) {
+                this.Copy_ITR_JSON.expenses = [];
+              }
+              this.Copy_ITR_JSON.expenses?.push({
+                expenseType: 'ELECTRIC_VEHICLE',
+                expenseFor: null,
+                details: null,
+                amount: Number(
+                  this.investmentDeductionForm.controls['us80eeb'].value
+                ),
+                noOfMonths: 0,
+              });
+            }
+          }
+        }
+      );
+      this.Copy_ITR_JSON.insurances = this.Copy_ITR_JSON.insurances?.filter(
+        (item: any) => item.policyFor !== 'DEPENDANT'
+      );
+      if (!this.Copy_ITR_JSON.insurances) {
+        this.Copy_ITR_JSON.insurances = [];
+      }
+      if (
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['selfPremium'].value
+        ) ||
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
+        ) ||
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['selfMedicalExpenditure'].value
+        )
+      ) {
+        this.Copy_ITR_JSON.insurances?.push({
+          insuranceType: 'HEALTH',
+          typeOfPolicy: null,
+          policyFor: 'DEPENDANT',
+          premium: Number(
+            this.investmentDeductionForm.controls['selfPremium'].value
+          ),
+          medicalExpenditure:
+            this.userAge >= 60
+              ? Number(
+                this.investmentDeductionForm.controls[
+                  'selfMedicalExpenditure'
+                ].value
+              )
+              : 0,
+          preventiveCheckUp: Number(
+            this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
+          ),
+          sumAssured: null,
+          healthCover: null,
+        });
+      }
+      this.Copy_ITR_JSON.insurances = this.Copy_ITR_JSON.insurances?.filter(
+        (item: any) => item.policyFor !== 'PARENTS'
+      );
+      if (!this.Copy_ITR_JSON.insurances) {
+        this.Copy_ITR_JSON.insurances = [];
+      }
+      if (
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['premium'].value
+        ) ||
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['preventiveCheckUp'].value
+        ) ||
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['medicalExpenditure'].value
+        )
+      ) {
+        this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.Copy_ITR_JSON.insurances?.push({
+          insuranceType: 'HEALTH',
+          typeOfPolicy: null,
+          policyFor: 'PARENTS',
+          premium: Number(
+            this.investmentDeductionForm.controls['premium'].value
+          ),
+          medicalExpenditure: Number(
+            this.investmentDeductionForm.controls['medicalExpenditure'].value
+          ),
+          preventiveCheckUp: Number(
+            this.investmentDeductionForm.controls['preventiveCheckUp'].value
+          ),
+          sumAssured: null,
+          healthCover: null,
+        });
+      }
+      this.Copy_ITR_JSON.disabilities = [];
+      if (
+        this.selected80u !== '' &&
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['us80u'].value
+        )
+      ) {
+        this.Copy_ITR_JSON.disabilities?.push({
+          typeOfDisability: this.selected80u,
+          amount: this.investmentDeductionForm.controls['us80u'].value,
+        });
+      }
+      if (
+        this.selected80dd !== '' &&
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['us80dd'].value
+        )
+      ) {
+        this.Copy_ITR_JSON.disabilities?.push({
+          typeOfDisability: this.selected80dd,
+          amount: this.investmentDeductionForm.controls['us80dd'].value,
+        });
+      }
+      if (
+        this.selected80ddb !== '' &&
+        this.utilsService.isNonZero(
+          this.investmentDeductionForm.controls['us80ddb'].value
+        )
+      ) {
+        this.Copy_ITR_JSON.disabilities?.push({
+          typeOfDisability: this.selected80ddb,
+          amount: this.investmentDeductionForm.controls['us80ddb'].value,
+        });
+      }
+
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Medical Expenses successfully.');
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Failed to update Medical Expenses.');
+        this.loading = false;
+      });
+    } else {
+      $('input.ng-invalid').first().focus();
     }
   }
 }
