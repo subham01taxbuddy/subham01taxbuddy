@@ -40,7 +40,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     id: null,
     seqNum: 1,
     value: "AGRI",
-    label: "Agriculture Income (less than or equal to RS. 5000)",
+    label: "Agriculture Income (less than or equal to RS. 5 Lakhs)",
     detailed: false
   }, {
     id: null,
