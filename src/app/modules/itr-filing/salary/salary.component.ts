@@ -327,13 +327,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       let totalAllowExempt = 0;
       for (let i = 0; i < (this.allowanceFormGroup.controls['allowances'] as FormArray).controls.length; i++) {
         let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
-        if (this.utilsService.isNonZero(allowance.value.taxableAmount) || this.utilsService.isNonZero(allowance.value.exemptAmount)) {
+        if (this.utilsService.isNonZero(allowance.value.allowValue)) {
           this.localEmployer.allowance.push({
-            allowanceType: allowance.controls['allowanceType'].value,
-            taxableAmount: Number(allowance.controls['taxableAmount'].value),
-            exemptAmount: Number(allowance.controls['exemptAmount'].value)
+            allowanceType: allowance.controls['allowType'].value,
+            taxableAmount: 0,
+            exemptAmount: Number(allowance.controls['allowValue'].value)
           });
-          totalAllowExempt = totalAllowExempt + Number(allowance.controls['exemptAmount'].value);
+          totalAllowExempt = totalAllowExempt + Number(allowance.controls['allowValue'].value);
         }
       }
       if (this.utilsService.isNonZero(totalAllowExempt) || this.utilsService.isNonZero(totalAllowExempt)) {
