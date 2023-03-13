@@ -152,7 +152,32 @@ export class ViewReviewComponent implements OnInit {
       }
     );
   }
- 
+  saveRecord() {
+    if (
+      this.userDetails.sourcePlatform === 'Play Store' ||
+      this.userDetails.sourcePlatform === 'Apple Store' ||
+      this.userDetails.sourcePlatform === 'Google My Business'
+    ) {
+      const param = `/review/match-user`;
+      const param2 = {
+        reviewId: this.userDetails.id,
+        mobileNumber: this.mobileNo,
+        environment: environment.environment,
+      };
+      this.reviewService.postMethod(param, param2).subscribe((result) => {
+        console.log('Save User Data:', result);
+        if (result.success) {
+          // this.getReview();
+          this.getReview();
+          this._toastMessageService.alert('success', 'User added successfully');
+          this.loading = false;
+        } else {
+          this._toastMessageService.alert('error', 'Failed to add user');
+          this.loading = false;
+        }
+      });
+    }
+  }
 
   reviewColumnDef() {
     return [
@@ -394,28 +419,28 @@ export class ViewReviewComponent implements OnInit {
     });
   }
 
-  saveRecord() {
-    if (
-      this.userDetails.sourcePlatform === 'Play Store' ||
-      this.userDetails.sourcePlatform === 'Apple Store' ||
-      this.userDetails.sourcePlatform === 'Google Workspace'
-    ) {
-      const param = `/review/match-user`;
-      const param2 = {
-        reviewId: this.userDetails.id,
-        mobileNumber: this.mobileNo,
-        environment: environment.environment,
-      };
-      this.reviewService.postMethod(param, param2).subscribe((result) => {
-        console.log('Save User Data:', result);
-        if (result.success) {
-          this._toastMessageService.alert('success', 'User added successfully');
-          this.loading = false;
-        } else {
-          this._toastMessageService.alert('error', 'Failed to add user');
-          this.loading = false;
-        }
-      });
-    }
-  }
+  // saveRecord() {
+  //   if (
+  //     this.userDetails.sourcePlatform === 'Play Store' ||
+  //     this.userDetails.sourcePlatform === 'Apple Store' ||
+  //     this.userDetails.sourcePlatform === 'Google Workspace'
+  //   ) {
+  //     const param = `/review/match-user`;
+  //     const param2 = {
+  //       reviewId: this.userDetails.id,
+  //       mobileNumber: this.mobileNo,
+  //       environment: environment.environment,
+  //     };
+  //     this.reviewService.postMethod(param, param2).subscribe((result) => {
+  //       console.log('Save User Data:', result);
+  //       if (result.success) {
+  //         this._toastMessageService.alert('success', 'User added successfully');
+  //         this.loading = false;
+  //       } else {
+  //         this._toastMessageService.alert('error', 'Failed to add user');
+  //         this.loading = false;
+  //       }
+  //     });
+  //   }
+  // }
 }
