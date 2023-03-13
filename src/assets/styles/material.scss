@@ -277,7 +277,7 @@ mat-label {
     font-weight: 500;
     font-size: 13px;
     line-height: 14px;
-    letter-spacing: -0.009em;    
+    letter-spacing: -0.009em;
     color: #9a9a9a;
     flex: none;
     order: 0;
@@ -305,6 +305,9 @@ mat-label {
                     // color: #07070C;
                     color: #00A4BF;
                 }
+              .mat-input-element:disabled {
+                color: #07070C;
+              }
 
                 .mat-select {
                     .mat-select-trigger {
