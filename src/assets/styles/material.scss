@@ -275,10 +275,10 @@ $altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
 mat-label {
     display: block;
     font-weight: 500;
-    font-size: 14.4296px;
+    font-size: 13px;
     line-height: 14px;
-    letter-spacing: -0.009em;
-    color: #07070C;
+    letter-spacing: -0.009em;    
+    color: #9a9a9a;
     flex: none;
     order: 0;
     flex-grow: 0;
@@ -299,10 +299,11 @@ mat-label {
                 margin-bottom: 5px;
 
                 .mat-input-element {
-                    font-weight: 400;
-                    font-size: 12.6259px;
+                    font-weight: 500;
+                    font-size: 14px;
                     line-height: 14px;
-                    color: #9A9AAF;
+                    // color: #07070C;
+                    color: #00A4BF;
                 }
 
                 .mat-select {
