@@ -98,7 +98,7 @@ export class FileParserComponent implements OnInit {
     this.loading = true;
     const formData = new FormData();
     formData.append("file", document);
-    let annualYear = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+    let annualYear = this.ITR_JSON.assessmentYear;
     // console.log('annualYear: ', annualYear);
     // //let cloudFileMetaData = '{"formCode":"' + this.ITR_JSON.itrType + ',"ay":' + this.ITR_JSON.assessmentYear + ',"filingTypeCd":"O","userId ":' + this.ITR_JSON.userId + ',"filingTeamMemberId":' + this.ITR_JSON.filingTeamMemberId + '"}';
     // formData.append("formCode", this.ITR_JSON.itrType);
