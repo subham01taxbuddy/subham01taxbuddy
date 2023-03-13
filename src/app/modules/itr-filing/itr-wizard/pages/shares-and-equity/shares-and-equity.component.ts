@@ -53,6 +53,7 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
     if (this.activateRoute.snapshot.queryParams['bondType']) {
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
       this.bondType === 'listed' ? this.title = ' Listed Securities (Equity Shares/ Equity Mutual Funds)' : this.title = 'Unlisted Securities (Shares not listed)';
+      this.compactView = this.bondType === 'listed' ? true : false;
     }
     this.config = {
       itemsPerPage: 2,
@@ -149,6 +150,8 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
         });
       });
 
+    } else {
+      this.addMoreData();
     }
   }
 
