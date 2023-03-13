@@ -7,6 +7,7 @@ import { DirectorInCompanyComponent } from './director-in-company/director-in-co
 import { UnlistedSharesComponent } from './unlisted-shares/unlisted-shares.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-other-information',
@@ -20,12 +21,27 @@ export class OtherInformationComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   loading = false;
-  public sharesGridOptions: GridOptions;
-  public directorGridOptions: GridOptions;
+  directorForm: FormGroup;
+  config: any;
+  sharesTypes = [
+    { value: 'LISTED', label: 'Listed' },
+    { value: 'UN_LISTED', label: 'Unlisted' }
+  ];
+  typeOfCompanies = [
+    { value: 'D', label: 'Domestic' },
+    { value: 'F', label: 'Foreign' }
+  ];
+
+  sharesForm: FormGroup;
 
   constructor(public matDialog: MatDialog,
     private itrMsService: ItrMsService,
-    public utilsService: UtilsService) {
+    public utilsService: UtilsService,
+              private fb: FormBuilder) {
+    this.config = {
+      itemsPerPage: 2,
+      currentPage: 1,
+    };
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     if (this.ITR_JSON.unlistedSharesDetails === null || this.ITR_JSON.unlistedSharesDetails === undefined) {
       this.ITR_JSON.unlistedSharesDetails = [];
@@ -72,6 +88,97 @@ export class OtherInformationComponent implements OnInit {
   isEditable() {
     return this.isEditOther;
   }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  get getDirectorsArray() {
+    return <FormArray>this.directorForm.get('directorsArray');
+  }
+  get getSharesArray() {
+    return <FormArray>this.sharesForm.get('sharesArray');
+  }
+
+  initDirectorForm() {
+    return this.fb.group({
+      directorsArray: this.fb.array([]),
+    })
+  }
+
+  initSharesForm() {
+    return this.fb.group({
+      sharesArray: this.fb.array([]),
+    })
+  }
+
+  createDirectorForm(director?: any) {
+    return this.fb.group({
+      hasEdit:[false],
+      companyName: [director?.companyName, Validators.required],
+      typeOfCompany: [director?.typeOfCompany, Validators.required],
+      companyPAN: [director?.companyPAN, Validators.compose([Validators.pattern(AppConstants.panNumberRegex)])],
+      sharesType: [director?.sharesType, Validators.required],
+      din: [director?.din, Validators.compose([Validators.pattern(AppConstants.numericRegex), /* Validators.maxLength(8), Validators.minLength(8) */])],
+    });
+  }
+
+  createSharesForm(share?:any) {
+    return this.fb.group({
+      hasEdit:[false],
+      companyName: [share?.companyName, Validators.required],
+      typeOfCompany: [share?.typeOfCompany, Validators.required],
+      companyPAN: [share?.companyPAN, Validators.compose([Validators.pattern(AppConstants.panNumberRegex)])],
+      openingShares: [share?.openingShares, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      openingCOA: [share?.openingCOA, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
+      acquiredShares: [share?.acquiredShares, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      purchaseDate: [share?.purchaseDate, Validators.required],
+      faceValuePerShare: [share?.faceValuePerShare, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
+      issuePricePerShare: [share?.issuePricePerShare, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      purchasePricePerShare: [share?.purchasePricePerShare, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
+      transferredShares: [share?.transferredShares, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      saleConsideration: [share?.saleConsideration, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
+      closingShares: [share?.closingShares, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      closingCOA: [share?.closingCOA, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])]
+    });
+  }
+
+  saveDirectorDetials() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    if (this.directorForm.valid) {
+      this.Copy_ITR_JSON.systemFlags.directorInCompany = true;
+      console.log('Save form here', this.directorForm.getRawValue());
+      const directorsArray = <FormArray>this.directorForm.get('directorsArray');
+      this.Copy_ITR_JSON.directorInCompany = directorsArray.getRawValue();
+      // if (this.data.mode === 'ADD') {
+      //   this.Copy_ITR_JSON.directorInCompany.push(this.directorForm.getRawValue());
+      // } else {
+      //   this.Copy_ITR_JSON.directorInCompany.splice(this.data.index, 1, this.directorForm.getRawValue());
+      // }
+
+      this.loading = true;
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+        this.loading = false;
+        this.utilsService.showSnackBar('Director in company details added successfully');
+        // this.saveAndNext.emit(true);
+        this.directorForm.reset();
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+      });
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
 
   tabChanged() {
     //re-intialise the ITR objects
@@ -121,51 +228,13 @@ export class OtherInformationComponent implements OnInit {
   }
 
   addSharesDetails(title, mode, i) {
-    const data = {
-      title: title,
-      mode: mode,
-      ITR_JSON: this.ITR_JSON,
-      index: i,
-    };
-    const dialogRef = this.matDialog.open(UnlistedSharesComponent, {
-      data: data,
-      closeOnNavigation: true,
-      // width: '700px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add bank =', result);
-      if (result !== undefined) {
-        this.ITR_JSON = result;
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        this.sharesGridOptions.api.setRowData(this.sharesCreateRowData());
-        this.sharesGridOptions.api.setColumnDefs(this.sharesCreateColumnDef());
-      } else {
-        if (this.ITR_JSON.unlistedSharesDetails.length === 0) {
-          this.ITR_JSON.systemFlags.haveUnlistedShares = false;
-        }
-      }
-    });
+    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    formArray.insert(0, this.createSharesForm());
   }
 
   sharesCallInConstructor() {
-    this.sharesGridOptions = <GridOptions>{
-      rowData: this.sharesCreateRowData(),
-      columnDefs: this.sharesCreateColumnDef(),
-      onGridReady: () => {
-        // this.sharesGridOptions.api.sizeColumnsToFit();
-      },
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      defaultColDef: {
-        resizable: true,
-        editable: false
-      },
-      suppressRowTransform: true
-    };
-  }
-
-  sharesCreateRowData() {
-    const dataToReturn = [];
+    this.sharesForm = this.initSharesForm();
+    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
     for (let i = 0; i < this.ITR_JSON?.unlistedSharesDetails.length; i++) {
       const val = this.ITR_JSON.unlistedSharesDetails[i];
       const temp = {
@@ -185,179 +254,18 @@ export class OtherInformationComponent implements OnInit {
         closingShares: val.closingShares,
         closingCOA: val.closingCOA
       };
-      dataToReturn.push(temp);
+      formArray.push(this.createSharesForm(temp));
     }
-
-    return dataToReturn;
   }
 
-  sharesCreateColumnDef() {
-    return [
-      {
-        headerName: 'No.',
-        field: 'id',
-        width: 70,
-        suppressMovable: true,
-        pinned: 'left',
-      },
-      {
-        headerName: 'Name of company',
-        field: 'companyName',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Type of company',
-        field: 'typeOfCompany',
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.typeOfCompany === 'D' ? 'Domestic' : 'Foreign';
-        }
-      },
-      {
-        headerName: 'PAN of company',
-        field: 'companyPAN',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Opening no of shares',
-        field: 'openingShares',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Opening cost of acquisition',
-        field: 'openingCOA',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.openingCOA ? params.data.openingCOA.toLocaleString('en-IN') : params.data.openingCOA;
-        },
-      },
-      {
-        headerName: 'No. of shares acquired',
-        field: 'acquiredShares',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Date of purchase',
-        field: 'purchaseDate',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
-        }
-      },
-      {
-        headerName: 'Face value per share',
-        field: 'faceValuePerShare',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.faceValuePerShare ? params.data.faceValuePerShare.toLocaleString('en-IN') : params.data.faceValuePerShare;
-        },
-      },
-      {
-        headerName: 'Issue price per share',
-        field: 'issuePricePerShare',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.issuePricePerShare ? params.data.issuePricePerShare.toLocaleString('en-IN') : params.data.issuePricePerShare;
-        },
-      },
-      {
-        headerName: 'Purchase price per share',
-        field: 'purchasePricePerShare',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.purchasePricePerShare ? params.data.purchasePricePerShare.toLocaleString('en-IN') : params.data.purchasePricePerShare;
-        },
-      },
-      {
-        headerName: 'No. of shares transferred',
-        field: 'transferredShares',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Sale consideration',
-        field: 'saleConsideration',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.saleConsideration ? params.data.saleConsideration.toLocaleString('en-IN') : params.data.saleConsideration;
-        },
-      },
-      {
-        headerName: 'Closing no of shares',
-        field: 'closingShares',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Closing cost of acquisition',
-        field: 'closingCOA',
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.closingCOA ? params.data.closingCOA.toLocaleString('en-IN') : params.data.closingCOA;
-        },
-      },
-      {
-        headerName: 'Edit',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        width: 100,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return ` <button type="button" class="action_icon add_button"  title="Edit" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: green">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>`;
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      },
-      {
-        headerName: 'Delete',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        width: 100,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Delete" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      }
-    ];
+  editSharesForm(index) {
+    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    formArray.controls[index].enable();
   }
 
-  public onSharesRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'edit': {
-          this.addSharesDetails('Edit unlisted shares details', 'EDIT', (params.data.id - 1));
-          break;
-        }
-        case 'remove': {
-          //re-intialise the ITR objects
-          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-          this.Copy_ITR_JSON.unlistedSharesDetails.splice(params.data.id - 1, 1);
-          if (this.Copy_ITR_JSON.unlistedSharesDetails.length === 0) {
-            this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
-          }
-          this.serviceCall('Unlisted shares')
-          break;
-        }
-      }
-    }
+  editDirectorForm(index) {
+    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    formArray.controls[index].enable();
   }
 
   //
@@ -376,160 +284,13 @@ export class OtherInformationComponent implements OnInit {
   }
 
   addDirectorDetails(title, mode, i) {
-    const data = {
-      title: title,
-      mode: mode,
-      ITR_JSON: this.ITR_JSON,
-      index: i,
-    };
-    const dialogRef = this.matDialog.open(DirectorInCompanyComponent, {
-      data: data,
-      closeOnNavigation: true,
-      // width: '700px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Result add directors =', result);
-      if (result !== undefined) {
-        this.ITR_JSON = result;
-        this.Copy_ITR_JSON = result;
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        this.directorGridOptions?.api.setRowData(this.directorCreateRowData());
-        this.directorGridOptions?.api.setColumnDefs(this.directorCreateColumnDef());
-      } else {
-        if (this.ITR_JSON?.directorInCompany.length === 0) {
-          this.ITR_JSON.systemFlags.directorInCompany = false;
-        }
-      }
-    });
+    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    formArray.insert(0, this.createDirectorForm());
   }
 
   directorCallInConstructor() {
-    this.directorGridOptions = <GridOptions>{
-      rowData: this.directorCreateRowData(),
-      columnDefs: this.directorCreateColumnDef(),
-      onGridReady: () => {
-        // this.sharesGridOptions.api.sizeColumnsToFit();
-      },
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      defaultColDef: {
-        resizable: true,
-        editable: false
-      },
-      suppressRowTransform: true
-    };
-  }
-
-
-  directorCreateColumnDef() {
-    return [
-      {
-        headerName: 'No.',
-        field: 'id',
-        width: 70,
-        suppressMovable: true,
-        pinned: 'left',
-      },
-      {
-        headerName: 'Name of company',
-        field: 'companyName',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Type of company',
-        field: 'typeOfCompany',
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.typeOfCompany === 'D' ? 'Domestic' : 'Foreign';
-        }
-      },
-      {
-        headerName: 'PAN of company',
-        field: 'companyPAN',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Type of Shares',
-        field: 'sharesType',
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.sharesType === 'UN_LISTED' ? 'Unlisted' : 'Listed';
-        }
-      },
-      {
-        headerName: 'DIN',
-        field: 'din',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Edit',
-        editable: false,
-        suppressMenu: true,
-        suppressMovable: true,
-        width: 100,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button"  title="Edit" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: green">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>`;
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      },
-      {
-        headerName: 'Delete',
-        editable: false,
-        suppressMenu: true,
-        suppressMovable: true,
-        width: 100,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Delete" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      }
-    ];
-  }
-
-  public onDirectorRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'edit': {
-          this.addDirectorDetails('Edit director details', 'EDIT', (params.data.id - 1));
-          break;
-        }
-        case 'remove': {
-          //re-intialise the ITR objects
-          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-          this.Copy_ITR_JSON.directorInCompany.splice(params.data.id - 1, 1);
-          if (this.Copy_ITR_JSON.directorInCompany.length === 0) {
-            this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
-          }
-          this.serviceCall('Director in company')
-          // this.deleteDetails('DIRECTOR', (params.data.id - 1));
-          break;
-        }
-      }
-    }
-  }
-
-  directorCreateRowData() {
-    const dataToReturn = [];
+    this.directorForm = this.initDirectorForm();
+    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
     for (let i = 0; i < this.ITR_JSON?.directorInCompany.length; i++) {
       const val = this.ITR_JSON.directorInCompany[i];
       const temp = {
@@ -540,11 +301,33 @@ export class OtherInformationComponent implements OnInit {
         sharesType: val.sharesType,
         din: val.din,
       };
-      dataToReturn.push(temp);
+      formArray.push(this.createDirectorForm(temp));
     }
-
-    return dataToReturn;
   }
+
+  deleteDirectors() {
+    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    let index = 0;
+    formArray.controls.forEach((form: FormGroup) => {
+      if(form.controls['hasEdit'].value) {
+        formArray.removeAt(index);
+      }
+      index++;
+    });
+  }
+
+  deleteShares() {
+    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    let index = 0;
+    formArray.controls.forEach((form: FormGroup) => {
+      if(form.controls['hasEdit'].value) {
+        formArray.removeAt(index);
+      }
+      index++;
+    });
+  }
+
+
 
   serviceCall(msg) {
     this.loading = true;
@@ -554,17 +337,46 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));
       this.loading = false;
       this.utilsService.showSnackBar(msg + ' details removed successfully');
-      if (this.ITR_JSON.systemFlags?.directorInCompany)
-        this.directorGridOptions?.api.setRowData(this.directorCreateRowData());
-      if (this.ITR_JSON.systemFlags.haveUnlistedShares)
-        this.sharesGridOptions.api.setRowData(this.sharesCreateRowData());
-      // this.saveAndNext.emit(true);
+      if (this.ITR_JSON.systemFlags?.directorInCompany){
+        this.ITR_JSON.directorInCompany = [];
+      }
+      if (this.ITR_JSON.systemFlags.haveUnlistedShares){
+        this.ITR_JSON.unlistedSharesDetails = [];
+      }
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
     });
   }
+
+  saveUnlistedShares() {
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    if (this.sharesForm.valid) {
+      this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = true;
+      console.log('Save form here', this.sharesForm.getRawValue());
+      const sharesArray = <FormArray>this.sharesForm.get('sharesArray');
+      this.Copy_ITR_JSON.unlistedSharesDetails = sharesArray.getRawValue();
+
+      this.loading = true;
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+        this.loading = false;
+        this.utilsService.showSnackBar('Unlisted share details added successfully.');
+
+      }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+      });
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
   saveAndContinue() {
+    this.saveDirectorDetials();
+    this.saveUnlistedShares();
     this.saveAndNext.emit(true);
   }
 
