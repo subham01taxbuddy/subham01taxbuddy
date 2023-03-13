@@ -296,6 +296,10 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.mat-expansion-panel-header.mat-expanded {
+    height: 55px;
+    margin-bottom: 15px;
+}
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
