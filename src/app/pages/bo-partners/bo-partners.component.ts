@@ -93,7 +93,8 @@ export class BoPartnersComponent implements OnInit {
   }
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.searchParam.page = event - 1;
+    this.getBoPartners();
+    // this.searchParam.page = event - 1;
   }
 
   boPartnersColumnDef() {
@@ -320,16 +321,18 @@ export class BoPartnersComponent implements OnInit {
       );
       this.loading = true;
 
-      let param = `/partner-details?page=0&size=10&from=${fromDate}&to=${toDate}`;
+      let param = `/partner-details?page=${
+        this.config.currentPage - 1
+      }&size=10&from=${fromDate}&to=${toDate}`;
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
           console.log('bo-partners list: ', response);
-          if (Array.isArray(response) && response.length > 0) {
+          if (Array.isArray(response.content)) {
             this.loading = false;
-            this.boPartnersInfo = response;
-            this.config.totalItems = response.length;
+            this.boPartnersInfo = response.content;
+            this.config.totalItems = response.totalElements;
             this.partnersGridOptions.api?.setRowData(
-              this.createRowData(response)
+              this.createRowData(this.boPartnersInfo)
             );
           } else {
             this.loading = false;
