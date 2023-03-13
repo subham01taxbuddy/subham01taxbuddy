@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Router } from '@angular/router';
+import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 declare let $: any;
 
 
@@ -16,8 +17,8 @@ declare let $: any;
   templateUrl: './investments-deductions.component.html',
   styleUrls: ['./investments-deductions.component.css']
 })
-export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
-  @Output() saveAndNext = new EventEmitter<any>();
+export class InvestmentsDeductionsComponent extends WizardNavigation implements OnInit, DoCheck {
+
   step = 0;
   isAddDonation: Number;
 
@@ -553,6 +554,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     private itrMsService: ItrMsService,
     public matDialog: MatDialog,
   ) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF')
@@ -1284,6 +1286,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   goBack() {
-    this.router.navigate(['/itr-filing/itr']);
+    this.saveAndNext.emit(false);
+    //this.router.navigate(['/itr-filing/itr']);
   }
 }

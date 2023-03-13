@@ -7,13 +7,13 @@ import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/drop
 import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
+import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 @Component({
   selector: 'app-taxes-paid',
   templateUrl: './taxes-paid.component.html',
   styleUrls: ['./taxes-paid.component.css']
 })
-export class TaxesPaidComponent implements OnInit {
-  @Output() saveAndNext = new EventEmitter<any>();
+export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
   onSalaryGridOptions: GridOptions;
   tdsOtherThanSalary16AGridOptions: GridOptions;
@@ -35,6 +35,7 @@ export class TaxesPaidComponent implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService
   ) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
   }
 
@@ -148,6 +149,10 @@ export class TaxesPaidComponent implements OnInit {
     this.step = index;
   }
 
+  goBack() {
+    this.saveAndNext.emit(false);
+    //this.router.navigate(['/itr-filing/itr']);
+  }
 }
 
 function extractValues(mappings) {
@@ -173,6 +178,7 @@ function lookupValue(mappings, key) {
   } else {
     return ''
   }
+
 }
 
 // convert value to code
