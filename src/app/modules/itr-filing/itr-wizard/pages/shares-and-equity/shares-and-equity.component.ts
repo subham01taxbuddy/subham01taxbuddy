@@ -181,16 +181,24 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
   }
 
   addMore() {
+    // if(!this.securitiesForm.enabled){
+    //   this.securitiesForm.enable();
+    // }
     const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
-    if (securitiesArray.valid) {
-      this.addMoreData();
+    if (securitiesArray && securitiesArray.length > 0){
+      if (securitiesArray.valid) {
+        this.addMoreData();
+      } else {
+        securitiesArray.controls.forEach(element => {
+          if ((element as FormGroup).invalid) {
+            element.markAsDirty();
+            element.markAllAsTouched();
+          }
+        });
+      }
     } else {
-      securitiesArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
+      this.securitiesForm.enable();
+      this.addMoreData();
     }
   }
 
