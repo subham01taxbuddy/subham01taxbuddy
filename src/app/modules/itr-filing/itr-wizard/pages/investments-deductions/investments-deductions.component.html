@@ -14,7 +14,7 @@
                     <div class="card__title card__col-sm-9" style="padding:10px 0; font-size: 18px;">Investment/
                         Deduction</div>
                     <div class="edit clearfix invest-edit card__col-sm-3">
-                        <button class="edit_btn invest" (click)="editForm()"><mat-icon>
+                        <button class="edit_btn invest" (click)="editForm('investment')"><mat-icon>
                                 edit_square
                             </mat-icon>Edit </button>
                     </div>
@@ -94,7 +94,7 @@
                             </mat-form-field>
                         </div>
                         <div class="save_buttons clearfix">
-                            <button class="tbd-btn save-btn" [disabled]="" (click)="saveInvestmentDeductions()">Save
+                            <button class="tbd-btn save-btn" [disabled]="investmentDeductionForm.invalid" (click)="saveInvestmentDeductions()">Save
                             </button>
                         </div>
                     </div>

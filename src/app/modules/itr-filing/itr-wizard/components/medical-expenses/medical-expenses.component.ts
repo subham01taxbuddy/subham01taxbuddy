@@ -153,56 +153,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
 
 
   setInvestmentsDeductionsValues() {
-    this.ITR_JSON.investments?.forEach((investment) => {
-      if (
-        investment.investmentType === 'ELSS' ||
-        investment.investmentType === 'PENSION_FUND' ||
-        investment.investmentType === 'PS_EMPLOYEE' ||
-        investment.investmentType === 'PS_EMPLOYER' ||
-        investment.investmentType === 'PENSION_SCHEME'
-      )
-        this.investmentDeductionForm.controls[
-          investment.investmentType
-        ].setValue(investment.amount);
-    });
-
-    for (let i = 0; i < this.ITR_JSON.loans?.length; i++) {
-      switch (this.ITR_JSON.loans[i].loanType) {
-        case 'EDUCATION': {
-          this.investmentDeductionForm.controls['us80e'].setValue(
-            this.ITR_JSON.loans[i].interestPaidPerAnum
-          );
-        }
-      }
-    }
-
-    for (let j = 0; j < this.ITR_JSON.expenses?.length; j++) {
-      switch (this.ITR_JSON.expenses[j].expenseType) {
-        case 'HOUSE_RENT_PAID': {
-          this.investmentDeductionForm.controls['us80gg'].setValue(
-            this.ITR_JSON.expenses[j].amount
-          );
-          break;
-        }
-        case 'ELECTRIC_VEHICLE': {
-          this.investmentDeductionForm.controls['us80eeb'].setValue(
-            this.ITR_JSON.expenses[j].amount
-          );
-          break;
-        }
-      }
-    }
-
-    for (let j = 0; j < this.ITR_JSON.donations?.length; j++) {
-      switch (this.ITR_JSON.donations[j].donationType) {
-        case 'POLITICAL': {
-          this.investmentDeductionForm.controls['us80ggc'].setValue(
-            this.ITR_JSON.donations[j].amountOtherThanCash
-          );
-          break;
-        }
-      }
-    }
     for (let i = 0; i < this.ITR_JSON.insurances?.length; i++) {
       if (this.ITR_JSON.insurances[i].policyFor === 'DEPENDANT') {
         this.investmentDeductionForm.controls['selfPremium'].setValue(
@@ -312,8 +262,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   isParentOverSixty() {
     if (!this.ITR_JSON?.systemFlags?.hasParentOverSixty) {
       console.log('clear parent related values');
-      // this.investmentDeductionForm.controls['premium'].setValue(null);
-      // this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
         null
       );
@@ -462,83 +410,8 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
             item === 'PENSION_SCHEME'
           ) {
             this.addAndUpdateInvestment(item);
-          } else {
-            if (item === 'us80e') {
-              this.Copy_ITR_JSON.loans = this.Copy_ITR_JSON.loans?.filter(
-                (item: any) => item.loanType !== 'EDUCATION'
-              );
-              if (!this.Copy_ITR_JSON.loans) {
-                this.Copy_ITR_JSON.loans = [];
-              }
-              this.Copy_ITR_JSON.loans?.push({
-                loanType: 'EDUCATION',
-                name: null,
-                interestPaidPerAnum: Number(
-                  this.investmentDeductionForm.controls['us80e'].value
-                ),
-                principalPaidPerAnum: 0.0,
-                loanAmount: null,
-                details: null,
-              });
-            } else if (item === 'us80gg') {
-              this.Copy_ITR_JSON.expenses = this.Copy_ITR_JSON.expenses?.filter(
-                (item: any) => item.expenseType !== 'HOUSE_RENT_PAID'
-              );
-              if (!this.Copy_ITR_JSON.expenses) {
-                this.Copy_ITR_JSON.expenses = [];
-              }
-              if (!this.Copy_ITR_JSON.systemFlags.hraAvailed) {
-                this.Copy_ITR_JSON.expenses?.push({
-                  expenseType: 'HOUSE_RENT_PAID',
-                  expenseFor: null,
-                  details: null,
-                  amount: Number(
-                    this.investmentDeductionForm.controls['us80gg'].value
-                  ),
-                  noOfMonths: 0,
-                });
-              }
-            } else if (item === 'us80ggc') {
-              this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
-                (item: any) => item.donationType !== 'POLITICAL'
-              );
-              if (!this.Copy_ITR_JSON.donations) {
-                this.Copy_ITR_JSON.donations = [];
-              }
-              this.Copy_ITR_JSON.donations?.push({
-                details: '',
-                identifier: '',
-                panNumber: '',
-                schemeCode: '',
-                donationType: 'POLITICAL',
-                name: '',
-                amountInCash: 0,
-                amountOtherThanCash: Number(
-                  this.investmentDeductionForm.controls['us80ggc'].value
-                ),
-                address: '',
-                city: '',
-                pinCode: '',
-                state: '',
-              });
-            } else if (item === 'us80eeb') {
-              this.Copy_ITR_JSON.expenses = this.Copy_ITR_JSON.expenses?.filter(
-                (item: any) => item.expenseType !== 'ELECTRIC_VEHICLE'
-              );
-              if (!this.Copy_ITR_JSON.expenses) {
-                this.Copy_ITR_JSON.expenses = [];
-              }
-              this.Copy_ITR_JSON.expenses?.push({
-                expenseType: 'ELECTRIC_VEHICLE',
-                expenseFor: null,
-                details: null,
-                amount: Number(
-                  this.investmentDeductionForm.controls['us80eeb'].value
-                ),
-                noOfMonths: 0,
-              });
-            }
           }
+
         }
       );
       this.Copy_ITR_JSON.insurances = this.Copy_ITR_JSON.insurances?.filter(
@@ -651,7 +524,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       }
 
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
-      // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
         this.ITR_JSON = result;
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
