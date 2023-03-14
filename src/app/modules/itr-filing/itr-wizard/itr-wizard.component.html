@@ -14,12 +14,12 @@
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
-          Sources</span>
+        <a (click)="gotoSources()" [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
+          Sources</a>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="!showIncomeSources && !showPrefill">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
-        <span (click)="gotoCgSchedule()" [ngClass]="breadcrumb ? 'capitalize text-color-brands' : !showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</span>
+        <a (click)="gotoCgSchedule()" [ngClass]="breadcrumb ? 'capitalize text-color-brands' : !showIncomeSources && !showPrefill ? 'capitalize' : 'capitalize text-color-brands'">{{selectedSchedule}}</a>
       </div>
       <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
         <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
@@ -65,9 +65,9 @@
       <hr>
       <!-- action-buttons  -->
       <div class="flex justify-between p-[30px] back-foot">
-        <button (click)="showPrefillView()" class="lftBtn">Back to Prefill Data </button>
+        <button (click)="showPrefillView()" class="lgtBtn">Back to Prefill Data </button>
 
-        <button (click)="gotoSummary()" class="RhtBtn"><span class="adjust">Go to Summary</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
+        <button (click)="gotoSummary()" class="darkBtn"><span class="adjust">Go to Summary</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
       </div>
 
     </div>

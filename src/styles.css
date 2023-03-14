@@ -296,15 +296,63 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
-.back-foot{
-  background-color:#F5F5FA;
-  position:fixed;
-  bottom:0px;
-  width:100%;
-  left:0px;
+.mat-expansion-panel-header.mat-expanded {
+    height: 55px;
+    margin-bottom: 15px;
 }
-
-.lftBtn {
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+.headers-align .mat-expansion-panel .mat-expansion-panel-header-title {
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 150%;
+  letter-spacing: -0.022em;
+  color: #1E1E1E;
+}
+.headers-align .mat-expansion-panel .mat-expanded .mat-expansion-panel-header-title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: -0.022em;
+  color: #FF6B00;
+}
+.mat-expansion-panel-header {
+  height: 55px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 24px;
+  border-radius: 6px;
+  transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #E3E3E3;
+}
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+  box-shadow: none;
+  border-radius: 6px;
+}
+.back-foot {
+  background-color: #F5F5FA;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  left: 0px;
+  border-top: 1px solid #cccccc;
+  padding-top: 5px;
+}
+.lgtBtn {
     margin-left: 17%;
     background-color: #ffffff;
     color: #00AECA;
@@ -316,13 +364,13 @@ button {
     margin-bottom:20px;
     font-weight: 500 !important;
 }
-.lftBtn:hover {
+.lgtBtn:hover {
   background-color: #00AECA;
   border-color: #00AECA;
   color: #ffffff;
 }
 
-.RhtBtn {
+.darkBtn {
   margin-right: 10%;
   background-color: #00AECA;
   border-color: #00AECA;
@@ -334,11 +382,32 @@ button {
   margin-bottom:20px;
   font-weight: 500 !important;
 }
-.RhtBtn:hover {
+.darkBtn:hover {
   background-color: #ffffff;
   color: #00AECA;
   border: 1px solid #00AECA;
 }
+
+.saveBtnIn {
+  margin-right: 7%;
+  background-color: #4F9A20;
+  border-color: #4F9A20;
+  color: #ffffff;   
+  border-radius: 6px;
+  height: 50px;
+  width: 230px;
+  margin-top: 10px;
+  margin-bottom:20px;
+  font-weight: 500 !important;
+}
+
+.saveBtnIn:hover {
+  background-color: #EEFFE4;
+  color: #4F9A20;
+  border: 1px solid #4F9A20;
+}
+
+
 
 .adjust {
   margin-top: 3px;
@@ -350,6 +419,12 @@ button {
   float:left;
   margin-top:3px;
   margin-left:5px;
+}
+
+.icoAdj {
+  float: left;
+  margin-top: 0px;
+  margin-left: 10px;
 }
 
 .item-act {
@@ -480,6 +555,23 @@ mat-step-header .mat-step-label.mat-step-label-active {
 }
 .spc-blw {
   margin-bottom:150px;
+}
+
+.mat-expansion-panel-header {
+  height: 55px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 24px;
+  border-radius: 6px;
+  transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #E3E3E3;
+}
+
+.mat-expansion-panel-header:hover{
+  background-color: #f8f8fc!important;
+  color: #00AECA!important;
+  border: 1px solid #00AECA!important;
 }
 
 /* Rizwan CSS 06 March 2023 Ends*/
@@ -8807,8 +8899,10 @@ body[dir=rtl] .checkbox[checked=true] {
   transition-duration: 0.25s;
   cursor: pointer;
   border: none;
-  background-color: #22374e;
-  color: #fff;
+  background-color: #EEFFE4;
+  color: #494949;
+  border: 1px solid #494949;
+  width: 150px;
 }
 
 .tbd-btn:disabled,
@@ -8819,7 +8913,9 @@ body[dir=rtl] .checkbox[checked=true] {
 }
 
 .tbd-btn:hover {
-  background-color: #04a3bc;
+  background-color: #4F9A20;
+  color:#ffffff;
+  border: 1px solid #4F9A20;
 }
 
 

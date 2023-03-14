@@ -687,8 +687,6 @@ export class CustomerProfileComponent implements OnInit {
     this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
   }
 
-
-
 }
 
 

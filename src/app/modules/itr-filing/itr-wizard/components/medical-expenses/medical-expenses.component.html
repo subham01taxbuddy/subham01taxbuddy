@@ -11,20 +11,17 @@
 
       <div class="card__row">
         <div class="card__col-lg-4">
+          <mat-label>Health insurance for self, spouse or children</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Health insurance for self, spouse or children</mat-label>
             <input matInput placeholder="Health insurance for self, spouse or children" maxlength="8"
               formControlName="selfPremium" autocomplete="off" digitsOnly (blur)="disableSelf('HEALTH')" />
-            <mat-hint *ngIf="
-                this.investmentDeductionForm.controls['selfMedicalExpenditure']
-                  .value > 0
-              ">
+            <mat-hint *ngIf=" this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0 ">
               Note: You have claimed medical insurance</mat-hint>
           </mat-form-field>
         </div>
         <div class="card__col-lg-4">
+          <mat-label>Preventive health Check-up</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Preventive health Check-up</mat-label>
             <input matInput placeholder="Preventive health Check-up" maxlength="8"
               formControlName="selfPreventiveCheckUp" autocomplete="off" digitsOnly (blur)="max5000Limit('SELF')" />
             <mat-error *ngIf="
@@ -37,8 +34,8 @@
         </div>
 
         <div class="card__col-lg-4" *ngIf="userAge >= 60">
+          <mat-label>Medical Expenditure for self, spouse or children</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Medical Expenditure for self, spouse or children</mat-label>
             <input matInput placeholder="Medical Expenditure for self, spouse or children" maxlength="8"
               formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly (blur)="disableSelf('MEDICAL')" />
             <mat-hint *ngIf="
@@ -51,7 +48,7 @@
       <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-12">
           Does any of your parents exceed age of 60? &nbsp;&nbsp;&nbsp;
-          <mat-checkbox class="chk-allign" color="primary" name="hasParentOverSixty"
+          <mat-checkbox class="chk-allign" color="primary" name="hasParentOverSixty" [disabled]="!isEditMedicalExpenses"
             [(ngModel)]="this.ITR_JSON.systemFlags.hasParentOverSixty" [ngModelOptions]="{ standalone: true }"
             (change)="isParentOverSixty()">
           </mat-checkbox>
@@ -59,8 +56,8 @@
       </div>
       <div class="card__row">
         <div class="card__col-lg-4">
+          <mat-label>Health insurance premium paid for parents</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Health insurance premium paid for parents</mat-label>
             <input matInput placeholder="Health insurance premium paid for parents" maxlength="8"
               formControlName="premium" autocomplete="off" digitsOnly (blur)="disableParent('HEALTH')" />
             <mat-hint *ngIf="
@@ -71,8 +68,8 @@
           </mat-form-field>
         </div>
         <div class="card__col-lg-4">
+          <mat-label>Preventive Health Check-up</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Preventive Health Check-up</mat-label>
             <input matInput placeholder="Preventive Health Check-up" maxlength="8" formControlName="preventiveCheckUp"
               autocomplete="off" digitsOnly (blur)="max5000Limit('PARENTS')" />
             <mat-error *ngIf="
@@ -85,8 +82,8 @@
         </div>
 
         <div class="card__col-lg-4" *ngIf="ITR_JSON.systemFlags?.hasParentOverSixty">
+          <mat-label>Medical Expenditure for Senior Citizen</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Medical Expenditure for Senior Citizen</mat-label>
             <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"
               formControlName="medicalExpenditure" autocomplete="off" digitsOnly (blur)="disableParent('MEDICAL')" />
             <mat-hint *ngIf="this.investmentDeductionForm.controls['premium'].value > 0">
@@ -101,15 +98,15 @@
       <div class="card__row">
         <div class="card__col-lg-6">
           <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80u"
-            [ngModelOptions]="{ standalone: true }" (change)="radioChange80u(true)">
+            [ngModelOptions]="{ standalone: true }" (change)="radioChange80u(true)" [disabled]="!isEditMedicalExpenses">
             <mat-radio-button value="SELF_WITH_DISABILITY">Self with disability</mat-radio-button><br /><br />
             <mat-radio-button value="SELF_WITH_SEVERE_DISABILITY">Self with severe disability
             </mat-radio-button>
           </mat-radio-group>
         </div>
         <div class="card__col-lg-6">
+          <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Amount</mat-label>
             <input matInput type="number" placeholder="Up to {{ maxLimit80u }}" maxlength="8" formControlName="us80u"
               autocomplete="off" digitsOnly />
             <mat-hint>Upto {{ maxLimit80u }}</mat-hint>
@@ -125,7 +122,8 @@
       <div class="card__row">
         <div class="card__col-lg-6">
           <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80dd"
-            [ngModelOptions]="{ standalone: true }" (change)="radioChange80dd(true)">
+            [ngModelOptions]="{ standalone: true }" (change)="radioChange80dd(true)"
+            [disabled]="!isEditMedicalExpenses">
             <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY">Dependent person with disability
             </mat-radio-button><br /><br />
             <mat-radio-button value="DEPENDENT_PERSON_WITH_SEVERE_DISABILITY">Dependent person with severe disability
@@ -133,8 +131,8 @@
           </mat-radio-group>
         </div>
         <div class="card__col-lg-6">
+          <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Amount</mat-label>
             <input matInput type="number" placeholder="Up to {{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
               autocomplete="off" digitsOnly />
             <mat-hint>Upto {{ maxLimit80dd }}</mat-hint>
@@ -150,15 +148,16 @@
       <div class="card__row">
         <div class="card__col-lg-6">
           <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80ddb"
-            [ngModelOptions]="{ standalone: true }" (change)="radioChange80ddb(true)">
+            [ngModelOptions]="{ standalone: true }" (change)="radioChange80ddb(true)"
+            [disabled]="!isEditMedicalExpenses">
             <mat-radio-button value="SELF_OR_DEPENDENT">Self or dependent </mat-radio-button><br /><br />
             <mat-radio-button value="SELF_OR_DEPENDENT_SENIOR_CITIZEN">Self or dependent - Senior Citizen
             </mat-radio-button>
           </mat-radio-group>
         </div>
         <div class="card__col-lg-6">
+          <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <mat-label>Amount</mat-label>
             <input matInput type="number" placeholder="Up to {{ maxLimit80ddb }}" maxlength="8"
               formControlName="us80ddb" autocomplete="off" digitsOnly />
             <mat-hint>Upto {{ maxLimit80ddb }}</mat-hint>
@@ -171,7 +170,7 @@
       </div>
     </ng-container>
     <div class="footer__buttons clearfix">
-      <button class="tbd-btn save-btn" [disabled]="!isEditMedicalExpenses" (click)="saveAndContinue()">
+      <button class="tbd-btn save-btn" [disabled]="!isEditMedicalExpenses" (click)="saveInvestmentDeductions()">
         Save
       </button>
     </div>

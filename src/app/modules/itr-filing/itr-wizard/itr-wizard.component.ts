@@ -162,11 +162,13 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   gotoSources() {
-    this.breadcrumb = null;
-    this.location.back();
-    this.showIncomeSources = true;
-    this.showPrefill = false;
-    this.ngAfterContentChecked();
+    if(!this.showIncomeSources) {
+      this.breadcrumb = null;
+      this.location.back();
+      this.showIncomeSources = true;
+      this.showPrefill = false;
+      this.ngAfterContentChecked();
+    }
   }
 
   updateSchedules(scheduleInfoEvent) {

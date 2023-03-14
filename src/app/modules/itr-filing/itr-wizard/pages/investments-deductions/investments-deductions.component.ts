@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, OnInit, Output, EventEmitter, DoCheck } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Router } from '@angular/router';
+import { WizardNavigation } from "../../../../itr-shared/WizardNavigation";
 declare let $: any;
 
 
@@ -16,8 +17,8 @@ declare let $: any;
   templateUrl: './investments-deductions.component.html',
   styleUrls: ['./investments-deductions.component.css']
 })
-export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
-  @Output() saveAndNext = new EventEmitter<any>();
+export class InvestmentsDeductionsComponent extends WizardNavigation implements OnInit {
+
   step = 0;
   isAddDonation: Number;
 
@@ -545,6 +546,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     "stateCode": "37",
     "status": true
   }];
+  isEditMedicalExpenses: boolean;
 
   constructor(
     private router: Router,
@@ -553,6 +555,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     private itrMsService: ItrMsService,
     public matDialog: MatDialog,
   ) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF')
@@ -585,7 +588,6 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    this.getItrDocuments();
     this.investmentDeductionForm = this.fb.group({
       ELSS: [null, Validators.pattern(AppConstants.numericRegex)],
       PENSION_FUND: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -608,30 +610,14 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       hasParentOverSixty: [null]
     });
     this.setInvestmentsDeductionsValues();
-    this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
-
+    this.investmentDeductionForm.disable();
   }
-  max5000Limit(val) {
-    if (val === 'SELF' && this.investmentDeductionForm.controls['selfPreventiveCheckUp'].valid &&
-      this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)) {
-      const applicable = 5000 - Number(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value);
-      this.investmentDeductionForm.controls['preventiveCheckUp'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.max(applicable)])
-      this.investmentDeductionForm.controls['preventiveCheckUp'].updateValueAndValidity();
-    } else if (val === 'PARENTS' && this.investmentDeductionForm.controls['preventiveCheckUp'].valid &&
-      this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)) {
-      const applicable = 5000 - Number(this.investmentDeductionForm.controls['preventiveCheckUp'].value);
-      this.investmentDeductionForm.controls['selfPreventiveCheckUp'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.max(applicable)])
-      this.investmentDeductionForm.controls['selfPreventiveCheckUp'].updateValueAndValidity();
-    }
 
-  }
 
   saveInvestmentDeductions() {
-    //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    this.max5000Limit('SELF')
     if (this.investmentDeductionForm.valid) {
       Object.keys(this.investmentDeductionForm.controls).forEach((item: any) => {
         if (item === 'ELSS' || item === 'PENSION_FUND' || item === 'PS_EMPLOYEE' ||
@@ -699,62 +685,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           }
         }
       });
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "DEPENDANT");
-      if (!this.ITR_JSON.insurances) {
-        this.ITR_JSON.insurances = [];
-      }
-      if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
-        || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)
-        || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value)) {
-        this.ITR_JSON.insurances?.push({
-          insuranceType: 'HEALTH',
-          typeOfPolicy: null,
-          policyFor: 'DEPENDANT',
-          premium: Number(this.investmentDeductionForm.controls['selfPremium'].value),
-          medicalExpenditure: this.userAge >= 60 ? Number(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value) : 0,
-          preventiveCheckUp: Number(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value),
-          sumAssured: null,
-          healthCover: null
-        });
-      }
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "PARENTS");
-      if (!this.ITR_JSON.insurances) {
-        this.ITR_JSON.insurances = [];
-      }
-      if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
-        || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
-        || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
-        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
-        this.ITR_JSON.insurances?.push({
-          insuranceType: 'HEALTH',
-          typeOfPolicy: null,
-          policyFor: 'PARENTS',
-          premium: Number(this.investmentDeductionForm.controls['premium'].value),
-          medicalExpenditure: Number(this.investmentDeductionForm.controls['medicalExpenditure'].value),
-          preventiveCheckUp: Number(this.investmentDeductionForm.controls['preventiveCheckUp'].value),
-          sumAssured: null,
-          healthCover: null
-        });
-      }
-      this.ITR_JSON.disabilities = [];
-      if (this.selected80u !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80u'].value)) {
-        this.ITR_JSON.disabilities?.push({
-          typeOfDisability: this.selected80u,
-          amount: this.investmentDeductionForm.controls['us80u'].value
-        })
-      }
-      if (this.selected80dd !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80dd'].value)) {
-        this.ITR_JSON.disabilities?.push({
-          typeOfDisability: this.selected80dd,
-          amount: this.investmentDeductionForm.controls['us80dd'].value
-        })
-      }
-      if (this.selected80ddb !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80ddb'].value)) {
-        this.ITR_JSON.disabilities?.push({
-          typeOfDisability: this.selected80ddb,
-          amount: this.investmentDeductionForm.controls['us80ddb'].value
-        })
-      }
+
       this.serviceCall('NEXT', this.ITR_JSON);
     } else {
       $('input.ng-invalid').first().focus();
@@ -797,38 +728,6 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
       }
     }
-    for (let i = 0; i < this.ITR_JSON.insurances?.length; i++) {
-      if (this.ITR_JSON.insurances[i].policyFor === 'DEPENDANT') {
-        this.investmentDeductionForm.controls['selfPremium'].setValue(this.ITR_JSON.insurances[i].premium);
-        this.investmentDeductionForm.controls['selfPreventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
-        this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
-      } else if (this.ITR_JSON.insurances[i].policyFor === 'PARENTS') {
-        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
-        this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(true);
-        this.investmentDeductionForm.controls['premium'].setValue(this.ITR_JSON.insurances[i].premium);
-        this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
-        this.investmentDeductionForm.controls['medicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
-      }
-    }
-    let sec80u = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_WITH_DISABILITY' || item.typeOfDisability === 'SELF_WITH_SEVERE_DISABILITY');
-    if (sec80u?.length > 0) {
-      this.selected80u = sec80u[0].typeOfDisability;
-      this.investmentDeductionForm.controls['us80u'].setValue(sec80u[0].amount);
-      this.radioChange80u(false);
-    }
-    let sec80dd = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' || item.typeOfDisability === 'DEPENDENT_PERSON_WITH_DISABILITY');
-    if (sec80dd?.length > 0) {
-      this.selected80dd = sec80dd[0].typeOfDisability;
-      this.investmentDeductionForm.controls['us80dd'].setValue(sec80dd[0].amount);
-      this.radioChange80dd(false);
-    }
-    let sec80ddb = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_OR_DEPENDENT' || item.typeOfDisability === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN');
-    if (sec80ddb?.length > 0) {
-      this.selected80ddb = sec80ddb[0].typeOfDisability;
-      this.investmentDeductionForm.controls['us80ddb'].setValue(sec80ddb[0].amount);
-      this.radioChange80ddb(false);
-    }
-    this.max5000Limit('SELF');
   }
 
   addAndUpdateInvestment(controlName) {
@@ -869,399 +768,25 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     }
   }
 
-  donationCallInConstructor(otherDonationToDropdown, stateDropdown) {
-    this.DonationGridOptions = <GridOptions>{
-      rowData: this.createRowData('OTHER'),
-      columnDefs: this.donationCreateColoumnDef(otherDonationToDropdown, stateDropdown),
-      enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      defaultColDef: {
-        resizable: true
-      },
-      suppressMovable: true,
-      cellFocused: true,
-      enableCharts: true
-    };
-  }
-  donationCreateColoumnDef(otherDonationToDropdown, stateDropdown) {
-    return this.columnDefs = [
-      {
-        headerName: 'Sr. No.',
-        field: 'srNo',
-        width: 50,
-        suppressMovable: true,
-        pinned: 'left',
-      },
-      {
-        headerName: 'Donation Type',
-        field: 'schemeCode',
-        editable: false,
-        suppressMovable: true,
-        onCellFocused: true,
-        valueGetter: function nameFromCode(params) {
-          console.log('params === ', params);
-          if (otherDonationToDropdown.length !== 0) {
-            const nameArray = otherDonationToDropdown.filter((item: any) => (item.value === params.data.schemeCode));
-            console.log('nameArray = ', nameArray);
-            return nameArray[0].label;
-          } else {
-            return params.data.value;
-          }
-        }
-      },
-      {
-        headerName: 'Amount in Cash',
-        field: 'amountInCash',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Amount Other than Cash',
-        field: 'amountOtherThanCash',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Name of Donee',
-        field: 'name',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Address',
-        field: 'address',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'City',
-        field: 'city',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Pin Code',
-        field: 'pinCode',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Pan Number',
-        field: 'panNumber',
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'State',
-        field: 'state',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function statenameFromCode(params) {
-          console.log('stateDropdown === ', stateDropdown);
-          if (stateDropdown.length !== 0) {
-            const nameArray = stateDropdown.filter((item: any) => item.stateCode === params.data.state);
-            console.log('stateDropdown = ', nameArray);
-            return nameArray[0].stateName;
-          } else {
-            return params.data.state;
-          }
-        }
-      },
-      {
-        headerName: 'Edit',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Edit" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: green">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>`;
-
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      },
-      {
-        headerName: 'Delete',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Delete" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      }
-    ];
-  }
-
-  public onDonationRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          //re-intialise the ITR objects
-          this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-          this.Copy_ITR_JSON.donations = this.ITR_JSON.donations.filter((item: any) => item.identifier !== params.data.identifier);
-          this.serviceCall('OTHER', this.Copy_ITR_JSON);
-          break;
-        }
-        case 'edit': {
-          console.log('edit params OTHER = ', params.data);
-          // this.addDonation('Edit Donation', 'EDIT', params.data, 'OTHER');
-          break;
-        }
-      }
-    }
-  }
-
-  createRowData(donationType) {
-    const newData = [];
-    const donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType === donationType);
-    for (let i = 0; i < donations?.length; i++) {
-      newData.push({
-        srNo: i + 1,
-        identifier: donations[i].identifier,
-        amountInCash: donations[i].amountInCash,
-        amountOtherThanCash: donations[i].amountOtherThanCash,
-        schemeCode: donations[i].schemeCode,
-        details: donations[i].details,
-        name: donations[i].name,
-        address: donations[i].address,
-        city: donations[i].city,
-        pinCode: donations[i].pinCode,
-        state: donations[i].state,
-        panNumber: donations[i].panNumber
-      });
-    }
-
-    return newData ? newData : [];
-  }
-
   serviceCall(val, ITR_JSON) {
-
     this.loading = true;
     this.utilsService.saveItrObject(ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.loading = false;
-      this.utilsService.showSnackBar('Donation updated successfully');
-      this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
+      this.utilsService.showSnackBar('Investment Deductions updated successfully');
       if (val === 'NEXT') {
-        this.saveAndNext.emit(true);
+        // this.saveAndNext.emit(true);
       }
 
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
-      this.utilsService.showSnackBar('Failed to update data');
+      this.utilsService.showSnackBar('Failed to update Investment Deductions details');
     });
   }
 
-  isParentOverSixty() {
-    if (!this.ITR_JSON?.systemFlags?.hasParentOverSixty) {
-      console.log('clear parent related values');
-      // this.investmentDeductionForm.controls['premium'].setValue(null);
-      // this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);
-      this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null);
-    }
-  }
-
-  getItrDocuments() {
-    const param1 =
-      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param1).subscribe((result: any) => {
-      this.itrDocuments = result;
-    })
-  }
-
-  // afterUploadDocs(fileUpload) {
-  //   if (fileUpload === 'File uploaded successfully') {
-  //     this.getItrDocuments();
-
-
-  deleteFile(fileName) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
-    var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
-      this.getItrDocuments();
-    },
-      error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
-        this.utilsService.showSnackBar(error.response);
-      })
-  }
-
-  deletedFileInfo(cloudFileId) {
-    this.deletedFileData = [];
-    this.loading = true;
-    let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
-        this.loading = false;
-      })
-  }
-
-  closeDialog() {
-    this.deletedFileData = [];
-  }
-
-  afterUploadDocs(fileUpload) {
-    if (fileUpload === 'File uploaded successfully') {
-      this.getItrDocuments();
-    }
-  }
-
-  zoom: number = 1.0;
-  incrementZoom(amount: number) {
-    this.zoom += amount;
-  }
-
-  docDetails = {
-    docUrl: '',
-    docType: ''
-  };
-  getDocsUrl(index) {
-    if (this.itrDocuments.length > 0) {
-      const docType = this.itrDocuments[index].fileName.split('.').pop();
-      if (this.itrDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
-      } else {
-        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
-      }
-      this.docDetails.docType = docType;
-    } else {
-      this.docDetails.docUrl = '';
-      this.docDetails.docType = '';
-    }
-
-    console.log('Doc URL: ', this.docDetails.docUrl)
-  }
-
-  radioChange80u(setDefault) {
-    if (this.selected80u === 'SELF_WITH_DISABILITY') {
-      this.maxLimit80u = 75000;
-    } else if (this.selected80u === 'SELF_WITH_SEVERE_DISABILITY') {
-      this.maxLimit80u = 125000
-    }
-    if (setDefault)
-      this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u)
-
-  }
-  radioChange80dd(setDefault) {
-    if (this.selected80dd === 'DEPENDENT_PERSON_WITH_DISABILITY') {
-      this.maxLimit80dd = 75000
-    } else if (this.selected80dd === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY') {
-      this.maxLimit80dd = 125000
-    }
-    if (setDefault)
-      this.investmentDeductionForm.controls['us80dd'].setValue(this.maxLimit80dd)
-  }
-  radioChange80ddb(setDefault) {
-    if (this.selected80ddb === 'SELF_OR_DEPENDENT') {
-      this.maxLimit80ddb = 40000
-    } else if (this.selected80ddb === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN') {
-      this.maxLimit80ddb = 100000
-    }
-    if (setDefault)
-      this.investmentDeductionForm.controls['us80ddb'].setValue(this.maxLimit80ddb)
-  }
-
-  ngDoCheck() {
-    if (this.selected80u !== '') {
-      this.investmentDeductionForm.controls['us80u'].enable();
-      this.investmentDeductionForm.controls['us80u'].setValidators([Validators.max(this.maxLimit80u)]);
-    } else {
-      this.investmentDeductionForm.controls['us80u'].disable();
-    }
-    if (this.selected80dd !== '') {
-      this.investmentDeductionForm.controls['us80dd'].enable();
-      this.investmentDeductionForm.controls['us80dd'].setValidators([Validators.max(this.maxLimit80dd)]);
-    } else {
-      this.investmentDeductionForm.controls['us80dd'].disable();
-    }
-    if (this.selected80ddb !== '') {
-      this.investmentDeductionForm.controls['us80ddb'].enable();
-      this.investmentDeductionForm.controls['us80ddb'].setValidators([Validators.max(this.maxLimit80ddb)]);
-    } else {
-      this.investmentDeductionForm.controls['us80ddb'].disable();
-    }
-
-    if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(null)
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
-    } else if (this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0) {
-      this.investmentDeductionForm.controls['selfPremium'].setValue(null)
-      this.investmentDeductionForm.controls['selfPremium'].disable();
-    }
-    if (this.investmentDeductionForm.controls['premium'].value > 0) {
-      this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null)
-      this.investmentDeductionForm.controls['medicalExpenditure'].disable();
-    } else if (this.investmentDeductionForm.controls['medicalExpenditure'].value > 0) {
-      this.investmentDeductionForm.controls['premium'].setValue(null)
-      this.investmentDeductionForm.controls['premium'].disable();
-    }
-  }
-
-  disableSelf(value) {
-    if (value === 'HEALTH') {
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].enable();
-      if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
-        this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(null)
-        this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
-      }
-    } else if (value === 'MEDICAL') {
-      this.investmentDeductionForm.controls['selfPremium'].enable();
-      if (this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0) {
-        this.investmentDeductionForm.controls['selfPremium'].setValue(null)
-        this.investmentDeductionForm.controls['selfPremium'].disable();
-      }
-    }
-  }
-  disableParent(value) {
-    if (value === 'HEALTH') {
-      this.investmentDeductionForm.controls['medicalExpenditure'].enable();
-      if (this.investmentDeductionForm.controls['premium'].value > 0) {
-        this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null)
-        this.investmentDeductionForm.controls['medicalExpenditure'].disable();
-      }
-    } else if (value === 'MEDICAL') {
-      this.investmentDeductionForm.controls['premium'].enable();
-      if (this.investmentDeductionForm.controls['medicalExpenditure'].value > 0) {
-        this.investmentDeductionForm.controls['premium'].setValue(null)
-        this.investmentDeductionForm.controls['premium'].disable();
-      }
-    }
-  }
 
   openNotesDialog(client) {
     let disposable = this.matDialog.open(UserNotesComponent, {
@@ -1283,7 +808,15 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     this.step = index;
   }
 
+  editForm(type) {
+    if (type === 'medicalExpenses') {
+      this.isEditMedicalExpenses = true;
+    } else if (type === 'investment') {
+      this.investmentDeductionForm.enable();
+    }
+  }
+
   goBack() {
-    this.router.navigate(['/itr-filing/itr']);
+    this.saveAndNext.emit(false);
   }
 }
