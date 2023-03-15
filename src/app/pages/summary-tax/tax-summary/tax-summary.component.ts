@@ -11,7 +11,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { MatomoService } from 'src/app/services/matomo.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -160,8 +159,7 @@ export class TaxSummaryComponent implements OnInit {
 
   constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    private router: Router,
-    private matomoService: MatomoService) {
+    private router: Router) {
 
   }
 
@@ -544,7 +542,7 @@ export class TaxSummaryComponent implements OnInit {
         employerObj.deductions.push(professionalTaxObj)
       }
 
-      //Salary( as per sec 17(1)) 
+      //Salary( as per sec 17(1))
       if (this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
         let sal17Obj = {
           description: null,
@@ -554,7 +552,7 @@ export class TaxSummaryComponent implements OnInit {
         }
         employerObj.salary.push(sal17Obj)
       }
-      //Perquist val( as per sec 17(2)) 
+      //Perquist val( as per sec 17(2))
       if (this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
         let valOfPerqu17Obj = {
           description: null,
@@ -564,7 +562,7 @@ export class TaxSummaryComponent implements OnInit {
         }
         employerObj.perquisites.push(valOfPerqu17Obj)
       }
-      //Profit in ilu( as per sec 17(3)) 
+      //Profit in ilu( as per sec 17(3))
       if (this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
         let profitsInLieuObj = {
           description: null,
@@ -956,7 +954,7 @@ export class TaxSummaryComponent implements OnInit {
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(this.donationData);
 
 
-    //Values 
+    //Values
     var deductionValues = incomeDeduction.DeductUndChapVIA;
     console.log('deductionValues Info: ', deductionValues);
 
@@ -1469,7 +1467,7 @@ export class TaxSummaryComponent implements OnInit {
     }
 
 
-    //Financial Information as on 31/03/2020  
+    //Financial Information as on 31/03/2020
     //Liabilities:
     let financialInfo = itrData.ScheduleBP.FinanclPartclrOfBusiness;
     console.log('financialInfo: -> ', financialInfo)
@@ -1555,7 +1553,7 @@ export class TaxSummaryComponent implements OnInit {
       console.log('User summary: => ', summary)
       if (summary.assesse.itrType === "1" || summary.assesse.itrType === "4") {
         this.itrSummaryForm.reset();
-        // this.sourcesOfIncome    sakjdnkasjdkja  
+        // this.sourcesOfIncome    sakjdnkasjdkja
         this.updatBussinessInfo = summary;
         this.bankData = [];
         this.housingData = [];
@@ -2477,7 +2475,7 @@ export class TaxSummaryComponent implements OnInit {
         console.log('userData: ', userData)
         // this.itrSummaryForm.controls['firstName'].setValue(result.firstName ? result.firstName : '');   //91
         // this.itrSummaryForm.controls['middleName'].setValue(result.middleName ? result.middleName : '');
-        // this.itrSummaryForm.controls['lastName'].setValue(result.lastName ? result.lastName : '');  //stateCode   
+        // this.itrSummaryForm.controls['lastName'].setValue(result.lastName ? result.lastName : '');  //stateCode
         // this.itrSummaryForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
       }, error => {
         if (error.status === 404) {
@@ -2602,7 +2600,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateGrossTotalIncome()
   }
 
-  calculateGrossTotalIncome() {    //Calculate point 4 
+  calculateGrossTotalIncome() {    //Calculate point 4
     // this.businessObject.prsumptiveIncomeTotal
 
     if (this.itrType.itrOne) {
@@ -2726,7 +2724,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   calculateRebateus87A() {    //Calculate point 8 (Less: Rebate u/s 87A)
-    // 
+    //
     // Remove logic as descuss with brij, user direct enter this amount
 
     // if (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['residentialStatus'].value === 'RESIDENT' && (this.itrSummaryForm.controls['taxSummary.controls['totalIncomeAfterDeductionIncludeSR'].value < 500000)) {
@@ -2826,7 +2824,7 @@ export class TaxSummaryComponent implements OnInit {
       this.taxesPaid.tdsOnSal26QB = total;
     }
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
-    //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
+    //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
     (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
     this.calculateNetTaxPayble();        //Calculate point 17
   }
@@ -2839,7 +2837,7 @@ export class TaxSummaryComponent implements OnInit {
 
     this.taxesPaid.tcs = total;
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
-    //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
+    //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
     (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
     this.calculateNetTaxPayble();        //Calculate point 17
   }
@@ -2858,7 +2856,7 @@ export class TaxSummaryComponent implements OnInit {
 
     this.taxesPaid.advanceSelfAssTax = total;
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
-    //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
+    //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
     (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
     //console.log('taxesPaid: ', this.taxesPaid)
 
@@ -3107,8 +3105,8 @@ export class TaxSummaryComponent implements OnInit {
           if (this.utilService.isNonEmpty(this.businessObject.grossReciept)) {
             let incomeObj = {
               incomeType: "PROFESSIONAL",
-              receipts: Number(this.businessObject.grossReciept),// gross receipts   
-              presumptiveIncome: Number(this.businessObject.presumptiveIncome),//50%  
+              receipts: Number(this.businessObject.grossReciept),// gross receipts
+              presumptiveIncome: Number(this.businessObject.presumptiveIncome),//50%
               periodOfHolding: 0,
               minimumPresumptiveIncome: Number(this.businessObject.minimumPresumptiveIncome)
             }
@@ -3479,9 +3477,9 @@ export class TaxSummaryComponent implements OnInit {
         taxPaidTDS: [0],
         taxPaidTCS: [0],//totalTaxCollectedAtSources          ONLY SHOW
         selfassessmentTax: [0],
-        totalTaxesPaid: [0],		//totalTaxPaid												
-        taxpayable: [0],			//netTaxPayable   
-        taxRefund: [0],				//netTaxPayable   
+        totalTaxesPaid: [0],		//totalTaxPaid
+        taxpayable: [0],			//netTaxPayable
+        taxRefund: [0],				//netTaxPayable
         totalTax: [0],   //totalTaxAndCess
         advanceTaxSelfAssessmentTax: [0],   //totalAdvanceTax          ONLY SHOW
 

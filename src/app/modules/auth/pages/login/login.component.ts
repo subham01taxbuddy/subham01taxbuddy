@@ -14,8 +14,6 @@ import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { environment } from 'src/environments/environment';
-import { MatomoService } from 'src/app/services/matomo.service';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 declare let $: any;
 
@@ -40,8 +38,7 @@ export class LoginComponent implements OnInit {
     private userMsService: UserMsService,
     private dialog: MatDialog,
     public utilsService: UtilsService,
-    private storageService: StorageService,
-    private matomoService: MatomoService
+    private storageService: StorageService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
   }
@@ -88,7 +85,6 @@ export class LoginComponent implements OnInit {
           userId: 0
         }
         this.setUserDataInsession(res, temp);
-        this.matomoService.trackMatomoEvents('/login', 'SIGNIN');
         if (res.attributes['custom:user_type'] && res.attributes['custom:user_type'] === 'MIGRATED') {
           this.updateCognitoId(res);
         } else {
@@ -263,7 +259,7 @@ export class LoginComponent implements OnInit {
             'email': loginSMEInfo['email'],
             'contactNumber': loginSMEInfo['mobileNumber'],
           };
-         
+
           const userDetail = {
             email: loginSMEInfo['email'],
             phoneNumber: loginSMEInfo['mobileNumber'],
@@ -309,13 +305,13 @@ export class LoginComponent implements OnInit {
         'defaultBotIds': '3eb13dbd656feb3acdbdf650efbf437d1',
         "skipRouting": true
       };
-      
+
       (window as any).Kommunicate.displayKommunicateWidget(true);
       const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
       const loginSMEInfo = data[0];
       var css = "#km-faq{display:none!important;}";
       (window as any).Kommunicate.customizeWidgetCss(css);
-      
+
       (window as any).Kommunicate.updateSettings(defaultSettings);
       // (window as any).Kommunicate.startConversation(defaultSettings, function (response) {
       //         console.log("new conversation created");
