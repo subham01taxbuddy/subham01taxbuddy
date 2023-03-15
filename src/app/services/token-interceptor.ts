@@ -9,7 +9,6 @@ import {
 import { catchError, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilsService } from './utils.service';
-import { MatomoService } from './matomo.service';
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
 @Injectable()
@@ -17,8 +16,7 @@ export class TokenInterceptor implements HttpInterceptor {
     userData: any;
     constructor(
         private router: Router,
-        public utilsService: UtilsService,
-        private matomoService: MatomoService
+        public utilsService: UtilsService
     ) {
     }
 
@@ -56,7 +54,6 @@ export class TokenInterceptor implements HttpInterceptor {
                     Authorization: `Bearer ` + TOKEN
                 }
             });
-            this.matomoService.trackMatomoEvents(this.router.url, 'HEARTBEAT');
 
         }
 

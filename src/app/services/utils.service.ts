@@ -13,7 +13,6 @@ import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
-declare function matomo(title: any, url: any, event: any, subscribeId: any);
 
 @Injectable()
 
@@ -535,14 +534,6 @@ export class UtilsService {
         return false;
     }
 
-    matomoCall(mainTabName: any, path: any, eventArray: any, scriptId: any) {
-        if (environment.production) {
-            matomo(mainTabName, path, eventArray, scriptId);
-        }
-        else {
-            matomo(mainTabName, path, eventArray, scriptId);
-        }
-    }
 
     async getStoredMyAgentList() {
         const agentList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST) || null);
