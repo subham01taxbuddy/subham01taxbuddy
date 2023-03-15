@@ -13,6 +13,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { withLatestFrom } from 'rxjs';
+import { forEach } from 'lodash';
 @Component({
   selector: 'app-other-asset-improvement',
   templateUrl: './other-asset-improvement.component.html',
@@ -60,14 +61,8 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   ngOnInit() {
     console.log('On Inti');
-
-    this.OtherAsssetImprovementForm = this.fb.group({
-      otherAssets: this.fb.array([]),
-    });
-
+    this.initForm();
     this.isAddMoreOtherAssets();
-    console.log(this.index);
-
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
@@ -117,69 +112,97 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   isAddMoreOtherAssets() {
+    // let assetDetails;
+    // let data;
+
+    // data = this.goldCg.assetDetails;
+
+    // console.log(data);
+
+    // if (data.length > 0) {
+    //   data.forEach((obj: any) => {
+    //     assetDetails = obj.assetDetails;
+    //     assetDetails.forEach((element: any) => {
+    //       this.getOtherAssets.controls['gainType'] = element.gainType;
+    //     });
+    //   });
+    // }
+
     const otherAssetDetailsArray = this.getOtherAssets;
+    // condition for adding more other assets
     if (otherAssetDetailsArray.valid) {
       this.addMoreOtherAssetsForm();
-      console.log(this.OtherAsssetImprovementForm);
+      // console.log(otherAssetsAray.controls);
     } else {
       otherAssetDetailsArray.controls.forEach((element) => {
         if ((element as FormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
+          this.utilsService.showSnackBar(
+            'Please fill all required details for the existing asset first'
+          );
         }
       });
-
-      this.utilsService.showSnackBar(
-        'Please fill all required details for the existing asset first'
-      );
     }
   }
 
   addMoreOtherAssetsForm(index?) {
     const otherAssetsArray = this.getOtherAssets;
-    const otherAssetsArrayLength = otherAssetsArray.length;
-
-    otherAssetsArray.insert(
-      otherAssetsArrayLength,
-      this.createOtherAssetsForm(index)
+    otherAssetsArray.push(
+      this.createOtherAssetsForm(otherAssetsArray.length, index)
     );
   }
 
-  createOtherAssetsForm(index?) {
+  initForm() {
+    return (this.OtherAsssetImprovementForm = this.fb.group({
+      otherAssets: this.fb.array([]),
+    }));
+  }
+
+  createOtherAssetsForm(srn, index?) {
     return this.fb.group({
       otherAssetsArray: this.fb.group({
         // srn: [this.data.rowIndex],
-        hasEdit: ['', false],
-        purchaseDate: ['', [Validators.required]],
-        sellDate: ['', [Validators.required]],
+        hasEdit: [index ? index.hasEdit : false],
+        purchaseDate: [index ? index.purchaseDate : '', [Validators.required]],
+        sellDate: [index ? index.sellDate : '', [Validators.required]],
         purchaseCost: [
-          '',
+          index ? index.purchaseCost : '',
           [
             Validators.required,
             Validators.pattern(AppConstants.amountWithoutDecimal),
           ],
         ],
         sellValue: [
-          '',
+          index ? index.sellValue : '',
           [
             Validators.required,
             Validators.pattern(AppConstants.amountWithoutDecimal),
           ],
         ],
 
-        sellExpense: [''],
-        capitalGain: 0,
-        gainType: [''],
+        sellExpense: [index ? index.sellExpense : ''],
+        capitalGain: [index ? index.capitalGain : 0],
+        gainType: [index ? index.gainType : ''],
         algorithm: 'cgProperty',
-        stampDutyValue: 0,
-        valueInConsideration: 0,
-        indexCostOfAcquisition: 0,
+        stampDutyValue: [index ? index.stampDutyValue : 0],
+        valueInConsideration: [index ? index.valueInConsideration : 0],
+        indexCostOfAcquisition: [index ? index.indexCostOfAcquisition : 0],
       }),
 
       improvementsArray: this.fb.group({
-        financialYearOfImprovement: ['', [Validators.required]],
-        costOfImprovement: [0, [Validators.required]],
-        indexCostOfImprovement: [0, [Validators.required]],
+        financialYearOfImprovement: [
+          index ? index.financialYearOfImprovement : '',
+          [Validators.required],
+        ],
+        costOfImprovement: [
+          index ? index.costOfImprovement : 0,
+          [Validators.required],
+        ],
+        indexCostOfImprovement: [
+          index ? index.indexCostOfImprovement : 0,
+          [Validators.required],
+        ],
       }),
     });
   }
@@ -190,13 +213,13 @@ export class OtherAssetImprovementComponent implements OnInit {
     //   (item) => item.srn === selectedAsset
     // )[0];
 
-    let assetDetails = (
+    let gainType = (
       (this.getOtherAssets.controls[i] as FormGroup).controls[
         'otherAssetsArray'
       ] as FormGroup
     ).controls['gainType'].value;
 
-    if (assetDetails == 'LONG') {
+    if (gainType == 'LONG') {
       let req = {
         cost: (
           (this.getOtherAssets.controls[i] as FormGroup).controls[
@@ -264,7 +287,7 @@ export class OtherAssetImprovementComponent implements OnInit {
         };
         request.improvement.push(improvement);
       } else {
-        // request.improvement = this.goldCg.improvement;
+        request.improvement = this.goldCg.improvement;
       }
     });
 
@@ -399,18 +422,18 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   editOtherAsset(i) {
     this.OtherAsssetImprovementForm.enable(i);
-    console.log(i);
     console.log(this.goldCg);
   }
 
   deleteOtherAsset(index) {
     console.log('Remove Index', index);
     const deleteOtherAsset = this.getOtherAssets;
-    deleteOtherAsset.removeAt(index);
 
-    if (deleteOtherAsset.length === 0) {
-      deleteOtherAsset.push(this.createOtherAssetsForm());
-    }
+    deleteOtherAsset.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        deleteOtherAsset.removeAt(index);
+      }
+    });
   }
 
   //  IMPROVEMENTS --------------------------------------------
