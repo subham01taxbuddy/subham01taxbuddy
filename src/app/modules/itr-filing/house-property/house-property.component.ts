@@ -123,12 +123,6 @@ export class HousePropertyComponent implements OnInit {
       }
     }
 
-    const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
-    // Condition is added because at least one tenant details is mandatory
-    if (nilTenant.length === 0) {
-      nilTenant.push(this.createTenantForm());
-    }
-
     console.log(
       'HOUSING deletedFileData LENGTH ---> ',
       this.deletedFileData.length
@@ -429,12 +423,14 @@ export class HousePropertyComponent implements OnInit {
     this.mode = 'UPDATE';
 
     this.housePropertyForm = this.createHousePropertyForm();
-    this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[index]);
+
 
     this.changePropType(
       this.housePropertyForm.controls['propertyType'].value,
       'EDIT'
     );
+
+    this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[index]);
     this.housePropertyForm.controls['country'].setValue('91');
     if (this.ITR_JSON.houseProperties[index].tenant instanceof Array) {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
@@ -462,12 +458,13 @@ export class HousePropertyComponent implements OnInit {
         this.ITR_JSON.houseProperties[index].grossAnnualRentReceived
       );
     }
-    // if (this.ITR_JSON.houseProperties[index].loans instanceof Array) {
-    //   const loans = <FormArray>this.housePropertyForm.get('loans');
-    //   this.ITR_JSON.houseProperties[index].loans.forEach(obj => {
-    //     loans.push(this.createLoanForm(obj));
-    //   });
-    // }
+    if (this.ITR_JSON.houseProperties[index].loans instanceof Array) {
+      const loans = <FormArray>this.housePropertyForm.get('loans');
+      loans.controls[0].patchValue(this.ITR_JSON.houseProperties[index].loans[0]);
+      // this.ITR_JSON.houseProperties[index].loans.forEach(obj => {
+      //   loans.push(this.createLoanForm(obj));
+      // });
+    }
 
     if (
       this.utilsService.isNonEmpty(
@@ -570,13 +567,13 @@ export class HousePropertyComponent implements OnInit {
     return panRepeat;
   }
 
-  // createLoanForm(obj: { loanType?: string, principalAmount?: number, interestAmount?: number } = {}): FormGroup {
-  //   return this.fb.group({
-  //     loanType: ['HOUSING'],
-  //     principalAmount: [obj.principalAmount || null, Validators.pattern(AppConstants.numericRegex)],
-  //     interestAmount: [obj.interestAmount || null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
-  //   });
-  // }
+  createLoanForm(obj: { loanType?: string, principalAmount?: number, interestAmount?: number } = {}): FormGroup {
+    return this.fb.group({
+      loanType: ['HOUSING'],
+      principalAmount: [obj.principalAmount || null, Validators.pattern(AppConstants.numericRegex)],
+      interestAmount: [obj.interestAmount || null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
+    });
+  }
   get getLoansArray() {
     return <FormArray>this.housePropertyForm.get('loans');
   }
@@ -618,9 +615,16 @@ export class HousePropertyComponent implements OnInit {
           .controls[0] as FormGroup
       ).controls['interestAmount'].updateValueAndValidity();
     } else if (type === 'LOP') {
+
       if (mode != 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
+      } else {
+        const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
+        // Condition is added because at least one tenant details is mandatory
+        if (nilTenant.length === 0) {
+          nilTenant.push(this.createTenantForm());
+        }
       }
       this.housePropertyForm.controls['annualRentReceived'].setValidators([
         Validators.pattern(AppConstants.numericRegex),

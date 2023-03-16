@@ -148,9 +148,23 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
             })
           }
         });
+        if (obj.deduction) {
+          obj.deduction.forEach((element: any) => {
+            this.deductionForm = this.initDeductionForm(element);
+          });
+        } else {
+          this.deductionForm = this.initDeductionForm();
+        }
+        if (this.getSecuritiesCg() <= 0) {
+          this.deduction = false;
+          this.isDisable = true;
+        } else {
+          this.isDisable = false;
+        }
       });
 
     } else {
+      this.compactView = false;
       this.addMoreData();
     }
   }
@@ -186,16 +200,16 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
     // }
     const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
     if (securitiesArray && securitiesArray.length > 0){
-      if (securitiesArray.valid) {
+      // if (securitiesArray.valid) {
         this.addMoreData();
-      } else {
-        securitiesArray.controls.forEach(element => {
-          if ((element as FormGroup).invalid) {
-            element.markAsDirty();
-            element.markAllAsTouched();
-          }
-        });
-      }
+      // } else {
+      //   securitiesArray.controls.forEach(element => {
+      //     if ((element as FormGroup).invalid) {
+      //       element.markAsDirty();
+      //       element.markAllAsTouched();
+      //     }
+      //   });
+      // }
     } else {
       this.securitiesForm.enable();
       this.addMoreData();

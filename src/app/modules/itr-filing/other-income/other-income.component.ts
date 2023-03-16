@@ -383,8 +383,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
 
       for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
-        const control = exemptIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'] === this.ITR_JSON.exemptIncomes[i].natureDesc)[0];
-        control['incomeValue'].setValue(this.ITR_JSON.exemptIncomes[i].amount);
+        const formGroup = exemptIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'].value === this.ITR_JSON.exemptIncomes[i].natureDesc)[0] as FormGroup;
+        formGroup.controls['incomeValue'].setValue(this.ITR_JSON.exemptIncomes[i].amount);
       }
     }
   }

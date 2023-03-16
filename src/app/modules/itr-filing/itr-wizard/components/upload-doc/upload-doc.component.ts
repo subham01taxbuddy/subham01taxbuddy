@@ -35,7 +35,10 @@ export class UploadDocComponent implements OnInit {
   getDocuments() {
     const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
-      this.documents = result;
+      console.log('documents:', result);
+      if(Array.isArray(result)) {
+        this.documents = result;
+      }
     })
   }
 
