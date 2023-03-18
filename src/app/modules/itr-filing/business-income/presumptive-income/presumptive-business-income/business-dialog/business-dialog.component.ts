@@ -26,14 +26,15 @@ export class BusinessDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<BusinessDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log("DATA1", data)
+    console.log("DATA1", data);
+    this.initBusinessForm(this.data.data);
   }
 
   ngOnInit(): void {
     let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
     if (natureOfBusiness) {
       this.natureOfBusinessDropdown = natureOfBusiness.filter((item: any) => item.section === '44AD');
-      this.data.natureList.forEach(item => {
+      natureOfBusiness.natureList.forEach(item => {
         this.natureOfBusinessDropdown.forEach(element => {
           if (item.natureOfBusiness.includes(element.label) && this.data.data.natureOfBusiness != element.label) {
             element.disabled = true;
@@ -64,7 +65,7 @@ export class BusinessDialogComponent implements OnInit {
   }
 
   getFullName() {
-    let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm.controls['natureOfBusiness'].value);
+    let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm?.controls['natureOfBusiness'].value);
     return business[0] ? business[0].label + '-' + business[0].code : null;
   }
 
