@@ -14,10 +14,16 @@
     color: #00AECA;
     border-radius: 4px;
     padding: 5px;
+    font-size: 13px;
   }
 
   .filename {
-    float: right;
+    overflow-wrap: break-word;
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
     margin-right: 24px;
+    font-size: 10px;
   }
 }
