@@ -10,6 +10,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddBalanceSheetComponent } from './add-balance-sheet/add-balance-sheet.component';
 import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-dialog.component';
+import {Location} from "@angular/common";
+import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
 const balanceSheetData : BusinessDescription[]=[
   {
@@ -24,7 +26,10 @@ const balanceSheetData : BusinessDescription[]=[
   templateUrl: './balance-sheet.component.html',
   styleUrls: ['./balance-sheet.component.scss']
 })
-export class BalanceSheetComponent implements OnInit {
+export class
+
+
+BalanceSheetComponent extends WizardNavigation implements OnInit {
   public balanceSheetGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -47,7 +52,9 @@ export class BalanceSheetComponent implements OnInit {
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public fb: FormBuilder,
+    private location: Location
   ) {
+    super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     this.depreciationObj = [];
@@ -69,13 +76,13 @@ export class BalanceSheetComponent implements OnInit {
   displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'businessDescription'];
   dataSource = new MatTableDataSource<BusinessDescription>();
   selection = new SelectionModel<BusinessDescription>(true, []);
-  
+
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-  
+
   masterToggle() {
     this.isAllSelected() ?
         this.selection.clear() :
@@ -221,11 +228,11 @@ export class BalanceSheetComponent implements OnInit {
         if (mode === 'ADD') {
           //  balanceSheetData.push(result)
           this.dataSource.data.push(result)
-          this.dataSource = new MatTableDataSource(this.dataSource.data) 
+          this.dataSource = new MatTableDataSource(this.dataSource.data)
           // this.balanceSheetGridOptions.rowData.push(result);
           // this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
         }
-        
+
       }
     });
 
@@ -355,6 +362,11 @@ export class BalanceSheetComponent implements OnInit {
         }
       });
     }
+  }
+
+  goBack() {
+    this.saveAndNext.emit(false);
+    //this.location.back();
   }
 
   onContinue() {
