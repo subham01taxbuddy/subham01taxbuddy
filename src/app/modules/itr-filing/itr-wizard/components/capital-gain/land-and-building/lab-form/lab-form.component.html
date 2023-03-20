@@ -196,7 +196,7 @@
                   </mat-radio-group>
                 </div>
                 <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
-                        (click)="addInvestment('ADD',investmentGridOptions.api, '', 0)">Add New&nbsp;&nbsp;
+                        (click)="addInvestment('ADD', '', 0)">Add New&nbsp;&nbsp;
                   <i class="fa fa-plus" aria-hidden="true"></i>
                 </button>
               </div>
@@ -205,7 +205,8 @@
             <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
               <div formArrayName="deductions">
 
-                <div class="card" *ngFor="let deduction of getDeductionsArray.controls;let i=index" [formGroupName]="i">
+                <div class="card" *ngFor="let deduction of getDeductionsArray.controls | paginate:config;let i=index"
+                     [formGroupName]="fieldGlobalIndex(i)">
 
                   <div class="card__row">
 <!--                    <mat-checkbox name="i"></mat-checkbox>-->
@@ -224,9 +225,10 @@
                     <div class="card__col-xs-12 card__col-sm-4">
                       <mat-label>Date of Purchase</mat-label>
                       <mat-form-field appearance="outline">
-                        <input matInput formControlName="purchaseDate" name="deductions[i]" class="input-field" maxlength="25"
-                               capitalizeFirst
-                               required>
+                        <input matInput formControlName="purchaseDate" name="deductions[i]" class="input-field"
+                               [matDatepicker]="purchaseDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                        <mat-datepicker #purchaseDate></mat-datepicker>
                         <mat-error
                           *ngIf="immovableForm.controls['deductions'].controls[i].controls['purchaseDate'].hasError('pattern')">
                           Enter valid name.
@@ -268,10 +270,16 @@
                 <!--              [disabled]="!isEmployerSelected()"-->
 
                 <div>
-                  <button class="delete-btn" (click)="removeBuyersDetails()" [disabled]="!deductionSelected()">
+                  <button class="delete-btn" (click)="deleteInvestment(i)" [disabled]="!deductionSelected()">
                     <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete </button>
                 </div>
 
+              </div>
+              <div class="txt-center">
+                <table>
+                  <tr *ngFor="let item of getDeductionsArray.controls | paginate:config"></tr>
+                </table>
+                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
               </div>
             </div>
           </div>

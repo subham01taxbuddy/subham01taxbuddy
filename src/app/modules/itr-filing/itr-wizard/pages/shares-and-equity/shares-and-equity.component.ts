@@ -363,10 +363,11 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
 
   getSecuritiesCg() {
     let totalCg = 0;
-    const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
-    securitiesArray.controls.forEach((element) => {
-      totalCg += parseInt((element as FormGroup).controls['capitalGain'].value);
+    this.brokerList.forEach(broker => {
+      totalCg += broker.LTCG;
+      totalCg += broker.STCG;
     });
+
     return totalCg;
   }
 

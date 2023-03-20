@@ -13,9 +13,9 @@
             <mat-panel-title>
             <mat-checkbox name="selected[i]"
                           formControlName="selected">
-            <span class="employerTitle" (click)="addEmployer(i)">{{employer.value.employerName}}</span>
+            <span class="employerTitle" (click)="editEmployerDetails(i)">{{employer.value.employerName}}</span>
             </mat-checkbox>
-            <mat-icon (click)="addEmployer(i)">
+            <mat-icon (click)="editEmployerDetails(i)">
               arrow_forward_ios
             </mat-icon>
             </mat-panel-title>

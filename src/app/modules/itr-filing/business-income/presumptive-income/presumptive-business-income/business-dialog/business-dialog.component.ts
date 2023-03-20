@@ -104,12 +104,24 @@ export class BusinessDialogComponent implements OnInit {
     });
   }
 
-
+  MAX_RECEIPT_LIMIT = 20000000;
 
   saveBusinessDetails() {
     //this.businessForm.controls['presumptiveIncome'].setValue(this.businessForm.controls['preIncome'].value + this.businessForm.controls['minimumPresumptiveIncome'].value);
     console.log('this.natureOfBusinessForm === ', this.businessForm.value);
     if (this.businessForm.valid) {
+
+      //check the income validation for u/s 44D
+      let totalReceived = this.businessForm.controls['receivedInCash'].value +
+        this.businessForm.controls['minimumPresumptiveIncome'].value +
+        this.businessForm.controls['receipts'].value + this.businessForm.controls['preIncome'].value;
+
+      if(totalReceived > this.MAX_RECEIPT_LIMIT){
+        this.utilsService.showSnackBar("Total of receipt in Bank and Receipt in Other mode from all business should not exceed Rs. "
+          + this.MAX_RECEIPT_LIMIT);
+        return;
+      }
+
       let localPresumptiveIncome = {
         businessType: 'BUSINESS',
         natureOfBusiness: this.businessForm.controls['natureOfBusiness'].value,
