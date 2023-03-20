@@ -48,6 +48,16 @@ export class HousePropertyComponent implements OnInit {
       label: 'Deemed Let Out',
     },
   ];
+  loanSectionDropDown = [
+    {
+      value: '80EE',
+      label: 'Interest on loan taken for residential house property (80EE)'
+    },
+    {
+      value: '80EEA',
+      label: 'Deduction in respect of interest on loan taken for certain house property (80EEA)'
+    }
+  ];
   stateDropdown = AppConstants.stateDropdown;
   thirtyPctOfAnnualValue = 0;
   annualValue = 0;
@@ -398,6 +408,8 @@ export class HousePropertyComponent implements OnInit {
       return false;
     }
   }
+
+  loanSection= '';
 
   currentIndex: number = null;
   housingView = '';

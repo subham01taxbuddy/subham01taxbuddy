@@ -6,19 +6,19 @@
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
       <mat-radio-group name="directorInCompany" (change)="ChangeDirectorStatus()"
-        [(ngModel)]="ITR_JSON.systemFlags.directorInCompany" [disabled]="!isEditOther">
+        [(ngModel)]="Copy_ITR_JSON.systemFlags.directorInCompany" [disabled]="!isEditOther">
         <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
         </mat-radio-button> &nbsp;&nbsp;&nbsp;
         <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
       </mat-radio-group>
     </div>
   </div>
-  <div style="text-align: right;" *ngIf="ITR_JSON.systemFlags?.directorInCompany">
+  <div style="text-align: right;" *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
     <button class="tbd-btn-small" (click)="addDirectorDetails('Add director details','ADD',null)">
       <i class="fa fa-plus" aria-hidden="true"></i>Add New Company
     </button>
   </div>
-  <div *ngIf="ITR_JSON.systemFlags?.directorInCompany">
+  <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
     <form [formGroup]="directorForm">
       <div formArrayName="directorsArray">
 
@@ -124,20 +124,20 @@
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
       <mat-radio-group name="isUnlistedShares" (change)="ChangeSharesStatus()"
-                       [(ngModel)]="ITR_JSON.systemFlags.haveUnlistedShares" [disabled]="!isEditOther">
+                       [(ngModel)]="Copy_ITR_JSON.systemFlags.haveUnlistedShares" [disabled]="!isEditOther">
         <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
         </mat-radio-button> &nbsp;&nbsp;&nbsp;
         <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
       </mat-radio-group>
     </div>
   </div>
-  <div style="text-align: right;" *ngIf="ITR_JSON.systemFlags.haveUnlistedShares">
+  <div style="text-align: right;" *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
     <button class="tbd-btn-small" (click)="addSharesDetails('Add unlisted shares details','ADD',null)"> &nbsp;&nbsp;
       <i class="fa fa-plus" aria-hidden="true"></i>
       Add Unlisted Company
     </button>
   </div>
-  <div style="height: 100%; padding-top: 5px; box-sizing: border-box;" *ngIf="ITR_JSON.systemFlags.haveUnlistedShares">
+  <div style="height: 100%; padding-top: 5px; box-sizing: border-box;" *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
     <form [formGroup]="sharesForm">
       <div formArrayName="sharesArray">
         <div class="card"

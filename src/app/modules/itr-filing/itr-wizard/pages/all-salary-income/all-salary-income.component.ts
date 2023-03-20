@@ -130,19 +130,19 @@ export class AllSalaryIncomeComponent extends WizardNavigation implements OnInit
   }
   addEmployer(index) {
     this.showList = false;
-    this.router.navigate(['/itr-filing/itr/salary/details'], {
+    this.router.navigate(['/itr-filing/itr/salary/details', index], {
       state: {
-        index: index
+        data: index
       }
     });
   }
 
   editEmployerDetails(index) {
     this.showList = false;
-    this.router.navigate(['/itr-filing/itr/salary/details'], {
+    this.router.navigate(['/itr-filing/itr/salary/details', index], {
       state: {
         //employer: this.ITR_JSON.employers[index],
-        index: index
+        data: index
       }
     });
   }

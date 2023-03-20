@@ -150,13 +150,13 @@ export class OtherInformationComponent implements OnInit {
   saveDirectorDetials() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.directorForm.valid) {
-      this.Copy_ITR_JSON.systemFlags.directorInCompany = true;
       console.log('Save form here', this.directorForm.getRawValue());
       const directorsArray = <FormArray>this.directorForm.get('directorsArray');
       this.Copy_ITR_JSON.directorInCompany = directorsArray.getRawValue();
+      this.Copy_ITR_JSON.systemFlags.directorInCompany = this.Copy_ITR_JSON.directorInCompany.length > 0;
       // if (this.data.mode === 'ADD') {
       //   this.Copy_ITR_JSON.directorInCompany.push(this.directorForm.getRawValue());
       // } else {
@@ -271,10 +271,10 @@ export class OtherInformationComponent implements OnInit {
   //
   ChangeDirectorStatus() {
 
-    if (this.ITR_JSON.systemFlags?.directorInCompany) {
+    if (this.Copy_ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {
-      if (this.ITR_JSON?.directorInCompany.length > 0) {
+      if (this.Copy_ITR_JSON?.directorInCompany.length > 0) {
         this.Copy_ITR_JSON.directorInCompany = [];
         this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
         this.serviceCall('Director in company')
@@ -352,14 +352,14 @@ export class OtherInformationComponent implements OnInit {
   saveUnlistedShares() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.sharesForm.valid) {
-      this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = true;
+
       console.log('Save form here', this.sharesForm.getRawValue());
       const sharesArray = <FormArray>this.sharesForm.get('sharesArray');
       this.Copy_ITR_JSON.unlistedSharesDetails = sharesArray.getRawValue();
-
+      this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = this.Copy_ITR_JSON.unlistedSharesDetails.length > 0;
       this.loading = true;
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));

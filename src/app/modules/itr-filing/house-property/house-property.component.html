@@ -281,8 +281,7 @@
                             style="padding-top: 20px"
                           >
                             <mat-radio-group
-                              name="isEligibleFor80EE"
-                              formControlName="isEligibleFor80EE"
+                              [formControl]="housePropertyForm.controls.isEligibleFor80EE"
                             >
                               <div class="customradiobtn bdr_btm">
                                 <mat-radio-button

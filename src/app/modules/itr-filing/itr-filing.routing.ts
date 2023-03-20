@@ -78,7 +78,7 @@ const routes: Routes = [
         component: AllSalaryIncomeComponent,
         children: [
           {
-            path: 'details',
+            path: 'details/:id',
             component: SalaryComponent,
           },
         ],
