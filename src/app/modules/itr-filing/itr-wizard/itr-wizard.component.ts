@@ -283,4 +283,9 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     });
 
   }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem('ITR_JSON');
+    sessionStorage.removeItem('incomeSources');
+  }
 }

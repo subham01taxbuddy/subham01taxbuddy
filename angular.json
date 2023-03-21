@@ -58,8 +58,7 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
-              "node_modules/mammoth/mammoth.browser.min.js",
-              "src/assets/matomo/matomo-uat.js"
+              "node_modules/mammoth/mammoth.browser.min.js"
             ]
           },
           "configurations": {

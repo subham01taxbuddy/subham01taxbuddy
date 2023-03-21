@@ -3,6 +3,7 @@ import {Subscription} from "rxjs";
 import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 import {Router} from "@angular/router";
 import {AppConstants} from "../../../../shared/constants";
+import {Schedules} from "../../../../shared/interfaces/schedules";
 
 @Component({
   selector: 'app-all-business-income',
@@ -17,7 +18,8 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
   isEditPersonal: boolean;
 
   isFnO = false;
-  constructor(private router: Router) {
+  constructor(private router: Router,
+              private schedules: Schedules) {
     super();
   }
 
@@ -25,7 +27,9 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
     let ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let filtered = ITR_JSON.business?.profitLossACIncomes?.filter(acIncome => (acIncome.businessType === 'SPECULATIVEINCOME') ||
       (acIncome.businessType === 'NONSPECULATIVEINCOME'))[0];
-    this.isFnO = filtered.length > 0;
+    let incomeSources = JSON.parse(sessionStorage.getItem('incomeSources'));
+    let fnoSelection = incomeSources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
+    this.isFnO = (filtered && filtered.length > 0) || (fnoSelection.selected);
   }
 
   initList() {
