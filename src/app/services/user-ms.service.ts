@@ -18,7 +18,7 @@ export class UserMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-    return this.httpClient.get<T>(environment.url + this.microService + param[0], { headers: this.headers });
+    return this.httpClient.get<T>(environment.url_dev + this.microService + param[0], { headers: this.headers });
     // .map(response => response.json())
   }
 

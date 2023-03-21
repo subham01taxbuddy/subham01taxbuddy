@@ -1,0 +1,33 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+      <div class="card__row">
+          <div class="card__col-xs-12 card__col-sm-12">
+            <p style="float: left;">Total Count: <b>{{smeList.length}}</b></p>
+            <br>
+            </div>
+          </div>
+        <div>
+        <div class="row" style="margin-top: 15px;">
+         <div class="col-12">
+          <table>
+            <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+          </table>
+          <ag-grid-angular
+
+          class="ag-theme-balham" [gridOptions]="smeListGridOptions"
+          [rowSelection]="rowSelection"
+          (rowClicked)="onSmeRowClicked($event)"
+          >
+
+          </ag-grid-angular>
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+         </div>
+
+        </div>
+      </div>
+
+
+
+
+
+

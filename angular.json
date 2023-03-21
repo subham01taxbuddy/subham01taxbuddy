@@ -54,7 +54,8 @@
               "src/assets/styles/colors.css",
               "src/assets/styles/style.css",
               "src/assets/styles/icons.css",
-              "src/assets/styles/main.less"
+              "src/assets/styles/main.less",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
               "node_modules/mammoth/mammoth.browser.min.js",

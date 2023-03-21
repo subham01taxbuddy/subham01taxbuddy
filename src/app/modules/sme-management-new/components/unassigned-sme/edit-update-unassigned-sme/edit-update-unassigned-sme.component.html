@@ -1,0 +1,177 @@
+<div>
+  <div class="align-items-center row">
+    <div class="col-sm-10">
+      <b style="font-size: 14px">Personal Details </b>
+    </div>
+    <div class="edit clearfix col-sm-2">
+      <button type="button" class="edit_btn">
+        <i class="fas fa-edit"></i>Edit
+      </button>
+    </div>
+  </div>
+  <div class="content-wrapper">
+    <form [formGroup]="smeFormGroup">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Mobile No <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Mobile No"
+              [formControl]="mobileNumber"
+              class="input-field"
+              maxlength="10"
+              minlength="6"
+              trim
+              digitsOnly
+              required
+            />
+             <mat-error
+                  *ngIf="mobileNumber?.hasError('required') ">
+                  This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Name <span class="text-danger">*</span> </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Name"
+              [formControl]="name"
+              class="input-field"
+             />
+            <mat-error
+            *ngIf="name?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Email ID <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="email id"
+              [formControl]="email"
+              class="input-field"
+            />
+            <mat-error
+            *ngIf="email?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Language <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Language"
+              [formControl]="languages"
+              class="input-field"
+            />
+            <mat-error
+            *ngIf="languages?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Referred Person <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Referred person"
+              [formControl]="referredPerson"
+              class="input-field"
+            />
+            <mat-error
+            *ngIf="referredPerson?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Income Tax Expertise <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Income Tax Expertise"
+              [formControl]="itrTypes"
+              class="input-field"
+
+            />
+            <mat-error
+            *ngIf="itrTypes?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Qualification <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Qualification"
+              name=""
+              [formControl]="qualification"
+              class="input-field"
+            />
+            <mat-error
+            *ngIf="qualification?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> State <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select
+                    placeholder="Select state"
+                    name="state"
+                    [formControl]="state"
+                  >
+                    <mat-option
+                      *ngFor="let state of stateDropdown"
+                      [value]="state.stateCode"
+                    >
+                      {{ state.stateName | titlecase }}
+                    </mat-option>
+              </mat-select>
+            <mat-error
+            *ngIf="state?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Search Team Lead (TL)/ Owner <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder=""
+              [formControl]="teamLead"
+              class="input-field"
+
+            />
+            <mat-error
+            *ngIf="teamLead?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div style="text-align: center;">
+    <button class="tbd-btn" (click)="onContinue()">Save </button>
+  </div>
+  </div>
+</div>

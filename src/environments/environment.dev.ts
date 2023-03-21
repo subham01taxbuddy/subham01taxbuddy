@@ -51,6 +51,7 @@
 
 export const environment = {
   production: false,
+  url_dev:"https://dev-api.taxbuddy.com",
   portal_url: 'https://uat-admin.taxbuddy.com/',
   url: "https://uat-api.taxbuddy.com",
   eri_url: "https://api.taxbuddy.com",
