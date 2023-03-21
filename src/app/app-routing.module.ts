@@ -23,7 +23,7 @@ export const appRoutes: Routes = [
     path: 'tasks', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)
   },
   {
-    path: 'sme-management', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/sme-management/sme-management.module').then(m => m.SmeManagementModule)
+    path: 'sme-management-new', component: LayoutComponent, loadChildren: () => import('./modules/sme-management-new/sme-management-new.module').then(m => m.SmeManagementNewModule)
   },
   {
     path: 'itr-filing', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/itr-filing/itr-filing.module').then(m => m.ItrFilingModule)

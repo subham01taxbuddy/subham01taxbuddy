@@ -1,5 +1,6 @@
 export const environment = {
 	production: true,
+  url_dev:"https://dev-api.taxbuddy.com",
 	portal_url: 'https://gst-admin.taxbuddy.com/',
 	url: "https://api.taxbuddy.com",
 	eri_url: "https://api.taxbuddy.com",
