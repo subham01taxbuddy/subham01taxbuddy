@@ -213,13 +213,14 @@
                     <div class="card__col-xs-12 card__col-sm-4">
 
                       <mat-label><mat-checkbox name="deduction[i]" formControlName="selected"></mat-checkbox>Section</mat-label>
-                      <mat-form-field appearance="outline">
-                        <input matInput formControlName="section" name="deductions[i]" class="input-field" maxlength="10" upperCase
-                               required trim>
-<!--                        <mat-error-->
-<!--                          *ngIf="immovableForm.controls['deductions'].controls[i].controls['section'].hasError('pattern')">-->
-<!--                          Enter valid PAN.-->
-<!--                        </mat-error>-->
+                      <mat-form-field class="input-field-width">
+                        <mat-select placeholder="Investment Under Section" name="section" formControlName="section"
+                                    (selectionChange)="changeInvestmentSection('HTML', i)">
+                          <mat-option value="54" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'"> 54 </mat-option>
+                          <mat-option value="54B"> 54B </mat-option>
+                          <mat-option value="54EC" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'"> 54EC </mat-option>
+                          <mat-option value="54F" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'"> 54F </mat-option>
+                        </mat-select>
                       </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4">
@@ -231,7 +232,7 @@
                         <mat-datepicker #purchaseDate></mat-datepicker>
                         <mat-error
                           *ngIf="immovableForm.controls['deductions'].controls[i].controls['purchaseDate'].hasError('pattern')">
-                          Enter valid name.
+                          Enter valid date.
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -240,7 +241,7 @@
                       <mat-label>Cost of New Asset</mat-label>
                       <mat-form-field appearance="outline">
                         <input matInput formControlName="assetCost" name="deductions[i]" type="number" class="input-field"
-                               required>
+                               required (blur)="calculateDeduction(i)">
                       </mat-form-field>
                     </div>
                   </div>

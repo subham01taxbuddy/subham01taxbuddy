@@ -87,6 +87,7 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          (blur)="calculateCg(i)"
                         />
 
                         <mat-error
@@ -115,6 +116,7 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          (blur)="calculateCg(i)"
                         />
 
                         <mat-error
@@ -143,7 +145,7 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                          (click)="saveDetails(i)"
+                          (blur)="calculateCg(i)"
                         />
                         <mat-error
                           *ngIf="
@@ -191,9 +193,7 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                          readonly
-                          (click)="calculateCg(i)"
-                        />
+                          readonly/>
                       </mat-form-field>
                     </div>
                   </div>
@@ -216,7 +216,7 @@
                             class="card__col-xs-11 flex justify-between items-center"
                           >
                             <mat-label
-                              ><strong>Is the property jointly owned? *</strong>
+                              ><strong>Add details of cost of improvements? *</strong>
                             </mat-label>
                             <mat-radio-group [formControl]="isImprovement">
                               <mat-radio-button
@@ -293,8 +293,7 @@
                               class="input-field"
                               maxlength="14"
                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                              (click)="calculateIndexCost(i)"
-                              (click)="saveDetails(i)"
+                              (blur)="calculateIndexCost(i)"
                               readonly
                             />
                           </mat-form-field>

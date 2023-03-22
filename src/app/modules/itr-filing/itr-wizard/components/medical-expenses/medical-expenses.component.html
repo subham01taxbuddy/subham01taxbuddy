@@ -107,11 +107,11 @@
         <div class="card__col-lg-6">
           <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="Up to {{ maxLimit80u }}" maxlength="8" formControlName="us80u"
-              autocomplete="off" digitsOnly />
-            <mat-hint>Upto {{ maxLimit80u }}</mat-hint>
-            <mat-error *ngIf="investmentDeductionForm.controls['us80u'].hasError('max')">
-              Max limit is {{ maxLimit80u }}</mat-error>
+            <input matInput type="number" placeholder="{{ maxLimit80u }}" maxlength="8" formControlName="us80u"
+              autocomplete="off" digitsOnly readonly/>
+<!--            <mat-hint>Upto {{ maxLimit80u }}</mat-hint>-->
+<!--            <mat-error *ngIf="investmentDeductionForm.controls['us80u'].hasError('max')">-->
+<!--              Max limit is {{ maxLimit80u }}</mat-error>-->
           </mat-form-field>
         </div>
       </div>
@@ -133,11 +133,11 @@
         <div class="card__col-lg-6">
           <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="Up to {{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
-              autocomplete="off" digitsOnly />
-            <mat-hint>Upto {{ maxLimit80dd }}</mat-hint>
-            <mat-error *ngIf="investmentDeductionForm.controls['us80dd'].hasError('max')">
-              Max limit is {{ maxLimit80dd }}</mat-error>
+            <input matInput type="number" placeholder="{{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
+              autocomplete="off" digitsOnly readonly/>
+<!--            <mat-hint>Upto {{ maxLimit80dd }}</mat-hint>-->
+<!--            <mat-error *ngIf="investmentDeductionForm.controls['us80dd'].hasError('max')">-->
+<!--              Max limit is {{ maxLimit80dd }}</mat-error>-->
           </mat-form-field>
         </div>
       </div>

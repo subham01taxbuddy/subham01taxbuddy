@@ -274,7 +274,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     } else if (this.selected80u === 'SELF_WITH_SEVERE_DISABILITY') {
       this.maxLimit80u = 125000;
     }
-    if (setDefault)
+    // if (setDefault)
       this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u);
   }
   radioChange80dd(setDefault) {
@@ -285,7 +285,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     ) {
       this.maxLimit80dd = 125000;
     }
-    if (setDefault)
+    // if (setDefault)
       this.investmentDeductionForm.controls['us80dd'].setValue(
         this.maxLimit80dd
       );

@@ -402,7 +402,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     let famPenDeduction = 0;
     let familyPension = this.otherIncomeFormGroup.controls['familyPension'];
     let totalFamPenDeduction = familyPension.value;
-    if (familyPension.valid && this.ITR_JSON.regime === 'OLD') {
+    if ((familyPension.valid || familyPension.disabled) && this.ITR_JSON.regime === 'OLD') {
       famPenDeduction = familyPension.value / 3 > 15000 ? 15000 : familyPension.value / 3;
       this.otherIncomeFormGroup.controls['famPenDeduction'].setValue(famPenDeduction.toFixed());
       this.otherIncomeFormGroup.controls['totalFamPenDeduction'].setValue((familyPension.value - famPenDeduction).toFixed());

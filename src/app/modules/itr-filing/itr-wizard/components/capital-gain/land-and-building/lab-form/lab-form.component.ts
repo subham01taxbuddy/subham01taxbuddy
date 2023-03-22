@@ -860,6 +860,13 @@ export class LabFormComponent implements OnInit {
 
   haveDeductions(formGroupName, index) {
     const improve = <FormArray>formGroupName.get('deductions');
+    if(this.isDeductions.value){
+
+    } else {
+      improve.clear();
+      let otherDeductions = this.cgArrayElement.deduction.filter(ded => (ded.srn != this.data.assetSelected.srn));
+      this.cgArrayElement.deduction = otherDeductions;
+    }
     // let srn = this.currentCgIndex;
     // if (this.isImprovements.value) {
     //   const obj = {
@@ -876,6 +883,70 @@ export class LabFormComponent implements OnInit {
     //   formGroupName.controls['improvement'] = this.fb.array([]);
     //   //this.calculateCapitalGain(formGroupName, '', index);
     // }
+  }
+
+  minPurchaseDate: any;
+  calMinPurchaseDate = new Date();
+  changeInvestmentSection(ref, index) {
+    // const investDetails = this.InvestSectionDropdown.filter(item => item.investmentSection === this.investmentForm.controls['underSection'].value);
+    // this.calMinPurchaseDate = new Date(this.data.assetSelected.sellDate);
+    // if (investDetails.length > 0) {
+    //   this.calMinPurchaseDate.setMonth(this.calMinPurchaseDate.getMonth() - investDetails[0].minInvestmentDate);
+    // }
+
+    this.minPurchaseDate = this.calMinPurchaseDate.toISOString().slice(0, 10);
+
+    /* this.calMaxPurchaseDate = new Date(this.data.assetSelected.sellDate)
+    if (investDetails.length > 0)
+      this.calMaxPurchaseDate.setMonth(this.calMaxPurchaseDate.getMonth() + investDetails[0].maxInvestmentDate);
+
+    this.maxPurchaseDate = this.calMaxPurchaseDate.toISOString().slice(0, 10); */
+    this.maxPurchaseDate = new Date();
+
+    const deductionForm = <FormArray>this.immovableForm.get('deductions').get(index);
+    if (deductionForm.controls['section'].value === '54EE' || deductionForm.controls['section'].value === '54EC') {
+      deductionForm.controls['assetCost'].setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
+      deductionForm.controls['assetCost'].updateValueAndValidity();
+    } else {
+      if (ref === 'HTML') {
+        deductionForm.controls['cgasAmount'].setValue(null);
+        deductionForm.controls['cgasAmount'].setValidators(null);
+        deductionForm.controls['cgasAmount'].updateValueAndValidity();
+      }
+    }
+    // this.setTotalDeductionValidation();
+    this.calculateDeduction(index);
+  }
+
+  calculateDeduction(index) {
+    //itr/calculate/capital-gain/deduction
+
+    const deductionForm = (<FormArray>this.immovableForm.get('deductions')).controls[index] as FormGroup;
+    const assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[index] as FormGroup;
+
+    let saleValue = assetDetails.controls['valueInConsideration'].value ? assetDetails.controls['valueInConsideration'].value : 0;
+    let expenses = assetDetails.controls['sellExpense'].value ? assetDetails.controls['sellExpense'].value : 0;
+    const param = '/calculate/capital-gain/deduction';
+    let request = {
+      capitalGain: this.data.capitalGain,
+      capitalGainDeductions: [{
+        deductionSection: `SECTION_${deductionForm.controls['section'].value}`,
+        costOfNewAsset: deductionForm.controls['assetCost'].value,
+        cgasDepositedAmount: deductionForm.controls['cgasAmount'].value,
+        "saleValue": saleValue,
+        "expenses": expenses
+      }]};
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      console.log('Deductions result=', result);
+      if(result?.success) {
+        let finalResult = result.data.filter(item => item.deductionSection === `SECTION_${deductionForm.controls['section'].value}`)[0];
+        deductionForm.controls['deduction'].setValue(finalResult?.deductionAmount);
+      } else {
+        deductionForm.controls['deduction'].setValue(0);
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Failed to get deductions.');
+    });
   }
 
   saveImmovableCG(formGroupName, index) {

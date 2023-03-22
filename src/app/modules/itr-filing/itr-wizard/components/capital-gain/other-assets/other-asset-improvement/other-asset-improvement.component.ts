@@ -115,18 +115,15 @@ export class OtherAssetImprovementComponent implements OnInit {
     // let assetDetails;
     // let data;
 
-    // data = this.goldCg.assetDetails;
+    let data = this.goldCg.assetDetails;
 
     // console.log(data);
 
-    // if (data.length > 0) {
-    //   data.forEach((obj: any) => {
-    //     assetDetails = obj.assetDetails;
-    //     assetDetails.forEach((element: any) => {
-    //       this.getOtherAssets.controls['gainType'] = element.gainType;
-    //     });
-    //   });
-    // }
+    if (data.length > 0) {
+      data.forEach((obj: any) => {
+        this.addMoreOtherAssetsForm(obj);
+      });
+    }
 
     const otherAssetDetailsArray = this.getOtherAssets;
     // condition for adding more other assets
@@ -162,7 +159,7 @@ export class OtherAssetImprovementComponent implements OnInit {
   createOtherAssetsForm(srn, index?) {
     return this.fb.group({
       otherAssetsArray: this.fb.group({
-        // srn: [this.data.rowIndex],
+        srn: [srn],
         hasEdit: [index ? index.hasEdit : false],
         purchaseDate: [index ? index.purchaseDate : '', [Validators.required]],
         sellDate: [index ? index.sellDate : '', [Validators.required]],
@@ -261,6 +258,10 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   calculateCg(index) {
+    let cgObject = ((this.getOtherAssets.controls[index] as FormGroup).
+      controls['otherAssetsArray'] as FormGroup).value;
+    let improvements = ((this.getOtherAssets.controls[index] as FormGroup).
+      controls['improvementsArray'] as FormGroup).value;
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
@@ -268,7 +269,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       assesseeType: 'INDIVIDUAL',
       residentialStatus: 'RESIDENT',
       assetType: 'GOLD',
-      assetDetails: this.goldCg.assetDetails,
+      assetDetails: [cgObject],
       improvement: [],
       deduction: this.goldCg.deduction,
     };
@@ -401,9 +402,17 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
       (item) => item.assetType !== 'GOLD'
     );
-    if (this.goldCg.assetDetails.length > 0) {
-      this.ITR_JSON.capitalGain.push(this.goldCg);
+
+    this.goldCg.assetDetails = [];
+    for (let i=0; i < this.getOtherAssets.controls.length; i++) {
+      let cgObject = (
+        (this.getOtherAssets.controls[i] as FormGroup).controls[
+          'otherAssetsArray'
+          ] as FormGroup
+      ).value;
+      this.goldCg.assetDetails.push(cgObject);
     }
+    this.ITR_JSON.capitalGain.push(this.goldCg);
 
     console.log('CG:', this.ITR_JSON.capitalGain);
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
