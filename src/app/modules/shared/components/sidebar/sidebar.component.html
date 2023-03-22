@@ -1,24 +1,53 @@
-<div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
-    <nav class="sidebar">
+<div
+  class="left-sidebar fixed"
+  [class.left-sidebar_open]="showSidebar"
+  [class.hideSideMenu]="hideSideBar"
+>
+  <nav class="sidebar">
+    <a
+      class="sidebar__item"
+      routerLink="/tasks"
+      routerLinkActive=""
+      (click)="closeSideBar()"
+    >
+      <i
+        class="fa fa-tasks norTx"
+        style="font-size: 20px"
+        aria-hidden="true"
+      ></i>
+      <span class="sidebar__name norTx">My Tasks</span>
+    </a>
+    <div class="d-menu">
+      <a
+      class="sidebar__item"
+      href="javascript:void(0)"
+      (click)="dropdownPanel['sme'] = !dropdownPanel['sme']"
+    >
+      <i class="fa fa-id-badge" style="font-size: 20px" aria-hidden="true"></i>
+      <span class="sidebar__name norTx">SME Management</span>
+    </a>
+    <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
+      <a routerLink="/sme-management-new/assignedsme">
+        <span class="sidebar__name norTx">Assigned SME</span>
+      </a>
+      <a routerLink="/sme-management-new/unassignedsme">
+        <span class="sidebar__name norTx">Unassigned SME</span>
+      </a>
+      <a routerLink="/sme-management-new/resignedsme">
+        <span class="sidebar__name norTx">Reassigned SME</span>
+      </a>
+    </div>
+    </div>
 
-        <a class="sidebar__item" routerLink="/tasks" routerLinkActive="" (click)="closeSideBar()">
-            <i class="fa fa-tasks norTx" style="font-size: 20px;" aria-hidden="true"></i>
-            <span class="sidebar__name norTx">My Tasks</span>
-        </a>
-<!--        <a class="sidebar__item" routerLink="/sme-management" routerLinkActive="" (click)="closeSideBar()">-->
-<!--            <i class="fa fa-tasks norTx" style="font-size: 20px;" aria-hidden="true"></i>-->
-<!--            <span class="sidebar__name norTx">SME Management</span>-->
-<!--        </a>-->
 
         <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
            (click)="closeSideBar()">
           <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
           <span class="sidebar__name norTx">User Management</span>
         </a>
-        <!-- <a class="sidebar__item item-act" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
+    <!-- <a class="sidebar__item item-act" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
             <i class="material-icons actTx">description</i>
             <span class="sidebar__name actTx">ITR Filing Process</span>
         </a> -->
-
-    </nav>
+  </nav>
 </div>
