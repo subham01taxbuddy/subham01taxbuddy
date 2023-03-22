@@ -285,6 +285,17 @@ mat-label {
     margin-bottom: 2px;
 }
 
+mat-form-field .mat-form-field {
+  &-underline {
+    position: static;
+    //bottom: auto;
+  }
+  &-subscript-wrapper {
+    position: absolute;
+    overflow: visible;
+  }
+}
+
 .mat-form-field {
     width: 90%;
     background: #FFFFFF;

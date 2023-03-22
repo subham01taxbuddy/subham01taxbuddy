@@ -99,7 +99,7 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   calculateNetIncome(index) {
     let specIncome = (this.specIncomeForm.controls['specIncomesArray'] as FormArray).controls[index] as FormGroup;
-    specIncome.controls['netIncome'].setValue(
+    specIncome?.controls['netIncome'].setValue(
       specIncome.controls['grossProfit'].value - specIncome.controls['expenditure'].value);
 
   }

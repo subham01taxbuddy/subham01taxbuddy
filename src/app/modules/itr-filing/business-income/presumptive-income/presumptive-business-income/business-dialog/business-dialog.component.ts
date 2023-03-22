@@ -34,7 +34,7 @@ export class BusinessDialogComponent implements OnInit {
     let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
     if (natureOfBusiness) {
       this.natureOfBusinessDropdown = natureOfBusiness.filter((item: any) => item.section === '44AD');
-      natureOfBusiness.natureList.forEach(item => {
+      this.data.natureList.forEach(item => {
         this.natureOfBusinessDropdown.forEach(element => {
           if (item.natureOfBusiness.includes(element.label) && this.data.data.natureOfBusiness != element.label) {
             element.disabled = true;

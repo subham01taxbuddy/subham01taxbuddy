@@ -119,6 +119,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       data: {
         mode: mode,
         data: this.businessArray,
+        natureList: this.businessArray,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -142,7 +143,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
       data: {
         mode: mode,
-        data: this.selection.selected[0]
+        data: this.selection.selected[0],
+        natureList: this.businessArray
       },
       closeOnNavigation: true,
       disableClose: false,
