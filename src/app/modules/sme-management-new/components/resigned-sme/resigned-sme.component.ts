@@ -17,6 +17,7 @@ export class ResignedSmeComponent implements OnInit {
   smeList: any = [];
   smeInfo: any;
   config: any;
+  loggedInSme:any;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -53,13 +54,15 @@ export class ResignedSmeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getSmeList();
   }
 
   getSmeList() {
     // ${this.config.currentPage - 1}
+    const loggedInSmeUserId=this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/1?${data}`;
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {

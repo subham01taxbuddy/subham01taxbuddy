@@ -61,7 +61,7 @@ export class AssignedSmeComponent implements OnInit {
     // ${this.config.currentPage - 1}
     const loggedInSmeUserId=this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/1?${data}`;
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
