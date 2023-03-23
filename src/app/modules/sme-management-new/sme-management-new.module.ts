@@ -1,3 +1,4 @@
+import { EditUpdateResignedSmeComponent } from './components/resigned-sme/edit-update-resigned-sme/edit-update-resigned-sme.component';
 import { EditUpdateAssignedSmeComponent } from './components/assigned-sme/edit-update-assigned-sme/edit-update-assigned-sme.component';
 import { EditUpdateUnassignedSmeComponent } from './components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
 import { UnassignedSmeComponent } from './components/unassigned-sme/unassigned-sme.component';
@@ -34,7 +35,8 @@ import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
     ResignedSmeComponent,
     UnassignedSmeComponent,
     EditUpdateUnassignedSmeComponent,
-    EditUpdateAssignedSmeComponent
+    EditUpdateAssignedSmeComponent,
+    EditUpdateResignedSmeComponent
   ]
 })
 export class SmeManagementNewModule { }

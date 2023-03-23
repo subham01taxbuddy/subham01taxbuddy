@@ -1,3 +1,4 @@
+import { EditUpdateResignedSmeComponent } from './components/resigned-sme/edit-update-resigned-sme/edit-update-resigned-sme.component';
 import { EditUpdateAssignedSmeComponent } from './components/assigned-sme/edit-update-assigned-sme/edit-update-assigned-sme.component';
 
 import { ResignedSmeComponent } from './components/resigned-sme/resigned-sme.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
             { path: 'resignedsme', component: ResignedSmeComponent },
             { path: 'edit-unassignedsme', component: EditUpdateUnassignedSmeComponent },
             { path: 'edit-assignedsme', component: EditUpdateAssignedSmeComponent },
+            { path: 'edit-resignedsme', component: EditUpdateResignedSmeComponent },
         ]
     },
     { path: '', redirectTo: '/sme-management-new/unassignedsme', pathMatch: 'full' }

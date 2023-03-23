@@ -1,15 +1,11 @@
-import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppConstants } from 'src/app/modules/shared/constants';
-import { UtilsService } from 'src/app/services/utils.service';
 import * as moment from 'moment';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
-import { UserMsService } from 'src/app/services/user-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -28,14 +24,11 @@ export interface User {
 }
 
 @Component({
-  selector: 'app-edit-update-assigned-sme',
-  templateUrl: './edit-update-assigned-sme.component.html',
-  styleUrls: ['./edit-update-assigned-sme.component.scss'],
-  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
+  selector: 'app-edit-update-resigned-sme',
+  templateUrl: './edit-update-resigned-sme.component.html',
+  styleUrls: ['./edit-update-resigned-sme.component.scss']
 })
-
-export class EditUpdateAssignedSmeComponent implements OnInit {
+export class EditUpdateResignedSmeComponent implements OnInit {
   smeObj:SmeObj;
   loading = false;
   rolesList: any[] = [];

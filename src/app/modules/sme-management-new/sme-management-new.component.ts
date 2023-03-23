@@ -14,6 +14,7 @@ export class SmeManagementNewComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    console.log("loggedInUserData",this.loggedInUserData)
   }
 
   isApplicable(permissionRoles) {

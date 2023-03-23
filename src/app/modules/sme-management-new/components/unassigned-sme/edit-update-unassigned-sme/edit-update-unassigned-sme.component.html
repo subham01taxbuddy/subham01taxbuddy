@@ -14,7 +14,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-4">
-          <mat-label> Mobile No <span class="text-danger">*</span></mat-label>
+          <mat-label> Mobile No </mat-label>
           <mat-form-field appearance="outline">
             <input
               type="text"
@@ -28,13 +28,13 @@
               digitsOnly
               required
             />
-             <mat-error
+             <!-- <mat-error
                   *ngIf="mobileNumber?.hasError('required') ">
-                  This field is required</mat-error>
+                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Name <span class="text-danger">*</span> </mat-label>
+          <mat-label> Name </mat-label>
           <mat-form-field appearance="outline">
             <input
               type="text"
@@ -43,13 +43,13 @@
               [formControl]="name"
               class="input-field"
              />
-            <mat-error
+            <!-- <mat-error
             *ngIf="name?.hasError('required') ">
-            This field is required</mat-error>
+            This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Email ID <span class="text-danger">*</span></mat-label>
+          <mat-label> Email ID</mat-label>
           <mat-form-field appearance="outline">
             <input
               type="text"
@@ -58,15 +58,15 @@
               [formControl]="email"
               class="input-field"
             />
-            <mat-error
+            <!-- <mat-error
             *ngIf="email?.hasError('required') ">
-            This field is required</mat-error>
+            This field is required</mat-error> -->
           </mat-form-field>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-4">
-          <mat-label> Language <span class="text-danger">*</span></mat-label>
+          <mat-label> Language </mat-label>
           <mat-form-field appearance="outline">
             <input
               type="text"
@@ -75,13 +75,13 @@
               [formControl]="languages"
               class="input-field"
             />
-            <mat-error
+            <!-- <mat-error
             *ngIf="languages?.hasError('required') ">
-            This field is required</mat-error>
+            This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Referred Person <span class="text-danger">*</span></mat-label>
+          <mat-label> Referred Person </mat-label>
           <mat-form-field appearance="outline">
             <input
               type="text"
@@ -90,32 +90,32 @@
               [formControl]="referredPerson"
               class="input-field"
             />
-            <mat-error
+            <!-- <mat-error
             *ngIf="referredPerson?.hasError('required') ">
-            This field is required</mat-error>
+            This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Income Tax Expertise <span class="text-danger">*</span></mat-label>
+          <mat-label> Income Tax Expertise </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Income Tax Expertise"
-              [formControl]="itrTypes"
-              class="input-field"
-
-            />
-            <mat-error
+            <mat-select [formControl]="itrTypes" multiple>
+              <mat-select-trigger>
+                <span *ngFor="let item of itrTypes.value; ">
+                  itr-{{item || ''}} <span>,</span>
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option>
+            </mat-select>
+            <!-- <mat-error
             *ngIf="itrTypes?.hasError('required') ">
-            This field is required</mat-error>
+            This field is required</mat-error> -->
           </mat-form-field>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm-4">
-          <mat-label> Qualification <span class="text-danger">*</span></mat-label>
+          <mat-label> Qualification </mat-label>
           <mat-form-field appearance="outline">
             <input
               type="text"
@@ -131,7 +131,7 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> State <span class="text-danger">*</span></mat-label>
+          <mat-label> State </mat-label>
           <mat-form-field appearance="outline">
             <mat-select
                     placeholder="Select state"
@@ -145,22 +145,20 @@
                       {{ state.stateName | titlecase }}
                     </mat-option>
               </mat-select>
-            <mat-error
+            <!-- <mat-error
             *ngIf="state?.hasError('required') ">
-            This field is required</mat-error>
+            This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> Search Team Lead (TL)/ Owner <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder=""
-              [formControl]="teamLead"
-              class="input-field"
-
-            />
+            <input type="text" matInput [formControl]="teamLead" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let option  of filteredOptions | async" [value]="option"  (click)="getownerNameId(option)">
+                       {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
             <mat-error
             *ngIf="teamLead?.hasError('required') ">
             This field is required</mat-error>
@@ -171,7 +169,7 @@
   </form>
   <hr>
   <div style="text-align: center;">
-    <button class="tbd-btn" (click)="onContinue()">Save </button>
+    <button class="tbd-btn" (click)=" updateSmeDetails()">Save </button>
   </div>
   </div>
 </div>
