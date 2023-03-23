@@ -75,7 +75,9 @@
                   </div>
                 </div>
                 <!-- description  -->
-                <div>{{ house.city }}, {{ house.pinCode }}</div>
+                <div class="card__col-sm-4">
+                  {{ house.city }}, {{ house.pinCode }}
+                </div>
                 <!-- net hp income  -->
                 <div>
                   {{ utilsService.currencyFormatter(house.taxableIncome) }}
