@@ -189,6 +189,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.selected80u = sec80u[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80u'].setValue(sec80u[0].amount);
       this.radioChange80u(false);
+    } else {
+      this.selected80u = '';
+      this.radioChange80u(false);
     }
     let sec80dd = this.ITR_JSON.disabilities?.filter(
       (item) =>
@@ -201,6 +204,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         sec80dd[0].amount
       );
       this.radioChange80dd(false);
+    } else {
+      this.selected80dd = '';
+      this.radioChange80dd(false);
     }
     let sec80ddb = this.ITR_JSON.disabilities?.filter(
       (item) =>
@@ -212,6 +218,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['us80ddb'].setValue(
         sec80ddb[0].amount
       );
+      this.radioChange80ddb(false);
+    } else {
+      this.selected80ddb = '';
       this.radioChange80ddb(false);
     }
     this.max5000Limit('SELF');
@@ -273,8 +282,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.maxLimit80u = 75000;
     } else if (this.selected80u === 'SELF_WITH_SEVERE_DISABILITY') {
       this.maxLimit80u = 125000;
+    } else {
+      this.maxLimit80u = 0;
     }
-    if (setDefault)
+    // if (setDefault)
       this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u);
   }
   radioChange80dd(setDefault) {
@@ -284,8 +295,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.selected80dd === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY'
     ) {
       this.maxLimit80dd = 125000;
+    } else {
+      this.maxLimit80dd = 0;
     }
-    if (setDefault)
+    // if (setDefault)
       this.investmentDeductionForm.controls['us80dd'].setValue(
         this.maxLimit80dd
       );
@@ -295,6 +308,8 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.maxLimit80ddb = 40000;
     } else if (this.selected80ddb === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN') {
       this.maxLimit80ddb = 100000;
+    } else {
+      this.maxLimit80ddb = 0;
     }
     if (setDefault)
       this.investmentDeductionForm.controls['us80ddb'].setValue(

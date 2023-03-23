@@ -383,8 +383,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
 
       for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
-        const control = exemptIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'] === this.ITR_JSON.exemptIncomes[i].natureDesc)[0];
-        control['incomeValue'].setValue(this.ITR_JSON.exemptIncomes[i].amount);
+        const formGroup = exemptIncomesFormArray.controls.filter((item: any) => item.controls['incomeType'].value === this.ITR_JSON.exemptIncomes[i].natureDesc)[0] as FormGroup;
+        formGroup.controls['incomeValue'].setValue(this.ITR_JSON.exemptIncomes[i].amount);
       }
     }
   }
@@ -402,7 +402,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     let famPenDeduction = 0;
     let familyPension = this.otherIncomeFormGroup.controls['familyPension'];
     let totalFamPenDeduction = familyPension.value;
-    if (familyPension.valid && this.ITR_JSON.regime === 'OLD') {
+    if ((familyPension.valid || familyPension.disabled) && this.ITR_JSON.regime === 'OLD') {
       famPenDeduction = familyPension.value / 3 > 15000 ? 15000 : familyPension.value / 3;
       this.otherIncomeFormGroup.controls['famPenDeduction'].setValue(famPenDeduction.toFixed());
       this.otherIncomeFormGroup.controls['totalFamPenDeduction'].setValue((familyPension.value - famPenDeduction).toFixed());

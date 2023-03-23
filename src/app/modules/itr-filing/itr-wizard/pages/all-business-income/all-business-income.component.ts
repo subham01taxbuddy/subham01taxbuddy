@@ -93,7 +93,8 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
     // }
     const child : WizardNavigation = componentRef;
     child.saveAndNext.subscribe( () => {
-      //this.gotoSources();
+      this.initList();
+      this.ngOnInit();
     });
   }
 

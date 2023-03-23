@@ -19,9 +19,11 @@ export class DocumentViewerComponent implements OnInit {
 
   ngOnInit() {
     console.log('viewer:', this.viewer, '........... Signed URL:', this.docUrl)
-    this.zoomContainerWidth = this.photoZoomWrapper.parent.width;
-    this.zoomContainerHeight = this.photoZoomWrapper.parent.height;
-    this.calculateZoomContainerDimensions(this.photoZoomWrapper.image);
+    this.zoomContainerWidth = this.photoZoomWrapper?.parent.width;
+    this.zoomContainerHeight = this.photoZoomWrapper?.parent.height;
+    if(this.photoZoomWrapper?.image) {
+      this.calculateZoomContainerDimensions(this.photoZoomWrapper?.image);
+    }
   }
 
   private calculateZoomContainerDimensions(image: HTMLImageElement): void {

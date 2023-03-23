@@ -8,7 +8,7 @@
                 <mat-form-field class="input-field-width">
                     <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                         name="natureOfBusiness" matTooltip="{{getFullName()}}">
-                        <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.label"
+                        <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.code"
                             [disabled]="profession.disabled">
                             {{profession.label}}-{{profession.code}}
                         </mat-option></mat-select>
@@ -28,7 +28,7 @@
 
             <div class="card__col-xs-12 card__col-sm-6">
                 <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" digitsOnly placeholder="Receipt received in bank"
+                    <input matInput class="input-field" digitsOnly placeholder="Gross Receipts"
                         matTooltip="Total collection from client received in bank (including cheque)"
                         matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="receipts"
                         maxlength="14" (blur)="calculateFiftyPer()">

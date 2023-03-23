@@ -94,7 +94,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
     console.log('nav data', this.location.getState());
     let extraData: any = this.location.getState();
-    this.currentIndex = extraData.index;
+    this.currentIndex = extraData.data;
     // this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -132,6 +132,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   ngOnInit() {
     // this.getDocuments();
+    console.log('init nav data', this.router.getCurrentNavigation()?.extras?.state);
     this.utilsService.smoothScrollToTop();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.deductionsFormGroup = this.createDeductionsFormGroup();

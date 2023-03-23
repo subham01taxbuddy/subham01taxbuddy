@@ -128,7 +128,7 @@
                 <app-donations [isAddDonation]="isAddDonation" (onSave)="saveInvestmentDeductions()"></app-donations>
             </mat-expansion-panel>
 
-            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">
+            <mat-expansion-panel *ngIf="ITR_JSON.regime === 'OLD'" [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <mat-icon>

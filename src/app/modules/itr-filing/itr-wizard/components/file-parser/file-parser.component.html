@@ -5,18 +5,26 @@
   <div class="card__col-xs-12 card__col-sm-12">
     <div class="card__col-xs-12 card__col-sm-6" *ngFor="let broker of brokerData">
       <div class="upload-data">
-        <div class="card__col-sm-4">
+        <div class="card__col-sm-3">
           <label>{{broker.label}}</label>
         </div>
-        <div class="card__col-sm-8">
-          <div class="card__col-sm-6">
+        <div class="card__col-sm-9">
+          <div class="card__col-sm-4">
           <button class="upload" (click)="upload(broker.name)">
             <i class="fa fa-upload"></i>
             Upload </button>
           </div>
-          <div class="card__col-sm-6">
-          <label class="filename"
-                 *ngFor="let file of broker.filesUploaded">{{file}}</label><br>
+          <div class="card__col-sm-1">
+            <mat-progress-spinner *ngIf="broker.loading"
+              color="primary"
+              diameter="20"
+              mode="indeterminate">
+            </mat-progress-spinner>
+          </div>
+          <div class="card__col-sm-7">
+              <label *ngFor="let file of broker.filesUploaded" class="filename">
+                <i class="fa fa-check-circle" style="color: green;"
+                                         aria-hidden="true">&nbsp;</i>{{file}}</label><br>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 <div style="overflow: hidden;">
     <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-    <div class="card__row" style="margin-bottom: 10px; margin-top :10px; 
+    <div class="card__row" style="margin-bottom: 10px; margin-top :10px;
     margin-left: 20px; margin-right: 15px;">
         <div class="">
             <div class="card__col-xs-12 card__col-sm-6">
@@ -44,28 +44,28 @@
                            </mat-checkbox>
                          </td>
                        </ng-container>
-                     
-                      
+
+
                        <ng-container matColumnDef="natureOfBusiness">
                          <th mat-header-cell *matHeaderCellDef> Nature Of Profession </th>
-                         <td mat-cell *matCellDef="let element"> {{element.natureOfBusiness}} </td>
+                         <td mat-cell *matCellDef="let element"> {{getBusinessName(element)}} </td>
                        </ng-container>
-                       
+
                        <ng-container matColumnDef="tradeName">
                          <th mat-header-cell *matHeaderCellDef> Trade Name </th>
                          <td mat-cell *matCellDef="let element"> {{element.tradeName}} </td>
                        </ng-container>
-            
+
                        <ng-container matColumnDef="receipts">
                          <th mat-header-cell *matHeaderCellDef>Gross Reciept</th>
                          <td mat-cell *matCellDef="let element"> {{element.receipts}} </td>
                        </ng-container>
-    
+
                        <ng-container matColumnDef="presumptiveIncome">
                         <th mat-header-cell *matHeaderCellDef>Presumptive Income min (50%)  </th>
                         <td mat-cell *matCellDef="let element"> {{element.presumptiveIncome}} </td>
                       </ng-container>
-                       
+
                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
                            (click)="selection.toggle(row)">

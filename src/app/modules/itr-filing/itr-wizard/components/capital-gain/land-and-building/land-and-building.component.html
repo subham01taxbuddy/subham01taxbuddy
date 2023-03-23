@@ -29,7 +29,7 @@
                   <div class="title">Total Capital Gain</div>
                   <div class="value">{{properties[i].cgIncome}}</div>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-2">
+                <div class="card__col-xs-12 card__col-sm-3">
                   <div class="title">City</div>
                   <div class="value">{{properties[i].address}}</div>
                 </div>
@@ -61,7 +61,7 @@
       <span class="font-semibold">Back to Capital Gain Topics</span>
     </button>
 
-    <button (click)="labFormComponent.saveImmovableCG()" style="background: #4F9A20"
+    <button (click)="labFormComponent.saveImmovableCG(labFormComponent.immovableForm, 0)" style="background: #4F9A20"
             *ngIf="labView === 'FORM'"
             class="btn normal-case h-fit min-h-fit transition-all duration-300 py-3 px-7 text-white">
       <span class="font-semibold">Save All</span>

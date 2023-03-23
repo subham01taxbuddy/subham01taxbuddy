@@ -148,9 +148,23 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
             })
           }
         });
+        if (obj.deduction) {
+          obj.deduction.forEach((element: any) => {
+            this.deductionForm = this.initDeductionForm(element);
+          });
+        } else {
+          this.deductionForm = this.initDeductionForm();
+        }
+        if (this.getSecuritiesCg() <= 0) {
+          this.deduction = false;
+          this.isDisable = true;
+        } else {
+          this.isDisable = false;
+        }
       });
 
     } else {
+      this.compactView = false;
       this.addMoreData();
     }
   }
@@ -181,16 +195,24 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
   }
 
   addMore() {
+    // if(!this.securitiesForm.enabled){
+    //   this.securitiesForm.enable();
+    // }
     const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
-    if (securitiesArray.valid) {
-      this.addMoreData();
+    if (securitiesArray && securitiesArray.length > 0){
+      // if (securitiesArray.valid) {
+        this.addMoreData();
+      // } else {
+      //   securitiesArray.controls.forEach(element => {
+      //     if ((element as FormGroup).invalid) {
+      //       element.markAsDirty();
+      //       element.markAllAsTouched();
+      //     }
+      //   });
+      // }
     } else {
-      securitiesArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
+      this.securitiesForm.enable();
+      this.addMoreData();
     }
   }
 
@@ -341,10 +363,11 @@ export class SharesAndEquityComponent extends WizardNavigation implements OnInit
 
   getSecuritiesCg() {
     let totalCg = 0;
-    const securitiesArray = <FormArray>this.securitiesForm.get('securitiesArray');
-    securitiesArray.controls.forEach((element) => {
-      totalCg += parseInt((element as FormGroup).controls['capitalGain'].value);
+    this.brokerList.forEach(broker => {
+      totalCg += broker.LTCG;
+      totalCg += broker.STCG;
     });
+
     return totalCg;
   }
 

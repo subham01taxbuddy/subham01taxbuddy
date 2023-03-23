@@ -40,7 +40,7 @@ export class SourceOfIncomesComponent implements OnInit {
         },
         {
           name: 'Capital Gain',
-          selected: (ITR_JSON.capitalGain != null && ITR_JSON.capitalGain.assetDetails?.length > 0) ? true : false,
+          selected: (ITR_JSON.capitalGain != null && ITR_JSON.capitalGain.length > 0) ? true : false,
           schedule: this.schedules.CAPITAL_GAIN
         },
         {

@@ -32,7 +32,7 @@ export class ProfessionalDialogComponent implements OnInit {
       this.natureOfProfessionDropdown = natureOfBusiness.filter((item: any) => item.section === '44ADA');
       this.data.natureList.forEach(item => {
         this.natureOfProfessionDropdown.forEach(element => {
-          if (item.natureOfBusiness.includes(element.label) && this.data.data.natureOfBusiness != element.label) {
+          if (item.natureOfBusiness?.includes(element.label) && this.data.data.natureOfBusiness != element.label) {
             element.disabled = true;
           }
         });

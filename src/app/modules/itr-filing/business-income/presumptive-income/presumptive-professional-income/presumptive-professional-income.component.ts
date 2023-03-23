@@ -39,7 +39,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    
+
     let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
     if (natureOfBusiness) {
       this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44ADA');
@@ -79,17 +79,22 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       this.dataSource = new MatTableDataSource(parsedData);
     }
   }
-  
+
+  getBusinessName(data){
+    let business = this.natureOfBusinessList.filter((item: any) => item.code === data.natureOfBusiness);
+    return business[0] ? (business[0] as any).label : null;
+  }
+
   displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'receipts','presumptiveIncome'];
   dataSource = new MatTableDataSource<professionalIncome>();
   selection = new SelectionModel<professionalIncome>(true, []);
-  
+
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-  
+
   masterToggle() {
     this.isAllSelected() ?
         this.selection.clear() :

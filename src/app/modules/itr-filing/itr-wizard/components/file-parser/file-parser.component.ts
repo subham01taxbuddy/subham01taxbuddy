@@ -21,7 +21,7 @@ export class FileParserComponent implements OnInit {
   brokerName: string;
   uploadDoc: any;
   loading = false;
-  brokerData: any;
+  brokerData;
 
   constructor(private itrService: ItrMsService,
               private utilService: UtilsService) { }
@@ -36,46 +36,55 @@ export class FileParserComponent implements OnInit {
       {
         name: '5Paisa',
         label: '5 Paisa',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'IIFL',
         label: 'IIFL',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'Angel One',
         label: 'Angel One',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'Paytm',
         label: 'PayTm',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'Axis',
         label: 'Axis Broker',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'Upstox',
         label: 'Upstox',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'Groww',
         label: 'Grow (Both version)',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'Zerodha',
         label: 'Zerodha',
+        loading: false,
         filesUploaded: []
       },
       {
         name: 'ICICI',
         label: 'ICICI Bank',
+        loading: false,
         filesUploaded: []
       }
     ];
@@ -96,6 +105,8 @@ export class FileParserComponent implements OnInit {
 
   uploadDocument(document) {
     this.loading = true;
+    let brokerIndex = (this.brokerData as []).findIndex((item :any) => item.name === this.brokerName);
+    this.brokerData[brokerIndex].loading = true;
     const formData = new FormData();
     formData.append("file", document);
     let annualYear = this.ITR_JSON.assessmentYear;
@@ -120,6 +131,7 @@ export class FileParserComponent implements OnInit {
           //TODO:Ashwini: adding dummy data till the time api is ready
           this.utilService.getCgSummary(this.ITR_JSON.userId.toString(), annualYear).subscribe(
             (result: any) => {
+              this.brokerData[brokerIndex].loading = false;
               if(result.success){
                 if(!this.ITR_JSON.capitalGain) {
                   this.ITR_JSON.capitalGain = [];

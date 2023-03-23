@@ -99,6 +99,7 @@
         <div class="card__col-lg-6">
           <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80u"
             [ngModelOptions]="{ standalone: true }" (change)="radioChange80u(true)" [disabled]="!isEditMedicalExpenses">
+            <mat-radio-button value="">None</mat-radio-button><br /><br />
             <mat-radio-button value="SELF_WITH_DISABILITY">Self with disability</mat-radio-button><br /><br />
             <mat-radio-button value="SELF_WITH_SEVERE_DISABILITY">Self with severe disability
             </mat-radio-button>
@@ -107,11 +108,11 @@
         <div class="card__col-lg-6">
           <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="Up to {{ maxLimit80u }}" maxlength="8" formControlName="us80u"
-              autocomplete="off" digitsOnly />
-            <mat-hint>Upto {{ maxLimit80u }}</mat-hint>
-            <mat-error *ngIf="investmentDeductionForm.controls['us80u'].hasError('max')">
-              Max limit is {{ maxLimit80u }}</mat-error>
+            <input matInput type="number" placeholder="{{ maxLimit80u }}" maxlength="8" formControlName="us80u"
+              autocomplete="off" digitsOnly readonly/>
+<!--            <mat-hint>Upto {{ maxLimit80u }}</mat-hint>-->
+<!--            <mat-error *ngIf="investmentDeductionForm.controls['us80u'].hasError('max')">-->
+<!--              Max limit is {{ maxLimit80u }}</mat-error>-->
           </mat-form-field>
         </div>
       </div>
@@ -124,6 +125,7 @@
           <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80dd"
             [ngModelOptions]="{ standalone: true }" (change)="radioChange80dd(true)"
             [disabled]="!isEditMedicalExpenses">
+            <mat-radio-button value="">None</mat-radio-button><br /><br />
             <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY">Dependent person with disability
             </mat-radio-button><br /><br />
             <mat-radio-button value="DEPENDENT_PERSON_WITH_SEVERE_DISABILITY">Dependent person with severe disability
@@ -133,11 +135,11 @@
         <div class="card__col-lg-6">
           <mat-label>Amount</mat-label>
           <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="Up to {{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
-              autocomplete="off" digitsOnly />
-            <mat-hint>Upto {{ maxLimit80dd }}</mat-hint>
-            <mat-error *ngIf="investmentDeductionForm.controls['us80dd'].hasError('max')">
-              Max limit is {{ maxLimit80dd }}</mat-error>
+            <input matInput type="number" placeholder="{{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
+              autocomplete="off" digitsOnly readonly/>
+<!--            <mat-hint>Upto {{ maxLimit80dd }}</mat-hint>-->
+<!--            <mat-error *ngIf="investmentDeductionForm.controls['us80dd'].hasError('max')">-->
+<!--              Max limit is {{ maxLimit80dd }}</mat-error>-->
           </mat-form-field>
         </div>
       </div>
@@ -150,6 +152,7 @@
           <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80ddb"
             [ngModelOptions]="{ standalone: true }" (change)="radioChange80ddb(true)"
             [disabled]="!isEditMedicalExpenses">
+            <mat-radio-button value="">None</mat-radio-button><br /><br />
             <mat-radio-button value="SELF_OR_DEPENDENT">Self or dependent </mat-radio-button><br /><br />
             <mat-radio-button value="SELF_OR_DEPENDENT_SENIOR_CITIZEN">Self or dependent - Senior Citizen
             </mat-radio-button>

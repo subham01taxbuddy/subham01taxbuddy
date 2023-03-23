@@ -8,40 +8,32 @@
             (saveAndNext)="saveAndNext($event)"></app-presumptive-professional-income>
     </mat-tab>
 </mat-tab-group> -->
-
-<mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" (closed)="closed('customer')" hideToggle
+<div>
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel hideToggle
                        class="hide-close">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon>
-          arrow_forward_ios
-        </mat-icon>
-        Business Income
-      </mat-panel-title>
-      <!-- <div class="card__row edit clearfix isShow">
-        <button class="edit_btn" (click)="$event.stopPropagation();editForm('customer')"><mat-icon>
-          edit_square
-        </mat-icon>Edit </button>
-      </div> -->
-    </mat-expansion-panel-header>
-    <app-presumptive-business-income (saveAndNext)="saveAndNext($event)"></app-presumptive-business-income>
-  </mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>
+            arrow_forward_ios
+          </mat-icon>
+          Business Income
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-presumptive-business-income></app-presumptive-business-income>
+    </mat-expansion-panel>
 
-  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" (closed)="closed('customer')" hideToggle
+    <mat-expansion-panel hideToggle
                        class="hide-close">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon>
-          arrow_forward_ios
-        </mat-icon>
-        Professional Income
-      </mat-panel-title>
-      <!-- <div class="card__row edit clearfix isShow">
-        <button class="edit_btn" (click)="$event.stopPropagation();editForm('customer')"><mat-icon>
-          edit_square
-        </mat-icon>Edit </button>
-      </div> -->
-    </mat-expansion-panel-header>
-    <app-presumptive-professional-income
-    (saveAndNext)="saveAndNext($event)"></app-presumptive-professional-income>
-  </mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>
+            arrow_forward_ios
+          </mat-icon>
+          Professional Income
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-presumptive-professional-income></app-presumptive-professional-income>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
