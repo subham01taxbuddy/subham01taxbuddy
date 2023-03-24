@@ -16,11 +16,11 @@
         <mat-icon> arrow_forward_ios </mat-icon>
         House Property Details
       </mat-panel-title>
-<!--      <div class="card__row col-xs-12 edit clearfix isShow">-->
-<!--        <button class="edit_btn" (click)="$event.stopPropagation(); editForm()">-->
-<!--          <mat-icon> edit_square </mat-icon>Edit-->
-<!--        </button>-->
-<!--      </div>-->
+      <!--      <div class="card__row col-xs-12 edit clearfix isShow">-->
+      <!--        <button class="edit_btn" (click)="$event.stopPropagation(); editForm()">-->
+      <!--          <mat-icon> edit_square </mat-icon>Edit-->
+      <!--        </button>-->
+      <!--      </div>-->
     </mat-expansion-panel-header>
 
     <div style="padding: 0 24px 24px 24px">
@@ -75,7 +75,13 @@
                   </div>
                 </div>
                 <!-- description  -->
-                <div>{{ house.city }}, {{ house.pinCode }}</div>
+                <div class="card__col-sm-4">
+                  {{ house.city }}, {{ house.pinCode }}
+                </div>
+                <!-- net hp income  -->
+                <div>
+                  {{ utilsService.currencyFormatter(house.taxableIncome) }}
+                </div>
                 <!-- right icon  -->
                 <mat-icon>arrow_forward_ios</mat-icon>
               </div>
@@ -281,7 +287,9 @@
                             style="padding-top: 20px"
                           >
                             <mat-radio-group
-                              [formControl]="housePropertyForm.controls.isEligibleFor80EE"
+                              [formControl]="
+                                housePropertyForm.controls.isEligibleFor80EE
+                              "
                             >
                               <div class="customradiobtn bdr_btm">
                                 <mat-radio-button
