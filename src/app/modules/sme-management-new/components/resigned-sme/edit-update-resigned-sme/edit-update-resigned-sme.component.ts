@@ -177,6 +177,75 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     return this.roles.controls['leadEngagement'] as FormControl
   }
 
+  assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
+    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    serviceRecord[0].assignmentStart = assignment.value;
+    console.log(serviceRecord[0]);
+
+    //add update api call
+    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+  }
+
+  smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
+    const userId = this.smeObj.userId;
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+    const request = serviceRecord;
+
+    serviceCheckBox.disable();
+    assignmentToggle.disable();
+
+    this.userMsService.putMethod(param, request).subscribe((result: any) => {
+      console.log('sme record by service  -> ', result);
+      if(result.success) {
+        serviceCheckBox.enable();
+        assignmentToggle.enable();
+        this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
+      } else {
+        this.utilsService.showSnackBar(result.error);
+        serviceCheckBox.enable();
+        assignmentToggle.enable();
+      }
+    }, error => {
+      this.utilsService.showSnackBar(error);
+      serviceCheckBox.enable();
+      assignmentToggle.enable();
+    });
+  }
+
+  serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
+    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    if(service.value) {
+      //service added, check if existing and update accordingly
+      if(serviceRecord && serviceRecord.length > 0){
+        //existing record
+        assignment.setValue(serviceRecord[0].assignmentStart);
+
+        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      } else {
+        assignment.setValue(false);
+        let updated = this.smeRecords[0];
+        updated.serviceType = serviceType;
+        updated.assignmentStart = false;
+        this.smeRecords.push(updated);
+
+        this.smeInfoUpdateServiceCall(updated, service, assignment);
+      }
+    } else {
+      //service is already added, set assignment start false
+      if(serviceRecord && serviceRecord.length > 0){
+        //existing record
+        assignment.setValue(false);
+        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      } else {
+        assignment.setValue(false);
+        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      }
+    }
+
+    console.log(this.smeRecords);
+  }
+
   services  : FormGroup =this.fb.group({
     itr: new FormControl(''),
     nri: new FormControl(''),

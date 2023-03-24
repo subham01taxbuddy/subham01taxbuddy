@@ -193,36 +193,45 @@
         <div class="row">
           <div class="col-sm-6">
             <section class="example-section" [formGroup]="services">
-              <p><mat-checkbox [formControl]="itr">ITR</mat-checkbox>
-                <mat-slide-toggle *ngIf="itr.value" [formControl]="itrToggle"  style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="itr" (change)="serviceUpdated('ITR', itr, itrToggle)">ITR</mat-checkbox>
+                <mat-slide-toggle *ngIf="itr.value" [formControl]="itrToggle"  style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('ITR', itr, itrToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="nri">NRI</mat-checkbox>
-                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="nri" (change)="serviceUpdated('NRI', nri, nriToggle)">NRI</mat-checkbox>
+                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="tpa">Tax Planing (TPA)/NPS </mat-checkbox>
-                <mat-slide-toggle *ngIf="tpa.value" [formControl]="tpaToggle" style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="tpa" (change)="serviceUpdated('TPA', tpa, tpaToggle)">Tax Planing (TPA)/NPS </mat-checkbox>
+                <mat-slide-toggle *ngIf="tpa.value" [formControl]="tpaToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('TPA', tpa, tpaToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="gst">GST</mat-checkbox>
-                <mat-slide-toggle *ngIf="gst.value" [formControl]="gstToggle"  style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="gst" (change)="serviceUpdated('GST', gst, gstToggle)">GST</mat-checkbox>
+                <mat-slide-toggle *ngIf="gst.value" [formControl]="gstToggle"  style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('GST', gst, gstToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="notice">Notice</mat-checkbox>
-                <mat-slide-toggle *ngIf="notice.value" [formControl]="noticeToggle"  style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="notice" (change)="serviceUpdated('NOTICE', notice, noticeToggle)">Notice</mat-checkbox>
+                <mat-slide-toggle *ngIf="notice.value" [formControl]="noticeToggle"  style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('NOTICE', notice, noticeToggle)"></mat-slide-toggle></p><hr>
 
             </section>
           </div>
           <div class="col-sm-6">
             <section class="example-section" [formGroup]="services">
-              <p><mat-checkbox [formControl]="wb">Wealth Builder(wB)</mat-checkbox>
-                <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth Builder(wB)</mat-checkbox>
+                <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('WB', wb, wbToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="pd">Portfolio Doctor(PD)</mat-checkbox>
-                <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd, pdToggle)">Portfolio Doctor(PD)</mat-checkbox>
+                <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('PD', pd, pdToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="mf">Mutual Fund (MF) Advisor</mat-checkbox>
-                <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf, mfToggle)">Mutual Fund (MF) Advisor</mat-checkbox>
+                <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('MF', mf, mfToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="other">Other Services</mat-checkbox>
-                <mat-slide-toggle *ngIf="other.value" [formControl]="otherToggle" style="float:right ; margin-right: 10px;"></mat-slide-toggle></p><hr>
+              <p><mat-checkbox [formControl]="other" (change)="serviceUpdated('OTHER', other, otherToggle)">Other Services</mat-checkbox>
+                <mat-slide-toggle *ngIf="other.value" [formControl]="otherToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('OTHER', other, otherToggle)"></mat-slide-toggle></p><hr>
 
             </section>
           </div>
