@@ -8,15 +8,16 @@
     <!-- main-div  -->
     <main
       class="overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
-    *ngIf="!showEriView">
+      *ngIf="!showEriView"
+    >
       <div>
-        <div class="flex justify-between items-center rounded-2x1 px-[25px]"
-        >
+        <div class="flex justify-between items-center rounded-2x1 px-[25px]">
           <!-- Prefill-Header  -->
-          
-          <div class="txHd">Please select download or import option to have your pre-filled
-          data to proceed further</div>
-        
+
+          <div class="txHd">
+            Please select download or import option to have your pre-filled data
+            to proceed further
+          </div>
 
           <div class="flex flex-col items-center">
             <div *ngIf="!data?.eriClientValidUpto">
@@ -30,7 +31,6 @@
             </div>
 
             <div *ngIf="data?.eriClientValidUpto" style="font-size: 12px">
-
               Client added, valid upto
               {{ data?.eriClientValidUpto | date }}
             </div>
@@ -39,6 +39,7 @@
 
         <!-- prefill-content  -->
         <div>
+          <!-- no prefill  -->
           <div
             *ngIf="!downloadPrefill"
             class="rounded-2xl overflow-scroll scrollbar-hide p-[25px] mb-[33px]"
@@ -57,7 +58,8 @@
               <!-- prefill-options  -->
               <div class="flex flex-col gap-y-3 p-[25px] mb-[25px]">
                 <!-- download-prefill  -->
-                <div class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[5px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
+                <div
+                  class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[5px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
                 >
                   <div
                     class="flex items-start flex-col lg:items-center gap-x-[14px] lg:flex-row"
@@ -71,13 +73,17 @@
                       />
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
-                      <div class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left">
+                      <div
+                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                      >
                         Download Prefill Data
                       </div>
-                      <div class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row">
+                      <div
+                        class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
+                      >
                         <span class="text">
-                          Please select this option to download the prefill
-                          data of the user</span
+                          Please select this option to download the prefill data
+                          of the user</span
                         >
                       </div>
                     </div>
@@ -94,7 +100,10 @@
                         Start
                       </button>
                     </div>
-                    <div *ngIf="ITR_JSON?.prefillDate !== null" style="font-size: 12px">
+                    <div
+                      *ngIf="ITR_JSON?.prefillDate !== null"
+                      style="font-size: 12px"
+                    >
                       Last
                       {{
                         this.ITR_JSON?.prefillDataSource === "UPLOAD"
@@ -122,8 +131,10 @@
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left">
-                      <i class="material-icons-outlined adIc">cloud_upload</i> Upload Prefill Data                     
+                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                      >
+                        <i class="material-icons-outlined adIc">cloud_upload</i>
+                        Upload Prefill Data
                       </div>
                       <div
                         class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
@@ -156,7 +167,10 @@
                         Upload
                       </button>
                     </div>
-                    <div *ngIf="ITR_JSON?.prefillDate !== null" style="font-size: 12px">
+                    <div
+                      *ngIf="ITR_JSON?.prefillDate !== null"
+                      style="font-size: 12px"
+                    >
                       <!--  -->
                       Last
                       {{
@@ -171,25 +185,40 @@
               </div>
 
               <hr />
+            </div>
+            <!-- action-buttons  -->
+            <div class="flex justify-between p-[30px] back-foot">
+              <button (click)="skipToSources()" class="lgtBtn">
+                Skip to Sources of Income
+              </button>
 
-              <!-- action-buttona  -->
-              <div class="flex justify-between p-[30px] back-foot">
-                <button (click)="skipToSources()" class="lgtBtn">
-                  Skip to Sources of Income
-                </button>
-
-                <button class="darkBtn" [disabled]="!uploadDoc" (click)="proceedAfterUpload()">
-                  <span class="adjust">Proceed Further</span> <i class="material-icons icoAd">arrow_right_alt </i>
-                </button>
-              </div>
+              <button
+                class="darkBtn"
+                [disabled]="!uploadDoc"
+                (click)="proceedAfterUpload()"
+              >
+                <span class="adjust">Proceed Further</span>
+                <i class="material-icons icoAd">arrow_right_alt </i>
+              </button>
             </div>
           </div>
+          <!-- if prefill  -->
           <div *ngIf="downloadPrefill">
             <app-prefill-data></app-prefill-data>
+            <!-- action-buttons  -->
+            <div class="flex justify-between p-[30px] back-foot">
+              <button (click)="skipToSources()" class="lgtBtn">
+                Skip to Sources of Income
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </main>
-    <router-outlet *ngIf="showEriView" (activate)="subscribeToEmmiter($event)" (deactivate)="unsubscribe()"></router-outlet>
+    <router-outlet
+      *ngIf="showEriView"
+      (activate)="subscribeToEmmiter($event)"
+      (deactivate)="unsubscribe()"
+    ></router-outlet>
   </div>
 </div>

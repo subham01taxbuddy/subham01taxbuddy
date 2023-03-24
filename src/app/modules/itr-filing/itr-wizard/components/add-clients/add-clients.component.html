@@ -9,7 +9,9 @@
   <div class="flex justify-between items-center">
     <div class="headline texAlSp">Steps to Add Client:</div>
     <div class="flex flex-col gap-[10px] items-center txrtSp">
-      <div>Client's Name: <b>{{ personalInfo.fName }} {{ personalInfo.lName }}</b></div>
+      <div>
+        Client's Name: <b>{{ personalInfo.fName }} {{ personalInfo.lName }}</b>
+      </div>
       <!-- <strong class="user-name"
         >{{ personalInfo.fName }} {{ personalInfo.lName }}</strong
       > -->
@@ -19,7 +21,8 @@
   <!-- alert-message  -->
   <div class="p-[25px]">
     <div class="alert alert-warning" role="alert">
-      <i class="material-icons-outlined adIc">warning</i> Add client now to avoid any further errors
+      <i class="material-icons-outlined adIc">warning</i> Add client now to
+      avoid any further errors
     </div>
   </div>
 
@@ -39,7 +42,8 @@
                 [(ngModel)]="selectedOtpOption"
                 [ngModelOptions]="{ standalone: true }"
               >
-                <mat-radio-button checked value="A">Aadhaar OTP</mat-radio-button
+                <mat-radio-button checked value="A"
+                  >Aadhaar OTP</mat-radio-button
                 >&nbsp;&nbsp;&nbsp;
                 <mat-radio-button value="E">E portal OTP</mat-radio-button>
               </mat-radio-group>
@@ -107,8 +111,8 @@
             <div style="padding: 0 0 25px 25px">
               <button
                 matStepperNext
-                class="colorVer btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
-                style="width: 62%"
+                class="lgtBtn"
+                style="margin: 0px"
                 *ngIf="addClientForm.controls.panNumber.valid"
                 (click)="verifyPan()"
               >
@@ -151,8 +155,8 @@
               <button
                 matStepperNext
                 (click)="verifyOtp()"
-                class="btn normal-case h-fit min-h-fit transition-all duration-100 bg-white hover:bg-sky-700 hover:border-sky-700 hover:text-white py-3 px-7"
-                style="width: 28%"
+                class="lgtBtn"
+                style="margin: 0px"
               >
                 <span class="font-semibold">Validate OTP</span>
               </button>
@@ -313,6 +317,8 @@
     </button>
 
     <button (click)="showPrefillView()" class="darkBtn">
-    <span class="adjust">Go to Prefill Json</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
+      <span class="adjust">Go to Prefill Json</span>
+      <i class="material-icons icoAd">arrow_right_alt </i>
+    </button>
   </div>
 </main>
