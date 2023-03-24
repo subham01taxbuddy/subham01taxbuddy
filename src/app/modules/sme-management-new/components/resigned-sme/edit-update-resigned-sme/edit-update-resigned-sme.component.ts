@@ -193,24 +193,49 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     const request = serviceRecord;
 
     serviceCheckBox.disable();
-    assignmentToggle.disable();
+    assignmentToggle?.disable();
 
     this.userMsService.putMethod(param, request).subscribe((result: any) => {
       console.log('sme record by service  -> ', result);
       if(result.success) {
         serviceCheckBox.enable();
-        assignmentToggle.enable();
+        assignmentToggle?.enable();
         this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
       } else {
         this.utilsService.showSnackBar(result.error);
         serviceCheckBox.enable();
-        assignmentToggle.enable();
+        assignmentToggle?.enable();
       }
     }, error => {
       this.utilsService.showSnackBar(error);
       serviceCheckBox.enable();
-      assignmentToggle.enable();
+      assignmentToggle?.enable();
     });
+  }
+
+  nriServiceToggle = false;
+
+  nriUpdated(event, itr: FormControl) {
+    //for NRI capability check ITR service and add relevant roles
+    this.nriServiceToggle = !this.nriServiceToggle;
+    let itrRecord = this.smeRecords.filter(element => element.serviceType === 'ITR')[0];
+    if(this.smeObj.owner){
+      if(this.nriServiceToggle === true) {
+        itrRecord.roles.push('OWNER_NRI');
+      } else {
+        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
+        itrRecord.roles.splice(index, 1);
+      }
+    } else {
+      if(this.nriServiceToggle === true) {
+        itrRecord.roles.push('FILER_NRI');
+      } else {
+        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
+        itrRecord.roles.removeAt(index);
+      }
+    }
+    console.log(itrRecord);
+    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
   }
 
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
