@@ -259,7 +259,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     name: new FormControl("",[Validators.required]),
     email: new FormControl(''),
     languages: new FormControl(''),
-    referredPerson: new FormControl(''),
+    referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
     state: new FormControl(''),
@@ -279,8 +279,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   get languages(){
     return this.smeFormGroup.controls['languages'] as FormControl
   }
-  get referredPerson(){
-    return this.smeFormGroup.controls['referredPerson'] as FormControl
+  get referredBy(){
+    return this.smeFormGroup.controls['referredBy'] as FormControl
   }
   get itrTypes(){
     return this.smeFormGroup.controls['itrTypes'] as FormControl
@@ -440,15 +440,21 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         name: this.name.value,
         email: this.email.value,
         mobileNumber: this.mobileNumber.value,
-        callingNumber: this.smeObj.callingNumber,
+        referredBy:this.referredBy.value,
+        qualification:this.qualification.value,
+        state:this.state.value,
+        callingNumber: this.callingNumber.value,
         serviceType: this.smeObj.serviceType,
         roles: this.smeObj.roles,
         languages:this.languages.value,
         parentId: this.smeObj.parentId,
         botId: this.smeObj.botId,
-        displayName: this.smeObj.displayName,
+        displayName: this.displayName.value,
         active: this.smeObj.active,
+        leaveStartDate:this.leaveStartDate.value,
+        leaveEndDate:this.leaveEndDate.value,
         joiningDate: this.joiningDate.value,
+        resigningDate:this.resigningDate.value,
         internal: this.internal.value == 'internal'? true :false,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
@@ -541,5 +547,7 @@ export interface SmeObj {
   callingNumberList: string[]
   filerCallingNumberHistory: any
   owner: boolean
-
+  referredBy:string
+  qualification:string
+  state:string
 }
