@@ -2,17 +2,18 @@
 <div class="main1">
     <div class="login_content1">
         <div class="login_content_container">
-            <div class="card">
+            <div class="">
                 <h2><img src="assets/img/logo-img.svg" style="margin-left:auto;margin-right:auto;display:block;"
                         alt="Smiley face" height="20%" width="50%"></h2>
                 <form [formGroup]="form" class="form-horizontal" *ngIf="mode === 'SIGN_IN'">
                     <div class="card__row">
+                        <mat-label style="color:  #07070C;">E-mail or Phone Number</mat-label>
                         <mat-form-field appearance="outline">
-                            <mat-label>Mobile Number</mat-label>
-                            <input matInput placeholder="Mobile Number" formControlName="user" maxlength="10"
+                            <input matInput placeholder="E-mail or Phone Number" formControlName="user" maxlength="10"
                                 appearance="outline"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 onkeypress=" event.charCode >= 48 && event.charCode <= 57" required />
+                                <span class="fa fa-envelope errspan" aria-hidden="true"></span>
                         </mat-form-field>
                     </div>
                     <!--  <button [disabled]="!form.controls['user.valid" type="submit" class="btn"
@@ -21,24 +22,32 @@
                         with WhatsApp</button> -->
                     <!-- <div>- - - - - - - - - - - - - - - - OR - - - - - - - - - - - - - - - -</div> -->
                     <div class="card__row">
+                        <mat-label style="color:  #07070C;">Password</mat-label>
                         <mat-form-field appearance="outline">
-                            <mat-label>Password</mat-label>
-                            <input matInput placeholder="Password" type="password" formControlName="passphrase"
+                           <input matInput placeholder="Password" type="password" formControlName="passphrase"
                                 appearance="outline" />
+                                <span class="fa fa fa-eye errspan" aria-hidden="true"></span>
                         </mat-form-field>
                     </div>
-                    <div>
+                    <div class="card__row">
+                    <div class="form-group clearfix">
+                      <button type="submit" class="btn"
+                          (click)="onSubmit()">Login
+                      </button>
+                    </div>
+                    </div>
+                    <div >
                         <div class="card__col-xs-12 card__col-sm-12" style="text-align: right;">
-                            <a class="green-link green-link-toggle" (click)="changeMode('FORGOT_PASSWORD')">Forgot
+                            <a class="link-style" (click)="changeMode('FORGOT_PASSWORD')">Forgot
                                 password?</a>
                         </div>
                     </div>
-                    <div class="form-group clearfix">
-                        <button type="submit" class="btn"
-                            style="margin-left: auto; margin-right: auto; display: block; min-width:40%;border:none;outline:none;"
-                            (click)="onSubmit()">Login
-                            with Password</button>
+                    <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 20px;">
+                    <div >
+                      <p style="color:  #07070C;">Don't have an account ? <a class = "link-style"> Sign Up</a> </p>
                     </div>
+                    </div>
+
                 </form>
 
                 <div *ngIf="mode === 'FORGOT_PASSWORD'">
@@ -66,10 +75,10 @@
             </div>
         </div>
     </div>
-    <div>
+    <!-- <div>
         <p>
             For any assistance please drop an email to
             <a href="mailto:appsupport@taxbuddy.com" target="_blank">appsupport@taxbuddy.com</a>
         </p>
-    </div>
+    </div> -->
 </div>
