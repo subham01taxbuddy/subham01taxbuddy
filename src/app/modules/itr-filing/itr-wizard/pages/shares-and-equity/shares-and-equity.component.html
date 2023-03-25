@@ -120,6 +120,8 @@
                 <mat-form-field appearance="outline">
                   <input
                     matInput
+                    [min]="minDate"
+                    [max]="maxDate"
                     formControlName="sellDate"
                     name="sellDate"
                     readonly
@@ -135,15 +137,25 @@
                     matSuffix
                     [for]="sellDate"
                   ></mat-datepicker-toggle>
-                  <mat-datepicker #sellDate></mat-datepicker>
+                  <mat-datepicker #sellDate> </mat-datepicker>
                   <mat-error
                     *ngIf="
                       securitiesForm.controls['securitiesArray'].controls[
                         i
                       ].controls['sellDate'].hasError('required')
                     "
-                    >Enter valid amount.</mat-error
                   >
+                    Enter valid Date.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      securitiesForm.controls['securitiesArray'].controls[
+                        i
+                      ].controls['sellDate'].hasError('dateOrder')
+                    "
+                  >
+                    Sale date must be after purchase date.
+                  </mat-error>
                 </mat-form-field>
               </div>
               <div class="card__col-xs-12 card__col-sm-3">
@@ -188,6 +200,7 @@
                     name="sellValue"
                     maxlength="14"
                     required
+                    readonly
                     (change)="
                       calculateTotalCG(securities); calculateDeductionGain()
                     "
@@ -208,6 +221,7 @@
                 <mat-form-field appearance="outline">
                   <input
                     matInput
+                    [max]="maxDate"
                     formControlName="purchaseDate"
                     name="purchaseDate"
                     [matDatepicker]="purchaseDate"
@@ -224,6 +238,15 @@
                     [for]="purchaseDate"
                   ></mat-datepicker-toggle>
                   <mat-datepicker #purchaseDate></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      securitiesForm.controls['securitiesArray'].controls[
+                        i
+                      ].controls['purchaseDate'].hasError('dateOrder')
+                    "
+                  >
+                    Purchase date must be before the sale date.
+                  </mat-error>
                 </mat-form-field>
               </div>
               <div class="card__col-xs-12 card__col-sm-3">
@@ -267,6 +290,7 @@
                     placeholder="Buy Value"
                     name="purchaseCost"
                     maxlength="14"
+                    readonly
                     (change)="calculateTotalCG(securities)"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
@@ -365,6 +389,7 @@
                     matTooltip="Cost of acquisition(as per grandfathering)"
                     matTooltipClass="tab-tooltip"
                     matTooltipPosition="above"
+                    readonly
                     (change)="calculateTotalCG(securities)"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
