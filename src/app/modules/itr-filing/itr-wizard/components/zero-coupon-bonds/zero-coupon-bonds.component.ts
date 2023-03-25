@@ -76,10 +76,10 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
 
               this.addMoreBondsData(element);
             }
-          })
+          });
           if (obj.deduction) {
             obj.deduction.forEach((element: any) => {
-              this.deductionForm = this.initDeductionForm(obj.deduction);
+              this.deductionForm = this.initDeductionForm(element);
             });
           } else {
             this.deductionForm = this.initDeductionForm();

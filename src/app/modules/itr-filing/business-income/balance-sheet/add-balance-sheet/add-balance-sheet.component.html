@@ -13,6 +13,7 @@
                         <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                             name="natureOfBusiness">
                             <mat-option *ngFor="let nature of natureOfBusinessDropdownAll" [value]="nature.label"
+                                        matTooltip="{{nature.label}}-{{nature.code}}"
                                 [disabled]="nature.disabled">
                                 {{nature.label}}-{{nature.code}}
                             </mat-option></mat-select>

@@ -196,11 +196,11 @@
               <p><mat-checkbox [formControl]="itr" (change)="serviceUpdated('ITR', itr, itrToggle)">ITR</mat-checkbox><mat-slide-toggle *ngIf="itr.value" [formControl]="itrToggle"  style="float:right ; margin-right: 10px;"
                                                                                                                                         (change)="assignmentUpdated('ITR', itr, itrToggle)"></mat-slide-toggle>
                 <mat-chip-list><mat-chip class="select-chip" *ngIf="itr.value" disableRipple
-                                   [selected]="nriServiceToggle"(click)="nriUpdated($event, itr)"><i class="fa fa-check" *ngIf="nriServiceToggle"></i>NRI</mat-chip></mat-chip-list></p><hr>
+                                         [selected]="nriServiceToggle"(click)="nriUpdated($event, itr)"><i class="fa fa-check" *ngIf="nriServiceToggle"></i>NRI</mat-chip></mat-chip-list></p><hr>
 
-<!--              <p><mat-checkbox [formControl]="nri" (change)="serviceUpdated('NRI', nri, nriToggle)">NRI</mat-checkbox>-->
-<!--                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"-->
-<!--                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>-->
+              <!--              <p><mat-checkbox [formControl]="nri" (change)="serviceUpdated('NRI', nri, nriToggle)">NRI</mat-checkbox>-->
+              <!--                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"-->
+              <!--                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>-->
 
               <p><mat-checkbox [formControl]="tpa" (change)="serviceUpdated('TPA', tpa, tpaToggle)">Tax Planing (TPA)/NPS </mat-checkbox>
                 <mat-slide-toggle *ngIf="tpa.value" [formControl]="tpaToggle" style="float:right ; margin-right: 10px;"
@@ -236,7 +236,7 @@
         <div class="row">
           <div class="col-sm-6">
             <mat-hint>
-              <p> <i class="fas fa-circle"></i>  Select checkbox to active service</p>
+              <p> <i class="fas fa-circle"></i>  select checkbox to active service</p>
             </mat-hint>
           </div>
           <div class="col-sm-6">

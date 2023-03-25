@@ -81,8 +81,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   getBusinessName(data){
-    let business = this.natureOfBusinessList.filter((item: any) => item.code === data.natureOfBusiness);
-    return business[0] ? (business[0] as any).label : null;
+    let business = this.natureOfBusinessList?.filter((item: any) => item.code === data.natureOfBusiness);
+    return business && business[0] ? (business[0] as any).label : null;
   }
 
   displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'receipts','presumptiveIncome'];

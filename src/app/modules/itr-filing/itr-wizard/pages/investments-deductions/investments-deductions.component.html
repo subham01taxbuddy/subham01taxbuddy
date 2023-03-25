@@ -20,21 +20,21 @@
                     </div>
                 </div>
                 <div class="card__row">
-                    <div class="card__col-lg-6" *ngIf="ITR_JSON.regime === 'OLD'">
+                    <div class="card__col-lg-6">
                         <mat-label>Under section 80C</mat-label>
                         <mat-form-field appearance="outline">
                             <input matInput placeholder="Under section 80C" formControlName="ELSS" maxlength="8"
                                 autocomplete="off" digitsOnly>
                         </mat-form-field>
                     </div>
-                    <div class="card__col-lg-6" *ngIf="ITR_JSON.regime === 'OLD'">
+                    <div class="card__col-lg-6">
                         <mat-label>Under section 80CCC</mat-label>
                         <mat-form-field appearance="outline">
                             <input matInput placeholder="Under section 80CCC" formControlName="PENSION_FUND"
                                 maxlength="8" autocomplete="off" digitsOnly>
                         </mat-form-field>
                     </div>
-                    <div class="card__col-lg-6" *ngIf="ITR_JSON.regime === 'OLD'">
+                    <div class="card__col-lg-6">
                         <mat-label>Under section 80CCD (1)</mat-label>
                         <mat-form-field appearance="outline">
                             <input matInput placeholder="Under section 80CCD (1)" formControlName="PS_EMPLOYEE"
@@ -48,7 +48,7 @@
                                 formControlName="PS_EMPLOYER" autocomplete="off" digitsOnly>
                         </mat-form-field>
                     </div>
-                    <div class="card__col-lg-6" *ngIf="ITR_JSON.regime === 'OLD'">
+                    <div class="card__col-lg-6">
                         <mat-label>Under section 80CCD (1B)</mat-label>
                         <mat-form-field appearance="outline">
                             <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
@@ -56,7 +56,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-lg-6" *ngIf="ITR_JSON.regime === 'OLD'">
+                    <div class="card__col-lg-6">
                         <mat-label>Under section 80E</mat-label>
                         <mat-form-field appearance="outline">
                             <input matInput placeholder="Under section 80E" maxlength="8" formControlName="us80e"
@@ -64,7 +64,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-lg-6" *ngIf="!ITR_JSON.systemFlags?.hraAvailed && ITR_JSON.regime === 'OLD'">
+                    <div class="card__col-lg-6" *ngIf="!ITR_JSON.systemFlags?.hraAvailed">
                         <mat-label>Under section 80GG</mat-label>
                         <mat-form-field appearance="outline">
                             <input matInput placeholder="Under section 80GG" maxlength="8" formControlName="us80gg"
@@ -128,7 +128,7 @@
                 <app-donations [isAddDonation]="isAddDonation" (onSave)="saveInvestmentDeductions()"></app-donations>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngIf="ITR_JSON.regime === 'OLD'" [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <mat-icon>

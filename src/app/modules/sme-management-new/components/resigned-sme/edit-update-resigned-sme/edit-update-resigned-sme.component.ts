@@ -1,16 +1,11 @@
-import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppConstants } from 'src/app/modules/shared/constants';
-import { UtilsService } from 'src/app/services/utils.service';
 import * as moment from 'moment';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
-import { UserMsService } from 'src/app/services/user-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import {MatChip} from "@angular/material/chips";
-
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -29,14 +24,11 @@ export interface User {
 }
 
 @Component({
-  selector: 'app-edit-update-assigned-sme',
-  templateUrl: './edit-update-assigned-sme.component.html',
-  styleUrls: ['./edit-update-assigned-sme.component.scss'],
-  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
+  selector: 'app-edit-update-resigned-sme',
+  templateUrl: './edit-update-resigned-sme.component.html',
+  styleUrls: ['./edit-update-resigned-sme.component.scss']
 })
-
-export class EditUpdateAssignedSmeComponent implements OnInit {
+export class EditUpdateResignedSmeComponent implements OnInit {
   smeObj:SmeObj;
   loading = false;
   rolesList: any[] = [];
@@ -185,6 +177,100 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     return this.roles.controls['leadEngagement'] as FormControl
   }
 
+  assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
+    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    serviceRecord[0].assignmentStart = assignment.value;
+    console.log(serviceRecord[0]);
+
+    //add update api call
+    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+  }
+
+  smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
+    const userId = this.smeObj.userId;
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+    const request = serviceRecord;
+
+    serviceCheckBox.disable();
+    assignmentToggle?.disable();
+
+    this.userMsService.putMethod(param, request).subscribe((result: any) => {
+      console.log('sme record by service  -> ', result);
+      if(result.success) {
+        serviceCheckBox.enable();
+        assignmentToggle?.enable();
+        this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
+      } else {
+        this.utilsService.showSnackBar(result.error);
+        serviceCheckBox.enable();
+        assignmentToggle?.enable();
+      }
+    }, error => {
+      this.utilsService.showSnackBar(error);
+      serviceCheckBox.enable();
+      assignmentToggle?.enable();
+    });
+  }
+
+  nriServiceToggle = false;
+
+  nriUpdated(event, itr: FormControl) {
+    //for NRI capability check ITR service and add relevant roles
+    this.nriServiceToggle = !this.nriServiceToggle;
+    let itrRecord = this.smeRecords.filter(element => element.serviceType === 'ITR')[0];
+    if(this.smeObj.owner){
+      if(this.nriServiceToggle === true) {
+        itrRecord.roles.push('OWNER_NRI');
+      } else {
+        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
+        itrRecord.roles.splice(index, 1);
+      }
+    } else {
+      if(this.nriServiceToggle === true) {
+        itrRecord.roles.push('FILER_NRI');
+      } else {
+        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
+        itrRecord.roles.removeAt(index);
+      }
+    }
+    console.log(itrRecord);
+    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
+  }
+
+  serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
+    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    if(service.value) {
+      //service added, check if existing and update accordingly
+      if(serviceRecord && serviceRecord.length > 0){
+        //existing record
+        assignment.setValue(serviceRecord[0].assignmentStart);
+
+        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      } else {
+        assignment.setValue(false);
+        let updated = this.smeRecords[0];
+        updated.serviceType = serviceType;
+        updated.assignmentStart = false;
+        this.smeRecords.push(updated);
+
+        this.smeInfoUpdateServiceCall(updated, service, assignment);
+      }
+    } else {
+      //service is already added, set assignment start false
+      if(serviceRecord && serviceRecord.length > 0){
+        //existing record
+        assignment.setValue(false);
+        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      } else {
+        assignment.setValue(false);
+        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      }
+    }
+
+    console.log(this.smeRecords);
+  }
+
   services  : FormGroup =this.fb.group({
     itr: new FormControl(''),
     nri: new FormControl(''),
@@ -303,100 +389,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     return this.smeFormGroup.controls['parentName'] as FormControl
   }
 
-  assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
-    serviceRecord[0].assignmentStart = assignment.value;
-    console.log(serviceRecord[0]);
-
-    //add update api call
-    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-  }
-
-  smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
-    const userId = this.smeObj.userId;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
-    const request = serviceRecord;
-
-    serviceCheckBox.disable();
-    assignmentToggle?.disable();
-
-    this.userMsService.putMethod(param, request).subscribe((result: any) => {
-      console.log('sme record by service  -> ', result);
-      if(result.success) {
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-        this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
-      } else {
-        this.utilsService.showSnackBar(result.error);
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-      }
-    }, error => {
-      this.utilsService.showSnackBar(error);
-      serviceCheckBox.enable();
-      assignmentToggle?.enable();
-    });
-  }
-
-  nriServiceToggle = false;
-
-  nriUpdated(event, itr: FormControl) {
-    //for NRI capability check ITR service and add relevant roles
-    this.nriServiceToggle = !this.nriServiceToggle;
-    let itrRecord = this.smeRecords.filter(element => element.serviceType === 'ITR')[0];
-    if(this.smeObj.owner){
-      if(this.nriServiceToggle === true) {
-        itrRecord.roles.push('OWNER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
-        itrRecord.roles.splice(index, 1);
-      }
-    } else {
-      if(this.nriServiceToggle === true) {
-        itrRecord.roles.push('FILER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
-        itrRecord.roles.removeAt(index);
-      }
-    }
-    console.log(itrRecord);
-    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
-  }
-
-  serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
-    if(service.value) {
-      //service added, check if existing and update accordingly
-      if(serviceRecord && serviceRecord.length > 0){
-        //existing record
-        assignment.setValue(serviceRecord[0].assignmentStart);
-
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      } else {
-        assignment.setValue(false);
-        let updated = this.smeRecords[0];
-        updated.serviceType = serviceType;
-        updated.assignmentStart = false;
-        this.smeRecords.push(updated);
-
-        this.smeInfoUpdateServiceCall(updated, service, assignment);
-      }
-    } else {
-      //service is already added, set assignment start false
-      if(serviceRecord && serviceRecord.length > 0){
-        //existing record
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      } else {
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      }
-    }
-
-    console.log(this.smeRecords);
-  }
-
   otherSmeInfo : FormGroup =this.fb.group({
     coOwner :new FormControl(''),
     callingNumber :new FormControl(''),
@@ -474,11 +466,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeServices.forEach((element) => {
       if (element.serviceType == "ITR") {
         this.itr.setValue(true);
-        if(this.smeObj.roles.includes('OWNER_NRI') || this.smeObj.roles.includes('FILER_NRI')){
-          this.nriServiceToggle = true;
-        }
         if (element.assignmentStart == true) {
           this.itrToggle.setValue(true);
+        }
+      }
+      else if (element.serviceType == "NRI") {
+        this.nri.setValue(true);
+        if (element.assignmentStart == true) {
+          this.nriToggle.setValue(true);
         }
       }
       else if (element.serviceType == "TPA") {

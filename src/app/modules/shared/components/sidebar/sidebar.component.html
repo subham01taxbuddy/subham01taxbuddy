@@ -10,41 +10,38 @@
       routerLinkActive=""
       (click)="closeSideBar()"
     >
-      <i
-        class="fa fa-tasks norTx"
-        style="font-size: 20px"
-        aria-hidden="true"
-      ></i>
       <span class="sidebar__name norTx">My Tasks</span>
     </a>
     <div class="d-menu">
       <a
-      class="sidebar__item"
-      href="javascript:void(0)"
-      (click)="dropdownPanel['sme'] = !dropdownPanel['sme']"
-    >
-      <i class="fa fa-id-badge" style="font-size: 20px" aria-hidden="true"></i>
-      <span class="sidebar__name norTx">SME Management</span>
-    </a>
-    <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
-      <a class="sidebar__subitem" routerLink="/sme-management-new/assignedsme" href="javascript:void(0)">
-        <span class="sidebar__subname norTx">Assigned SME</span>
+        class="sidebar__item"
+        href="javascript:void(0)"
+        (click)="dropdownPanel['sme'] = !dropdownPanel['sme']"
+      >
+        <span class="sidebar__name norTx">SME Management</span>
       </a>
-      <a class="sidebar__subitem" routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
-        <span class="sidebar__subname norTx">Unassigned SME</span>
-      </a>
-      <a class="sidebar__subitem" routerLink="/sme-management-new/resignedsme" href="javascript:void(0)">
-        <span class="sidebar__subname norTx">Reassigned SME</span>
-      </a>
-    </div>
-    </div>
-
-
-        <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
-           (click)="closeSideBar()">
-          <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
-          <span class="sidebar__name norTx">User Management</span>
+      <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
+        <a class="sidebar__subitem" routerLink="/sme-management-new/assignedsme" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Assigned SME</span>
         </a>
+        <a class="sidebar__subitem" routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Unassigned SME</span>
+        </a>
+        <a class="sidebar__subitem" routerLink="/sme-management-new/resignedsme" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Resigned SME</span>
+        </a>
+      </div>
+    </div>
+
+
+    <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
+       (click)="closeSideBar()">
+      <span class="sidebar__name norTx">User Management</span>
+    </a>
+    <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
+       (click)="closeSideBar()">
+      <span class="sidebar__name norTx">Subscription</span>
+    </a>
     <!-- <a class="sidebar__item item-act" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
             <i class="material-icons actTx">description</i>
             <span class="sidebar__name actTx">ITR Filing Process</span>
