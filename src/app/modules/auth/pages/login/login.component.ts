@@ -210,6 +210,9 @@ export class LoginComponent implements OnInit {
   }
 
   getSmeInfoDetails(userId) {
+    if(!userId) {
+      return;
+    }
     this.loading = true;
     //https://dev-api.taxbuddy.com/user/sme-details-new/1?smeUserId=1
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
