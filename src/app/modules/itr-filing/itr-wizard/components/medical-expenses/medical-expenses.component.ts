@@ -410,11 +410,13 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   saveInvestmentDeductions() {
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.max5000Limit('SELF');
     if (this.investmentDeductionForm.valid) {
+      this.loading = true;
       Object.keys(this.investmentDeductionForm.controls).forEach(
         (item: any) => {
           if (

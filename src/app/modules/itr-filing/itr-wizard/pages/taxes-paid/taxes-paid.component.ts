@@ -44,6 +44,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
+    this.loading = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 

@@ -109,7 +109,7 @@
               <input formControlName="pinCode" matInput currencyMask placeholder="PIN" name="pinCode[i]"
                 class="input-field" maxlength="6" minlength="6" required type="text" trim digitsOnly (blur)="
                   getData(
-                    i,
+                    fieldGlobalIndex(i),
                     generalDonationForm.controls['donationArray'].controls[i]
                       .controls['pinCode'].value
                   )

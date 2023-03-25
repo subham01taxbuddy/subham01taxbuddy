@@ -52,11 +52,12 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     if (this.showHeadOfIncome === 'TDTS' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A && this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach(item => {
         this.addMoreSalary(item);
-      })
+      });
+      // this.addSalary();
     } else if (this.showHeadOfIncome === 'TDTSP' && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach(item => {
         this.addMoreSalary(item);
-      })
+      });
     } else {
       this.addMoreSalary()
     }
