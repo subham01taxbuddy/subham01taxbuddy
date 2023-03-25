@@ -1,12 +1,12 @@
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
-import { Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef, HostListener } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Schedules } from "../../shared/interfaces/schedules";
 import { NavigationEnd, Router } from "@angular/router";
 import { Location } from '@angular/common';
-import { Subscription } from "rxjs";
+import {fromEvent, Subscription } from "rxjs";
 import { WizardNavigation } from "../../itr-shared/WizardNavigation";
 import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
 import {AllBusinessIncomeComponent} from "./pages/all-business-income/all-business-income.component";
@@ -48,7 +48,17 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   ) {
 
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+
   }
+
+  // @HostListener('window:popstate', ['$event'])
+  // onBrowserBackBtnClose(event: Event) {
+  //   console.log('back button pressed');
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   this.utilsService.showSnackBar('Do not user browser back button');
+  //   //this.router.navigate(['/home'],  {replaceUrl:true});
+  // }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -62,6 +72,15 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if (this.router.url.startsWith('/itr-filing/itr') && this.router.url !== '/itr-filing/itr' && !this.showIncomeSources) {
       this.router.navigate(['/itr-filing/itr']);
     }
+
+    this.subscription = fromEvent(window, 'popstate').subscribe(_ => {
+      //history.pushState(null, null, location.href);
+      if(this.router.url.startsWith('/itr-filing/itr/eri')) {
+        this.skipPrefill(_);
+        this.utilsService.showSnackBar(`Using browser back button will reset the progress!`);
+      }
+
+    });
 
     //check if prefill data is available, hide prefill view
     if(this.ITR_JSON.prefillData){
@@ -118,6 +137,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   showPrefillView() {
+    this.subscription.unsubscribe();
     this.breadcrumb = null;
     if (this.router.url !== '/itr-filing/itr') {
       // while(this.router.url !== '/itr-filing/itr') {
@@ -126,7 +146,18 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     }
     this.showPrefill = true;
     this.showIncomeSources = false;
-    // this.
+
+    setTimeout(function(){
+      this.subscription = fromEvent(window, 'popstate').subscribe(_ => {
+        //history.pushState(null, null, location.href);
+        if (this.router.url.startsWith('/itr-filing/itr/eri')) {
+          this.skipPrefill(_);
+          this.utilsService.showSnackBar(`Using browser back button will reset the progress!`);
+        }
+
+      })
+    }, 2000);
+
   }
 
   gotoSummary() {
@@ -287,5 +318,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
     sessionStorage.removeItem('incomeSources');
+    this.subscription.unsubscribe();
   }
 }
