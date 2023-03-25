@@ -133,6 +133,7 @@ export class SharesAndEquityComponent
     let assetDetails;
     let data;
 
+    this.brokerList = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
         (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
