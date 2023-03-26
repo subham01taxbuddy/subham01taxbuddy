@@ -118,7 +118,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     "id": null,
     "seqNum": 14,
     "value": "10(26AAA)",
-    "label": "Sec 10(26AAA) - Any income as referred to in section 10(26",
+    "label": "Sec 10(26AAA) - Any income as referred to in section 10(26AAA)",
     "detailed": false
   }, {
     "id": null,

@@ -98,7 +98,7 @@
                     <p class="paIncTx">Great news...!!!
                         You are getting refund of {{utilsService.currencyFormatter(refund)}}.00 of your tax return into
                         your
-                        bank account number. <b>{{bankArray.accountNumber}}</b>
+                        bank account number. <b>{{bankArray?.accountNumber}}</b>
                     </p>
                 </div>
             </div>
@@ -488,9 +488,9 @@
                                                     </td>
                                                     <td>{{natureOfBusinessFromCode(business?.natureOfBusiness)}}</td>
                                                     <td>{{business?.tradeName}}</td>
-                                                    <td>Rs {{business.incomes[0].turnOver}}</td>
-                                                    <td>Rs {{utilsService.currencyFormatter(business.businessType === 'SPECULATIVEINCOME' ? business.incomes[0].netIncomeFromSpeculativeIncome :
-                                                        (business.businessType === 'NONSPECULATIVEINCOME' ? business.netProfitfromNonSpeculativeIncome:''))}}</td>
+                                                    <td>Rs {{business?.incomes[0]?.turnOver}}</td>
+                                                    <td>Rs {{utilsService.currencyFormatter(business?.businessType === 'SPECULATIVEINCOME' ? business?.incomes[0]?.netIncomeFromSpeculativeIncome :
+                                                        (business?.businessType === 'NONSPECULATIVEINCOME' ? business?.netProfitfromNonSpeculativeIncome:''))}}</td>
                                                 </tr>
 
                                                 <!--  <tr>
@@ -515,7 +515,7 @@
                                     </mat-expansion-panel>
 
                                     <!-- ************************** Income from Capital Gain ****************************** -->
-                                    <mat-expansion-panel class="color-panel accordion-border" [disabled]="[(totalCapitalGain('AMT') === 0 
+                                    <mat-expansion-panel class="color-panel accordion-border" [disabled]="[(totalCapitalGain('AMT') === 0
                     && !ITR_JSON.systemFlags.hasCapitalGain) ? true : false]" #CG>
                                         <mat-expansion-panel-header class="newclass">
                                             <div class="font80" style="width: 100%;" cellpadding="0" cellspacing="0">
@@ -2008,7 +2008,7 @@
         <div class="col-lg-9 col-md-9 col-sm-12 paIncTx1">
             Great news...!!!
             You are getting refund of {{utilsService.currencyFormatter(refund)}}.00 of your tax return into your
-            bank account number. <b>{{bankArray.accountNumber}}</b>
+            bank account number. <b>{{bankArray?.accountNumber}}</b>
             <br>
             <span style="font-size: 12px; font-style: italic"><b>Note:</b> Ensure that your bank account is correct &
                 Pre-validated to Income tax portal. <span> <a

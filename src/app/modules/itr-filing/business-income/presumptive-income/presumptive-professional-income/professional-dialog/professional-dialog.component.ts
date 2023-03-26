@@ -44,7 +44,7 @@ export class ProfessionalDialogComponent implements OnInit {
   }
 
   getFullName() {
-    let business = this.natureOfProfessionDropdown.filter(item => item.code === this.professionForm.controls['natureOfBusiness'].value);
+    let business = this.natureOfProfessionDropdown?.filter(item => item.code === this.professionForm.controls['natureOfBusiness'].value);
     return business[0] ? business[0].label + '-' + business[0].code : null;
   }
 
