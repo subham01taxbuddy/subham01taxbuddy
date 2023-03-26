@@ -23,6 +23,7 @@ export class UploadDocComponent implements OnInit {
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.currentPath = `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
     this.getDocuments();
   }
 
@@ -33,7 +34,7 @@ export class UploadDocComponent implements OnInit {
   }
 
   getDocuments() {
-    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
+    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/${this.currentPath}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log('documents:', result);
       if(Array.isArray(result)) {
@@ -42,8 +43,11 @@ export class UploadDocComponent implements OnInit {
     })
   }
 
+  currentPath = '';
+
   openDocument(event) {
     console.log('got', event);
+    this.currentPath = event.path;
     const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/${event.path}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.documents = result;
@@ -81,7 +85,7 @@ export class UploadDocComponent implements OnInit {
   deleteFile(fileName) {
     let adminId = JSON.parse(localStorage.getItem("UMD"));
     var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
+    let filePath = `/${fileName}`;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
