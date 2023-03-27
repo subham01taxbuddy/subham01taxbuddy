@@ -1,55 +1,64 @@
-<div
-  class="left-sidebar fixed"
-  [class.left-sidebar_open]="showSidebar"
-  [class.hideSideMenu]="hideSideBar"
->
+<div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
   <nav class="sidebar">
-    <a
-      class="sidebar__item"
-      routerLink="/tasks"
-      routerLinkActive=""
-      (click)="closeSideBar()"
-    >
-      <i
-        class="fa fa-tasks norTx"
-        style="font-size: 20px"
-        aria-hidden="true"
-      ></i>
+    <a class="sidebar__item" routerLink="/tasks" routerLinkActive="" (click)="closeSideBar()">
+      <i class="fa fa-tasks norTx" style="font-size: 20px" aria-hidden="true"></i>
       <span class="sidebar__name norTx">My Tasks</span>
     </a>
     <div class="d-menu">
-      <a
-      class="sidebar__item"
-      href="javascript:void(0)"
-      (click)="dropdownPanel['sme'] = !dropdownPanel['sme']"
-    >
-      <i class="fa fa-id-badge" style="font-size: 20px" aria-hidden="true"></i>
-      <span class="sidebar__name norTx">SME Management</span>
-    </a>
-    <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
-      <a class="sidebar__subitem" routerLink="/sme-management-new/assignedsme" href="javascript:void(0)">
-        <span class="sidebar__subname norTx">Assigned SME</span>
+      <a class="sidebar__item" href="javascript:void(0)" (click)="dropdownPanel['sme'] = !dropdownPanel['sme']">
+        <i class="fa fa-id-badge" style="font-size: 20px" aria-hidden="true"></i>
+        <span class="sidebar__name norTx">SME Management</span>
       </a>
-      <a class="sidebar__subitem" routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
-        <span class="sidebar__subname norTx">Unassigned SME</span>
-      </a>
-      <a class="sidebar__subitem" routerLink="/sme-management-new/resignedsme" href="javascript:void(0)">
-        <span class="sidebar__subname norTx">Resigned SME</span>
-      </a>
-    </div>
-    </div>
-
-
-        <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
-           (click)="closeSideBar()">
-          <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
-          <span class="sidebar__name norTx">User Management</span>
+      <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
+        <a class="sidebar__subitem" routerLink="/sme-management-new/assignedsme" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Assigned SME</span>
         </a>
-    <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
-       (click)="closeSideBar()">
+        <a class="sidebar__subitem" routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Unassigned SME</span>
+        </a>
+        <a class="sidebar__subitem" routerLink="/sme-management-new/resignedsme" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Resigned SME</span>
+        </a>
+      </div>
+    </div>
+    <div class="d-menu">
+      <a href="javascript:void(0)" class="sidebar__item" (click)="dropdownPanel['subscription'] = !dropdownPanel['subscription']">
+        <i class="fa fa-rocket" style="font-size: 20px" aria-hidden="true"></i>
+        <span class="sidebar__name norTx">Subscription</span>
+      </a>
+      <div *ngIf="dropdownPanel['subscription']"  class="d-menu-links">
+        <a class="sidebar__subitem" routerLink="/subscription/assigned-subscription" href="javascript:void(0)">
+          <span class="sidebar__subname norTx">Assigned-Sub</span>
+        </a>
+        <div class="d-sub-menu">
+          <a class="sidebar__subitem" (click)="dropdownPanelChild['invoice'] = !dropdownPanelChild['invoice']"  href="javascript:void(0)">
+            <span class="sidebar__subname norTx">Invoice</span>
+          </a>
+          <div *ngIf="dropdownPanelChild['invoice']"  class="d-menu-links">
+            <a class="sidebar__subitem" routerLink="/subscription/performa-invoice" href="javascript:void(0)">
+              <span class="sidebar__subname norTx">Performa Invoice</span>
+            </a>
+          </div>
+          <div *ngIf="dropdownPanelChild['invoice']"  class="d-menu-links">
+            <a class="sidebar__subitem" routerLink="/subscription/tax-invoice" href="javascript:void(0)">
+              <span class="sidebar__subname norTx">Tax Invoice</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
+      (click)="closeSideBar()">
+      <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
+      <span class="sidebar__name norTx">User Management</span>
+    </a>
+    <!-- <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
+      (click)="closeSideBar()">
       <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
       <span class="sidebar__name norTx">Subscription</span>
-    </a>
+    </a> -->
     <!-- <a class="sidebar__item item-act" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
             <i class="material-icons actTx">description</i>
             <span class="sidebar__name actTx">ITR Filing Process</span>

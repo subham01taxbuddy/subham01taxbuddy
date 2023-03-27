@@ -28,7 +28,7 @@ export const appRoutes: Routes = [
   {
     path: 'itr-filing', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/itr-filing/itr-filing.module').then(m => m.ItrFilingModule)
   },
-  { path: 'subscription', loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
+  { path: 'subscription',component: LayoutComponent, loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
   { path: '**', redirectTo: 'login' },
 ];
 
