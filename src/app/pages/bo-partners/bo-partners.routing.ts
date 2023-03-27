@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: '', component: BoPartnersComponent,
     children: [
-      { path: '', redirectTo: '/pages/bo-partners', pathMatch: 'full'}
+      { path: '', redirectTo: '/bo-partners', pathMatch: 'full'}
     ]
 },
 ];

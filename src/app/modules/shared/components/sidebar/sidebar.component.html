@@ -32,7 +32,6 @@
     </div>
     <div class="d-menu">
       <a href="javascript:void(0)" class="sidebar__item" (click)="dropdownPanel['subscription'] = !dropdownPanel['subscription']">
-        <i class="fa fa-rocket" style="font-size: 20px" aria-hidden="true"></i>
         <span class="sidebar__name norTx">Subscription</span>
       </a>
       <div *ngIf="dropdownPanel['subscription']"  class="d-menu-links">
@@ -61,6 +60,14 @@
     <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
        (click)="closeSideBar()">
       <span class="sidebar__name norTx">User Management</span>
+    </a>
+    <a class="sidebar__item" routerLink="/review" routerLinkActive="sidebar__item_active"
+       (click)="closeSideBar()">
+      <span class="sidebar__name norTx">Review</span>
+    </a>
+    <a class="sidebar__item" routerLink="/bo-partners" routerLinkActive="sidebar__item_active"
+       (click)="closeSideBar()">
+      <span class="sidebar__name norTx">Bo-Partners</span>
     </a>
     <!-- <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
        (click)="closeSideBar()">
