@@ -9,6 +9,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import {MatChip} from "@angular/material/chips";
 
 
 export const MY_FORMATS = {
@@ -318,24 +319,49 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     const request = serviceRecord;
 
     serviceCheckBox.disable();
-    assignmentToggle.disable();
+    assignmentToggle?.disable();
 
     this.userMsService.putMethod(param, request).subscribe((result: any) => {
       console.log('sme record by service  -> ', result);
       if(result.success) {
         serviceCheckBox.enable();
-        assignmentToggle.enable();
+        assignmentToggle?.enable();
         this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
       } else {
         this.utilsService.showSnackBar(result.error);
         serviceCheckBox.enable();
-        assignmentToggle.enable();
+        assignmentToggle?.enable();
       }
     }, error => {
       this.utilsService.showSnackBar(error);
       serviceCheckBox.enable();
-      assignmentToggle.enable();
+      assignmentToggle?.enable();
     });
+  }
+
+  nriServiceToggle = false;
+
+  nriUpdated(event, itr: FormControl) {
+    //for NRI capability check ITR service and add relevant roles
+    this.nriServiceToggle = !this.nriServiceToggle;
+    let itrRecord = this.smeRecords.filter(element => element.serviceType === 'ITR')[0];
+    if(this.smeObj.owner){
+      if(this.nriServiceToggle === true) {
+        itrRecord.roles.push('OWNER_NRI');
+      } else {
+        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
+        itrRecord.roles.splice(index, 1);
+      }
+    } else {
+      if(this.nriServiceToggle === true) {
+        itrRecord.roles.push('FILER_NRI');
+      } else {
+        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
+        itrRecord.roles.removeAt(index);
+      }
+    }
+    console.log(itrRecord);
+    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
   }
 
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
@@ -448,14 +474,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeServices.forEach((element) => {
       if (element.serviceType == "ITR") {
         this.itr.setValue(true);
+        if(this.smeObj.roles.includes('OWNER_NRI') || this.smeObj.roles.includes('FILER_NRI')){
+          this.nriServiceToggle = true;
+        }
         if (element.assignmentStart == true) {
           this.itrToggle.setValue(true);
-        }
-      }
-      else if (element.serviceType == "NRI") {
-        this.nri.setValue(true);
-        if (element.assignmentStart == true) {
-          this.nriToggle.setValue(true);
         }
       }
       else if (element.serviceType == "TPA") {

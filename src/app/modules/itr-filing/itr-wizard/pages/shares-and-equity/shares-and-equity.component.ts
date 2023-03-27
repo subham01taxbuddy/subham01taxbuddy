@@ -133,6 +133,7 @@ export class SharesAndEquityComponent
     let assetDetails;
     let data;
 
+    this.brokerList = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
         (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -207,7 +208,8 @@ export class SharesAndEquityComponent
     this.securitiesForm = this.initForm();
     this.deductionForm = this.initDeductionForm();
     if (this.Copy_ITR_JSON.capitalGain) {
-      this.initDetailedForm(this.Copy_ITR_JSON);
+      this.showCompactView();
+      //this.initDetailedForm(this.Copy_ITR_JSON);
     } else {
       this.addMoreData();
     }

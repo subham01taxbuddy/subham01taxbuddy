@@ -1,12 +1,21 @@
 <div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
   <nav class="sidebar">
-    <a class="sidebar__item" routerLink="/tasks" routerLinkActive="" (click)="closeSideBar()">
-      <i class="fa fa-tasks norTx" style="font-size: 20px" aria-hidden="true"></i>
+    <a
+      class="sidebar__item"
+      routerLink="/tasks"
+      routerLinkActive=""
+      (click)="closeSideBar()"
+    >
       <span class="sidebar__name norTx">My Tasks</span>
     </a>
+    </a>
+  </div>
     <div class="d-menu">
-      <a class="sidebar__item" href="javascript:void(0)" (click)="dropdownPanel['sme'] = !dropdownPanel['sme']">
-        <i class="fa fa-id-badge" style="font-size: 20px" aria-hidden="true"></i>
+      <a
+        class="sidebar__item"
+        href="javascript:void(0)"
+        (click)="dropdownPanel['sme'] = !dropdownPanel['sme']"
+      >
         <span class="sidebar__name norTx">SME Management</span>
       </a>
       <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
@@ -50,13 +59,11 @@
     </div>
 
     <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
-      (click)="closeSideBar()">
-      <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
+       (click)="closeSideBar()">
       <span class="sidebar__name norTx">User Management</span>
     </a>
-    <!-- <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
-      (click)="closeSideBar()">
-      <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
+    <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
+       (click)="closeSideBar()">
       <span class="sidebar__name norTx">Subscription</span>
     </a> -->
     <!-- <a class="sidebar__item item-act" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">

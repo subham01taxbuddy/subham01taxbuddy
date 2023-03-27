@@ -57,16 +57,17 @@ export class LoginComponent implements OnInit {
         this.getFyList();
         this.getAgentList();
 
-        if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['/tasks/assigned-users']);
-        } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => userData.USER_ROLE.includes(item))) {
-          this.router.navigate(['/tasks/assigned-users']);
-        } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
-          this.router.navigate(['pages/tpa-interested']);
-        } else {
-          if (userData.USER_ROLE.length > 0)
-            this._toastMessageService.alert("error", "Access Denied.");
-        }
+        this.getSmeInfoDetails(userData.userId);
+        // if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
+        //   this.router.navigate(['/tasks/assigned-users']);
+        // } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => userData.USER_ROLE.includes(item))) {
+        //   this.router.navigate(['/tasks/assigned-users']);
+        // } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
+        //   this.router.navigate(['pages/tpa-interested']);
+        // } else {
+        //   if (userData.USER_ROLE.length > 0)
+        //     this._toastMessageService.alert("error", "Access Denied.");
+        // }
       }
     }).catch(e => {
       console.log('Auth.current session catch error:', e);
@@ -164,21 +165,7 @@ export class LoginComponent implements OnInit {
     this.getAgentList();
     this.getSmeInfoDetails(jhi.userId);
     this.getDueDateDetails();
-    if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
-      this.router.navigate(['/tasks/assigned-users']);
-      this.utilsService.logAction(jhi.userId, 'login')
-      // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-      //   this.router.navigate(['/pages/dashboard/calling/calling2']);
-      //   this.utilsService.logAction(jhi.userId, 'login')
-      // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
-      //   this.router.navigate(['pages/tpa-interested']);
-      //   this.utilsService.logAction(jhi.userId, 'login')
-    } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => jhi.role.includes(item))) {
-      this.router.navigate(['/tasks/assigned-users']);
-    } else {
-      if (jhi.role.length > 0)
-        this._toastMessageService.alert("error", "Access Denied.");
-    }
+
   }
   getDueDateDetails() {
     //https://uat-api.taxbuddy.com/itr/due-date
@@ -223,8 +210,12 @@ export class LoginComponent implements OnInit {
   }
 
   getSmeInfoDetails(userId) {
+    if(!userId) {
+      return;
+    }
     this.loading = true;
-    const param = `/sme/info?userId=${userId}`;
+    //https://dev-api.taxbuddy.com/user/sme-details-new/1?smeUserId=1
+    const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
       if (res.success) {
@@ -232,6 +223,25 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.InitChat();
         }, 2000);
+
+        let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
+          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER'];
+        let roles = res.data[0]?.roles;
+        if (roles.indexOf("ROLE_ADMIN") !== -1) {
+          this.router.navigate(['/tasks/assigned-users']);
+          this.utilsService.logAction(userId, 'login');
+          // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
+          //   this.router.navigate(['/pages/dashboard/calling/calling2']);
+          //   this.utilsService.logAction(jhi.userId, 'login')
+          // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
+          //   this.router.navigate(['pages/tpa-interested']);
+          //   this.utilsService.logAction(jhi.userId, 'login')
+        } else if (allowedRoles.some(item => roles.includes(item))) {
+          this.router.navigate(['/tasks/assigned-users']);
+        } else {
+          if (roles.length > 0)
+            this._toastMessageService.alert("error", "Access Denied.");
+        }
       }
     }, error => {
       this.loading = false;
