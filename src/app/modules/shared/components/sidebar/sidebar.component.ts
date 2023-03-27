@@ -26,6 +26,7 @@ export class SidebarComponent implements DoCheck {
   }
 
   dropdownPanel:any = {}
+  dropdownPanelChild:any = {}
 
   ngDoCheck() {
     this.showSidebar = NavbarService.getInstance().showSideBar;
