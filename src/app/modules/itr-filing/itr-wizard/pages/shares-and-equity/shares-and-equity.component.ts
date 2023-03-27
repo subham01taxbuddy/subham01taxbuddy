@@ -230,6 +230,7 @@ export class SharesAndEquityComponent
     // if(!this.securitiesForm.enabled){
     //   this.securitiesForm.enable();
     // }
+    this.compactView = false;
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
