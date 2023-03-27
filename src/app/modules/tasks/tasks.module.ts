@@ -18,6 +18,7 @@ import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
 import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
 import { EVerificationDialogComponent } from './components/e-verification-dialog/e-verification-dialog.component';
 import { ItrLifecycleDialogComponent } from './components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
+import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new-users.component";
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { ItrLifecycleDialogComponent } from './components/itr-lifecycle-dialog/i
     declarations: [
         TasksComponent,
         AssignedUsersComponent,
+        AssignedNewUsersComponent,
         ScheduledCallComponent,
         ReAssignDialogComponent,
         FilingsComponent,
