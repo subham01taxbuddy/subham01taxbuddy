@@ -53,6 +53,8 @@ export class UserListComponent implements OnInit {
       columnDefs: this.usersCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
+      paginateChildRows:true,
+      paginationPageSize: 15,
       onGridReady: params => {
       },
 
@@ -109,7 +111,7 @@ export class UserListComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.getUserData(event - 1);
+    // this.getUserData(event - 1);
   }
 
   getUserData(pageNo: any) {
@@ -248,7 +250,7 @@ export class UserListComponent implements OnInit {
           debounceMs: 0
         }
       },
-      
+
       {
         headerName: 'See/Add Notes',
         editable: false,
@@ -271,7 +273,7 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      
+
       {
         headerName: 'FNB',
         editable: false,
