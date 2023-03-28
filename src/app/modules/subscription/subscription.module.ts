@@ -28,7 +28,7 @@ import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.compon
     FormsModule,
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
-     SharedModule,
+    // SharedModule,
     HttpClientModule,
     AgGridModule,
     MaterialModule,

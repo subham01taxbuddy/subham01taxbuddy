@@ -12,33 +12,48 @@
           <div class="card" style="margin-top: 10px;">
             <div class="row" style="margin-top: 15px;">
               <div class="col-sm-3">
-                <mat-label> Select Year </mat-label>
+                <mat-label> Financial Year </mat-label>
                 <mat-form-field appearance="outline" class="customBg">
-                  <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
+                  <input type="text" matInput [formControl]="assessmentYear">
+                  <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
                     <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
                       {{year.financialYear}}
                     </mat-option>
-                  </mat-select>
+                  </mat-select> -->
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <mat-label> Search by Name </mat-label>
-                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+                <mat-form-field appearance="outline" class="customBg">
+                  <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
+                  <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
+                    <mat-icon style="color: #00AECA">search</mat-icon>
+                  </button>
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getFilerNameId(option)">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <mat-label> Search Mobile Number</mat-label>
                 <mat-form-field appearance="outline" class="customBg">
                   <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto">
-                  <mat-autocomplete #auto="matAutocomplete">
-                    <!-- <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
+                  <button (click)="advanceSearch()" mat-button matSuffix mat-icon-button>
+                    <mat-icon style="color: #00AECA">search</mat-icon>
+                  </button>
+                  <!-- <mat-icon matSuffix>search</mat-icon> -->
+                  <!-- <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
                       {{option.name}}
-                    </mat-option> -->
-                  </mat-autocomplete>
+                    </mat-option>
+                  </mat-autocomplete> -->
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
-                <button  class="btn " style=" background: #00AECA;
-                border-radius: 5px;" > create Subscription </button>
+                <button *ngIf="roles?.includes('ROLE_OWNER','ROLE_LEADER') && userInfo.length===0" class="btn " style=" background: #00AECA;
+                border-radius: 5px;" (click)="createSub()" > create Subscription </button>
               </div>
             </div>
           </div>
