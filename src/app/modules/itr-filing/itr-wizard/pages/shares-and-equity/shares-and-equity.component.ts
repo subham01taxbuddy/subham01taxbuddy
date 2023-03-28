@@ -69,7 +69,7 @@ export class SharesAndEquityComponent
         ? (this.title =
             ' Listed Securities (Equity Shares/ Equity Mutual Funds)')
         : (this.title = 'Unlisted Securities (Shares not listed)');
-      this.compactView = this.bondType === 'listed' ? true : false;
+      this.compactView = true;
     }
     this.config = {
       itemsPerPage: 2,
