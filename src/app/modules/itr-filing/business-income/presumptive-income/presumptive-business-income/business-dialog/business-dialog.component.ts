@@ -112,9 +112,8 @@ export class BusinessDialogComponent implements OnInit {
     if (this.businessForm.valid) {
 
       //check the income validation for u/s 44D
-      let totalReceived = this.businessForm.controls['receivedInCash'].value +
-        this.businessForm.controls['minimumPresumptiveIncome'].value +
-        this.businessForm.controls['receipts'].value + this.businessForm.controls['preIncome'].value;
+      let totalReceived = parseInt(this.businessForm.controls['receivedInCash'].value) +
+        parseInt(this.businessForm.controls['receipts'].value);
 
       if(totalReceived > this.MAX_RECEIPT_LIMIT){
         this.utilsService.showSnackBar("Total of receipt in Bank and Receipt in Other mode from all business should not exceed Rs. "

@@ -51,6 +51,7 @@ import {PresumptiveIncomeComponent} from "./business-income/presumptive-income/p
 import {BalanceSheetComponent} from "./business-income/balance-sheet/balance-sheet.component";
 import {ProfitLossAcComponent} from "./business-income/profit-loss-ac/profit-loss-ac.component";
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
+import {OldVsNewComponent} from "./itr-wizard/components/old-vs-new/old-vs-new.component";
 
 const routes: Routes = [
   {
@@ -73,6 +74,7 @@ const routes: Routes = [
       },
       { path: 'taxes-paid', component: TaxesPaidComponent },
       { path: 'declaration', component: DeclarationComponent },
+      { path: 'old-vs-new', component: OldVsNewComponent },
       {
         path: 'salary',
         component: AllSalaryIncomeComponent,

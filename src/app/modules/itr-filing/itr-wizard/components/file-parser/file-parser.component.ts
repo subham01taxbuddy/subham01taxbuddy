@@ -95,7 +95,7 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
       },
       {
-        name: 'TaxBuddy',
+        name: 'Taxbuddy',
         label: 'TaxBuddy',
         loading: false,
         filesUploaded: [],
