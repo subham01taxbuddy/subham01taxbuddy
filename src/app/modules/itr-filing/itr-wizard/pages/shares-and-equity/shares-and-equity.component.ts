@@ -453,6 +453,14 @@ export class SharesAndEquityComponent
           } else {
             securities.controls['capitalGain'].setValue(0);
           }
+
+          if (res.assetDetails[0].grandFatheredValue) {
+            securities.controls['grandFatheredValue'].setValue(
+              res.assetDetails[0].grandFatheredValue
+            );
+          } else {
+            securities.controls['grandFatheredValue'].setValue(0);
+          }
         },
         (error) => {
           this.loading = false;

@@ -373,36 +373,35 @@
                     />
                   </mat-form-field>
                 </div>
+
+                <div class="card__col-xs-12 card__col-sm-3">
+                  <mat-label>GrandFathered Value </mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      formControlName="grandFatheredValue"
+                      placeholder="GrandFathered Value "
+                      name="grandFatheredValue"
+                      maxlength="14"
+                      matTooltip="Cost of acquisition(as per grandfathering)"
+                      matTooltipClass="tab-tooltip"
+                      matTooltipPosition="above"
+                      readonly
+                      (change)="calculateTotalCG(securities)"
+                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    />
+                    <mat-error
+                      *ngIf="
+                        securitiesForm.controls['securitiesArray'].controls[
+                          i
+                        ].controls['grandFatheredValue'].hasError('pattern')
+                      "
+                      >Enter valid amount.</mat-error
+                    >
+                  </mat-form-field>
+                </div>
               </div>
-              <div
-                class="card__col-xs-12 card__col-sm-3"
-                *ngIf="this.bondType === 'listed'"
-              >
-                <mat-label>Cost of Acquisition</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    formControlName="indexCostOfAcquisition"
-                    placeholder="Cost of Acquisition"
-                    name="indexCostOfAcquisition"
-                    maxlength="14"
-                    matTooltip="Cost of acquisition(as per grandfathering)"
-                    matTooltipClass="tab-tooltip"
-                    matTooltipPosition="above"
-                    readonly
-                    (change)="calculateTotalCG(securities)"
-                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  />
-                  <mat-error
-                    *ngIf="
-                      securitiesForm.controls['securitiesArray'].controls[
-                        i
-                      ].controls['indexCostOfAcquisition'].hasError('pattern')
-                    "
-                    >Enter valid amount.</mat-error
-                  >
-                </mat-form-field>
-              </div>
+
               <div class="card__col-xs-12 card__col-sm-3">
                 <mat-label>Gain Amount*</mat-label>
                 <mat-form-field appearance="outline">
