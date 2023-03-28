@@ -48,11 +48,13 @@ export class ProfessionalDialogComponent implements OnInit {
     return business[0] ? business[0].label + '-' + business[0].code : null;
   }
 
+  maxProfessionalIncome = 5000000;
+
   initProfessionForm(obj?: professionalIncome) {
     this.professionForm = this.formBuilder.group({
       natureOfBusiness: [obj?.natureOfBusiness || null, Validators.required],
       tradeName: [obj?.tradeName || null, [Validators.required]],
-      receipts: [obj?.receipts || null, Validators.required],
+      receipts: [obj?.receipts || null, [Validators.required, Validators.max(this.maxProfessionalIncome)]],
       presumptiveIncome: [obj?.presumptiveIncome || null, [Validators.required, Validators.min(this.amountFifty)]],
     });
   }

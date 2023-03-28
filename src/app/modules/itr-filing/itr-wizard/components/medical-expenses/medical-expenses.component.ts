@@ -76,11 +76,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   initForm() {
+    let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
     this.investmentDeductionForm = this.fb.group({
-      selfPremium: [null, Validators.pattern(AppConstants.numericRegex)],
+      selfPremium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(25000)]],
       selfPreventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       selfMedicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex),],
-      premium: [null, Validators.pattern(AppConstants.numericRegex)],
+      premium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(maxPremium)]],
       preventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -269,7 +270,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   isParentOverSixty() {
-    if (!this.ITR_JSON?.systemFlags?.hasParentOverSixty) {
+    if (!this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty) {
       console.log('clear parent related values');
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
         null
@@ -411,8 +412,11 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
 
   saveInvestmentDeductions() {
 
+    let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = isParentOverSixty;
 
     this.max5000Limit('SELF');
     if (this.investmentDeductionForm.valid) {
@@ -487,7 +491,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           this.investmentDeductionForm.controls['medicalExpenditure'].value
         )
       ) {
-        this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
+        // this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
         this.Copy_ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,

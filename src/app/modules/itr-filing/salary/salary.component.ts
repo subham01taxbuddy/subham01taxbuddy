@@ -219,11 +219,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   createAllowanceArray() {
     const data = [];
+
     for (let i = 0; i < this.allowanceDropdown.length; i++) {
+      let validators = this.allowanceDropdown[i].value === 'CHILDREN_EDUCATION' ? Validators.max(2400) : null;
       data.push(this.fb.group({
         label: this.allowanceDropdown[i].label,
         allowType: this.allowanceDropdown[i].value,
-        allowValue: []
+        allowValue: [null, validators]
       }));
     }
     return this.fb.array(

@@ -588,7 +588,7 @@ export class DonationsComponent implements OnInit {
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : ''],
       donationType: [item ? item.donationType : 'OTHER'],
-      amountInCash: [item ? item.amountInCash : null, Validators.required],
+      amountInCash: [item ? item.amountInCash : null, [Validators.required, Validators.max(2000)]],
       amountOtherThanCash: [item ? item.amountOtherThanCash : null, Validators.required],
       schemeCode: [item ? item.schemeCode : '', Validators.required],
       details: [item ? item.details : ''],

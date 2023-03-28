@@ -49,7 +49,7 @@
         <div class="card__col-xs-12 card__col-sm-12">
           Does any of your parents exceed age of 60? &nbsp;&nbsp;&nbsp;
           <mat-checkbox class="chk-allign" color="primary" name="hasParentOverSixty" [disabled]="!isEditMedicalExpenses"
-            [(ngModel)]="this.ITR_JSON.systemFlags.hasParentOverSixty" [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="this.Copy_ITR_JSON.systemFlags.hasParentOverSixty" [ngModelOptions]="{ standalone: true }"
             (change)="isParentOverSixty()">
           </mat-checkbox>
         </div>
@@ -81,7 +81,7 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-lg-4" *ngIf="ITR_JSON.systemFlags?.hasParentOverSixty">
+        <div class="card__col-lg-4" *ngIf="Copy_ITR_JSON.systemFlags?.hasParentOverSixty">
           <mat-label>Medical Expenditure for Senior Citizen</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"
