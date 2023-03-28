@@ -1,3 +1,4 @@
+import { data } from 'jquery';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,7 +8,12 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { map, Observable, startWith } from 'rxjs';
 
+export interface User {
+  name: string;
+  userId:Number;
+}
 @Component({
   selector: 'app-assigned-subscription',
   templateUrl: './assigned-subscription.component.html',
@@ -19,18 +25,25 @@ export class AssignedSubscriptionComponent implements OnInit {
   @Input() tabName: any;
   @Output() sendTotalCount = new EventEmitter<any>();
 
+  filerList:any;
+  filerNames:any;
   queryParam: any ;
   userInfo: any = [];
+  options: User[] = [];
+  filteredOptions: Observable<User[]>;
+  userId: any;
+  selectedUserName: any = '';
   subscriptionListGridOptions: GridOptions;
   config: any;
   loading!: boolean;
   financialYear = AppConstants.gstFyList;
   loggedInSme: any;
+  roles:any;
   searchParam: any = {
     statusId: null,
     page: 0,
     pageSize: 10,
-    // assigned:false,
+    assigned:true,
     // owner:true,
     mobileNumber: null,
     emailId: null,
@@ -42,6 +55,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
+    private userService: UserMsService,
     private router: Router
   ) {
     this.subscriptionListGridOptions = <GridOptions>{
@@ -62,13 +76,41 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    console.log('loggedIn Sme Details' ,this.loggedInSme)
+    this.roles =this.loggedInSme[0]?.roles
+    console.log('roles',this.roles)
     this.getAssignedSubscription(0);
+    this. getFilerList();
+    this.filteredOptions = this.searchName.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options.slice();
+      })
+    );
   }
 
+  displayFn(user: User): string {
+    return user && user.name ? user.name : '';
+  }
+
+  private _filter(name: string): User[] {
+    const filterValue = (name).toLowerCase();
+
+    return this.options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+
   subscriptionFormGroup: FormGroup = this.fb.group({
+    searchName :new FormControl(''),
     mobileNumber: new FormControl(''),
-    assessmentYear: new FormControl(''),
+    assessmentYear: new FormControl('2023-24'),
   });
+  get searchName() {
+    return this.subscriptionFormGroup.controls['searchName'] as FormControl;
+  }
   get mobileNumber() {
     return this.subscriptionFormGroup.controls['mobileNumber'] as FormControl;
   }
@@ -117,6 +159,70 @@ export class AssignedSubscriptionComponent implements OnInit {
         console.log('error during getting subscription info: ', error);
       }
     );
+  }
+
+  searchByName(pageNo=0){
+     let selectedSmeUserId =this.filerDetails.userId
+    let pagination = `?page=${pageNo}&pageSize=10`;
+    if (this.utilsService.isNonEmpty(this.queryParam)) {
+      pagination = `&page=${pageNo}&pageSize=10`;
+    }
+    var param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
+    this.loading = true;
+    this.itrService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        console.log('Search by name RESPONSE:', response);
+        if (response.data.content instanceof Array && response.data.content.length > 0) {
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData(response.data.content)
+          );
+        } else {
+          let msg = 'There is no records of subscription against this user';
+          this.utilsService.showSnackBar(msg);
+        }
+      })
+  }
+
+  advanceSearch() {
+    console.log('this.searchVal -> ', this.mobileNumber.value)
+    if (this.utilsService.isNonEmpty(this.mobileNumber)) {
+      if (this.mobileNumber.value.toString().length >= 8 && this.mobileNumber.value.toString().length <= 10) {
+        this.getUserByMobileNum(this.mobileNumber.value)
+      } else {
+        this._toastMessageService.alert("error", "Enter valid mobile number.");
+      }
+    }
+    // else {
+    //   this.selectedUserName = '';
+    //   this.queryParam = '?subscriptionAssigneeId=0';
+    //   this.utilsService.sendMessage(this.queryParam);
+    //   this.utilsService.showSnackBar('You are fetching all records.')
+    // }
+  }
+
+  getUserByMobileNum(mobileNumber) {
+    const loggedInSmeUserId=this?.loggedInSme[0]?.userId
+    this.loading = true;
+    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + mobileNumber;
+    this.itrService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      console.log('Get user  by mobile number responce: ', response);
+      if (response.data instanceof Array && response.data.length > 0) {
+        this.subscriptionListGridOptions.api?.setRowData(
+          this.createRowData(response.data)
+        );
+        this.config.totalItems = response.data.content.totalElements;
+      } else {
+        this._toastMessageService.alert("error", "no user with given no.");
+      }
+    },
+      error => {
+        this.loading = false;
+        this.selectedUserName = '';
+        console.log('Error -> ', error);
+        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
+      })
   }
 
   subscriptionCreateColumnDef() {
@@ -349,6 +455,38 @@ export class AssignedSubscriptionComponent implements OnInit {
     sessionStorage.setItem('subscriptionObject',JSON.stringify(subscriptionData))
     this.router.navigate(['/subscription/create-subscription'])
   }
+
+  createSub(){
+    let subscriptionData = {
+      type:'create',
+      data:null,
+    };
+    sessionStorage.setItem('subscriptionObject',JSON.stringify(subscriptionData))
+    this.router.navigate(['/subscription/create-subscription'])
+  }
+
+  getFilerList(){
+
+    const loggedInSmeUserId=this?.loggedInSme[0]?.userId
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    let param =`/sme-details-new/${loggedInSmeUserId}?${data}`
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+        console.log('owner list result -> ', result);
+         this.filerList = result.data.content;
+         this.filerNames = this.filerList.map((item) => {
+          return { name: item.name, userId:item.userId  };
+        });
+         this.options = this.filerNames;
+      })
+
+}
+
+filerDetails :any;
+getFilerNameId(option){
+  this.filerDetails =option
+  console.log(option)
+}
 
   pageChanged(event: any) {
     this.config.currentPage = event;

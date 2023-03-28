@@ -1,0 +1,40 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="spc-blw">
+  <div class="com_model perBx">
+    <div class="container card">
+      <div class="card__title" style="padding:10px; font-size: 20px;">Comparison of New v/s Old Regime</div>
+      <div class="cardRect">
+        <table class="table table-bordered">
+          <thead style="background:#eaeaea">
+          <tr class="table-head">
+            <th class="text-center particular-label">Particulars</th>
+            <th class="text-center particular-value">Old Tax Regime (₹)</th>
+            <th class="text-center particular-value">New Tax Regime (₹)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let particular of particularsArray;let i=index">
+            <td class="particular-label">
+              {{particular.label}}
+            </td>
+            <td class="particular-value">
+              {{particular.old}}
+            </td>
+            <td class="particular-value">
+              {{particular.new}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="flex justify-between p-[30px] back-foot">
+  <button (click)="goBack()" class="lgtBtn">Back to Sources </button>
+
+  <button (click)="gotoSummary()" class="darkBtn"><span class="adjust">Save & Next</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
+</div>
