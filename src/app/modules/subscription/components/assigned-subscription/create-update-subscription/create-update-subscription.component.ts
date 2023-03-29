@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { data } from 'jquery';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -18,6 +19,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   sourcesList =[]
   subscriptionObj: any;
   smeSelectedPlanId: any;
+  loggedInSme:any;
   allPlans: any;
   maxEndDate: any;
   minEndDate: any;
@@ -42,6 +44,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   };
 
   gstTypesMaster = AppConstants.gstTypesMaster;
+  stateDropdown = AppConstants.stateDropdown;
   frequencyTypesMaster: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
 
   constructor(
@@ -53,6 +56,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
     this.subscriptionObj = JSON.parse(
       sessionStorage.getItem('subscriptionObject'));
     console.log('subscriptionObj', this.subscriptionObj);
@@ -71,13 +75,34 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       { name: 'Capital Gain' },
       { name: 'Futures / Options' },
     ];
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    if(this.subscriptionObj.data == null){
+      this.getUserPlanInfo(this?.loggedInSme[0]?.userId)
+      this.getAllPlanInfo(this.serviceType)
 
-    this.getUserPlanInfo(this.subscriptionObj.data.subscriptionId)
-    // this.activatedRoute.params.subscribe(params => {
-    //   this.getUserPlanInfo(params['subscriptionId']);
-    //   this.getSubscriptionFilingsCalender(params['subscriptionId']);
-    // });
+    }else{
+      this.getUserPlanInfo(this.subscriptionObj?.data?.subscriptionId)
+    }
 
+    this.setFormValues(this.selectedUserInfo);
+  }
+
+  async updateDataByPincode() {
+    await this.utilsService
+      .getPincodeData(this.pin.value)
+      .then((result) => {
+        console.log('pindata', result);
+        this.city.setValue(result.city);
+        // this.country.setValue(result.countryCode);
+        this.state.setValue(result.stateCode);
+      });
+  }
+
+  setFormValues(data) {
+    console.log('data',data)
+    this.pin.setValue(data.address[0]?.pinCode);
+    this.state.setValue(data.address[0]?.state);
+    this.city.setValue(data.address[0]?.city);
   }
 
   sourcesUpdated(source) {
@@ -94,11 +119,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   personalInfoForm :FormGroup = this.fb.group({
     userName :new FormControl(''),
     mobileNumber: new FormControl(''),
-    email:new FormControl(''),
+    emailAddress:new FormControl(''),
     gstNo: new FormControl(''),
     reminderMobileNumber :new FormControl(''),
     reminderEmail :new FormControl(''),
-    pin :new FormControl(''),
+    pin :new FormControl('',Validators.compose([Validators.maxLength(6),
+      Validators.pattern(AppConstants.PINCode),
+    ])),
     state :new FormControl(''),
     city :new FormControl(''),
     zipcode:new FormControl(''),
@@ -112,8 +139,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   get userName() {
     return this.personalInfoForm.controls['userName'] as FormControl;
   }
-  get email() {
-    return this.personalInfoForm.controls['email'] as FormControl;
+  get emailAddress() {
+    return this.personalInfoForm.controls['emailAddress'] as FormControl;
   }
   get gstNo() {
     return this.personalInfoForm.controls['gstNo'] as FormControl;
@@ -238,6 +265,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       if (res && res.records instanceof Array) {
         this.selectedUserInfo = res.records[0];
         console.log('this.selectedUserInfo:', this.selectedUserInfo);
+        this.personalInfoForm.patchValue(this.selectedUserInfo); // all
+        this.otherDetailsForm.patchValue(this.selectedUserInfo);
+        this.setFormValues(this.selectedUserInfo);
         if (this.utilsService.isNonEmpty(this.selectedUserInfo) && this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
           this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType)
           if (this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails.gstType) && this.selectedUserInfo.gstDetails.gstType === 'REGULAR') {
@@ -253,6 +283,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         console.log('Error -> ', error);
       })
   }
+
 
 
   setFinalPricing() {
@@ -278,6 +309,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe((plans: any) => {
+      console.log(' all plans',plans)
       if (plans instanceof Array) {
         const activePlans = plans.filter((item: any) => item.isActive === true);
         if (this.utilsService.isNonEmpty(serviceType))
@@ -301,7 +333,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       userId: this.userSubscription.userId,
       planId: selectedPlan,
       selectedBy: 'SME',
-      smeUserId: smeInfo.USER_UNIQUE_ID
+      smeUserId: this?.loggedInSme[0]?.userId
     }
     this.loading = true;
     this.itrService.postMethod(param, request).subscribe((response: any) => {

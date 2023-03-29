@@ -54,7 +54,7 @@
         <div class="col-sm-4">
           <mat-label> Email ID </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="email id" [formControl]="email" class="input-field" />
+            <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field" />
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -65,7 +65,7 @@
         <div class="col-sm-4">
           <mat-label> GSTN No </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="email id" [formControl]="gstNo" class="input-field" />
+            <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field" />
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -94,7 +94,9 @@
         <div class="col-sm-4">
           <mat-label> PIN No </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="PIN No." [formControl]="pin" class="input-field" />
+            <input type="text" trim matInput placeholder="Pin Code" class="input-field" [formControl]="pin"
+              (blur)="updateDataByPincode()" style="line-height: 21px" />
+            <!-- <input type="text" matInput placeholder="PIN No." [formControl]="pin" class="input-field" /> -->
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -103,11 +105,18 @@
         <div class="col-sm-4">
           <mat-label> state </mat-label>
           <mat-form-field appearance="outline">
+          <mat-select placeholder="Select state"  [formControl]="state" style="line-height: 21px">
+            <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+              {{ state.stateName | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+          <!-- <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
-          </mat-form-field>
+            <mat-error
+                  *ngIf="state?.hasError('required') ">
+                  This field is required</mat-error>
+          </mat-form-field> -->
         </div>
         <div class="col-sm-4">
           <mat-label> city </mat-label>
