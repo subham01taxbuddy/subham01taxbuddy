@@ -69,7 +69,7 @@ export class SharesAndEquityComponent
         ? (this.title =
             ' Listed Securities (Equity Shares/ Equity Mutual Funds)')
         : (this.title = 'Unlisted Securities (Shares not listed)');
-      this.compactView = this.bondType === 'listed' ? true : false;
+      this.compactView = true;
     }
     this.config = {
       itemsPerPage: 2,
@@ -452,6 +452,14 @@ export class SharesAndEquityComponent
             );
           } else {
             securities.controls['capitalGain'].setValue(0);
+          }
+
+          if (res.assetDetails[0].grandFatheredValue) {
+            securities.controls['grandFatheredValue'].setValue(
+              res.assetDetails[0].grandFatheredValue
+            );
+          } else {
+            securities.controls['grandFatheredValue'].setValue(0);
           }
         },
         (error) => {
