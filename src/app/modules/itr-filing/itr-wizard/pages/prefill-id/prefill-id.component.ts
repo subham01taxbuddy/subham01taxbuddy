@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -18,8 +18,9 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
   styleUrls: ['./prefill-id.component.scss'],
 })
 export class PrefillIdComponent implements OnInit {
-  checked: boolean = false;
-  uploadChecked: boolean = false;
+  downloadPrefillChecked: boolean = false;
+  uploadPrefillChecked: boolean = false;
+  uploadJsonChecked: boolean = false;
   downloadPrefill: boolean = false;
   uploadDoc: any;
   loading = false;
@@ -33,8 +34,7 @@ export class PrefillIdComponent implements OnInit {
     private toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
     private utilsService: UtilsService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     console.log();
@@ -182,21 +182,18 @@ export class PrefillIdComponent implements OnInit {
     );
   }
 
-  checkedOtp() {
-    if ((this.checked = true)) {
-      this.uploadChecked = false;
+  onCheckboxChange(checkboxNumber: number) {
+    if (checkboxNumber === 1) {
+      this.uploadPrefillChecked = false;
+      this.uploadJsonChecked = false;
     }
-
-    if ((this.checked = false)) {
-      this.uploadChecked = true;
+    if (checkboxNumber === 2) {
+      this.downloadPrefillChecked = false;
+      this.uploadJsonChecked = false;
     }
-
-    if ((this.uploadChecked = true)) {
-      this.checked = false;
-    }
-
-    if ((this.uploadChecked = false)) {
-      this.checked = true;
+    if (checkboxNumber === 3) {
+      this.downloadPrefillChecked = false;
+      this.uploadPrefillChecked = false;
     }
   }
 }

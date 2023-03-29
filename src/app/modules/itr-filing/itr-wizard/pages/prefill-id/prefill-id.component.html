@@ -68,13 +68,13 @@
                       <input
                         class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
                         type="checkbox"
-                        [(ngModel)]="checked"
-                        (click)="checkedOtp()"
+                        [(ngModel)]="downloadPrefillChecked"
+                        (change)="onCheckboxChange(1)"
                       />
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                        class="text-base leading-5 text-gray-1100 font-semibold lg:text-left"
                       >
                         Download Prefill Data
                       </div>
@@ -95,7 +95,7 @@
                         size="12px"
                         class="btn"
                         (click)="downloadPrefillOpt()"
-                        [disabled]="!checked"
+                        [disabled]="!downloadPrefillChecked"
                       >
                         Start
                       </button>
@@ -125,13 +125,13 @@
                       <input
                         class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
                         type="checkbox"
-                        [(ngModel)]="uploadChecked"
-                        (click)="checkedOtp()"
+                        [(ngModel)]="uploadPrefillChecked"
+                        (change)="onCheckboxChange(2)"
                       />
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                        class="text-base leading-5 text-gray-1100 font-semibold lg:text-left flex items-center gap-[5px]"
                       >
                         <i class="material-icons-outlined adIc">cloud_upload</i>
                         Upload Prefill Data
@@ -153,7 +153,7 @@
                         id="input-jsonfile-id"
                         hidden
                         file-model="MeterFile"
-                        class="inptfile"
+                        class="inputfile"
                         (change)="uploadJsonFile($event.target.files)"
                       />
 
@@ -162,7 +162,7 @@
                         size="12px"
                         class="btn"
                         (click)="upload()"
-                        [disabled]="!uploadChecked"
+                        [disabled]="!uploadPrefillChecked"
                       >
                         Upload
                       </button>
@@ -179,6 +179,77 @@
                           : "generated"
                       }}
                       on {{ this.ITR_JSON?.prefillDate | date }}
+                    </div>
+                  </div>
+                </div>
+                <!-- upload-json  -->
+                <div
+                  class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
+                >
+                  <div
+                    class="flex items-start flex-col lg:items-center gap-x-[14px] lg:flex-row"
+                  >
+                    <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
+                      <input
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
+                        type="checkbox"
+                        [(ngModel)]="uploadJsonChecked"
+                        (change)="onCheckboxChange(3)"
+                      />
+                    </div>
+                    <div class="flex flex-col gap-y-[6px]">
+                      <div
+                        class="text-base leading-5 text-gray-1100 font-semibold lg:text-left flex items-center gap-[5px]"
+                      >
+                        <i class="material-icons-outlined adIc">cloud_upload</i>
+                        Upload JSON
+                      </div>
+                      <div
+                        class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
+                      >
+                        <span class="text"
+                          >If you already have a JSON, you can upload the JSON
+                          here</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <div>
+                      <input
+                        type="file"
+                        id="input-jsonfile-id"
+                        hidden
+                        file-model="MeterFile"
+                        class="inputfile"
+                        (change)="uploadJsonFile($event.target.files)"
+                      />
+
+                      <button
+                        type="button"
+                        size="12px"
+                        class="btn"
+                        (click)="upload()"
+                        [disabled]="!uploadJsonChecked"
+                      >
+                        Upload
+                      </button>
+                    </div>
+                    <!-- <div
+                      *ngIf="ITR_JSON?.prefillDate !== null"
+                      style="font-size: 12px"
+                    >
+
+                      Last
+                      {{
+                        this.ITR_JSON?.prefillDataSource === "UPLOAD"
+                          ? "uploaded"
+                          : "generated"
+                      }}
+                      on {{ this.ITR_JSON?.prefillDate | date }}
+                    </div> -->
+                    <div *ngIf="uploadJsonChecked">
+                      <app-tax-summary></app-tax-summary>
                     </div>
                   </div>
                 </div>
