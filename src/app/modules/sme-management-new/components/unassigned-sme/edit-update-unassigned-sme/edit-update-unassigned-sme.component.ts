@@ -1,3 +1,4 @@
+
 import { map, Observable, startWith } from 'rxjs';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -37,6 +38,16 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   itrTypesData = [];
   ownerUserId:any;
   loggedInSme:any;
+  langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
+  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
+  'Santali', 'Sindhi', 'Urdu']
+  itrTypeList = [
+    { value: 1, display: 'ITR 1' },
+    { value: 2, display: 'ITR 2' },
+    { value: 3, display: 'ITR 3' },
+    { value: 4, display: 'ITR 4' },
+
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -88,11 +99,11 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     name: new FormControl(''),
     email: new FormControl(''),
     languages: new FormControl(''),
-    referredPerson: new FormControl(''),
+    referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
     state: new FormControl(''),
-    teamLead: new FormControl(''),
+    teamLead: new FormControl('',[Validators.required]),
   });
 
   get mobileNumber() {
@@ -107,8 +118,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   get languages() {
     return this.smeFormGroup.controls['languages'] as FormControl;
   }
-  get referredPerson() {
-    return this.smeFormGroup.controls['referredPerson'] as FormControl;
+  get referredBy() {
+    return this.smeFormGroup.controls['referredBy'] as FormControl;
   }
   get itrTypes() {
     return this.smeFormGroup.controls['itrTypes'] as FormControl;
@@ -159,6 +170,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         serviceType: this.smeObj.serviceType,
         roles: this.smeObj.roles,
         languages:this.languages.value,
+        qualification:this.qualification.value,
+        referredBy:this.referredBy.value,
         parentId: this.ownerDetails?.userId,
         botId: this.smeObj.botId,
         displayName: this.smeObj.displayName,
@@ -196,8 +209,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.loading = false;
         }
       );
-    }(error) => {
-      this._toastMessageService.alert('error', 'failed to update.');
+    }else {
+      this._toastMessageService.alert('error', 'failed to update plz select owner name.');
       this.loading = false;}
   }
 }
@@ -211,6 +224,8 @@ export interface SmeObj {
   serviceType: string
   roles: string[]
   languages: string[]
+  qualification:string
+  referredBy:string
   parentId: number
   botId: string
   displayName: string

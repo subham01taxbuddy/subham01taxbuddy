@@ -51,6 +51,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   loggedInSme:any;
   smeRecords:any;
   smeServices:any;
+  langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
+  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
+  'Santali', 'Sindhi', 'Urdu']
+  itrTypeList = [
+    { value: 1, display: 'ITR 1' },
+    { value: 2, display: 'ITR 2' },
+    { value: 3, display: 'ITR 3' },
+    { value: 4, display: 'ITR 4' },
+
+  ];
 
   constructor(
     private  fb:FormBuilder,
@@ -527,6 +537,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     })
   }
 
+  ownerDetails :any;
+  getownerNameId(option){
+    this.ownerDetails =option
+    console.log(option)
+  }
+
   updateSmeDetails() {
     const userId = this.smeObj.userId;
     console.log(userId);
@@ -565,7 +581,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         leader: this.leader.value,
         admin: this.admin.value,
         filer: this.filer.value,
-        coOwnerUserId: this.smeObj.coOwnerUserId,
+        coOwnerUserId: this.ownerDetails?.userId
       };
 
       console.log('finalReq', finalReq);
