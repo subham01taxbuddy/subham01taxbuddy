@@ -47,7 +47,7 @@ export class ResignedSmeComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 30,
       currentPage: 1,
       totalItems: null,
     };
@@ -73,6 +73,7 @@ export class ResignedSmeComponent implements OnInit {
         ) {
           this.loading = false;
           this.smeInfo = result.data.content;
+          this.config.totalItems = result.data.totalElements;
           console.log('smelist', this.smeList);
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(this.smeInfo)
@@ -235,7 +236,7 @@ export class ResignedSmeComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
