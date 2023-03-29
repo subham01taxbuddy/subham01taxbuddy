@@ -14,7 +14,7 @@
               <div class="col-sm-3">
                 <mat-label> Financial Year </mat-label>
                 <mat-form-field appearance="outline" class="customBg">
-                  <input type="text" matInput [formControl]="assessmentYear">
+                  <input type="text" matInput [formControl]="assessmentYear" readonly>
                   <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
                     <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
                       {{year.financialYear}}
