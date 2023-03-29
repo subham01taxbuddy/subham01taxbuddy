@@ -84,7 +84,31 @@ export interface ITR_JSON {
     prefillDate: string;
     prefillData: any;
     prefillDataSource: string;
+    everOptedNewRegime: OptedInNewRegime;
+    everOptedOutOfNewRegime: OptedOutNewRegime;
+    optionForCurrentAY: CurrentNewRegime;
 }
+
+export interface CurrentNewRegime {
+  currentYearRegime: string;
+  assessmentYear: string;
+  date: string;
+  acknowledgementNumber: string;
+}
+export interface OptedInNewRegime {
+  everOptedNewRegime: boolean;
+  assessmentYear: string;
+  date: string;
+  acknowledgementNumber: string;
+}
+
+export interface OptedOutNewRegime {
+  everOptedOutOfNewRegime: boolean;
+  assessmentYear: string;
+  date: string;
+  acknowledgementNumber: string;
+}
+
 export interface DirectorInCompany {
     companyName: string;
     typeOfCompany: string;
