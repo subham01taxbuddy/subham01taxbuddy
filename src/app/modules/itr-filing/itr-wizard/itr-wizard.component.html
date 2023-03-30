@@ -3,9 +3,20 @@
   <h2 class="topSps capitalize text-gray-1100 font-bold text-2xl leading-[35px] dark:text-gray-dark-1100 pb-[18px]">
     ITR Filing Process
   </h2>
+  <div class="aligBtn">
+    <button class="action-buttons1" title="Users notes" (click)="openNotesDialog()">
+      <i class="fa fa-sticky-note-o fa-1x"aria-hidden="true" style="color: green;"></i> Users notes
+    </button>
+    <button class="action-buttons" title="Chat with user" (click)="openChat()">
+      <i class="fa fa-weixin fa-1x"aria-hidden="true" style="color: green;"></i> Chat with user
+    </button>
+    <button class="action-buttons" title="Call user"(click)="startCalling()">
+      <i class="fa fa-phone fa-1x fa-flip-horizontal"aria-hidden="true" style="color: green;"></i> Call user
+    </button>
+  </div>
   <div style="padding: 0 !important;">
     <div class="card__row">
-      <div class="card__col-lg-12">
+      <div class="card__col-lg-12 spcTp">
       <div class="card__col-lg-8 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
       <div class="flex items-center gap-x-1">
         <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon" />
@@ -27,20 +38,10 @@
       </div>
     </div>
       <div class="card__col-lg-4" style="text-align: right">
-        <div>
+        <div class="nmTxAl">
           {{customerName}} :&nbsp;&nbsp;<span>{{ITR_JSON.panNumber}}</span>
         </div>
-        <div>
-          <button class="action-buttons" title="Users notes" (click)="openNotesDialog()">
-            <i class="fa fa-sticky-note-o fa-1x"aria-hidden="true" style="color: green;"></i>
-          </button>
-          <button class="action-buttons" title="Chat with user" (click)="openChat()">
-            <i class="fa fa-weixin fa-1x"aria-hidden="true" style="color: green;"></i>
-          </button>
-          <button class="action-buttons" title="Call user"(click)="startCalling()">
-            <i class="fa fa-phone fa-1x"aria-hidden="true" style="color: green;"></i>
-          </button>
-        </div>
+      
       </div>
     </div>
     </div>

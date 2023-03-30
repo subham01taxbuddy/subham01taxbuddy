@@ -129,13 +129,12 @@
                 <mat-radio-button [value]="false" labelPosition='after'>No</mat-radio-button>
               </mat-radio-group>
               <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
-                      (click)="addMoreImprovements(this.immovableForm)">Add New&nbsp;&nbsp;
-                <i class="fa fa-plus" aria-hidden="true"></i>
+                      (click)="addMoreImprovements(this.immovableForm)"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New                
               </button>
             </div>
         </div>
 
-        <div class="card" formArrayName="improvement" *ngIf="isImprovements.value">
+        <div class="card cardYes" formArrayName="improvement" *ngIf="isImprovements.value">
           <div class="card__row" *ngFor="let improve of getImprovementsArrayForImmovable.controls;let i=index" [formGroupName]="i">
 
             <div class="card__col-xs-12 card__col-sm-4">
@@ -175,7 +174,7 @@
           </div>
           <div>
             <button class="delete-btn" (click)="removeImprovement(i,this.immovableForm)" [disabled]="!improvementSelected()">
-              <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete </button>
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
           </div>
 
         </div>
@@ -196,8 +195,7 @@
                   </mat-radio-group>
                 </div>
                 <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
-                        (click)="addInvestment('ADD', '', 0)">Add New&nbsp;&nbsp;
-                  <i class="fa fa-plus" aria-hidden="true"></i>
+                        (click)="addInvestment('ADD', '', 0)"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New               
                 </button>
               </div>
 
@@ -271,8 +269,8 @@
                 <!--              [disabled]="!isEmployerSelected()"-->
 
                 <div>
-                  <button class="delete-btn" (click)="deleteInvestment(i)" [disabled]="!deductionSelected()">
-                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete </button>
+                  <button class="delete-btn btnGry" (click)="deleteInvestment(i)" [disabled]="!deductionSelected()">
+                    <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
                 </div>
 
               </div>
@@ -408,7 +406,7 @@
 
               <div>
                 <button class="delete-btn" (click)="removeBuyersDetails()" [disabled]="!buyerSelected()">
-                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete </button>
+                  <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
               </div>
 
             </div>
