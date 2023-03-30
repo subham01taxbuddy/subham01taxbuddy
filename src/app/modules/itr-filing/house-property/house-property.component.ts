@@ -608,6 +608,8 @@ export class HousePropertyComponent implements OnInit {
     if (type === 'SOP') {
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
+      this.annualValue = null;
+      this.thirtyPctOfAnnualValue = null;
       this.housePropertyForm.controls['rentPercentage'].enable();
       this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
       this.housePropertyForm.controls[
