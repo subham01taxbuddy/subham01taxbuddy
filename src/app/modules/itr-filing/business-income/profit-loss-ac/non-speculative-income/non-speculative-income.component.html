@@ -5,7 +5,7 @@
         <div>
           <div class="card__col-xs-12 card__col-sm-10">
             <b style="font-size: 14px;">Trading Account </b>
-            <button type="button" class="tbd-btn" style="float: right" (click)="addSpecIncomeForm()">+ Add More </button>
+            <button type="button" class="tbd-btn" style="float: right" (click)="addNonSpecIncomeForm()">+ Add More </button>
           </div>
 
         </div>
@@ -135,6 +135,15 @@
     <div>
     <div class="card__col-xs-12">
       <div class="card__col-sm-6 txt-center">
+        <div class="card__col-sm-3">
+          <button
+            type="submit"
+            class="tbd-btn-secondary"
+            (click)="deleteArray()"
+          >
+            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete Income
+          </button>
+        </div>
         <table>
           <tr *ngFor="let item of getIncomeArray.controls | paginate:config"></tr>
         </table>
@@ -190,12 +199,12 @@
                                     <!-- <mat-error *ngIf="expense.controls[i]['expenseAmount'].hasError('required')">Please
                                         enter amount</mat-error> -->
                                 </mat-form-field>
-                              <div *ngIf="expense.controls['expenseType'].value !='OTHER_EXPENSES'"> &nbsp;</div>
-                              <div *ngIf="expense.controls['expenseType'].value =='OTHER_EXPENSES'">
+                              <div *ngIf="expense.controls['expenseType'].value !=='OTHER_EXPENSES'"> &nbsp;</div>
+                              <div *ngIf="expense.controls['expenseType'].value ==='OTHER_EXPENSES'">
                                 <mat-form-field class="input-field-width">
                                   <input matInput class="input-field" placeholder="description"
                                          formControlName="description" maxlength="14"
-                                         [required]="expense.controls['expenseType'].value =='OTHER_EXPENSES'">
+                                         [required]="expense.controls['expenseType'].value ==='OTHER_EXPENSES'">
                                 </mat-form-field>
                               </div>
                             </div>

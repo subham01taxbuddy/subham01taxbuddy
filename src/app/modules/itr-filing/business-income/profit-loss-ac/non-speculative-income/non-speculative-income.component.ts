@@ -128,6 +128,11 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     });
   }
 
+  addNonSpecIncomeForm() {
+    let form = this.createNonSpecIncomeForm(0, null);
+    (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).insert(0, form);
+  }
+
   editNonSpecIncomeForm(index) {
     let specIncome = (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls[index] as FormGroup;
     specIncome.enable();
@@ -179,7 +184,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     const expenses = this.expenses;
     let index = 0;
     this.expenses.controls.forEach((form: FormGroup) => {
-      if(form.controls['hasExpenses'].value) {
+      if(form.controls['hasExpense'].value) {
         expenses.removeAt(index);
       }
       index++;
@@ -187,15 +192,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.calculateNetProfit();
     this.changed();
   }
-
-
-
-
-
-
-
-
-
 
   calculateNetProfit() {
     this.profitLossForm.controls['netProfit'].setValue(0);
@@ -255,6 +251,17 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to add non-speculative income, please try again.');
       this.utilsService.smoothScrollToTop();
+    });
+  }
+
+  deleteArray() {
+    const nonspecIncomesArray = <FormArray>(
+      this.nonspecIncomeForm.get('nonspecIncomesArray')
+    );
+    nonspecIncomesArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        nonspecIncomesArray.removeAt(index);
+      }
     });
   }
 }

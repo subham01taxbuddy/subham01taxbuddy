@@ -9,7 +9,7 @@
                     <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
                         name="natureOfBusiness" matTooltip="{{getFullName()}}">
                         <mat-option *ngFor="let profession of natureOfProfessionDropdown" [value]="profession.code"
-                            [disabled]="profession.disabled">
+                            [disabled]="profession.disabled" matTooltip="{{profession.label}}-{{profession.code}}">
                             {{profession.label}}-{{profession.code}}
                         </mat-option></mat-select>
                     <mat-error *ngIf="professionForm.controls['natureOfBusiness'].hasError('required')">Please select
