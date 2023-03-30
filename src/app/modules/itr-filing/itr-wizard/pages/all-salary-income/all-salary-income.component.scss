@@ -2,7 +2,7 @@
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 15px;
   float: right;
 }
 
@@ -49,18 +49,16 @@
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 150%;
   /* identical to box height, or 30px */
-
   text-align: center;
-
   color: #E20000;
-
 }
 
 .delete-btn:disabled {
   background: #F5F5F5;
   border: 1px solid #BDBDBD;
   color: #BDBDBD;
+  padding:10px;
 }

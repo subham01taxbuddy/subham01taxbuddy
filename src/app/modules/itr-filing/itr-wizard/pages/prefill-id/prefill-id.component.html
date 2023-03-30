@@ -66,7 +66,7 @@
                   >
                     <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
                       <input
-                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px] roundCheck"
                         type="checkbox"
                         [(ngModel)]="checked"
                         (click)="checkedOtp()"
@@ -74,7 +74,7 @@
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                        class="text-base leading-5 text-gray-1100 font-semibold text-left txBg"
                       >
                         Download Prefill Data
                       </div>
@@ -123,7 +123,7 @@
                   >
                     <div class="mb-5 w-[52px] h-[52px] lg:mb-0">
                       <input
-                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px] roundCheck"
                         type="checkbox"
                         [(ngModel)]="uploadChecked"
                         (click)="checkedOtp()"
@@ -131,10 +131,10 @@
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold text-center lg:text-left"
+                        class="text-base leading-5 text-gray-1100 font-semibold text-left txBg"
                       >
                         <i class="material-icons-outlined adIc">cloud_upload</i>
-                        Upload Prefill Data
+                        Upload Prefill Json
                       </div>
                       <div
                         class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"

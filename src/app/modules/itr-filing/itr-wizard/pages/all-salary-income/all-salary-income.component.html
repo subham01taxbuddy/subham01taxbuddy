@@ -1,10 +1,10 @@
 <div *ngIf="showList">
   <div>
     <span class="subTitle">Employer Details:</span>
-    <button class="tbd-btn save-btn" style="align-self: end" (click)="addEmployer(-1)">Add Employer&nbsp;&nbsp; <i class="fa fa-plus"
-                                                                                          aria-hidden="true"></i>
+    <button class="tbd-btn save-btn" style="align-self: end" (click)="addEmployer(-1)"><i class="fa fa-plus"
+                                                                                          aria-hidden="true"></i>&nbsp;Add Employer
     </button>
-  </div><br>
+  </div><br> 
   <form [formGroup]="salaryIncomeFormGroup">
     <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
       <mat-accordion class="headers-align" formArrayName="employersArray">
@@ -23,8 +23,8 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-    <button class="delete-btn" (click)="deleteEmployers()" [disabled]="!isEmployerSelected()">
-      <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete </button>
+    <button class="delete-btn btnGry" (click)="deleteEmployers()" [disabled]="!isEmployerSelected()">
+      <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
   </form>
 </div>
 <router-outlet *ngIf="!showList" (activate)="subscribeToEmmiter($event)" (deactivate)="unsubscribe()"></router-outlet>
