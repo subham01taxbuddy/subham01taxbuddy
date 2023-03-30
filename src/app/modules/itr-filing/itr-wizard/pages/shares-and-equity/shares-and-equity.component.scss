@@ -1,94 +1,97 @@
 .hide {
-    .mat-select-trigger {
-        .mat-select-arrow-wrapper {
-            display: none;
-        }
+  .mat-select-trigger {
+    .mat-select-arrow-wrapper {
+      display: none;
     }
+  }
 }
 
 .isDeduction {
-    font-weight: 500;
-    font-size: 22px;
-    color: #FF6B00;
+  font-weight: 500;
+  font-size: 22px;
+  color: #ff6b00;
 }
 
 .separation {
-    border-top: 1px solid gray;
+  border-top: 1px solid gray;
 }
 
 .head-title {
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: 11px;
-    color: #000000;
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 11px;
+  color: #000000;
 }
 
 .tds-on {
-    display: inline-flex;
+  display: inline-flex;
 }
 
 .tds-title {
-    padding: 10px;
-    font-size: 21px;
-    color: #FF6B00;
-    font-weight: 500;
+  padding: 10px;
+  font-size: 21px;
+  color: #ff6b00;
+  font-weight: 500;
 }
 
 .upload-data {
-    border: 1px solid #eee;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  margin: 6px 0;
+
+  label {
+    color: #07070c;
+  }
+
+  .upload {
+    border: 1px solid #00aeca;
+    color: #00aeca;
     border-radius: 4px;
-    padding: 10px;
-    display: flex;
-    margin: 6px 0;
+    padding: 5px;
+  }
+}
 
-    label {
-        color: #07070C;
-    }
-
-    .upload {
-        border: 1px solid #00AECA;
-        color: #00AECA;
-        border-radius: 4px;
-        padding: 5px;
-    }
-
+.card__col-sm-3 {
+  padding: 10px !important;
 }
 
 .mat-form-field {
-    width: 90%;
-    background: #FFFFFF;
-    border-radius: 6.62375px;
+  width: 90%;
+  background: #ffffff;
+  border-radius: 6.62375px;
 
-    .mat-form-field-wrapper {
-        // padding-bottom: 0px !important;
+  .mat-form-field-wrapper {
+    // padding-bottom: 0px !important;
 
-        .mat-form-field-flex {
-            .mat-form-field-infix {
-                padding: 0.4em 0 !important;
-                margin-bottom: 5px;
+    .mat-form-field-flex {
+      .mat-form-field-infix {
+        padding: 0.4em 0 !important;
+        margin-bottom: 5px;
 
-                .mat-input-element {
-                    font-weight: 400;
-                    font-size: 12.6259px;
-                    line-height: 14px;
-                    color: #9A9AAF;
-                }
-
-                .mat-select {
-                    .mat-select-trigger {
-                        .mat-select-value {
-                            .mat-select-value-text {
-                                .mat-select-min-line {
-                                    font-weight: 400;
-                                    font-size: 12.6259px;
-                                    line-height: 14px;
-                                    color: #9A9AAF;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        .mat-input-element {
+          font-weight: 400;
+          font-size: 12.6259px;
+          line-height: 14px;
+          color: #9a9aaf;
         }
+
+        .mat-select {
+          .mat-select-trigger {
+            .mat-select-value {
+              .mat-select-value-text {
+                .mat-select-min-line {
+                  font-weight: 400;
+                  font-size: 12.6259px;
+                  line-height: 14px;
+                  color: #9a9aaf;
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  }
 }
