@@ -198,13 +198,9 @@ export class PrefillIdComponent implements OnInit {
   }
 
   addClientOverBot() {
-    const param = '/eri/send-otp-payload';
-    const request = {
-      userId: '8428',
-      serviceType: 'ITR',
-    };
+    const param = `/eri/send-otp-payload?userId=${this.data.userId}&serviceType=ITR`;
 
-    this.itrMsService.getMethod(param, request).subscribe(
+    this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         if (res && res.success) {
           this.utilsService.showSnackBar(
