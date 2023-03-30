@@ -14,8 +14,8 @@
     </div>
   </div>
   <div style="text-align: right;" *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
-    <button class="tbd-btn-small" (click)="addDirectorDetails('Add director details','ADD',null)">
-      <i class="fa fa-plus" aria-hidden="true"></i>Add New Company
+    <button class="tbd-btn-small addOthr" (click)="addDirectorDetails('Add director details','ADD',null)">
+      <i class="fa fa-plus" aria-hidden="true"></i> Add New Company
     </button>
   </div>
   <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
@@ -93,10 +93,10 @@
 
 
         </div>
-        <div class="display-flex">
+        <div class="display-flex fotSp">
           <div class="card__col-xs-12">
             <div class="card__col-sm-3">
-              <button type="submit" class="tbd-btn-secondary" (click)="deleteDirectors()"><i
+              <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteDirectors()"><i
                 class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
             </div>
             <div class="card__col-sm-6 txt-center">
@@ -132,7 +132,7 @@
     </div>
   </div>
   <div style="text-align: right;" *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
-    <button class="tbd-btn-small" (click)="addSharesDetails('Add unlisted shares details','ADD',null)"> &nbsp;&nbsp;
+    <button class="tbd-btn-small addOthr" (click)="addSharesDetails('Add unlisted shares details','ADD',null)"> &nbsp;&nbsp;
       <i class="fa fa-plus" aria-hidden="true"></i>
       Add Unlisted Company
     </button>
@@ -317,10 +317,10 @@
         </div>
       </div>
     </form>
-    <div class="display-flex">
+    <div class="display-flex fotSp">
       <div class="card__col-xs-12">
         <div class="card__col-sm-3">
-          <button type="submit" class="tbd-btn-secondary" (click)="deleteShares()"><i
+          <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteShares()"><i
             class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
         </div>
         <div class="card__col-sm-6 txt-center">

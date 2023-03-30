@@ -353,16 +353,17 @@ button {
   padding-top: 5px;
 }
 .lgtBtn {
-    margin-left: 17%;
-    background-color: #ffffff;
-    color: #00AECA;
-    border: 1px solid #00AECA;
-    border-radius: 6px;
-    height: 50px;
-    width: 230px;
-    margin-top: 10px;
-    margin-bottom:20px;
-    font-weight: 500 !important;
+  margin-left: 17%;
+  background-color: #ffffff;
+  color: #00AECA;
+  border: 1px solid #00AECA;
+  border-radius: 6px;
+  height: 50px;
+  width: auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: 500 !important;
+  padding: 0px 14px 0px 14px;
 }
 .lgtBtn:hover {
   background-color: #00AECA;
@@ -451,6 +452,19 @@ button {
   border-radius: 5px;
   border:1px solid #797979;
   margin-right: 28px;
+}
+
+
+.addOthr {
+  background-color: #EEFFE4;
+  color: #797979;
+  border-radius: 5px;
+  border: 1px solid #797979;
+  margin-right: 28px;
+  padding: 8px;
+  margin-bottom: 15px;
+  margin-right: 0px;
+  margin-top: 10px;
 }
 
 .border-b {
@@ -8902,7 +8916,7 @@ body[dir=rtl] .checkbox[checked=true] {
   background-color: #EEFFE4;
   color: #494949;
   border: 1px solid #494949;
-  width: 150px;
+  width:auto;
 }
 
 .tbd-btn:disabled,
