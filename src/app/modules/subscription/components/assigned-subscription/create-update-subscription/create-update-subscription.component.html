@@ -45,7 +45,7 @@
         <div class="col-sm-4">
           <mat-label> Mobile Number </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field" />
+            <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field" readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -54,7 +54,7 @@
         <div class="col-sm-4">
           <mat-label> Email ID </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field" />
+            <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field" readonly />
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -255,57 +255,89 @@
           <tr>
             <td>Less Paid for schedule call</td>
             <td></td>
-            <td>500</td>
+            <td><span *ngIf="this?.userSubscription && this?.userSubscription?.concessionsApplied"  class="head">{{userSubscription?.concessionsApplied[0]?.amount | currency:'INR'}}</span></td>
           </tr>
           <tr>
             <td>Less Paid for TPA</td>
             <td></td>
-            <td>500</td>
+            <td><span *ngIf="this?.userSubscription && this?.userSubscription?.concessionsApplied" class="head">{{userSubscription?.concessionsApplied[1]?.amount | currency:'INR'}} </span></td>
           </tr>
           <tr>
             <td>Total</td>
             <td></td>
-            <td>500</td>
+            <td>{{totalCon | currency:'INR'}}</td>
           </tr>
           <tr>
-            <td>Promo Code : </td>
-            <td></td>
-            <td>500</td>
+            <td>Promo Code :
+              <div class="row">
+                <div class="col-sm-5">
+                  <mat-label>Search & Select Promo Code</mat-label>
+                  <mat-form-field  appearance="outline">
+                    <input type="text" placeholder="Start typing..." matInput
+                      [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+                    <mat-error *ngIf="searchedPromoCode.invalid">
+                      Please select value from dropdown only.
+                    </mat-error>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+                        {{option.title}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-5">
+                  <button class="btn " style=" background: #00AECA;
+                  border-radius: 2px;" (click)="applyPromo()">Apply</button> &nbsp;
+                  <button class="btn " style=" background: #00AECA;
+                  border-radius: 2px;" (click)="removePromoCode()" type="reset">Remove</button>
+                </div>
+              </div>
+
+            </td>
+            <td>
+
+            </td>
+            <td><span class="head" *ngIf="this?.userSubscription && this?.userSubscription?.promoCode"><b>
+              {{getExactPromoDiscount() |
+              currency:'INR'}}
+            </b><br></span><br></td>
           </tr>
           <tr>
             <th>Final Amount To Pay  </th>
             <td></td>
-            <th>500</th>
+            <th>{{this?.userSubscription?.payableSubscriptionAmount |
+              currency:'INR'}}</th>
           </tr>
           <tr>
             <td></td>
             <td>base Price</td>
-            <td>{{userSubscription?.smeSelectedPlan?.basePrice | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.basePrice| currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>CGST</td>
-            <td>{{userSubscription?.smeSelectedPlan?.cgst | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.cgst | currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>SGST</td>
-            <td>{{userSubscription?.smeSelectedPlan?.sgst | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.sgst | currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>IGST</td>
-            <td>{{userSubscription?.smeSelectedPlan?.igst | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.igst | currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>Total Tax</td>
-            <td>{{userSubscription?.smeSelectedPlan?.totalTax | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.totalTax | currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>Total Amount</td>
-            <td></td>
+            <td><span class="head"><b>{{this?.userSubscription?.payableSubscriptionAmount |
+              currency:'INR'}}</b></span></td>
           </tr>
         </tbody>
       </table>
@@ -321,18 +353,31 @@
         <div class="col-sm-8">
           <div class="row">
             <div class="col-sm-6">
-              <mat-label> Service</mat-label>
+              <mat-label>Select Service</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="service" [formControl]="service" class="input-field" />
 
-              </mat-form-field>
+                <mat-select [(ngModel)]="service" [ngModelOptions]="{standalone: true}" matInput
+                    placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()">
+                    <mat-option value="ITR Filing"> ITR Filing </mat-option>
+                    <mat-option value="GST Filing"> GST </mat-option>
+                    <mat-option value="Notice response"> Notice response </mat-option>
+                    <mat-option value="TDS filing"> TDS filing </mat-option>
+                    <mat-option value="TPA"> TPA </mat-option>
+                    <mat-option value="Other Services"> Other Services </mat-option>
+                </mat-select>
+            </mat-form-field>
             </div>
             <div class="col-sm-6">
-              <mat-label> Service Details</mat-label>
+              <mat-label>Service Detail</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="service details" [formControl]="serviceDetails" class="input-field" />
 
-              </mat-form-field>
+                <mat-select [(ngModel)]="serviceDetail" [ngModelOptions]="{standalone: true}"
+                    (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail"
+                    autocomplete="off" required>
+                    <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
+                        {{details.details}} </mat-option>
+                </mat-select>
+            </mat-form-field>
             </div>
           </div>
           <div class="row">
@@ -346,7 +391,11 @@
             <div class="col-sm-6">
               <mat-label> Financial Year</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="Financial Year" [formControl]="financialYear" class="input-field" />
+                <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" >
+                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                    {{year.financialYear}}
+                  </mat-option>
+                </mat-select>
 
               </mat-form-field>
             </div>
@@ -355,22 +404,26 @@
         <div class="col-sm-4">
           <mat-label> Description</mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="description" [formControl]="description" class="input-field" />
-            <!-- <mat-error
-                        *ngIf="callingNumber?.hasError('required') ">
-                        This field is required</mat-error> -->
-          </mat-form-field>
+            <mat-label>Description</mat-label>
+            <input [formControl]="description"  matInput
+                placeholder="Description" autocomplete="off">
+        </mat-form-field>
         </div>
       </div>
       <hr>
       <div  style="float: right;">
         <button  class="btn " style=" background: #4F9A20;
-        border-radius: 5px;"><i class="fas fa-wallet"></i> Refund Request </button>
+        border-radius: 5px;" (click)="updateSubscription()"><i class="fas fa-wallet"></i> Auto Generate Invoice </button>
       </div>
+      <div  style="float: right;">
+        <button  class="btn " style=" background: #4F9A20;
+        border-radius: 5px;" *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0 "><i class="fas fa-wallet"></i> Refund Request </button>
+      </div>
+
     </div>
   </div>
 </div>
-<div style="margin-top: 50px;">
+<div style="margin-top: 50px;" class="d-none">
   <div class="col-sm-10">
     <b style="font-size: 20px">In case Of GST </b>
   </div>

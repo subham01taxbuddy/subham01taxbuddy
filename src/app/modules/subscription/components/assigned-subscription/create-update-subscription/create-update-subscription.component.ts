@@ -7,6 +7,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ActivatedRoute } from '@angular/router';
+import { map, Observable, startWith } from 'rxjs';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -14,6 +16,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./create-update-subscription.component.scss'],
 })
 export class CreateUpdateSubscriptionComponent implements OnInit {
+  searchedPromoCode = new FormControl('', Validators.required);
+  filteredOptions!: Observable<any[]>;
+  serviceDetails = [];
+  service: string;
+  serviceDetail: string = '';
+  selectedPlanInfo: any;
+  invoiceForm: FormGroup;
+  financialYear = AppConstants.gstFyList;
   loading!: boolean;
   userSubscription: any;
   sourcesList =[]
@@ -28,6 +38,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   promoCodeInfo: any;
   serviceType = '';
   selectedUserInfo: any;
+  scheduleCallPay = new FormControl('',[]);
+  tpaPaid = new FormControl('',[]);
   noOfMonths = new FormControl('', []);
   subStartDate = new FormControl(new Date(), [Validators.required]);
   subEndDate = new FormControl(new Date('Mar 31, 2023'), [Validators.required]);
@@ -53,19 +65,33 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     public utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
+    private toastMessage: ToastMessageService
   ) {}
 
   ngOnInit() {
+    this.getAllPromoCode();
+
+    this.filteredOptions = this.searchedPromoCode.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => {
+          console.log(value, this.allPromoCodes)
+          return value;
+        }),
+        map(code => {
+          return code ? this._filter(code) : this.allPromoCodes.slice();
+        })
+      );
 
     this.subscriptionObj = JSON.parse(
       sessionStorage.getItem('subscriptionObject'));
     console.log('subscriptionObj', this.subscriptionObj);
     if( this.subscriptionObj.type ==='edit'){
       this.personalInfoForm.patchValue(this.subscriptionObj.data); // all
-      this.otherDetailsForm.patchValue(this.subscriptionObj.data);
+      // this.otherDetailsForm.patchValue(this.subscriptionObj.data);
     }else if (this.subscriptionObj.type ==='create') {
       this.personalInfoForm.patchValue(null); // all
-      this.otherDetailsForm.patchValue(null);
+      // this.otherDetailsForm.patchValue(null);
     }
 
     this.sourcesList = [
@@ -85,6 +111,27 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     }
 
     this.setFormValues(this.selectedUserInfo);
+  }
+
+  displayFn(label: any) {
+    return label ? label : undefined;
+  }
+
+  _filter(title: any) {
+    const filterValue = title.toLowerCase();
+    return this.allPromoCodes.filter(option => option.title.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  getCodeFromLabelOnBlur() {
+    if (this.utilsService.isNonEmpty(this.searchedPromoCode.value) && this.utilsService.isNonEmpty(this.searchedPromoCode.value)) {
+      let pCode = this.allPromoCodes.filter((item: any) => item.title.toLowerCase() === this.searchedPromoCode.value.toLowerCase());
+      if (pCode.length !== 0) {
+        this.selectedPromoCode = pCode[0].code;
+        console.log('smeCode on blur = ', pCode);
+      } else {
+        this.searchedPromoCode.setErrors({ invalid: true });
+      }
+    }
   }
 
   async updateDataByPincode() {
@@ -131,6 +178,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     zipcode:new FormControl(''),
     ownerName:new FormControl(''),
     filerName:new FormControl(''),
+    assessmentYear:new FormControl(''),
   });
 
   get mobileNumber() {
@@ -169,29 +217,43 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   get filerName() {
     return this.personalInfoForm.controls['filerName'] as FormControl;
   }
+  get assessmentYear() {
+    return this.personalInfoForm.controls['assessmentYear'] as FormControl;
+  }
 
-  otherDetailsForm:FormGroup = this.fb.group({
-    service :new FormControl(''),
-    serviceDetails:new FormControl(''),
+  otherInfoForm:FormGroup = this.fb.group({
     sacNumber:new FormControl(''),
-    financialYear: new FormControl(''),
     description:new FormControl('')
   })
-  get service() {
-    return this.otherDetailsForm.controls['service'] as FormControl;
-  }
-  get serviceDetails() {
-    return this.otherDetailsForm.controls['serviceDetails'] as FormControl;
+
+  get description() {
+     return this.otherInfoForm.controls['description'] as FormControl;
   }
   get sacNumber() {
-    return this.otherDetailsForm.controls['sacNumber'] as FormControl;
+     return this.otherInfoForm.controls['sacNumber'] as FormControl;
   }
-  get financialYear() {
-    return this.otherDetailsForm.controls['financialYear'] as FormControl;
-  }
-  get description() {
-    return this.otherDetailsForm.controls['description'] as FormControl;
-  }
+  // otherDetailsForm:FormGroup = this.fb.group({
+  //   service :new FormControl(''),
+  //   serviceDetails:new FormControl(''),
+  //   sacNumber:new FormControl(''),
+  //   financialYear: new FormControl(''),
+  //   description:new FormControl('')
+  // })
+  // get service() {
+  //   return this.otherDetailsForm.controls['service'] as FormControl;
+  // }
+  // get serviceDetails() {
+  //   return this.otherDetailsForm.controls['serviceDetails'] as FormControl;
+  // }
+  // get sacNumber() {
+  //   return this.otherDetailsForm.controls['sacNumber'] as FormControl;
+  // }
+  // get financialYear() {
+  //   return this.otherDetailsForm.controls['financialYear'] as FormControl;
+  // }
+  // get description() {
+  //   return this.otherDetailsForm.controls['description'] as FormControl;
+  // }
 
   gstFormGroup:FormGroup = this.fb.group({
     startDate :new FormControl(''),
@@ -203,6 +265,80 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
   get endDate() {
     return this.gstFormGroup.controls['endDate'] as FormControl;
+  }
+
+  getAllPromoCode() {
+    let param = '/promocodes?isActive=true';
+    this.itrService.getMethod(param).subscribe(promoCode => {
+      console.log('Plans -> ', promoCode);
+      if (Array.isArray(promoCode) && promoCode.length > 0) {
+        this.allPromoCodes = promoCode;
+        this.showPromoCode(this.selectedPromoCode);
+      }
+    },
+      error => {
+        console.log('Error during getting all PromoCodes: ', error)
+      })
+  }
+
+  applyPromo() {
+    console.log('selectedPromoCode:', this.selectedPromoCode);
+    const param = `/subscription/apply-promocode`;
+    const request = {
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode
+    }
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
+      console.log('apply promo res',res)
+      if (res['Error']) {
+        this.utilsService.showSnackBar(res['Error']);
+        return;
+      }
+      this.userSubscription = res;
+      this.setFinalPricing();
+      console.log('PROMO code applied', res);
+      this.utilsService.showSnackBar(`Promo Code ${this.selectedPromoCode} applied successfully!`);
+    })
+  }
+
+  removePromoCode() {
+    const param = `/subscription/remove-promocode?subscriptionId=${this.userSubscription.subscriptionId}`;
+    this.itrService.deleteMethod(param).subscribe((res: any) => {
+      this.utilsService.showSnackBar(`Promo Code ${this.selectedPromoCode} removed successfully!`);
+      console.log('PROMO code removed', res);
+      this.userSubscription = res;
+      this.setFinalPricing();
+      this.promoCodeInfo = null;
+    })
+  }
+
+  getExactPromoDiscount() {
+    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+      return this.userSubscription.smeSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
+    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+      return this.userSubscription.userSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
+    } else {
+      return 'NA'
+    }
+  }
+
+  getConcessionsApplied(){
+    this?.userSubscription?.concessionsApplied?.forEach((element) => {
+      if (element.title == "Schedule Call Paid") {
+        this.scheduleCallPay.setValue(element.amount)
+      }
+      else if (element.title == "Already Paid") {
+       this.tpaPaid.setValue(element.amount)
+      }
+      else{
+        return 'NA'
+      }
+  })
+  }
+
+  totalCon :any;
+  totalConcession(){
+    this.totalCon= this.scheduleCallPay.value +this.tpaPaid.value
   }
 
   showPromoCode(code) {
@@ -250,6 +386,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       }
 
        this.setFinalPricing();
+       this.getConcessionsApplied();
+       this.totalConcession();
     },
       error => {
         this.loading = false
@@ -266,7 +404,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         this.selectedUserInfo = res.records[0];
         console.log('this.selectedUserInfo:', this.selectedUserInfo);
         this.personalInfoForm.patchValue(this.selectedUserInfo); // all
-        this.otherDetailsForm.patchValue(this.selectedUserInfo);
+        // this.otherDetailsForm.patchValue(this.selectedUserInfo);
         this.setFormValues(this.selectedUserInfo);
         if (this.utilsService.isNonEmpty(this.selectedUserInfo) && this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
           this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType)
@@ -343,11 +481,101 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         this.maxEndDate.setDate(this.maxEndDate.getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
       }
       this.setFinalPricing();
+      // this.selectedPlan()
       this.loading = false;
     }, error => {
       this.loading = false;
       console.log('SME Selected plan error:', error);
     })
+  }
+
+  onUpdateGstNoValidation() {
+    if (this.service == 'GST Filing' && this.serviceDetail !== 'GST Registration') {
+      this.invoiceForm.controls['gstin'].setValidators([Validators.required, Validators.pattern(AppConstants.GSTNRegex)]);
+    } else {
+      this.invoiceForm.controls['gstin'].setValidators(Validators.pattern(AppConstants.GSTNRegex));
+    }
+    this.invoiceForm.controls['gstin'].updateValueAndValidity();
+  }
+
+  changeService() {
+    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR Filing' },
+    { service: 'GST Filing', details: 'GST Registration' },
+    { service: 'GST Filing', details: 'GST Annual Subscription' },
+    { service: 'GST Filing', details: 'GSTR Annual return' },
+    { service: 'GST Filing', details: 'GSTR Filing' },
+    { service: 'GST Filing', details: 'GST Notice' },
+    { service: 'GST Filing', details: 'Any other services' },
+    { service: 'Notice response', details: 'Defective Notice response u/s 139 (9)' },
+    { service: 'Notice response', details: 'Notice response and rectification  u/s 143 (1)' },
+    { service: 'Notice response', details: 'Notice response u/s 142 (1)' },
+    { service: 'Notice response', details: 'Notice response u/s 148' },
+    { service: 'Notice response', details: 'Notice e-proceeding response' },
+    { service: 'Notice response', details: 'Notice response u/s 143 (3)' },
+    { service: 'Notice response', details: 'Notice response to outstanding demand u/s 245' },
+    { service: 'Notice response', details: 'Any Other Notice' },
+    { service: 'TDS filing', details: 'TDS (26Q ) filing' },
+    { service: 'TDS filing', details: 'TDS (24Q ) filing' },
+    { service: 'TDS filing', details: 'TDS (27Q ) filing' },
+    { service: 'TDS filing', details: 'TDS Notice' },
+    { service: 'TDS filing', details: 'Any other services' },
+    { service: 'TPA', details: 'TPA' },
+      { service: 'TPA', details: 'HNI' },
+    { service: 'Other Services', details: 'Accounting' },
+    { service: 'Other Services', details: 'TDS Registration' },
+    { service: 'Other Services', details: 'TDS Filing' },
+    { service: 'Other Services', details: 'ROC / Firm Registration' },
+    { service: 'Other Services', details: 'PT Registration' },
+    { service: 'Other Services', details: 'PT Return Filing' },
+    { service: 'Other Services', details: 'PF Withdrawal' },
+    { service: 'Other Services', details: 'Food Licence' },
+    { service: 'Other Services', details: 'Shop Licence / adhhr Udhuyog' },
+    { service: 'Other Services', details: 'Company registration' },
+    { service: 'Other Services', details: 'Import / Export Certificate' },
+    { service: 'Other Services', details: 'PF / ESIC Registration' },
+    { service: 'Other Services', details: 'Audit (Professional / Free Lancer' },
+    { service: 'Other Services', details: 'Other Services' }];
+    this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
+    // if (this.service === "TPA") {
+    //   this.serviceDetail = "TPA";
+    // }
+  }
+
+  // selectedPlan() {
+  //   this.selectedPlanInfo = this.userSubscription.smeSelectedPlanId;
+  //   console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
+
+  // }
+
+  updateSubscription(){
+    if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan.planId)) {
+      console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
+      let param = '/subscription';
+      const smeInfo = JSON.parse(localStorage.getItem('UMD'));
+      let reqBody = {
+        userId: this.userSubscription.userId,
+        planId: this.userSubscription.smeSelectedPlan.planId,
+        selectedBy: "SME", // USER or SME
+      }
+      console.log('Req Body: ', reqBody)
+      this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
+        console.log('After subscription plan added res:', res);
+        this.toastMessage.alert("success", "Subscription created successfully.")
+        // let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
+        // console.log('subInfo: ', subInfo)
+      }, error => {
+        console.log('error -> ', error);
+        this.toastMessage.alert("error", this.utilsService.showErrorMsg(error.error.status))
+      })
+    }
+    else {
+      this.toastMessage.alert("error", "Select Plan.")
+    }
   }
 
 }
