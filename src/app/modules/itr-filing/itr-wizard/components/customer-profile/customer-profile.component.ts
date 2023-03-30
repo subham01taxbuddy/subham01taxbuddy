@@ -349,7 +349,7 @@ export class CustomerProfileComponent implements OnInit {
       this.customerProfileForm.controls['orgITRDate'].setValidators(Validators.required);
       this.customerProfileForm.controls['orgITRDate'].updateValueAndValidity();
     }
-    if (this.customerProfileForm.controls['isRevised'].value === 'Y') {
+    if (this.ITR_JSON.isRevised === 'Y') {
       this.customerProfileForm.controls['isRevised'].disable();
     }
   }
