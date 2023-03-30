@@ -311,6 +311,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
 
     console.log(this.Copy_ITR_JSON.exemptIncomes);
+    this.loading = true;
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
