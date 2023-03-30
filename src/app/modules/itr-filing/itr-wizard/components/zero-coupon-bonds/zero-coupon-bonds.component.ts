@@ -311,6 +311,7 @@ export class ZeroCouponBondsComponent
   }
 
   save(type?) {
+    this.loading = true;
     if (type === 'bonds') {
       if (this.getBondsCg() <= 0) {
         this.deduction = false;
@@ -380,6 +381,7 @@ export class ZeroCouponBondsComponent
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {
           this.ITR_JSON = result;
+          this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
           this.utilsService.showSnackBar(
             'Bonds and zero coupon bonds data added successfully'
