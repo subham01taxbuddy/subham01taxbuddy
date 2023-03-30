@@ -196,4 +196,30 @@ export class PrefillIdComponent implements OnInit {
       this.uploadPrefillChecked = false;
     }
   }
+
+  addClientOverBot() {
+    const param = '/eri/send-otp-payload';
+    const request = {
+      userId: '8428',
+      serviceType: 'ITR',
+    };
+
+    this.itrMsService.getMethod(param, request).subscribe(
+      (res: any) => {
+        if (res && res.success) {
+          this.utilsService.showSnackBar(
+            'Add Client over chatbot has been initiated'
+          );
+        } else {
+          this.utilsService.showSnackBar('An error occured. Please try again');
+        }
+      },
+      (error) => {
+        this.utilsService.showSnackBar(
+          'Something went wrong, try after some time.'
+        );
+        this.loading = false;
+      }
+    );
+  }
 }

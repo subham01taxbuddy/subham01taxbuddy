@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
@@ -7,14 +14,17 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { WizardNavigation } from "../../../../itr-shared/WizardNavigation";
+import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 
 @Component({
   selector: 'app-zero-coupon-bonds',
   templateUrl: './zero-coupon-bonds.component.html',
-  styleUrls: ['./zero-coupon-bonds.component.scss']
+  styleUrls: ['./zero-coupon-bonds.component.scss'],
 })
-export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit {
+export class ZeroCouponBondsComponent
+  extends WizardNavigation
+  implements OnInit
+{
   step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: FormGroup;
@@ -27,7 +37,7 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
-    { name: 'LTCG', value: 'LONG' }
+    { name: 'LTCG', value: 'LONG' },
   ];
   isDisable: boolean;
   bondType: any;
@@ -37,8 +47,7 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
-    private activateRoute: ActivatedRoute,
-
+    private activateRoute: ActivatedRoute
   ) {
     super();
   }
@@ -46,10 +55,14 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
   ngOnInit(): void {
     if (this.activateRoute.snapshot.queryParams['bondType']) {
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
-      this.bondType === 'bonds' ? this.title = ' Bonds & Debenture' : this.title = 'Zero Coupon Bonds';
+      this.bondType === 'bonds'
+        ? (this.title = ' Bonds & Debenture')
+        : (this.title = 'Zero Coupon Bonds');
     }
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
@@ -62,15 +75,21 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
       let assetDetails;
       let data;
       if (this.bondType === 'bonds') {
-        data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "BONDS");
+        data = this.Copy_ITR_JSON.capitalGain.filter(
+          (item: any) => item.assetType === 'BONDS'
+        );
       } else if (this.bondType === 'zeroCouponBonds') {
-        data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "ZERO_COUPON_BONDS");
+        data = this.Copy_ITR_JSON.capitalGain.filter(
+          (item: any) => item.assetType === 'ZERO_COUPON_BONDS'
+        );
       }
       if (data.length > 0) {
         data.forEach((obj: any) => {
           assetDetails = obj.assetDetails;
           assetDetails.forEach((element: any) => {
-            const filterImp = obj.improvement.filter(data => data.srn == element.srn)
+            const filterImp = obj.improvement.filter(
+              (data) => data.srn == element.srn
+            );
             if (filterImp.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
 
@@ -106,7 +125,7 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
     if (bondsArray.valid) {
       this.addMoreBondsData();
     } else {
-      bondsArray.controls.forEach(element => {
+      bondsArray.controls.forEach((element) => {
         if ((element as FormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
@@ -118,7 +137,7 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
   initForm() {
     return this.fb.group({
       bondsArray: this.fb.array([]),
-    })
+    });
   }
 
   createForm(srn, item?): FormGroup {
@@ -128,15 +147,30 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
       id: [item ? item.id : null],
       description: [item ? item.description : null],
       stampDutyValue: [item ? item.stampDutyValue : null],
-      valueInConsideration: [item ? item.valueInConsideration : null, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
-      purchaseCost: [item ? item.purchaseCost : null, [Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]],
+      valueInConsideration: [
+        item ? item.valueInConsideration : null,
+        [
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithDecimal),
+        ],
+      ],
+      purchaseCost: [
+        item ? item.purchaseCost : null,
+        [
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithDecimal),
+        ],
+      ],
       isinCode: [item ? item.isinCode : null],
       nameOfTheUnits: [item ? item.nameOfTheUnits : null],
       sellOrBuyQuantity: [item ? item.sellOrBuyQuantity : null],
       sellValuePerUnit: [item ? item.sellValuePerUnit : null],
       purchaseDate: [item ? item.purchaseDate : null, Validators.required],
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
-      costOfImprovement: [item ? item.costOfImprovement : null, [Validators.pattern(AppConstants.amountWithDecimal)]],
+      costOfImprovement: [
+        item ? item.costOfImprovement : null,
+        [Validators.pattern(AppConstants.amountWithDecimal)],
+      ],
       sellDate: [item ? item.sellDate : null, Validators.required],
       sellValue: [item ? item.sellValue : null],
       sellExpense: [item ? item.sellExpense : null],
@@ -147,20 +181,25 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
       hasIndexation: [item ? item.hasIndexation : null],
       algorithm: [item ? item.algorithm : 'cgProperty'],
       fmvAsOn31Jan2018: [item ? item.fmvAsOn31Jan2018 : null],
-
     });
   }
 
   editBondsForm(i) {
-    ((this.bondsForm.controls['bondsArray'] as FormGroup).controls[i] as FormGroup).enable();
-    ((this.bondsForm.controls['bondsArray'] as FormGroup).controls[i] as FormGroup).controls['gainType'].disable();
+    (
+      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
+        i
+      ] as FormGroup
+    ).enable();
+    (
+      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
+        i
+      ] as FormGroup
+    ).controls['gainType'].disable();
   }
-
 
   get getBondsArray() {
     return <FormArray>this.bondsForm.get('bondsArray');
   }
-
 
   addMoreBondsData(item?) {
     const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
@@ -173,9 +212,8 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
       if ((element as FormGroup).controls['hasEdit'].value) {
         bondsArray.removeAt(index);
       }
-    })
+    });
   }
-
 
   pageChanged(event) {
     this.config.currentPage = event;
@@ -186,28 +224,40 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
   }
 
   getGainType(bonds) {
-    if (bonds.controls['purchaseDate'].value && bonds.controls['sellDate'].value) {
+    if (
+      bonds.controls['purchaseDate'].value &&
+      bonds.controls['sellDate'].value
+    ) {
       let param = '/calculate/indexed-cost';
       let purchaseDate = bonds.controls['purchaseDate'].value;
       let sellDate = bonds.controls['sellDate'].value;
       let request = {
-        "assetType": 'BONDS',
-        "buyDate": moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-        "sellDate": moment(new Date(sellDate)).format('YYYY-MM-DD')
+        assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
+        buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+        sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
       };
       this.loading = true;
-      this.itrMsService.postMethod(param, request).subscribe((result: any) => {
-        if (result.success) {
-          bonds.controls['gainType'].setValue(result.data.capitalGainType);
+      this.itrMsService.postMethod(param, request).subscribe(
+        (result: any) => {
+          if (result.success) {
+            bonds.controls['gainType'].setValue(result.data.capitalGainType);
+            this.loading = false;
+          } else {
+            this.loading = false;
+            this.toastMsgService.alert(
+              'error',
+              'failed to calculate Type of gain.'
+            );
+          }
+        },
+        (error) => {
           this.loading = false;
-        } else {
-          this.loading = false;
-          this.toastMsgService.alert("error", "failed to calculate Type of gain.")
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate Type of gain.'
+          );
         }
-      }, error => {
-        this.loading = false;
-        this.toastMsgService.alert("error", "failed to calculate Type of gain.")
-      });
+      );
     }
   }
 
@@ -215,31 +265,39 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
     if (bonds.valid) {
       const param = '/singleCgCalculate';
       let request = {
-        assessmentYear: "2022-2023",
-        assesseeType: "INDIVIDUAL",
-        residentialStatus: "RESIDENT",
-        assetType: 'BONDS',
+        assessmentYear: '2022-2023',
+        assesseeType: 'INDIVIDUAL',
+        residentialStatus: 'RESIDENT',
+        assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
         assetDetails: [bonds.getRawValue()],
 
-        "improvement": [
+        improvement: [
           {
-            "srn": bonds.controls['srn'].value,
-            "dateOfImprovement": "",
-            "costOfImprovement": bonds.controls['costOfImprovement'].value,
-          }
+            srn: bonds.controls['srn'].value,
+            dateOfImprovement: '',
+            costOfImprovement: bonds.controls['costOfImprovement'].value,
+          },
         ],
-      }
-      this.itrMsService.postMethod(param, request).subscribe((res: any) => {
-        this.loading = false;
-        if (res.assetDetails[0].capitalGain) {
-          bonds.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
-        } else {
-          bonds.controls['capitalGain'].setValue(0);
+      };
+      this.itrMsService.postMethod(param, request).subscribe(
+        (res: any) => {
+          this.loading = false;
+          if (res.assetDetails[0].capitalGain) {
+            bonds.controls['capitalGain'].setValue(
+              res.assetDetails[0].capitalGain
+            );
+          } else {
+            bonds.controls['capitalGain'].setValue(0);
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
         }
-      }, error => {
-        this.loading = false;
-        this.toastMsgService.alert("error", "failed to calculate total capital gain.")
-      })
+      );
     }
   }
 
@@ -251,7 +309,6 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
     });
     return totalCg;
   }
-
 
   save(type?) {
     if (type === 'bonds') {
@@ -267,38 +324,47 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
 
     if (this.bondsForm.valid || this.deductionForm.valid) {
       if (!this.Copy_ITR_JSON.capitalGain) {
-        this.Copy_ITR_JSON.capitalGain = []
+        this.Copy_ITR_JSON.capitalGain = [];
       }
       let bondIndex;
       if (this.bondType === 'bonds') {
-        bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(element => element.assetType === 'BONDS')
+        bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+          (element) => element.assetType === 'BONDS'
+        );
       } else if (this.bondType === 'zeroCouponBonds') {
-        bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(element => element.assetType === 'ZERO_COUPON_BONDS')
+        bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+          (element) => element.assetType === 'ZERO_COUPON_BONDS'
+        );
       }
       const bondImprovement = [];
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
-      bondsArray.controls.forEach(element => {
+      bondsArray.controls.forEach((element) => {
         bondImprovement.push({
-          "srn": (element as FormGroup).controls['srn'].value,
-          "dateOfImprovement": null,
-          "costOfImprovement": (element as FormGroup).controls['costOfImprovement'].value
-        })
+          srn: (element as FormGroup).controls['srn'].value,
+          dateOfImprovement: null,
+          costOfImprovement: (element as FormGroup).controls[
+            'costOfImprovement'
+          ].value,
+        });
       });
 
       if (!bondsArray.value) {
         this.deductionForm.value([]);
       }
       const bondData = {
-        "assessmentYear": "",
-        "assesseeType": "",
-        "residentialStatus": "",
-        "assetType": this.bondType === 'bonds' ? "BONDS" : "ZERO_COUPON_BONDS",
-        "deduction": this.deductionForm.invalid || (this.getBondsCg() <= 0) ? [] : [this.deductionForm.getRawValue()],
-        "improvement": bondImprovement,
-        "buyersDetails": [],
-        "assetDetails": bondsArray.getRawValue()
-      }
-      console.log("bondData", bondData)
+        assessmentYear: '',
+        assesseeType: '',
+        residentialStatus: '',
+        assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
+        deduction:
+          this.deductionForm.invalid || this.getBondsCg() <= 0
+            ? []
+            : [this.deductionForm.getRawValue()],
+        improvement: bondImprovement,
+        buyersDetails: [],
+        assetDetails: bondsArray.getRawValue(),
+      };
+      console.log('bondData', bondData);
 
       if (bondIndex >= 0) {
         if (bondData.assetDetails.length > 0) {
@@ -311,16 +377,23 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
           this.Copy_ITR_JSON.capitalGain?.push(bondData);
         }
       }
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Bonds and zero coupon bonds data added successfully');
-        this.utilsService.smoothScrollToTop();
-      }, error => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Failed to add bonds and zero coupon bonds data, please try again.');
-        this.utilsService.smoothScrollToTop();
-      });
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          this.ITR_JSON = result;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Bonds and zero coupon bonds data added successfully'
+          );
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Failed to add bonds and zero coupon bonds data, please try again.'
+          );
+          this.utilsService.smoothScrollToTop();
+        }
+      );
     }
   }
 
@@ -334,12 +407,14 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
       purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
       purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
       costOfNewAssets: [obj ? obj.costOfNewAssets : null, Validators.required],
-      investmentInCGAccount: [obj ? obj.investmentInCGAccount : null, Validators.required],
+      investmentInCGAccount: [
+        obj ? obj.investmentInCGAccount : null,
+        Validators.required,
+      ],
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
     });
   }
-
 
   calculateDeductionGain() {
     if (this.deductionForm.valid) {
@@ -349,38 +424,55 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
       let expenses = 0;
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       bondsArray.controls.forEach((element) => {
-        capitalGain += parseInt((element as FormGroup).controls['capitalGain'].value);
-        saleValue += parseInt((element as FormGroup).controls['valueInConsideration'].value);
-        expenses += parseInt((element as FormGroup).controls['sellExpense'].value);
-      })
+        capitalGain += parseInt(
+          (element as FormGroup).controls['capitalGain'].value
+        );
+        saleValue += parseInt(
+          (element as FormGroup).controls['valueInConsideration'].value
+        );
+        expenses += parseInt(
+          (element as FormGroup).controls['sellExpense'].value
+        );
+      });
 
       let param = '/calculate/capital-gain/deduction';
       let request = {
-        "capitalGain": capitalGain,
-        "capitalGainDeductions": [
+        capitalGain: capitalGain,
+        capitalGainDeductions: [
           {
-            "deductionSection": "SECTION_54F",
-            "costOfNewAsset": parseInt(this.deductionForm.controls['costOfNewAssets'].value),
-            "cgasDepositedAmount": parseInt(this.deductionForm.controls['investmentInCGAccount'].value),
-            "saleValue": saleValue,
-            "expenses": expenses
+            deductionSection: 'SECTION_54F',
+            costOfNewAsset: parseInt(
+              this.deductionForm.controls['costOfNewAssets'].value
+            ),
+            cgasDepositedAmount: parseInt(
+              this.deductionForm.controls['investmentInCGAccount'].value
+            ),
+            saleValue: saleValue,
+            expenses: expenses,
           },
-        ]
+        ],
       };
-      this.itrMsService.postMethod(param, request).subscribe((result: any) => {
-        this.loading = false;
-        if (result.success) {
-          if (result.data.length > 0) {
-            this.deductionForm.controls['totalDeductionClaimed'].setValue(result.data[0].deductionAmount)
-          } else {
-            this.deductionForm.controls['totalDeductionClaimed'].setValue(0)
-          }
-        }
-      },
-        error => {
+      this.itrMsService.postMethod(param, request).subscribe(
+        (result: any) => {
           this.loading = false;
-          this.toastMsgService.alert("error", "failed to calculate Deduction Gain.")
-        })
+          if (result.success) {
+            if (result.data.length > 0) {
+              this.deductionForm.controls['totalDeductionClaimed'].setValue(
+                result.data[0].deductionAmount
+              );
+            } else {
+              this.deductionForm.controls['totalDeductionClaimed'].setValue(0);
+            }
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate Deduction Gain.'
+          );
+        }
+      );
     }
   }
 
@@ -391,5 +483,4 @@ export class ZeroCouponBondsComponent extends WizardNavigation implements OnInit
   saveAll() {
     this.save();
   }
-
 }
