@@ -24,7 +24,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   statusList = [];
   // isDisable = true;
   loggedInUserData: any;
-  
+
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
@@ -97,7 +97,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToSubscription() {
-    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: this.data.mobileNumber } });
+    this.router.navigate(['/subscription/assigned-subscription'], { queryParams: { userMobNo: this.data.mobileNumber } });
     this.dialogRef.close();
   }
   goToCloud() {
