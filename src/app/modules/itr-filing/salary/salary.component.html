@@ -15,11 +15,11 @@
             <div class="sectionTitle">Employer Details</div>
             <div class="card__row">
               <div class="card__col-xs-12 card__col-sm-6">
-                <mat-label class="inputLabel">Name of the employer</mat-label>
+                <mat-label class="inputLabel">Name of the employer*</mat-label>
                 <mat-form-field appearance="outline">
                   <input type="text" trim matInput placeholder="Name of the employer"
                          name="NameOfEmployer" class="input-field" formControlName="employerName"
-                         maxlength="125">
+                         maxlength="125" required>
                   <mat-error
                     *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('required')">
                     Enter the name of employer
