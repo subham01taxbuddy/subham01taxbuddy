@@ -400,6 +400,7 @@ export class SharesAndEquityComponent
   calculateFMV(securities) {
     if (
       securities.controls['isinCode'].valid &&
+      securities.controls['isinCode'].value &&
       securities.controls['purchaseDate'].value &&
       securities.controls['sellDate'].value
     ) {

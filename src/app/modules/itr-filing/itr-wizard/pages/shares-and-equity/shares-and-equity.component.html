@@ -83,6 +83,10 @@
                     (change)="calculateTotalCG(securities)"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
+                  <mat-hint style="font-size: 75%"
+                    >If Scrip Name is not available you can enter
+                    INNOTREQUIRD</mat-hint
+                  >
                   <mat-error
                     *ngIf="
                       securitiesForm.controls['securitiesArray'].controls[
@@ -330,7 +334,7 @@
                 <mat-label>Type of Capital Gain*</mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select
-                    placeholder=""
+                    placeholder="Type of Gain"
                     class="hide"
                     formControlName="gainType"
                     name="gainType[i]"
@@ -356,6 +360,10 @@
                       (blur)="calculateFMV(securities)"
                       (change)="calculateTotalCG(securities)"
                     />
+                    <mat-hint style="font-size: 75%"
+                      >If ISIN Code is not available, you can enter
+                      INNOTREQUIRD</mat-hint
+                    >
                   </mat-form-field>
                 </div>
 
@@ -373,7 +381,8 @@
                 </div>
 
                 <div class="card__col-xs-12 card__col-sm-3">
-                  <mat-label>GrandFathered Value </mat-label>
+                  <mat-label>Cost of acquisition </mat-label>
+
                   <mat-form-field appearance="outline">
                     <input
                       matInput
@@ -388,6 +397,9 @@
                       (change)="calculateTotalCG(securities)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
+                    <mat-hint style="font-size: 75%"
+                      >As per grandfathering</mat-hint
+                    >
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
