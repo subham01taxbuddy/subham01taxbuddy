@@ -542,6 +542,7 @@
           <mat-label>Type of Deduction*</mat-label>
           <mat-form-field appearance="outline">
             <input
+              (change)="calculateDeductionGain()"
               matInput
               readonly
               placeholder=""
@@ -560,6 +561,7 @@
           <mat-label>Purchase Date of New Asset*</mat-label>
           <mat-form-field appearance="outline">
             <input
+              (change)="calculateDeductionGain()"
               matInput
               readonly
               placeholder="Purchase date of new asset"
@@ -630,6 +632,7 @@
           <mat-label>Amount of Deduction Claimed*</mat-label>
           <mat-form-field appearance="outline">
             <input
+              (change)="calculateDeductionGain()"
               matInput
               readonly
               placeholder="Amount of deduction claimed"
