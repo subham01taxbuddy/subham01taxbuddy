@@ -1,19 +1,115 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 
 <div class="main clearfix">
   <div class="content content_full">
     <div class="content__container">
       <div class="card">
-      <div class="card__row">
-          <div class="card__col-xs-12 card__col-sm-12">
-            Total Count: <b>{{totalCount}}</b>
-            </div>
-          </div>
         <div class="card__row">
-          <ag-grid-angular class="ag-theme-balham" [gridOptions]="partnersGridOptions" (rowClicked)="onUsersRowClicked($event)">
-            <!--     paginationPageSize=15 pagination=true-->
-          </ag-grid-angular>
+          <form [formGroup]="boPartnerDateForm">
+            <div class="card__col-md-3">
+              <mat-label>From Date</mat-label>
+              <mat-form-field class="input-field-width" appearance="outline">
+                <input
+                  matInput
+                  placeholder="DD/MM/YYYY"
+                  formControlName="fromDate"
+                  [matDatepicker]="picker1"
+                  [max]="maxDate"
+                  autocomplete="off"
+                  (dateChange)="
+                    setToDateValidation(
+                      boPartnerDateForm.controls['fromDate'].value
+                    )
+                  "
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    boPartnerDateForm.controls['fromDate'].hasError('required')
+                  "
+                  >Select From date</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-md-3">
+              <mat-label>To Date</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  placeholder="DD/MM/YYYY"
+                  formControlName="toDate"
+                  [matDatepicker]="picker2"
+                  [max]="maxDate"
+                  [min]="minToDate"
+                  autocomplete="off"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    boPartnerDateForm.controls['toDate'].hasError('required')
+                  "
+                  >Select To date</mat-error
+                >
+                <mat-error
+                  *ngIf="boPartnerDateForm.controls['toDate'].hasError('min')"
+                  >To date always greater than from date</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-md-2">
+              <button
+                class="btn"
+                style="border: none; cursor: pointer"
+                (click)="getBoPartners()"
+              >
+                Search
+              </button>
+            </div>
+          </form>
         </div>
+        <br />
+        <p style="float: right">
+          Total Count: <b>{{ config.totalItems }}</b>
+        </p>
+        <br />
+        <div class="card__row">
+          <table>
+            <tr *ngFor="let item of boPartnersInfo | paginate : config"></tr>
+          </table>
+
+          <ag-grid-angular
+            class="ag-theme-balham"
+            [gridOptions]="partnersGridOptions"
+            (rowClicked)="onUsersRowClicked($event)"
+          >
+          </ag-grid-angular>
+
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </div>
+        <!-- <div class="card__row">
+          <ag-grid-angular
+            class="ag-theme-balham"
+            [gridOptions]="partnersGridOptions"
+            (rowClicked)="onUsersRowClicked($event)"
+          >
+                 paginationPageSize=15 pagination=true-->
+        <!-- </ag-grid-angular>
+        </div> -->
       </div>
     </div>
   </div>

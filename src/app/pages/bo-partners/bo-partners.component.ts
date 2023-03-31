@@ -327,10 +327,10 @@ export class BoPartnersComponent implements OnInit {
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
           console.log('bo-partners list: ', response);
-          if (Array.isArray(response.content)) {
+          if (Array.isArray(response)) {
             this.loading = false;
-            this.boPartnersInfo = response.content;
-            this.config.totalItems = response.totalElements;
+            this.boPartnersInfo = response;
+            this.config.totalItems = response.length;
             this.partnersGridOptions.api?.setRowData(
               this.createRowData(this.boPartnersInfo)
             );
