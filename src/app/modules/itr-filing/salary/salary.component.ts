@@ -25,7 +25,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  readonly limitPT = 2500;
+  readonly limitPT = 5000;
   maxPT = this.limitPT;
   maxEA = 5000;
   currentIndex: number = null;
