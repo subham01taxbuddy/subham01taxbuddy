@@ -47,7 +47,6 @@
                   <input
                     matInput
                     [max]="maxPurchaseDate"
-
                     formControlName="purchaseDate"
                     name="asset[i]"
                     readonly
@@ -278,6 +277,7 @@
                 style="float: right"
                 [disabled]="totalCg <= 0"
                 (click)="addMoreImprovements(this.immovableForm)"
+                *ngIf="isImprovements.value"
               >
                 Add New&nbsp;&nbsp;
                 <i class="fa fa-plus" aria-hidden="true"></i>
@@ -407,6 +407,7 @@
                     style="float: right"
                     [disabled]="totalCg <= 0"
                     (click)="addInvestment('ADD', '', 0)"
+                    *ngIf="isDeductions.value"
                   >
                     Add New&nbsp;&nbsp;
                     <i class="fa fa-plus" aria-hidden="true"></i>
