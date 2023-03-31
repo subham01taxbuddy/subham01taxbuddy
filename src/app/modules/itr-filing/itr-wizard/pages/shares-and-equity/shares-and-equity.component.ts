@@ -492,6 +492,7 @@ export class SharesAndEquityComponent
   }
 
   save(type?) {
+    this.loading = true;
     if (type === 'securities') {
       if (this.getSecuritiesCg() <= 0) {
         this.deduction = false;

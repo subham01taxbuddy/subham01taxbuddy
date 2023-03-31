@@ -47,7 +47,7 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
       },
       {
-        name: 'Angel One',
+        name: 'Angel',
         label: 'Angel One',
         loading: false,
         filesUploaded: [],
