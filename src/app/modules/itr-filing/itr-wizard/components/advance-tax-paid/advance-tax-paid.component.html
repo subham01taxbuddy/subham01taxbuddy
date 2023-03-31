@@ -1,0 +1,182 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+<form [formGroup]="salaryForm">
+  <div formArrayName="salaryArray">
+    <div class="head-title mb-5">
+      Please enter the amount of advance tax or self assessment tax paid
+    </div>
+    <div
+      class="display-flex"
+      *ngFor="
+        let donation of getSalaryArray.controls | paginate : config;
+        let i = index
+      "
+      [formGroupName]="fieldGlobalIndex(i)"
+    >
+      <mat-checkbox
+        color="primary"
+        name="hasEdit[i]"
+        formControlName="hasEdit"
+        class="ml30"
+      >
+      </mat-checkbox>
+      <div class="card__col-xs-12 card__col-sm-12">
+        <div class="card__col-xs-12 card__col-sm-3">
+          <mat-label>BSR Code*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="bsrCode"
+              matInput
+              placeholder="BSR Code"
+              name="bsrCode[i]"
+              required
+              class="input-field"
+              maxlength="7"
+              minlength="7"
+              digitsOnly
+            />
+            <mat-error
+              *ngIf="
+                salaryForm.controls['salaryArray'].controls[i].controls[
+                  'bsrCode'
+                ].hasError('required')
+              "
+            >
+              Enter positive amount without decimal.</mat-error
+            >
+            <mat-error
+              *ngIf="
+                salaryForm.controls['salaryArray'].controls[i].controls[
+                  'bsrCode'
+                ].hasError('minlength')
+              "
+            >
+              Please enter 7 digit BSR code.</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-3">
+          <mat-label>Date of Deposit*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matTooltip="Date of Deposit"
+              matTooltipClass="tab-tooltip"
+              matTooltipPosition="above"
+              matInput
+              [matDatepicker]="picker"
+              class="input-field"
+              placeholder="Date of Deposit"
+              name="dateOfDeposit"
+              formControlName="dateOfDeposit"
+              [min]="minDate"
+              [max]="maxDate"
+              readonly
+              required
+            />
+            <mat-hint>Format: DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+              *ngIf="
+                salaryForm.controls['salaryArray'].controls[i].controls[
+                  'dateOfDeposit'
+                ].hasError('required')
+              "
+            >
+              Select date of Deposit</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-3">
+          <mat-label>Serial No of Challan*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="challanNumber"
+              matInput
+              placeholder="Challan Number"
+              name="challanNumber[i]"
+              required
+              class="input-field"
+              maxlength="5"
+              digitsOnly
+            />
+            <mat-error
+              *ngIf="
+                salaryForm.controls['salaryArray'].controls[i].controls[
+                  'challanNumber'
+                ].hasError('required')
+              "
+            >
+              Enter positive amount without decimal.</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-3">
+          <mat-label>Total Tax Paid*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="totalTax"
+              matInput
+              placeholder="Total Tax Paid"
+              name="totalTax[i]"
+              required
+              class="input-field"
+              maxlength="14"
+              digitsOnly
+            />
+            <mat-error
+              *ngIf="
+                salaryForm.controls['salaryArray'].controls[i].controls[
+                  'totalTax'
+                ].hasError('required')
+              "
+            >
+              Enter positive amount without decimal.</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="edit-head">
+        <button type="button" class="edit-donation" (click)="editSalaryForm(i)">
+          <mat-icon> edit_square </mat-icon>Edit
+        </button>
+      </div>
+    </div>
+    <div class="display-flex">
+      <div class="card__col-xs-12">
+        <div class="card__col-sm-3">
+          <button
+            type="submit"
+            class="tbd-btn-secondary"
+            (click)="deleteSalaryArray()"
+          >
+            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+          </button>
+        </div>
+        <div class="card__col-sm-6 txt-center">
+          <table>
+            <tr
+              *ngFor="let item of getSalaryArray.controls | paginate : config"
+            ></tr>
+          </table>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </div>
+        <div class="card__col-sm-3" style="text-align: right">
+          <button type="submit" class="tbd-btn save-btn" (click)="save()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

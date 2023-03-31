@@ -9,11 +9,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
+import {ITR_JSON, OptedInNewRegime, OptedOutNewRegime} from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
-declare function matomo(title: any, url: any, event: any, subscribeId: any);
 
 @Injectable()
 
@@ -139,7 +138,7 @@ export class UtilsService {
                     console.log('this.ITR_JSON in utils', this.ITR_JSON);
                     console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -193,7 +192,7 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -216,7 +215,7 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -349,7 +348,13 @@ export class UtilsService {
             declaration: undefined,
             disability: undefined,
             movableAsset: [],
-            immovableAsset: []
+            immovableAsset: [],
+            prefillDate: null,
+            prefillData: null,
+            prefillDataSource: null,
+            everOptedNewRegime: null,
+            everOptedOutOfNewRegime: null,
+            optionForCurrentAY: null
         };
 
         return ITR_JSON;
@@ -532,14 +537,6 @@ export class UtilsService {
         return false;
     }
 
-    matomoCall(mainTabName: any, path: any, eventArray: any, scriptId: any) {
-        if (environment.production) {
-            matomo(mainTabName, path, eventArray, scriptId);
-        }
-        else {
-            matomo(mainTabName, path, eventArray, scriptId);
-        }
-    }
 
     async getStoredMyAgentList() {
         const agentList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST) || null);
@@ -798,6 +795,15 @@ export class UtilsService {
         //https://uat-api.taxbuddy.com/itr/due-date
         const param = '/due-date';
         return this.itrMsService.getMethod(param);
+    }
+
+    getCgSummary(userId, assessmentYear) {
+        const param = '/cg-summary';
+        let request = {
+          userId: userId,
+          assessmentYear: assessmentYear
+        }
+        return this.itrMsService.postMethod(param, request);
     }
 
 }

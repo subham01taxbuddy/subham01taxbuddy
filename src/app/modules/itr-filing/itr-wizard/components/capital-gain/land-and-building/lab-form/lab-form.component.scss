@@ -1,0 +1,96 @@
+.itarium-mat-error {
+    font-style: italic;
+    margin-top: -18px;
+    text-align: right;
+}
+
+.text-style {
+    background: #bdc3c7;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.top {
+    margin-top: 21px;
+}
+
+.invalid {
+    border: 1px solid #f00;
+}
+
+.sectionTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 150%;
+  /* identical to box height, or 26px */
+
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+  margin-bottom: 20px;
+}
+
+.subTitle{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  /* identical to box height, or 24px */
+
+  letter-spacing: -0.019em;
+
+  color: #1E1E1E;
+
+}
+
+.card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #F5F5FA;
+  border-radius: 10px;
+}
+
+.cardYes {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: #FBFBFD;
+  border: 1px solid #F5F5FA!important;
+  border-radius: 10px;
+  padding:10px;
+}
+
+.mat-radio-label {  
+  margin-left: 8px!important;
+}
+
+.delete-btn {
+  background: #FFE1E1;
+  border: 1px solid #E20000;
+  border-radius: 6px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  color: #E20000;
+}
+
+.delete-btn:disabled {
+  background: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  color: #BDBDBD;
+  padding:10px;
+}
+
+.btnGry {
+  border: 1px solid #cccccc;
+  padding: 10px;
+  color: #cccccc;
+  width: 95px;
+  border-radius: 5px;
+  margin-left: -15px;
+}

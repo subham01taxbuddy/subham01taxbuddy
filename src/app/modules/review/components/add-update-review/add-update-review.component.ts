@@ -4,9 +4,9 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ConfirmModel } from 'src/app/pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ReviewService } from '../../services/review.service';
+import {ConfirmModel} from "../../../itr-filing/kommunicate-dialog/kommunicate-dialog.component";
 
 export const MY_FORMATS = {
   parse: {
@@ -79,35 +79,12 @@ export class AddUpdateReviewComponent implements OnInit {
     this.loading = true;
     this.isError = false;
     const param = `review`;
-    const reqBody = {
-      "sourcePlatform": this.reviewForm.controls['sourcePlatform'].value,
-      "sourceMobile": this.reviewForm.controls['sourceMobile'].value,
-      "sourceEmail": this.reviewForm.controls['sourceEmail'].value,
-      "sourceRating": this.reviewForm.controls['sourceRating'].value,
-      "sourceComment": this.reviewForm.controls['sourceComment'].value,
-      "sourceReviewDateTime": this.reviewForm.controls['sourceReviewDateTime'].value,
-      "sourceUserName": this.reviewForm.controls['sourceUserName'].value,
-      "isReviewNegative": this.reviewForm.controls['isReviewNegative'].value,
-      "productName": this.reviewForm.controls['productName'].value,
-      "userId": this.reviewForm.controls['userId'].value,
-      "smeId": this.reviewForm.controls['smeId'].value,
-      "smeNotes": this.reviewForm.controls['smeNotes'].value,
-      "reviewSentiment": this.reviewForm.controls['reviewSentiment'].value
-    };
-    this.reviewService.postMethod(param, reqBody).subscribe(res => {
-      if (res.success) {
-        this._toastMessageService.alert("success", "Review added successfully");
-        this.loading = false;
-        this.dialogRef.close(true);
-      } else {
-        this._toastMessageService.alert("error", "Failed to add review");
-        this.loading = false;
-        this.dialogRef.close(false);
-      }
+    this.reviewService.postMethod(param, this.reviewForm.getRawValue()).subscribe(res => {
+      this._toastMessageService.alert("success", "Review added successfully");
+      this.dialogRef.close();
     }, (error) => {
-      this.loading = false;
+      this.loading = true;
       this._toastMessageService.alert("error", "Failed to add review");
-      this.dialogRef.close(false);
     });
   }
 }

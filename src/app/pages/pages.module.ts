@@ -1,8 +1,4 @@
-import {
-  NgModule,
-  NO_ERRORS_SCHEMA,
-  CUSTOM_ELEMENTS_SCHEMA,
-} from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -35,17 +31,6 @@ import { ToggleComponent } from '../additional-components/toggle/toggle.componen
 import { AttributesFilterComponent } from '../additional-components/attributes-filter/attributes-filter.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-//Pages Component
-import { BusinessComponent } from './business/business.component';
-import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
-import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
-import { AddUpdateGSTBillInvoiceComponent } from './business/gst-cloud/add-update-gst-bill-invoice/add-update-gst-bill-invoice.component';
-import { AddUpdateCreditDebitNoteInvoiceComponent } from './business/gst-cloud/add-update-credit-debit-note-invoice/add-update-credit-debit-note-invoice.component';
-import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
-import { PartyListComponent } from './business/party-list/party-list.component';
-import { ImportPartyListComponent } from './business/import-party-list/import-party-list.component';
-import { GST3BComputationComponent } from './business/gst-3b-computation/gst-3b-computation.component';
-
 import { routes } from './pages.routing';
 import { environment } from '../../environments/environment';
 import Auth from '@aws-amplify/auth';
@@ -56,23 +41,19 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ValidateOtpByWhatAppComponent } from '../modules/auth/components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { AgGridCheckboxComponent } from '../additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 import { SharedModule } from '../modules/shared/shared.module';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NeedHelpComponent } from './need-help/need-help.component';
-import { NgxPaginationModule } from 'ngx-pagination';
+
 
 Auth.configure(environment.AMPLIFY_CONFIG);
 
 Storage.configure({
   AWSS3: {
     bucket: environment.s3_cred.bucket,
-    region: environment.s3_cred.region,
-  },
+    region: environment.s3_cred.region
+  }
 });
 
 export const MY_FORMATS = {
@@ -84,19 +65,10 @@ export const MY_FORMATS = {
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
-  },
+  }
 };
 @NgModule({
   declarations: [
-    BusinessComponent,
-    BusinessProfileComponent,
-    GSTCloudComponent,
-    AddUpdateGSTBillInvoiceComponent,
-    AddUpdateCreditDebitNoteInvoiceComponent,
-    BusinessDocumentsComponent,
-    PartyListComponent,
-    ImportPartyListComponent,
-    GST3BComputationComponent,
     SelectObjectFilterPipe,
     SelectFilterPipe,
     SelectObjFilterPipe,
@@ -130,7 +102,6 @@ export const MY_FORMATS = {
   ],
   imports: [
     CommonModule,
-    NgxPaginationModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -148,29 +119,13 @@ export const MY_FORMATS = {
     BacktipsDatePipe,
     CapitalizeFirstPipe,
     SafePipe,
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 
-  exports: [
-    CalendarComponent,
-    BacktipsDatePipe,
-    AgGridModule,
-    AgGridCheckboxComponent,
-    AttributesFilterComponent,
-    FormsModule,
+  exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    InputSelectObjectComponent,
-    NgxLoadingModule,
-    InputUploadComponent,
-    NgxExtendedPdfViewerModule,
-    NeedHelpComponent,
-  ],
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, NgxExtendedPdfViewerModule, NeedHelpComponent]
 })
-export class PagesModule {}
+export class PagesModule { }

@@ -39,11 +39,11 @@
           </table>
 
           <ag-grid-angular class="ag-theme-balham" [gridOptions]="usersGridOptions"
-            (rowClicked)="onUsersRowClicked($event)">
-            <!--    paginationPageSize=15 pagination=true-->
+            (rowClicked)="onUsersRowClicked($event)" paginationPageSize=15 pagination=true>
+
           </ag-grid-angular>
 
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+<!--          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>-->
         </div>
       </div>
     </div>

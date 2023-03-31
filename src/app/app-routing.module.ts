@@ -8,101 +8,38 @@ import { AuthGuard } from './../app/services/auth.guard';
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'login',
-    loadChildren: () =>
-      import('./../app/modules/auth/auth.module').then((m) => m.AuthModule),
+    path: 'auth', loadChildren: () => import('./../app/modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: 'pages',
-    component: LayoutComponent,
-    canActivate: [RoleBaseAuthGuardService],
-    loadChildren: () =>
-      import('./../app/pages/pages.module').then((m) => m.PagesModule),
+    path: 'login', loadChildren: () => import('./../app/modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: 'pages/master',
-    component: LayoutComponent,
-    canActivate: [RoleBaseAuthGuardService],
-    loadChildren: () =>
-      import('./../app/modules/master/master.module').then(
-        (m) => m.MasterModule
-      ),
+    path: 'pages', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/pages/pages.module').then(m => m.PagesModule)
   },
   {
-    path: 'pages/dashboard',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./../app/modules/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
-      ),
+    path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
   },
   {
-    path: 'pages/reports',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./../app/modules/main-reports/main-reports.module').then(
-        (m) => m.MainReportsModule
-      ),
+    path: 'tasks', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)
   },
   {
-    path: 'pages/review',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./../app/modules/review/review.module').then(
-        (m) => m.ReviewModule
-      ),
+    path: 'sme-management-new', component: LayoutComponent, loadChildren: () => import('./modules/sme-management-new/sme-management-new.module').then(m => m.SmeManagementNewModule)
   },
   {
-    path: 'pages/delete-user',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./../app/modules/delete-user/delete-user.module').then(
-        (m) => m.DeleteUserModule
-      ),
+    path: 'itr-filing', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/itr-filing/itr-filing.module').then(m => m.ItrFilingModule)
+  },
+  { path: 'subscription',component: LayoutComponent, loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
+  {
+    path: 'review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
   },
   {
-    path: 'eri',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./../app/modules/eri-flow/eri-flow.module').then(
-        (m) => m.EriFlowModule
-      ),
-  },
-  {
-    path: 'tasks',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/tasks/tasks.module').then((m) => m.TasksModule),
-  },
-  {
-    path: 'sme-management',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/sme-management/sme-management.module').then(
-        (m) => m.SmeManagementModule
-      ),
-  },
-  {
-    path: 'report-card',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/report-card/report-card.module').then(
-        (m) => m.ReportCardModule
-      ),
+    path: 'bo-partners', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/pages/bo-partners/bo-partners.module').then(m => m.BoPartnersModule)
   },
   { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

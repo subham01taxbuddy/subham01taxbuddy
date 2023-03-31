@@ -1,0 +1,474 @@
+@import "./variable";
+@import "~@angular/material/theming";
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+$fontConfig: (
+    display-4: mat-typography-level(112px, 112px, 300, "Poppins"),
+    display-3: mat-typography-level(56px, 56px, 400, "Poppins", 0.0089em),
+    display-2: mat-typography-level(45px, 48px, 400, "Poppins", 0),
+    display-1: mat-typography-level(34px, 40px, 400, "Poppins", 0.0074em),
+    headline: mat-typography-level(24px, 32px, 400, "Poppins", 0),
+    title: mat-typography-level(20px, 32px, 500, "Poppins", 0.0075em),
+    subheading-2: mat-typography-level(16px, 28px, 400, "Poppins", 0.0094em),
+    subheading-1: mat-typography-level(15px, 24px, 500, "Poppins", 0.0067em),
+    body-2: mat-typography-level(14px, 24px, 500, "Poppins", 0.0179em),
+    body-1: mat-typography-level(14px, 20px, 400, "Poppins", 0.0179em),
+    button: mat-typography-level(14px, 14px, 500, "Poppins", 0.0893em),
+    caption: mat-typography-level(12px, 20px, 400, "Poppins", 0.0333em),
+    input: mat-typography-level(inherit, 1.125, 400, "Poppins", 1.5px),
+);
+
+// Foreground Elements
+// Light Theme Text
+$darkText: #000;
+$darkPrimaryText: rgba($darkText, 0.87);
+$darkAccentText: rgba($darkPrimaryText, 0.54);
+$darkDisabledText: rgba($darkPrimaryText, 0.38);
+$darkDividers: rgba($darkPrimaryText, 0.12);
+$darkFocused: rgba($darkPrimaryText, 0.12);
+
+$matLightThemeForeground: (
+    base: $black,
+    divider: $darkDividers,
+    dividers: $darkDividers,
+    disabled: $darkDisabledText,
+    disabled-button: rgba($darkText, 0.26),
+    disabled-text: $darkDisabledText,
+    elevation: $black,
+    secondary-text: $darkAccentText,
+    hint-text: $darkDisabledText,
+    accent-text: $darkAccentText,
+    icon: $darkAccentText,
+    icons: $darkAccentText,
+    text: $darkPrimaryText,
+    slider-min: $darkPrimaryText,
+    slider-off: rgba($darkText, 0.26),
+    slider-off-active: $darkDisabledText,
+);
+
+// Dark Theme text
+$lightText: $white;
+$lightPrimaryText: $lightText;
+$lightAccentText: rgba($lightPrimaryText, 0.7);
+$lightDisabledText: rgba($lightPrimaryText, 0.5);
+$lightDividers: rgba($lightPrimaryText, 0.12);
+$lightFocused: rgba($lightPrimaryText, 0.12);
+
+$matDarkThemeForeground: (
+    base: $lightText,
+    divider: $lightDividers,
+    dividers: $lightDividers,
+    disabled: $lightDisabledText,
+    disabledButton: rgba($lightText, 0.3),
+    disabledText: $lightDisabledText,
+    elevation: $black,
+    hintText: $lightDisabledText,
+    secondary-text: $lightAccentText,
+    accentText: $lightAccentText,
+    icon: $lightText,
+    icons: $lightText,
+    text: $lightText,
+    slider-min: $lightText,
+    sliderff: rgba($lightText, 0.3),
+    slider-off-active: rgba($lightText, 0.3),
+);
+
+// Background config
+// Light bg
+$lightBackground: $lightBackground;
+$lightBgDarker5: darken($lightBackground, 5%);
+$lightBgDarker10: darken($lightBackground, 10%);
+$lightBgDarker20: darken($lightBackground, 20%);
+$lightBgDarker30: darken($lightBackground, 30%);
+$lightBgLighter5: lighten($lightBackground, 5%);
+$darkBgTooltip: lighten($darkBackground, 20%);
+$darkBgAlpha4: rgba($darkBackground, 0.04);
+$darkBgAlpha12: rgba($darkBackground, 0.12);
+
+$matLightThemeBackground: (
+    background: $lightBackground,
+    status-bar: $lightBgDarker20,
+    app-bar: $lightBgDarker5,
+    hover: $darkBgAlpha4,
+    card: $lightBgLighter5,
+    dialog: $lightBgLighter5,
+    tooltip: $darkBgTooltip,
+    disabled-button: $darkBgAlpha12,
+    raised-button: $lightBgLighter5,
+    focused-button: $darkFocused,
+    selected-button: $lightBgDarker20,
+    selected-disabled-button: $lightBgDarker30,
+    disabled-button-toggle: $lightBgDarker10,
+    unselected-chip: $lightBgDarker10,
+    disabled-list-option: $lightBgDarker10,
+);
+
+// Dark bg
+$darkBackground: $darkBackground;
+$darkBgLighter5: lighten($darkBackground, 5%);
+$darkBgLighter10: lighten($darkBackground, 10%);
+$darkBgLighter20: lighten($darkBackground, 20%);
+$darkBgLighter30: lighten($darkBackground, 30%);
+$lightBgAlpha4: rgba($lightBackground, 0.04);
+$lightBgAlpha12: rgba($lightBackground, 0.12);
+
+// Background palette for dark themes.
+$matDarkThemeBackground: (
+    background: $darkBackground,
+    status-bar: $darkBgLighter20,
+    app-bar: $darkBgLighter5,
+    hover: $lightBgAlpha4,
+    card: $darkBgLighter5,
+    dialog: $darkBgLighter5,
+    tooltip: $darkBgLighter20,
+    disabled-button: $lightBgAlpha12,
+    raised-button: $darkBgLighter5,
+    focused-button: $lightFocused,
+    selected-button: $darkBgLighter20,
+    selected-disabled-button: $darkBgLighter30,
+    disabled-button-toggle: $darkBgLighter10,
+    unselected-chip: $darkBgLighter20,
+    disabled-list-option: $darkBgLighter10,
+);
+
+// Compute font config
+@include mat-core($fontConfig);
+
+// Theme Config
+
+$matPrimary: (
+    main: $primaryColor,
+    lighter: $lighter,
+    darker: $darker,
+    200: $primaryColor,
+    // For slide toggle,
+    contrast: (main: $lightPrimaryText,
+        lighter: $darkPrimaryText,
+        darker: $lightPrimaryText,
+    ),
+);
+
+$themePrimary: mat-palette($matPrimary, main, lighter, darker);
+
+$matAccent: (
+    main: #118CB2,
+    lighter: #b3ebf2,
+    darker: #00a5c3,
+    200: #118CB2,
+    contrast: (main: $darkPrimaryText,
+        lighter: $darkPrimaryText,
+        darker: $lightPrimaryText,
+    ),
+);
+$themeAccent: mat-palette($matAccent, main, lighter, darker);
+
+$matWarn: (
+    main: $matWarnMain,
+    lighter: $matWarnLighter,
+    darker: $matWarnMain,
+    200: $matWarnMain,
+    contrast: (main: $lightPrimaryText,
+        lighter: $darkPrimaryText,
+        darker: $lightPrimaryText,
+    ),
+);
+$themeWarn: mat-palette($matWarn, main, lighter, darker);
+
+$theme: mat-light-theme($themePrimary, $themeAccent, $themeWarn);
+$altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
+
+// Theme Init
+@include angular-material-theme($theme);
+
+.theme-alternate {
+    @include angular-material-theme($altTheme);
+}
+
+// Specific component overrides, pieces that are not in line with the general theming
+
+/*CSS changes by Sushma Start */
+
+.txt-center {
+    text-align: center;
+}
+
+.display-flex {
+    display: flex !important;
+}
+
+.ml30 {
+    margin-left: 30px;
+}
+
+.headers-align {
+    .mat-expansion-panel {
+        margin-bottom: 28px;
+
+        .mat-expanded {
+
+            .mat-expansion-panel-header-title {
+                font-weight: 500;
+                font-size: 21.2451px;
+                line-height: 150%;
+                letter-spacing: -0.022em;
+                color: #FF6B00;
+
+                .mat-icon {
+                    color: #00AECA;
+                    transform: rotate(90deg);
+                    margin-right: 14px;
+                }
+            }
+        }
+
+        .mat-expansion-panel-header-title {
+            font-weight: 500;
+            font-size: 21.2451px;
+            line-height: 150%;
+            letter-spacing: -0.022em;
+            color: #1E1E1E;
+
+            .mat-icon {
+                color: #00AECA;
+                margin-right: 14px;
+            }
+        }
+    }
+}
+
+.mat-expanded {
+    .isShow {
+        display: block;
+    }
+}
+
+.isShow {
+    display: none;
+}
+
+.edit {
+    text-align: right;
+    margin-top: 20px;
+    padding: 14px 0 19px;
+    border-top-style: solid;
+
+    .edit_btn {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 0px 20.5882px;
+        gap: 6.86px;
+        width: 69.83px;
+        height: 32.21px;
+        margin-right: 10px;
+        background: #E5F2F7;
+        border: 1px solid #797979;
+        border-radius: 6.86273px;
+    }
+}
+
+
+mat-label {
+    display: block;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 14px;
+    letter-spacing: -0.009em;
+    color: #9a9a9a;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin-bottom: 2px;
+}
+
+mat-form-field .mat-form-field {
+  &-underline {
+    position: static;
+    //bottom: auto;
+  }
+  &-subscript-wrapper {
+    position: absolute;
+    overflow: visible;
+  }
+}
+
+.mat-form-field {
+    width: 90%;
+    background: #FFFFFF;
+    border-radius: 6.62375px;
+
+    .mat-form-field-wrapper {
+        // padding-bottom: 0px !important;
+
+        .mat-form-field-flex {
+            .mat-form-field-infix {
+                padding: 0.4em 0 !important;
+                margin-bottom: 5px;
+
+                .mat-input-element {
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 14px;
+                    // color: #07070C;
+                    color: #00A4BF;
+                }
+              .mat-input-element:disabled {
+                color: #07070C;
+              }
+
+                .mat-select {
+                    .mat-select-trigger {
+                        .mat-select-value {
+                            .mat-select-value-text {
+                                .mat-select-min-line {
+                                    font-weight: 400;
+                                    font-size: 12.6259px;
+                                    line-height: 14px;
+                                    color: #9A9AAF;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.mat-radio-group {
+    .mat-radio-button {
+        .mat-radio-label {
+            .mat-radio-label-content {
+                font-weight: 400;
+                font-size: 12.6259px;
+                line-height: 14px;
+                color: #9A9AAF;
+            }
+        }
+    }
+
+    .mat-radio-checked {
+        .mat-radio-label {
+            .mat-radio-label-content {
+                font-weight: 400;
+                font-size: 12.6259px;
+                line-height: 14px;
+                color: #07070C;
+            }
+        }
+    }
+}
+
+.card__row {
+    margin: 0 -10px 0;
+}
+
+.hide-close {
+    mat-expansion-panel-header {
+        pointer-events: none;
+
+        mat-panel-title {
+            mat-icon {
+                pointer-events: visiblefill !important;
+            }
+        }
+
+        .edit {
+            button {
+                pointer-events: visiblefill !important;
+            }
+        }
+    }
+}
+
+.save-btn {
+    background: #EEFFE4;
+    border: 1px solid #9C9C9C;
+    border-radius: 6.86273px;
+    color: #000;
+}
+
+.note {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 150%;
+    letter-spacing: -0.022em;
+    color: #1E1E1E;
+}
+
+.card-header {
+    background: rgba(217, 217, 217, 0.15);
+    border: 2px solid #E4E4E4;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 75vw;
+    left: 26.1px;
+}
+
+
+.mat-dialog-title {
+    font-weight: 600 !important;
+    font-size: 25px !important;
+    line-height: 18px !important;
+    align-items: center;
+    text-align: center;
+    color: #07070C;
+}
+
+.add-notes {
+    width: 90%;
+    text-align: right;
+}
+
+.saved-notes {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 14px;
+    color: #000000;
+}
+
+.edit-head {
+    width: 132px;
+
+    .edit-donation {
+        background: #E5F2F6;
+        border: 0.5px solid #D9D9D9;
+        border-radius: 3px;
+        display: flex;
+        padding: 5px 4px;
+
+        .mat-icon {
+            height: 15px;
+            width: 19px;
+        }
+
+        .material-icons {
+            font-size: 14px;
+        }
+    }
+}
+
+.head-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 30px;
+    color: #000000;
+}
+
+// mat-form-field {
+//     .mat-form-field-wrapper {
+//         .mat-form-field-flex {
+//             .mat-form-field-infix {
+//                 .mat-form-field-label-wrapper {
+//                     top: -2em;
+//                 }
+//             }
+//         }
+//     }
+// }
+
+/*CSS changes by Sushma End */

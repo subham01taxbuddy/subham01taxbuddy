@@ -1,0 +1,347 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div>
+  <!-- other-assets  -->
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel
+      [expanded]="step === 0"
+      (opened)="setStep(0)"
+      (closed)="closed()"
+      hideToggle
+      class="hide-close"
+    >
+      <mat-expansion-panel-header class="flex justify-between items-center">
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Other Assets
+        </mat-panel-title>
+        <div class="edit clearfix isShow">
+          <button
+            class="flex items-center btn gap-[15px]"
+            style="flex-direction: row"
+            (click)="$event.stopPropagation(); addOtherAssets('otherAssets')"
+          >
+            <mat-icon [inline]="true"> edit_square </mat-icon>
+            <span>Add Other Assets</span>
+          </button>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="flex gap-[25px]" style="padding-top: 25px">
+        <div>
+          <div>
+            <app-other-asset-improvement
+              style="padding-top: 25px"
+              [isAddOtherAssetsImprovement]="isAddOtherAssetsImprovement"
+            ></app-other-asset-improvement>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <br />
+
+  <!-- deductions  -->
+  <div class="card" style="padding-top: 25px">
+    <!-- header  -->
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="card__title">Add Deduction under section 54F</div>
+        <div>
+          (Applicable for any capital assets other than residential House
+          Property)
+        </div>
+      </div>
+    </div>
+
+    <!-- form  -->
+    <div style="padding-top: 25px">
+      <form [formGroup]="deductionForm">
+        <div formArrayName="deductions">
+          <div
+            *ngFor="
+              let deduction of getDeductions?.controls | paginate : config;
+              let i = index
+            "
+            [formGroupName]="fieldGlobalIndex(i)"
+          >
+            <div class="card flex" style="flex-direction: row">
+              <div class="flex">
+                <!-- CHECKBOX  -->
+                <div style="padding-right: 35px">
+                  <mat-checkbox color="primary"></mat-checkbox>
+                </div>
+
+                <!-- inputs  -->
+                <div class="flex flex-wrap items-center">
+                  <!-- type-of-deduction  -->
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Type of Deduction</mat-label>
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        digitsOnly
+                        formControlName="typeOfDeduction"
+                        placeholder="Type of Deduction"
+                        name="typeOfDeduction"
+                        class="input-field"
+                        maxlength="14"
+                        readonly
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      />
+                      <!-- <mat-error
+                  *ngIf="
+                    assetDetailsForm.controls['purchaseCost'].hasError(
+                      'pattern'
+                    )
+                  "
+                  >Enter valid amount.</mat-error
+                > -->
+                    </mat-form-field>
+                  </div>
+                  <!-- buy-date  -->
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label> Buy Date / Date of Acquisition </mat-label>
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        formControlName="purchaseDate"
+                        name="purchaseDate"
+                        [matDatepicker]="purchaseDate"
+                        placeholder="Buy Date / Date of Acquisition"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="purchaseDate"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #purchaseDate></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <!-- cost-of-new-asset  -->
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Cost of New Asset</mat-label>
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        digitsOnly
+                        formControlName="costOfNewAsset"
+                        placeholder="Cost Of New Asset"
+                        name="costOfNewAsset"
+                        class="input-field"
+                        maxlength="14"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      />
+                      <!-- <mat-error
+                  *ngIf="
+                    assetDetailsForm.controls['sellValue'].hasError('pattern')
+                  "
+                  >Enter valid amount.</mat-error
+                > -->
+                    </mat-form-field>
+                  </div>
+                  <!-- CGAS Deposit  -->
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label
+                      >Amount deposited in CGAS before due date</mat-label
+                    >
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        digitsOnly
+                        formControlName="CGASAmount"
+                        placeholder="Amount deposited in CGAS before due date"
+                        name="CGASAmount"
+                        class="input-field"
+                        maxlength="14"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      />
+                      <!-- <mat-error
+                  *ngIf="
+                    assetDetailsForm.controls['sellExpense'].hasError('pattern')
+                  "
+                  >Enter valid amount.</mat-error
+                > -->
+                    </mat-form-field>
+                  </div>
+                  <!-- deduction claimed  -->
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-label>Amount of Deduction Claimed</mat-label>
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        digitsOnly
+                        formControlName="deductionClaimed"
+                        placeholder="Amount of Deduction Claimed"
+                        name="deductionClaimed"
+                        class="input-field"
+                        maxlength="14"
+                        readonly
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        (click)="calculateDeduction(i)"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <!-- edit Other Assets deduction -->
+              <div class="edit-head">
+                <button
+                  type="button"
+                  class="edit-donation"
+                  (click)="editDeduction(i)"
+                >
+                  <mat-icon> edit_square </mat-icon>Edit
+                </button>
+              </div>
+            </div>
+
+            <br />
+            <br />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- footer  -->
+    <div
+      class="card__col-xs-12 flex items-center justify-between"
+      style="padding-bottom: 10px"
+    >
+      <div class="card__col-sm-3">
+        <button
+          type="submit"
+          class="tbd-btn-secondary"
+          (click)="deleteDeduction(index)"
+        >
+          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+        </button>
+      </div>
+      <!-- <div class="card__col-sm-6 txt-center">
+          <table>
+            <tr
+              *ngFor="
+                let item of getDeductions?.controls | paginate : config
+              "
+            ></tr>
+          </table>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </div> -->
+      <div class="card__col-sm-3" style="text-align: right">
+        <button class="tbd-btn save-btn" (click)="saveCg()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <hr />
+
+  <!-- page-navigation-buttons  -->
+  <div class="flex justify-between items-center">
+    <div>
+      <button class="btn" (click)="goBack()">
+        Back to Capital Gain Topics
+      </button>
+    </div>
+
+    <div>
+      <button class="btn">Save All</button>
+    </div>
+  </div>
+</div>
+
+<!-- <div style="padding-top: 20px">
+  <div class="card__title" style="padding: 10px; font-size: 20px">
+    Other Assets
+    <span style="float: right">
+      <button
+        class="tbd-btn-small"
+        (click)="addMore('ADD', 'GOLD', goldCg.assetDetails.length)"
+      >
+        Add More&nbsp;&nbsp; <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
+    </span>
+  </div>
+
+  <div style="height: 100%; padding-top: 10px; box-sizing: border-box">
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      class="ag-theme-balham"
+      [gridOptions]="otherAssetsGridOptions"
+      (rowClicked)="onOtherAssetsRowClicked($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
+
+<div style="padding-top: 20px">
+  <div class="card__title" style="padding: 10px; font-size: 20px">
+    Add Details of cost of Improvement?
+    <span style="float: right">
+      <button class="tbd-btn-small" (click)="addImprovement('ADD')">
+        Add More&nbsp;&nbsp; <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
+    </span>
+  </div>
+
+  <div style="height: 100%; padding-top: 10px; box-sizing: border-box">
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      class="ag-theme-balham"
+      [gridOptions]="improvementGridOptions"
+      (rowClicked)="onImprovementRowClicked($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
+
+<div style="padding-top: 20px">
+  <div class="card__title" style="padding: 10px; font-size: 20px">
+    Add deduction under section 54F
+    <i
+      class="fa fa-info-circle"
+      aria-hidden="true"
+      title="Applicable for any capital assets other than residential HP"
+    ></i>
+    <span style="float: right">
+      <button
+        class="tbd-btn-small"
+        [disabled]="!canAddDeductions"
+        (click)="addDeduction('ADD')"
+      >
+        Add More&nbsp;&nbsp; <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
+    </span>
+  </div>
+
+  <div style="height: 100%; padding-top: 10px; box-sizing: border-box">
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      class="ag-theme-balham"
+      [gridOptions]="deductionGridOptions"
+      (rowClicked)="onDeductionRowClicked($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
+
+<div class="pull-right">
+  <button class="tbd-btn" (click)="saveCg()">Save</button>
+</div> -->

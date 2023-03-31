@@ -1,0 +1,181 @@
+<div>
+  <div class="align-items-center row">
+    <div class="col-sm-10">
+      <b style="font-size: 14px">Personal Details </b>
+    </div>
+    <div class="edit clearfix col-sm-2">
+      <button type="button" class="edit_btn">
+        <i class="fas fa-edit"></i>Edit
+      </button>
+    </div>
+  </div>
+  <div class="content-wrapper">
+    <form [formGroup]="smeFormGroup">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Mobile No </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Mobile No"
+              [formControl]="mobileNumber"
+              class="input-field"
+              maxlength="10"
+              minlength="6"
+              trim
+              digitsOnly
+              required
+            />
+             <!-- <mat-error
+                  *ngIf="mobileNumber?.hasError('required') ">
+                  This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Name </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Name"
+              [formControl]="name"
+              class="input-field"
+             />
+            <!-- <mat-error
+            *ngIf="name?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Email ID</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="email id"
+              [formControl]="email"
+              class="input-field"
+            />
+            <!-- <mat-error
+            *ngIf="email?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Language </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select [formControl]="languages" multiple>
+              <mat-select-trigger>
+                {{languages.value ? languages.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let lang of langList" [value]="lang"> {{lang}}</mat-option>
+            </mat-select>
+
+            <!-- <mat-error
+                    *ngIf="languages?.hasError('required') ">
+                    This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Referred Person </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Referred person"
+              [formControl]="referredBy"
+              class="input-field"
+            />
+            <!-- <mat-error
+            *ngIf="referredBy?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4" >
+          <mat-label> Income Tax Expertise </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select [formControl]="itrTypes" multiple>
+              <mat-select-trigger>
+                {{itrTypes.value ? itrTypes.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value"> {{itrType.display}}</mat-option>
+              <!-- <mat-select-trigger>
+                <span *ngFor="let item of itrTypes.value; ">
+                  itr-{{item || ''}} <span>,</span>
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option> -->
+            </mat-select>
+            <!-- <mat-error
+            *ngIf="itrTypes?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Qualification </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Qualification"
+              name=""
+              [formControl]="qualification"
+              class="input-field"
+            />
+            <mat-error
+            *ngIf="qualification?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> State </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select
+                    placeholder="Select state"
+                    name="state"
+                    [formControl]="state"
+                  >
+                    <mat-option
+                      *ngFor="let state of stateDropdown"
+                      [value]="state.stateCode"
+                    >
+                      {{ state.stateName | titlecase }}
+                    </mat-option>
+              </mat-select>
+            <!-- <mat-error
+            *ngIf="state?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Search Team Lead (TL)/ Owner <span class="text-danger">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input type="text" matInput [formControl]="teamLead" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let option  of filteredOptions | async" [value]="option"  (click)="getownerNameId(option)">
+                       {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+            <mat-error
+            *ngIf="teamLead?.hasError('required') ">
+            This field is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div style="text-align: center;">
+    <button class="tbd-btn" [disabled]="!smeFormGroup.valid" (click)=" updateSmeDetails()">Save </button>
+  </div>
+  </div>
+</div>

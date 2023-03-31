@@ -13,7 +13,7 @@ import { ReviewService } from '../../services/review.service';
 @Component({
   selector: 'app-review-list',
   templateUrl: './review-list.component.html',
-  styleUrls: ['./review-list.component.scss'],
+  styleUrls: ['./review-list.component.scss']
 })
 export class ReviewListComponent implements OnInit {
   config: any;
@@ -23,37 +23,36 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
-  selectStatus: any = 'OPEN';
+  selectStatus: any = '';
   statusList: any[] = AppConstants.statusList;
   platformList: any[] = AppConstants.platformList;
-  selectPlatform: any = 'All';
+  selectPlatform: any = '';
 
-  constructor(
-    @Inject(LOCALE_ID) private locale: string,
+  constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
-    private reviewService: ReviewService
-  ) {
+    private reviewService: ReviewService,) {
     this.reviewGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reviewColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: params => {
+      },
 
       sortable: true,
       defaultColDef: {
         resizable: true,
         cellRendererFramework: AgTooltipComponent,
         cellRendererParams: (params: ICellRendererParams) => {
-          this.formatToolTip(params.data);
-        },
+          this.formatToolTip(params.data)
+        }
       },
     };
 
     this.config = {
       itemsPerPage: 12,
       currentPage: 1,
-      totalItems: null,
+      totalItems: 0
     };
   }
 
@@ -75,10 +74,10 @@ export class ReviewListComponent implements OnInit {
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -94,10 +93,10 @@ export class ReviewListComponent implements OnInit {
         width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -113,10 +112,10 @@ export class ReviewListComponent implements OnInit {
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -132,10 +131,10 @@ export class ReviewListComponent implements OnInit {
         width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -152,27 +151,27 @@ export class ReviewListComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: (data: any) => {
           if (data.value) {
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale)
           } else {
             return '-';
           }
         },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
         headerName: 'User Comment',
         field: 'sourceComment',
         width: 200,
         suppressMovable: true,
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -188,10 +187,10 @@ export class ReviewListComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -207,7 +206,7 @@ export class ReviewListComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         cellRenderer: (data: any) => {
           if (data.value) {
             return data.value;
@@ -216,8 +215,8 @@ export class ReviewListComponent implements OnInit {
           }
         },
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
       },
       {
@@ -233,11 +232,11 @@ export class ReviewListComponent implements OnInit {
           }
         },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
         headerName: 'Product',
@@ -245,10 +244,10 @@ export class ReviewListComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -275,11 +274,10 @@ export class ReviewListComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
-            display: 'flex',
+            textAlign: 'center', display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center',
-          };
+            'justify-content': 'center'
+          }
         },
       },
       {
@@ -298,11 +296,10 @@ export class ReviewListComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
-            display: 'flex',
+            textAlign: 'center', display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center',
-          };
+            'justify-content': 'center'
+          }
         },
       },
       {
@@ -321,14 +318,14 @@ export class ReviewListComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
-            display: 'flex',
+            textAlign: 'center', display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center',
-          };
+            'justify-content': 'center'
+          }
         },
       },
-    ];
+
+    ]
   }
 
   addReview(title, key, data) {
@@ -338,10 +335,10 @@ export class ReviewListComponent implements OnInit {
       data: {
         title: title,
         leadData: data,
-        mode: key,
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
+        mode: key
+      }
+    })
+    disposable.afterClosed().subscribe(result => {
       if (result) {
         this.getReview(0);
       }
@@ -370,7 +367,7 @@ export class ReviewListComponent implements OnInit {
         mode: key,
       },
     });
-    disposable.afterClosed().subscribe((result) => {
+    disposable.afterClosed().subscribe(result => {
       if (result) {
         this.getReview(0);
       }
@@ -430,14 +427,11 @@ export class ReviewListComponent implements OnInit {
   createRowData(data: any) {
     var userArray = [];
     for (let i = 0; i < data.length; i++) {
+
       let platform = '-';
       if (data[i].sourcePlatform) {
-        const filterData = this.sourceList.filter(
-          (element) => element.value === data[i].sourcePlatform
-        );
-        platform = filterData.length
-          ? filterData[0].label
-          : data[i].sourcePlatform;
+        const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
+        platform = filterData.length ? filterData[0].label : data[i].sourcePlatform
       }
 
       let userInfo: any = Object.assign({}, userArray[i], {
@@ -452,8 +446,8 @@ export class ReviewListComponent implements OnInit {
         id: data[i].id,
         status: data[i].status,
         sourceComment: data[i].sourceComment,
-        groupId: data[i].groupId ? data[i].groupId : '',
-      });
+        groupId: data[i].groupId ? data[i].groupId : ''
+      })
       userArray.push(userInfo);
     }
     return userArray;

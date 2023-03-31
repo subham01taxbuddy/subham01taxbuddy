@@ -1,0 +1,163 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div>
+    <div class="card__row display-flex">
+        <div class="card__col-lg-6">
+            <div class="card__title card__col-lg-8" style="padding:10px; font-size: 20px;">Investment/ Deduction Details
+            </div>
+        </div>
+        <div class="card__col-lg-6"></div>
+    </div>
+    <form [formGroup]="investmentDeductionForm">
+        <div class="card__row display-flex">
+            <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
+                <div class="display-flex card__col-sm-12">
+                    <div class="card__title card__col-sm-9" style="padding:10px 0; font-size: 18px;">Investment/
+                        Deduction</div>
+                    <div class="edit clearfix invest-edit card__col-sm-3">
+                        <button class="edit_btn invest" (click)="editForm('investment')"><mat-icon>
+                                edit_square
+                            </mat-icon>Edit </button>
+                    </div>
+                </div>
+                <div class="card__row">
+                    <div class="card__col-lg-6">
+                        <mat-label>Under section 80C</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80C" formControlName="ELSS" maxlength="8"
+                                autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-6">
+                        <mat-label>Under section 80CCC</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80CCC" formControlName="PENSION_FUND"
+                                maxlength="8" autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-6">
+                        <mat-label>Under section 80CCD (1)</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80CCD (1)" formControlName="PS_EMPLOYEE"
+                                maxlength="8" autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-6">
+                        <mat-label>Under section 80CCD (2)</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80CCD (2)" maxlength="8"
+                                formControlName="PS_EMPLOYER" autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-6">
+                        <mat-label>Under section 80CCD (1B)</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
+                                formControlName="PENSION_SCHEME" autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-6">
+                        <mat-label>Under section 80E</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80E" maxlength="8" formControlName="us80e"
+                                autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-6" *ngIf="!ITR_JSON.systemFlags?.hraAvailed">
+                        <mat-label>Under section 80GG</mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under section 80GG" maxlength="8" formControlName="us80gg"
+                                autocomplete="off" digitsOnly>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div style="padding-top: 20px;">
+                    Other Deductions
+                    <div class="card__row">
+                        <div class="card__col-lg-6">
+                            <mat-label>Under section 80GGC</mat-label>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Under section 80GGC" maxlength="8"
+                                    formControlName="us80ggc" autocomplete="off" digitsOnly>
+                                <mat-hint>Donation is in other than cash mode</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-6">
+                            <mat-label>Under section 80EEB</mat-label>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Under section 80EEB" maxlength="8"
+                                    formControlName="us80eeb" autocomplete="off" digitsOnly>
+                                <mat-error *ngIf="investmentDeductionForm.controls['us80eeb'].hasError('max')">
+                                    Max limit is 1,50,000</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="save_buttons clearfix">
+                            <button class="tbd-btn save-btn" [disabled]="investmentDeductionForm.invalid" (click)="saveInvestmentDeductions()">Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="space-in">
+            </div>
+            <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
+              <app-upload-doc [userId]="ITR_JSON.userId"></app-upload-doc>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="card__row mb-2">
+        <mat-accordion class="headers-align">
+            <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle class="hide-close">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>
+                            arrow_forward_ios
+                        </mat-icon>
+                        General Donations under sec 80G
+                    </mat-panel-title>
+                    <div class="card__row edit clearfix isShow">
+                        <button type="button" class="edit_btn"
+                            (click)="$event.stopPropagation();addDonation('donation')"> <i class="fa fa-plus"></i>Add
+                        </button>
+                    </div>
+                </mat-expansion-panel-header>
+                <app-donations [isAddDonation]="isAddDonation" (onSave)="saveInvestmentDeductions()"></app-donations>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="hide-close">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>
+                            arrow_forward_ios
+                        </mat-icon>
+                        Medical Expenses (u/s 80D) </mat-panel-title>
+                    <div class="card__row edit clearfix isShow">
+                        <button class="edit_btn" (click)="$event.stopPropagation();editForm('medicalExpenses')"><mat-icon>
+                                edit_square
+                            </mat-icon>Edit </button>
+                    </div>
+                </mat-expansion-panel-header>
+                <app-medical-expenses [isEditMedicalExpenses]="isEditMedicalExpenses"></app-medical-expenses>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+        <button
+            class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+            (click)="goBack()">
+            <mat-icon>keyboard_backspace</mat-icon>
+            <span class="font-semibold">&nbsp;Back to Main Page</span>
+        </button>
+
+        <button
+            class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+            (click)="saveInvestmentDeductions()">
+            <span class="font-semibold">Save All</span>
+        </button>
+    </div>
+</div>

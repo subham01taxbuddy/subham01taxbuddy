@@ -1,0 +1,418 @@
+<div>
+  <div class="align-items-center row">
+    <div class="col-sm-10">
+      <b style="font-size: 20px">Personal Details </b>
+    </div>
+    <div class="edit clearfix col-sm-2">
+      <button type="button" class="edit_btn">
+        <i class="fas fa-edit"></i>Edit
+      </button>
+    </div>
+  </div>
+  <div class="content-wrapper">
+    <!-- <form [formGroup]="smeFormGroup"> -->
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Mobile No </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Mobile No"
+              [formControl]="mobileNumber"
+              class="input-field"
+              maxlength="10"
+              minlength="6"
+              trim
+              digitsOnly
+              required
+            />
+             <!-- <mat-error
+                  *ngIf="mobileNumber?.hasError('required') ">
+                  This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Name </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Name"
+              [formControl]="name"
+              class="input-field"
+             />
+            <!-- <mat-error
+            *ngIf="name?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Email ID </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="email id"
+              [formControl]="email"
+              class="input-field"
+            />
+            <!-- <mat-error
+            *ngIf="email?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Language </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select [formControl]="languages" multiple>
+              <mat-select-trigger>
+                {{languages.value ? languages.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let lang of langList" [value]="lang"> {{lang}}</mat-option>
+            </mat-select>
+            <!-- <mat-error
+            *ngIf="languages?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Referred Person </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Referred person"
+              [formControl]="referredBy"
+              class="input-field"
+            />
+            <!-- <mat-error
+            *ngIf="referredPerson?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4" >
+          <mat-label> Income Tax Expertise </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select [formControl]="itrTypes" multiple>
+              <mat-select-trigger>
+                {{itrTypes.value ? itrTypes.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value"> {{itrType.display}}</mat-option>
+              <!-- <mat-select-trigger>
+                <span *ngFor="let item of itrTypes.value; ">
+                  itr-{{item || ''}} <span>,</span>
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option> -->
+            </mat-select>
+            <!-- <mat-error
+            *ngIf="itrTypes?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Qualification </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Qualification"
+              name=""
+              [formControl]="qualification"
+              class="input-field"
+            />
+            <!-- <mat-error
+            *ngIf="qualification?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> State </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select
+                    placeholder="Select state"
+                    name="state"
+                    [formControl]="state" >
+                 <mat-option
+                      *ngFor="let state of stateDropdown"
+                      [value]="state.stateCode" >
+                      {{ state.stateName | titlecase }}
+                 </mat-option>
+              </mat-select>
+            <!-- <mat-error
+            *ngIf="state?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Search Team Lead (TL)/ Owner </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder=""
+              [formControl]="parentName"
+              class="input-field"
+
+            />
+            <!-- <mat-error
+            *ngIf="parentName?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  <!-- </form> -->
+  <hr>
+  <div class="row">
+    <div class="col-sm-10" style="margin-top: 10px;">
+      <b style="font-size: 20px">Company Details: </b>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4" style="margin-top: 10px;">
+      <div class="card" style="margin-top: 10px;">
+        <b style="font-size: 18px">Roles: </b>
+        <section class="example-section" [formGroup]="roles">
+          <p><mat-checkbox [formControl]="admin">Admin</mat-checkbox></p><hr>
+          <p><mat-checkbox [formControl]="leader">Leader</mat-checkbox></p><hr>
+          <p><mat-checkbox [formControl]="owner">Owner</mat-checkbox></p><hr>
+          <p><mat-checkbox [formControl]="filer">Partner/Filer</mat-checkbox></p><hr>
+          <p><mat-checkbox [formControl]="leadEngagement">Lead Engagement</mat-checkbox></p><hr>
+        </section>
+      </div>
+
+    </div>
+    <div class="col-sm-8" style="margin-top: 10px;">
+      <div class="card" style="margin-top: 10px;">
+        <b style="font-size: 18px">Services: </b>
+        <div class="row">
+          <div class="col-sm-6">
+            <section class="example-section" [formGroup]="services">
+              <p><mat-checkbox [formControl]="itr" (change)="serviceUpdated('ITR', itr, itrToggle)">ITR</mat-checkbox><mat-slide-toggle *ngIf="itr.value" [formControl]="itrToggle"  style="float:right ; margin-right: 10px;"
+                                                                                                                                        (change)="assignmentUpdated('ITR', itr, itrToggle)"></mat-slide-toggle>
+                <mat-chip-list><mat-chip class="select-chip" *ngIf="itr.value" disableRipple
+                                   [selected]="nriServiceToggle"(click)="nriUpdated($event, itr)"><i class="fa fa-check" *ngIf="nriServiceToggle"></i>NRI</mat-chip></mat-chip-list></p><hr>
+
+<!--              <p><mat-checkbox [formControl]="nri" (change)="serviceUpdated('NRI', nri, nriToggle)">NRI</mat-checkbox>-->
+<!--                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"-->
+<!--                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>-->
+
+              <p><mat-checkbox [formControl]="tpa" (change)="serviceUpdated('TPA', tpa, tpaToggle)">Tax Planing (TPA)/NPS </mat-checkbox>
+                <mat-slide-toggle *ngIf="tpa.value" [formControl]="tpaToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('TPA', tpa, tpaToggle)"></mat-slide-toggle></p><hr>
+
+              <p><mat-checkbox [formControl]="notice" (change)="serviceUpdated('NOTICE', notice, noticeToggle)">Notice</mat-checkbox>
+                <mat-slide-toggle *ngIf="notice.value" [formControl]="noticeToggle"  style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('NOTICE', notice, noticeToggle)"></mat-slide-toggle></p><hr>
+
+            </section>
+          </div>
+          <div class="col-sm-6">
+            <section class="example-section" [formGroup]="services">
+              <p><mat-checkbox [formControl]="gst" (change)="serviceUpdated('GST', gst, gstToggle)">GST</mat-checkbox>
+                <mat-slide-toggle *ngIf="gst.value" [formControl]="gstToggle"  style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('GST', gst, gstToggle)"></mat-slide-toggle></p><hr>
+
+              <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth Builder(WB)</mat-checkbox>
+                <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('WB', wb, wbToggle)"></mat-slide-toggle></p><hr>
+
+              <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd, pdToggle)">Portfolio Doctor(PD)</mat-checkbox>
+                <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('PD', pd, pdToggle)"></mat-slide-toggle></p><hr>
+
+              <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf, mfToggle)">Mutual Fund (MF) Advisor</mat-checkbox>
+                <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
+                                  (change)="assignmentUpdated('MF', mf, mfToggle)"></mat-slide-toggle></p><hr>
+
+            </section>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-hint>
+              <p> <i class="fas fa-circle"></i>  Select checkbox to active service</p>
+            </mat-hint>
+          </div>
+          <div class="col-sm-6">
+            <mat-hint>
+              <p><i class="fas fa-circle"></i>  Toggle to assign service</p>
+            </mat-hint>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   <!-- <form [formGroup]="otherSmeInfo"> -->
+    <div class="container" style="margin-top: 30px;">
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Add Co-Owner </mat-label>
+          <mat-form-field appearance="outline">
+            <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)" >
+                   {{option.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <!-- <mat-error
+            *ngIf="coOwner?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Calling Number </mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Calling Number"
+              [formControl]="callingNumber"
+              class="input-field"
+             />
+            <!-- <mat-error
+            *ngIf="callingNumber?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-label> Official Email ID</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              type="text"
+              matInput
+              placeholder="Official Email ID"
+              [formControl]="officialEmail"
+              class="input-field"
+             />
+            <!-- <mat-error
+            *ngIf="officialEmail?.hasError('required') ">
+            This field is required</mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-4">
+            <mat-label> Kommunicate ID  </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                type="text"
+                matInput
+                placeholder="Kommunicate ID"
+                [formControl]="kommId"
+                class="input-field"
+               />
+              <!-- <mat-error
+              *ngIf="kommId?.hasError('required') ">
+              This field is required</mat-error> -->
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label> Display Name </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                type="text"
+                matInput
+                placeholder="Display Name"
+                [formControl]="displayName"
+                class="input-field"
+               />
+              <!-- <mat-error
+              *ngIf="displayName?.hasError('required') ">
+              This field is required</mat-error> -->
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label> SME/Partner </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                type="text"
+                matInput
+                placeholder=""
+                [formControl]="internal"
+                class="input-field"
+               />
+              <!-- <mat-error
+              *ngIf="officialEmail?.hasError('required') ">
+              This field is required</mat-error> -->
+            </mat-form-field>
+          </div>
+      </div>
+      <div class="row">
+            <div class="col-sm-4">
+              <mat-label> Leave Starts </mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput  [matDatepicker]="picker1" placeholder="Leave Starts" [formControl]="leaveStartDate"  [min]="minDate"
+                [max]="maxDate" autocomplete="off" (dateChange)="onDateChange(leaveStartDate.value)" >
+                <mat-hint>DD/MM/YYYY</mat-hint>
+               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+               <mat-datepicker #picker1></mat-datepicker>
+                <!-- <mat-error
+                *ngIf="leaveStartDate?.hasError('required') ">
+                This field is required</mat-error> -->
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-label> Leave Ends </mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Leave Ends"  [formControl]="leaveEndDate" [min]="minDate"
+                             [max]="maxDate" [matDatepicker]="picker2" autocomplete="off" required>
+                             <mat-hint>DD/MM/YYYY</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                <!-- <mat-error
+                *ngIf="leaveEndDate?.hasError('required') ">
+                This field is required</mat-error> -->
+              </mat-form-field>
+            </div>
+      </div>
+      <div class="row">
+              <div class="col-sm-4">
+                <mat-label> Joining Date  </mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput placeholder="Joining Date" [formControl]="joiningDate" [min]="minDate"
+                             [max]="maxDate" [matDatepicker]="picker3" autocomplete="off" required>
+                             <mat-hint>DD/MM/YYYY</mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                  <!-- <mat-error
+                  *ngIf="officialEmail?.hasError('required') ">
+                  This field is required</mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Resigning Date  </mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="minDate"
+                           [max]="maxDate" [matDatepicker]="picker4" autocomplete="off" required>
+                           <mat-hint> <p><i class="fas fa-circle"></i>  Resignation date is date of removal</p> </mat-hint>
+                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <mat-datepicker #picker4></mat-datepicker>
+                        <!-- <mat-error *ngIf="personalInfoForm.controls['dateOfBirth'].hasError('required')">
+                            Select Date of
+                            Birth</mat-error> -->
+                  <!-- <mat-error
+                  *ngIf="officialEmail?.hasError('required') ">
+                  This field is required</mat-error> -->
+                </mat-form-field>
+              </div>
+      </div>
+    </div>
+  <!-- </form> -->
+    <div style="text-align: center;  margin-top: 40px;">
+      <button class="tbd-btn" (click)="updateSmeDetails()">Save </button>
+    </div>
+  </div>
+</div>
+
+

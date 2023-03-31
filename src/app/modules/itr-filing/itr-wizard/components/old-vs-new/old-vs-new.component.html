@@ -1,0 +1,216 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="spc-blw">
+  <div class="com_model perBx">
+    <div class="container card">
+      <div class="card__title" style="padding:10px; font-size: 20px;">Comparison of New v/s Old Regime</div>
+      <div class="cardRect">
+        <table class="table table-bordered">
+          <thead style="background:#eaeaea">
+          <tr class="table-head">
+            <th class="text-center particular-label">Particulars</th>
+            <th class="text-center particular-value">Old Tax Regime (₹)</th>
+            <th class="text-center particular-value">New Tax Regime (₹)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let particular of particularsArray;let i=index">
+            <td class="particular-label">
+              {{particular.label}}
+            </td>
+            <td class="particular-value">
+              {{particular.old}}
+            </td>
+            <td class="particular-value">
+              {{particular.new}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <hr>
+
+        <form [formGroup]="regimeSelectionForm">
+          <div formGroupName="everOptedNewRegime">
+            <div class="card__row">
+              <div class="card__col-xs-9 question-label">
+                1. Have you ever opted for New Regimes in earlier Years
+              </div>
+              <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+                <mat-radio-group name="everOptedNewRegime" formControlName="everOptedNewRegime"
+                (change)="updateRegimeLabels()">
+                  <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
+                  </mat-radio-button>
+                  <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="card__row" *ngIf="regimeSelectionForm.controls['everOptedNewRegime'].controls['everOptedNewRegime'].value === true">
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Select F.Y.:</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Select Financial Year" required name="assessmentYear" formControlName="assessmentYear">
+                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                    {{year.financialYear}}
+                  </mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Acknowledgement Number</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput maxlength="15" minlength="15" (blur)="setFilingDate()" name="acknowledgementNumber" formControlName="acknowledgementNumber"
+                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                       disabled placeholder="Acknowledgement Number" digitsOnly
+                       onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
+                <!--                    Enter-->
+                <!--                    acknowledgement number</mat-error>-->
+                <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">-->
+                <!--                    Acknowledgement number should be 15 digit</mat-error>-->
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Date:</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly
+                       name="date" formControlName="date"
+                       [matDatepicker]="picker1" autocomplete="off">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
+                <!--                    Select-->
+                <!--                    Date of-->
+                <!--                    filling</mat-error>-->
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+          <hr>
+
+          <div formGroupName="everOptedOutOfNewRegime">
+            <div class="card__row">
+              <div class="card__col-xs-9 question-label">
+                2. Have you ever opted out of New Regime in earlier Years
+              </div>
+              <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+                <mat-radio-group name="everOptedOutOfNewRegime" formControlName="everOptedOutOfNewRegime"
+                                 (change)="updateRegimeLabels()">
+                  <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
+                  </mat-radio-button>
+                  <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="card__row" *ngIf="regimeSelectionForm.controls['everOptedOutOfNewRegime'].controls['everOptedOutOfNewRegime'].value === true">
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Select F.Y.:</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Select Financial Year" required name="assessmentYear" formControlName="assessmentYear">
+                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                    {{year.financialYear}}
+                  </mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Acknowledgement Number</mat-label>
+              <mat-form-field appearance="outline">
+                  <input matInput maxlength="15" minlength="15" (blur)="setFilingDate()" name="acknowledgementNumber" formControlName="acknowledgementNumber"
+                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      disabled placeholder="Acknowledgement Number" digitsOnly
+                      onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+  <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
+  <!--                    Enter-->
+  <!--                    acknowledgement number</mat-error>-->
+  <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">-->
+  <!--                    Acknowledgement number should be 15 digit</mat-error>-->
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Date:</mat-label>
+              <mat-form-field appearance="outline">
+                  <input matInput placeholder="Date of filling" [max]="fillingMaxDate"
+                         readonly name="date" formControlName="date"
+                      [matDatepicker]="picker1" autocomplete="off">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+  <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
+  <!--                    Select-->
+  <!--                    Date of-->
+  <!--                    filling</mat-error>-->
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+          <hr>
+
+          <div formGroupName="optionForCurrentAY">
+            <div class="card__row">
+            <div class="card__col-xs-9 question-label">
+              3. Option for current assessment year
+            </div>
+            <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+              <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime">
+                <mat-radio-button [value]="'NEW'" style="margin-left:0px;margin-right:2px" labelPosition='before'>{{newRegimeLabel}}
+                </mat-radio-button>
+                <mat-radio-button [value]="'OLD'" labelPosition='before'>{{oldRegimeLabel}}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+            <div class="card__row" *ngIf="regimeSelectionForm.controls['optionForCurrentAY'].controls['currentYearRegime'].value === 'NEW'">
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Select F.Y.:</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Select Financial Year" required name="assessmentYear" formControlName="assessmentYear">
+                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                    {{year.financialYear}}
+                  </mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Acknowledgement Number</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput maxlength="15" minlength="15" (blur)="setFilingDate()" name="acknowledgementNumber" formControlName="acknowledgementNumber"
+                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                       disabled placeholder="Acknowledgement Number" digitsOnly
+                       onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
+                <!--                    Enter-->
+                <!--                    acknowledgement number</mat-error>-->
+                <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">-->
+                <!--                    Acknowledgement number should be 15 digit</mat-error>-->
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-4">
+              <mat-label class="option-label">Date:</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly name="date" formControlName="date"
+                       [matDatepicker]="picker1" autocomplete="off">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
+                <!--                    Select-->
+                <!--                    Date of-->
+                <!--                    filling</mat-error>-->
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+          <hr>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="flex justify-between p-[30px] back-foot">
+  <button (click)="goBack()" class="lgtBtn">Back to Sources </button>
+
+  <button (click)="gotoSummary()" class="darkBtn"><span class="adjust">Save & Next</span> <i class="material-icons icoAd">arrow_right_alt </i></button>
+</div>

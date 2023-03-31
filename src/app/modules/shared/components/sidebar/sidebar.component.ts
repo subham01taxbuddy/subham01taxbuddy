@@ -17,13 +17,16 @@ export class SidebarComponent implements DoCheck {
   constructor(private navbarService: NavbarService, private roleBaseAuthGuardService: RoleBaseAuthGuardService, private route: Router) {
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
     this.route.events.subscribe((url: any) => {
-      if (route.url === '/pages/itr-filing/itr') {
-        this.hideSideBar = true;
-      } else {
-        this.hideSideBar = false;
-      }
+      // if (route.url === '/itr-filing/itr') {
+      //   this.hideSideBar = true;
+      // } else {
+      //   this.hideSideBar = false;
+      // }
     });
   }
+
+  dropdownPanel:any = {}
+  dropdownPanelChild:any = {}
 
   ngDoCheck() {
     this.showSidebar = NavbarService.getInstance().showSideBar;
@@ -36,14 +39,6 @@ export class SidebarComponent implements DoCheck {
 
   isApplicable(permissionRoles: any) {
     return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
-  }
-
-  chatCorner() {
-    this.route.navigate(['/pages/chat-corner']);
-  }
-
-  taxSummary() {
-    this.route.navigate(['/pages/tax-summary'])
   }
 
 }

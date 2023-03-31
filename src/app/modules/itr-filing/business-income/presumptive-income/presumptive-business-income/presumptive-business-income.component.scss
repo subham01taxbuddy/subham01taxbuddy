@@ -1,0 +1,30 @@
+th.mat-header-cell, td.mat-cell {
+    text-align: center;
+    border: 1px solid #CCC;
+    padding: 0 !important;
+}
+
+.table-income {
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+  column-width: fit-content;
+
+}
+
+.regular-td {
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.label-td {
+  text-align: left;
+  word-wrap: break-word;
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  /*width: 80% !important;*/
+  white-space:pre-line;
+}

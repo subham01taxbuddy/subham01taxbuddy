@@ -5,7 +5,7 @@
 
 
 .left-sidebar
-  width: 160px
+  //width: 180px
   float: left
   min-height: 100vh
   background-color: $color-1
@@ -22,25 +22,36 @@
     border-radius: 3px
     width: 6px
     height: 6px
-  &::-webkit-scrollbar-thumb 
+  &::-webkit-scrollbar-thumb
     background-color: #c9c9c9
     border-radius: 4px
 
-.left-sidebar + .left-sidebar 
+.left-sidebar + .left-sidebar
   display: none
 
-.left-sidebar.fixed + .left-sidebar 
+.left-sidebar.fixed + .left-sidebar
   display: block
   position: relative
   z-index: 1
 
 .sidebar__item:visited,
-.sidebar__item 
+.sidebar__item
   display: block
   padding: 17px 0 12px
-  height: 84px
+  //height: 84px
   width: 100%
   text-align: center
+  text-decoration: none
+  cursor: pointer
+  transition-property: color, background-color
+  transition-duration: .25s
+
+.sidebar__subitem
+  display: block
+  padding: 17px 0 12px
+  height: 44px
+  width: 100%
+  text-align: left
   text-decoration: none
   cursor: pointer
   transition-property: color, background-color
@@ -51,9 +62,14 @@
   text-align: center
   font-size: 34px
 
-.sidebar__name 
+.sidebar__name
   display: block
   margin-top: 10px
+
+.sidebar__subname
+  display: block
+  margin-top: 10px
+  margin-left: 10px
 
 .sidebar__ico-img
   width: 32px
@@ -63,12 +79,12 @@
 .sidebar__ico-img#ico-stock
   width: 34px
 
-  
+
 .sidebar__ico-img#membership
   width: 34px
 
 .sidebar__ico-img#recipe
-  width: 34px  
+  width: 34px
 
 // Colors
 .sidebar__item.sidebar__item_active:visited,
@@ -95,13 +111,13 @@
 
 /* MEDIA */
 +max-responsive($semi-medium)
-  .left-sidebar 
+  .left-sidebar
     height: auto
     min-height: auto
     left: -160px
     transition: left .3s ease-in-out
-  
-  .left-sidebar_open.left-sidebar 
+
+  .left-sidebar_open.left-sidebar
     left: 0px
 
 +max-responsive(635px)

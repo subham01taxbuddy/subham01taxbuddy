@@ -7,9 +7,9 @@ export const environment = {
     ifsc_url: "https://ifsc.razorpay.com",
     amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
     reviewUrl: "https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/",
-    matomoScriptId: '5',
+    isValidItr:false,
     assistedKmScript: '../assets/assisted-km-script-uat.html',
-	environment:'DEV',
+	  environment:'DEV',
 
     s3_cred: {
         // user_name: "ashish@ssbainnovations.com",
@@ -17,12 +17,12 @@ export const environment = {
         bucket: 'tb-gst-docs-uat-dev',
         region: 'ap-south-1'
     },
-    /* aws_cred: {
-        identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
-        region: 'ap-south-1',
-        userPoolId: 'ap-south-1_s42HgYzaY',
-        userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
-    }, */
+    //  aws_cred: {
+    //     identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
+    //     region: 'ap-south-1',
+    //     userPoolId: 'ap-south-1_s42HgYzaY',
+    //     userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
+    // },
     AMPLIFY_CONFIG: {
         aws_project_region: 'ap-south-1',
         aws_cognito_identity_pool_id: 'ap-south-1:7a42574d-ac52-44b8-81d8-93a724392687',
@@ -35,15 +35,5 @@ export const environment = {
     },
 
     externalScripts: {
-        matomo: `var _paq = window._paq = window._paq || [];
-		  _paq.push(['trackPageView']);
-		  _paq.push(['enableLinkTracking']);
-		  (function() {
-			var u="//matomo.taxbuddy.com/";
-			_paq.push(['setTrackerUrl', u+'matomo.php']);
-			_paq.push(['setSiteId', '5']);
-			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-			g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-		  })();`
     }
 };

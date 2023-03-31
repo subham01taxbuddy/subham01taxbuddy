@@ -23,19 +23,20 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   expenseTypeList: any[] = [
-    { key: 'TRADING_EXPENSES', value: 'Trading Expenses' },
-    { key: 'ELECTRICITY', value: 'Electricity' },
-    { key: 'INTERNET', value: 'Internet' },
-    { key: 'MOBILE', value: 'Mobile' },
-    { key: 'PROFESSIONAL_FEES', value: 'Professional Fees' },
-    { key: 'AUDIT_FEES', value: 'Audit Fees' },
-    { key: 'INTEREST', value: 'Interest' },
-    { key: 'TAXES_AND_CESS', value: 'Taxes & Cess' },
-    { key: 'OTHER_EXPENSES', value: 'Other Expenses' }
+    { key: 'Trading Expenses', value: 'Trading Expenses' },
+    { key: 'Electricity', value: 'Electricity' },
+    { key: 'Internet', value: 'Internet' },
+    { key: 'Mobile', value: 'Mobile' },
+    { key: 'Professional Fees', value: 'Professional Fees' },
+    { key: 'Audit Fees', value: 'Audit Fees' },
+    { key: 'Interest', value: 'Interest' },
+    { key: 'Taxes & Cess', value: 'Taxes & Cess' },
+    { key: 'Other Expenses', value: 'Other Expenses' }
   ]
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   tradingData: ProfitLossIncomes = {
+    brokerName:'',
     id: 0,
     incomeType: "NONSPECULATIVEINCOME",
     turnOver: 0,

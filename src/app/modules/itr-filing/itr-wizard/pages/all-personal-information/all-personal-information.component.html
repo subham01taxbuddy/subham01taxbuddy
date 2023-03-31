@@ -1,0 +1,64 @@
+<div class="spc-blw">
+<h3 class="personal-info">Personal Information:</h3>
+<mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" (closed)="closed('customer')" hideToggle
+        class="hide-close">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <mat-icon>
+                    arrow_forward_ios
+                </mat-icon>
+                Customer Profile
+            </mat-panel-title>
+            <div class="card__row edit clearfix isShow">
+                <button class="edit_btn" (click)="$event.stopPropagation();editForm('customer')"><mat-icon>
+                        edit_square
+                    </mat-icon>Edit </button>
+            </div>
+        </mat-expansion-panel-header>
+        <app-customer-profile [navigationData]="navigationData" [isEditCustomer]="isEditCustomer"></app-customer-profile>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" (closed)="closed('personal')" hideToggle
+        class="hide-close">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <mat-icon>
+                    arrow_forward_ios
+                </mat-icon>
+                Personal Details </mat-panel-title>
+            <div class="card__row edit clearfix isShow">
+                <button class="edit_btn" (click)="$event.stopPropagation();editForm('personal')"><mat-icon>
+                        edit_square
+                    </mat-icon>Edit </button>
+            </div>
+        </mat-expansion-panel-header>
+        <app-personal-information [isEditPersonal]="isEditPersonal"></app-personal-information>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" (closed)="closed('other')" hideToggle
+        class="hide-close">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <mat-icon>
+                    arrow_forward_ios
+                </mat-icon>
+                Other Information
+            </mat-panel-title>
+            <div class="card__row edit clearfix isShow">
+                <button class="edit_btn" (click)="$event.stopPropagation();editForm('other')"><mat-icon>
+                        edit_square
+                    </mat-icon>Edit </button>
+            </div>
+        </mat-expansion-panel-header>
+        <app-other-information [isEditOther]="isEditOther"></app-other-information>
+    </mat-expansion-panel>
+
+</mat-accordion>
+</div>
+
+<div class="flex justify-between p-[30px] back-foot">
+    <button (click)="goBack()" class="lgtBtn"><mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Source Page</button>
+
+    <button (click)="saveAll()" class="saveBtnIn"> Save All</button>
+</div>
