@@ -23,10 +23,10 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
-  selectStatus:any = '';
+  selectStatus: any = '';
   statusList: any[] = AppConstants.statusList;
-  platformList:any[]=AppConstants.platformList;
-  selectPlatform:any ='';
+  platformList: any[] = AppConstants.platformList;
+  selectPlatform: any = '';
 
   constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
@@ -54,13 +54,12 @@ export class ReviewListComponent implements OnInit {
       currentPage: 1,
       totalItems: 0
     };
-
   }
 
   formatToolTip(params: any) {
     let temp = params.value;
     const lineBreak = false;
-    return { temp, lineBreak }
+    return { temp, lineBreak };
   }
 
   ngOnInit(): void {
@@ -353,9 +352,9 @@ export class ReviewListComponent implements OnInit {
       data: {
         title: title,
         leadData: data,
-        mode: key
-      }
-    })
+        mode: key,
+      },
+    });
   }
 
   updateSmeNote(title, key, data) {
@@ -366,7 +365,7 @@ export class ReviewListComponent implements OnInit {
         title: title,
         leadData: data,
         mode: key,
-      }
+      },
     });
     disposable.afterClosed().subscribe(result => {
       if (result) {
@@ -382,37 +381,53 @@ export class ReviewListComponent implements OnInit {
 
   getReview(pageNo) {
     let pagination = `page=${pageNo}&pageSize=12`;
-    let platform = (this.selectPlatform && this.selectPlatform != 'All') ? `&platform=${this.selectPlatform}` : '';
-    let status = (this.selectStatus && this.selectStatus != 'All') ? `&status=${this.selectStatus}` : '';
+    let platform =
+      this.selectPlatform && this.selectPlatform != 'All'
+        ? `&platform=${this.selectPlatform}`
+        : '';
+    let status =
+      this.selectStatus && this.selectStatus != 'All'
+        ? `&status=${this.selectStatus}`
+        : '';
 
     if (this.selectStatus || this.selectPlatform) {
-      var param = `review?environment=${environment.environment}&${pagination}` + status + platform;
+      var param =
+        `review?environment=${environment.environment}&${pagination}` +
+        status +
+        platform;
     } else {
       var param = `review?environment=${environment.environment}&${pagination}`;
     }
-    this.loading = true;
-    this.reviewService.getMethod(param).subscribe((response: any) => {
-      if (response.body.content instanceof Array && response.body.content.length > 0) {
-        this.loading = false;
-        this.userInfo = response.body.content;
-        this.reviewGridOptions.api?.setRowData(this.createRowData(response.body.content));
-        this.config.totalItems = response.body.totalElements;
-      } else {
-        this.loading = false;
+    this.loading = false;
+    this.reviewService.getMethod(param).subscribe(
+      (response: any) => {
+        if (
+          response.body.content instanceof Array &&
+          response.body.content.length > 0
+        ) {
+          this.loading = false;
+          this.userInfo = response.body.content;
+          this.reviewGridOptions.api?.setRowData(
+            this.createRowData(response.body.content)
+          );
+          this.config.totalItems = response.body.totalElements;
+        } else {
+          this.loading = false;
+          this.config.totalItems = 0;
+          this.reviewGridOptions.api?.setRowData(this.createRowData([]));
+        }
+      },
+      (error) => {
         this.config.totalItems = 0;
-        this.reviewGridOptions.api?.setRowData(this.createRowData([]));
+        this.loading = false;
       }
-    },
-      error => {
-        this.config.totalItems = 0;
-        this.loading = false;
-      })
+    );
   }
 
   createRowData(data: any) {
     var userArray = [];
     for (let i = 0; i < data.length; i++) {
-     
+
       let platform = '-';
       if (data[i].sourcePlatform) {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);

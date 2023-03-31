@@ -400,6 +400,7 @@ export class SharesAndEquityComponent
   calculateFMV(securities) {
     if (
       securities.controls['isinCode'].valid &&
+      securities.controls['isinCode'].value &&
       securities.controls['purchaseDate'].value &&
       securities.controls['sellDate'].value
     ) {
@@ -491,6 +492,7 @@ export class SharesAndEquityComponent
   }
 
   save(type?) {
+    this.loading = true;
     if (type === 'securities') {
       if (this.getSecuritiesCg() <= 0) {
         this.deduction = false;
@@ -699,7 +701,7 @@ export class SharesAndEquityComponent
           (element as FormGroup).controls['capitalGain'].value
         );
         saleValue += parseInt(
-          (element as FormGroup).controls['valueInConsideration'].value
+          (element as FormGroup).controls['sellValue'].value
         );
         expenses += parseInt(
           (element as FormGroup).controls['sellExpense'].value

@@ -93,6 +93,15 @@
   </div>
   <div>
     <div class="card__col-xs-12">
+      <div class="card__col-sm-3">
+        <button
+          type="submit"
+          class="tbd-btn-secondary"
+          (click)="deleteArray()"
+        >
+          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+        </button>
+      </div>
       <div class="card__col-sm-6 txt-center">
         <table>
           <tr *ngFor="let item of getIncomeArray.controls | paginate:config"></tr>

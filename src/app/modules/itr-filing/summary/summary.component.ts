@@ -19,6 +19,7 @@ export class SummaryComponent implements OnInit {
   loading: boolean = false;
   disposable: any;
   summaryDetail: any;
+  summaryToolChecked: boolean = true;
   ITR_JSON: ITR_JSON;
   show = false;
   capitalGain: any;

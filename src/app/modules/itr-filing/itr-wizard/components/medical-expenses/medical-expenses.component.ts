@@ -275,6 +275,8 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
         null
       );
+      let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
+
     }
   }
 

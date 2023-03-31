@@ -285,7 +285,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Other Income updated successfully.');
-      this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+      // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to update other income.');
@@ -311,13 +311,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
 
     console.log(this.Copy_ITR_JSON.exemptIncomes);
+    this.loading = true;
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Other Income updated successfully.');
-      this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+      // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to update other income.');
