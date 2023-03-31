@@ -701,7 +701,7 @@ export class SharesAndEquityComponent
           (element as FormGroup).controls['capitalGain'].value
         );
         saleValue += parseInt(
-          (element as FormGroup).controls['valueInConsideration'].value
+          (element as FormGroup).controls['sellValue'].value
         );
         expenses += parseInt(
           (element as FormGroup).controls['sellExpense'].value
