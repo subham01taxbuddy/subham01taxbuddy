@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
@@ -57,6 +57,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
     public utilsService: UtilsService,
+    private cdRef:ChangeDetectorRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -254,14 +255,20 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     });
   }
 
+  ngDoCheck() {
+    this.cdRef.detectChanges();
+  }
+
   deleteArray() {
-    const nonspecIncomesArray = <FormArray>(
-      this.nonspecIncomeForm.get('nonspecIncomesArray')
-    );
-    nonspecIncomesArray.controls.forEach((element, index) => {
+    let indexToRemove: number[] = [];
+    (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.forEach((element, index) => {
       if ((element as FormGroup).controls['hasEdit'].value) {
-        nonspecIncomesArray.removeAt(index);
+        //indexToRemove.push(index);
+        (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.splice(index, 1);
       }
     });
+    // indexToRemove.reverse().forEach((index) => {
+    //   (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.splice(index, 1);
+    // });
   }
 }
