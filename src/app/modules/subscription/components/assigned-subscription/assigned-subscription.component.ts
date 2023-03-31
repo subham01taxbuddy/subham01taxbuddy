@@ -1,7 +1,7 @@
 import { data } from 'jquery';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -25,6 +25,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   @Input() tabName: any;
   @Output() sendTotalCount = new EventEmitter<any>();
 
+  searchVal: any;
   filerList:any;
   filerNames:any;
   queryParam: any ;
@@ -56,7 +57,8 @@ export class AssignedSubscriptionComponent implements OnInit {
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
@@ -79,6 +81,18 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('loggedIn Sme Details' ,this.loggedInSme)
     this.roles =this.loggedInSme[0]?.roles
     console.log('roles',this.roles)
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log("99999999999999999:", params)
+      if (this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-') {
+        this.userId = params['userMobNo'];
+        this.selectedUserName = this.userId
+        this.searchVal = params['userMobNo'];
+        this.queryParam = `?userId=${this.userId}`;
+        this.advanceSearch();
+        // console.log('this.queryParam --> ',this.queryParam)
+      }
+    });
+
     this.getAssignedSubscription(0);
     this. getFilerList();
     this.filteredOptions = this.searchName.valueChanges.pipe(
@@ -185,26 +199,22 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   advanceSearch() {
-    console.log('this.searchVal -> ', this.mobileNumber.value)
-    if (this.utilsService.isNonEmpty(this.mobileNumber)) {
-      if (this.mobileNumber.value.toString().length >= 8 && this.mobileNumber.value.toString().length <= 10) {
-        this.getUserByMobileNum(this.mobileNumber.value)
+    console.log('this.searchVal -> ', this.searchVal)
+    if (this.utilsService.isNonEmpty(this.searchVal)) {
+      if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 10) {
+        this.getUserByMobileNum(this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
       }
     }
-    // else {
-    //   this.selectedUserName = '';
-    //   this.queryParam = '?subscriptionAssigneeId=0';
-    //   this.utilsService.sendMessage(this.queryParam);
-    //   this.utilsService.showSnackBar('You are fetching all records.')
-    // }
+
   }
 
-  getUserByMobileNum(mobileNumber) {
+  getUserByMobileNum(number) {
+    console.log('number',number)
     const loggedInSmeUserId=this?.loggedInSme[0]?.userId
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + mobileNumber;
+    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       console.log('Get user  by mobile number responce: ', response);

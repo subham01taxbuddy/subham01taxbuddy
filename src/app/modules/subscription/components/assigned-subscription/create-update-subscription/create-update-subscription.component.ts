@@ -552,6 +552,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   // }
 
+
+  getOwnerFilerName(){
+    // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
+    let param =`/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=`
+  }
+
   updateSubscription(){
     if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan.planId)) {
       console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);

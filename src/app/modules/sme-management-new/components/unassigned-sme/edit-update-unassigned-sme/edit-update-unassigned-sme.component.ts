@@ -267,6 +267,29 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       parentName= this.leaderDetails?.name;
     }
 
+    // if( this.smeObj.roles=null){
+    //   this.smeObj.roles=[];
+    // }
+    if(this.owner.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_OWNER')
+    }
+    if(this.filer.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_FILER');
+
+    }
+    if(this.leader.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_LEADER')
+    }
+    if(this.admin.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_ADMIN')
+    }
+
+
+
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
