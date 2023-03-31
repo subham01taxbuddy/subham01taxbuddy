@@ -79,11 +79,11 @@ export class HousePropertyComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
-    if (this.ITR_JSON.regime === 'NEW') {
-      this.propertyTypeDropdown = this.propertyTypeDropdown.filter(
-        (item) => item.value !== 'SOP'
-      );
-    }
+    // if (this.ITR_JSON.regime === 'NEW') {
+    //   this.propertyTypeDropdown = this.propertyTypeDropdown.filter(
+    //     (item) => item.value !== 'SOP'
+    //   );
+    // }
     if (
       this.utilsService.isNonEmpty(this.ITR_JSON) &&
       this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
@@ -608,6 +608,7 @@ export class HousePropertyComponent implements OnInit {
     if (type === 'SOP') {
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
       this.annualValue = null;
       this.thirtyPctOfAnnualValue = null;
       this.housePropertyForm.controls['rentPercentage'].enable();
