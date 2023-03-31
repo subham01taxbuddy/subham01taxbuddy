@@ -13,21 +13,21 @@
             <div>
               <b style="font-size: 20px">{{cardTitles}} </b>
             </div>
-            <div *ngIf="roles?.includes('ROLE_LEADER','ROLE_ADMIN')" >
+            <div  >
               <div class="row">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchOwner" >
+                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
                     <button (click)="searchByOwner()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button>
-                    <!-- <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getFilerNameId(option)">
-                        {{option.name}}
+                    <!-- <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto"> -->
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <mat-option *ngFor="let options  of filteredOptions | async" [value]="options.name" (click)="getOwnerNameId(options)">
+                        {{options.name}}
                       </mat-option>
-                    </mat-autocomplete> -->
+                    </mat-autocomplete>
                   </mat-form-field>
                 </div>
                 <div class="col-sm-6">
