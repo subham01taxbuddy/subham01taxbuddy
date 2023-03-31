@@ -296,6 +296,7 @@
                 let improve of getImprovementsArrayForImmovable.controls;
                 let i = index
               "
+              (click)="active = i"
               [formGroupName]="i"
             >
               <div class="card__col-xs-12 card__col-sm-4">
@@ -365,10 +366,11 @@
                 </mat-form-field>
               </div>
             </div>
+
             <div>
               <button
                 class="delete-btn"
-                (click)="removeImprovement(i, this.immovableForm)"
+                (click)="removeImprovement(active, this.immovableForm)"
                 [disabled]="!improvementSelected()"
               >
                 <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete

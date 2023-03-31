@@ -72,7 +72,7 @@ export class LabFormComponent implements OnInit {
   @Input() data: any;
 
   config: any;
-
+  active: any;
   constructor(
     private fb: FormBuilder,
     private itrMsService: ItrMsService,
@@ -1120,7 +1120,7 @@ export class LabFormComponent implements OnInit {
     this.calculateCapitalGain(formGroupName, '', index);
   }
 
-  haveImprovements(formGroupName, index) {
+  haveImprovements(formGroupName) {
     const improve = <FormArray>formGroupName.get('improvement');
     let srn = this.currentCgIndex;
     if (this.isImprovements.value) {
