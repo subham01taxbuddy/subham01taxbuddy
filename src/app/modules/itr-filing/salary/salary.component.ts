@@ -291,6 +291,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
 
+      this.checkGrossSalary();
+
       this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
       this.localEmployer.state = this.employerDetailsFormGroup.controls['state'].value
@@ -557,6 +559,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       }
     }
 
+    this.checkGrossSalary();
     // Set Allowance
     if (this.localEmployer.allowance instanceof Array) {
       const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
