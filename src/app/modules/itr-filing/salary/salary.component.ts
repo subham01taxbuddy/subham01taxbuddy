@@ -290,6 +290,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   saveEmployerDetails() {
 
     if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
+
       this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
       this.localEmployer.state = this.employerDetailsFormGroup.controls['state'].value
@@ -343,6 +344,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           totalAllowExempt = totalAllowExempt + Number(allowance.controls['allowValue'].value);
         }
       }
+
+      //check allowances total is not exceeding the gross salary
+      if(totalAllowExempt > this.grossSalary){
+        this.utilsService.showSnackBar('Allowances total cannot exceed gross salary');
+        return;
+      }
+
       if (this.utilsService.isNonZero(totalAllowExempt) || this.utilsService.isNonZero(totalAllowExempt)) {
         this.localEmployer.allowance.push({
           allowanceType: 'ALL_ALLOWANCES',
@@ -487,6 +495,23 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     return this.utilsService.currencyFormatter(taxable);
   }
 
+  grossSalary = 0;
+  checkGrossSalary(){
+    this.grossSalary = 0;
+    let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
+
+    //check for SEC17_1 for gross salary
+    for (let i = 0; i < salaryDetails.controls.length; i++) {
+      let salary = salaryDetails.controls[i] as FormGroup
+      if (this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)) {
+        if (salary.controls['salaryType'].value === "SEC17_1") {
+          this.grossSalary = salary.controls['salaryValue'].value;
+          break;
+        }
+      }
+    }
+  }
+
   editEmployerDetails(index) {
     this.employerDetailsFormGroup.reset();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
@@ -502,27 +527,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     // this.getData(this.localEmployer.pinCode);
 
-    let grossSalary = 0;
-
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
         let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
         const salary = salaryDetails.controls.filter((item: any) => item.controls['salaryType'].value === this.localEmployer.salary[i].salaryType)[0] as FormGroup;
         salary.controls['salaryValue'].setValue(this.localEmployer.salary[i].taxableAmount);
-
-        //check for SEC17_1 for gross salary
-        for (let i = 0; i < salaryDetails.controls.length; i++) {
-          let salary = salaryDetails.controls[i] as FormGroup
-          if (this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)) {
-            if (salary.controls['salaryType'].value === "SEC17_1") {
-              grossSalary = salary.controls['salaryValue'].value;
-              break;
-            }
-          }
-        }
-
-
       }
       //Ashwini: need to confirm this one
       // const sec17_1 = this.localEmployer.salary.filter((item:any) => item.salaryType === 'SEC17_1');
@@ -556,10 +566,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         const id = allowanceArray.controls.filter((item: any) => item.controls['allowType'].value === allowance[i].allowanceType)[0] as FormGroup;
         id.controls['allowValue'].setValue(allowance[i].exemptAmount);
 
-        if(id.controls['allowType'].value !== 'CHILDREN_EDUCATION') {
-          id.controls['allowValue'].setValidators(Validators.max(grossSalary));
-          id.controls['allowValue'].updateValueAndValidity();
-        }
         // id.setValue({
         //   id: id,
         //   label: this.allowanceDropdown[i].label,

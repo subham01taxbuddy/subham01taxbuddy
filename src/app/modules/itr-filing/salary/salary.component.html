@@ -121,7 +121,7 @@
                     <td>
                       <mat-form-field class="input-field-width" style="width: 90% !important;">
                         <input type="text" trim matInput placeholder="" name="salaryValue[i]"
-                               formControlName="salaryValue"
+                               formControlName="salaryValue" (blur)="checkGrossSalary()"
                                class="input-field" maxlength="125"/>
                       </mat-form-field>
                     </td>
