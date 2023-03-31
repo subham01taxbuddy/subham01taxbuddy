@@ -12,6 +12,8 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { map, Observable, startWith } from 'rxjs';
+// import { User } from 'src/app/modules/sme-management-new/components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -24,6 +26,11 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
+
+export interface User {
+  name: string;
+  userId:Number;
+}
 
 @Component({
   selector: 'app-performa-invoice',
@@ -49,6 +56,10 @@ export class PerformaInvoiceComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   roles: any;
+  ownerNames: User[];
+  options: User[] = [];
+  filteredOptions: Observable<User[]>;
+  ownerList: any;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -60,7 +71,7 @@ export class PerformaInvoiceComponent implements OnInit {
   };
   invoiceListGridOptions: GridOptions;
   Status: any = [
-    { label: 'Paid', value: 'Paid' },
+    { label: 'Unpaid', value: 'Unpaid' },
     { label: 'Failed', value: 'Failed' },
   ];
   fyDropDown: any = [
@@ -116,10 +127,31 @@ export class PerformaInvoiceComponent implements OnInit {
     this.roles = this.loggedInSme[0]?.roles;
     console.log('roles', this.roles);
     // this.getInvoice();
-
+    this.getOwner();
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
+    console.log('filteroptions',this.filteredOptions)
+    this.filteredOptions = this.searchOwner.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options.slice();
+      })
+    );
   }
+
+  displayFn(user: User): string {
+    return user && user.name ? user.name : '';
+  }
+
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
@@ -148,9 +180,25 @@ export class PerformaInvoiceComponent implements OnInit {
     return this.invoiceFormGroup.controls['searchOwner'] as FormControl;
   }
 
+
+  getOwner() {
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      this.ownerList = result.data.content;
+      console.log("ownerlist",this.ownerList)
+      this.ownerNames = this.ownerList.map((item) => {
+        return { name: item.name, userId:item.userId  };
+      });
+      this.options = this.ownerNames;
+      console.log(' ownerName -> ', this.ownerNames);
+    });
+  }
+
   ownerDetails: any;
   getOwnerNameId(option) {
-    this.filerDetails = option;
+    this.ownerDetails = option;
     console.log(option);
   }
   searchByOwner() {
@@ -187,12 +235,13 @@ export class PerformaInvoiceComponent implements OnInit {
     //    } else {
     //     // param = `/invoice/sme/`
     //   }
-
+    let status = this.status.value;
+    console.log("selected status",this.status)
     let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
-    let param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}`;
+    let param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}&paymentStatus=${status}`;
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
