@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div style="padding-top: 20px;">
+<div style="padding-top:20px; padding-bottom: 130px;">
     <mat-accordion class="headers-align">
       <mat-expansion-panel hideToggle class="hide-close">
         <mat-expansion-panel-header>
@@ -106,10 +106,10 @@
             <div class="sectionTitle">Salary Details</div>
             <div>
               <table class="table table-bordered">
-                  <thead style="background:#eaeaea">
+                  <thead>
                   <tr class="table-head">
-                    <th class="text-center">Salary Type</th>
-                    <th class="text-center">Gross Amount</th>
+                    <th>Salary Type</th>
+                    <th>Gross Amount</th>
                   </tr>
                   </thead>
                   <tbody formArrayName="salaryDetails">
@@ -145,12 +145,12 @@
 
         <form [formGroup]="allowanceFormGroup">
           <div class="cardRect">
-            <div class="sectionTitle">Exempt Allowance</div>
+            <!-- <div class="sectionTitle">Exempt Allowance</div> -->
             <table class="table table-bordered">
               <thead style="background:#eaeaea">
               <tr class="table-head">
-                <th class="text-center">Allowance Type</th>
-                <th class="text-center">Exempt Amount</th>
+                <th>Allowance Type</th>
+                <th>Exempt Amount</th>
               </tr>
               </thead>
               <tbody formArrayName="allowances">
@@ -183,7 +183,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="cardRect">
-          <div class="sectionTitle">Deductions u/s 16</div>
+          <!-- <div class="sectionTitle">Deductions u/s 16</div> -->
           <div class="card__row">
             <form [formGroup]="deductionsFormGroup">
               <div class="card__col-xs-12 card__col-sm-6">

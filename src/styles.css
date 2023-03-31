@@ -296,6 +296,33 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.delete-btn {
+  background: #FFE1E1;
+  border: 1px solid #E20000;
+  border-radius: 6px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  text-align: center;
+  color: #E20000;
+}
+
+.delete-btn:disabled {
+  background: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  color: #BDBDBD;
+  padding: 10px;
+}
+.btnGry {
+  border: 1px solid #cccccc;
+  padding: 10px;
+  color: #cccccc;
+  width: 95px;
+  border-radius: 5px;
+  margin-left: -15px;
+}
 .mat-expansion-panel-header.mat-expanded {
     height: 55px;
     margin-bottom: 15px;

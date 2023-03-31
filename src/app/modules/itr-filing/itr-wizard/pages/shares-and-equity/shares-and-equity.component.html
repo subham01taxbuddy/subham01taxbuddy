@@ -31,10 +31,10 @@
           (click)="showBroker(securities.brokerName)"
         >
           <mat-expansion-panel-header
-            class="card__row"
+            class="card__row drop"
             (click)="showBroker(securities.brokerName)"
           >
-            <div class="card__col-xs-12">
+            <div class="card__col-xs-12 ">
               <div class="card__col-xs-12 card__col-sm-3">
                 <div class="title">Broker Name</div>
                 <div class="value">{{ securities.brokerName }}</div>
@@ -442,7 +442,7 @@
               <div class="card__col-sm-3">
                 <button
                   type="submit"
-                  class="tbd-btn-secondary"
+                  class="delete-btn btnGry"
                   (click)="deleteArray()"
                 >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
@@ -486,7 +486,7 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<div class="card mt-5 mb-5">
+<div class="card mt-5 mb-5 btm">
   <div class="display-flex mt-3 mb-3">
     <div class="card__col-xs-12 card__col-sm-8 isDeduction">
       Add deduction under section 54F?
@@ -640,12 +640,8 @@
       </div>
 
       <div class="edit-head">
-        <button
-          type="button"
-          class="edit-donation"
-          (click)="deductionForm.enable()"
-        >
-          <mat-icon> edit_square </mat-icon>Edit
+        <button type="button" class="edit-donation" (click)="deductionForm.enable()">
+          <mat-icon>edit_square</mat-icon>Edit
         </button>
       </div>
     </div>
@@ -666,18 +662,15 @@
   </div>
 </div>
 
-<div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
-  <button
-    class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
-  >
-    <mat-icon>keyboard_backspace</mat-icon>
+<div class="flex justify-between p-[30px] back-foot">
+  <button class="lgtBtn">
+    <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
     <span class="font-semibold" (click)="goBack()"
-      >&nbsp;Back to Source Page</span
-    >
+      >&nbsp;Back to Source Page</span>
   </button>
 
   <button
-    class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+    class="saveBtnIn"
   >
     <span class="font-semibold" (click)="saveAll()">Save All</span>
   </button>

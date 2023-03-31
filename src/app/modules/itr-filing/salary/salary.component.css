@@ -21,20 +21,20 @@ table {
 
 th {
   text-align: left;
-  padding: 5px;
-  font-size: 12px;
+  padding: 10px 0px 10px 15px;
+  font-size: 14px;
   border: 1px solid #ddd;
 }
 
 td {
-  text-align: left;
-  padding: 5px;
-  font-size: 12px;
+  text-align: left; 
+  padding: 0px 0px 0px 15px;
+  font-size: 14px;
   border: 1px solid #ddd;
 }
 
 tr:nth-child(even) {
-  background-color: #f2f2f2
+  background-color: #ffffff;
 }
 
 .subTitle {

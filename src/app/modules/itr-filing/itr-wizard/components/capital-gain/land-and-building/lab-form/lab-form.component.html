@@ -124,9 +124,9 @@
             <div class="card__row">
               <mat-radio-group name="isImprovements" (change)="haveImprovements(this.immovableForm)"
                                [formControl]="isImprovements">
-                <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='after'>Yes
+                <mat-radio-button [value]="true" style="margin-left:10px;" labelPosition='after'>Yes
                 </mat-radio-button>
-                <mat-radio-button [value]="false" labelPosition='after'>No</mat-radio-button>
+                <mat-radio-button [value]="false" style="margin-left:10px;" labelPosition='after'>No</mat-radio-button>
               </mat-radio-group>
               <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
                       (click)="addMoreImprovements(this.immovableForm)"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New                
@@ -135,10 +135,10 @@
         </div>
 
         <div class="card cardYes" formArrayName="improvement" *ngIf="isImprovements.value">
+          <mat-checkbox name="improve[i]" formControlName="selected"></mat-checkbox>
           <div class="card__row" *ngFor="let improve of getImprovementsArrayForImmovable.controls;let i=index" [formGroupName]="i">
-
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-label><mat-checkbox name="improve[i]" formControlName="selected"></mat-checkbox>Year Of Improvement</mat-label>
+             <div class="card__col-xs-12 card__col-sm-4">
+              <mat-label>Year Of Improvement</mat-label>
               <mat-form-field class="input-field-width">
                 <mat-select placeholder="Year of Improvement" name="improve[i]" formControlName="dateOfImprovement"
                             required>
@@ -191,7 +191,7 @@
                                    [formControl]="isDeductions" [disabled]="totalCg<=0">
                     <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='after'>Yes
                     </mat-radio-button>
-                    <mat-radio-button [value]="false" labelPosition='after'>No</mat-radio-button>
+                    <mat-radio-button [value]="false" style="margin-left:10px;" labelPosition='after'>No</mat-radio-button>
                   </mat-radio-group>
                 </div>
                 <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
@@ -207,10 +207,9 @@
                      [formGroupName]="fieldGlobalIndex(i)">
 
                   <div class="card__row">
-<!--                    <mat-checkbox name="i"></mat-checkbox>-->
-                    <div class="card__col-xs-12 card__col-sm-4">
-
-                      <mat-label><mat-checkbox name="deduction[i]" formControlName="selected"></mat-checkbox>Section</mat-label>
+<!--<mat-checkbox name="i"></mat-checkbox>-->
+                   <mat-label><mat-checkbox name="deduction[i]" formControlName="selected"></mat-checkbox>Section</mat-label>
+                    <div class="card__col-xs-12 card__col-sm-4">                     
                       <mat-form-field class="input-field-width">
                         <mat-select placeholder="Investment Under Section" name="underSection" formControlName="underSection"
                                     (selectionChange)="changeInvestmentSection('HTML', i)">
@@ -288,17 +287,17 @@
         <div>
           <div>
             <span class="subTitle">Buyers details (At least one Buyer detail is mandatory)</span>
-            <button mat-button class="save-btn" style="float: right" (click)="addMoreBuyersDetails()">
+            <button mat-button class="save-btn" style="float:right; border:1px solid #cccccc;" (click)="addMoreBuyersDetails()">
               + Add Buyer
             </button>
             <div formArrayName="buyersDetails">
 
-              <div class="card" *ngFor="let buyer of getBuyersDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
-
+              <div class="cardYes" *ngFor="let buyer of getBuyersDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
+                <mat-checkbox name="buyer[i]" formControlName="selected"></mat-checkbox>
                 <div class="card__row">
                   <div class="card__col-xs-12 card__col-sm-3">
 
-                    <mat-label><mat-checkbox name="buyer[i]" formControlName="selected"></mat-checkbox>PAN</mat-label>
+                    <mat-label>PAN</mat-label>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase
                              required trim
