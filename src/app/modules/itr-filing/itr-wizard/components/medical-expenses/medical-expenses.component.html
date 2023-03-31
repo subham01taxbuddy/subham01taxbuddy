@@ -59,12 +59,7 @@
           <mat-label>Health insurance premium paid for parents</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Health insurance premium paid for parents" maxlength="8"
-              formControlName="premium" autocomplete="off" digitsOnly (blur)="disableParent('HEALTH')" />
-            <mat-hint *ngIf="
-                this.investmentDeductionForm.controls['medicalExpenditure']
-                  .value > 0
-              ">
-              Note: You have claimed medical insurance</mat-hint>
+              formControlName="premium" autocomplete="off" digitsOnly />
           </mat-form-field>
         </div>
         <div class="card__col-lg-4">
@@ -85,9 +80,7 @@
           <mat-label>Medical Expenditure for Senior Citizen</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"
-              formControlName="medicalExpenditure" autocomplete="off" digitsOnly (blur)="disableParent('MEDICAL')" />
-            <mat-hint *ngIf="this.investmentDeductionForm.controls['premium'].value > 0">
-              Note: You have claimed medical insurance</mat-hint>
+              formControlName="medicalExpenditure" autocomplete="off" digitsOnly />
           </mat-form-field>
         </div>
       </div>

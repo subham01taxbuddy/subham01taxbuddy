@@ -399,22 +399,37 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['selfPremium'].setValue(null);
       this.investmentDeductionForm.controls['selfPremium'].disable();
     }
-    if (this.investmentDeductionForm.controls['premium'].value > 0) {
-      this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
-        null
-      );
-      this.investmentDeductionForm.controls['medicalExpenditure'].disable();
-    } else if (
-      this.investmentDeductionForm.controls['medicalExpenditure'].value > 0
-    ) {
-      this.investmentDeductionForm.controls['premium'].setValue(null);
-      this.investmentDeductionForm.controls['premium'].disable();
-    }
   }
 
   saveInvestmentDeductions() {
 
     let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
+
+    if(isParentOverSixty){
+      let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['premium'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['preventiveCheckUp'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['medicalExpenditure'].value);
+      if(totalExpenses > 50000) {
+        this.utilsService.showSnackBar('Medical expenses for parents cannot exceed 50000');
+        return;
+      }
+    } else {
+      let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['premium'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['preventiveCheckUp'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['medicalExpenditure'].value);
+      if(totalExpenses > 25000) {
+        this.utilsService.showSnackBar('Medical expenses for parents cannot exceed 25000');
+        return;
+      }
+    }
+    let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value) +
+      this.utilsService.getInt(this.investmentDeductionForm.controls['selfPremium'].value) +
+      this.utilsService.getInt(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value);
+    if(totalExpenses > 25000) {
+      this.utilsService.showSnackBar('Medical expenses for self cannot exceed 25000');
+      return;
+    }
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
