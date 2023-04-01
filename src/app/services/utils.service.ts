@@ -810,4 +810,15 @@ export class UtilsService {
     getInt(value) {
       return value ? parseInt(value) : 0;
     }
+
+  findAssesseeType(panNumber) {
+      let assesseeType = '';
+      if (panNumber.substring(4, 3) === 'P') {
+        assesseeType = 'INDIVIDUAL';
+      } else if (panNumber.substring(4, 3) === 'H') {
+        assesseeType = 'HUF';
+      } else {
+        assesseeType = 'INDIVIDUAL';
+      }
+  }
 }
