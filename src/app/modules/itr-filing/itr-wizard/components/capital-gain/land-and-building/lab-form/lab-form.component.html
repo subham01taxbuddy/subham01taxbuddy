@@ -402,6 +402,7 @@
                           name="underSection"
                           formControlName="underSection"
                           (selectionChange)="changeInvestmentSection('HTML', i)"
+                          (onChange)="onDropdownChange($event, i)"
                         >
                           <mat-option
                             value="54"

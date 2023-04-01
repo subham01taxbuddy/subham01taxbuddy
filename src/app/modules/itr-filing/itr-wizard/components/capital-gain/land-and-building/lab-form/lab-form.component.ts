@@ -1188,6 +1188,7 @@ export class LabFormComponent implements OnInit {
 
     const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
       .controls[index] as FormGroup;
+
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC'
@@ -1197,6 +1198,8 @@ export class LabFormComponent implements OnInit {
         Validators.pattern(AppConstants.amountWithoutDecimal),
       ]);
       deductionForm.controls['costOfNewAssets'].updateValueAndValidity();
+
+      // deductionForm.controls['purchaseDate'].setValue(this.maxPurchaseDate);
     } else {
       if (ref === 'HTML') {
         deductionForm.controls['investmentInCGAccount'].setValue(null);
@@ -1206,8 +1209,22 @@ export class LabFormComponent implements OnInit {
         ].updateValueAndValidity();
       }
     }
+
     // this.setTotalDeductionValidation();
     this.calculateDeduction(index);
+  }
+
+  onDropdownChange(event, index) {
+    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
+      .controls[index] as FormGroup;
+    const sellDate = new Date(deductionForm.controls['sellDate'].value);
+    // this.maxPurchaseDate = new Date(sellDate.setMonth(sellDate.getMonth() + 6));
+
+    if (event.value == '54EC') {
+      deductionForm.controls['purchaseDate'].setValue(
+        new Date(sellDate.setMonth(sellDate.getMonth() + 6))
+      );
+    }
   }
 
   calculateDeduction(index) {
@@ -1395,7 +1412,7 @@ export class LabFormComponent implements OnInit {
       investmentInCGAccount: null,
       totalDeductionClaimed: null,
     };
-    if (deductions.valid ) {
+    if (deductions.valid) {
       deductions.push(this.createDeductionForm(obj));
     } else {
       console.log('add above details first');
