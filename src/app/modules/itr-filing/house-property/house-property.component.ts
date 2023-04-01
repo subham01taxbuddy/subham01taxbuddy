@@ -861,7 +861,7 @@ export class HousePropertyComponent implements OnInit {
               this.housePropertyForm = this.createHousePropertyForm();
             }
             this.utilsService.showSnackBar(
-              'Rental income updated successfully'
+              'House Property income updated successfully.'
             );
             // TODO
             // this.RuleServiceCall();
