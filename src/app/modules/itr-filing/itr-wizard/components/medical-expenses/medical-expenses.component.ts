@@ -76,12 +76,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   initForm() {
-    let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
+    // let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
     this.investmentDeductionForm = this.fb.group({
       selfPremium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(25000)]],
       selfPreventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       selfMedicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex),],
-      premium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(maxPremium)]],
+      premium: [null, [Validators.pattern(AppConstants.numericRegex)]],
       preventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -275,8 +275,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
         null
       );
-      let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
-
     }
   }
 

@@ -14,7 +14,6 @@ import { AddUpdateTradingComponent } from './add-update-trading/add-update-tradi
   styleUrls: ['./non-speculative-income.component.scss']
 })
 export class NonSpeculativeIncomeComponent implements OnInit {
-  public tradingGridOptions: GridOptions;
   nonspecIncomeFormArray: FormArray;
   nonspecIncomeForm: FormGroup;
   config: any;
@@ -230,7 +229,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       "businessType": "NONSPECULATIVEINCOME",
       "totalgrossProfitFromNonSpeculativeIncome": row.grossProfit,
       "netProfitfromNonSpeculativeIncome": row.netProfit,
-      "incomes": this.tradingGridOptions.rowData,
+      "incomes": this.nonspecIncomeFormArray.getRawValue(),
       "expenses": row.expenses,
     });
     if (!this.Copy_ITR_JSON.business.profitLossACIncomes) {
