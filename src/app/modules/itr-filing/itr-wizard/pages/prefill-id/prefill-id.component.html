@@ -24,7 +24,12 @@
               *ngIf="!data?.eriClientValidUpto"
               class="flex flex-row items-center space-between"
             >
-              <button class="lgtBtn" type="button" style="margin-left: 6%" (click)="addClientOverBot()">
+              <button
+                class="lgtBtn"
+                type="button"
+                style="margin-left: 6%"
+                (click)="addClientOverBot()"
+              >
                 <span class="font-semibold">
                   Initiate Add Client & Prefill over Bot
                 </span>
@@ -75,7 +80,7 @@
                   >
                     <div class="w-[52px] h-[52px] lg:mb-0">
                       <input
-                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px] roundCheck"
                         type="checkbox"
                         [(ngModel)]="downloadPrefillChecked"
                         (change)="onCheckboxChange(1)"
@@ -83,7 +88,7 @@
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold lg:text-left"
+                        class="text-base leading-5 text-gray-1100 font-semibold text-left txBg"
                       >
                         Download Prefill Data
                       </div>
@@ -133,7 +138,7 @@
                   >
                     <div class="w-[52px] h-[52px] lg:mb-0">
                       <input
-                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px]"
+                        class="chkSpc checkbox checkbox-primary rounded border-2 w-[24px] h-[24px] mb-[-6px] roundCheck"
                         type="checkbox"
                         [(ngModel)]="uploadPrefillChecked"
                         (change)="onCheckboxChange(2)"
@@ -141,10 +146,10 @@
                     </div>
                     <div class="flex flex-col gap-y-[6px]">
                       <div
-                        class="text-base leading-5 text-gray-1100 font-semibold lg:text-left flex items-center gap-[5px]"
+                        class="text-base leading-5 text-gray-1100 font-semibold text-left txBg"
                       >
                         <i class="material-icons-outlined adIc">cloud_upload</i>
-                        Upload Prefill Data
+                        Upload Prefill Json
                       </div>
                       <div
                         class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"

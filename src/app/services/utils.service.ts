@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
+import {ITR_JSON, OptedInNewRegime, OptedOutNewRegime} from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
@@ -351,7 +351,10 @@ export class UtilsService {
             immovableAsset: [],
             prefillDate: null,
             prefillData: null,
-            prefillDataSource: null
+            prefillDataSource: null,
+            everOptedNewRegime: null,
+            everOptedOutOfNewRegime: null,
+            optionForCurrentAY: null
         };
 
         return ITR_JSON;

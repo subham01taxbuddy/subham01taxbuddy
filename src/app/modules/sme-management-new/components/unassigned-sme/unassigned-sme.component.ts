@@ -21,7 +21,7 @@ export class UnassignedSmeComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 20,
+    pageSize: 30,
     assigned:false,
     // owner:true,
     mobileNumber: null,
@@ -46,7 +46,7 @@ export class UnassignedSmeComponent implements OnInit {
 
         sortable: true,
       };this.config = {
-        itemsPerPage: 10,
+        itemsPerPage: 30,
         currentPage: 1,
         totalItems: null
       };
@@ -68,6 +68,7 @@ export class UnassignedSmeComponent implements OnInit {
           this.loading = false;
           this.smeInfo =result.data.content
           console.log("smelist",this.smeList)
+          this.config.totalItems = result.data.totalElements;
           this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
         } else {
           this.loading = false;
@@ -206,7 +207,7 @@ export class UnassignedSmeComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">

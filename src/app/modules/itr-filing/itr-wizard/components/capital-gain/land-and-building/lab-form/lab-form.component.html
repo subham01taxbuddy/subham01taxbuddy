@@ -277,58 +277,25 @@
                   >No</mat-radio-button
                 >
               </mat-radio-group>
-            </div>
-
-            <div class="card__row">
-              <button
-                class="tbd-btn save-btn"
-                style="float: right"
-                [disabled]="totalCg <= 0"
-                (click)="addMoreImprovements(this.immovableForm)"
-                *ngIf="isImprovements.value"
-              >
-                Add New&nbsp;&nbsp;
-                <i class="fa fa-plus" aria-hidden="true"></i>
+              <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
+                      (click)="addMoreImprovements(this.immovableForm)"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New                
               </button>
             </div>
           </div>
 
-          <div formArrayName="improvement">
-            <div
-              style="padding: 25px"
-              class="card"
-              *ngFor="
-                let improve of getImprovementsArrayForImmovable.controls;
-                let i = index
-              "
-              (click)="active = i"
-              [formGroupName]="i"
-            >
-              <div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <mat-label
-                    ><mat-checkbox
-                      style="margin-right: 5px"
-                      name="improve[i]"
-                      formControlName="selected"
-                    ></mat-checkbox>
-                    Year Of Improvement</mat-label
-                  >
-                  <mat-form-field class="input-field-width">
-                    <mat-select
-                      name="improve[i]"
-                      formControlName="dateOfImprovement"
-                      required
-                    >
-                      <mat-option
-                        [value]="year"
-                        *ngFor="let year of improvementYears"
-                      >
-                        {{ year }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+        <div class="card cardYes" formArrayName="improvement" *ngIf="isImprovements.value">
+          <div class="card__row" *ngFor="let improve of getImprovementsArrayForImmovable.controls;let i=index" [formGroupName]="i">
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <mat-label><mat-checkbox name="improve[i]" formControlName="selected"></mat-checkbox>Year Of Improvement</mat-label>
+              <mat-form-field class="input-field-width">
+                <mat-select placeholder="Year of Improvement" name="improve[i]" formControlName="dateOfImprovement"
+                            required>
+                  <mat-option [value]="year" *ngFor="let year of improvementYears"> {{year}} </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
 
                 <div class="card__col-xs-12 card__col-sm-4">
                   <mat-label>Cost Of Improvement</mat-label>
@@ -375,14 +342,8 @@
             </div>
           </div>
           <div>
-            <button
-              class="delete-btn"
-              (click)="removeImprovement(active, this.immovableForm)"
-              [disabled]="!improvementSelected()"
-              *ngIf="isImprovements.value"
-            >
-              <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
-            </button>
+            <button class="delete-btn" (click)="removeImprovement(i,this.immovableForm)" [disabled]="!improvementSelected()">
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
           </div>
           <hr />
 
@@ -410,19 +371,9 @@
                     >
                   </mat-radio-group>
                 </div>
-
-                <div class="card__row">
-                  <button
-                    class="tbd-btn save-btn"
-                    style="float: right"
-                    [disabled]="totalCg <= 0"
-                    (click)="addInvestment(this.immovableForm)"
-                    *ngIf="isDeductions.value"
-                  >
-                    Add New&nbsp;&nbsp;
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                  </button>
-                </div>
+                <button class="tbd-btn save-btn" style="float: right;" [disabled]="totalCg<=0"
+                        (click)="addInvestment('ADD', '', 0)"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New               
+                </button>
               </div>
 
               <div formArrayName="deductions">
@@ -575,6 +526,13 @@
                       </mat-form-field>
                     </div>
                   </div>
+
+                </div>
+                <!--              [disabled]="!isEmployerSelected()"-->
+
+                <div>
+                  <button class="delete-btn btnGry" (click)="deleteInvestment(i)" [disabled]="!deductionSelected()">
+                    <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
                 </div>
               </div>
               <div>
@@ -833,15 +791,9 @@
                 </div>
                 <!--              [disabled]="!isEmployerSelected()"-->
 
-                <div>
-                  <button
-                    class="delete-btn"
-                    (click)="removeBuyersDetails(active)"
-                    [disabled]="!buyerSelected()"
-                  >
-                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
-                  </button>
-                </div>
+              <div>
+                <button class="delete-btn" (click)="removeBuyersDetails()" [disabled]="!buyerSelected()">
+                  <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
               </div>
             </div>
           </div>

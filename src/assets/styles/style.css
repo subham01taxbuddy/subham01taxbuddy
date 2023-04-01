@@ -84,6 +84,11 @@ a {
 
 /* --[HEADER]-- */
 
+.card {
+  border:none!important;
+  box-shadow:none!important;
+}
+
 .header {
   position: relative;
   min-height: 70px;

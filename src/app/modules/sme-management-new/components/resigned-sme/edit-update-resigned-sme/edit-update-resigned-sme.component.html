@@ -68,13 +68,13 @@
         <div class="col-sm-4">
           <mat-label> Language </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Language"
-              [formControl]="languages"
-              class="input-field"
-            />
+            <mat-select [formControl]="languages" multiple>
+              <mat-select-trigger>
+                {{languages.value ? languages.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let lang of langList" [value]="lang"> {{lang}}</mat-option>
+            </mat-select>
             <!-- <mat-error
             *ngIf="languages?.hasError('required') ">
             This field is required</mat-error> -->
@@ -100,11 +100,16 @@
           <mat-form-field appearance="outline">
             <mat-select [formControl]="itrTypes" multiple>
               <mat-select-trigger>
+                {{itrTypes.value ? itrTypes.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value"> {{itrType.display}}</mat-option>
+              <!-- <mat-select-trigger>
                 <span *ngFor="let item of itrTypes.value; ">
                   itr-{{item || ''}} <span>,</span>
                 </span>
               </mat-select-trigger>
-              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option>
+              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option> -->
             </mat-select>
             <!-- <mat-error
             *ngIf="itrTypes?.hasError('required') ">
@@ -218,7 +223,7 @@
                 <mat-slide-toggle *ngIf="gst.value" [formControl]="gstToggle"  style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('GST', gst, gstToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth Builder(wB)</mat-checkbox>
+              <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth Builder(WB)</mat-checkbox>
                 <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('WB', wb, wbToggle)"></mat-slide-toggle></p><hr>
 
@@ -256,7 +261,7 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option"  >
+              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)" >
                    {{option.name}}
               </mat-option>
             </mat-autocomplete>
@@ -404,7 +409,7 @@
       </div>
     </div>
   <!-- </form> -->
-    <div style="text-align: center;">
+    <div style="text-align: center; margin-top: 40px;">
       <button class="tbd-btn" (click)="updateSmeDetails()">Save </button>
     </div>
   </div>
