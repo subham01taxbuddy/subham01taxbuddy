@@ -531,6 +531,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   applySmeSelectedPlan(selectedPlan) {
+    this.loading=true;
     this.smeSelectedPlanId = selectedPlan;
     const smeInfo = JSON.parse(localStorage.getItem('UMD'));
     const param = '/subscription';
@@ -540,11 +541,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId
     }
-    this.loading = true;
+
     this.itrService.postMethod(param, request).subscribe((response: any) => {
       this.loading=false;
       console.log('SME Selected plan:', response);
       this.userSubscription = response;
+      this.loading = false;
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         this.maxEndDate.setDate(this.maxEndDate.getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
       }
