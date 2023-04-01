@@ -386,17 +386,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['us80ddb'].disable();
     }
 
-    if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(
-        null
-      );
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
-    } else if (
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0
-    ) {
-      this.investmentDeductionForm.controls['selfPremium'].setValue(null);
-      this.investmentDeductionForm.controls['selfPremium'].disable();
-    }
   }
 
   saveInvestmentDeductions() {
