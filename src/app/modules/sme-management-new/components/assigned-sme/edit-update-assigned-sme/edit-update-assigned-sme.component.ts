@@ -205,15 +205,15 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     pd: new FormControl(''),
     mf: new FormControl(''),
     other: new FormControl(''),
-    itrToggle :new FormControl(false),
-    nriToggle:new FormControl(false),
-    tpaToggle :new FormControl(false),
-    gstToggle:new FormControl(false),
-    noticeToggle:new FormControl(false),
-    wbToggle:new FormControl(false),
-    pdToggle:new FormControl(false),
-    mfToggle :new FormControl(false),
-    otherToggle:new FormControl(false),
+    itrToggle :new FormControl(''),
+    nriToggle:new FormControl(''),
+    tpaToggle :new FormControl(''),
+    gstToggle:new FormControl(''),
+    noticeToggle:new FormControl(''),
+    wbToggle:new FormControl(''),
+    pdToggle:new FormControl(''),
+    mfToggle :new FormControl(''),
+    otherToggle:new FormControl(''),
   })
 
   get itr(){
@@ -521,18 +521,18 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.pdToggle.setValue(true);
         }
       }
-      else if (element.serviceType == "PD") {
+      else if (element.serviceType == "MF") {
         this.mf.setValue(true);
         if (element.assignmentStart == true) {
           this.mfToggle.setValue(true);
         }
       }
-      else if (element.serviceType == "PD") {
-        this.other.setValue(true);
-        if (element.assignmentStart == true) {
-          this.otherToggle.setValue(true);
-        }
-      }
+      // else if (element.serviceType == "PD") {
+      //   this.other.setValue(true);
+      //   if (element.assignmentStart == true) {
+      //     this.otherToggle.setValue(true);
+      //   }
+      // }
     })
     })
   }
