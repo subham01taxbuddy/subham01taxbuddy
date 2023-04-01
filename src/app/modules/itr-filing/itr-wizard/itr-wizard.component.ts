@@ -165,6 +165,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     this.showIncomeSources = false;
     this.selectedSchedule = 'Comparison of New v/s Old Regime';
     this.router.navigate(['/itr-filing/itr/old-vs-new']);
+    // this.breadcrumb = null;
+    // this.showIncomeSources = false;
+    // this.selectedSchedule = 'Summary';
+    // this.router.navigate(['/itr-filing/itr/summary']);
   }
 
   gotoSchedule(schedule) {

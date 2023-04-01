@@ -364,7 +364,7 @@ export class OtherInformationComponent implements OnInit {
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
         this.loading = false;
-        this.utilsService.showSnackBar('Unlisted share details added successfully.');
+        this.utilsService.showSnackBar('Other information updated successfully.');
 
       }, error => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));

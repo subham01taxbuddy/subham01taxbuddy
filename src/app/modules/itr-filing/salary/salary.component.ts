@@ -25,7 +25,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  readonly limitPT = 2500;
+  readonly limitPT = 5000;
   maxPT = this.limitPT;
   maxEA = 5000;
   currentIndex: number = null;
@@ -160,11 +160,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       this.deductionsFormGroup.controls['professionalTax'].setValue(null)
       this.deductionsFormGroup.controls['professionalTax'].disable();
     }
-    if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
+    if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT')) {
       this.deductionsFormGroup.controls['entertainmentAllow'].disable();
+    } else {
+      this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
+      this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
     }
-    this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
-    this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
 
     if(this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
@@ -221,7 +222,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     const data = [];
 
     for (let i = 0; i < this.allowanceDropdown.length; i++) {
-      let validators = this.allowanceDropdown[i].value === 'CHILDREN_EDUCATION' ? Validators.max(2400) : null;
+      let validators = null;
+      if(this.allowanceDropdown[i].value === 'CHILDREN_EDUCATION') {
+        validators = Validators.max(2400);
+      }
       data.push(this.fb.group({
         label: this.allowanceDropdown[i].label,
         allowType: this.allowanceDropdown[i].value,
@@ -265,7 +269,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       });
     } else {
       return this.fb.group({
-        employerName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+        employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
         address: [''],
         city: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
         state: [''],
@@ -285,7 +289,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   saveEmployerDetails() {
 
-    if (this.employerDetailsFormGroup.valid) {
+    if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
+
+      this.checkGrossSalary();
+
       this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
       this.localEmployer.state = this.employerDetailsFormGroup.controls['state'].value
@@ -339,6 +346,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           totalAllowExempt = totalAllowExempt + Number(allowance.controls['allowValue'].value);
         }
       }
+
+      //check allowances total is not exceeding the gross salary
+      if(totalAllowExempt > this.grossSalary){
+        this.utilsService.showSnackBar('Allowances total cannot exceed gross salary');
+        return;
+      }
+
       if (this.utilsService.isNonZero(totalAllowExempt) || this.utilsService.isNonZero(totalAllowExempt)) {
         this.localEmployer.allowance.push({
           allowanceType: 'ALL_ALLOWANCES',
@@ -483,6 +497,23 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     return this.utilsService.currencyFormatter(taxable);
   }
 
+  grossSalary = 0;
+  checkGrossSalary(){
+    this.grossSalary = 0;
+    let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
+
+    //check for SEC17_1 for gross salary
+    for (let i = 0; i < salaryDetails.controls.length; i++) {
+      let salary = salaryDetails.controls[i] as FormGroup
+      if (this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)) {
+        if (salary.controls['salaryType'].value === "SEC17_1") {
+          this.grossSalary = salary.controls['salaryValue'].value;
+          break;
+        }
+      }
+    }
+  }
+
   editEmployerDetails(index) {
     this.employerDetailsFormGroup.reset();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
@@ -497,6 +528,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.updateDataByPincode();
 
     // this.getData(this.localEmployer.pinCode);
+
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
@@ -527,6 +559,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       }
     }
 
+    this.checkGrossSalary();
     // Set Allowance
     if (this.localEmployer.allowance instanceof Array) {
       const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
@@ -535,6 +568,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
         const id = allowanceArray.controls.filter((item: any) => item.controls['allowType'].value === allowance[i].allowanceType)[0] as FormGroup;
         id.controls['allowValue'].setValue(allowance[i].exemptAmount);
+
         // id.setValue({
         //   id: id,
         //   label: this.allowanceDropdown[i].label,
@@ -576,8 +610,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
     this.maxPT = this.maxPT + Number(this.deductionsFormGroup.controls['professionalTax'].value);
     this.maxEA = this.maxEA + Number(this.deductionsFormGroup.controls['entertainmentAllow'].value);
-    this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
-    this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
+    if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT')) {
+      this.deductionsFormGroup.controls['entertainmentAllow'].disable();
+    } else {
+      this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
+      this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
+    }
+    // this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
+    // this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
 
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
   }

@@ -267,6 +267,29 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       parentName= this.leaderDetails?.name;
     }
 
+    // if( this.smeObj.roles=null){
+    //   this.smeObj.roles=[];
+    // }
+    if(this.owner.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_OWNER')
+    }
+    if(this.filer.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_FILER');
+
+    }
+    if(this.leader.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_LEADER')
+    }
+    if(this.admin.value === true){
+      this.smeObj.roles=[];
+      this.smeObj.roles.push('ROLE_ADMIN')
+    }
+
+
+
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
@@ -308,13 +331,20 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       let requestData = JSON.parse(JSON.stringify(finalReq));
       console.log('requestData', requestData);
       this.userMsService.putMethod(param, requestData).subscribe(
-        (res) => {
+        (res:any) => {
           console.log('SME assignment updated', res);
           this.loading = false;
-          this._toastMessageService.alert(
-            'success',
-            'sme details updated successfully'
-          );
+          if(res.success ===false){
+            this._toastMessageService.alert(
+              'false',
+              'failed to update sme details '
+            );
+          }else{
+            this._toastMessageService.alert(
+              'success',
+              'sme details updated successfully'
+            );
+          }
         },
         (error) => {
           this._toastMessageService.alert('error', 'failed to update.');

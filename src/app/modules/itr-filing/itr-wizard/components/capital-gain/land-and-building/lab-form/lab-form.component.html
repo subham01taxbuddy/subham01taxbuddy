@@ -791,9 +791,15 @@
                 </div>
                 <!--              [disabled]="!isEmployerSelected()"-->
 
-              <div>
-                <button class="delete-btn" (click)="removeBuyersDetails()" [disabled]="!buyerSelected()">
-                  <i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
+                <div>
+                  <button
+                    class="delete-btn"
+                    (click)="removeBuyersDetails(active)"
+                    [disabled]="!buyerSelected()"
+                  >
+                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -588,13 +588,20 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       let requestData = JSON.parse(JSON.stringify(finalReq));
       console.log('requestData', requestData);
       this.userMsService.putMethod(param, requestData).subscribe(
-        (res) => {
+        (res:any) => {
           console.log('SME assignment updated', res);
           this.loading = false;
-          this._toastMessageService.alert(
-            'success',
-            'sme details updated successfully'
-          );
+          if(res.success ===false){
+            this._toastMessageService.alert(
+              'false',
+              'failed to update sme details '
+            );
+          }else{
+            this._toastMessageService.alert(
+              'success',
+              'sme details updated successfully'
+            );
+          }
         },
         (error) => {
           this._toastMessageService.alert('error', 'failed to update.');

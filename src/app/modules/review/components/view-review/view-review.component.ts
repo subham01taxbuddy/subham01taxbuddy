@@ -8,6 +8,11 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { HttpClient } from '@angular/common/http';
+import { defineLocale } from 'moment';
+import { defined } from 'highcharts';
 
 @Component({
   selector: 'app-view-review',
@@ -17,13 +22,17 @@ import { ReviewService } from '../../services/review.service';
 export class ViewReviewComponent implements OnInit {
   reviewGridOptions: GridOptions;
   loading!: boolean;
-  userInfo = [];
+  userInfo= [];
+  mobileNo: string = '';
+  currentUserId: number = 0;
+  user_data: any = [];
   sourceList: any[] = AppConstants.sourceList;
+  platformList: any[] = AppConstants.platformList;
   isDataById: boolean;
   userDetails: any;
   waChatLink = null;
   loggedSmeInfo: any;
-
+  selectPlatform: any = 'All';
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private reviewService: ReviewService,
@@ -31,7 +40,8 @@ export class ViewReviewComponent implements OnInit {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    public dialogRef: MatDialogRef<ViewReviewComponent>,
+    public http: HttpClient,
+    public dialogRef: MatDialogRef<ViewReviewComponent>
   ) {
     this.loggedSmeInfo = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.reviewGridOptions = <GridOptions>{
@@ -39,12 +49,10 @@ export class ViewReviewComponent implements OnInit {
       columnDefs: this.reviewColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: params => {
-      },
+      onGridReady: (params) => {},
 
       sortable: true,
     };
-
   }
 
   ngOnInit(): void {
@@ -75,7 +83,8 @@ export class ViewReviewComponent implements OnInit {
       error => {
         this.isDataById = null;
         this.loading = false;
-      })
+      }
+    );
   }
 
   getWhatsAppLink() {
@@ -123,7 +132,34 @@ export class ViewReviewComponent implements OnInit {
     },
       error => {
         this.loading = false;
-      })
+      }
+    );
+  }
+  saveRecord() {
+    if (
+      this.userDetails.sourcePlatform === 'Play Store' ||
+      this.userDetails.sourcePlatform === 'Apple Store' ||
+      this.userDetails.sourcePlatform === 'Google My Business'
+    ) {
+      const param = `/review/match-user`;
+      const param2 = {
+        reviewId: this.userDetails.id,
+        mobileNumber: this.mobileNo,
+        environment: environment.environment,
+      };
+      this.reviewService.postMethod(param, param2).subscribe((result) => {
+        console.log('Save User Data:', result);
+        if (result.success) {
+          // this.getReview();
+          this.getReview();
+          this._toastMessageService.alert('success', 'User added successfully');
+          this.loading = false;
+        } else {
+          this._toastMessageService.alert('error', 'Failed to add user');
+          this.loading = false;
+        }
+      });
+    }
   }
 
   reviewColumnDef() {
@@ -224,6 +260,19 @@ export class ViewReviewComponent implements OnInit {
         },
       },
       {
+        headerName: 'UserMatched',
+        field: 'matchedUserId',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: function (params: any) {
+          return `<button type="radio" class="action_icon add_button" title="review given by this user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-circle-o" aria-hidden="true" data-action-type="radio" ></i>
+           </button>`;
+        },
+      },
+      {
         headerName: 'Call',
         editable: false,
         suppressMenu: true,
@@ -256,6 +305,8 @@ export class ViewReviewComponent implements OnInit {
         lName: data[i].lName,
         mobileNumber: data[i].mobileNumber,
         email_address: data[i].email_address,
+        userId: data[i].userId,
+        id: data[i].id,
         filer: data[i].filer,
       })
       userArray.push(userInfo);
@@ -272,31 +323,82 @@ export class ViewReviewComponent implements OnInit {
           break;
         }
       }
+      switch (actionType) {
+        case 'radio': {
+          this.radioValue(params.data);
+        }
+      }
     }
   }
 
   call(data) {
-    this.loading = true;
+    this.loading = false;
     const param = `/prod/call-support/call`;
     const reqBody = {
-      "agent_number": this.loggedSmeInfo[0].mobileNumber,
-      "customer_number": data.mobileNumber
-    }
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success) {
-        if (result.success.status) {
-          this._toastMessageService.alert("success", result.success.message)
+      agent_number: this.loggedSmeInfo[0].mobileNumber,
+      customer_number: data.mobileNumber,
+    };
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
+      (result: any) => {
+        this.loading = false;
+        if (result.success) {
+          if (result.success.status) {
+            this._toastMessageService.alert('success', result.success.message);
+          }
+        } else {
+          this._toastMessageService.alert('error', result.error);
+          this.loading = false;
         }
-      } else {
-        this._toastMessageService.alert("error", result.error)
+      },
+      (error) => {
+        this.utilsService.showSnackBar(
+          'Error while making call, Please try again.'
+        );
         this.loading = false;
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+    );
   }
 
+  radioValue(data) {
+    this.loading = true;
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Matched User ?',
+        message: 'Are you sure you Review Given By this User?.',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'YES') {
+        const param = `/prod/review/byid`;
+        const reqBody = {
+          body: {
+            matchedUserId: data.userId,
+          },
+          pathParameters: {
+            id: this.data.leadData.id,
+          },
+          environment: environment.environment,
+        };
+        this.userMsService.putMethodAWSURL(param, reqBody).subscribe(
+          (response: any) => {
+            this.loading = false;
+            if (response.success) {
+              this._toastMessageService.alert('success', response.message);
+              this.loading = false;
+            } else {
+              this._toastMessageService.alert('error', response.message);
+              this.loading = false;
+            }
+          },
+          (error) => {
+            this.utilsService.showSnackBar(
+              'Error while making Match, Please try again.'
+            );
+            this.loading = false;
+          }
+        );
+      }
+    });
+  }
 
 }
