@@ -162,7 +162,7 @@
               placeholder=""
               [formControl]="parentName"
               class="input-field"
-
+            readonly
             />
             <!-- <mat-error
             *ngIf="parentName?.hasError('required') ">
@@ -366,7 +366,7 @@
               <mat-label> Leave Ends </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput placeholder="Leave Ends"  [formControl]="leaveEndDate" [min]="minDate"
-                             [max]="maxDate" [matDatepicker]="picker2" autocomplete="off" required>
+                             [max]="maxDate" [matDatepicker]="picker2" autocomplete="off" >
                              <mat-hint>DD/MM/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
@@ -381,7 +381,7 @@
                 <mat-label> Joining Date  </mat-label>
                 <mat-form-field appearance="outline">
                   <input matInput placeholder="Joining Date" [formControl]="joiningDate" [min]="minDate"
-                             [max]="maxDate" [matDatepicker]="picker3" autocomplete="off" required>
+                             [max]="maxDate" [matDatepicker]="picker3" autocomplete="off" >
                              <mat-hint>DD/MM/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker #picker3></mat-datepicker>
@@ -394,7 +394,7 @@
                 <mat-label> Resigning Date  </mat-label>
                 <mat-form-field appearance="outline">
                   <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="minDate"
-                           [max]="maxDate" [matDatepicker]="picker4" autocomplete="off" required>
+                           [max]="maxDate" [matDatepicker]="picker4" autocomplete="off" >
                            <mat-hint> <p><i class="fas fa-circle"></i>  Resignation date is date of removal</p> </mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                         <mat-datepicker #picker4></mat-datepicker>

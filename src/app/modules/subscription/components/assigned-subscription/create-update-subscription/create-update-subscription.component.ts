@@ -9,6 +9,22 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { Schedules } from 'src/app/modules/shared/interfaces/schedules';
+
+// export class Schedules {
+//   public PERSONAL_INFO = 'PERSONAL_INFO';
+//   public OTHER_SOURCES = 'otherSources';
+//   public INVESTMENTS_DEDUCTIONS = 'investmentsDeductions';
+//   public TAXES_PAID = 'taxesPaid';
+//   public DECLARATION = 'declaration';
+//   public SALARY = 'SALARY';
+//   public HOUSE_PROPERTY = 'HOUSE_PROPERTY';
+//   public BUSINESS_INCOME = 'BUSINESS_INCOME';
+//   public CAPITAL_GAIN = 'capitalGain';
+//   public SPECULATIVE_INCOME = 'speculativeIncome';
+//   public FOREIGN_INCOME = 'foreignIncome';
+//   public MORE_INFORMATION = 'moreInformation'
+// }
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -16,6 +32,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
   styleUrls: ['./create-update-subscription.component.scss'],
 })
 export class CreateUpdateSubscriptionComponent implements OnInit {
+
   searchedPromoCode = new FormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
   serviceDetails = [];
@@ -27,7 +44,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   loading!: boolean;
   userSubscription: any;
   sourcesList =[]
-  subscriptionObj: any;
+  subscriptionObj: userInfo;
   smeSelectedPlanId: any;
   loggedInSme:any;
   allPlans: any;
@@ -65,7 +82,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     public utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
-    private toastMessage: ToastMessageService
+    private toastMessage: ToastMessageService,
+     private schedules: Schedules,
   ) {}
 
   ngOnInit() {
@@ -84,32 +102,57 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       );
 
     this.subscriptionObj = JSON.parse(
-      sessionStorage.getItem('subscriptionObject'));
+      sessionStorage.getItem('subscriptionObject'))?.data;
     console.log('subscriptionObj', this.subscriptionObj);
-    if( this.subscriptionObj.type ==='edit'){
-      this.personalInfoForm.patchValue(this.subscriptionObj.data); // all
-      // this.otherDetailsForm.patchValue(this.subscriptionObj.data);
-    }else if (this.subscriptionObj.type ==='create') {
-      this.personalInfoForm.patchValue(null); // all
-      // this.otherDetailsForm.patchValue(null);
-    }
+    this.personalInfoForm.patchValue(this.subscriptionObj)
+    // if( this.subscriptionObj.type ==='edit'){
+    //   this.personalInfoForm.patchValue(this.subscriptionObj); // all
+    //    this.otherDetailsForm.patchValue(this.subscriptionObj.data);
+    // }else if (this.subscriptionObj.type ==='create') {
+    //   this.personalInfoForm.patchValue(null); // all
+    //    this.otherDetailsForm.patchValue(null);
+    // }
 
     this.sourcesList = [
-      { name: 'Salary' },
-      { name: 'House Property' },
-      { name: 'Business/Profession' },
-      { name: 'Capital Gain' },
-      { name: 'Futures / Options' },
+      {
+        name: 'Salary',
+        schedule:'SALARY'
+      },
+      {
+        name: 'House Property',
+        schedule:'HOUSE_PROPERTY'
+      },
+      {
+        name: 'Business / Profession',
+        schedule:'BUSINESS_AND_PROFESSION'
+      },
+      {
+        name: 'Capital Gain',
+        schedule: 'CAPITAL_GAINS'
+      },
+      {
+        name: 'Futures / Options',
+        schedule: 'FUTURE_AND_OPTIONS'
+      },
+      {
+        name: 'NRI / Foreign',
+        schedule: 'FOREIGN_INCOME_NRI_EXPAT'
+      },
+      {
+        name: 'Crypto',
+        schedule: 'CRYPTOCURRENCY'
+      },
     ];
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    if(this.subscriptionObj.data == null){
+    if(this.subscriptionObj == null){
       this.getUserPlanInfo(this?.loggedInSme[0]?.userId)
       this.getAllPlanInfo(this.serviceType)
 
     }else{
-      this.getUserPlanInfo(this.subscriptionObj?.data?.subscriptionId)
+      this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
     }
 
+    this.getOwnerFilerName()
     this.setFormValues(this.selectedUserInfo);
   }
 
@@ -150,6 +193,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     this.pin.setValue(data.address[0]?.pinCode);
     this.state.setValue(data.address[0]?.state);
     this.city.setValue(data.address[0]?.city);
+    this.zipcode.setValue(data.address[0]?.pinCode)
   }
 
   sourcesUpdated(source) {
@@ -157,10 +201,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       (item) => item.name === source.name
     )[0];
     clickedSource.selected = !clickedSource.selected;
+
     let event = {
       schedule: clickedSource,
       sources: this.sourcesList,
     };
+    console.log('updated source:',this.sourcesList)
   }
 
   personalInfoForm :FormGroup = this.fb.group({
@@ -355,6 +401,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       console.log("user Subscription",this.userSubscription)
       this.gstUserInfoByUserId(subscription.userId);
       this.loading = false;
+      this.reminderMobileNumber.setValue(subscription.reminderMobileNumber)
+      this.reminderEmail.setValue(subscription.reminderEmail)
       let myDate = new Date();
       console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear())
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
@@ -444,6 +492,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   }
 
+  // selectedPlan=this.sourcesList.filter((item:any) => item.selected===true)
+
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe((plans: any) => {
@@ -475,6 +525,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     }
     this.loading = true;
     this.itrService.postMethod(param, request).subscribe((response: any) => {
+      this.loading=false;
       console.log('SME Selected plan:', response);
       this.userSubscription = response;
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
@@ -555,11 +606,85 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   getOwnerFilerName(){
     // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
-    let param =`/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=`
+
+    let param =`/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`
+    this.userService.getMethod(param).subscribe((result: any) => {
+      console.log('owner filer name  -> ', result);
+      this.filerName.setValue(result.data[0].name);
+      this.ownerName.setValue(result.data[0].parentName)
+    })
+  }
+
+  updateUserDetails(){
+    // https://api.taxbuddy.com/user/profile/735121
+    // this.userSubscription.userId
+    let param = `/profile/${this.userSubscription.userId}`;
+     let reqBody ={
+      createdDate: this.subscriptionObj.createdDate,
+      id: this.subscriptionObj.id,
+      userId: this.subscriptionObj.userId,
+      fName:this.selectedUserInfo.fName,
+      mName:this.selectedUserInfo.mName,
+      lName: this.selectedUserInfo.lName,
+      fatherName:this.selectedUserInfo.fatherName,
+      gender: this.selectedUserInfo.gender,
+      dateOfBirth: this.selectedUserInfo.dateOfBirth,
+      maritalStatus: this.selectedUserInfo.maritalStatus,
+      emailAddress: this.emailAddress.value,
+      aadharNumber: this.selectedUserInfo.aadharNumber,
+      panNumber: this.selectedUserInfo.panNumber,
+      imageURL: this.selectedUserInfo.imageURL,
+      mobileNumber: this.mobileNumber.value,
+      residentialStatus: this.selectedUserInfo.residentialStatus,
+      zohoDeskId: this.selectedUserInfo.zohoDeskId,
+      address:[{
+        premisesName:this.selectedUserInfo?.address[0]?.premisesName,
+        road: this.selectedUserInfo?.address[0]?.road,
+        area: this.selectedUserInfo?.address[0]?.area,
+        city: this.city.value,
+        state: this.state.value,
+        pinCode: this.pin.value
+      }
+      ],
+      whatsAppNumber:this.selectedUserInfo.whatsAppNumber,
+      optinDate: this.selectedUserInfo.optinDate,
+      optoutDate: this.selectedUserInfo.optoutDate,
+      isUserOpted: this.selectedUserInfo.isUserOpted,
+      isWhatsAppMsgAllowed: this.selectedUserInfo.isWhatsAppMsgAllowed,
+      bankDetails:this.selectedUserInfo.bankDetails,
+      gstDetails: this.selectedUserInfo.gstDetails,
+      messageSentCount: this.selectedUserInfo.messageSentCount,
+      countryCode:this.selectedUserInfo.countryCode,
+      theFlyLink: this.selectedUserInfo.theFlyLink,
+      language:  this.selectedUserInfo.language,
+      eriClientValidUpto: this.selectedUserInfo.eriClientValidUpto,
+      eriClientotpSourceFlag: this.selectedUserInfo.eriClientotpSourceFlag,
+      reviewGiven: this.selectedUserInfo.reviewGiven,
+      assesseeType: this.selectedUserInfo.assesseeType,
+      subscriptionId:this.selectedUserInfo.subscriptionId,
+      subscriptionAssigneeId:this.selectedUserInfo.subscriptionAssigneeId,
+
+    }
+
+    let requestData = JSON.parse(JSON.stringify(reqBody));
+      console.log('requestData', requestData);
+    this.userService.putMethod(param,reqBody).subscribe((res: any) => {
+    console.log('user upadted res: ', res);
+    this.loading = false;
+          this.toastMessage.alert(
+            'success',
+            'user details updated successfully'
+          );
+        },
+        (error) => {
+          this.toastMessage.alert('error', 'failed to update.');
+          this.loading = false;}
+        )
+
   }
 
   updateSubscription(){
-    if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan.planId)) {
+    if (this.userSubscription.smeSelectedPlan !=null) {
       console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
       let param = '/subscription';
       const smeInfo = JSON.parse(localStorage.getItem('UMD'));
@@ -567,9 +692,28 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: "SME", // USER or SME
+        item:{
+          itemDescription:this.description?.value,
+          quantity: this.userSubscription?.item[0]?.quantity,
+          rate: this?.userSubscription?.payableSubscriptionAmount,
+          cgstPercent: this?.userSubscription?.cgstPercent,
+          cgstAmount: this?.userSubscription?.cgstAmount,
+          igstAmount:  this?.userSubscription?.igstAmount,
+          igstPercent: this?.userSubscription?.igstPercent,
+          sgstPercent: this?.userSubscription?.sgstPercent,
+          sgstAmount: this?.userSubscription?.sgstAmount,
+          amount: this?.userSubscription?.payableSubscriptionAmount,
+          sacCode: this.sacNumber.value,
+        },
+        financialYear:this.assessmentYear.value,
+        service:this.service,
+        serviceDetail:this.serviceDetail,
+        reminderEmail:this.reminderEmail.value,
+        reminderMobileNumber:this.reminderMobileNumber.value
       }
       console.log('Req Body: ', reqBody)
-      this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
+      let requestData = JSON.parse(JSON.stringify(reqBody));
+      this.itrService.postMethod(param, requestData).subscribe((res: any) => {
         console.log('After subscription plan added res:', res);
         this.toastMessage.alert("success", "Subscription created successfully.")
         // let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
@@ -580,8 +724,47 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
     }
     else {
-      this.toastMessage.alert("error", "Select Plan.")
+      this.toastMessage.alert("error", "plz Select Plan.")
     }
   }
 
+}
+
+
+export interface userInfo {
+  createdDate: string
+  id: string
+  userId: number
+  fName: string
+  mName: any
+  lName: string
+  fatherName: any
+  gender: any
+  dateOfBirth: string
+  maritalStatus: any
+  emailAddress: string
+  aadharNumber: any
+  panNumber: any
+  imageURL: any
+  mobileNumber: string
+  residentialStatus: any
+  zohoDeskId: any
+  address: any[]
+  whatsAppNumber: string
+  optinDate: any
+  optoutDate: any
+  isUserOpted: boolean
+  isWhatsAppMsgAllowed: string
+  bankDetails: any[]
+  gstDetails: any
+  messageSentCount: number
+  countryCode: string
+  theFlyLink: any
+  language: string
+  eriClientValidUpto: any
+  eriClientotpSourceFlag: any
+  reviewGiven: boolean
+  assesseeType: string
+  subscriptionId:number
+  subscriptionAssigneeId:number
 }
