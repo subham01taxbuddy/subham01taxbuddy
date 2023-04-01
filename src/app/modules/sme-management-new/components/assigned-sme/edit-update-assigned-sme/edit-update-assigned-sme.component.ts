@@ -544,6 +544,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   updateSmeDetails() {
+
+   const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
+   const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
+   const LeaveEndDate = this.convertToDDMMYY(this.leaveEndDate.value);
+   const  ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
+
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
@@ -566,10 +572,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         botId: this.smeObj.botId,
         displayName: this.displayName.value,
         active: this.smeObj.active,
-        leaveStartDate:this.leaveStartDate.value,
-        leaveEndDate:this.leaveEndDate.value,
-        joiningDate: this.joiningDate.value,
-        resigningDate:this.resigningDate.value,
+        leaveStartDate:LeaveStartDate,
+        leaveEndDate:LeaveEndDate,
+        joiningDate: JoiningDate,
+        resigningDate:ResigningDate,
         internal: this.internal.value == 'internal'? true :false,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
