@@ -12,7 +12,7 @@
 
         <div class="card__col-xs-12 card__col-sm-12">
           <div formArrayName="nonspecIncomesArray" style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-            <div *ngFor="let income of getIncomeArray.controls | paginate:config ;let i=index"
+            <div *ngFor="let income of getIncomeArray.controls;let i=index"
                  [formGroupName]="fieldGlobalIndex(i)">
               <div class="card__row">
                 <div class="card__col-xs-12 card__col-sm-4">
@@ -117,14 +117,9 @@
                   </mat-form-field>
                 </div>
 
-
-
-
               </div>
 
               <hr><br><br>
-
-
 
             </div>
 
@@ -144,10 +139,10 @@
             <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete Income
           </button>
         </div>
-        <table>
-          <tr *ngFor="let item of getIncomeArray.controls | paginate:config"></tr>
-        </table>
-        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+<!--        <table>-->
+<!--          <tr *ngFor="let item of getIncomeArray.controls | paginate:config"></tr>-->
+<!--        </table>-->
+<!--        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>-->
       </div>
 
     </div>
@@ -226,5 +221,5 @@
 
 
 <div style="text-align: right;">
-    <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Continue </button>
+    <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Save </button>
 </div>

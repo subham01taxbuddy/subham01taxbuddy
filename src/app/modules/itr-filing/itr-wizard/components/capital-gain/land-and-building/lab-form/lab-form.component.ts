@@ -72,7 +72,7 @@ export class LabFormComponent implements OnInit {
   @Input() data: any;
 
   config: any;
-
+  active: any;
   constructor(
     private fb: FormBuilder,
     private itrMsService: ItrMsService,
@@ -1120,7 +1120,7 @@ export class LabFormComponent implements OnInit {
     this.calculateCapitalGain(formGroupName, '', index);
   }
 
-  haveImprovements(formGroupName, index) {
+  haveImprovements(formGroupName) {
     const improve = <FormArray>formGroupName.get('improvement');
     let srn = this.currentCgIndex;
     if (this.isImprovements.value) {
@@ -1140,7 +1140,7 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  haveDeductions(formGroupName, index) {
+  haveDeductions(formGroupName) {
     const improve = <FormArray>formGroupName.get('deductions');
     if (this.isDeductions.value) {
     } else {
@@ -1383,70 +1383,86 @@ export class LabFormComponent implements OnInit {
     );
   }
 
-  addInvestment(mode, investment, rowIndex?) {
-    const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
-    const data = {
-      // investmentSections: investmentSections, //  TODO add hard code investment sections
-      ITR_JSON: this.ITR_JSON,
-      mode: mode,
-      rowIndex: rowIndex,
-      investment: investment,
-      assets: this.cgArrayElement.assetDetails[this.currentCgIndex],
-      gainType: this.cgArrayElement.assetDetails[this.currentCgIndex].gainType,
-      capitalGain:
-        this.cgArrayElement.assetDetails[this.currentCgIndex].capitalGain, //(assetDetails.controls[0] as FormGroup).getRawValue().capitalGain,
-      assetClassName: 'Plot of Land', //name.length > 0 ? name[0].assetName : assetSelected.assetType
+  addInvestment(formGroupName) {
+    const deductions = <FormArray>formGroupName.get('deductions');
+    let srn = this.currentCgIndex;
+    const obj = {
+      srn: srn,
+      selected: [false],
+      underSection: null,
+      purchaseDate: null,
+      costOfNewAssets: null,
+      investmentInCGAccount: null,
+      totalDeductionClaimed: null,
     };
-    const dialogRef = this.matDialog.open(AddInvestmentDialogComponent, {
-      data: data,
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
+    if (deductions.valid ) {
+      deductions.push(this.createDeductionForm(obj));
+    } else {
+      console.log('add above details first');
+    }
+    // const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
+    // const data = {
+    //   // investmentSections: investmentSections, //  TODO add hard code investment sections
+    //   ITR_JSON: this.ITR_JSON,
+    //   mode: mode,
+    //   rowIndex: rowIndex,
+    //   investment: investment,
+    //   assets: this.cgArrayElement.assetDetails[this.currentCgIndex],
+    //   gainType: this.cgArrayElement.assetDetails[this.currentCgIndex].gainType,
+    //   capitalGain:
+    //     this.cgArrayElement.assetDetails[this.currentCgIndex].capitalGain, //(assetDetails.controls[0] as FormGroup).getRawValue().capitalGain,
+    //   assetClassName: 'Plot of Land', //name.length > 0 ? name[0].assetName : assetSelected.assetType
+    // };
+    // const dialogRef = this.matDialog.open(AddInvestmentDialogComponent, {
+    //   data: data,
+    //   closeOnNavigation: true,
+    //   disableClose: false,
+    //   width: '700px',
+    // });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Result add CG=', result);
-      if (result !== undefined) {
-        console.log(result);
-        result.srn = this.currentCgIndex;
-        if (mode === 'ADD') {
-          if (!this.cgArrayElement.deduction) {
-            this.cgArrayElement.deduction = [];
-          }
-          this.cgArrayElement.deduction.push(result);
-          this.investmentsCreateRowData();
-        } else if (mode === 'EDIT') {
-          let deductions = this.cgArrayElement.deduction.filter(
-            (deduction) => deduction.srn == this.data.assetSelected.srn
-          );
-          deductions.splice(result.rowIndex, 1, result.deduction); //add correct index here
-          let otherDeductions = this.cgArrayElement.deduction.filter(
-            (ded) => ded.srn != this.data.assetSelected.srn
-          );
-          if (otherDeductions == null) {
-            otherDeductions = [];
-          }
-          this.cgArrayElement.deduction = otherDeductions.concat(deductions);
-        }
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   console.log('Result add CG=', result);
+    //   if (result !== undefined) {
+    //     console.log(result);
+    //     result.srn = this.currentCgIndex;
+    //     if (mode === 'ADD') {
+    //       if (!this.cgArrayElement.deduction) {
+    //         this.cgArrayElement.deduction = [];
+    //       }
+    //       this.cgArrayElement.deduction.push(result);
+    //       this.investmentsCreateRowData();
+    //     } else if (mode === 'EDIT') {
+    //       let deductions = this.cgArrayElement.deduction.filter(
+    //         (deduction) => deduction.srn == this.data.assetSelected.srn
+    //       );
+    //       deductions.splice(result.rowIndex, 1, result.deduction); //add correct index here
+    //       let otherDeductions = this.cgArrayElement.deduction.filter(
+    //         (ded) => ded.srn != this.data.assetSelected.srn
+    //       );
+    //       if (otherDeductions == null) {
+    //         otherDeductions = [];
+    //       }
+    //       this.cgArrayElement.deduction = otherDeductions.concat(deductions);
+    //     }
 
-        if (this.deductions instanceof Array && this.deductions.length > 0) {
-          this.isDeductions.setValue(true);
-          const deductions = <FormArray>this.immovableForm.get('deductions');
-          deductions.clear();
-          this.deductions.forEach((obj) => {
-            let deductionForm = this.createDeductionForm(obj);
-            deductions.push(deductionForm);
-            this.isDeductionsValid(
-              this.immovableForm,
-              this.deductions.indexOf(obj)
-            );
-          });
-          console.log('Immovable Form===', this.immovableForm);
-        }
+    //     if (this.deductions instanceof Array && this.deductions.length > 0) {
+    //       this.isDeductions.setValue(true);
+    //       const deductions = <FormArray>this.immovableForm.get('deductions');
+    //       deductions.clear();
+    //       this.deductions.forEach((obj) => {
+    //         let deductionForm = this.createDeductionForm(obj);
+    //         deductions.push(deductionForm);
+    //         this.isDeductionsValid(
+    //           this.immovableForm,
+    //           this.deductions.indexOf(obj)
+    //         );
+    //       });
+    //       console.log('Immovable Form===', this.immovableForm);
+    //     }
 
-        this.calculateCapitalGain(this.immovableForm, '', this.currentCgIndex);
-      }
-    });
+    //     this.calculateCapitalGain(this.immovableForm, '', this.currentCgIndex);
+    //   }
+    // });
   }
 
   investmentsCreateRowData() {

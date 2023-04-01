@@ -25,7 +25,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  readonly limitPT = 2500;
+  readonly limitPT = 5000;
   maxPT = this.limitPT;
   maxEA = 5000;
   currentIndex: number = null;
@@ -290,6 +290,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   saveEmployerDetails() {
 
     if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
+
+      this.checkGrossSalary();
 
       this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
@@ -557,6 +559,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       }
     }
 
+    this.checkGrossSalary();
     // Set Allowance
     if (this.localEmployer.allowance instanceof Array) {
       const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');

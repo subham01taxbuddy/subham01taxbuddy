@@ -13,6 +13,7 @@ import {ITR_JSON, OptedInNewRegime, OptedOutNewRegime} from '../modules/shared/i
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
+import {parse} from "@typescript-eslint/parser";
 
 @Injectable()
 
@@ -806,4 +807,7 @@ export class UtilsService {
         return this.itrMsService.postMethod(param, request);
     }
 
+    getInt(value) {
+      return value ? parseInt(value) : 0;
+    }
 }

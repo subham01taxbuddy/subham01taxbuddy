@@ -370,27 +370,31 @@ BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
-    this.loading = true;
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    this.Copy_ITR_JSON.business.businessDescription = this.dataSource.data;
-    this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.value;
-    this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
-
-    console.log(this.Copy_ITR_JSON);
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.loading = false;
-      this.ITR_JSON = result;
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Balance Sheet income added successfully');
-      console.log('Balance Sheet=', result);
-      this.utilsService.smoothScrollToTop();
-    }, error => {
-      this.loading = false;
+    if(this.assetLiabilitiesForm.valid) {
+      this.loading = true;
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Failed to add Balance Sheet income, please try again.');
-      this.utilsService.smoothScrollToTop();
-    });
+
+      this.Copy_ITR_JSON.business.businessDescription = this.dataSource.data;
+      this.Copy_ITR_JSON.business.financialParticulars = this.assetLiabilitiesForm.value;
+      this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
+
+      console.log(this.Copy_ITR_JSON);
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
+        this.loading = false;
+        this.ITR_JSON = result;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Balance Sheet income added successfully');
+        console.log('Balance Sheet=', result);
+        this.utilsService.smoothScrollToTop();
+      }, error => {
+        this.loading = false;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('Failed to add Balance Sheet income, please try again.');
+        this.utilsService.smoothScrollToTop();
+      });
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
   }
 }
