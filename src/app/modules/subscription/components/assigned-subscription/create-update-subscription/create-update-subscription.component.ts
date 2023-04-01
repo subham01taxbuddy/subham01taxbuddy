@@ -190,10 +190,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   setFormValues(data) {
     console.log('data',data)
-    this.pin.setValue(data.address[0]?.pinCode);
-    this.state.setValue(data.address[0]?.state);
-    this.city.setValue(data.address[0]?.city);
-    this.zipcode.setValue(data.address[0]?.pinCode)
+    this.pin.setValue(data?.address[0]?.pinCode);
+    this.state.setValue(data?.address[0]?.state);
+    this.city.setValue(data?.address[0]?.city);
+    this.zipcode.setValue(data?.address[0]?.pinCode)
   }
 
   sourcesUpdated(source) {
@@ -206,7 +206,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       schedule: clickedSource,
       sources: this.sourcesList,
     };
-    console.log('updated source:',this.sourcesList)
+    console.log('updated source:',this.sourcesList);
+    this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
   }
 
   personalInfoForm :FormGroup = this.fb.group({
@@ -496,8 +497,24 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
+    let selected = '';
+    this.sourcesList.forEach((item:any) => {
+      if(item.selected === true){
+        console.log(item.schedule);
+        if(this.utilsService.isNonEmpty(selected)) {
+          selected += ',' + item.schedule ;
+        } else {
+          selected += item.schedule;
+        }
+      }
+    });
+
+    if(this.utilsService.isNonEmpty(selected)){
+      param += '?serviceType=ITR&eligilities=' + selected + '&userId=' + this.userSubscription.userId;
+    }
+
     this.itrService.getMethod(param).subscribe((plans: any) => {
-      console.log(' all plans',plans)
+      console.log(' all plans',plans);
       if (plans instanceof Array) {
         const activePlans = plans.filter((item: any) => item.isActive === true);
         if (this.utilsService.isNonEmpty(serviceType))
@@ -505,7 +522,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         else
           this.allPlans = activePlans;
       } else {
-        this.allPlans = plans;
+        this.allPlans = [plans];
       }
     },
       error => {
