@@ -148,7 +148,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'userName',
-        width: 180,
+        width: 80,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -161,7 +161,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'userMobile',
-        width: 130,
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -174,7 +174,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Schedule Call Date',
         field: 'scheduleCallTime',
-        width: 150,
+        width: 155,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -192,7 +192,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Time',
         field: 'time',
-        width: 120,
+        width: 70,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -205,7 +205,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'SME Name',
         field: 'smeName',
-        width: 150,
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -249,7 +249,7 @@ export class ScheduledCallComponent implements OnInit {
               <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
              </button>`;
         },
-        width: 60,
+        width: 95,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -260,7 +260,7 @@ export class ScheduledCallComponent implements OnInit {
         },
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -271,7 +271,7 @@ export class ScheduledCallComponent implements OnInit {
               <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
              </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -293,7 +293,7 @@ export class ScheduledCallComponent implements OnInit {
               <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
              </button>`;
         },
-        width: 60,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -335,7 +335,7 @@ export class ScheduledCallComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Update Call Status"
             style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
         },
-        width: 80,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

@@ -303,7 +303,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       },
       {
         headerName: 'Actions',
-        width: 50,
+        width: 70,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -346,7 +346,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       },
       {
         headerName: 'Status',
-        width: 50,
+        width: 70,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -375,7 +375,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width:50,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -401,7 +401,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
       {
         headerName: 'E-Verify',
-        width: 50,
+        width: 75,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -449,7 +449,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
            </button>`;
         },
-        width: 50,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -484,7 +484,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -495,7 +495,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         },
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -506,7 +506,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

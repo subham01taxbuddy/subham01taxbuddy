@@ -15,6 +15,13 @@ section {
   display: block;
 }
 
+/* Css updates 02 Apr 2023 */
+.card {
+  padding:30px;
+  margin-top:50px;
+}
+/* Css updates 02 Apr 2023 */
+
 
 
 .mandatory_icon {
@@ -259,7 +266,7 @@ a {
 
 .tab__item {
   display: inline-block;
-  font-size: 2em;
+  font-size: 22px;
   font-weight: 300;
   margin-right: 30px;
   padding-bottom: 15px;
@@ -287,6 +294,7 @@ a {
 .content_full {
   width: 100%;
   float: none;
+  margin-top:50px;
 }
 
 .content_half {
