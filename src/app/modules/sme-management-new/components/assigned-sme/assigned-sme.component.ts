@@ -105,7 +105,7 @@ export class AssignedSmeComponent implements OnInit {
         headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-
+        pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
         cellRenderer: (params) => {},
@@ -115,6 +115,7 @@ export class AssignedSmeComponent implements OnInit {
         field: 'mobileNumber',
         width: 120,
         suppressMovable: true,
+        pinned: 'left',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -235,6 +236,7 @@ export class AssignedSmeComponent implements OnInit {
         field: '',
         width: 100,
         suppressMovable: true,
+        pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {

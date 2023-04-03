@@ -339,7 +339,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     let record = {
       serviceType: serviceType,
       assignmentStart: assignmentStart,
-      role: 'FILER_' + serviceType
+      role: serviceType === 'TPA' ? 'FILER_TPA_NPS' : 'FILER_' + serviceType
     }
     if(service.value) {
       //service added, check if existing and update accordingly
