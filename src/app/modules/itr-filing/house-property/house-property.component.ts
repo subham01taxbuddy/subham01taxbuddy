@@ -591,15 +591,14 @@ export class HousePropertyComponent implements OnInit {
   }
 
   chekIsSOPAdded() {
+    this.isSelfOccupied = 0;
     if (this.ITR_JSON.houseProperties.length > 0) {
       for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
-          this.isSelfOccupied = true;
-          break;
+          this.isSelfOccupied++;
+          // break;
         }
       }
-    } else {
-      this.isSelfOccupied = false;
     }
   }
 
@@ -713,6 +712,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  maxSopAllowed = 2;
   saveHouseProperty(view) {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -738,6 +738,12 @@ export class HousePropertyComponent implements OnInit {
       };
     }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
+
+    if(this.isSelfOccupied > this.maxSopAllowed){
+      this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
+      return;
+    }
+
     if (
       this.housePropertyForm
         .valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */
@@ -812,7 +818,7 @@ export class HousePropertyComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
-  isSelfOccupied: boolean;
+  isSelfOccupied = 0;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
@@ -826,15 +832,14 @@ export class HousePropertyComponent implements OnInit {
             this.ITR_JSON = result;
             this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+            this.isSelfOccupied = 0;
             for (let i = 0; i < this.ITR_JSON?.houseProperties?.length; i++) {
               if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
-                // this.isSelfOccupied = true;
-              } else {
-                // this.isSelfOccupied = false;
+                this.isSelfOccupied++;
               }
             }
 
-            // console.log('this.isSelfOccupied == ', this.isSelfOccupied);
+            console.log('this.isSelfOccupied == ', this.isSelfOccupied);
 
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
@@ -861,7 +866,7 @@ export class HousePropertyComponent implements OnInit {
               this.housePropertyForm = this.createHousePropertyForm();
             }
             this.utilsService.showSnackBar(
-              'Rental income updated successfully'
+              'House Property income updated successfully.'
             );
             // TODO
             // this.RuleServiceCall();

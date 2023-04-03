@@ -182,7 +182,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
-      this.ownerList = result.data.content;
+      this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
       this.ownerNames = this.ownerList.map((item) => {
         return { name: item.name, userId:item.userId  };
@@ -203,7 +203,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
 
-      this.leaderList = result.data.content;
+      this.leaderList = result.data;
       console.log('leader list result -> ', result);
       this.leaderNames = this.leaderList.map((item) => {
         return { name: item.name, userId:item.userId  };

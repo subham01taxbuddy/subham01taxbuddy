@@ -14,7 +14,7 @@
           <mat-label>Health insurance for self, spouse or children</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Health insurance for self, spouse or children" maxlength="8"
-              formControlName="selfPremium" autocomplete="off" digitsOnly (blur)="disableSelf('HEALTH')" />
+              formControlName="selfPremium" autocomplete="off" digitsOnly/>
             <mat-hint *ngIf=" this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0 ">
               Note: You have claimed medical insurance</mat-hint>
           </mat-form-field>
@@ -37,11 +37,7 @@
           <mat-label>Medical Expenditure for self, spouse or children</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Medical Expenditure for self, spouse or children" maxlength="8"
-              formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly (blur)="disableSelf('MEDICAL')" />
-            <mat-hint *ngIf="
-                this.investmentDeductionForm.controls['selfPremium'].value > 0
-              ">
-              Note: You have claimed health insurance</mat-hint>
+              formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly/>
           </mat-form-field>
         </div>
       </div>

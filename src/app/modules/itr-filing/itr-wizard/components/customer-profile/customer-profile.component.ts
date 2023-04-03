@@ -231,23 +231,9 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
-  findAssesseeType() {
-    // this.customerProfileForm.controls['panNumber'].setValue(this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value) ? this.customerProfileForm.controls['panNumber'].value.toUpperCase() : this.customerProfileForm.controls['panNumber'].value);
-    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value)) {
-      const pan = this.customerProfileForm.controls['panNumber'].value;
-      if (pan.substring(4, 3) === 'P') {
-        this.customerProfileForm.controls['assesseeType'].setValue('INDIVIDUAL');
-      } else if (pan.substring(4, 3) === 'H') {
-        this.customerProfileForm.controls['assesseeType'].setValue('HUF');
-      } else {
-        this.customerProfileForm.controls['assesseeType'].setValue('INDIVIDUAL');
-      }
-    }
-  }
 
   getUserDataByPan(pan) {
     if (this.customerProfileForm.controls['panNumber'].valid) {
-      this.findAssesseeType()
       const token = sessionStorage.getItem(AppConstants.TOKEN);
       let httpOptions: any;
       httpOptions = {
@@ -265,6 +251,8 @@ export class CustomerProfileComponent implements OnInit {
           this.customerProfileForm.controls['firstName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''));
           this.customerProfileForm.controls['lastName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''));
           this.customerProfileForm.controls['middleName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.middleName) ? result.middleName : ''));
+          this.customerProfileForm.controls['dateOfBirth'].setValue(result.dateOfBirth);
+          this.customerProfileForm.controls['assesseeType'].setValue(this.utilsService.findAssesseeType(pan));
           if (result.isValid !== 'EXISTING AND VALID') {
             this.utilsService.showSnackBar('Record (PAN) Not Found in ITD Database/Invalid PAN');
           }
@@ -276,7 +264,6 @@ export class CustomerProfileComponent implements OnInit {
 
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
-    this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
