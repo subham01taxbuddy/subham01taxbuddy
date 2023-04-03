@@ -215,6 +215,7 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   getInvoice() {
+
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
     //  this.loading = true;
@@ -241,6 +242,14 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
+
+    if(this.roles?.includes('ROLE_OWNER')){
+      let param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userID}&paymentStatus=${status}`
+    }
+    else if (this.roles?.includes('ROLE_OWNER')){
+
+    }
+
     let param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}&paymentStatus=${status}`;
 
     this.itrService.getMethod(param).subscribe((response: any) => {

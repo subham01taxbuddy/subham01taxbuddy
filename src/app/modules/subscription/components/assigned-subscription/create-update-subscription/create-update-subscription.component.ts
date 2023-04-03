@@ -328,10 +328,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
   }
 
-  applyPromo() {
+  applyPromo(selectedPlan) {
     console.log('selectedPromoCode:', this.selectedPromoCode);
-    const param = `/subscription/apply-promocode`;
+    this.smeSelectedPlanId = selectedPlan;
+    const smeInfo = JSON.parse(localStorage.getItem('UMD'));
+    const param = `/subscription/recalculate`;
     const request = {
+      userId: this.userSubscription.userId,
+      planId: selectedPlan,
+      selectedBy: 'SME',
+      smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode
     }
@@ -534,7 +540,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     this.loading=true;
     this.smeSelectedPlanId = selectedPlan;
     const smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    const param = '/subscription';
+    const param = '/subscription/recalculate';
     const request = {
       userId: this.userSubscription.userId,
       planId: selectedPlan,
