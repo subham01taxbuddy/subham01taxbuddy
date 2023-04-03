@@ -65,7 +65,7 @@ export class BusinessDialogComponent implements OnInit {
   }
 
   getFullName() {
-    let business = this.natureOfBusinessDropdown.filter(item => item.code === this.businessForm?.controls['natureOfBusiness'].value);
+    let business = this.natureOfBusinessDropdown.filter(item => item.code == this.businessForm?.controls['natureOfBusiness'].value);
     return business[0] ? business[0].label + '-' + business[0].code : null;
   }
 

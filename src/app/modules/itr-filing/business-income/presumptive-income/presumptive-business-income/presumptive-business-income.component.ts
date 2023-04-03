@@ -50,9 +50,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   getBusinessName(data){
     // console.log('data>=',data)
-    let business = this.natureOfBusinessList?.filter((item: any) => item?.code === data?.natureOfBusiness);
-    console.log('business name =',business)
-    return business && business[0] ? (business[0] as any)?.label : null;
+    return (this.natureOfBusinessList?.find((item: any) => item?.code === data?.natureOfBusiness) as any)?.label || null
+    // console.log('business name =',business)
+    // return business && business[0] ? (business[0] as any)?.label : null;
   }
 
   getByBank(item,incomeType,incomeSubType){

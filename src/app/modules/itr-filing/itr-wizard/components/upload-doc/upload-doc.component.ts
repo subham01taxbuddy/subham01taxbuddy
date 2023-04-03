@@ -23,7 +23,7 @@ export class UploadDocComponent implements OnInit {
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.currentPath = `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
+    this.currentPath = `ITR/${this?.utilsService?.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
     this.getDocuments();
   }
 

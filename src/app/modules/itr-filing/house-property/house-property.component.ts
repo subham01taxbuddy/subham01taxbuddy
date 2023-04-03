@@ -739,7 +739,7 @@ export class HousePropertyComponent implements OnInit {
     }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
 
-    if(this.isSelfOccupied > this.maxSopAllowed){
+    if(this.isSelfOccupied >= this.maxSopAllowed){
       this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
       return;
     }
@@ -818,7 +818,7 @@ export class HousePropertyComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
-  isSelfOccupied = 0;
+  isSelfOccupied = 1;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
