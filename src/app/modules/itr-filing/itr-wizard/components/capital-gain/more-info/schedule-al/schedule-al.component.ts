@@ -82,8 +82,8 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
       this.createMovableAssetsForm();
     }
 
-    this.immovableAssetForm.disable();
-    this.movableAssetsForm.disable();
+    this.immovableAssetForm?.disable();
+    this.movableAssetsForm?.disable();
   }
 
   initForm() {
@@ -112,7 +112,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
   createMovableAssetsForm(item?) {
     this.movableAssetsForm = this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      jwelleryAmount: [item ? item.jwelleryAmount : null],
+      jwelleryAmount: [item ? item?.jwelleryAmount : null],
       artWorkAmount: [item ? item.artWorkAmount : null],
       vehicleAmount: [item ? item.vehicleAmount : null],
       bankAmount: [item ? item.bankAmount : null],
@@ -149,25 +149,25 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
 
   editAssetForm(i, type) {
     if (type === 'immovable') {
-      ((this.immovableAssetForm.controls['immovableAssetArray'] as FormGroup).controls[i] as FormGroup).enable();
+      ((this.immovableAssetForm?.controls['immovableAssetArray'] as FormGroup).controls[i] as FormGroup).enable();
     } else if (type === 'movable') {
       this.movableAssetsForm.enable();
     }
   }
 
   get immovableAssetArray() {
-    return <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+    return <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
   }
 
 
   addMoreAssetsData(item?) {
-    const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+    const immovableAssetArray = <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
     immovableAssetArray.push(this.createImmovableAssetForm(immovableAssetArray.length, item));
   }
 
 
   deleteImmovableAssetsArray() {
-    const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+    const immovableAssetArray = <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
     immovableAssetArray.controls.forEach((element, index) => {
       if ((element as FormGroup).controls['hasEdit'].value) {
         immovableAssetArray.removeAt(index);
