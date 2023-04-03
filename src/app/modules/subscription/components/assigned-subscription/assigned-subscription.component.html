@@ -1,0 +1,74 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div>
+  <div class="align-items-center row">
+    <div class="col-sm-10">
+      <b style="font-size: 20px">Assigned Subscription </b>
+    </div>
+  </div>
+  <div class="content-wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12" style="margin-top: 10px;">
+          <div class="card" style="margin-top: 10px;">
+            <div class="row" style="margin-top: 15px;">
+              <div class="col-sm-3">
+                <mat-label> Financial Year </mat-label>
+                <mat-form-field appearance="outline" class="customBg">
+                  <input type="text" matInput [formControl]="assessmentYear" readonly>
+                  <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
+                    <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                      {{year.financialYear}}
+                    </mat-option>
+                  </mat-select> -->
+                </mat-form-field>
+              </div>
+              <div class="col-sm-3">
+                <mat-label> Search by Name </mat-label>
+                <mat-form-field appearance="outline" class="customBg">
+                  <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
+                  <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
+                    <mat-icon style="color: #00AECA">search</mat-icon>
+                  </button>
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getFilerNameId(option)">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-3">
+                <mat-label> Search Mobile Number</mat-label>
+                <mat-form-field appearance="outline" class="customBg">
+                  <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto">
+                  <button (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
+                    <mat-icon style="color: #00AECA">search</mat-icon>
+                  </button>
+                  <!-- <mat-icon matSuffix>search</mat-icon> -->
+                  <!-- <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-autocomplete> -->
+                </mat-form-field>
+              </div>
+              <div class="col-sm-3 d-none">
+                <button *ngIf="roles?.includes('ROLE_ADMIN','ROLE_LEADER') && userInfo.length===0" class="btn " style=" background: #00AECA;
+                border-radius: 5px;" (click)="createSub()" > create Subscription </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 15px;">
+        <div class="col-12">
+          <table>
+            <tr *ngFor="let item of userInfo | paginate : config"></tr>
+          </table>
+          <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions" [rowSelection]="rowSelection"
+            (rowClicked)="onSubscriptionRowClicked($event)">
+          </ag-grid-angular>
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>

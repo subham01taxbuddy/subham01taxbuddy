@@ -70,7 +70,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
         this.addMore(obj);
       });
     }
-
+    this.calculateTotalLosses();
     this.disableSILoss();
   }
 

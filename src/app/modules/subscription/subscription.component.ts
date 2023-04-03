@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RoleBaseAuthGuardService } from '../shared/services/role-base-auth-guard.service';
 
 @Component({
   selector: 'app-subscription',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubscriptionComponent implements OnInit {
 
-  constructor() { }
+  loggedInUserData: any;
 
-  ngOnInit(): void {
+  constructor(private roleBaseAuthGuardService: RoleBaseAuthGuardService,) { }
+
+  ngOnInit() {
+    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    console.log("loggedInUserData",this.loggedInUserData)
   }
+
+  isApplicable(permissionRoles) {
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+}
 
 }

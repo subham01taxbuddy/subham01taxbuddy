@@ -47,6 +47,11 @@ export class UploadDocComponent implements OnInit {
 
   openDocument(event) {
     console.log('got', event);
+    if(!event.type){
+      //no doc selected, close doc view
+      this.docUrl = null;
+      return;
+    }
     this.currentPath = event.path;
     const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/${event.path}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
@@ -85,7 +90,7 @@ export class UploadDocComponent implements OnInit {
   deleteFile(fileName) {
     let adminId = JSON.parse(localStorage.getItem("UMD"));
     var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `/${fileName}`;
+    let filePath = `${fileName}`;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {

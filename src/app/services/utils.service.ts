@@ -9,10 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
+import {ITR_JSON, OptedInNewRegime, OptedOutNewRegime} from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
+import {parse} from "@typescript-eslint/parser";
 
 @Injectable()
 
@@ -351,7 +352,10 @@ export class UtilsService {
             immovableAsset: [],
             prefillDate: null,
             prefillData: null,
-            prefillDataSource: null
+            prefillDataSource: null,
+            everOptedNewRegime: null,
+            everOptedOutOfNewRegime: null,
+            optionForCurrentAY: null
         };
 
         return ITR_JSON;
@@ -803,4 +807,18 @@ export class UtilsService {
         return this.itrMsService.postMethod(param, request);
     }
 
+    getInt(value) {
+      return value ? parseInt(value) : 0;
+    }
+
+  findAssesseeType(panNumber) {
+      let assesseeType = '';
+      if (panNumber.substring(4, 3) === 'P') {
+        assesseeType = 'INDIVIDUAL';
+      } else if (panNumber.substring(4, 3) === 'H') {
+        assesseeType = 'HUF';
+      } else {
+        assesseeType = 'INDIVIDUAL';
+      }
+  }
 }

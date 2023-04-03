@@ -14,7 +14,7 @@
           <mat-label>Health insurance for self, spouse or children</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Health insurance for self, spouse or children" maxlength="8"
-              formControlName="selfPremium" autocomplete="off" digitsOnly (blur)="disableSelf('HEALTH')" />
+              formControlName="selfPremium" autocomplete="off" digitsOnly/>
             <mat-hint *ngIf=" this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0 ">
               Note: You have claimed medical insurance</mat-hint>
           </mat-form-field>
@@ -37,11 +37,7 @@
           <mat-label>Medical Expenditure for self, spouse or children</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Medical Expenditure for self, spouse or children" maxlength="8"
-              formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly (blur)="disableSelf('MEDICAL')" />
-            <mat-hint *ngIf="
-                this.investmentDeductionForm.controls['selfPremium'].value > 0
-              ">
-              Note: You have claimed health insurance</mat-hint>
+              formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly/>
           </mat-form-field>
         </div>
       </div>
@@ -49,7 +45,7 @@
         <div class="card__col-xs-12 card__col-sm-12">
           Does any of your parents exceed age of 60? &nbsp;&nbsp;&nbsp;
           <mat-checkbox class="chk-allign" color="primary" name="hasParentOverSixty" [disabled]="!isEditMedicalExpenses"
-            [(ngModel)]="this.ITR_JSON.systemFlags.hasParentOverSixty" [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="this.Copy_ITR_JSON.systemFlags.hasParentOverSixty" [ngModelOptions]="{ standalone: true }"
             (change)="isParentOverSixty()">
           </mat-checkbox>
         </div>
@@ -59,12 +55,7 @@
           <mat-label>Health insurance premium paid for parents</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Health insurance premium paid for parents" maxlength="8"
-              formControlName="premium" autocomplete="off" digitsOnly (blur)="disableParent('HEALTH')" />
-            <mat-hint *ngIf="
-                this.investmentDeductionForm.controls['medicalExpenditure']
-                  .value > 0
-              ">
-              Note: You have claimed medical insurance</mat-hint>
+              formControlName="premium" autocomplete="off" digitsOnly />
           </mat-form-field>
         </div>
         <div class="card__col-lg-4">
@@ -81,13 +72,11 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-lg-4" *ngIf="ITR_JSON.systemFlags?.hasParentOverSixty">
+        <div class="card__col-lg-4" *ngIf="Copy_ITR_JSON.systemFlags?.hasParentOverSixty">
           <mat-label>Medical Expenditure for Senior Citizen</mat-label>
           <mat-form-field appearance="outline">
             <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"
-              formControlName="medicalExpenditure" autocomplete="off" digitsOnly (blur)="disableParent('MEDICAL')" />
-            <mat-hint *ngIf="this.investmentDeductionForm.controls['premium'].value > 0">
-              Note: You have claimed medical insurance</mat-hint>
+              formControlName="medicalExpenditure" autocomplete="off" digitsOnly />
           </mat-form-field>
         </div>
       </div>

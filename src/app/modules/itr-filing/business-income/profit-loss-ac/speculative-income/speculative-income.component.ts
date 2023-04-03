@@ -160,4 +160,15 @@ export class SpeculativeIncomeComponent implements OnInit {
       //show errors
     }
   }
+
+  deleteArray() {
+    const specIncomesArray = <FormArray>(
+      this.specIncomeForm.get('specIncomesArray')
+    );
+    specIncomesArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        specIncomesArray.removeAt(index);
+      }
+    });
+  }
 }

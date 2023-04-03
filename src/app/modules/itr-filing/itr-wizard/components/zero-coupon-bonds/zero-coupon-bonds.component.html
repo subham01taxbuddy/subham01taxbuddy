@@ -1,276 +1,500 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]="step === 1" step='1' hideToggle class="hide-close">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                <mat-icon>
-                    arrow_forward_ios
-                </mat-icon>
-                {{title}}
-            </mat-panel-title>
-            <div class="card__row edit clearfix isShow">
-                <button class="edit_btn" (click)="$event.stopPropagation();addMore()"><i
-                        class="fa fa-plus"></i>Add</button>
-            </div>
-        </mat-expansion-panel-header>
-        <div class="card">
-            <form [formGroup]="bondsForm">
-                <div formArrayName="bondsArray">
-
-                    <div class="tds-on" *ngFor="let bonds of getBondsArray.controls | paginate:config ;let i=index"
-                        [formGroupName]="fieldGlobalIndex(i)">
-
-                        <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
-                        </mat-checkbox>
-                        <div class="card__col-xs-12 card__col-sm-12">
-
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Buy Date*</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" readonly placeholder="Buy Date"
-                                        (dateChange)="getGainType(bonds);calculateTotalCG(bonds)"
-                                        formControlName="purchaseDate" name="purchaseDate"
-                                        [matDatepicker]="purchaseDate" required>
-                                    <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #purchaseDate></mat-datepicker>
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['purchaseDate'].hasError('required')">Please
-                                        select
-                                        date</mat-error>
-                                </mat-form-field>
-                            </div>
-
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Cost of Acquisition*</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" digitsOnly
-                                        matTooltip="Cost of Acquisition without indexation (Purchase value)"
-                                        matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                                        placeholder="Cost of Acquisition without indexation (Purchase value)"
-                                        (change)="calculateTotalCG(bonds)" formControlName="purchaseCost" maxlength="14"
-                                        required>
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['purchaseCost'].hasError('required')">Please
-                                        enter
-                                        cost of acquisition</mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Cost of improvement</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" digitsOnly (change)="calculateTotalCG(bonds)"
-                                        placeholder="Cost of improvement without indexation"
-                                        formControlName="costOfImprovement" maxlength="14"
-                                        matTooltip="Cost of improvement without indexation"
-                                        matTooltipClass="tab-tooltip" matTooltipPosition="above">
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['costOfImprovement'].hasError('required')">Please
-                                        enter
-                                        cost of improvement</mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Sale Date*</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field"
-                                        (dateChange)="getGainType(bonds);calculateTotalCG(bonds)" readonly
-                                        [matDatepicker]="sellDate" placeholder="Sale Date" formControlName="sellDate"
-                                        name="sellDate" required>
-                                    <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #sellDate></mat-datepicker>
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['sellDate'].hasError('required')">Please
-                                        select
-                                        date</mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Sale value*</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" name="assets[i]"
-                                        (change)="calculateTotalCG(bonds);calculateDeductionGain()"
-                                        placeholder="Sale value/Full value consideration" digitsOnly
-                                        formControlName="valueInConsideration" maxlength="14"
-                                        matTooltip="Sale value/Full value consideration" matTooltipClass="tab-tooltip"
-                                        matTooltipPosition="above" required>
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['valueInConsideration'].hasError('required')">Please
-                                        sale value</mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Expenses</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" name="assets[i]" placeholder="Expense"
-                                        (change)="calculateTotalCG(bonds);calculateDeductionGain()"
-                                        formControlName="sellExpense" maxlength="14" digitsOnly>
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['sellExpense'].hasError('required')">Please
-                                        enter expenses</mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Type of Capital Gain*</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <mat-select placeholder="" class="hide" formControlName="gainType"
-                                        name="gainType[i]">
-                                        <mat-option *ngFor="let type of gainTypeList" [value]="type.value">
-                                            {{ type.name }}
-                                        </mat-option>
-                                    </mat-select>
-
-                                </mat-form-field>
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-3">
-                                <mat-label>Total Capital Gain*</mat-label>
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" name="assets[i]" placeholder="capitalGain"
-                                        formControlName="capitalGain" maxlength="14" readonly
-                                        (change)="calculateDeductionGain()">
-                                    <mat-error
-                                        *ngIf="bondsForm.controls['bondsArray'].controls[i].controls['capitalGain'].hasError('required')">Total
-                                        capital Gain is mandatory</mat-error>
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="edit-head">
-                            <button type="button" class="edit-donation" (click)="editBondsForm(i)"><mat-icon>
-                                    edit_square
-                                </mat-icon>Edit </button>
-                        </div>
-                    </div>
-                    <div class="display-flex">
-                        <div class="card__col-xs-12">
-                            <div class="card__col-sm-3">
-                                <button type="submit" mat-stroked-button color="warn" class=""
-                                    (click)="deleteBondsArray()"><i class="fa fa-trash"
-                                        aria-hidden="true">&nbsp;</i>Delete</button>
-                            </div>
-                            <div class="card__col-sm-6 txt-center">
-                                <table>
-                                    <tr *ngFor="let item of getBondsArray.controls | paginate:config"></tr>
-                                </table>
-                                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-                            </div>
-                            <div class="card__col-sm-3" style="text-align: right;">
-                                <button type="submit" mat-stroked-button class=""
-                                    [disabled]="bondsForm.invalid" (click)="save('bonds')">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </mat-expansion-panel>
-
-</mat-accordion>
-
-
-<div class="card mt-5 mb-5">
-    <div class="display-flex mt-3 mb-3">
-        <div class="card__col-xs-12 card__col-sm-8 isDeduction">
-            Add deduction under section 54F?
-            <i class="fa fa-info-circle" aria-hidden="true"
-                matTooltip="Applicable for any capital assets other than residential HP" matTooltipClass="tab-tooltip"
-                matTooltipPosition="above" data-action-type="redirectUrl"></i>
-        </div>
-        <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 mt-2 text-right">
-            <mat-radio-group [(ngModel)]="deduction" [disabled]="isDisable">
-                <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
-                </mat-radio-button>
-                <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
-            </mat-radio-group>
-        </div>
-    </div>
-    <form [formGroup]="deductionForm" style="margin-top: 20px" *ngIf="this.deduction">
-
-        <div class="display-flex mt-2">
-            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+  <mat-expansion-panel
+    [expanded]="step === 1"
+    step="1"
+    hideToggle
+    class="hide-close"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon> arrow_forward_ios </mat-icon>
+        {{ title }}
+      </mat-panel-title>
+      <div class="card__row edit clearfix isShow">
+        <button class="edit_btn" (click)="$event.stopPropagation(); addMore()">
+          <i class="fa fa-plus"></i>Add
+        </button>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="card">
+      <form [formGroup]="bondsForm">
+        <div formArrayName="bondsArray">
+          <div
+            class="tds-on"
+            *ngFor="
+              let bonds of getBondsArray.controls | paginate : config;
+              let i = index
+            "
+            [formGroupName]="fieldGlobalIndex(i)"
+          >
+            <mat-checkbox
+              color="primary"
+              name="hasEdit[i]"
+              formControlName="hasEdit"
+              class="ml30"
+            >
             </mat-checkbox>
             <div class="card__col-xs-12 card__col-sm-12">
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-label>Type of Deduction*</mat-label>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly placeholder="" formControlName="underSection"
-                            name="underSection">
-                        <mat-error *ngIf="deductionForm.controls['underSection'].hasError('required')">Please enter
-                            type of
-                            deduction</mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-label>Purchase Date of New Asset*</mat-label>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly placeholder="Purchase date of new asset"
-                            formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate">
-                        <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-                        <mat-datepicker #purchaseDate></mat-datepicker>
-                        <mat-error *ngIf="deductionForm.controls['purchaseDate'].hasError('required')">Please select
-                            date</mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-label>Cost of New Asset*</mat-label>
-                    <mat-form-field appearance="outline">
-                        <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
-                            (change)="calculateDeductionGain()" formControlName="costOfNewAssets" required
-                            maxlength="14">
-                        <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError('required')">Please
-                            enter cost
-                            of
-                            new assets</mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-label>Amount deposited on CGAS*</mat-label>
-                    <mat-form-field appearance="outline">
-                        <input matInput digitsOnly class="input-field"
-                            placeholder="Amount deposited on CGAS before due date"
-                            formControlName="investmentInCGAccount" required maxlength="14"
-                            matTooltip="Amount deposited on CGAS before due date" (change)="calculateDeductionGain()"
-                            matTooltipClass="tab-tooltip" matTooltipPosition="above">
-                        <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError('required')">Please
-                            enter
-                            amount</mat-error>
-                    </mat-form-field>
-                </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Buy Date*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    readonly
+                    placeholder="Buy Date"
+                    (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
+                    formControlName="purchaseDate"
+                    name="purchaseDate"
+                    [matDatepicker]="purchaseDate"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="purchaseDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #purchaseDate></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'purchaseDate'
+                      ].hasError('required')
+                    "
+                    >Please select date</mat-error
+                  >
+                </mat-form-field>
+              </div>
 
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-label>Amount of Deduction Claimed*</mat-label>
-                    <mat-form-field appearance="outline">
-                        <input matInput readonly class="input-field" placeholder="Amount of deduction claimed"
-                            formControlName="totalDeductionClaimed" maxlength="14">
-                        <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('required')">Please
-                            enter
-                            amount</mat-error>
-                    </mat-form-field>
-                </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Cost of Acquisition*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    digitsOnly
+                    matTooltip="Cost of Acquisition without indexation (Purchase value)"
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    placeholder="Cost of Acquisition without indexation (Purchase value)"
+                    (change)="calculateTotalCG(bonds)"
+                    formControlName="purchaseCost"
+                    maxlength="14"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'purchaseCost'
+                      ].hasError('required')
+                    "
+                    >Please enter cost of acquisition</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Cost of improvement</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    digitsOnly
+                    (change)="calculateTotalCG(bonds)"
+                    placeholder="Cost of improvement without indexation"
+                    formControlName="costOfImprovement"
+                    maxlength="14"
+                    matTooltip="Cost of improvement without indexation"
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                  />
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'costOfImprovement'
+                      ].hasError('required')
+                    "
+                    >Please enter cost of improvement</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Sale Date*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
+                    readonly
+                    [matDatepicker]="sellDate"
+                    placeholder="Sale Date"
+                    formControlName="sellDate"
+                    name="sellDate"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="sellDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #sellDate></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'sellDate'
+                      ].hasError('required')
+                    "
+                    >Please select date</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Sale value*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    name="assets[i]"
+                    (change)="calculateTotalCG(bonds); calculateDeductionGain()"
+                    placeholder="Sale value/Full value consideration"
+                    digitsOnly
+                    formControlName="valueInConsideration"
+                    maxlength="14"
+                    matTooltip="Sale value/Full value consideration"
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'valueInConsideration'
+                      ].hasError('required')
+                    "
+                    >Please sale value</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Expenses</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    name="assets[i]"
+                    placeholder="Expense"
+                    (change)="calculateTotalCG(bonds); calculateDeductionGain()"
+                    formControlName="sellExpense"
+                    maxlength="14"
+                    digitsOnly
+                  />
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'sellExpense'
+                      ].hasError('required')
+                    "
+                    >Please enter expenses</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Type of Capital Gain*</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select
+                    placeholder=""
+                    class="hide"
+                    formControlName="gainType"
+                    name="gainType[i]"
+                  >
+                    <mat-option
+                      *ngFor="let type of gainTypeList"
+                      [value]="type.value"
+                    >
+                      {{ type.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-3">
+                <mat-label>Total Capital Gain*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    class="input-field"
+                    name="assets[i]"
+                    placeholder="capitalGain"
+                    formControlName="capitalGain"
+                    maxlength="14"
+                    readonly
+                    (change)="calculateDeductionGain()"
+                  />
+                  <mat-error
+                    *ngIf="
+                      bondsForm.controls['bondsArray'].controls[i].controls[
+                        'capitalGain'
+                      ].hasError('required')
+                    "
+                    >Total capital Gain is mandatory</mat-error
+                  >
+                </mat-form-field>
+              </div>
             </div>
 
             <div class="edit-head">
-                <button type="button" class="edit-donation" (click)="deductionForm.enable()"><mat-icon>
-                        edit_square
-                    </mat-icon>Edit </button>
+              <button
+                type="button"
+                class="edit-donation"
+                (click)="editBondsForm(i)"
+              >
+                <mat-icon> edit_square </mat-icon>Edit
+              </button>
             </div>
-
+          </div>
+          <div class="display-flex">
+            <div class="card__col-xs-12">
+              <div class="card__col-sm-3">
+                <button
+                  type="submit"
+                  mat-stroked-button
+                  color="warn"
+                  class=""
+                  (click)="deleteBondsArray()"
+                >
+                  <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                </button>
+              </div>
+              <div class="card__col-sm-6 txt-center">
+                <table>
+                  <tr
+                    *ngFor="
+                      let item of getBondsArray.controls | paginate : config
+                    "
+                  ></tr>
+                </table>
+                <pagination-controls
+                  (pageChange)="pageChanged($event)"
+                ></pagination-controls>
+              </div>
+              <div class="card__col-sm-3" style="text-align: right">
+                <button
+                  type="submit"
+                  mat-stroked-button
+                  class=""
+                  [disabled]="bondsForm.invalid"
+                  (click)="save('bonds')"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-    </form>
-    <div class="card__col-xs-12 card__col-sm-12" style="text-align: right;" *ngIf="deduction">
-        <button type="submit" class="tbd-btn save-btn" [disabled]="deductionForm.invalid" (click)="save()">Save</button>
+      </form>
     </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div class="card mt-5 mb-5">
+  <div class="display-flex mt-3 mb-3">
+    <div class="card__col-xs-12 card__col-sm-8 isDeduction">
+      Add deduction under section 54F?
+      <i
+        class="fa fa-info-circle"
+        aria-hidden="true"
+        matTooltip="Applicable for any capital assets other than residential HP"
+        matTooltipClass="tab-tooltip"
+        matTooltipPosition="above"
+        data-action-type="redirectUrl"
+      ></i>
+    </div>
+    <div
+      class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 mt-2 text-right"
+    >
+      <mat-radio-group [(ngModel)]="deduction" [disabled]="isDisable">
+        <mat-radio-button
+          [value]="true"
+          style="margin-left: 0px; margin-right: 2px"
+          labelPosition="before"
+          >Yes
+        </mat-radio-button>
+        <mat-radio-button [value]="false" labelPosition="before"
+          >No</mat-radio-button
+        >
+      </mat-radio-group>
+    </div>
+  </div>
+  <form
+    [formGroup]="deductionForm"
+    style="margin-top: 20px"
+    *ngIf="this.deduction"
+  >
+    <div class="display-flex mt-2">
+      <mat-checkbox
+        color="primary"
+        name="hasEdit[i]"
+        formControlName="hasEdit"
+        class="ml30"
+      >
+      </mat-checkbox>
+      <div class="card__col-xs-12 card__col-sm-12">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-label>Type of Deduction*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              (change)="calculateDeductionGain()"
+              matInput
+              class="input-field"
+              readonly
+              placeholder=""
+              formControlName="underSection"
+              name="underSection"
+            />
+            <mat-error
+              *ngIf="
+                deductionForm.controls['underSection'].hasError('required')
+              "
+              >Please enter type of deduction</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-label>Purchase Date of New Asset*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              class="input-field"
+              readonly
+              placeholder="Purchase date of new asset"
+              formControlName="purchaseDate"
+              name="purchaseDate"
+              [matDatepicker]="purchaseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="purchaseDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #purchaseDate></mat-datepicker>
+            <mat-error
+              *ngIf="
+                deductionForm.controls['purchaseDate'].hasError('required')
+              "
+              >Please select date</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-label>Cost of New Asset*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              digitsOnly
+              class="input-field"
+              placeholder="cost of new asset"
+              (change)="calculateDeductionGain()"
+              formControlName="costOfNewAssets"
+              required
+              maxlength="14"
+            />
+            <mat-error
+              *ngIf="
+                deductionForm.controls['costOfNewAssets'].hasError('required')
+              "
+              >Please enter cost of new assets</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-label>Amount deposited on CGAS*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              digitsOnly
+              class="input-field"
+              placeholder="Amount deposited on CGAS before due date"
+              formControlName="investmentInCGAccount"
+              required
+              maxlength="14"
+              matTooltip="Amount deposited on CGAS before due date"
+              (change)="calculateDeductionGain()"
+              matTooltipClass="tab-tooltip"
+              matTooltipPosition="above"
+            />
+            <mat-error
+              *ngIf="
+                deductionForm.controls['investmentInCGAccount'].hasError(
+                  'required'
+                )
+              "
+              >Please enter amount</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-label>Amount of Deduction Claimed*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              readonly
+              class="input-field"
+              placeholder="Amount of deduction claimed"
+              formControlName="totalDeductionClaimed"
+              maxlength="14"
+            />
+            <mat-error
+              *ngIf="
+                deductionForm.controls['totalDeductionClaimed'].hasError(
+                  'required'
+                )
+              "
+              >Please enter amount</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="edit-head">
+        <button
+          type="button"
+          class="edit-donation"
+          (click)="deductionForm.enable()"
+        >
+          <mat-icon> edit_square </mat-icon>Edit
+        </button>
+      </div>
+    </div>
+  </form>
+  <div
+    class="card__col-xs-12 card__col-sm-12"
+    style="text-align: right"
+    *ngIf="deduction"
+  >
+    <button
+      type="submit"
+      class="tbd-btn save-btn"
+      [disabled]="deductionForm.invalid"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </div>
 </div>
 
 <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
-    <button
-        class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white">
-        <mat-icon>keyboard_backspace</mat-icon>
-        <span class="font-semibold" (click)="goBack()">&nbsp;Back to Capital Gain Topics</span>
-    </button>
+  <button
+    class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+  >
+    <mat-icon>keyboard_backspace</mat-icon>
+    <span class="font-semibold" (click)="goBack()"
+      >&nbsp;Back to Capital Gain Topics</span
+    >
+  </button>
 
-    <button
-        class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white">
-        <span class="font-semibold" (click)="saveAll()">Save All</span>
-    </button>
+  <button
+    class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-sky-600 hover:bg-sky-700 hover:border-sky-700 py-3 px-7 text-white"
+  >
+    <span class="font-semibold" (click)="saveAll()">Save All</span>
+  </button>
 </div>

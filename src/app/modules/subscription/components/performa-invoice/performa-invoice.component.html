@@ -1,0 +1,143 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div>
+  <div class="align-items-center row">
+    <div class="col-sm-10">
+      <b style="font-size: 25px">Performa Invoices </b>
+    </div>
+  </div>
+  <div class="content-wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12" style="margin-top: 10px;">
+          <div class="card" style="margin-top: 10px;">
+            <div>
+              <b style="font-size: 20px">{{cardTitles}} </b>
+            </div>
+            <div  >
+              <div class="row">
+                <div class="col-sm-6">
+                  <mat-label> Search By Owner </mat-label>
+                  <mat-form-field appearance="outline" class="customBg">
+                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
+                    <button (click)="searchByOwner()" mat-button matSuffix mat-icon-button>
+                      <mat-icon style="color: #00AECA">search</mat-icon>
+                    </button>
+                    <!-- <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto"> -->
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <mat-option *ngFor="let options  of filteredOptions | async" [value]="options.name" (click)="getOwnerNameId(options)">
+                        {{options.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-label> Search By Filer </mat-label>
+                  <mat-form-field appearance="outline" class="customBg">
+                    <input type="text" matInput [formControl]="searchFiler" >
+                    <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
+                      <mat-icon style="color: #00AECA">search</mat-icon>
+                    </button>
+
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="roles?.includes('ROLE_OWNER')" >
+              <div class="row">
+                <div >
+                  <mat-label> Search By Filer </mat-label>
+                  <mat-form-field appearance="outline" class="customBg">
+                    <input type="text" matInput [formControl]="searchFiler" >
+                    <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
+                      <mat-icon style="color: #00AECA">search</mat-icon>
+                    </button>
+
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+              <div class="col-sm-3">
+                <mat-label> Select FY </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput [formControl]="assessmentYear" readonly>
+                  <!-- <mat-select placeholder="Select FY" [formControl]="assessmentYear" (selectionChange)="setDates()">
+                      <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
+                          {{item.label}}
+                      </mat-option>
+                  </mat-select> -->
+              </mat-form-field>
+              </div>
+              <div class="col-sm-3">
+                <mat-label> From Date </mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-label>From Date</mat-label>
+                  <input matInput [formControl]="startDate"  [matDatepicker]="picker1" [max]="maxDate"
+                      autocomplete="off"
+                      (dateChange)="setToDateValidation(startDate.value)">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="startDate.hasError('required')">Select From
+                      date</mat-error>
+              </mat-form-field>
+              </div>
+              <div class="col-sm-3">
+                <mat-label> To Date </mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-label>To Date</mat-label>
+                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [max]="maxDate"
+                      autocomplete="off" >
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="endDate.hasError('required')">Select To
+                      date</mat-error>
+                  <mat-error *ngIf="endDate.hasError('min')">To date always greater
+                      than from date</mat-error>
+              </mat-form-field>
+              </div>
+              <div class="col-sm-3">
+                <mat-label>Select Status </mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select placeholder="Select Status" [formControl]="status">
+                      <mat-option *ngFor="let item of Status" [value]="item.value">
+                          {{item.label}}
+                      </mat-option>
+                  </mat-select>
+              </mat-form-field>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div >
+                <button  class="btn " style=" background: #00AECA;
+                border-radius: 5px; float: right;" (click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
+                <button  class="btn " style=" background: #00AECA;
+                border-radius: 5px; float: right;" (click)="getInvoice()"><i  class="fas fa-file-invoice" aria-hidden="true" ></i> Show Invoice </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="float: right; margin-top: 20px; margin-right: 10px;">
+        <span style="float: right;"> Total Count: <b>{{totalInvoice}}</b>  |
+          Unpaid:
+          <b>{{getCount('unpaid')}}</b> | Failed: <b>{{getCount('failed')}}</b></span>
+      </div>
+       <br>
+       <div class="row" style="margin-top: 45px;">
+        <div class="col-12">
+          <table>
+            <tr *ngFor="let item of invoiceInfo | paginate : config"></tr>
+          </table>
+          <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceListGridOptions"
+            (rowClicked)="onInvoiceRowClicked($event)">
+          </ag-grid-angular>
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

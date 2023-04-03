@@ -99,6 +99,7 @@ import { MoreInformationComponent } from './itr-wizard/pages/more-information/mo
 import { FileParserComponent } from './itr-wizard/components/file-parser/file-parser.component';
 import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-gain/other-assets/other-asset-improvement/other-asset-improvement.component';
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
+import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new.component';
 
 @NgModule({
   imports: [
@@ -211,6 +212,7 @@ import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-c
     OtherAssetImprovementComponent,
     FileParserComponent,
     ScheduleCflComponent,
+    OldVsNewComponent,
   ],
 
   exports: [CustomerProfileComponent],

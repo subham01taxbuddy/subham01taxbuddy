@@ -225,7 +225,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       })
 
       disposable.afterClosed().subscribe(result => {
-        this.router.navigate(['/tasks/assigned-users'])
+        this.router.navigate(['/tasks/assigned-users-new'])
       });
     })
   }

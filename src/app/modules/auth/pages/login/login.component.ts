@@ -228,7 +228,7 @@ export class LoginComponent implements OnInit {
           'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER'];
         let roles = res.data[0]?.roles;
         if (roles.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['/tasks/assigned-users']);
+          this.router.navigate(['/tasks/assigned-users-new']);
           this.utilsService.logAction(userId, 'login');
           // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
           //   this.router.navigate(['/pages/dashboard/calling/calling2']);
@@ -237,7 +237,7 @@ export class LoginComponent implements OnInit {
           //   this.router.navigate(['pages/tpa-interested']);
           //   this.utilsService.logAction(jhi.userId, 'login')
         } else if (allowedRoles.some(item => roles.includes(item))) {
-          this.router.navigate(['/tasks/assigned-users']);
+          this.router.navigate(['/tasks/assigned-users-new']);
         } else {
           if (roles.length > 0)
             this._toastMessageService.alert("error", "Access Denied.");

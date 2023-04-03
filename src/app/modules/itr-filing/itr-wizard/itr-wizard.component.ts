@@ -65,6 +65,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     console.log('Inside on init itr wizard');
     this.componentsList.push(this.schedules.PERSONAL_INFO);
     this.componentsList.push(this.schedules.OTHER_SOURCES);
+    this.componentsList.push(this.schedules.MORE_INFORMATION);
     this.componentsList.push(this.schedules.INVESTMENTS_DEDUCTIONS);
     this.componentsList.push(this.schedules.TAXES_PAID);
     this.componentsList.push(this.schedules.DECLARATION);
@@ -94,7 +95,8 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
       this.ITR_JSON.family.filter((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
-          this.customerName = item.fName + ' ' + item.mName + ' ' + item.lName;
+          let mName = item.mName ? item.mName : '';
+          this.customerName = item.fName + ' ' + mName + ' ' + item.lName;
         }
       });
     }
@@ -163,8 +165,12 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   gotoSummary() {
     this.breadcrumb = null;
     this.showIncomeSources = false;
-    this.selectedSchedule = 'Summary';
-    this.router.navigate(['/itr-filing/itr/summary']);
+    this.selectedSchedule = 'Comparison of New v/s Old Regime';
+    this.router.navigate(['/itr-filing/itr/old-vs-new']);
+    // this.breadcrumb = null;
+    // this.showIncomeSources = false;
+    // this.selectedSchedule = 'Summary';
+    // this.router.navigate(['/itr-filing/itr/summary']);
   }
 
   gotoSchedule(schedule) {
@@ -214,7 +220,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
         } else {
           //for add more info when capital gain is selected
           if (scheduleInfoEvent.schedule.schedule === 'capitalGain') {
-            this.componentsList.splice(index, 0, this.schedules.MORE_INFORMATION);
             this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
           } else {
             this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
@@ -232,7 +237,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
         // let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
         // if (!spSource.selected) {
           this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
-          this.componentsList = this.componentsList.filter(item => item !== this.schedules.MORE_INFORMATION);
         // }
       } else {
         this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);

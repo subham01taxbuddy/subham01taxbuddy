@@ -28,7 +28,13 @@ export const appRoutes: Routes = [
   {
     path: 'itr-filing', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/itr-filing/itr-filing.module').then(m => m.ItrFilingModule)
   },
-  { path: 'subscription', loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
+  { path: 'subscription',component: LayoutComponent, loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
+  {
+    path: 'review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
+  },
+  {
+    path: 'bo-partners', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/pages/bo-partners/bo-partners.module').then(m => m.BoPartnersModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

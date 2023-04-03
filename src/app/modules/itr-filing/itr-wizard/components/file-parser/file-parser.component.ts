@@ -47,7 +47,7 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
       },
       {
-        name: 'Angel One',
+        name: 'Angel',
         label: 'Angel One',
         loading: false,
         filesUploaded: [],
@@ -95,7 +95,7 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
       },
       {
-        name: 'TaxBuddy',
+        name: 'Taxbuddy',
         label: 'TaxBuddy',
         loading: false,
         filesUploaded: [],
@@ -112,6 +112,14 @@ export class FileParserComponent implements OnInit {
   }
 
   upload(brokerName) {
+    //check if there is data of capital gains
+    let data = this.ITR_JSON.capitalGain.filter(
+      (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+    );
+    if(data && data.length > 0) {
+      this.utilService.showSnackBar('Uploading a new statement will erase the updates made to saved shares data.');
+    }
+
     this.brokerName = brokerName;
     document.getElementById('input-file-id').click();
   }
