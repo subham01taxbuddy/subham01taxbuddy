@@ -353,26 +353,43 @@
               <mat-label> Leave Starts </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput  [matDatepicker]="picker1" placeholder="Leave Starts" [formControl]="leaveStartDate"  [min]="minDate"
-                [max]="maxDate" autocomplete="off" (dateChange)="onDateChange(leaveStartDate.value)" >
+                 autocomplete="off" >
                 <mat-hint>DD/MM/YYYY</mat-hint>
                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                <mat-datepicker #picker1></mat-datepicker>
                 <!-- <mat-error
                 *ngIf="leaveStartDate?.hasError('required') ">
                 This field is required</mat-error> -->
+                <!-- <mat-error
+                *ngIf="leaveStartDate.hasError('invaliddaterange')">
+                <strong>Start date cannot be greater than end date</strong>
+              </mat-error>
+              <mat-error
+                *ngIf="leaveStartDate.hasError('required')">
+                Covering Start date is <strong>required</strong>
+              </mat-error> -->
               </mat-form-field>
             </div>
             <div class="col-sm-4">
               <mat-label> Leave Ends </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput placeholder="Leave Ends"  [formControl]="leaveEndDate" [min]="minDate"
-                             [max]="maxDate" [matDatepicker]="picker2" autocomplete="off" >
+                              [matDatepicker]="picker2" autocomplete="off"  >
                              <mat-hint>DD/MM/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                 <!-- <mat-error
                 *ngIf="leaveEndDate?.hasError('required') ">
                 This field is required</mat-error> -->
+                <!-- <mat-error
+                *ngIf="leaveEndDate.hasError('invaliddaterange')">
+                <strong>End date cannot be earlier than start date</strong>
+              </mat-error>
+              <mat-error
+                *ngIf="leaveEndDate.hasError('required')">
+                Covering End date is <strong>required</strong>
+              </mat-error> -->
+
               </mat-form-field>
             </div>
       </div>
