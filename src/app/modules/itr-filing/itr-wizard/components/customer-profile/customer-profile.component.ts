@@ -2,7 +2,7 @@ import { NriDetailsDialogComponent } from '../../../components/nri-details-dialo
 import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import {DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -134,6 +134,7 @@ export class CustomerProfileComponent implements OnInit {
     private router: Router,
     private matDialog: MatDialog,
     public location: Location,
+              private datePipe: DatePipe,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
@@ -251,7 +252,10 @@ export class CustomerProfileComponent implements OnInit {
           this.customerProfileForm.controls['firstName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''));
           this.customerProfileForm.controls['lastName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''));
           this.customerProfileForm.controls['middleName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.middleName) ? result.middleName : ''));
-          this.customerProfileForm.controls['dateOfBirth'].setValue(result.dateOfBirth);
+          //1988-11-28 to DD/MM/YYYY
+          //this.datePipe.transform(dob,"dd/MM/yyyy")
+          let dob = new Date(result.dateOfBirth).toLocaleDateString("en-US");
+          // this.customerProfileForm.controls['dateOfBirth'].setValue(dob);
           this.customerProfileForm.controls['assesseeType'].setValue(this.utilsService.findAssesseeType(pan));
           if (result.isValid !== 'EXISTING AND VALID') {
             this.utilsService.showSnackBar('Record (PAN) Not Found in ITD Database/Invalid PAN');

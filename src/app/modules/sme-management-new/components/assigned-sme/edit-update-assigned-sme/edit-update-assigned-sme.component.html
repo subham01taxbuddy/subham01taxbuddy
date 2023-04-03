@@ -353,7 +353,7 @@
               <mat-label> Leave Starts </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput  [matDatepicker]="picker1" placeholder="Leave Starts" [formControl]="leaveStartDate"  [min]="minDate"
-                [max]="maxDate" autocomplete="off" (dateChange)="onDateChange(leaveStartDate.value)" >
+                 autocomplete="off" (dateChange)="onDateChange(leaveStartDate.value)" >
                 <mat-hint>DD/MM/YYYY</mat-hint>
                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                <mat-datepicker #picker1></mat-datepicker>
