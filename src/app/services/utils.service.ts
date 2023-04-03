@@ -820,5 +820,6 @@ export class UtilsService {
       } else {
         assesseeType = 'INDIVIDUAL';
       }
+      return assesseeType;
   }
 }

@@ -60,7 +60,7 @@
   background: #FBFBFD;
   border: 1px solid #F5F5FA!important;
   border-radius: 10px;
-  padding:10px;
+  padding:20px;
 }
 
 .mat-radio-label {  
@@ -77,6 +77,8 @@
   font-size: 14px;
   text-align: center;
   color: #E20000;
+  padding: 10px;
+  margin-bottom:20px;
 }
 
 .delete-btn:disabled {
@@ -84,6 +86,7 @@
   border: 1px solid #BDBDBD;
   color: #BDBDBD;
   padding:10px;
+  margin-bottom:20px;
 }
 
 .btnGry {

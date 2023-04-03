@@ -120,30 +120,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       console.log(item, this.roles);
     });
 
-
-    // this.smeObj.roles.forEach((element) => {
-    // if (element == 'FILER_ITR') {
-    // this.itr.setValue(true);
-    // }
-    // else if (element == 'FILER_NRI') {
-    // this.nri.setValue(true);
-    // }
-    // else if (element == 'FILER_NOTICE') {
-    //   this.notice.setValue(true);
-    // }
-    // else if (element == 'FILER_WB') {
-    //   this.wb.setValue(true);
-    // }
-    // else if (element == ' FILER_PD') {
-    //   this.pd.setValue(true);
-    // }
-    // else if (element == ' FILER_GST') {
-    //   this.gst.setValue(true);
-    // }
-    // else if (element == '  ROLE_LE') {
-    //   this.leader.setValue(true);
-    // }
-    // });
   }
 
   displayFn(user: User): string {
@@ -314,97 +290,75 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    let serviceRecord = this.serviceRecords.filter(element => element.serviceType === serviceType);
     serviceRecord[0].assignmentStart = assignment.value;
-    console.log(serviceRecord[0]);
+    console.log(this.serviceRecords);
 
-    //add update api call
-    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
   }
 
-  smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
-    const userId = this.smeObj.userId;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
-    const request = serviceRecord;
-
-    serviceCheckBox.disable();
-    assignmentToggle?.disable();
-
-    this.userMsService.putMethod(param, request).subscribe((result: any) => {
-      console.log('sme record by service  -> ', result);
-      if(result.success) {
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-        this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
-      } else {
-        this.utilsService.showSnackBar(result.error);
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-      }
-    }, error => {
-      this.utilsService.showSnackBar(error);
-      serviceCheckBox.enable();
-      assignmentToggle?.enable();
-    });
-  }
+  // smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
+  //   const userId = this.smeObj.userId;
+  //   const loggedInSmeUserId=this.loggedInSme[0].userId
+  //   const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+  //   const request = serviceRecord;
+  //
+  //   serviceCheckBox.disable();
+  //   assignmentToggle?.disable();
+  //
+  //   console.log(request);
+  //   // this.userMsService.putMethod(param, request).subscribe((result: any) => {
+  //   //   console.log('sme record by service  -> ', result);
+  //   //   if(result.success) {
+  //   //     serviceCheckBox.enable();
+  //   //     assignmentToggle?.enable();
+  //   //     this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
+  //   //   } else {
+  //   //     this.utilsService.showSnackBar(result.error);
+  //   //     serviceCheckBox.enable();
+  //   //     assignmentToggle?.enable();
+  //   //   }
+  //   // }, error => {
+  //   //   this.utilsService.showSnackBar(error);
+  //   //   serviceCheckBox.enable();
+  //   //   assignmentToggle?.enable();
+  //   // });
+  // }
 
   nriServiceToggle = false;
 
   nriUpdated(event, itr: FormControl) {
     //for NRI capability check ITR service and add relevant roles
     this.nriServiceToggle = !this.nriServiceToggle;
-    let itrRecord = this.smeRecords.filter(element => element.serviceType === 'ITR')[0];
-    if(this.smeObj.owner){
-      if(this.nriServiceToggle === true) {
-        itrRecord.roles.push('OWNER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
-        itrRecord.roles.splice(index, 1);
-      }
-    } else {
-      if(this.nriServiceToggle === true) {
-        itrRecord.roles.push('FILER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
-        itrRecord.roles.removeAt(index);
-      }
-    }
-    console.log(itrRecord);
-    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
   }
 
+  serviceRecords: any[] = [];
+
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    let serviceRecord = this.serviceRecords.filter(element => element.serviceType === serviceType);
+    let assignmentStart = assignment.value ? assignment.value : false;
+    let record = {
+      serviceType: serviceType,
+      assignmentStart: assignmentStart,
+      role: 'FILER_' + serviceType
+    }
     if(service.value) {
       //service added, check if existing and update accordingly
       if(serviceRecord && serviceRecord.length > 0){
         //existing record
-        assignment.setValue(serviceRecord[0].assignmentStart);
-
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        serviceRecord[0].serviceType = serviceType;
+        serviceRecord[0].assignmentStart = assignmentStart;
       } else {
-        assignment.setValue(false);
-        let updated = this.smeRecords[0];
-        updated.serviceType = serviceType;
-        updated.assignmentStart = false;
-        this.smeRecords.push(updated);
-
-        this.smeInfoUpdateServiceCall(updated, service, assignment);
+        this.serviceRecords.push(record);
       }
     } else {
-      //service is already added, set assignment start false
+      //service is already added, remove from list
       if(serviceRecord && serviceRecord.length > 0){
         //existing record
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      } else {
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        this.serviceRecords.splice( this.serviceRecords.indexOf(serviceRecord[0]), 1);
       }
     }
 
-    console.log(this.smeRecords);
+    console.log(this.serviceRecords);
   }
 
   otherSmeInfo : FormGroup =this.fb.group({
@@ -475,15 +429,19 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
     console.log('sme record by service  -> ', result);
-    this.smeRecords=result.data
+    this.smeRecords=result.data;
+
+    this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
     this.smeServices =this.smeRecords.map((item) => {
       return { serviceType: item.serviceType , assignmentStart :item.assignmentStart};
     });
     console.log("servicesList",this.smeServices)
 
+   this.serviceRecords = this.smeServices;
     this.smeServices.forEach((element) => {
       if (element.serviceType == "ITR") {
         this.itr.setValue(true);
+        this.itr.disable();
         if(this.smeObj.roles.includes('OWNER_NRI') || this.smeObj.roles.includes('FILER_NRI')){
           this.nriServiceToggle = true;
         }
@@ -493,48 +451,48 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       }
       else if (element.serviceType == "TPA") {
         this.tpa.setValue(true);
+        this.tpa.disable();
         if (element.assignmentStart == true) {
           this.tpaToggle.setValue(true);
         }
       }
       else if (element.serviceType == "GST") {
         this.gst.setValue(true);
+        this.gst.disable();
         if (element.assignmentStart == true) {
           this.gstToggle.setValue(true);
         }
       }
       else if (element.serviceType == "NOTICE") {
         this.notice.setValue(true);
+        this.notice.disable();
         if (element.assignmentStart == true) {
           this.noticeToggle.setValue(true);
         }
       }
       else if (element.serviceType == "WB") {
         this.wb.setValue(true);
+        this.wb.disable();
         if (element.assignmentStart == true) {
           this.wbToggle.setValue(true);
         }
       }
       else if (element.serviceType == "PD") {
         this.pd.setValue(true);
+        this.pd.disable();
         if (element.assignmentStart == true) {
           this.pdToggle.setValue(true);
         }
       }
       else if (element.serviceType == "MF") {
         this.mf.setValue(true);
+        this.mf.disable();
         if (element.assignmentStart == true) {
           this.mfToggle.setValue(true);
         }
       }
-      // else if (element.serviceType == "PD") {
-      //   this.other.setValue(true);
-      //   if (element.assignmentStart == true) {
-      //     this.otherToggle.setValue(true);
-      //   }
-      // }
-    })
-    })
+      });
+    });
   }
 
   ownerDetails :any;
@@ -550,11 +508,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
    const LeaveEndDate = this.convertToDDMMYY(this.leaveEndDate.value);
    const  ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
 
-    const userId = this.smeObj.userId;
-    console.log(userId);
-    const param = `/sme-details-new/${userId}`;
-    if (this.smeFormGroup.valid && this.roles.valid && this.services.valid ) {
-      this.loading = true;
+    if (this.smeFormGroup.valid && this.roles.valid) {
 
       let finalReq = {
         userId: this.smeObj.userId,
@@ -589,32 +543,70 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         filer: this.filer.value,
         coOwnerUserId: this.ownerDetails?.userId
       };
-
-      console.log('finalReq', finalReq);
-      let requestData = JSON.parse(JSON.stringify(finalReq));
-      console.log('requestData', requestData);
-      this.userMsService.putMethod(param, requestData).subscribe(
-        (res:any) => {
-          console.log('SME assignment updated', res);
-          this.loading = false;
-          if(res.success ===false){
-            this._toastMessageService.alert(
-              'false',
-              'failed to update sme details '
-            );
-          }else{
-            this._toastMessageService.alert(
-              'success',
-              'sme details updated successfully'
-            );
+      if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
+        if (this.smeObj.owner) {
+          if (this.nriServiceToggle === true) {
+            finalReq.roles.push('OWNER_NRI');
+          } else {
+            let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
+            if(index >= 0) {
+              finalReq.roles.splice(index, 1);
+            }
           }
-        },
-        (error) => {
-          this._toastMessageService.alert('error', 'failed to update.');
-          this.loading = false;
+        } else {
+          if (this.nriServiceToggle === true) {
+            finalReq.roles.push('FILER_NRI');
+          } else {
+            let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
+            if(index >= 0) {
+              finalReq.roles.splice(index, 1);
+            }
+          }
         }
-      );
+      }
+      if(this.serviceRecords.length > 0) {
+        this.serviceRecords.forEach(service => {
+          finalReq.serviceType = service.serviceType;
+          finalReq.assignmentStart = service.assignmentStart;
+          finalReq.roles.push(service.role);
+          console.log(finalReq);
+          this.serviceApiCall(finalReq);
+        });
+      } else {
+        //update with as is
+        console.log(finalReq);
+        this.serviceApiCall(finalReq);
+      }
     }
+  }
+
+  serviceApiCall(requestData: any) {
+    const userId = this.smeObj.userId;
+    console.log(userId);
+    const param = `/sme-details-new/${userId}`;
+
+    this.loading = true;
+    this.userMsService.putMethod(param, requestData).subscribe(
+      (res:any) => {
+        console.log('SME assignment updated', res);
+        this.loading = false;
+        if(res.success ===false){
+          this._toastMessageService.alert(
+            'false',
+            'failed to update sme details '
+          );
+        }else{
+          this._toastMessageService.alert(
+            'success',
+            'sme details updated successfully'
+          );
+        }
+      },
+      (error) => {
+        this._toastMessageService.alert('error', 'failed to update.');
+        this.loading = false;
+      }
+    );
   }
 
   convertToDDMMYY(date) {
