@@ -169,7 +169,7 @@ export class OtherInformationComponent implements OnInit {
         this.loading = false;
         this.utilsService.showSnackBar('Director in company details added successfully');
         // this.saveAndNext.emit(true);
-        this.directorForm.reset();
+        // this.directorForm.reset();
       }, error => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
@@ -221,6 +221,7 @@ export class OtherInformationComponent implements OnInit {
     } else {
       if (this.ITR_JSON.unlistedSharesDetails.length > 0) {
         this.Copy_ITR_JSON.unlistedSharesDetails = [];
+        (this.sharesForm.controls['sharesArray'] as FormArray).clear();
         this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
         this.serviceCall('Unlisted shares')
       }
@@ -276,6 +277,8 @@ export class OtherInformationComponent implements OnInit {
     } else {
       if (this.Copy_ITR_JSON?.directorInCompany.length > 0) {
         this.Copy_ITR_JSON.directorInCompany = [];
+        // this.directorForm.reset();
+        (this.directorForm.controls['directorsArray'] as FormArray).clear();
         this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
         this.serviceCall('Director in company')
       }
@@ -295,11 +298,11 @@ export class OtherInformationComponent implements OnInit {
       const val = this.ITR_JSON.directorInCompany[i];
       const temp = {
         id: i + 1,
-        companyName: val.companyName,
-        typeOfCompany: val.typeOfCompany,
-        companyPAN: val.companyPAN,
-        sharesType: val.sharesType,
-        din: val.din,
+        companyName: val?.companyName,
+        typeOfCompany: val?.typeOfCompany,
+        companyPAN: val?.companyPAN,
+        sharesType: val?.sharesType,
+        din: val?.din,
       };
       formArray.push(this.createDirectorForm(temp));
     }
@@ -332,19 +335,25 @@ export class OtherInformationComponent implements OnInit {
   serviceCall(msg) {
     this.loading = true;
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
+      console.log('result of save itr object',result)
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
       this.ITR_JSON = JSON.parse(JSON.stringify(result));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));
+      console.log('copy of itr json',this.Copy_ITR_JSON )
       this.loading = false;
       this.utilsService.showSnackBar(msg + ' details removed successfully');
+
       if (this.ITR_JSON.systemFlags?.directorInCompany){
         this.ITR_JSON.directorInCompany = [];
+
       }
       if (this.ITR_JSON.systemFlags.haveUnlistedShares){
         this.ITR_JSON.unlistedSharesDetails = [];
       }
+
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      console.log('in error of srvice call')
       this.loading = false;
     });
   }
