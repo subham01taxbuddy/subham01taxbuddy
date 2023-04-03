@@ -113,6 +113,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     //    this.otherDetailsForm.patchValue(null);
     // }
 
+    this.updateIgstFlag();
     this.sourcesList = [
       {
         name: 'Salary',
@@ -179,12 +180,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   async updateDataByPincode() {
     await this.utilsService
-      .getPincodeData(this.pin.value)
+      .getPincodeData(this.personalInfoForm.controls['pin'])
       .then((result) => {
         console.log('pindata', result);
         this.city.setValue(result.city);
         // this.country.setValue(result.countryCode);
         this.state.setValue(result.stateCode);
+        this.updateIgstFlag();
       });
   }
 
@@ -391,7 +393,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   totalCon :any;
   totalConcession(){
-    this.totalCon= this.scheduleCallPay.value +this.tpaPaid.value
+    let concession = 0;
+    this?.userSubscription?.concessionsApplied?.forEach(item=> {
+      concession += item.amount;
+    });
+    this.totalCon= this.userSubscription?.smeSelectedPlan?.totalAmount - concession;
   }
 
   showPromoCode(code) {
@@ -499,6 +505,15 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   }
 
+  showIgst = true;
+
+  updateIgstFlag() {
+    if(this.state.value === '19'){
+      this.showIgst = false;
+    } else if(this.personalInfoForm.controls['gstNo'].value.startsWith('27')){
+      this.showIgst = false;
+    }
+  }
   // selectedPlan=this.sourcesList.filter((item:any) => item.selected===true)
 
   getAllPlanInfo(serviceType) {
@@ -557,6 +572,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         this.maxEndDate.setDate(this.maxEndDate.getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
       }
       this.setFinalPricing();
+      this.totalConcession();
       // this.selectedPlan()
       this.loading = false;
     }, error => {

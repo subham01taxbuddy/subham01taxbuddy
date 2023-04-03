@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -9,7 +8,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import {MatChip} from "@angular/material/chips";
 
 
 export const MY_FORMATS = {
@@ -91,30 +89,28 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     if(this.smeObj.internal === true ){
       this.internal.setValue("internal")
-    }else this.internal.setValue("external")
+    }else {
+      this.internal.setValue("external")
+    }
 
     if(this.smeObj.leaveStartDate !== null){
-    let leaveStartDate = this.smeObj.leaveStartDate;
-    let lDate = leaveStartDate?.split('IST');
-    this.leaveStartDate.setValue(new Date((lDate[0])+(lDate[1])))
+      let leaveStartDate = this.smeObj.leaveStartDate;
+      this.leaveStartDate.setValue(moment(leaveStartDate, 'DD/MM/YYYY').toDate());
     }
 
     if(this.smeObj.leaveEndDate !== null){
-    let leaveEndDate = this.smeObj.leaveEndDate;
-    let lEndDate = leaveEndDate?.split('IST');
-    this.leaveEndDate.setValue(new Date(lEndDate[0]+lEndDate[1]))
+      let leaveEndDate = this.smeObj.leaveEndDate;
+      this.leaveEndDate.setValue(moment(leaveEndDate, 'DD/MM/YYYY').toDate())
     }
 
     if(this.smeObj.joiningDate !== null){
-    let joiningDate = this.smeObj.joiningDate;
-    let joinDate = joiningDate?.split('IST');
-    this.joiningDate.setValue(new Date(joinDate[0]+joinDate[1]))
+      let joiningDate = this.smeObj.joiningDate;
+      this.joiningDate.setValue(moment(joiningDate, 'DD/MM/YYYY').toDate())
     }
 
     if(this.smeObj.resigningDate !== null){
-    let resigningDate = this.smeObj.resigningDate;
-    let resignDate = resigningDate?.split('IST');
-    this.resigningDate.setValue(new Date(resignDate[0]+resignDate[1]))
+      let resigningDate = this.smeObj.resigningDate;
+      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
     }
     this.roles.valueChanges.subscribe((item) => {
       console.log(item, this.roles);

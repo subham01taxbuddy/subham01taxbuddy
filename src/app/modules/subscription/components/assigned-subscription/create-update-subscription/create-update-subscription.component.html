@@ -66,7 +66,8 @@
         <div class="col-sm-4">
           <mat-label> GSTN No </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field" />
+            <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field"
+            (blur)="updateIgstFlag()"/>
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -176,9 +177,9 @@
               <!-- <span class="head">Description:</span><br> -->
               <span class="head">Validation For Days:</span><br>
               <span class="head">Base Price:</span><br>
-              <span class="head">CGST:</span><br>
-              <span class="head">SGST:</span><br>
-              <span class="head">IGST:</span><br>
+              <span class="head" *ngIf="!showIgst">CGST:</span><br>
+              <span class="head" *ngIf="!showIgst">SGST:</span><br>
+              <span class="head" *ngIf="showIgst">IGST:</span><br>
               <span class="head">Total Tax:</span><br>
               <span class="head">Total Amount:</span>
             </div>
@@ -187,9 +188,9 @@
               <span class="head">{{userSubscription.userSelectedPlan.name}}</span><br>
               <span class="head">{{userSubscription.userSelectedPlan.validForDays}}</span><br>
               <span class="head">{{userSubscription.userSelectedPlan.basePrice | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.cgst | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.sgst | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.igst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="!showIgst">{{userSubscription.userSelectedPlan.cgst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="!showIgst">{{userSubscription.userSelectedPlan.sgst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="showIgst">{{userSubscription.userSelectedPlan.igst | currency:'INR'}}</span><br>
               <span class="head">{{userSubscription.userSelectedPlan.totalTax | currency:'INR'}}</span><br>
               <span class="head">{{userSubscription.userSelectedPlan.totalAmount | currency:'INR'}}</span>
             </div>
@@ -254,19 +255,14 @@
             <th>Amount</th>
           </tr>
           <tr>
-            <td>change in plan/Actual plan amount</td>
+            <td>{{userSubscription?.smeSelectedPlan === null || userSubscription?.userSelectedPlan?.planId === userSubscription?.smeSelectedPlan?.planId ? 'Actual Plan Amount' : 'Change in Plan'}}</td>
             <td></td>
-            <td>{{userSubscription?.smeSelectedPlan?.totalAmount | currency:'INR'}}</td>
+            <td>{{(userSubscription?.smeSelectedPlan !== null ? userSubscription?.smeSelectedPlan?.totalAmount : userSubscription?.userSelectedPlan.totalAmount) | currency:'INR'}}</td>
           </tr>
-          <tr>
-            <td>Less Paid for schedule call</td>
+          <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+            <td>Less: {{item.title}}</td>
             <td></td>
-            <td><span *ngIf="this?.userSubscription && this?.userSubscription?.concessionsApplied"  class="head">{{userSubscription?.concessionsApplied[0]?.amount | currency:'INR'}}</span></td>
-          </tr>
-          <tr>
-            <td>Less Paid for TPA</td>
-            <td></td>
-            <td><span *ngIf="this?.userSubscription && this?.userSubscription?.concessionsApplied" class="head">{{userSubscription?.concessionsApplied[1]?.amount | currency:'INR'}} </span></td>
+            <td><span class="head">{{item.amount | currency:'INR'}}</span></td>
           </tr>
           <tr>
             <td>Total</td>
@@ -316,20 +312,20 @@
           </tr>
           <tr>
             <td></td>
-            <td>base Price</td>
+            <td>Base Price</td>
             <td>{{this?.userSubscription?.basePrice| currency:'INR'}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!showIgst">
             <td></td>
             <td>CGST</td>
             <td>{{this?.userSubscription?.cgst | currency:'INR'}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!showIgst">
             <td></td>
             <td>SGST</td>
             <td>{{this?.userSubscription?.sgst | currency:'INR'}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="showIgst">
             <td></td>
             <td>IGST</td>
             <td>{{this?.userSubscription?.igst | currency:'INR'}}</td>
@@ -419,17 +415,17 @@
       <hr>
       <div  style="float: right;">
         <button  class="btn " style=" background: #4F9A20;
-        border-radius: 5px;" (click)="updateSubscription()"><i class="fas fa-wallet"></i> Auto Generate Invoice </button>
+        border-radius: 5px;" (click)="updateSubscription()"><i class="fas fa-wallet"></i> Save & Generate Invoice </button>
       </div>
       <div  style="float: right;">
         <button  class="btn " style=" background: #4F9A20;
-        border-radius: 5px;" *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0 "><i class="fas fa-wallet"></i> Refund Request </button>
+        border-radius: 5px;" *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0 "><i class="fas fa-wallet"></i> Save & Refund Request </button>
       </div>
 
     </div>
   </div>
 </div>
-<div style="margin-top: 50px;" class="d-none">
+<div style="margin-top: 50px;" class="d-none" *ngIf="false">
   <div class="col-sm-10">
     <b style="font-size: 20px">In case Of GST </b>
   </div>
