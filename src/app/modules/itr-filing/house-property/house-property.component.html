@@ -1444,7 +1444,7 @@
           <div class="flex justify-between">
             <!-- <a class="btn btn-cancel">Cancel</a> -->
             <button class="btn" (click)="cancelHpForm()">Cancel</button>
-            <button class="btn" (click)="saveHouseProperty('','')">Save</button>
+            <button class="btn" [disabled]="isDisable" (click)="saveHouseProperty('','')">Save</button>
           </div>
         </div>
       </form>
