@@ -10,7 +10,7 @@
     </a>
 
 
-    <div class="d-menu">
+    <div *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_OWNER', 'ROLE_LEADER'])" class="d-menu">
       <a
         class="sidebar__item"
         href="javascript:void(0)"
