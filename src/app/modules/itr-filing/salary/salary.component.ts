@@ -441,9 +441,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((res: any) => {
       this.Copy_ITR_JSON.itrType = res?.data?.itrType;
       const param1 = '/taxitr?type=employers';
-      this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe((result: any) => {
+      let request = this.Copy_ITR_JSON;
+      request.capitalGain = [];
+      this.itrMsService.postMethod(param1, request).subscribe((result: any) => {
         if (this.utilsService.isNonEmpty(result)) {
           this.ITR_JSON = result;
+          this.ITR_JSON.capitalGain = this.Copy_ITR_JSON.capitalGain;
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
 
