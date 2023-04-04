@@ -255,7 +255,7 @@ export class CustomerProfileComponent implements OnInit {
           //1988-11-28 to DD/MM/YYYY
           //this.datePipe.transform(dob,"dd/MM/yyyy")
           let dob = new Date(result.dateOfBirth).toLocaleDateString("en-US");
-          // this.customerProfileForm.controls['dateOfBirth'].setValue(dob);
+          this.customerProfileForm.controls['dateOfBirth'].setValue(moment(result.dateOfBirth, 'YYYY-MM-DD').toDate());
           this.customerProfileForm.controls['assesseeType'].setValue(this.utilsService.findAssesseeType(pan));
           if (result.isValid !== 'EXISTING AND VALID') {
             this.utilsService.showSnackBar('Record (PAN) Not Found in ITD Database/Invalid PAN');
