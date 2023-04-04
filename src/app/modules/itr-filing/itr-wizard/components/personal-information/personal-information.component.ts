@@ -354,6 +354,7 @@ export class PersonalInformationComponent implements OnInit {
     this.getAllBankByIfsc();
     this.stateDropdown = this.stateDropdownMaster;
     this.getDocuments();
+    this.getUserDataByPan(this.customerProfileForm.controls['panNumber'].value);
   }
 
   ngOnChanges(changes: SimpleChanges) {
