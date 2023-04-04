@@ -289,7 +289,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
 
 
-    if(this.utilsService.isNonEmpty(this.searchLeader.value) || (this.utilsService.isNonEmpty(this.searchOwner.value))){
+    if(this.leader.value || this.utilsService.isNonEmpty(this.searchLeader.value) || (this.utilsService.isNonEmpty(this.searchOwner.value))){
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
@@ -352,8 +352,14 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         }
       );
     }else {
-       this._toastMessageService.alert('error', 'failed to update plz select owner name.');
-       this.loading = false;}
+      if(this.owner.value && !this.utilsService.isNonEmpty(this.searchLeader.value)) {
+        this._toastMessageService.alert('error', 'Please select leader name.');
+        this.loading = false;
+      } else if (this.filer.value && !this.utilsService.isNonEmpty(this.searchOwner.value)) {
+        this._toastMessageService.alert('error', 'Please select owner name.');
+        this.loading = false;
+      }
+    }
   }
 }
 
