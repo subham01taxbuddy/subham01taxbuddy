@@ -70,6 +70,7 @@ export class LabFormComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
+  
 
   config: any;
   active: any;
@@ -495,6 +496,7 @@ export class LabFormComponent implements OnInit {
 
   createDeductionForm(obj?: any): FormGroup {
     return this.fb.group({
+      srn: [obj.srn || this.currentCgIndex.toString()],
       selected: [false],
       underSection: [obj?.underSection || null],
       purchaseDate: [obj?.purchaseDate || null, [Validators.required]],
@@ -1186,8 +1188,10 @@ export class LabFormComponent implements OnInit {
     this.maxPurchaseDate = this.calMaxPurchaseDate.toISOString().slice(0, 10); */
     this.maxPurchaseDate = new Date();
 
-    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
-      .controls[index] as FormGroup;
+    const deductionForm = (
+      this.immovableForm.controls['deductions'] as FormArray
+    ).controls[index] as FormGroup;
+
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC'
@@ -1368,8 +1372,9 @@ export class LabFormComponent implements OnInit {
         console.log('Capital gain save result=', result);
         // this.dialogRef.close(this.ITR_JSON); // TODO send data to table back
         this.utilsService.smoothScrollToTop();
-        this.saveBusy = false;
         this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+        this.saveBusy = false;
+      
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1395,7 +1400,7 @@ export class LabFormComponent implements OnInit {
       investmentInCGAccount: null,
       totalDeductionClaimed: null,
     };
-    if (deductions.valid ) {
+    if (deductions.valid) {
       deductions.push(this.createDeductionForm(obj));
     } else {
       console.log('add above details first');
@@ -1571,35 +1576,35 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  cancelCgForm() {
-    this.immovableForm.reset();
-    this.immovableForm.controls['improvement'] = this.fb.array([]);
-    this.immovableForm.controls['buyersDetails'] = this.fb.array([]);
-    if (
-      this.utilsService.isNonEmpty(this.ITR_JSON) &&
-      this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-      this.ITR_JSON.capitalGain instanceof Array &&
-      this.ITR_JSON.capitalGain?.length > 0
-    ) {
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
-    } else {
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
-    }
-    this.utilsService.smoothScrollToTop();
-  }
+  // cancelCgForm() {
+  //   this.immovableForm.reset();
+  //   this.immovableForm.controls['improvement'] = this.fb.array([]);
+  //   this.immovableForm.controls['buyersDetails'] = this.fb.array([]);
+  //   if (
+  //     this.utilsService.isNonEmpty(this.ITR_JSON) &&
+  //     this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
+  //     this.ITR_JSON.capitalGain instanceof Array &&
+  //     this.ITR_JSON.capitalGain?.length > 0
+  //   ) {
+  //     this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+  //   } else {
+  //     this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+  //   }
+  //   this.utilsService.smoothScrollToTop();
+  // }
 
   deleteInvestment(index) {
-    let deductions = this.cgArrayElement.deduction.filter(
-      (deduction) => deduction.srn == this.data.assetSelected.srn
-    );
-    deductions.splice(index, 1);
-    let otherDeductions = this.cgArrayElement.deduction.filter(
-      (ded) => ded.srn != this.data.assetSelected.srn
-    );
-    if (otherDeductions == null) {
-      otherDeductions = [];
-    }
-    this.cgArrayElement.deduction = otherDeductions.concat(deductions);
+    // let deductions = this.cgArrayElement.deduction.filter(
+    //   (deduction) => deduction.srn == this.data.assetSelected.srn
+    // );
+    // deductions.splice(index, 1);
+    // let otherDeductions = this.cgArrayElement.deduction.filter(
+    //   (ded) => ded.srn != this.data.assetSelected.srn
+    // );
+    // if (otherDeductions == null) {
+    //   otherDeductions = [];
+    // }
+    // this.cgArrayElement.deduction = otherDeductions.concat(deductions);
     console.log(this.cgArrayElement.deduction);
     const deductionsArray = (<FormArray>(
       this.immovableForm.get('deductions')
