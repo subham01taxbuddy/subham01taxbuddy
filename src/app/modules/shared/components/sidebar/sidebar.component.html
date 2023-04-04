@@ -19,7 +19,7 @@
         <span class="sidebar__name norTx">SME Management</span>
       </a>
       <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
-        <a class="sidebar__subitem" routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
+        <a *ngIf="isApplicable(['ROLE_LEADER'])" class="sidebar__subitem" routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
           <span class="sidebar__subname norTx">Unassigned SME</span>
         </a>
         <a class="sidebar__subitem" routerLink="/sme-management-new/assignedsme" href="javascript:void(0)">

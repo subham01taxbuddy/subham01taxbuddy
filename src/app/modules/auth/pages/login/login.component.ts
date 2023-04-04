@@ -225,7 +225,7 @@ export class LoginComponent implements OnInit {
         }, 2000);
 
         let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
-          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER'];
+          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
         let roles = res.data[0]?.roles;
         if (roles.indexOf("ROLE_ADMIN") !== -1) {
           this.router.navigate(['/tasks/assigned-users-new']);
