@@ -540,25 +540,23 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         coOwnerUserId: this.ownerDetails?.userId
       };
       if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
-        if (this.smeObj.owner) {
-          if (this.nriServiceToggle === true) {
-            finalReq.roles.push('OWNER_NRI');
-          } else {
-            let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
-            if(index >= 0) {
-              finalReq.roles.splice(index, 1);
-            }
+
+        if (this.nriServiceToggle === true && this.smeObj.owner) {
+          finalReq.roles.push('OWNER_NRI');
+        } else if (this.nriServiceToggle === true && this.smeObj.filer) {
+          finalReq.roles.push('FILER_NRI');
+        } else if (this.nriServiceToggle === false && this.smeObj.owner){
+          let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
+          if(index >= 0) {
+            finalReq.roles.splice(index, 1);
           }
-        } else {
-          if (this.nriServiceToggle === true) {
-            finalReq.roles.push('FILER_NRI');
-          } else {
-            let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
-            if(index >= 0) {
-              finalReq.roles.splice(index, 1);
-            }
+        } else if (this.nriServiceToggle === false && this.smeObj.filer) {
+          let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
+          if(index >= 0) {
+            finalReq.roles.splice(index, 1);
           }
         }
+
       }
       if(this.serviceRecords.length > 0) {
         this.serviceRecords.forEach(service => {

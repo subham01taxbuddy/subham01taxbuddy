@@ -27,6 +27,7 @@
               trim
               digitsOnly
               required
+              readonly
             />
              <!-- <mat-error
                   *ngIf="mobileNumber?.hasError('required') ">
@@ -42,6 +43,7 @@
               placeholder="Name"
               [formControl]="name"
               class="input-field"
+              readonly
              />
             <!-- <mat-error
             *ngIf="name?.hasError('required') ">
@@ -57,6 +59,7 @@
               placeholder="email id"
               [formControl]="email"
               class="input-field"
+              readonly
             />
             <!-- <mat-error
             *ngIf="email?.hasError('required') ">
@@ -68,7 +71,7 @@
         <div class="col-sm-4">
           <mat-label> Language </mat-label>
           <mat-form-field appearance="outline">
-            <mat-select [formControl]="languages" multiple>
+            <mat-select [formControl]="languages" multiple disabled>
               <mat-select-trigger>
                 {{languages.value ? languages.value : ''}}
 
@@ -88,7 +91,7 @@
               matInput
               placeholder="Referred person"
               [formControl]="referredBy"
-              class="input-field"
+              class="input-field" readonly
             />
             <!-- <mat-error
             *ngIf="referredPerson?.hasError('required') ">
@@ -98,7 +101,7 @@
         <div class="col-sm-4">
           <mat-label> Income Tax Expertise </mat-label>
           <mat-form-field appearance="outline">
-            <mat-select [formControl]="itrTypes" multiple>
+            <mat-select [formControl]="itrTypes" multiple disabled>
               <mat-select-trigger>
                 {{itrTypes.value ? itrTypes.value : ''}}
 
@@ -128,7 +131,7 @@
               placeholder="Qualification"
               name=""
               [formControl]="qualification"
-              class="input-field"
+              class="input-field" readonly
             />
             <!-- <mat-error
             *ngIf="qualification?.hasError('required') ">
@@ -138,7 +141,7 @@
         <div class="col-sm-4">
           <mat-label> State </mat-label>
           <mat-form-field appearance="outline">
-            <mat-select
+            <mat-select disabled
                     placeholder="Select state"
                     name="state"
                     [formControl]="state" >
@@ -183,11 +186,11 @@
       <div class="card" style="margin-top: 10px;">
         <b style="font-size: 18px">Roles: </b>
         <section class="example-section" [formGroup]="roles">
-          <p><mat-checkbox [formControl]="admin">Admin</mat-checkbox></p><hr>
-          <p><mat-checkbox [formControl]="leader">Leader</mat-checkbox></p><hr>
-          <p><mat-checkbox [formControl]="owner">Owner</mat-checkbox></p><hr>
-          <p><mat-checkbox [formControl]="filer">Partner/Filer</mat-checkbox></p><hr>
-          <p><mat-checkbox [formControl]="leadEngagement">Lead Engagement</mat-checkbox></p><hr>
+          <p><mat-checkbox disabled [formControl]="admin" readonly>Admin</mat-checkbox></p><hr>
+          <p><mat-checkbox disabled [formControl]="leader" readonly>Leader</mat-checkbox></p><hr>
+          <p><mat-checkbox disabled [formControl]="owner" readonly>Owner</mat-checkbox></p><hr>
+          <p><mat-checkbox disabled [formControl]="filer" readonly>Partner/Filer</mat-checkbox></p><hr>
+          <p><mat-checkbox disabled [formControl]="leadEngagement" readonly>Lead Engagement</mat-checkbox></p><hr>
         </section>
       </div>
 
@@ -198,7 +201,7 @@
         <div class="row">
           <div class="col-sm-6">
             <section class="example-section" [formGroup]="services">
-              <p><mat-checkbox [formControl]="itr" (change)="serviceUpdated('ITR', itr, itrToggle)">ITR</mat-checkbox><mat-slide-toggle *ngIf="itr.value" [formControl]="itrToggle"  style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="itr" (change)="serviceUpdated('ITR', itr, itrToggle)">ITR</mat-checkbox><mat-slide-toggle *ngIf="itr.value" [formControl]="itrToggle"  style="float:right ; margin-right: 10px;"
                                                                                                                                         (change)="assignmentUpdated('ITR', itr, itrToggle)"></mat-slide-toggle>
                 <mat-chip-list><mat-chip class="select-chip" *ngIf="itr.value" disableRipple
                                          [selected]="nriServiceToggle"(click)="nriUpdated($event, itr)"><i class="fa fa-check" *ngIf="nriServiceToggle"></i>NRI</mat-chip></mat-chip-list></p><hr>
@@ -207,32 +210,32 @@
               <!--                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"-->
               <!--                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>-->
 
-              <p><mat-checkbox [formControl]="tpa" (change)="serviceUpdated('TPA', tpa, tpaToggle)">Tax Planing (TPA)/NPS </mat-checkbox>
-                <mat-slide-toggle *ngIf="tpa.value" [formControl]="tpaToggle" style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="tpa" (change)="serviceUpdated('TPA', tpa, tpaToggle)">Tax Planing (TPA)/NPS </mat-checkbox>
+                <mat-slide-toggle readonly *ngIf="tpa.value" [formControl]="tpaToggle" style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('TPA', tpa, tpaToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="notice" (change)="serviceUpdated('NOTICE', notice, noticeToggle)">Notice</mat-checkbox>
-                <mat-slide-toggle *ngIf="notice.value" [formControl]="noticeToggle"  style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="notice" (change)="serviceUpdated('NOTICE', notice, noticeToggle)">Notice</mat-checkbox>
+                <mat-slide-toggle readonly *ngIf="notice.value" [formControl]="noticeToggle"  style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('NOTICE', notice, noticeToggle)"></mat-slide-toggle></p><hr>
 
             </section>
           </div>
           <div class="col-sm-6">
             <section class="example-section" [formGroup]="services">
-              <p><mat-checkbox [formControl]="gst" (change)="serviceUpdated('GST', gst, gstToggle)">GST</mat-checkbox>
-                <mat-slide-toggle *ngIf="gst.value" [formControl]="gstToggle"  style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="gst" (change)="serviceUpdated('GST', gst, gstToggle)">GST</mat-checkbox>
+                <mat-slide-toggle disabled *ngIf="gst.value" [formControl]="gstToggle"  style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('GST', gst, gstToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth Builder(WB)</mat-checkbox>
-                <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth Builder(WB)</mat-checkbox>
+                <mat-slide-toggle disabled *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('WB', wb, wbToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd, pdToggle)">Portfolio Doctor(PD)</mat-checkbox>
-                <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="pd" (change)="serviceUpdated('PD', pd, pdToggle)">Portfolio Doctor(PD)</mat-checkbox>
+                <mat-slide-toggle disabled *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('PD', pd, pdToggle)"></mat-slide-toggle></p><hr>
 
-              <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf, mfToggle)">Mutual Fund (MF) Advisor</mat-checkbox>
-                <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
+              <p><mat-checkbox disabled [formControl]="mf" (change)="serviceUpdated('MF', mf, mfToggle)">Mutual Fund (MF) Advisor</mat-checkbox>
+                <mat-slide-toggle disabled *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
                                   (change)="assignmentUpdated('MF', mf, mfToggle)"></mat-slide-toggle></p><hr>
 
             </section>
@@ -241,7 +244,7 @@
         <div class="row">
           <div class="col-sm-6">
             <mat-hint>
-              <p> <i class="fas fa-circle"></i>  select checkbox to active service</p>
+              <p> <i class="fas fa-circle"></i> Select checkbox to active service</p>
             </mat-hint>
           </div>
           <div class="col-sm-6">
@@ -259,7 +262,7 @@
         <div class="col-sm-4">
           <mat-label> Add Co-Owner </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
+            <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto" readonly>
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
               <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)" >
                    {{option.name}}
@@ -278,7 +281,7 @@
               matInput
               placeholder="Calling Number"
               [formControl]="callingNumber"
-              class="input-field"
+              class="input-field" readonly
              />
             <!-- <mat-error
             *ngIf="callingNumber?.hasError('required') ">
@@ -293,7 +296,7 @@
               matInput
               placeholder="Official Email ID"
               [formControl]="officialEmail"
-              class="input-field"
+              class="input-field" readonly
              />
             <!-- <mat-error
             *ngIf="officialEmail?.hasError('required') ">
@@ -310,7 +313,7 @@
                 matInput
                 placeholder="Kommunicate ID"
                 [formControl]="kommId"
-                class="input-field"
+                class="input-field" readonly
                />
               <!-- <mat-error
               *ngIf="kommId?.hasError('required') ">
@@ -325,7 +328,7 @@
                 matInput
                 placeholder="Display Name"
                 [formControl]="displayName"
-                class="input-field"
+                class="input-field" readonly
                />
               <!-- <mat-error
               *ngIf="displayName?.hasError('required') ">
@@ -340,7 +343,7 @@
                 matInput
                 placeholder=""
                 [formControl]="internal"
-                class="input-field"
+                class="input-field" readonly
                />
               <!-- <mat-error
               *ngIf="officialEmail?.hasError('required') ">
@@ -353,10 +356,10 @@
               <mat-label> Leave Starts </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput  [matDatepicker]="picker1" placeholder="Leave Starts" [formControl]="leaveStartDate"  [min]="minDate"
-                 autocomplete="off" >
+                 autocomplete="off" readonly>
                 <mat-hint>DD/MM/YYYY</mat-hint>
                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-               <mat-datepicker #picker1></mat-datepicker>
+               <mat-datepicker #picker1 disabled></mat-datepicker>
                 <!-- <mat-error
                 *ngIf="leaveStartDate?.hasError('required') ">
                 This field is required</mat-error> -->
@@ -374,10 +377,10 @@
               <mat-label> Leave Ends </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput placeholder="Leave Ends"  [formControl]="leaveEndDate" [min]="minDate"
-                              [matDatepicker]="picker2" autocomplete="off"  >
+                              [matDatepicker]="picker2" autocomplete="off"  readonly>
                              <mat-hint>DD/MM/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-datepicker #picker2 disabled></mat-datepicker>
                 <!-- <mat-error
                 *ngIf="leaveEndDate?.hasError('required') ">
                 This field is required</mat-error> -->
@@ -398,10 +401,10 @@
                 <mat-label> Joining Date  </mat-label>
                 <mat-form-field appearance="outline">
                   <input matInput placeholder="Joining Date" [formControl]="joiningDate" [min]="minDate"
-                             [max]="maxDate" [matDatepicker]="picker3" autocomplete="off" >
+                             [max]="maxDate" [matDatepicker]="picker3" autocomplete="off" readonly>
                              <mat-hint>DD/MM/YYYY</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                        <mat-datepicker #picker3></mat-datepicker>
+                        <mat-datepicker #picker3 disabled></mat-datepicker>
                   <!-- <mat-error
                   *ngIf="officialEmail?.hasError('required') ">
                   This field is required</mat-error> -->
