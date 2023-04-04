@@ -70,7 +70,6 @@ export class LabFormComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
-  
 
   config: any;
   active: any;
@@ -669,9 +668,11 @@ export class LabFormComponent implements OnInit {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[index] as FormGroup;
-    if (buyersDetails.controls['share'].value === 100) {
+
+    const shareValue = buyersDetails.controls['share'].value;
+    if (shareValue >= 0 && shareValue <= 100) {
       buyersDetails.controls['amount'].setValue(
-        assetDetails.controls['valueInConsideration'].value
+        (assetDetails.controls['valueInConsideration'].value * shareValue) / 100
       );
     }
   }
@@ -1374,7 +1375,6 @@ export class LabFormComponent implements OnInit {
         this.utilsService.smoothScrollToTop();
         this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
         this.saveBusy = false;
-      
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
