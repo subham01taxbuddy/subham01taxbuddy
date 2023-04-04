@@ -694,8 +694,8 @@ export class PersonalInformationComponent implements OnInit {
 
 
   deleteFile(filePath) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    let adminId = this.utilsService.getLoggedInUserID();
+    var path = '/itr/cloud/files?actionBy=' + adminId;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {

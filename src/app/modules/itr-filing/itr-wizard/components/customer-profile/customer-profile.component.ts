@@ -123,7 +123,7 @@ export class CustomerProfileComponent implements OnInit {
   ]
 
   filePath = 'ITR/';
-  loggedInUserData: any;
+  loggedInUserRoles: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -137,7 +137,7 @@ export class CustomerProfileComponent implements OnInit {
               private datePipe: DatePipe,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
   }
 
   ngOnInit() {
@@ -413,8 +413,8 @@ export class CustomerProfileComponent implements OnInit {
 
 
   deleteFile(filePath) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    let adminId = this.utilsService.getLoggedInUserID();
+    var path = '/itr/cloud/files?actionBy=' + adminId;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
@@ -663,7 +663,7 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   isApplicable(permissionRoles) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
   }
 
   setFilingDate() {

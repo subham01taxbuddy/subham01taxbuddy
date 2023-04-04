@@ -5,6 +5,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
+import {UtilsService} from "../../../../services/utils.service";
 
 @Component({
   selector: 'app-update-sme-notes',
@@ -12,7 +13,6 @@ import { ReviewService } from '../../services/review.service';
   styleUrls: ['./update-sme-notes.component.scss']
 })
 export class UpdateSmeNotesComponent implements OnInit {
-  userData: any;
   smeReviewForm: FormGroup;
   updateStatusForm: FormGroup;
   sentimentList = AppConstants.sentimentList;
@@ -24,9 +24,9 @@ export class UpdateSmeNotesComponent implements OnInit {
     private reviewService: ReviewService,
     private _toastMessageService: ToastMessageService,
     public dialogRef: MatDialogRef<UpdateSmeNotesComponent>,
+    private utilsService: UtilsService
 
   ) {
-    this.userData = JSON.parse(localStorage.getItem('UMD'));
 
   }
 
@@ -41,7 +41,7 @@ export class UpdateSmeNotesComponent implements OnInit {
       reviewSentiment: [this.data.leadData.reviewSentiment ? this.data.leadData.reviewSentiment : '', Validators.required],
       smeNotes: [this.data.leadData.smeNotes ? this.data.leadData.smeNotes : '', Validators.required],
       status: [this.data.leadData.status ? this.data.leadData.status : ''],
-      userId: [this.userData.USER_UNIQUE_ID],
+      userId: [this.utilsService.getLoggedInUserID()],
       smeId: [""],
     })
   }

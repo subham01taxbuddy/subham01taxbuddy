@@ -424,8 +424,8 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   saveInvoice() {
-    let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID);
+    let smeId = this.utilsService.getLoggedInUserID();
+    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeId);
     if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
       return;
     }
@@ -692,8 +692,8 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   updateAndSendInvoice() {
-    let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID);
+    let smeId = this.utilsService.getLoggedInUserID();
+    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeId);
     if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
       return;
     }

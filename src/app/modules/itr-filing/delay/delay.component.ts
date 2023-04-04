@@ -45,11 +45,11 @@ export class DelayComponent implements AfterContentChecked {
 
   // TODO
   getDelayedItrData(fy:any) {
-    const loggedInUserData = JSON.parse(localStorage.getItem('UMD')||'');
+    const loggedInUserId = this.utilsService.getLoggedInUserID();
     // let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
     let reqBody = {
       'financialYear': fy,
-      'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
+      'filingTeamMemberId': loggedInUserId
     }
     // this.itrMsService.getMethod(param).subscribe((res: any) => {
     let param = '/itr-search?page=0&size=20';

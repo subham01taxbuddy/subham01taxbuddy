@@ -55,7 +55,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       filter: true,
       floatingFilter: true
     };
-    this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
 
     if(this.router.getCurrentNavigation().extras.state) {
       this.mobileNumber = this.router.getCurrentNavigation().extras.state['mobileNumber'];
@@ -72,7 +72,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       currentPage: 1,
       totalItems: 0
     };
-    this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
   }
@@ -102,10 +102,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   getAgentList() {
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agents = result.data;
@@ -118,7 +119,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
-      this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     } else {
       this.selectedFilingTeamMemberId = event;
     }

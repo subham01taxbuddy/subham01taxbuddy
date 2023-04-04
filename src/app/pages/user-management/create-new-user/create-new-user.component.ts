@@ -21,11 +21,12 @@ export class CreateNewUserComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
-    private userService: UserMsService
+    private userService: UserMsService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
-    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
+    const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm = this.fb.group({
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
       firstName: ['', Validators.required],
@@ -54,7 +55,7 @@ export class CreateNewUserComponent implements OnInit {
       this.signUpForm.controls['agentUserId'].setValue(null);
       return;
     }
-    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
+    const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm.controls['agentUserId'].setValue(loggedInId);
   }
   userSignUp() {

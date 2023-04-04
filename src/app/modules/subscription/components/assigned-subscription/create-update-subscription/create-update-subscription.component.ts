@@ -333,7 +333,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   applyPromo(selectedPlan) {
     console.log('selectedPromoCode:', this.selectedPromoCode);
     this.smeSelectedPlanId = selectedPlan;
-    const smeInfo = JSON.parse(localStorage.getItem('UMD'));
     const param = `/subscription/recalculate`;
     const request = {
       userId: this.userSubscription.userId,
@@ -442,8 +441,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       }
       this.subscriptionAssigneeId.setValue(this.userSubscription.subscriptionAssigneeId);
       if (!this.utilsService.isNonEmpty(this.subscriptionAssigneeId.value)) {
-        const smeInfo = JSON.parse(localStorage.getItem('UMD'));
-        this.subscriptionAssigneeId.setValue(smeInfo.USER_UNIQUE_ID);
+        const smeId = this.utilsService.getLoggedInUserID();
+        this.subscriptionAssigneeId.setValue(smeId);
       }
 
        this.setFinalPricing();
@@ -554,7 +553,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   applySmeSelectedPlan(selectedPlan) {
     this.loading=true;
     this.smeSelectedPlanId = selectedPlan;
-    const smeInfo = JSON.parse(localStorage.getItem('UMD'));
     const param = '/subscription/recalculate';
     const request = {
       userId: this.userSubscription.userId,
@@ -728,7 +726,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     if (this.userSubscription.smeSelectedPlan !=null) {
       console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
       let param = '/subscription';
-      const smeInfo = JSON.parse(localStorage.getItem('UMD'));
       let reqBody = {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,

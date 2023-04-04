@@ -23,7 +23,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   initialData = {};
   statusList = [];
   // isDisable = true;
-  loggedInUserData: any;
+  loggedInUserRoles: any;
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
@@ -48,12 +48,12 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   ngOnInit() {
     // this.getStatus();
-    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
 
   }
 
   isApplicable(permissionRoles: any) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
   }
 
   closeDialog() {

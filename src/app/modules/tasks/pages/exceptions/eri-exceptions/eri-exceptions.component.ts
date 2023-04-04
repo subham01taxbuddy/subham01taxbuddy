@@ -47,7 +47,7 @@ export class EriExceptionsComponent implements OnInit {
       totalItems: 0
     };
     this.isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
-    this.selectedAgentUserId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+    this.selectedAgentUserId = this.utilsService.getLoggedInUserID();
     this.getEriExceptionList(this.selectedAgentUserId, 0);
   }
 
@@ -498,11 +498,6 @@ export class EriExceptionsComponent implements OnInit {
   fromSme(event) {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
-    // if (event === '') {
-    //   // this.selectedAgentUserId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
-    // } else {
-    //   this.selectedAgentUserId = event;
-    // }
     this.selectedAgentUserId = event;
     this.getEriExceptionList(this.selectedAgentUserId, this.selectedPageNo);
 
@@ -516,8 +511,8 @@ export class EriExceptionsComponent implements OnInit {
   }
 
   isApplicable(permissionRoles: any) {
-    let loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
-    this.isAgentList = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserData.USER_ROLE, permissionRoles);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    this.isAgentList = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, permissionRoles);
   }
 }
 

@@ -29,7 +29,7 @@ export class RoleUpdateComponent implements OnInit {
     // { label: 'ITR - Filer', value: 'ROLE_FILING_TEAM' }, // ITR Filer
     // { label: 'SME', value: 'ROLE_SME' }, // ITR Filer
 
-    // { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead 
+    // { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead
     // { label: 'GST - Super Lead', value: 'GST_SUPER_LEAD' }, // GST Super lead
     // { label: 'ITR - Team Lead', value: 'ITR_TEAM_LEAD' }, // ITR Team lead
     // { label: 'GST - Team Lead', value: 'GST_TEAM_LEAD' }, // GST Team lead
@@ -40,7 +40,6 @@ export class RoleUpdateComponent implements OnInit {
   // userId: number;
   noteDetails = new FormControl('', Validators.required);
   userRole: any = new FormControl([], Validators.required);
-  loggedInUserDetails: any;
   loading = false;
   constructor(public dialogRef: MatDialogRef<RoleUpdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
@@ -51,8 +50,6 @@ export class RoleUpdateComponent implements OnInit {
   ) {
     console.log('Selected UserID for notes',
       this.data.userId);
-    this.loggedInUserDetails = JSON.parse(localStorage.getItem('UMD') || '');
-    console.info('this.loggedInUserDetails:', this.loggedInUserDetails);
 
   }
 

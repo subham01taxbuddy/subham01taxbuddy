@@ -479,8 +479,8 @@ export class UtilsService {
         return [];
     }
     async getAgentList() {
-        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        const loggedInUserId = this.getLoggedInUserID();
+        const param = `/sme/${loggedInUserId}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -524,7 +524,6 @@ export class UtilsService {
     }
 
     getMyCallingNumber() {
-        // const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
         const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
         if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].mobileNumber))) {
             return loggedInSmeInfo[0].mobileNumber;
@@ -561,8 +560,8 @@ export class UtilsService {
         }
     }
     async getMyAgentList() {
-        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        const loggedInUserId = this.getLoggedInUserID();
+        const param = `/sme/${loggedInUserId}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -821,5 +820,24 @@ export class UtilsService {
         assesseeType = 'INDIVIDUAL';
       }
       return assesseeType;
+  }
+
+  getLoggedInUserID(){
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].userId))) {
+      return loggedInSmeInfo[0].userId;
+    }
+  }
+
+  getIdToken() {
+    let userData = JSON.parse(localStorage.getItem('UMD'));
+    return (userData) ? userData.id_token : null;
+  }
+
+  getUserRoles(){
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].roles))) {
+      return loggedInSmeInfo[0].roles;
+    }
   }
 }

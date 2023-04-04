@@ -84,10 +84,10 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   myItrsList(fy: String, pageNo) {
     this.loading = true;
     return new Promise((resolve, reject) => {
-      const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
+      const loggedInUserId = this.utilsService.getLoggedInUserID();
       let reqBody = {
         'financialYear': fy,
-        'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
+        'filingTeamMemberId': loggedInUserId
       }
       //https://uat-api.taxbuddy.com/itr/itr-search?page=0&size=20
       //let param = `${ApiEndpoints.itrMs.itrByFilingTeamMemberId}?filingTeamMemberId=${loggedInUserData.USER_UNIQUE_ID}`;/* ${loggedInUserData.USER_UNIQUE_ID} */
@@ -269,7 +269,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
           } else if (params.data.ackStatus === 'DELAY') {
             return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
             background: transparent; font-size: 16px; cursor:not-allowed;color: red">
-            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
+            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead"
             aria-hidden="true"></i>
            </button>`;
           } else {
@@ -361,13 +361,13 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
-            <i class="fa fa-circle" title="E-Verification is done" 
+            <i class="fa fa-circle" title="E-Verification is done"
             aria-hidden="true"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-check-circle" title="Click to check the latest E-verification status" 
+            <i class="fa fa-check-circle" title="Click to check the latest E-verification status"
             aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           }
