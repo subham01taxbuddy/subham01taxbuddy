@@ -435,6 +435,9 @@ export class UtilsService {
             smeList.sort((a, b) => a.name > b.name ? 1 : -1)
             return smeList;
         } else {
+            if(!this.getLoggedInUserID()){
+              return [];
+            }
             let res: any = await this.getSmeList().catch(error => {
                 this.loading = false;
                 console.log(error);
@@ -464,6 +467,9 @@ export class UtilsService {
             agentList.sort((a, b) => a.name > b.name ? 1 : -1)
             return agentList;
         } else {
+          if(!this.getLoggedInUserID()){
+            return [];
+          }
             let res: any = await this.getAgentList().catch(error => {
                 this.loading = false;
                 console.log(error);
