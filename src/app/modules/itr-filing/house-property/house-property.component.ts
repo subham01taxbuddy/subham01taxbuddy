@@ -418,10 +418,10 @@ export class HousePropertyComponent implements OnInit {
   addHousingIncome() {
     // ASHISH HULWAN because of new view changes changes the below values as per need
     // this.housingView = 'INITIAL';
-  if(this.isSelfOccupied >= this.maxSopAllowed){
-        this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
-         return;
-  }
+  // if(this.isSelfOccupied >= this.maxSopAllowed){
+  //       this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
+  //        return;
+  // }
     this.hpView = 'FORM';
     // this.housingView = 'FORM';
     this.mode = 'ADD';
@@ -716,7 +716,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   maxSopAllowed = 2;
-  saveHouseProperty(view) {
+  saveHouseProperty(view,mode='ADD') {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -742,10 +742,6 @@ export class HousePropertyComponent implements OnInit {
     }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
 
-    // if(this.isSelfOccupied >= this.maxSopAllowed){
-    //   this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
-    //   return;
-    // }
 
     if (
       this.housePropertyForm
@@ -811,6 +807,15 @@ export class HousePropertyComponent implements OnInit {
         this.Copy_ITR_JSON.houseProperties = [];
       }
       if (this.mode === 'ADD') {
+        if (this.isSelfOccupied >= this.maxSopAllowed) {
+          this.utilsService.showSnackBar(
+            'You cannot add more than ' +
+              this.maxSopAllowed +
+              ' self occupied properties'
+          );
+          return;
+        }
+
         this.Copy_ITR_JSON.houseProperties.push(hp);
       } else {
         this.Copy_ITR_JSON.houseProperties.splice(this.currentIndex, 1, hp);
