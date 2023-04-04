@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { Schedules } from 'src/app/modules/shared/interfaces/schedules';
+import {Location} from "@angular/common";
 
 // export class Schedules {
 //   public PERSONAL_INFO = 'PERSONAL_INFO';
@@ -84,6 +85,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     private userService: UserMsService,
     private toastMessage: ToastMessageService,
      private schedules: Schedules,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -113,7 +115,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     //    this.otherDetailsForm.patchValue(null);
     // }
 
-    this.updateIgstFlag();
     this.sourcesList = [
       {
         name: 'Salary',
@@ -145,7 +146,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       },
     ];
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    if(this.subscriptionObj == null){
+    if(this.subscriptionObj === null){
       this.getUserPlanInfo(this?.loggedInSme[0]?.userId)
       this.getAllPlanInfo(this.serviceType)
 
@@ -367,13 +368,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   getExactPromoDiscount() {
-    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
-      return this.userSubscription.smeSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
-    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-      return this.userSubscription.userSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
-    } else {
-      return 'NA'
-    }
+    return this.userSubscription.promoApplied.discountedAmount;
   }
 
   getConcessionsApplied(){
@@ -444,10 +439,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         const smeId = this.utilsService.getLoggedInUserID();
         this.subscriptionAssigneeId.setValue(smeId);
       }
-
-       this.setFinalPricing();
-       this.getConcessionsApplied();
-       this.totalConcession();
+      this.setFinalPricing();
+      this.getConcessionsApplied();
+      this.totalConcession();
     },
       error => {
         this.loading = false
@@ -455,6 +449,18 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
   }
 
+  setServiceDetails() {
+    this.service = this.serviceType;
+    this.changeService();
+    switch (this.serviceType) {
+      case 'ITR':
+        //set plan list for service details and selected plan as seletced detail
+        this.serviceDetail = this.userSubscription.smeSelectedPlan ?
+          this.userSubscription.smeSelectedPlan.name :
+          this.userSubscription.userSelectedPlan.name;
+        break;
+    }
+  }
 
   gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
@@ -466,6 +472,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         this.personalInfoForm.patchValue(this.selectedUserInfo); // all
         // this.otherDetailsForm.patchValue(this.selectedUserInfo);
         this.setFormValues(this.selectedUserInfo);
+        this.updateIgstFlag();
         if (this.utilsService.isNonEmpty(this.selectedUserInfo) && this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
           this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType)
           if (this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails.gstType) && this.selectedUserInfo.gstDetails.gstType === 'REGULAR') {
@@ -544,6 +551,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       } else {
         this.allPlans = [plans];
       }
+        this.setServiceDetails();
     },
       error => {
         console.log('Error during getting all plans: ', error)
@@ -569,6 +577,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         this.maxEndDate.setDate(this.maxEndDate.getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
       }
+      this.setServiceDetails();
       this.setFinalPricing();
       this.totalConcession();
       // this.selectedPlan()
@@ -589,34 +598,36 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   changeService() {
-    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR Filing' },
-    { service: 'GST Filing', details: 'GST Registration' },
-    { service: 'GST Filing', details: 'GST Annual Subscription' },
-    { service: 'GST Filing', details: 'GSTR Annual return' },
-    { service: 'GST Filing', details: 'GSTR Filing' },
-    { service: 'GST Filing', details: 'GST Notice' },
-    { service: 'GST Filing', details: 'Any other services' },
-    { service: 'Notice response', details: 'Defective Notice response u/s 139 (9)' },
-    { service: 'Notice response', details: 'Notice response and rectification  u/s 143 (1)' },
-    { service: 'Notice response', details: 'Notice response u/s 142 (1)' },
-    { service: 'Notice response', details: 'Notice response u/s 148' },
-    { service: 'Notice response', details: 'Notice e-proceeding response' },
-    { service: 'Notice response', details: 'Notice response u/s 143 (3)' },
-    { service: 'Notice response', details: 'Notice response to outstanding demand u/s 245' },
-    { service: 'Notice response', details: 'Any Other Notice' },
-    { service: 'TDS filing', details: 'TDS (26Q ) filing' },
-    { service: 'TDS filing', details: 'TDS (24Q ) filing' },
-    { service: 'TDS filing', details: 'TDS (27Q ) filing' },
-    { service: 'TDS filing', details: 'TDS Notice' },
-    { service: 'TDS filing', details: 'Any other services' },
+    const serviceArray = [
+    //   { service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR Filing' },
+    { service: 'GST', details: 'GST Registration' },
+    { service: 'GST', details: 'GST Annual Subscription' },
+    { service: 'GST', details: 'GSTR Annual return' },
+    { service: 'GST', details: 'GSTR Filing' },
+    { service: 'GST', details: 'GST Notice' },
+    { service: 'GST', details: 'Any other services' },
+    { service: 'NOTICE', details: 'Defective Notice response u/s 139 (9)' },
+    { service: 'NOTICE', details: 'Notice response and rectification  u/s 143 (1)' },
+    { service: 'NOTICE', details: 'Notice response u/s 142 (1)' },
+    { service: 'NOTICE', details: 'Notice response u/s 148' },
+    { service: 'NOTICE', details: 'Notice e-proceeding response' },
+    { service: 'NOTICE', details: 'Notice response u/s 143 (3)' },
+    { service: 'NOTICE', details: 'Notice response to outstanding demand u/s 245' },
+    { service: 'NOTICE', details: 'Any Other Notice' },
     { service: 'TPA', details: 'TPA' },
       { service: 'TPA', details: 'HNI' },
-    { service: 'Other Services', details: 'Accounting' },
+      { service: 'Other Services', details: 'TDS (26Q ) filing' },
+      { service: 'Other Services', details: 'TDS (24Q ) filing' },
+      { service: 'Other Services', details: 'TDS (27Q ) filing' },
+      { service: 'Other Services', details: 'TDS Notice' },
+      { service: 'Other Services', details: 'Any other services' },
+
+      { service: 'Other Services', details: 'Accounting' },
     { service: 'Other Services', details: 'TDS Registration' },
     { service: 'Other Services', details: 'TDS Filing' },
     { service: 'Other Services', details: 'ROC / Firm Registration' },
@@ -630,10 +641,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     { service: 'Other Services', details: 'PF / ESIC Registration' },
     { service: 'Other Services', details: 'Audit (Professional / Free Lancer' },
     { service: 'Other Services', details: 'Other Services' }];
-    this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
-    // if (this.service === "TPA") {
-    //   this.serviceDetail = "TPA";
-    // }
+
+    if (this.service === "ITR") {
+      this.serviceDetails = this.allPlans.map((item) => {
+        return { service: 'ITR', details:item.name  };
+      });
+    } else {
+      this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
+    }
   }
 
   // selectedPlan() {
@@ -649,8 +664,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     let param =`/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`
     this.userService.getMethod(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      this.filerName.setValue(result.data[0].name);
-      this.ownerName.setValue(result.data[0].parentName)
+      this.filerName.setValue(result.data[0]?.name);
+      this.ownerName.setValue(result.data[0]?.parentName)
     })
   }
 
