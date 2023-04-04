@@ -418,6 +418,10 @@ export class HousePropertyComponent implements OnInit {
   addHousingIncome() {
     // ASHISH HULWAN because of new view changes changes the below values as per need
     // this.housingView = 'INITIAL';
+  if(this.isSelfOccupied >= this.maxSopAllowed){
+        this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
+         return;
+  }
     this.hpView = 'FORM';
     // this.housingView = 'FORM';
     this.mode = 'ADD';
@@ -438,8 +442,7 @@ export class HousePropertyComponent implements OnInit {
 
 
     this.changePropType(
-      this.housePropertyForm.controls['propertyType'].value,
-      'EDIT'
+      this.housePropertyForm.controls['propertyType'].value,'EDIT'
     );
 
     this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[index]);
@@ -739,10 +742,10 @@ export class HousePropertyComponent implements OnInit {
     }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
 
-    if(this.isSelfOccupied >= this.maxSopAllowed){
-      this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
-      return;
-    }
+    // if(this.isSelfOccupied >= this.maxSopAllowed){
+    //   this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
+    //   return;
+    // }
 
     if (
       this.housePropertyForm
@@ -818,7 +821,7 @@ export class HousePropertyComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
-  isSelfOccupied = 1;
+  isSelfOccupied = 0;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
