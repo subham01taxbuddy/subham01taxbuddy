@@ -69,8 +69,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     };
     this.initForm();
     this.nonspecIncomeFormArray = new FormArray([]);
-    if (this.Copy_ITR_JSON.business.profitLossACIncomes) {
-      let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType === "NONSPECULATIVEINCOME");
+    if (this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
+      let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter((item: any) => item.businessType === "NONSPECULATIVEINCOME");
       if (data.length > 0) {
         let index = 0;
         data[0].incomes.forEach(item => {
@@ -232,10 +232,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       "incomes": this.nonspecIncomeFormArray.getRawValue(),
       "expenses": row.expenses,
     });
-    if (!this.Copy_ITR_JSON.business.profitLossACIncomes) {
+    if (!this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
       this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes
     } else {
-      let data = this.Copy_ITR_JSON.business.profitLossACIncomes.filter((item: any) => item.businessType != "NONSPECULATIVEINCOME");
+      let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter((item: any) => item.businessType != "NONSPECULATIVEINCOME");
       this.Copy_ITR_JSON.business.profitLossACIncomes = (data).concat(profitLossACIncomes)
     }
     console.log(this.Copy_ITR_JSON);
