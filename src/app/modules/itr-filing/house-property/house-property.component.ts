@@ -608,6 +608,18 @@ export class HousePropertyComponent implements OnInit {
   changePropType(type, mode?) {
     console.log(type);
     if (type === 'SOP') {
+      if (this.isSelfOccupied >= this.maxSopAllowed) {
+        this.utilsService.showSnackBar(
+          'You cannot add more than ' +
+            this.maxSopAllowed +
+            ' self occupied properties');
+            this.housePropertyForm.controls['loans'].disable();
+      //   for (var control in this.housePropertyForm.controls) {
+      //     this.housePropertyForm.controls[control].disable();
+      // }
+      // this.housePropertyForm.disable();
+        return;
+      }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
@@ -807,14 +819,6 @@ export class HousePropertyComponent implements OnInit {
         this.Copy_ITR_JSON.houseProperties = [];
       }
       if (this.mode === 'ADD') {
-        if (this.isSelfOccupied >= this.maxSopAllowed) {
-          this.utilsService.showSnackBar(
-            'You cannot add more than ' +
-              this.maxSopAllowed +
-              ' self occupied properties'
-          );
-          return;
-        }
 
         this.Copy_ITR_JSON.houseProperties.push(hp);
       } else {
