@@ -11,7 +11,7 @@
 
       <div class="card" style="background: #ffffff">
         <form [formGroup]="immovableForm">
-          <div style="padding-top: 25px">
+          <div class="spBlw">
             <span class="sectionTitle"
               >Add details of capital gain from Land / Building /
               Property?</span
@@ -32,16 +32,8 @@
             >
           </div>
 
-          <div class="card" formArrayName="assetDetails">
-            <div
-              style="padding: 25px"
-              class="card__row"
-              *ngFor="
-                let asset of getAssetDetailsArrayForImmovable.controls;
-                let i = index
-              "
-              [formGroupName]="i"
-            >
+          <div class="card" formArrayName="assetDetails" class="inpSp">
+            <div *ngFor="let asset of getAssetDetailsArrayForImmovable.controls; let i = index" [formGroupName]="i">
               <div class="card__col-lg-4">
                 <mat-label>Date of Acquisition</mat-label>
                 <mat-form-field appearance="outline">
@@ -280,9 +272,11 @@
 
         <div class="card cardYes" formArrayName="improvement" *ngIf="isImprovements.value">
           <div class="card__row" *ngFor="let improve of getImprovementsArrayForImmovable.controls;let i=index" [formGroupName]="i">
-
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-label><mat-checkbox name="improve[i]" formControlName="selected"></mat-checkbox>Year Of Improvement</mat-label>
+            <div class="col-lg-12 col-md-12 col-sm-12"> 
+            <mat-checkbox name="improve[i]" formControlName="selected"></mat-checkbox>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">              
+              <mat-label>Year Of Improvement</mat-label>
               <mat-form-field class="input-field-width">
                 <mat-select placeholder="Year of Improvement" name="improve[i]" formControlName="dateOfImprovement"
                             required>
@@ -554,9 +548,11 @@
               <div class="cardYes" *ngFor="let buyer of getBuyersDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
 
                 <div class="card__row">
+                  <div class="col-lg-12 col-md-12 col-sm-12">
+                  <mat-checkbox name="buyer[i]" formControlName="selected"></mat-checkbox>
+                  </div>
                   <div class="card__col-xs-12 card__col-sm-3">
-
-                    <mat-label><mat-checkbox name="buyer[i]" formControlName="selected"></mat-checkbox>PAN</mat-label>
+                    <mat-label>PAN</mat-label>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase
                              required trim
