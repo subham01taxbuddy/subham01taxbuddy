@@ -18,8 +18,12 @@ section {
 /* Css updates 02 Apr 2023 */
 .card {
   padding:30px;
-  margin-top:50px;
+  /* margin-top:50px; */
 }
+
+.spBlw {
+  margin-bottom:150px!important;
+ }
 /* Css updates 02 Apr 2023 */
 
 

@@ -398,6 +398,7 @@ button {
   border-top: 1px solid #cccccc;
   padding-top: 5px;
 }
+
 .lgtBtn {
   margin-left: 17%;
   background-color: #ffffff;
@@ -521,7 +522,7 @@ button {
 .txHd {
   font-weight: bold;
   font-size: 18px;
-  width: 73%;
+  /* width: 73%; */
 }
 
 .dis_btn {
