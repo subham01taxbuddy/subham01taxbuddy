@@ -64,7 +64,7 @@ export const MY_FORMATS = {
 })
 export class LabFormComponent implements OnInit {
   @Output() cancelForm = new EventEmitter<any>();
-
+  disableFutureDates: any;
   loading = false;
   improvementYears = [];
   stateDropdown = AppConstants.stateDropdown;
@@ -1193,6 +1193,10 @@ export class LabFormComponent implements OnInit {
       this.immovableForm.controls['deductions'] as FormArray
     ).controls[index] as FormGroup;
 
+    const assetDetails = (
+      this.immovableForm.controls['assetDetails'] as FormArray
+    ).controls[index] as FormGroup;
+
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC'
@@ -1202,6 +1206,26 @@ export class LabFormComponent implements OnInit {
         Validators.pattern(AppConstants.amountWithoutDecimal),
       ]);
       deductionForm.controls['costOfNewAssets'].updateValueAndValidity();
+      const disableFutureDates = (date: Date): boolean => {
+        // Get the sell date from the assetDetails form group
+        const sellDate = new Date(assetDetails.controls['sellDate'].value);
+
+        // Calculate the min date (the sellDate plus one day)
+        const minDate = new Date(sellDate);
+        minDate.setDate(sellDate.getDate() - 1);
+
+        // Calculate the max date (6 months after the sellDate)
+        const maxDate = new Date(sellDate);
+        maxDate.setDate(sellDate.getDate() + 1);
+        maxDate.setMonth(maxDate.getMonth() + 6);
+
+        // Enable dates between the sellDate plus one day and 6 months after the sellDate,
+        // and disable all other dates
+        return date > minDate && date < maxDate;
+      };
+
+      // Set the matDatepickerFilter to the disableFutureDates function
+      this.disableFutureDates = disableFutureDates;
     } else {
       if (ref === 'HTML') {
         deductionForm.controls['investmentInCGAccount'].setValue(null);
@@ -1211,6 +1235,7 @@ export class LabFormComponent implements OnInit {
         ].updateValueAndValidity();
       }
     }
+
     // this.setTotalDeductionValidation();
     this.calculateDeduction(index);
   }
