@@ -333,7 +333,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -344,7 +344,7 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -402,7 +402,7 @@ export class AssignedNewUsersComponent implements OnInit {
           }
           return 'NA'
         },
-        width: 50,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -414,7 +414,7 @@ export class AssignedNewUsersComponent implements OnInit {
       },
       {
         headerName: 'Actions',
-        width: 50,
+        width: 68,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -513,7 +513,7 @@ export class AssignedNewUsersComponent implements OnInit {
           }
           return 'NA'
         },
-        width: 50,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -602,7 +602,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
-        width: 50,
+        width: 55,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

@@ -4,11 +4,27 @@
 
 .ag-theme-balham {
   font-family: Poppins !important;
+  margin: -35px 0px 10px 0px !important;
 }
 
 .ag-theme-balham .ag-root {
   min-height: 82px !important;
 }
+
+.ag-theme-balham .ag-header-cell, .ag-theme-balham .ag-header-group-cell {
+  padding-left: 0px;
+  padding-right: 12px;
+}
+
+.ag-header-cell-label .ag-header-cell-text {
+  white-space: normal !important;
+  padding-left: 10px;
+}
+
+.ag-header {
+  height: 50px!important;
+  padding-top:5px!important;
+  }
 
 .ag-root-wrapper-body.ag-layout-normal {
   flex: 1 1 auto;
@@ -296,6 +312,9 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.ngx-pagination {
+  margin-left: -35px!important;
+}
 .delete-btn {
   background: #FFE1E1;
   border: 1px solid #E20000;
