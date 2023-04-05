@@ -14,8 +14,6 @@ import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { environment } from 'src/environments/environment';
-import { MatomoService } from 'src/app/services/matomo.service';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 declare let $: any;
 
@@ -40,8 +38,7 @@ export class LoginComponent implements OnInit {
     private userMsService: UserMsService,
     private dialog: MatDialog,
     public utilsService: UtilsService,
-    private storageService: StorageService,
-    private matomoService:MatomoService
+    private storageService: StorageService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
   }
@@ -60,16 +57,17 @@ export class LoginComponent implements OnInit {
         this.getFyList();
         this.getAgentList();
 
-        if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['/tasks/assigned-users']);
-        } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => userData.USER_ROLE.includes(item))) {
-          this.router.navigate(['/tasks/assigned-users']);
-        } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
-          this.router.navigate(['pages/tpa-interested']);
-        } else {
-          if (userData.USER_ROLE.length > 0)
-            this._toastMessageService.alert("error", "Access Denied.");
-        }
+        this.getSmeInfoDetails(userData.userId);
+        // if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
+        //   this.router.navigate(['/tasks/assigned-users']);
+        // } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => userData.USER_ROLE.includes(item))) {
+        //   this.router.navigate(['/tasks/assigned-users']);
+        // } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
+        //   this.router.navigate(['pages/tpa-interested']);
+        // } else {
+        //   if (userData.USER_ROLE.length > 0)
+        //     this._toastMessageService.alert("error", "Access Denied.");
+        // }
       }
     }).catch(e => {
       console.log('Auth.current session catch error:', e);
@@ -88,7 +86,6 @@ export class LoginComponent implements OnInit {
           userId: 0
         }
         this.setUserDataInsession(res, temp);
-        this.matomoService.trackMatomoEvents('/login','SIGNIN');         
         if (res.attributes['custom:user_type'] && res.attributes['custom:user_type'] === 'MIGRATED') {
           this.updateCognitoId(res);
         } else {
@@ -167,21 +164,14 @@ export class LoginComponent implements OnInit {
     this.getFyList();
     this.getAgentList();
     this.getSmeInfoDetails(jhi.userId);
-    if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
-      this.router.navigate(['/tasks/assigned-users']);
-      this.utilsService.logAction(jhi.userId, 'login')
-      // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-      //   this.router.navigate(['/pages/dashboard/calling/calling2']);
-      //   this.utilsService.logAction(jhi.userId, 'login')
-      // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
-      //   this.router.navigate(['pages/tpa-interested']);
-      //   this.utilsService.logAction(jhi.userId, 'login')
-    } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => jhi.role.includes(item))) {
-      this.router.navigate(['/tasks/assigned-users']);
-    } else {
-      if (jhi.role.length > 0)
-        this._toastMessageService.alert("error", "Access Denied.");
-    }
+    this.getDueDateDetails();
+
+  }
+  getDueDateDetails() {
+    //https://uat-api.taxbuddy.com/itr/due-date
+    this.utilsService.getDueDateDetails().subscribe((result: any) => {
+      sessionStorage.setItem('itrFilingDueDate', result.data.itrFilingDueDate);
+    });
   }
 
   sendOtpOnWhatapp(values: any) {
@@ -220,15 +210,127 @@ export class LoginComponent implements OnInit {
   }
 
   getSmeInfoDetails(userId) {
+    if(!userId) {
+      return;
+    }
     this.loading = true;
-    const param = `/sme/info?userId=${userId}`;
+    //https://dev-api.taxbuddy.com/user/sme-details-new/1?smeUserId=1
+    const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
-      sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+      if (res.success) {
+        sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+        setTimeout(() => {
+          this.InitChat();
+        }, 2000);
+
+        let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
+          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
+        let roles = res.data[0]?.roles;
+        if (roles.indexOf("ROLE_ADMIN") !== -1) {
+          this.router.navigate(['/tasks/assigned-users-new']);
+          this.utilsService.logAction(userId, 'login');
+          // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
+          //   this.router.navigate(['/pages/dashboard/calling/calling2']);
+          //   this.utilsService.logAction(jhi.userId, 'login')
+          // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
+          //   this.router.navigate(['pages/tpa-interested']);
+          //   this.utilsService.logAction(jhi.userId, 'login')
+        } else if (allowedRoles.some(item => roles.includes(item))) {
+          this.router.navigate(['/tasks/assigned-users-new']);
+        } else {
+          if (roles.length > 0)
+            this._toastMessageService.alert("error", "Access Denied.");
+        }
+      }
     }, error => {
       this.loading = false;
     })
   }
+
+  InitChat() {
+    if ((window as any).Kommunicate) {
+      (window as any).Kommunicate.logout();
+    }
+    const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    const loginSMEInfo = data[0];
+
+    (function (d, m) {
+      var kommunicateSettings =
+      {
+        "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
+        "popupWidget": true,
+        "automaticChatOpenOnNavigation": true,
+        'userId': loginSMEInfo['userId'],
+
+        "onInit": function () {
+          var chatContext = {
+            'userName': loginSMEInfo['name'],
+            'email': loginSMEInfo['email'],
+            'contactNumber': loginSMEInfo['mobileNumber'],
+          };
+
+          const userDetail = {
+            email: loginSMEInfo['email'],
+            phoneNumber: loginSMEInfo['mobileNumber'],
+            displayName: loginSMEInfo['name'],
+            userId: loginSMEInfo.userId,
+            password: '',
+            metadata: {
+              'userId': loginSMEInfo.userId,
+              'contactNumber': loginSMEInfo.mobileNumber,
+              'email': loginSMEInfo['email'],
+              'Platform': 'Website'
+            }
+          };
+          (window as any).Kommunicate.updateChatContext(chatContext);
+
+          (window as any).Kommunicate.updateUser(userDetail);
+        }
+      };
+      var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+      s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+      var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+      (window as any).kommunicate = m; m._globals = kommunicateSettings;
+    })(document, (window as any).kommunicate || {});
+
+    setTimeout(() => {
+      this.loadChat();
+    }, 2000);
+  }
+
+  loadChat() {
+    const waitForGlobal = function (key, callback) {
+      if (window[key]) {
+        callback();
+      } else {
+        setTimeout(function () {
+          waitForGlobal(key, callback);
+        }, 1000);
+      }
+    };
+
+    waitForGlobal('Kommunicate', function () {
+      var defaultSettings = {
+        'defaultBotIds': '3eb13dbd656feb3acdbdf650efbf437d1',
+        "skipRouting": true
+      };
+
+      (window as any).Kommunicate.displayKommunicateWidget(true);
+      const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+      const loginSMEInfo = data[0];
+      var css = "#km-faq{display:none!important;}";
+      (window as any).Kommunicate.customizeWidgetCss(css);
+
+      (window as any).Kommunicate.updateSettings(defaultSettings);
+      // (window as any).Kommunicate.startConversation(defaultSettings, function (response) {
+      //         console.log("new conversation created");
+      //     });
+
+
+    });
+  }
+
 
   mode: string = 'SIGN_IN';
   username: string = '';

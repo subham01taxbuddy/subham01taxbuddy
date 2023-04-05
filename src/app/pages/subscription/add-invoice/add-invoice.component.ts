@@ -9,7 +9,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 
 export const MY_FORMATS = {
@@ -425,8 +424,8 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   saveInvoice() {
-    let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID);
+    let smeId = this.utilsService.getLoggedInUserID();
+    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeId);
     if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
       return;
     }
@@ -693,8 +692,8 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   updateAndSendInvoice() {
-    let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID);
+    let smeId = this.utilsService.getLoggedInUserID();
+    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeId);
     if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
       return;
     }

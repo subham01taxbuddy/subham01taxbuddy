@@ -7,12 +7,14 @@ import { FilingsComponent } from './pages/filings/filings.component';
 import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-exceptions.component';
 import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
 import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
+import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new-users.component";
 
 const routes: Routes = [
     {
         path: '', component: TasksComponent,
         children: [
             { path: 'assigned-users', component: AssignedUsersComponent },
+            { path: 'assigned-users-new', component: AssignedNewUsersComponent },
             { path: 'schedule-call', component: ScheduledCallComponent },
             { path: 'filings', component: FilingsComponent },
             // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
@@ -24,7 +26,7 @@ const routes: Routes = [
                     { path: '', redirectTo: 'signup', pathMatch: 'full' }
                 ]
             },
-            { path: '', redirectTo: '/tasks/assigned-users', pathMatch: 'full' }
+            { path: '', redirectTo: '/tasks/assigned-users-new', pathMatch: 'full' }
         ]
     },
 ];

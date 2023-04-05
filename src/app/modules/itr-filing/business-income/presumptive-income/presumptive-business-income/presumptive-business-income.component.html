@@ -1,0 +1,79 @@
+<div style="overflow: hidden;">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+    <div class="card__row" style="margin-bottom: 10px; margin-top :10px;
+    margin-left: 20px; margin-right: 15px;">
+        <div class="">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <b style="font-size: 14px;">Business Income 44AD </b>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-5" style="text-align: right;">
+                <button class="tbd-btn-small" style="text-align: right;"
+                    (click)="addBusinessRow('ADD', businessData)">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    Add More Business&nbsp;&nbsp;
+                </button>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-1" style="text-align: right;">
+              <button class="tbd-btn-small" style="text-align: right;"
+                  (click)="editBusinessRow('EDIT', businessData)" [disabled]="this.selection.selected.length > 1 || this.selection.selected.length === 0">
+                        Edit&nbsp;&nbsp;
+              </button>
+          </div>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-12">
+          <table class="table-income" style="width: 100%">
+            <thead>
+              <tr>
+                <th class="regular-td" [colSpan]="3" style="text-align: center"></th>
+                <th class="regular-td" [colSpan]="2" style="text-align: center">
+                  Gross turnover of the year- Received in Bank
+                </th>
+                <th class="regular-td" [colSpan]="2" style="text-align: center">
+                  Gross turnover of the year- Received in Other Mode
+                </th>
+              </tr>
+              <tr>
+                <th class="regular-td"><mat-checkbox (change)="$event ? masterToggle() : null"
+                                                     [checked]="selection.hasValue() && isAllSelected()"
+                                                     [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox></th>
+                <th class="regular-td"> Nature Of Business </th>
+                <th class="regular-td"> Trade Name </th>
+                <th class="regular-td">Reciept In Bank</th>
+                <th class="regular-td">Presumptive Income (6%)  </th>
+                <th class="regular-td">Reciept In Other Mode</th>
+                <th class="regular-td">Presumptive Income (8%)  </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let business of businessArray; let i=index">
+                <td class="regular-td"><mat-checkbox  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(business) : null"
+                  [checked]="selection.isSelected(business)" >
+                  </mat-checkbox></td>
+                <td class="label-td">{{getBusinessName(business)}}</td>
+                <td class="regular-td">{{business.tradeName}}</td>
+                <td class="regular-td">{{getByBank(business,'BANK','receipts')}}</td>
+                <td class="regular-td">{{getByBank(business,'BANK','presumptiveIncome')}}</td>
+                <td class="regular-td">{{getByCash(business,'CASH','receipts')}}</td>
+                <td class="regular-td">{{getByCash(business,'CASH','presumptiveIncome')}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="container">
+            <div>
+                <button mat-raised-button color="primary" (click)="removeSelectedRows()">
+                 Delete
+                </button>
+             </div>
+          </div>
+        </div>
+    </div>
+</div>
+<div style="text-align: center;">
+    <!-- <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+        &nbsp;&nbsp;Back</button> -->
+    <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Save </button>
+</div>

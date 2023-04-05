@@ -13,10 +13,10 @@ import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { FilingStatusDialogComponent } from 'src/app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { ReviseReturnDialogComponent } from 'src/app/pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e-verification-dialog/e-verification-dialog.component';
+import { FilingStatusDialogComponent } from 'src/app/modules/itr-filing/filing-status-dialog/filing-status-dialog.component';
+import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 
 @Component({
   selector: 'app-filings',
@@ -55,14 +55,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       filter: true,
       floatingFilter: true
     };
-    this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
 
     if(this.router.getCurrentNavigation().extras.state) {
       this.mobileNumber = this.router.getCurrentNavigation().extras.state['mobileNumber'];
       console.log(this.router.getCurrentNavigation().extras.state);
-      this.search();  
+      this.search();
     }
-    
+
   }
 
   ngOnInit() {
@@ -72,7 +72,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       currentPage: 1,
       totalItems: 0
     };
-    this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
   }
@@ -93,19 +93,20 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       },
       {
         'statusId' : 'ALL',
-        'statusName' : 'All'//Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed 
+        'statusName' : 'All'//Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed
       }
     ];
     if(!this.mobileNumber) {
       this.selectedStatusId = this.itrStatus[2].statusId;
-    } 
+    }
   }
 
   getAgentList() {
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agents = result.data;
@@ -118,7 +119,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
-      this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     } else {
       this.selectedFilingTeamMemberId = event;
     }
@@ -173,7 +174,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log(event);
     if(!this.mobileNumber) {
       this.myItrsList(event, this.selectedPageNo, this.selectedFilingTeamMemberId);
-    } 
+    }
   }
 
   createOnSalaryRowData(data) {
@@ -310,13 +311,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           if (params.data.eFillingCompleted && params.data.ackStatus === 'SUCCESS') {
             return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: green">
-            <i class="fa fa-check" title="ITR filed successfully / Click to start revise return" 
+            <i class="fa fa-check" title="ITR filed successfully / Click to start revise return"
             aria-hidden="true" data-action-type="startRevise"></i>
            </button>`;
           } else if (params.data.ackStatus === 'DELAY') {
             return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
             background: transparent; font-size: 16px; color: red">
-            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
+            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead"
             aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           } else {
@@ -408,13 +409,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
-            <i class="fa fa-circle" title="E-Verification is done" 
+            <i class="fa fa-circle" title="E-Verification is done"
             aria-hidden="true"  data-action-type="lifeCycle"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-check-circle" title="Click to check the latest E-verification status" 
+            <i class="fa fa-check-circle" title="Click to check the latest E-verification status"
             aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           }
@@ -588,13 +589,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/itr'], { 
-        state: { 
-          userId: data.userId, 
-          panNumber: data.panNumber, 
-          eriClientValidUpto: data?.eriClientValidUpto, 
-          name: data?.fName + ' ' + data?.lName 
-        } 
+    this.router.navigate(['/itr-filing/itr'], {
+        state: {
+          userId: data.userId,
+          panNumber: data.panNumber,
+          eriClientValidUpto: data?.eriClientValidUpto,
+          name: data?.fName + ' ' + data?.lName
+        }
       });
     // if (data.statusId !== 11) {
     //   this.router.navigate(['/eri'], {
@@ -632,13 +633,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/itr'], { 
-          state: { 
-            userId: data.userId, 
-            panNumber: data.panNumber, 
-            eriClientValidUpto: data?.eriClientValidUpto, 
-            name: data?.fName + ' ' + data?.lName 
-          } 
+        this.router.navigate(['/itr-filing/itr'], {
+          state: {
+            userId: data.userId,
+            panNumber: data.panNumber,
+            eriClientValidUpto: data?.eriClientValidUpto,
+            name: data?.fName + ' ' + data?.lName
+          }
         });
       }
       console.log('The dialog was closed', result);

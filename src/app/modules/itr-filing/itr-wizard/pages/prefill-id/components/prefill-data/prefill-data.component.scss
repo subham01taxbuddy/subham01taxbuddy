@@ -1,0 +1,28 @@
+.headline {
+  font-size: 21px;
+  /* text-decoration: underline; */
+  padding-left: 10px;
+}
+
+.RequestOtp {
+  margin-bottom: 25px;
+}
+
+.card {
+  padding: 35px;
+}
+
+.downloadJson {
+  padding: 50px;
+  flex-direction: row;
+  margin-bottom: 44px;
+}
+
+.enterOtp {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  justify-content: space-between;
+  align-items: start;
+  width: 63%;
+}

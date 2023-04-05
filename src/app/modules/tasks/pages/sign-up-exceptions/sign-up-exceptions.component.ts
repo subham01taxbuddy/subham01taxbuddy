@@ -45,7 +45,7 @@ export class SignUpExceptionsComponent implements OnInit {
       totalItems: 0
     };
 
-    this.selectedAgentUserId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+    this.selectedAgentUserId = this.utilsService.getLoggedInUserID();
     this.getSignUpExceptionList(this.selectedAgentUserId, 0);
   }
 
@@ -509,7 +509,7 @@ export class SignUpExceptionsComponent implements OnInit {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
-      this.selectedAgentUserId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      this.selectedAgentUserId = this.utilsService.getLoggedInUserID();
     } else {
       this.selectedAgentUserId = event;
     }

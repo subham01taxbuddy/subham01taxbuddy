@@ -1,0 +1,68 @@
+<h1 mat-dialog-title> Investment details</h1>
+
+<mat-dialog-content>
+  <form [formGroup]="investmentForm">
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <mat-select placeholder="Investment Under Section" name="underSection" formControlName="underSection">
+            <mat-option value="54F"> 54F </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <mat-select placeholder="Type Of Asset" name="assetType" [(ngModel)]="assetType" [ngModelOptions]=" 
+             {standalone: true}">
+            <mat-option value="EQUITY_SHARES_LISTED"> Listed (LTCG) </mat-option>
+            <mat-option value="EQUITY_SHARES_UNLISTED"> Unlisted (LTCG) </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div> -->
+    </div>
+
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field>
+          <input matInput formControlName="purchaseDate" readonly name="purchaseDate" [matDatepicker]="purchaseDate"
+            placeholder="Date of Purchase">
+          <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+          <mat-datepicker #purchaseDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <input matInput digitsOnly formControlName="costOfNewAssets" placeholder="Cost of New Asset"
+            name="costOfNewAssets" class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <mat-error *ngIf="investmentForm.controls['costOfNewAssets'].hasError('pattern')">Enter
+            valid amount.</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <input matInput currencyMask digitsOnly formControlName="investmentInCGAccount"
+            placeholder="Amount Deposited in CGAS" name="investmentInCGAccount" class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <mat-error *ngIf="investmentForm.controls['investmentInCGAccount'].hasError('pattern')">Enter
+            valid amount.</mat-error>
+        </mat-form-field>
+      </div>
+      <!-- <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <input matInput currencyMask digitsOnly formControlName="totalDeductionClaimed" [hidden]="true"
+            placeholder="Deduction Claimed" name="totalDeductionClaimed" class="input-field" maxlength="14" [disabled]="true"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <mat-error *ngIf="investmentForm.controls['totalDeductionClaimed'].hasError('pattern')">Enter
+            valid amount.</mat-error>
+        </mat-form-field>
+      </div> -->
+    </div>
+    <div class="row dialog-button">
+      <div class="sub_btn top-space">
+        <button type="submit" class="tbd-btn" (click)="saveInvestments()">Save</button>
+        <button class="tbd-btn-secondary" (click)="cancelInvestments()" mat-dialog-close>Cancel</button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

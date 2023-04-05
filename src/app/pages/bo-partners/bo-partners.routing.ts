@@ -3,12 +3,11 @@ import { BoPartnersComponent } from './bo-partners.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: BoPartnersComponent,
+    path: '', component: BoPartnersComponent,
     children: [
-      { path: '', redirectTo: '/pages/bo-partners', pathMatch: 'full' },
-    ],
-  },
+      { path: '', redirectTo: '/bo-partners', pathMatch: 'full'}
+    ]
+},
 ];
 
 export const BoPartnersRoutes = RouterModule.forChild(routes);

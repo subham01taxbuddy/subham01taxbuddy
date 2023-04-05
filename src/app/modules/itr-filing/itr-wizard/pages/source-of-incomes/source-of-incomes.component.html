@@ -1,0 +1,39 @@
+<div
+  class="mx-auto text-gray-900 font-normal grid grid-rows-[auto,1fr] scrollbar-hide"
+  id="layout"
+>
+  <!-- main-body  -->
+  <div
+    class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pb-[28px] h-screen"
+  >
+    <div class="box-background rounded-2x1">
+      <!-- sourcesOfIncome-content  -->
+      <div class="txHd alTxH">Select at least 1 sources of income:</div>
+      <div
+        class="flex items-center justify-between align-center p-[25px] mt-[25px]"
+      >
+        <div class="sources-back">
+          <!-- sources-of-income options  -->
+          <mat-chip-list
+            class="sources-chip"
+            multiple
+            (change)="sourcesUpdated($event)"
+          >
+            <mat-chip
+              disableRipple
+              *ngFor="let source of sourcesList"
+              (click)="sourcesUpdated(source)"
+              [selected]="source.selected"
+            >
+
+              {{ source.name }}
+
+              <i class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
+              <i class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

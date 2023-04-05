@@ -23,8 +23,8 @@ export class MoreOptionsDialogComponent implements OnInit {
   initialData = {};
   statusList = [];
   // isDisable = true;
-  loggedInUserData: any;
-  
+  loggedInUserRoles: any;
+
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
@@ -48,12 +48,12 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   ngOnInit() {
     // this.getStatus();
-    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
 
   }
 
   isApplicable(permissionRoles: any) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
   }
 
   closeDialog() {
@@ -97,7 +97,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToSubscription() {
-    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: this.data.mobileNumber } });
+    this.router.navigate(['/subscription/assigned-subscription'], { queryParams: { userMobNo: this.data.mobileNumber } });
     this.dialogRef.close();
   }
   goToCloud() {

@@ -1,0 +1,182 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">{{data.title}}</label>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close" (click)="this.dialogRef.close()"><i class="fa fa-times"
+    aria-hidden="true"></i></button>
+
+<ng-container>
+  <mat-dialog-content>
+    <form [formGroup]="sharesForm">
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
+              name="companyName" class="input-field" maxlength="125" required>
+            <mat-error *ngIf="sharesForm.controls['companyName'].hasError('required')">Enter the name of company.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <mat-select placeholder="Type of Company" (selectionChange)="addPanValidator()" name="typeOfCompany"
+              formControlName="typeOfCompany" required>
+              <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
+                {{ type.label}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="sharesForm.controls['typeOfCompany'].hasError('required')">Select the type of company.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company" name="companyPAN"
+              class="input-field" maxlength="10" [required]="sharesForm.controls['typeOfCompany'].value === 'D'">
+            <mat-error *ngIf="sharesForm.controls['companyPAN'].hasError('pattern')">Enter valid PAN number.</mat-error>
+            <mat-error *ngIf="sharesForm.controls['companyPAN'].hasError('required')">Enter PAN of the company.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card__row">
+        <!-- Opening -->
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input matInput formControlName="openingShares" placeholder="Opening No. of shares" name="openingShares"
+              class="input-field" maxlength="14" digitsOnly
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
+            <mat-error *ngIf="sharesForm.controls['openingShares'].hasError('required')">Enter no of opening shares.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input matInput formControlName="openingCOA" placeholder="Opening Cost of acquisition" name="openingCOA"
+              class="input-field" maxlength="14" digitsOnly
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
+            <mat-error *ngIf="sharesForm.controls['openingCOA'].hasError('required')">Enter cost of acquisition.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Opening End -->
+        <!-- Shares Aquired -->
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
+              name="acquiredShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
+            <mat-error *ngIf="sharesForm.controls['acquiredShares'].hasError('required')">Enter No. of shares acquired.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field>
+            <input matInput [min]="minPurchaseDate" readonly [max]="maxPurchaseDate" formControlName="purchaseDate"
+              name="purchaseDate" [matDatepicker]="purchaseDate" placeholder="Date of purchase" required>
+            <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+            <mat-datepicker #purchaseDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="faceValuePerShare" placeholder="Face value per share"
+              name="faceValuePerShare" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
+            <mat-error *ngIf="sharesForm.controls['faceValuePerShare'].hasError('required')">Enter face value per share.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="issuePricePerShare" placeholder="Issue price per share"
+              name="issuePricePerShare" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" required (blur)="setIssueOrPurchase('I')">
+            <mat-error *ngIf="sharesForm.controls['issuePricePerShare'].hasError('required')">Enter issue price per
+              share.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="purchasePricePerShare" placeholder="Purchase price per share"
+              name="purchasePricePerShare" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required
+              (blur)="setIssueOrPurchase('P')">
+            <mat-error *ngIf="sharesForm.controls['purchasePricePerShare'].hasError('required')">Enter Purchase price
+              per share.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Shares Quired End -->
+        <!-- Shares Transferred -->
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="transferredShares" placeholder="No. of shares transferred"
+              name="transferredShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57"
+              [required]="sharesForm.controls['saleConsideration'].value">
+            <mat-error *ngIf="sharesForm.controls['transferredShares'].hasError('required')">Enter No. of shares
+              transferred.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="saleConsideration" placeholder="Sale consideration"
+              name="saleConsideration" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+              [required]="sharesForm.controls['transferredShares'].value">
+            <mat-error *ngIf="sharesForm.controls['saleConsideration'].hasError('required')">Enter sale consideration.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Shares Transferred End -->
+      <!-- Closing -->
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="closingShares" placeholder="Closing no of shares"
+              name="closingShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
+            <mat-error *ngIf="sharesForm.controls['closingShares'].hasError('required')">Enter closing no. of shares.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input digitsOnly matInput formControlName="closingCOA" placeholder="Closing cost of acquisition"
+              name="closingCOA" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
+            <mat-error *ngIf="sharesForm.controls['closingCOA'].hasError('required')">Enter Closing cost of acquisition.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Closing End -->
+
+      <!-- <div class="sub_btn">
+        <button type="submit" class="btn save" (click)="saveShareDetials()">Save</button>
+        <button type="button" class="btn cancel" (click)="dialogRef.close()">Cancel</button>
+      </div> -->
+      <div class="pull-right">
+        <button class="tbd-btn" (click)="saveShareDetials()">Save </button>
+        <button class="tbd-btn-secondary" mat-dialog-close (click)="this.dialogRef.close()">Cancel</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</ng-container>

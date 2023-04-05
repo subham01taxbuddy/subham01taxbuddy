@@ -51,9 +51,9 @@
                                 <mat-form-field class="input-field-width">
                                     <mat-select placeholder="expense Type" formControlName="expenseType"
                                         name="expenseType" (selectionChange)="changed()">
-                                        <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
+                                        <mat-option *ngFor="let type of expenseTypeList" [value]="type.value"
                                             [disabled]="type.disabled">
-                                            {{type.value}}
+                                            {{type.key}}
                                         </mat-option></mat-select>
                                     <!-- <mat-error *ngIf="expense.controls[i]['expenseType'].hasError('required')">Please
                                         enter
@@ -61,12 +61,12 @@
                                 </mat-form-field>
                             </div>
                             <div class="card__col-xs-12 card__col-sm-3">
-                                <div *ngIf="expense.controls['expenseType'].value !='OTHER_EXPENSES'"> &nbsp;</div>
-                                <div *ngIf="expense.controls['expenseType'].value =='OTHER_EXPENSES'">
+                                <div *ngIf="expense.controls['expenseType'].value !='Other Expenses'"> &nbsp;</div>
+                                <div *ngIf="expense.controls['expenseType'].value =='Other Expenses'">
                                     <mat-form-field class="input-field-width">
                                         <input matInput class="input-field" placeholder="description"
                                             formControlName="description" maxlength="14"
-                                            [required]="expense.controls['expenseType'].value =='OTHER_EXPENSES'">
+                                            [required]="expense.controls['expenseType'].value =='Other Expenses'">
                                     </mat-form-field>
                                 </div>
                             </div>

@@ -7,6 +7,8 @@ import { DirectCallingComponent } from '../direct-calling/direct-calling.compone
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { KnowlarityNotificationComponent } from '../knowlarity-notification/knowlarity-notification.component';
 import { AppConstants } from '../../constants';
+import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-layout',
@@ -20,14 +22,16 @@ export class LayoutComponent implements OnInit {
   showNotification: boolean = false;
   routePath: any;
   updatedChat: any;
-
+  urlSafe: any;
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private userService: UserMsService,
     private ngZone: NgZone,
-    private matBottomSheet: MatBottomSheet
+    private matBottomSheet: MatBottomSheet,
+    public sanitizer: DomSanitizer,
   ) {
+    this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(environment.assistedKmScript);
     const knowlarityScript = document.createElement('script');
     knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.com:8200/update-stream/560397a2-d875-478b-8003-cc4675e9a0eb/konnect"
                                     var knowlarityData = [];
@@ -71,7 +75,65 @@ export class LayoutComponent implements OnInit {
         }
       }
     };
+    // if ((window as any).Kommunicate) {
+    //   (window as any).Kommunicate.logout();
+    // }
+    // (function (d, m) {
+    //   var kommunicateSettings =
+    //     { "appId": "3eb13dbd656feb3acdbdf650efbf437d1", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+    //   var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+    //   s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+    //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+    //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
+    // })(document, (window as any).kommunicate || {});
+
+    // this.loadChat();
   }
+
+  loadChat() {
+    const waitForGlobal = function (key, callback) {
+      if (window[key]) {
+        callback();
+      } else {
+        setTimeout(function () {
+          waitForGlobal(key, callback);
+        }, 1000);
+      }
+    };
+
+    waitForGlobal('Kommunicate', function () {
+      var defaultSettings = {
+        'defaultBotIds': '3eb13dbd656feb3acdbdf650efbf437d1',
+        "skipRouting": true
+      };
+      (window as any).Kommunicate.displayKommunicateWidget(true);
+      const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+      const loginSMEInfo = data[0];
+      var css = "#km-faq{display:none!important;}";
+      (window as any).Kommunicate.customizeWidgetCss(css);
+      const userDetail = {
+        email: loginSMEInfo['email'],
+        phoneNumber: loginSMEInfo['mobileNumber'],
+        displayName: loginSMEInfo['name'],
+        userId: loginSMEInfo.userId,
+        password: '',
+        metadata: {
+          'userId': loginSMEInfo.userId,
+          'contactNumber': loginSMEInfo.mobileNumber,
+          'email': loginSMEInfo['email'],
+          'Platform': 'Website'
+        }
+      };
+      (window as any).Kommunicate.updateUser(userDetail);
+      (window as any).Kommunicate.updateSettings(defaultSettings);
+      // (window as any).Kommunicate.startConversation(defaultSettings, function (response) {
+      //         console.log("new conversation created");
+      //     });
+
+
+    });
+  }
+
 
   showWhatsAppNotification() {
     let param = '/user-whatsapp-detail?smeMobileNumber=';

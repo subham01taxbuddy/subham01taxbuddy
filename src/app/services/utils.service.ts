@@ -9,11 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
+import {ITR_JSON, OptedInNewRegime, OptedOutNewRegime} from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
-declare function matomo(title: any, url: any, event: any, subscribeId: any);
+import {parse} from "@typescript-eslint/parser";
 
 @Injectable()
 
@@ -139,7 +139,7 @@ export class UtilsService {
                     console.log('this.ITR_JSON in utils', this.ITR_JSON);
                     console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -193,7 +193,7 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -216,7 +216,7 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/itr'], {
+                    this.router.navigate(['/itr-filing/itr'], {
                         state: {
                             userId: this.ITR_JSON.userId,
                             panNumber: profile.panNumber,
@@ -349,7 +349,13 @@ export class UtilsService {
             declaration: undefined,
             disability: undefined,
             movableAsset: [],
-            immovableAsset: []
+            immovableAsset: [],
+            prefillDate: null,
+            prefillData: null,
+            prefillDataSource: null,
+            everOptedNewRegime: null,
+            everOptedOutOfNewRegime: null,
+            optionForCurrentAY: null
         };
 
         return ITR_JSON;
@@ -429,6 +435,9 @@ export class UtilsService {
             smeList.sort((a, b) => a.name > b.name ? 1 : -1)
             return smeList;
         } else {
+            if(!this.getLoggedInUserID()){
+              return [];
+            }
             let res: any = await this.getSmeList().catch(error => {
                 this.loading = false;
                 console.log(error);
@@ -458,6 +467,9 @@ export class UtilsService {
             agentList.sort((a, b) => a.name > b.name ? 1 : -1)
             return agentList;
         } else {
+          if(!this.getLoggedInUserID()){
+            return [];
+          }
             let res: any = await this.getAgentList().catch(error => {
                 this.loading = false;
                 console.log(error);
@@ -473,8 +485,8 @@ export class UtilsService {
         return [];
     }
     async getAgentList() {
-        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        const loggedInUserId = this.getLoggedInUserID();
+        const param = `/sme/${loggedInUserId}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -518,7 +530,6 @@ export class UtilsService {
     }
 
     getMyCallingNumber() {
-        // const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
         const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
         if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].mobileNumber))) {
             return loggedInSmeInfo[0].mobileNumber;
@@ -532,14 +543,6 @@ export class UtilsService {
         return false;
     }
 
-    matomoCall(mainTabName: any, path: any, eventArray: any, scriptId: any) {
-        if (environment.production) {
-            matomo(mainTabName, path, eventArray, scriptId);
-        }
-        else {
-            matomo(mainTabName, path, eventArray, scriptId);
-        }
-    }
 
     async getStoredMyAgentList() {
         const agentList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST) || null);
@@ -563,8 +566,8 @@ export class UtilsService {
         }
     }
     async getMyAgentList() {
-        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        const loggedInUserId = this.getLoggedInUserID();
+        const param = `/sme/${loggedInUserId}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -802,10 +805,45 @@ export class UtilsService {
 
     getCgSummary(userId, assessmentYear) {
         const param = '/cg-summary';
-        const formData = new FormData();
-        formData.append("userId", userId);
-        formData.append("assessmentYear", assessmentYear);
-        return this.itrMsService.getMethod(param);
+        let request = {
+          userId: userId,
+          assessmentYear: assessmentYear
+        }
+        return this.itrMsService.postMethod(param, request);
     }
 
+    getInt(value) {
+      return value ? parseInt(value) : 0;
+    }
+
+  findAssesseeType(panNumber) {
+      let assesseeType = '';
+      if (panNumber.substring(4, 3) === 'P') {
+        assesseeType = 'INDIVIDUAL';
+      } else if (panNumber.substring(4, 3) === 'H') {
+        assesseeType = 'HUF';
+      } else {
+        assesseeType = 'INDIVIDUAL';
+      }
+      return assesseeType;
+  }
+
+  getLoggedInUserID(){
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].userId))) {
+      return loggedInSmeInfo[0].userId;
+    }
+  }
+
+  getIdToken() {
+    let userData = JSON.parse(localStorage.getItem('UMD'));
+    return (userData) ? userData.id_token : null;
+  }
+
+  getUserRoles(){
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].roles))) {
+      return loggedInSmeInfo[0].roles;
+    }
+  }
 }

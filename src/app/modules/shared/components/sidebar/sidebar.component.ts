@@ -2,6 +2,7 @@ import { Component, DoCheck } from '@angular/core';
 import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import {UtilsService} from "../../../../services/utils.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -11,19 +12,24 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 export class SidebarComponent implements DoCheck {
 
   showSidebar!: boolean;
-  loggedInUserData: any;
+  loggedInUserRoles: any;
 
   hideSideBar!: boolean;
-  constructor(private navbarService: NavbarService, private roleBaseAuthGuardService: RoleBaseAuthGuardService, private route: Router) {
-    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
+  constructor(private navbarService: NavbarService,
+              private roleBaseAuthGuardService: RoleBaseAuthGuardService, private route: Router,
+              private utilsService: UtilsService) {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.route.events.subscribe((url: any) => {
-      if (route.url === '/pages/itr-filing/itr') {
-        this.hideSideBar = true;
-      } else {
-        this.hideSideBar = false;
-      }
+      // if (route.url === '/itr-filing/itr') {
+      //   this.hideSideBar = true;
+      // } else {
+      //   this.hideSideBar = false;
+      // }
     });
   }
+
+  dropdownPanel:any = {}
+  dropdownPanelChild:any = {}
 
   ngDoCheck() {
     this.showSidebar = NavbarService.getInstance().showSideBar;
@@ -35,15 +41,7 @@ export class SidebarComponent implements DoCheck {
   }
 
   isApplicable(permissionRoles: any) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
-  }
-
-  chatCorner() {
-    this.route.navigate(['/pages/chat-corner']);
-  }
-
-  taxSummary() {
-    this.route.navigate(['/pages/tax-summary'])
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
   }
 
 }

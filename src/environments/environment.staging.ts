@@ -1,5 +1,6 @@
 export const environment = {
 	production: false,
+  url_dev:"https://dev-api.taxbuddy.com",
 	portal_url: 'https://uat-admin.taxbuddy.com/',
 	url: "https://uat-api.taxbuddy.com",
 	eri_url: "https://api.taxbuddy.com",
@@ -7,7 +8,6 @@ export const environment = {
 	ifsc_url: "https://ifsc.razorpay.com",
 	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
-	matomoScriptId: '5',
 	isValidItr:false,
 	assistedKmScript: '../assets/assisted-km-script-uat.html',
 	environment:'UAT',
@@ -36,15 +36,5 @@ export const environment = {
 	},
 
 	externalScripts: {
-		matomo: `var _paq = window._paq = window._paq || [];
-		  _paq.push(['trackPageView']);
-		  _paq.push(['enableLinkTracking']);
-		  (function() {
-			var u="//matomo.taxbuddy.com/";
-			_paq.push(['setTrackerUrl', u+'matomo.php']);
-			_paq.push(['setSiteId', '5']);
-			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-			g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-		  })();`
 	}
 };

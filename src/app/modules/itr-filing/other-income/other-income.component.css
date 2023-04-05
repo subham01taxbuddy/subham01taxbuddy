@@ -1,0 +1,78 @@
+.subTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  /* identical to box height, or 27px */
+
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+}
+
+.inputLabel {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14.4296px;
+  line-height: 14px;
+  margin-bottom: 10px;
+  /* identical to box height, or 100% */
+
+  letter-spacing: -0.009em;
+
+  /* Neutral/Neutral 1100 [day] */
+
+  color: #07070C;
+}
+
+.sectionTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 150%;
+  /* identical to box height, or 30px */
+
+  text-align: right;
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+
+}
+
+.footer__buttons {
+  border-width: 0px;
+}
+
+table {
+  table-layout: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+
+}
+
+.label-td {
+  text-align: left;
+  word-wrap: break-word;
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  /*width: 80% !important;*/
+  white-space:pre-line;
+}
+
+.note {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  /* or 136% */
+
+
+  color: #000000;
+}

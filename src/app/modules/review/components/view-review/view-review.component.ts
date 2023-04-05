@@ -1,11 +1,5 @@
-import { data } from 'jquery';
-import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { Component, Inject, OnInit } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ChatOptionsDialogComponent } from 'src/app/modules/tasks/components/chat-options/chat-options-dialog.component';
@@ -23,13 +17,12 @@ import { defined } from 'highcharts';
 @Component({
   selector: 'app-view-review',
   templateUrl: './view-review.component.html',
-  styleUrls: ['./view-review.component.scss'],
+  styleUrls: ['./view-review.component.scss']
 })
 export class ViewReviewComponent implements OnInit {
   reviewGridOptions: GridOptions;
   loading!: boolean;
-  userInfo: any;
-  userId: any;
+  userInfo= [];
   mobileNo: string = '';
   currentUserId: number = 0;
   user_data: any = [];
@@ -50,9 +43,7 @@ export class ViewReviewComponent implements OnInit {
     public http: HttpClient,
     public dialogRef: MatDialogRef<ViewReviewComponent>
   ) {
-    this.loggedSmeInfo = JSON.parse(
-      sessionStorage.getItem('LOGGED_IN_SME_INFO')
-    );
+    this.loggedSmeInfo = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.reviewGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reviewColumnDef(),
@@ -66,31 +57,30 @@ export class ViewReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewReviewById();
-    // this.getWhatsAppLink();
+    this.getWhatsAppLink();
   }
 
   viewReviewById() {
     var param = `review/byid`;
     const requestBody = {
-      id: this.data.leadData.id,
-      environment: environment.environment,
-    };
-    this.loading = false;
-    this.reviewService.postMethod(param, requestBody).subscribe(
-      (response: any) => {
-        if (response.success) {
-          this.loading = false;
-          this.isDataById = true;
-          this.userDetails = response.body;
-          if (this.userDetails.sourcePlatform != 'Kommunicate') {
-            this.getReview();
-          }
-        } else {
-          this.isDataById = false;
-          this.loading = false;
+      "id": this.data.leadData.id,
+      "environment": environment.environment
+    }
+    this.loading = true;
+    this.reviewService.postMethod(param, requestBody).subscribe((response: any) => {
+      if (response.success) {
+        this.loading = false;
+        this.isDataById = true;
+        this.userDetails = response.body;
+        if (this.userDetails.sourcePlatform != 'Kommunicate') {
+          this.getReview();
         }
-      },
-      (error) => {
+      } else {
+        this.isDataById = false;
+        this.loading = false;
+      }
+    },
+      error => {
         this.isDataById = null;
         this.loading = false;
       }
@@ -100,28 +90,22 @@ export class ViewReviewComponent implements OnInit {
   getWhatsAppLink() {
     this.loading = true;
     let paramWa = `/kommunicate/whatsApp-chat-link?userId=${this.loggedSmeInfo[0].userId}`;
-    this.userMsService.getMethod(paramWa).subscribe(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.waChatLink = response.data.whatsAppChatLink;
-        } else {
-        }
-      },
-      (error) => {
-        this.loading = false;
+    this.userMsService.getMethod(paramWa).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.waChatLink = response.data.whatsAppChatLink;
+      } else {
       }
-    );
+    }, error => {
+      this.loading = false;
+    });
   }
 
   openKommunicateDashboard(type) {
-    if ((type = 'kommunicate')) {
-      window.open(
-        `https://dashboard.kommunicate.io/conversations/${this.data.leadData.groupId}`,
-        '_blank'
-      );
+    if (type = 'kommunicate') {
+      window.open(`https://dashboard.kommunicate.io/conversations/${this.data.leadData.groupId}`, "_blank");
     }
-    if ((type = 'NotKommunicate')) {
+    if (type = 'NotKommunicate') {
       console.log(this.waChatLink);
       if (this.waChatLink) {
         window.open(this.waChatLink);
@@ -131,23 +115,22 @@ export class ViewReviewComponent implements OnInit {
 
   getReview() {
     var param = `review/users`;
-    this.loading = false;
+    this.loading = true;
     const reqBody = {
-      reviewId: this.data.leadData.id,
-      environment: environment.environment,
-    };
-    this.reviewService.postMethod(param, reqBody).subscribe(
-      (response) => {
-        if (response instanceof Array && response.length > 0) {
-          this.loading = false;
-          this.userInfo = response;
-          this.reviewGridOptions.api?.setRowData(this.createRowData(response));
-        } else {
-          this.loading = false;
-          this.reviewGridOptions.api?.setRowData(this.createRowData([]));
-        }
-      },
-      (error) => {
+      "reviewId": this.data.leadData.id,
+      "environment": environment.environment
+    }
+    this.reviewService.postMethod(param, reqBody).subscribe(response => {
+      if (response instanceof Array && response.length > 0) {
+        this.loading = false;
+        this.userInfo = response;
+        this.reviewGridOptions.api?.setRowData(this.createRowData(response));
+      } else {
+        this.loading = false;
+        this.reviewGridOptions.api?.setRowData(this.createRowData([]));
+      }
+    },
+      error => {
         this.loading = false;
       }
     );
@@ -184,13 +167,13 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'First Name',
         field: 'fName',
-        width: 140,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -203,13 +186,13 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'Last Name',
         field: 'lName',
-        width: 140,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -225,10 +208,10 @@ export class ViewReviewComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -244,10 +227,10 @@ export class ViewReviewComponent implements OnInit {
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -260,13 +243,13 @@ export class ViewReviewComponent implements OnInit {
       {
         headerName: 'Name of the SME',
         field: 'filer',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
         cellRenderer: (data: any) => {
           if (data.value) {
@@ -305,14 +288,13 @@ export class ViewReviewComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
-            display: 'flex',
+            textAlign: 'center', display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center',
-          };
+            'justify-content': 'center'
+          }
         },
       },
-    ];
+    ]
   }
 
   createRowData(data: any) {
@@ -326,7 +308,7 @@ export class ViewReviewComponent implements OnInit {
         userId: data[i].userId,
         id: data[i].id,
         filer: data[i].filer,
-      });
+      })
       userArray.push(userInfo);
     }
     return userArray;
@@ -419,28 +401,4 @@ export class ViewReviewComponent implements OnInit {
     });
   }
 
-  // saveRecord() {
-  //   if (
-  //     this.userDetails.sourcePlatform === 'Play Store' ||
-  //     this.userDetails.sourcePlatform === 'Apple Store' ||
-  //     this.userDetails.sourcePlatform === 'Google Workspace'
-  //   ) {
-  //     const param = `/review/match-user`;
-  //     const param2 = {
-  //       reviewId: this.userDetails.id,
-  //       mobileNumber: this.mobileNo,
-  //       environment: environment.environment,
-  //     };
-  //     this.reviewService.postMethod(param, param2).subscribe((result) => {
-  //       console.log('Save User Data:', result);
-  //       if (result.success) {
-  //         this._toastMessageService.alert('success', 'User added successfully');
-  //         this.loading = false;
-  //       } else {
-  //         this._toastMessageService.alert('error', 'Failed to add user');
-  //         this.loading = false;
-  //       }
-  //     });
-  //   }
-  // }
 }

@@ -1,0 +1,42 @@
+// .content-wrapper {
+//   background: #fff;
+//   padding: 30px;
+//   margin-top: 20px;
+// }
+
+
+.content-wrapper {
+  background: #fff;
+  padding: 30px;
+  margin-top: 20px;
+}
+.example-section {
+  margin: 12px 0;
+}
+
+.example-margin {
+  margin: 0 12px;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}
+
+.select-chip .mat-chip {
+  background-color: #FFFFFF;
+  border: 1.94547px solid #E3E3E3;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 19.45px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 31px;
+  text-align: center;
+  color: #7E7E8F;
+}

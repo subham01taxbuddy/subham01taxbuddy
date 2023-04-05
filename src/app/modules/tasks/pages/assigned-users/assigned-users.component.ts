@@ -1,5 +1,4 @@
 import { async } from '@angular/core/testing';
-import { ReviseReturnDialogComponent } from './../../../../pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
@@ -20,6 +19,7 @@ import { environment } from 'src/environments/environment';
 import { MoreOptionsDialogComponent } from '../../components/more-options-dialog/more-options-dialog.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { param } from 'jquery';
+import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 
 @Component({
   selector: 'app-assigned-users',
@@ -72,8 +72,8 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    const UMD = JSON.parse(localStorage.getItem('UMD'))
-    this.agentId = UMD.USER_UNIQUE_ID;
+    const userId = this.utilsService.getLoggedInUserID();
+    this.agentId = userId;
     this.getMasterStatusList();
     this.search();
     this.getAgentList();
@@ -90,13 +90,13 @@ export class AssignedUsersComponent implements OnInit {
   }
   fromSme(event) {
     if (event === '' || event === 'ALL') {
-      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      let loggedInId = this.utilsService.getLoggedInUserID();
       if (this.agentId !== loggedInId) {
         this.agentId = loggedInId;
         this.search('agent');
       }
     } else if (event === 'SELF') {
-      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID;
+      let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
       this.search('agent', true);
     } else {
@@ -106,10 +106,11 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   getAgentList() {
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agents = result.data;
@@ -117,25 +118,6 @@ export class AssignedUsersComponent implements OnInit {
       })
     }
   }
-  // getUserData(pageNo: any) {
-  //   this.loading = true;
-  //   const UMD = JSON.parse(localStorage.getItem('UMD'))
-  //   let param = `/sme/${UMD.USER_UNIQUE_ID}/user-list?page=${pageNo}&pageSize=20`;
-  //   this.userMsService.getMethod(param).subscribe((result: any) => {
-  //     console.log('result -> ', result);
-  //     this.loading = false;
-  //     if (result.success) {
-  //       this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-  //       this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-  //       this.userInfo = result.data['content'];
-  //       this.config.totalItems = result.totalElements;
-  //     }
-  //   }, error => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-  //     console.log('Error during getting Leads data. -> ', error)
-  //   })
-  // }
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -522,7 +504,7 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED') 
+          if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED')
               ||  params.data.serviceType != 'ITR') {
             return `<button type="button" class="action_icon add_button" title="Re Assignment"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -570,7 +552,7 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return ` 
+          return `
            <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
@@ -813,10 +795,10 @@ export class AssignedUsersComponent implements OnInit {
   async startFiling(data) {
     console.log(data);
 
-    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
+    const loggedInId = this.utilsService.getLoggedInUserID();
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    
+
     if(data.itrObjectStatus === 'CREATE') {
       //no ITR object found, create a new ITR object
       this.loading = true;
@@ -831,29 +813,29 @@ export class AssignedUsersComponent implements OnInit {
       objITR.filingTeamMemberId = loggedInId;
       //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
       console.log('obj:', objITR);
-      
+
       //update status to WIP
       //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
-      
+
       const param = '/itr';
       this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
           console.log('My iTR Json successfully created-==', result);
           this.loading = false;
           objITR = result;
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-          this.router.navigate(['/pages/itr-filing/itr'],{ 
-            state: { 
-              userId: data.userId, 
-              panNumber: data.panNumber, 
-              eriClientValidUpto: data.eriClientValidUpto, 
-              name: data.name } 
+          this.router.navigate(['/itr-filing/itr'],{
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data.eriClientValidUpto,
+              name: data.name }
             });
       }, error => {
           this.loading = false;
       });
       this.loading = false;
       console.log('end');
-      
+
     } else {
       //one more ITR objects in place, use existing ITR object
       let itrFilter = data.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${data.openItrId}` : '';
@@ -879,17 +861,17 @@ export class AssignedUsersComponent implements OnInit {
           console.log('obj:', obj);
           workingItr = JSON.parse(JSON.stringify(obj));
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-          this.router.navigate(['/pages/itr-filing/itr'],{ 
-            state: { 
-              userId: data.userId, 
-              panNumber: data.panNumber, 
-              eriClientValidUpto: data.eriClientValidUpto, 
-              name: data.name 
-            } 
+          this.router.navigate(['/itr-filing/itr'],{
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data.eriClientValidUpto,
+              name: data.name
+            }
           });
         } else {
           //multiple ITRs found, navigate to ITR tab with the results
-          this.router.navigateByUrl('/tasks/filings', 
+          this.router.navigateByUrl('/tasks/filings',
             {state: {'mobileNumber': data.mobileNumber}});
         }
       }, async (error:any) => {
@@ -898,7 +880,7 @@ export class AssignedUsersComponent implements OnInit {
       });
 
     }
-   
+
   }
 
   async getUserProfile(userId) {
@@ -960,12 +942,12 @@ export class AssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/itr'],{ 
-          state: { 
-            userId: data.userId, 
-            panNumber: data.panNumber, 
-            eriClientValidUpto: data.eriClientValidUpto, 
-            name: data.name } 
+        this.router.navigate(['/itr-filing/itr'],{
+          state: {
+            userId: data.userId,
+            panNumber: data.panNumber,
+            eriClientValidUpto: data.eriClientValidUpto,
+            name: data.name }
           });
       }
       console.log('The dialog was closed', result);
@@ -1086,7 +1068,7 @@ export class AssignedUsersComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
     });
-    
+
   }
 
   reAssignUser(client) {

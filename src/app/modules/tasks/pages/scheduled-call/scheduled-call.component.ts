@@ -47,19 +47,17 @@ export class ScheduledCallComponent implements OnInit {
 
   ngOnInit() {
     this.getAgentList();
-    var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
-      this.loggedUserId = userInfo.USER_UNIQUE_ID;
-    }
+    this.loggedUserId = this.utilsService.getLoggedInUserID();
     this.showScheduleCallList()
   }
 
   /* async */ getAgentList() {
     // this.agentList = await this.utilsService.getStoredAgentList();
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    const loggedInUserId = this.utilsService.getLoggedInUserID();
+    const loggedInUserRoles = this.utilsService.getUserRoles();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agentList = result.data;

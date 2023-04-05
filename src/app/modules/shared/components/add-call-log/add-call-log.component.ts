@@ -82,24 +82,24 @@ export class AddCallLogComponent implements OnInit {
   }
 
   createCallLogForm(data: ConfirmModel) {
-    const loggedInSme = JSON.parse(localStorage.getItem('UMD') || '')
-    const teamLead = this.smeList.filter((item:any) => item.email === loggedInSme['USER_EMAIL'])[0].teamLeadEmail;
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "")[0];
+    const teamLead = this.smeList.filter((item:any) => item.email === loggedInSmeInfo.email)[0].teamLeadEmail;
     return this.fb.group({
       userName: [data.userName || ''],
       userId: [data.userId || ''],
       userMobile: [data.userMobile || ''],
       userEmail: [data.userEmail || '', Validators.pattern(AppConstants.emailRegex)],
-      smeEmailId: [(loggedInSme && loggedInSme['USER_EMAIL']) || ''],
-      smeUserId: [(loggedInSme && loggedInSme['USER_UNIQUE_ID'])],
+      smeEmailId: [loggedInSmeInfo.email || ''],
+      smeUserId: [loggedInSmeInfo.userId],
       teamLeadEmail: [teamLead || ''],
       statusId: [null, Validators.required],
       statusName: ['', Validators.required],
       scheduleCallTime: [''],
-      scheduleCallEmail: [(loggedInSme && loggedInSme['USER_EMAIL']) || ''],
+      scheduleCallEmail: [loggedInSmeInfo.email || ''],
       scheduleCallName: [''],
       description: ['', Validators.compose([Validators.required])],
       reason: [''],
-      createdByName: [(loggedInSme && (loggedInSme['USER_F_NAME'] + ' ' + loggedInSme['USER_L_NAME'])) || '']
+      createdByName: [loggedInSmeInfo.name || '']
     });
   }
 
