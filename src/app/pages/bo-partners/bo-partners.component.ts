@@ -430,6 +430,7 @@ export class BoPartnersComponent implements OnInit {
       console.log('statusData:', result);
       if (result) {
         if (result.data === 'statusChanged') {
+          // this.getBoPartners();
           this.getBoPartners();
         }
       }
