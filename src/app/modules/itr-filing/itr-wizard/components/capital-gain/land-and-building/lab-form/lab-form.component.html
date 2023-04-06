@@ -278,18 +278,13 @@
                   >No</mat-radio-button
                 >
               </mat-radio-group>
-            </div>
-
-            <div class="card__row">
               <button
                 class="tbd-btn save-btn"
                 style="float: right"
                 [disabled]="totalCg <= 0"
                 (click)="addMoreImprovements(this.immovableForm)"
-                *ngIf="isImprovements.value"
               >
-                Add New&nbsp;&nbsp;
-                <i class="fa fa-plus" aria-hidden="true"></i>
+                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New
               </button>
             </div>
           </div>
@@ -383,11 +378,10 @@
           <div>
             <button
               class="delete-btn"
-              (click)="removeImprovement(active, this.immovableForm)"
+              (click)="removeImprovement(i, this.immovableForm)"
               [disabled]="!improvementSelected()"
-              *ngIf="isImprovements.value"
             >
-              <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete
             </button>
           </div>
           <hr />
@@ -416,19 +410,14 @@
                     >
                   </mat-radio-group>
                 </div>
-
-                <div class="card__row">
-                  <button
-                    class="tbd-btn save-btn"
-                    style="float: right"
-                    [disabled]="totalCg <= 0"
-                    (click)="addInvestment(this.immovableForm)"
-                    *ngIf="isDeductions.value"
-                  >
-                    Add New&nbsp;&nbsp;
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                  </button>
-                </div>
+                <button
+                  class="tbd-btn save-btn"
+                  style="float: right"
+                  [disabled]="totalCg <= 0"
+                  (click)="addInvestment('ADD', '', 0)"
+                >
+                  <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New
+                </button>
               </div>
 
               <div
@@ -463,6 +452,7 @@
                           formControlName="underSection"
                           (selectionChange)="changeInvestmentSection('HTML', i)"
                           (change)="calculateDeduction(i)"
+                          (onChange)="onDropdownChange($event, i)"
                         >
                           <mat-option
                             value="54"

@@ -1251,6 +1251,19 @@ export class LabFormComponent implements OnInit {
     this.calculateDeduction(index);
   }
 
+  onDropdownChange(event, index) {
+    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
+      .controls[index] as FormGroup;
+    const sellDate = new Date(deductionForm.controls['sellDate'].value);
+    // this.maxPurchaseDate = new Date(sellDate.setMonth(sellDate.getMonth() + 6));
+
+    if (event.value == '54EC') {
+      deductionForm.controls['purchaseDate'].setValue(
+        new Date(sellDate.setMonth(sellDate.getMonth() + 6))
+      );
+    }
+  }
+
   calculateDeduction(index) {
     //itr/calculate/capital-gain/deduction
 
