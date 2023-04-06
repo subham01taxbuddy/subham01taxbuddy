@@ -1,0 +1,18 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<mat-tab-group>
+  <mat-tab label="Land And Building">
+    <app-land-and-building (saveAndNext)="saveAndNext($event)"></app-land-and-building>
+  </mat-tab>
+  <mat-tab label="Shares and Equity">
+    <app-equity-mf></app-equity-mf>
+  </mat-tab>
+  <mat-tab label="Bonds or Debentures (other than capital indexed bonds), ZCB's">
+    <app-bonds (saveAndNext)="saveAndNext($event)"></app-bonds>
+  </mat-tab>
+  <mat-tab label="Other">
+    <app-other-assets></app-other-assets>
+  </mat-tab>
+  <!-- <mat-tab label="More Information">
+    <app-more-info (saveAndNext)="saveAndNext($event)"></app-more-info>
+  </mat-tab> -->
+</mat-tab-group>

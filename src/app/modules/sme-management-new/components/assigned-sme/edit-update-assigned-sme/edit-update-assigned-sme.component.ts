@@ -663,5 +663,6 @@ export interface SmeObj {
   owner: boolean
   referredBy:string
   qualification:string
-  state:string
+  state:string,
+  smeOriginalEmail: string
 }

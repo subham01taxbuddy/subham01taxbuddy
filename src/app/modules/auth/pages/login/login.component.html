@@ -1,81 +1,117 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px' }"
+></ngx-loading>
 <div class="main1">
-    <div class="login_content1">
-        <div class="login_content_container">
-            <div class="">
-                <h2><img src="assets/img/logo-img.svg" style="margin-left:auto;margin-right:auto;display:block;"
-                        alt="Smiley face" height="20%" width="50%"></h2>
-                <form [formGroup]="form" class="form-horizontal" *ngIf="mode === 'SIGN_IN'">
-                    <div class="card__row">
-                        <mat-label style="color:  #07070C;">E-mail or Phone Number</mat-label>
-                        <mat-form-field appearance="outline">
-                            <input matInput placeholder="E-mail or Phone Number" formControlName="user" maxlength="10"
-                                appearance="outline"
-                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" required />
-                                <span class="fa fa-envelope errspan" aria-hidden="true"></span>
-                        </mat-form-field>
-                    </div>
-                    <!--  <button [disabled]="!form.controls['user.valid" type="submit" class="btn"
+  <div class="login_content1">
+    <div class="login_content_container">
+      <div class="">
+        <h2>
+          <img
+            src="assets/img/logo-img.svg"
+            style="margin-left: auto; margin-right: auto; display: block"
+            alt="Smiley face"
+            height="20%"
+            width="50%"
+          />
+        </h2>
+        <form
+          [formGroup]="form"
+          class="form-horizontal"
+          *ngIf="mode === 'SIGN_IN'"
+        >
+          <div class="card__row">
+            <mat-label style="color: #07070c">E-mail or Phone Number</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                placeholder="E-mail or Phone Number"
+                formControlName="user"
+                maxlength="10"
+                appearance="outline"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                onkeypress=" event.charCode >= 48 && event.charCode <= 57"
+                required
+              />
+              <span class="fa fa-envelope errspan" aria-hidden="true"></span>
+            </mat-form-field>
+          </div>
+          <!--  <button [disabled]="!form.controls['user.valid" type="submit" class="btn"
                         (click)="sendOtpOnWhatapp(form.controls['user.value)"
                         style="margin-left: auto; margin-right: auto; display: block; min-width:40%;border:none;outline:none;">Login
                         with WhatsApp</button> -->
-                    <!-- <div>- - - - - - - - - - - - - - - - OR - - - - - - - - - - - - - - - -</div> -->
-                    <div class="card__row">
-                        <mat-label style="color:  #07070C;">Password</mat-label>
-                        <mat-form-field appearance="outline">
-                           <input matInput placeholder="Password" type="password" formControlName="passphrase"
-                                appearance="outline" />
-                                <span class="fa fa fa-eye errspan" aria-hidden="true"></span>
-                        </mat-form-field>
-                    </div>
-                    <div class="card__row">
-                    <div class="form-group clearfix">
-                      <button type="submit" class="btn"
-                          (click)="onSubmit()">Login
-                      </button>
-                    </div>
-                    </div>
-                    <div >
+          <!-- <div>- - - - - - - - - - - - - - - - OR - - - - - - - - - - - - - - - -</div> -->
+          <div class="card__row">
+            <mat-label style="color: #07070c">Password</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                placeholder="Password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="passphrase"
+                appearance="outline"
+              />
+
+              <span>
+                <i
+                  alt="show"
+                  class="fa fa fa-eye errspan"
+                  (click)="showPassword = !showPassword"
+                  [class.hide]="showPassword"
+                ></i>
+              </span>
+            </mat-form-field>
+          </div>
+          <div class="card__row">
+            <div class="form-group clearfix">
+              <button type="submit" class="btn" (click)="onSubmit()">
+                Login
+              </button>
+            </div>
+          </div>
+          <!-- <div >
                         <div class="card__col-xs-12 card__col-sm-12" style="text-align: right;">
                             <a class="link-style" (click)="changeMode('FORGOT_PASSWORD')">Forgot
                                 password?</a>
                         </div>
-                    </div>
-                    <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 20px;">
+                    </div> -->
+          <!-- <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 20px;">
                     <div >
                       <p style="color:  #07070C;">Don't have an account ? <a class = "link-style"> Sign Up</a> </p>
                     </div>
-                    </div>
+                    </div> -->
+        </form>
 
-                </form>
-
-                <div *ngIf="mode === 'FORGOT_PASSWORD'">
-                    <app-forgot-password (sendValue)="fromForgotPassword($event)"></app-forgot-password>
-                </div>
-                <div *ngIf="mode === 'OTP'">
-                    <app-validate-otp [username]="username" (sendValue)="fromOtp($event)">
-                    </app-validate-otp>
-                </div>
-                <div class="col pad-zero" *ngIf="mode === 'SUCCESS'">
-                    <div>
-                        <h2 style="text-align: center;">RESET YOUR PASSWORD</h2>
-                    </div>
-                    <div style="margin-bottom: 16px">
-                        Your password has been reset successfully.
-                        <br>
-                        <span class="link-style">
-                            <a href="javascript:;" class="fgt_txt links" (click)="changeMode('SIGN_IN')">Please click
-                                here
-                                to
-                                Sign in</a>
-                        </span>
-                    </div>
-                </div>
-            </div>
+        <div *ngIf="mode === 'FORGOT_PASSWORD'">
+          <app-forgot-password
+            (sendValue)="fromForgotPassword($event)"
+          ></app-forgot-password>
         </div>
+        <div *ngIf="mode === 'OTP'">
+          <app-validate-otp [username]="username" (sendValue)="fromOtp($event)">
+          </app-validate-otp>
+        </div>
+        <div class="col pad-zero" *ngIf="mode === 'SUCCESS'">
+          <div>
+            <h2 style="text-align: center">RESET YOUR PASSWORD</h2>
+          </div>
+          <div style="margin-bottom: 16px">
+            Your password has been reset successfully.
+            <br />
+            <span class="link-style">
+              <a
+                href="javascript:;"
+                class="fgt_txt links"
+                (click)="changeMode('SIGN_IN')"
+                >Please click here to Sign in</a
+              >
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- <div>
+  </div>
+  <!-- <div>
         <p>
             For any assistance please drop an email to
             <a href="mailto:appsupport@taxbuddy.com" target="_blank">appsupport@taxbuddy.com</a>

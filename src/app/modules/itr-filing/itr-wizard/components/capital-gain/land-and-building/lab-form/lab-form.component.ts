@@ -64,7 +64,7 @@ export const MY_FORMATS = {
 })
 export class LabFormComponent implements OnInit {
   @Output() cancelForm = new EventEmitter<any>();
-
+  disableFutureDates: any;
   loading = false;
   improvementYears = [];
   stateDropdown = AppConstants.stateDropdown;
@@ -495,6 +495,7 @@ export class LabFormComponent implements OnInit {
 
   createDeductionForm(obj?: any): FormGroup {
     return this.fb.group({
+      srn: [obj.srn || this.currentCgIndex.toString()],
       selected: [false],
       underSection: [obj?.underSection || null],
       purchaseDate: [obj?.purchaseDate || null, [Validators.required]],
@@ -667,9 +668,11 @@ export class LabFormComponent implements OnInit {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[index] as FormGroup;
-    if (buyersDetails.controls['share'].value === 100) {
+
+    const shareValue = buyersDetails.controls['share'].value;
+    if (shareValue >= 0 && shareValue <= 100) {
       buyersDetails.controls['amount'].setValue(
-        assetDetails.controls['valueInConsideration'].value
+        (assetDetails.controls['valueInConsideration'].value * shareValue) / 100
       );
     }
   }
@@ -1188,6 +1191,9 @@ export class LabFormComponent implements OnInit {
 
     const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
       .controls[index] as FormGroup;
+    const assetDetails = (
+      this.immovableForm.controls['assetDetails'] as FormArray
+    ).controls[index] as FormGroup;
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC'
@@ -1197,6 +1203,26 @@ export class LabFormComponent implements OnInit {
         Validators.pattern(AppConstants.amountWithoutDecimal),
       ]);
       deductionForm.controls['costOfNewAssets'].updateValueAndValidity();
+      const disableFutureDates = (date: Date): boolean => {
+        // Get the sell date from the assetDetails form group
+        const sellDate = new Date(assetDetails.controls['sellDate'].value);
+
+        // Calculate the min date (the sellDate plus one day)
+        const minDate = new Date(sellDate);
+        minDate.setDate(sellDate.getDate() - 1);
+
+        // Calculate the max date (6 months after the sellDate)
+        const maxDate = new Date(sellDate);
+        maxDate.setDate(sellDate.getDate() + 1);
+        maxDate.setMonth(maxDate.getMonth() + 6);
+
+        // Enable dates between the sellDate plus one day and 6 months after the sellDate,
+        // and disable all other dates
+        return date > minDate && date < maxDate;
+      };
+
+      // Set the matDatepickerFilter to the disableFutureDates function
+      this.disableFutureDates = disableFutureDates;
     } else {
       if (ref === 'HTML') {
         deductionForm.controls['investmentInCGAccount'].setValue(null);
@@ -1206,6 +1232,7 @@ export class LabFormComponent implements OnInit {
         ].updateValueAndValidity();
       }
     }
+
     // this.setTotalDeductionValidation();
     this.calculateDeduction(index);
   }
@@ -1368,8 +1395,8 @@ export class LabFormComponent implements OnInit {
         console.log('Capital gain save result=', result);
         // this.dialogRef.close(this.ITR_JSON); // TODO send data to table back
         this.utilsService.smoothScrollToTop();
-        this.saveBusy = false;
         this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+        this.saveBusy = false;
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1571,35 +1598,35 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  cancelCgForm() {
-    this.immovableForm.reset();
-    this.immovableForm.controls['improvement'] = this.fb.array([]);
-    this.immovableForm.controls['buyersDetails'] = this.fb.array([]);
-    if (
-      this.utilsService.isNonEmpty(this.ITR_JSON) &&
-      this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-      this.ITR_JSON.capitalGain instanceof Array &&
-      this.ITR_JSON.capitalGain?.length > 0
-    ) {
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
-    } else {
-      this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
-    }
-    this.utilsService.smoothScrollToTop();
-  }
+  // cancelCgForm() {
+  //   this.immovableForm.reset();
+  //   this.immovableForm.controls['improvement'] = this.fb.array([]);
+  //   this.immovableForm.controls['buyersDetails'] = this.fb.array([]);
+  //   if (
+  //     this.utilsService.isNonEmpty(this.ITR_JSON) &&
+  //     this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
+  //     this.ITR_JSON.capitalGain instanceof Array &&
+  //     this.ITR_JSON.capitalGain?.length > 0
+  //   ) {
+  //     this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+  //   } else {
+  //     this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+  //   }
+  //   this.utilsService.smoothScrollToTop();
+  // }
 
   deleteInvestment(index) {
-    let deductions = this.cgArrayElement.deduction.filter(
-      (deduction) => deduction.srn == this.data.assetSelected.srn
-    );
-    deductions.splice(index, 1);
-    let otherDeductions = this.cgArrayElement.deduction.filter(
-      (ded) => ded.srn != this.data.assetSelected.srn
-    );
-    if (otherDeductions == null) {
-      otherDeductions = [];
-    }
-    this.cgArrayElement.deduction = otherDeductions.concat(deductions);
+    // let deductions = this.cgArrayElement.deduction.filter(
+    //   (deduction) => deduction.srn == this.data.assetSelected.srn
+    // );
+    // deductions.splice(index, 1);
+    // let otherDeductions = this.cgArrayElement.deduction.filter(
+    //   (ded) => ded.srn != this.data.assetSelected.srn
+    // );
+    // if (otherDeductions == null) {
+    //   otherDeductions = [];
+    // }
+    // this.cgArrayElement.deduction = otherDeductions.concat(deductions);
     console.log(this.cgArrayElement.deduction);
     const deductionsArray = (<FormArray>(
       this.immovableForm.get('deductions')

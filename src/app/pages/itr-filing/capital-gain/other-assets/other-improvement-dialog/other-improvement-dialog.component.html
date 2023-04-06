@@ -1,0 +1,48 @@
+<h1 mat-dialog-title> Cost Of Improvement Details</h1>
+
+<mat-dialog-content>
+  <form [formGroup]="improvementForm">
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <mat-select placeholder="Select Asset Srn" name="selectSrn" formControlName="srn" 
+          (selectionChange)="assetSelected()" required>
+            <mat-option *ngFor="let data of data.assetDetails" [value]="data.srn">
+              {{ data.srn }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <mat-select placeholder="Year of Improvement" name="financialYearOfImprovement"
+            formControlName="financialYearOfImprovement" (selectionChange)="calculateIndexCost()" required>
+            <mat-option [value]="year" *ngFor="let year of improvementYears"> {{year}} </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <input matInput digitsOnly formControlName="costOfImprovement" placeholder="Cost Of Improvement"
+            name="costOfImprovement" class="input-field" maxlength="14" (blur)="calculateIndexCost()"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field class="input-field-width">
+          <input matInput digitsOnly formControlName="indexCostOfImprovement"
+            placeholder="Cost Of Improvement with Indexation" name="indexCostOfImprovement" class="input-field"
+            maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row dialog-button">
+      <div class="sub_btn top-space">
+        <button type="submit" class="tbd-btn" (click)="saveDetails()">Save</button>
+        <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

@@ -330,7 +330,7 @@ export class BoPartnersComponent implements OnInit {
           if (Array.isArray(response.content)) {
             this.loading = false;
             this.boPartnersInfo = response.content;
-            this.config.totalItems = response.totalElements;
+            this.config.totalItems = response.content.length;
             this.partnersGridOptions.api?.setRowData(
               this.createRowData(this.boPartnersInfo)
             );
@@ -430,6 +430,7 @@ export class BoPartnersComponent implements OnInit {
       console.log('statusData:', result);
       if (result) {
         if (result.data === 'statusChanged') {
+          // this.getBoPartners();
           this.getBoPartners();
         }
       }
