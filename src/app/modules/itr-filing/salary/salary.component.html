@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div style="padding-top: 20px;">
+<div style="padding-top:20px; padding-bottom: 130px;">
     <mat-accordion class="headers-align">
       <mat-expansion-panel hideToggle class="hide-close">
         <mat-expansion-panel-header>
@@ -15,11 +15,11 @@
             <div class="sectionTitle">Employer Details</div>
             <div class="card__row">
               <div class="card__col-xs-12 card__col-sm-6">
-                <mat-label class="inputLabel">Name of the employer</mat-label>
+                <mat-label class="inputLabel">Name of the employer*</mat-label>
                 <mat-form-field appearance="outline">
                   <input type="text" trim matInput placeholder="Name of the employer"
                          name="NameOfEmployer" class="input-field" formControlName="employerName"
-                         maxlength="125">
+                         maxlength="125" required>
                   <mat-error
                     *ngIf="employerDetailsFormGroup.controls['employerName'].hasError('required')">
                     Enter the name of employer
@@ -106,10 +106,10 @@
             <div class="sectionTitle">Salary Details</div>
             <div>
               <table class="table table-bordered">
-                  <thead style="background:#eaeaea">
+                  <thead>
                   <tr class="table-head">
-                    <th class="text-center">Salary Type</th>
-                    <th class="text-center">Gross Amount</th>
+                    <th>Salary Type</th>
+                    <th>Gross Amount</th>
                   </tr>
                   </thead>
                   <tbody formArrayName="salaryDetails">
@@ -121,7 +121,7 @@
                     <td>
                       <mat-form-field class="input-field-width" style="width: 90% !important;">
                         <input type="text" trim matInput placeholder="" name="salaryValue[i]"
-                               formControlName="salaryValue"
+                               formControlName="salaryValue" (blur)="checkGrossSalary()"
                                class="input-field" maxlength="125"/>
                       </mat-form-field>
                     </td>
@@ -145,12 +145,12 @@
 
         <form [formGroup]="allowanceFormGroup">
           <div class="cardRect">
-            <div class="sectionTitle">Exempt Allowance</div>
+            <!-- <div class="sectionTitle">Exempt Allowance</div> -->
             <table class="table table-bordered">
               <thead style="background:#eaeaea">
               <tr class="table-head">
-                <th class="text-center">Allowance Type</th>
-                <th class="text-center">Exempt Amount</th>
+                <th>Allowance Type</th>
+                <th>Exempt Amount</th>
               </tr>
               </thead>
               <tbody formArrayName="allowances">
@@ -183,7 +183,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="cardRect">
-          <div class="sectionTitle">Deductions u/s 16</div>
+          <!-- <div class="sectionTitle">Deductions u/s 16</div> -->
           <div class="card__row">
             <form [formGroup]="deductionsFormGroup">
               <div class="card__col-xs-12 card__col-sm-6">
@@ -213,11 +213,11 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-    <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+    <div class="flex justify-between p-[30px] back-foot">
       <button
-        class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+        class="lgtBtn"
         (click)="goBack()">
-        <mat-icon>keyboard_backspace</mat-icon>
+        <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
         <span class="font-semibold">&nbsp;Back to Main Page</span>
       </button>
 

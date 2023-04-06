@@ -76,12 +76,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   initForm() {
-    let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
+    // let maxPremium = this.userAge >= 60 ? 50000 : 25000;
     this.investmentDeductionForm = this.fb.group({
-      selfPremium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(25000)]],
+      selfPremium: [null, [Validators.pattern(AppConstants.numericRegex)]],
       selfPreventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       selfMedicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex),],
-      premium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(maxPremium)]],
+      premium: [null, [Validators.pattern(AppConstants.numericRegex)]],
       preventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -386,33 +386,38 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['us80ddb'].disable();
     }
 
-    if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(
-        null
-      );
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
-    } else if (
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0
-    ) {
-      this.investmentDeductionForm.controls['selfPremium'].setValue(null);
-      this.investmentDeductionForm.controls['selfPremium'].disable();
-    }
-    if (this.investmentDeductionForm.controls['premium'].value > 0) {
-      this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
-        null
-      );
-      this.investmentDeductionForm.controls['medicalExpenditure'].disable();
-    } else if (
-      this.investmentDeductionForm.controls['medicalExpenditure'].value > 0
-    ) {
-      this.investmentDeductionForm.controls['premium'].setValue(null);
-      this.investmentDeductionForm.controls['premium'].disable();
-    }
   }
 
   saveInvestmentDeductions() {
 
     let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
+
+    if(isParentOverSixty){
+      let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['premium'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['preventiveCheckUp'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['medicalExpenditure'].value);
+      if(totalExpenses > 50000) {
+        this.utilsService.showSnackBar('Medical expenses for parents cannot exceed 50000');
+        return;
+      }
+    } else {
+      let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['premium'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['preventiveCheckUp'].value) +
+        this.utilsService.getInt(this.investmentDeductionForm.controls['medicalExpenditure'].value);
+      if(totalExpenses > 25000) {
+        this.utilsService.showSnackBar('Medical expenses for parents cannot exceed 25000');
+        return;
+      }
+    }
+    let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
+    let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value) +
+      this.utilsService.getInt(this.investmentDeductionForm.controls['selfPremium'].value) +
+      this.utilsService.getInt(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value);
+    if(totalExpenses > maxExpenseLimit) {
+      this.utilsService.showSnackBar('Medical expenses for self cannot exceed 25000');
+      return;
+    }
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 

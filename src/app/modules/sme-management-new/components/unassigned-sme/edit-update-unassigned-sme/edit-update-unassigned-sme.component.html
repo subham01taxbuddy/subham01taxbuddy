@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div>
   <div class="align-items-center row">
     <div class="col-sm-10">
@@ -68,16 +69,17 @@
         <div class="col-sm-4">
           <mat-label> Language </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Language"
-              [formControl]="languages"
-              class="input-field"
-            />
+            <mat-select [formControl]="languages" multiple>
+              <mat-select-trigger>
+                {{languages.value ? languages.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let lang of langList" [value]="lang"> {{lang}}</mat-option>
+            </mat-select>
+
             <!-- <mat-error
-            *ngIf="languages?.hasError('required') ">
-            This field is required</mat-error> -->
+                    *ngIf="languages?.hasError('required') ">
+                    This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -87,24 +89,29 @@
               type="text"
               matInput
               placeholder="Referred person"
-              [formControl]="referredPerson"
+              [formControl]="referredBy"
               class="input-field"
             />
             <!-- <mat-error
-            *ngIf="referredPerson?.hasError('required') ">
+            *ngIf="referredBy?.hasError('required') ">
             This field is required</mat-error> -->
           </mat-form-field>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" >
           <mat-label> Income Tax Expertise </mat-label>
           <mat-form-field appearance="outline">
             <mat-select [formControl]="itrTypes" multiple>
               <mat-select-trigger>
+                {{itrTypes.value ? itrTypes.value : ''}}
+
+              </mat-select-trigger>
+              <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value"> {{itrType.display}}</mat-option>
+              <!-- <mat-select-trigger>
                 <span *ngFor="let item of itrTypes.value; ">
                   itr-{{item || ''}} <span>,</span>
                 </span>
               </mat-select-trigger>
-              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option>
+              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option> -->
             </mat-select>
             <!-- <mat-error
             *ngIf="itrTypes?.hasError('required') ">
@@ -150,7 +157,7 @@
             This field is required</mat-error> -->
           </mat-form-field>
         </div>
-        <div class="col-sm-4">
+        <!-- <div class="col-sm-4">
           <mat-label> Search Team Lead (TL)/ Owner <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput [formControl]="teamLead" [matAutocomplete]="auto">
@@ -163,13 +170,57 @@
             *ngIf="teamLead?.hasError('required') ">
             This field is required</mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
       </div>
     </div>
   </form>
   <hr>
+  <div class="row">
+    <div class="col-sm-4" style="margin-top: 10px;">
+      <div class="card" style="margin-top: 10px;">
+        <b style="font-size: 18px">Roles: </b>
+        <section class="example-section" [formGroup]="roles">
+          <p><mat-checkbox (change)="onCheckboxChange(1)" [formControl]="admin">Admin</mat-checkbox></p><hr>
+          <p><mat-checkbox (change)="onCheckboxChange(2)" [formControl]="leader">Leader</mat-checkbox></p><hr>
+          <p><mat-checkbox (change)="onCheckboxChange(3)" [formControl]="owner">Owner</mat-checkbox></p><hr>
+          <p><mat-checkbox (change)="onCheckboxChange(4)" [formControl]="filer">Partner/Filer</mat-checkbox></p><hr>
+          <!-- <p><mat-checkbox [formControl]="leadEngagement">Lead Engagement</mat-checkbox></p><hr> -->
+        </section>
+      </div>
+    </div>
+    <div class="col-sm-5" style="margin-top: 60px;" *ngIf="filer.value">
+      <mat-label> <b style="font-size: 12px">Search Owner Name</b> <span class="text-danger">*</span></mat-label>
+      <mat-form-field appearance="outline">
+        <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" required>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option"  (click)="getownerNameId(option)">
+                   {{option.name}}
+              </mat-option>
+            </mat-autocomplete>
+        <mat-error
+        *ngIf="owner?.hasError('required') ">
+        This field is required</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-5" style="margin-top: 60px;" *ngIf="owner.value">
+      <mat-label> <b style="font-size: 12px">Search Leader Name</b> <span class="text-danger">*</span></mat-label>
+      <mat-form-field appearance="outline">
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" required>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn1">
+              <mat-option *ngFor="let option1  of filteredOptions1 | async" [value]="option1"  (click)="getLeaderNameId(option1)">
+                   {{option1.name}}
+              </mat-option>
+            </mat-autocomplete>
+        <mat-error
+        *ngIf="owner?.hasError('required') ">
+        This field is required</mat-error>
+      </mat-form-field>
+    </div>
+
+  </div>
+<hr>
   <div style="text-align: center;">
-    <button class="tbd-btn" (click)=" updateSmeDetails()">Save </button>
+    <button class="tbd-btn"  (click)=" updateSmeDetails()">Save </button>
   </div>
   </div>
 </div>

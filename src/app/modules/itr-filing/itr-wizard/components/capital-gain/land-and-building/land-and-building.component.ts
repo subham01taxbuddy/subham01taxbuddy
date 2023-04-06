@@ -277,8 +277,7 @@ export class LandAndBuildingComponent
         this.utilsService.showSnackBar('Capital gain deleted successfully');
         console.log('Capital gain save result=', result);
         this.utilsService.smoothScrollToTop();
-        this.loading = false;
-        this.labView = 'TABLE';
+
         this.cgCreateRowData();
       },
       (error) => {

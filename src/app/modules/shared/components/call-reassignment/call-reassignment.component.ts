@@ -57,7 +57,7 @@ export class CallReassignmentComponent implements OnInit {
         setTimeout(() => {
           let body = {
             from: this.agentList.filter((item:any) => item.agentId === this.callReassignForm.controls['agentId'].value)[0].name+'-'+this.agentList.filter((item:any) => item.agentId === this.callReassignForm.controls['agentId'].value)[0].serviceType,
-            to: this.smeList.filter((item:any) => item.callerAgentUserId === this.callReassignForm.controls['callerAgentUserIds'].value)[0].name 
+            to: this.smeList.filter((item:any) => item.callerAgentUserId === this.callReassignForm.controls['callerAgentUserIds'].value)[0].name
           }
           this.dialogRef.close({ event: 'close', requestBody: body })
         }, 4000)
@@ -93,8 +93,8 @@ export class CallReassignmentComponent implements OnInit {
       this.callReassignForm.controls['callerAgentUserId'].updateValueAndValidity();
     } else {
       this.agentsCall = false;
-      const userObj = JSON.parse(localStorage.getItem('UMD') ||'')
-      this.callReassignForm.controls['callerAgentUserId'].setValue(userObj.USER_UNIQUE_ID);
+      const userId = this.utilsService.getLoggedInUserID();
+      this.callReassignForm.controls['callerAgentUserId'].setValue(userId);
       this.callReassignForm.controls['agentId'].setValue(null);
       this.callReassignForm.controls['agentId'].setValidators(null);
       this.callReassignForm.controls['agentId'].updateValueAndValidity();

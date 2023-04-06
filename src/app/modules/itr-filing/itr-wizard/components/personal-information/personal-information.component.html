@@ -78,7 +78,7 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Area/ Locality</mat-label>
                     <mat-form-field appearance="outline">
-                        <input type="text" trim matInput placeholder="Area/ Locality" [pattern]="charRegex" name="area"
+                        <input type="text" trim matInput placeholder="Area/ Locality Characters Only" [pattern]="charRegex" name="area"
                             formControlName="area" class="input-field" maxlength="50" required>
                         <mat-error
                             *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('required')">
@@ -102,7 +102,7 @@
         <table class="table table-bordered" style="width: 100%;">
             <thead style="background:#eaeaea">
                 <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
-                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
                     <th class="text-center">IFSC Code*</th>
                     <th class="text-center">Name of Bank*</th>
                     <th class="text-center">Account Number*</th>

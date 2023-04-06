@@ -1,7 +1,7 @@
 import { data } from 'jquery';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -25,6 +25,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   @Input() tabName: any;
   @Output() sendTotalCount = new EventEmitter<any>();
 
+  searchVal: any;
   filerList:any;
   filerNames:any;
   queryParam: any ;
@@ -42,7 +43,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 10,
+    pageSize: 30,
     assigned:true,
     // owner:true,
     mobileNumber: null,
@@ -56,7 +57,8 @@ export class AssignedSubscriptionComponent implements OnInit {
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
@@ -68,7 +70,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 30,
       currentPage: 1,
       totalItems: null,
     };
@@ -79,8 +81,20 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('loggedIn Sme Details' ,this.loggedInSme)
     this.roles =this.loggedInSme[0]?.roles
     console.log('roles',this.roles)
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log("99999999999999999:", params)
+      if (this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-') {
+        this.userId = params['userMobNo'];
+        this.selectedUserName = this.userId
+        this.searchVal = params['userMobNo'];
+        this.queryParam = `?userId=${this.userId}`;
+        this.advanceSearch();
+        // console.log('this.queryParam --> ',this.queryParam)
+      }
+    });
+
     this.getAssignedSubscription(0);
-    this. getFilerList();
+    this.getFilerList();
     this.filteredOptions = this.searchName.valueChanges.pipe(
       startWith(''),
       map((value) => {
@@ -124,9 +138,9 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.queryParam=`?subscriptionAssigneeId=${loggedInSmeUserId}`
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
-    let pagination = `?page=${pageNo}&pageSize=10`;
+    let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
-      pagination = `&page=${pageNo}&pageSize=10`;
+      pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
     var param = `/subscription-dashboard-new/${loggedInSmeUserId}?${pagination}`;
     this.loading = true;
@@ -139,7 +153,7 @@ export class AssignedSubscriptionComponent implements OnInit {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data.content)
           );
-          this.config.totalItems = response.data.content.totalElements;
+          this.config.totalItems = response.data.totalElements;
         } else {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData([])
@@ -163,9 +177,9 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   searchByName(pageNo=0){
      let selectedSmeUserId =this.filerDetails.userId
-    let pagination = `?page=${pageNo}&pageSize=10`;
+    let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
-      pagination = `&page=${pageNo}&pageSize=10`;
+      pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
     var param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
     this.loading = true;
@@ -185,26 +199,22 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   advanceSearch() {
-    console.log('this.searchVal -> ', this.mobileNumber.value)
-    if (this.utilsService.isNonEmpty(this.mobileNumber)) {
-      if (this.mobileNumber.value.toString().length >= 8 && this.mobileNumber.value.toString().length <= 10) {
-        this.getUserByMobileNum(this.mobileNumber.value)
+    console.log('this.searchVal -> ', this.searchVal)
+    if (this.utilsService.isNonEmpty(this.searchVal)) {
+      if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 10) {
+        this.getUserByMobileNum(this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
       }
     }
-    // else {
-    //   this.selectedUserName = '';
-    //   this.queryParam = '?subscriptionAssigneeId=0';
-    //   this.utilsService.sendMessage(this.queryParam);
-    //   this.utilsService.showSnackBar('You are fetching all records.')
-    // }
+
   }
 
-  getUserByMobileNum(mobileNumber) {
+  getUserByMobileNum(number) {
+    console.log('number',number)
     const loggedInSmeUserId=this?.loggedInSme[0]?.userId
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + mobileNumber;
+    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       console.log('Get user  by mobile number responce: ', response);
@@ -212,7 +222,7 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.subscriptionListGridOptions.api?.setRowData(
           this.createRowData(response.data)
         );
-        this.config.totalItems = response.data.content.totalElements;
+        this.config.totalItems = response.data.totalElements;
       } else {
         this._toastMessageService.alert("error", "no user with given no.");
       }

@@ -2,7 +2,7 @@ import { NriDetailsDialogComponent } from '../../../components/nri-details-dialo
 import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import {DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -123,7 +123,7 @@ export class CustomerProfileComponent implements OnInit {
   ]
 
   filePath = 'ITR/';
-  loggedInUserData: any;
+  loggedInUserRoles: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -134,9 +134,10 @@ export class CustomerProfileComponent implements OnInit {
     private router: Router,
     private matDialog: MatDialog,
     public location: Location,
+              private datePipe: DatePipe,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
   }
 
   ngOnInit() {
@@ -231,23 +232,9 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
-  findAssesseeType() {
-    // this.customerProfileForm.controls['panNumber'].setValue(this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value) ? this.customerProfileForm.controls['panNumber'].value.toUpperCase() : this.customerProfileForm.controls['panNumber'].value);
-    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value)) {
-      const pan = this.customerProfileForm.controls['panNumber'].value;
-      if (pan.substring(4, 3) === 'P') {
-        this.customerProfileForm.controls['assesseeType'].setValue('INDIVIDUAL');
-      } else if (pan.substring(4, 3) === 'H') {
-        this.customerProfileForm.controls['assesseeType'].setValue('HUF');
-      } else {
-        this.customerProfileForm.controls['assesseeType'].setValue('INDIVIDUAL');
-      }
-    }
-  }
 
   getUserDataByPan(pan) {
     if (this.customerProfileForm.controls['panNumber'].valid) {
-      this.findAssesseeType()
       const token = sessionStorage.getItem(AppConstants.TOKEN);
       let httpOptions: any;
       httpOptions = {
@@ -265,6 +252,11 @@ export class CustomerProfileComponent implements OnInit {
           this.customerProfileForm.controls['firstName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''));
           this.customerProfileForm.controls['lastName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''));
           this.customerProfileForm.controls['middleName'].setValue(this.titlecasePipe.transform(this.utilsService.isNonEmpty(result.middleName) ? result.middleName : ''));
+          //1988-11-28 to DD/MM/YYYY
+          //this.datePipe.transform(dob,"dd/MM/yyyy")
+          let dob = new Date(result.dateOfBirth).toLocaleDateString("en-US");
+          this.customerProfileForm.controls['dateOfBirth'].setValue(moment(result.dateOfBirth, 'YYYY-MM-DD').toDate());
+          this.customerProfileForm.controls['assesseeType'].setValue(this.utilsService.findAssesseeType(pan));
           if (result.isValid !== 'EXISTING AND VALID') {
             this.utilsService.showSnackBar('Record (PAN) Not Found in ITD Database/Invalid PAN');
           }
@@ -276,7 +268,6 @@ export class CustomerProfileComponent implements OnInit {
 
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
-    this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
@@ -349,7 +340,7 @@ export class CustomerProfileComponent implements OnInit {
       this.customerProfileForm.controls['orgITRDate'].setValidators(Validators.required);
       this.customerProfileForm.controls['orgITRDate'].updateValueAndValidity();
     }
-    if (this.customerProfileForm.controls['isRevised'].value === 'Y') {
+    if (this.ITR_JSON.isRevised === 'Y') {
       this.customerProfileForm.controls['isRevised'].disable();
     }
   }
@@ -422,8 +413,8 @@ export class CustomerProfileComponent implements OnInit {
 
 
   deleteFile(filePath) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    let adminId = this.utilsService.getLoggedInUserID();
+    var path = '/itr/cloud/files?actionBy=' + adminId;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
@@ -672,7 +663,7 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   isApplicable(permissionRoles) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
   }
 
   setFilingDate() {

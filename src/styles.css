@@ -4,11 +4,27 @@
 
 .ag-theme-balham {
   font-family: Poppins !important;
+  margin: -35px 0px 10px 0px !important;
 }
 
 .ag-theme-balham .ag-root {
   min-height: 82px !important;
 }
+
+.ag-theme-balham .ag-header-cell, .ag-theme-balham .ag-header-group-cell {
+  padding-left: 0px;
+  padding-right: 12px;
+}
+
+.ag-header-cell-label .ag-header-cell-text {
+  white-space: normal !important;
+  padding-left: 10px;
+}
+
+.ag-header {
+  height: 50px!important;
+  padding-top:5px!important;
+  }
 
 .ag-root-wrapper-body.ag-layout-normal {
   flex: 1 1 auto;
@@ -296,6 +312,36 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.ngx-pagination {
+  margin-left: -35px!important;
+}
+.delete-btn {
+  background: #FFE1E1;
+  border: 1px solid #E20000;
+  border-radius: 6px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  text-align: center;
+  color: #E20000;
+}
+
+.delete-btn:disabled {
+  background: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  color: #BDBDBD;
+  padding: 10px;
+}
+.btnGry {
+  border: 1px solid #cccccc;
+  padding: 10px;
+  color: #cccccc;
+  width: 95px;
+  border-radius: 5px;
+  margin-left: -15px;
+}
 .mat-expansion-panel-header.mat-expanded {
     height: 55px;
     margin-bottom: 15px;
@@ -352,17 +398,19 @@ button {
   border-top: 1px solid #cccccc;
   padding-top: 5px;
 }
+
 .lgtBtn {
-    margin-left: 17%;
-    background-color: #ffffff;
-    color: #00AECA;
-    border: 1px solid #00AECA;
-    border-radius: 6px;
-    height: 50px;
-    width: 230px;
-    margin-top: 10px;
-    margin-bottom:20px;
-    font-weight: 500 !important;
+  margin-left: 17%;
+  background-color: #ffffff;
+  color: #00AECA;
+  border: 1px solid #00AECA;
+  border-radius: 6px;
+  height: 50px;
+  width: auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: 500 !important;
+  padding: 0px 14px 0px 14px;
 }
 .lgtBtn:hover {
   background-color: #00AECA;
@@ -453,6 +501,19 @@ button {
   margin-right: 28px;
 }
 
+
+.addOthr {
+  background-color: #EEFFE4;
+  color: #797979;
+  border-radius: 5px;
+  border: 1px solid #797979;
+  margin-right: 28px;
+  padding: 8px;
+  margin-bottom: 15px;
+  margin-right: 0px;
+  margin-top: 10px;
+}
+
 .border-b {
   border-bottom-width: 1px;
   margin-top: -25px;
@@ -461,7 +522,7 @@ button {
 .txHd {
   font-weight: bold;
   font-size: 18px;
-  width: 73%;
+  /* width: 73%; */
 }
 
 .dis_btn {
@@ -8902,7 +8963,7 @@ body[dir=rtl] .checkbox[checked=true] {
   background-color: #EEFFE4;
   color: #494949;
   border: 1px solid #494949;
-  width: 150px;
+  width:auto;
 }
 
 .tbd-btn:disabled,

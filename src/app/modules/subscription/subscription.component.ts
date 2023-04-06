@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoleBaseAuthGuardService } from '../shared/services/role-base-auth-guard.service';
+import {UtilsService} from "../../services/utils.service";
 
 @Component({
   selector: 'app-subscription',
@@ -8,17 +9,18 @@ import { RoleBaseAuthGuardService } from '../shared/services/role-base-auth-guar
 })
 export class SubscriptionComponent implements OnInit {
 
-  loggedInUserData: any;
+  loggedInUserRoles: any;
 
-  constructor(private roleBaseAuthGuardService: RoleBaseAuthGuardService,) { }
+  constructor(private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+              private utilsService: UtilsService) { }
 
   ngOnInit() {
-    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
-    console.log("loggedInUserData",this.loggedInUserData)
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    console.log("loggedInUserData",this.loggedInUserRoles)
   }
 
   isApplicable(permissionRoles) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
 }
 
 }

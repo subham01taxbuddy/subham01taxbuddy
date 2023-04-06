@@ -39,7 +39,6 @@ export class MyTeamItrsComponent implements OnInit {
     private userMsService: UserMsService,
     private toastMsgService: ToastMessageService,
     private router: Router, private dialog: MatDialog,) {
-    // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
     // this.myFilingTeamMembers = this.filingTeamMembers;
     // var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
@@ -105,8 +104,6 @@ export class MyTeamItrsComponent implements OnInit {
         'financialYear': fy,
         'filingTeamMemberId': id
       }
-      // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-      // const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=${id}`;
       let param = `/itr-search?page=${pageNo}&size=50`;
       let param2 = reqBody;
       this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
@@ -263,13 +260,13 @@ export class MyTeamItrsComponent implements OnInit {
           if (params.data.eFillingCompleted && params.data.ackStatus === 'SUCCESS') {
             return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: green">
-            <i class="fa fa-check" title="ITR filed successfully / Click to start revise return" 
+            <i class="fa fa-check" title="ITR filed successfully / Click to start revise return"
             aria-hidden="true" data-action-type="startRevise"></i>
            </button>`;
           } else if (params.data.ackStatus === 'DELAY') {
             return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
             background: transparent; font-size: 16px; color: red">
-            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
+            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead"
             aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           } else {
@@ -338,13 +335,13 @@ export class MyTeamItrsComponent implements OnInit {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
-            <i class="fa fa-circle" title="E-Verification is done" 
+            <i class="fa fa-circle" title="E-Verification is done"
             aria-hidden="true"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-check-circle" title="Click to update the E-verification status as done" 
+            <i class="fa fa-check-circle" title="Click to update the E-verification status as done"
             aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           }

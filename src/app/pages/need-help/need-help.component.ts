@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
+import {AppConstants} from "../../modules/shared/constants";
 
 @Component({
   selector: 'app-need-help',
@@ -28,12 +29,12 @@ export class NeedHelpComponent implements OnInit {
     private userMsService: UserMsService
   ) { }
   ngOnInit(): void {
-    this.userData = JSON.parse(localStorage.getItem('UMD'));
+    this.userData = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "")[0];
     this.helpForm = this.fb.group({
       description: new FormControl('', Validators.required),
       details: new FormControl(''),
       filename: new FormControl(''),
-      mobileNo: new FormControl(this.userData.USER_MOBILE, Validators.required)
+      mobileNo: new FormControl(this.userData.email, Validators.required)
     });
   }
   getURL() {
@@ -49,14 +50,14 @@ export class NeedHelpComponent implements OnInit {
       const request = {
         "code": "TAXBUDDY_TECHNICAL_ISSUE",
         "description": this.helpForm.controls['description'].value + ' ~ screen url:' + window.location.href,
-        "agentName": this.userData.USER_F_NAME + ' ' + this.userData.USER_L_NAME,
-        "email": this.userData.USER_EMAIL,
+        "agentName": this.userData.name,
+        "email": this.userData.email,
         "mobile": this.helpForm.controls['mobileNo'].value,
         "environment": "UAT"
       };
       if (this.fileName) {
         request["fileName"] = this.fileName;
-        // optional, include if there is any attachment 
+        // optional, include if there is any attachment
       }
       this.userMsService.postMethodAWSURL(param, request).subscribe(res => {
         this.ticket_number = res.data.ticket_number;

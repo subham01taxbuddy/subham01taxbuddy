@@ -56,7 +56,6 @@ Storage.configure({
   }
 });
 
-
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -95,7 +94,6 @@ export const MY_FORMATS = {
     AgGridCheckboxComponent,
     ValidateOtpByWhatAppComponent,
     NeedHelpComponent,
-
   ],
   entryComponents: [
     ConfirmationModalComponent,

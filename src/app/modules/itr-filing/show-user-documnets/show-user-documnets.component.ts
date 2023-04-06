@@ -226,8 +226,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
     // this.utilsService.openLoaderDialog();
     // console.log('current loaded file path: ', this.userObj.userId + '' + this.filePath + '/' + fileName);
     // eslint-disable-next-line prefer-const
-    const userData = JSON.parse(localStorage.getItem('UMD') || '');
-    let path = '/itr/cloud/files?actionBy=' + userData.USER_UNIQUE_ID;
+    const userId = this.utilsService.getLoggedInUserID();
+    let path = '/itr/cloud/files?actionBy=' + userId;
     const filePath = this.userId + '' + this.filePath + '/' + fileName;
     const body = [filePath];
     console.log('body: ', body);

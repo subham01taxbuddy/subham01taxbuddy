@@ -4,6 +4,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import * as moment from 'moment'
+import {AppConstants} from "../../shared/constants";
 
 @Component({
   selector: 'app-filing-tasks',
@@ -29,8 +30,11 @@ export class FilingTasksComponent implements OnInit {
   }
 
   ngOnInit() {
-    const smeEmailId = JSON.parse(localStorage.getItem('UMD'))['USER_EMAIL'];
-    this.getFilingTasks(smeEmailId);
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if (loggedInSmeInfo && loggedInSmeInfo[0]) {
+      const smeEmailId = loggedInSmeInfo[0].email;
+      this.getFilingTasks(smeEmailId);
+    }
   }
 
   getFilingTasks(smeEmailId) {

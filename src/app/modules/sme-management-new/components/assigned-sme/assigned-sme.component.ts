@@ -14,14 +14,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class AssignedSmeComponent implements OnInit {
   smeListGridOptions: GridOptions;
   loading = false;
-  smeList: any = [];
+  smeListLength: any;
   smeInfo: any;
   config: any;
   loggedInSme:any;
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 20,
+    pageSize: 30,
     assigned:true,
     // owner:true,
     mobileNumber: null,
@@ -46,7 +46,7 @@ export class AssignedSmeComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 30,
       currentPage: 1,
       totalItems: null,
     };
@@ -72,7 +72,9 @@ export class AssignedSmeComponent implements OnInit {
         ) {
           this.loading = false;
           this.smeInfo = result.data.content;
-          console.log('smelist', this.smeList);
+          this.config.totalItems = result.data.totalElements;
+
+          console.log('smelist length no ', this.smeListLength);
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(this.smeInfo)
           );
@@ -103,7 +105,7 @@ export class AssignedSmeComponent implements OnInit {
         headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-
+        pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
         cellRenderer: (params) => {},
@@ -113,6 +115,7 @@ export class AssignedSmeComponent implements OnInit {
         field: 'mobileNumber',
         width: 120,
         suppressMovable: true,
+        pinned: 'left',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -233,8 +236,9 @@ export class AssignedSmeComponent implements OnInit {
         field: '',
         width: 100,
         suppressMovable: true,
+        pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">

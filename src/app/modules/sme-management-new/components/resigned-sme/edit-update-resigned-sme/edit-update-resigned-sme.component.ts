@@ -34,6 +34,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   rolesList: any[] = [];
   minDate = new Date(1900, 0, 1);
   maxDate = new Date(new Date().getFullYear() , new Date().getMonth(), new Date().getDate());
+  // leaveEndMinDate = new Date(this.leaveStartDate)
   stateDropdown = AppConstants.stateDropdown;
   ownerList: any;
   itrTypesData = [];
@@ -43,6 +44,17 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   loggedInSme:any;
   smeRecords:any;
   smeServices:any;
+  langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
+  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
+  'Santali', 'Sindhi', 'Urdu']
+  itrTypeList = [
+    { value: 1, display: 'ITR 1' },
+    { value: 2, display: 'ITR 2' },
+    { value: 3, display: 'ITR 3' },
+    { value: 4, display: 'ITR 4' },
+
+  ];
+
 
   constructor(
     private  fb:FormBuilder,
@@ -400,7 +412,9 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     leaveEndDate:new FormControl(''),
     joiningDate:new FormControl(''),
     resigningDate:new FormControl(''),
-  })
+  },
+  //  {validator: this.checkDates}
+   );
 
   get coOwner(){
     return this.otherSmeInfo.controls['coOwner'] as FormControl
@@ -433,6 +447,38 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     return this.otherSmeInfo.controls['resigningDate'] as FormControl
   }
 
+  // comparisonEnddateValidator(): any {
+  //   let ldStartDate = this.leaveStartDate.value;
+  //   let ldEndDate = this.leaveEndDate.value;
+
+  //   let startnew = new Date(ldStartDate);
+  //   let endnew = new Date(ldEndDate);
+  //   if (startnew > endnew) {
+  //     return this.leaveEndDate.setErrors({ 'invaliddaterange': true });
+  //   }
+
+  //   let oldvalue = startnew;
+  //   this.leaveStartDate.reset();
+  //   this.leaveStartDate.patchValue(oldvalue);
+  //   return this.leaveStartDate.setErrors({ 'invaliddaterange': false });
+  // }
+
+  // comparisonStartdateValidator(): any {
+  //   let ldStartDate = this.leaveStartDate.value;
+  //   let ldEndDate = this.leaveEndDate.value;
+
+  //   let startnew = new Date(ldStartDate);
+  //   let endnew = new Date(ldEndDate);
+  //   if (startnew > endnew) {
+  //     return this.leaveStartDate.setErrors({ 'invaliddaterange': true });
+  //   }
+
+  //   let oldvalue = endnew;
+  //   this.leaveEndDate.reset();
+  //   this.leaveEndDate.patchValue(oldvalue);
+  //   return this.leaveEndDate.setErrors({ 'invaliddaterange': false });
+  // }
+
 
   getOwner() {
     const loggedInSmeUserId=this.loggedInSme[0].userId
@@ -440,7 +486,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
-      this.ownerList = result.data.content;
+      this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
       this.ownerNames = this.ownerList.map((item) => {
         return { name: item.name, userId:item.userId  };
@@ -522,7 +568,19 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     })
   }
 
+  ownerDetails :any;
+  getownerNameId(option){
+    this.ownerDetails =option
+    console.log(option)
+  }
+
   updateSmeDetails() {
+
+    const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
+   const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
+   const LeaveEndDate = this.convertToDDMMYY(this.leaveEndDate.value);
+   const  ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
+
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
@@ -545,10 +603,10 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         botId: this.smeObj.botId,
         displayName: this.displayName.value,
         active: this.smeObj.active,
-        leaveStartDate:this.leaveStartDate.value,
-        leaveEndDate:this.leaveEndDate.value,
-        joiningDate: this.joiningDate.value,
-        resigningDate:this.resigningDate.value,
+        leaveStartDate:LeaveStartDate,
+        leaveEndDate:LeaveEndDate,
+        joiningDate: JoiningDate,
+        resigningDate:ResigningDate,
         internal: this.internal.value == 'internal'? true :false,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
@@ -560,20 +618,27 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         leader: this.leader.value,
         admin: this.admin.value,
         filer: this.filer.value,
-        coOwnerUserId: this.smeObj.coOwnerUserId,
+        coOwnerUserId: this.ownerDetails?.userId
       };
 
       console.log('finalReq', finalReq);
       let requestData = JSON.parse(JSON.stringify(finalReq));
       console.log('requestData', requestData);
       this.userMsService.putMethod(param, requestData).subscribe(
-        (res) => {
+        (res:any) => {
           console.log('SME assignment updated', res);
           this.loading = false;
-          this._toastMessageService.alert(
-            'success',
-            'sme details updated successfully'
-          );
+          if(res.success ===false){
+            this._toastMessageService.alert(
+              'false',
+              'failed to update sme details '
+            );
+          }else{
+            this._toastMessageService.alert(
+              'success',
+              'sme details updated successfully'
+            );
+          }
         },
         (error) => {
           this._toastMessageService.alert('error', 'failed to update.');

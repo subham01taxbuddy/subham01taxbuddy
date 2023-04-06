@@ -26,7 +26,7 @@ const routes: Routes = [
                     { path: '', redirectTo: 'signup', pathMatch: 'full' }
                 ]
             },
-            { path: '', redirectTo: '/tasks/assigned-users', pathMatch: 'full' }
+            { path: '', redirectTo: '/tasks/assigned-users-new', pathMatch: 'full' }
         ]
     },
 ];

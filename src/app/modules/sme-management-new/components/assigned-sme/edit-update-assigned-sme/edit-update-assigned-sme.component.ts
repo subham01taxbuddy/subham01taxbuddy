@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -9,7 +8,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import {MatChip} from "@angular/material/chips";
 
 
 export const MY_FORMATS = {
@@ -51,6 +49,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   loggedInSme:any;
   smeRecords:any;
   smeServices:any;
+  langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
+  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
+  'Santali', 'Sindhi', 'Urdu']
+  itrTypeList = [
+    { value: 1, display: 'ITR 1' },
+    { value: 2, display: 'ITR 2' },
+    { value: 3, display: 'ITR 3' },
+    { value: 4, display: 'ITR 4' },
+
+  ];
 
   constructor(
     private  fb:FormBuilder,
@@ -81,59 +89,33 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     if(this.smeObj.internal === true ){
       this.internal.setValue("internal")
-    }else this.internal.setValue("external")
+    }else {
+      this.internal.setValue("external")
+    }
 
     if(this.smeObj.leaveStartDate !== null){
-    let leaveStartDate = this.smeObj.leaveStartDate;
-    let lDate = leaveStartDate?.split('IST');
-    this.leaveStartDate.setValue(new Date((lDate[0])+(lDate[1])))
+      let leaveStartDate = this.smeObj.leaveStartDate;
+      this.leaveStartDate.setValue(moment(leaveStartDate, 'DD/MM/YYYY').toDate());
     }
 
     if(this.smeObj.leaveEndDate !== null){
-    let leaveEndDate = this.smeObj.leaveEndDate;
-    let lEndDate = leaveEndDate?.split('IST');
-    this.leaveEndDate.setValue(new Date(lEndDate[0]+lEndDate[1]))
+      let leaveEndDate = this.smeObj.leaveEndDate;
+      this.leaveEndDate.setValue(moment(leaveEndDate, 'DD/MM/YYYY').toDate())
     }
 
     if(this.smeObj.joiningDate !== null){
-    let joiningDate = this.smeObj.joiningDate;
-    let joinDate = joiningDate?.split('IST');
-    this.joiningDate.setValue(new Date(joinDate[0]+joinDate[1]))
+      let joiningDate = this.smeObj.joiningDate;
+      this.joiningDate.setValue(moment(joiningDate, 'DD/MM/YYYY').toDate())
     }
 
     if(this.smeObj.resigningDate !== null){
-    let resigningDate = this.smeObj.resigningDate;
-    let resignDate = resigningDate?.split('IST');
-    this.resigningDate.setValue(new Date(resignDate[0]+resignDate[1]))
+      let resigningDate = this.smeObj.resigningDate;
+      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
     }
     this.roles.valueChanges.subscribe((item) => {
       console.log(item, this.roles);
     });
 
-
-    // this.smeObj.roles.forEach((element) => {
-    // if (element == 'FILER_ITR') {
-    // this.itr.setValue(true);
-    // }
-    // else if (element == 'FILER_NRI') {
-    // this.nri.setValue(true);
-    // }
-    // else if (element == 'FILER_NOTICE') {
-    //   this.notice.setValue(true);
-    // }
-    // else if (element == 'FILER_WB') {
-    //   this.wb.setValue(true);
-    // }
-    // else if (element == ' FILER_PD') {
-    //   this.pd.setValue(true);
-    // }
-    // else if (element == ' FILER_GST') {
-    //   this.gst.setValue(true);
-    // }
-    // else if (element == '  ROLE_LE') {
-    //   this.leader.setValue(true);
-    // }
-    // });
   }
 
   displayFn(user: User): string {
@@ -195,15 +177,15 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     pd: new FormControl(''),
     mf: new FormControl(''),
     other: new FormControl(''),
-    itrToggle :new FormControl(false),
-    nriToggle:new FormControl(false),
-    tpaToggle :new FormControl(false),
-    gstToggle:new FormControl(false),
-    noticeToggle:new FormControl(false),
-    wbToggle:new FormControl(false),
-    pdToggle:new FormControl(false),
-    mfToggle :new FormControl(false),
-    otherToggle:new FormControl(false),
+    itrToggle :new FormControl(''),
+    nriToggle:new FormControl(''),
+    tpaToggle :new FormControl(''),
+    gstToggle:new FormControl(''),
+    noticeToggle:new FormControl(''),
+    wbToggle:new FormControl(''),
+    pdToggle:new FormControl(''),
+    mfToggle :new FormControl(''),
+    otherToggle:new FormControl(''),
   })
 
   get itr(){
@@ -304,97 +286,75 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    let serviceRecord = this.serviceRecords.filter(element => element.serviceType === serviceType);
     serviceRecord[0].assignmentStart = assignment.value;
-    console.log(serviceRecord[0]);
+    console.log(this.serviceRecords);
 
-    //add update api call
-    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
   }
 
-  smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
-    const userId = this.smeObj.userId;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
-    const request = serviceRecord;
-
-    serviceCheckBox.disable();
-    assignmentToggle?.disable();
-
-    this.userMsService.putMethod(param, request).subscribe((result: any) => {
-      console.log('sme record by service  -> ', result);
-      if(result.success) {
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-        this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
-      } else {
-        this.utilsService.showSnackBar(result.error);
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-      }
-    }, error => {
-      this.utilsService.showSnackBar(error);
-      serviceCheckBox.enable();
-      assignmentToggle?.enable();
-    });
-  }
+  // smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
+  //   const userId = this.smeObj.userId;
+  //   const loggedInSmeUserId=this.loggedInSme[0].userId
+  //   const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+  //   const request = serviceRecord;
+  //
+  //   serviceCheckBox.disable();
+  //   assignmentToggle?.disable();
+  //
+  //   console.log(request);
+  //   // this.userMsService.putMethod(param, request).subscribe((result: any) => {
+  //   //   console.log('sme record by service  -> ', result);
+  //   //   if(result.success) {
+  //   //     serviceCheckBox.enable();
+  //   //     assignmentToggle?.enable();
+  //   //     this.utilsService.showSnackBar('Assignment updated successfully for ' + serviceRecord.serviceType);
+  //   //   } else {
+  //   //     this.utilsService.showSnackBar(result.error);
+  //   //     serviceCheckBox.enable();
+  //   //     assignmentToggle?.enable();
+  //   //   }
+  //   // }, error => {
+  //   //   this.utilsService.showSnackBar(error);
+  //   //   serviceCheckBox.enable();
+  //   //   assignmentToggle?.enable();
+  //   // });
+  // }
 
   nriServiceToggle = false;
 
   nriUpdated(event, itr: FormControl) {
     //for NRI capability check ITR service and add relevant roles
     this.nriServiceToggle = !this.nriServiceToggle;
-    let itrRecord = this.smeRecords.filter(element => element.serviceType === 'ITR')[0];
-    if(this.smeObj.owner){
-      if(this.nriServiceToggle === true) {
-        itrRecord.roles.push('OWNER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
-        itrRecord.roles.splice(index, 1);
-      }
-    } else {
-      if(this.nriServiceToggle === true) {
-        itrRecord.roles.push('FILER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex(item => item === 'OWNER_NRI');
-        itrRecord.roles.removeAt(index);
-      }
-    }
-    console.log(itrRecord);
-    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
   }
 
+  serviceRecords: any[] = [];
+
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(element => element.serviceType === serviceType);
+    let serviceRecord = this.serviceRecords.filter(element => element.serviceType === serviceType);
+    let assignmentStart = assignment.value ? assignment.value : false;
+    let record = {
+      serviceType: serviceType,
+      assignmentStart: assignmentStart,
+      role: serviceType === 'TPA' ? 'FILER_TPA_NPS' : 'FILER_' + serviceType
+    }
     if(service.value) {
       //service added, check if existing and update accordingly
       if(serviceRecord && serviceRecord.length > 0){
         //existing record
-        assignment.setValue(serviceRecord[0].assignmentStart);
-
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        serviceRecord[0].serviceType = serviceType;
+        serviceRecord[0].assignmentStart = assignmentStart;
       } else {
-        assignment.setValue(false);
-        let updated = this.smeRecords[0];
-        updated.serviceType = serviceType;
-        updated.assignmentStart = false;
-        this.smeRecords.push(updated);
-
-        this.smeInfoUpdateServiceCall(updated, service, assignment);
+        this.serviceRecords.push(record);
       }
     } else {
-      //service is already added, set assignment start false
+      //service is already added, remove from list
       if(serviceRecord && serviceRecord.length > 0){
         //existing record
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      } else {
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        this.serviceRecords.splice( this.serviceRecords.indexOf(serviceRecord[0]), 1);
       }
     }
 
-    console.log(this.smeRecords);
+    console.log(this.serviceRecords);
   }
 
   otherSmeInfo : FormGroup =this.fb.group({
@@ -448,7 +408,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
-      this.ownerList = result.data.content;
+      this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
       this.ownerNames = this.ownerList.map((item) => {
         return { name: item.name, userId:item.userId  };
@@ -465,15 +425,19 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
     console.log('sme record by service  -> ', result);
-    this.smeRecords=result.data
+    this.smeRecords=result.data;
+
+    this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
     this.smeServices =this.smeRecords.map((item) => {
       return { serviceType: item.serviceType , assignmentStart :item.assignmentStart};
     });
     console.log("servicesList",this.smeServices)
 
+   this.serviceRecords = this.smeServices;
     this.smeServices.forEach((element) => {
       if (element.serviceType == "ITR") {
         this.itr.setValue(true);
+        this.itr.disable();
         if(this.smeObj.roles.includes('OWNER_NRI') || this.smeObj.roles.includes('FILER_NRI')){
           this.nriServiceToggle = true;
         }
@@ -483,56 +447,64 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       }
       else if (element.serviceType == "TPA") {
         this.tpa.setValue(true);
+        this.tpa.disable();
         if (element.assignmentStart == true) {
           this.tpaToggle.setValue(true);
         }
       }
       else if (element.serviceType == "GST") {
         this.gst.setValue(true);
+        this.gst.disable();
         if (element.assignmentStart == true) {
           this.gstToggle.setValue(true);
         }
       }
       else if (element.serviceType == "NOTICE") {
         this.notice.setValue(true);
+        this.notice.disable();
         if (element.assignmentStart == true) {
           this.noticeToggle.setValue(true);
         }
       }
       else if (element.serviceType == "WB") {
         this.wb.setValue(true);
+        this.wb.disable();
         if (element.assignmentStart == true) {
           this.wbToggle.setValue(true);
         }
       }
       else if (element.serviceType == "PD") {
         this.pd.setValue(true);
+        this.pd.disable();
         if (element.assignmentStart == true) {
           this.pdToggle.setValue(true);
         }
       }
-      else if (element.serviceType == "PD") {
+      else if (element.serviceType == "MF") {
         this.mf.setValue(true);
+        this.mf.disable();
         if (element.assignmentStart == true) {
           this.mfToggle.setValue(true);
         }
       }
-      else if (element.serviceType == "PD") {
-        this.other.setValue(true);
-        if (element.assignmentStart == true) {
-          this.otherToggle.setValue(true);
-        }
-      }
-    })
-    })
+      });
+    });
+  }
+
+  ownerDetails :any;
+  getownerNameId(option){
+    this.ownerDetails =option
+    console.log(option)
   }
 
   updateSmeDetails() {
-    const userId = this.smeObj.userId;
-    console.log(userId);
-    const param = `/sme-details-new/${userId}`;
-    if (this.smeFormGroup.valid && this.roles.valid && this.services.valid ) {
-      this.loading = true;
+
+   const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
+   const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
+   const LeaveEndDate = this.convertToDDMMYY(this.leaveEndDate.value);
+   const  ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
+
+    if (this.smeFormGroup.valid && this.roles.valid) {
 
       let finalReq = {
         userId: this.smeObj.userId,
@@ -550,10 +522,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         botId: this.smeObj.botId,
         displayName: this.displayName.value,
         active: this.smeObj.active,
-        leaveStartDate:this.leaveStartDate.value,
-        leaveEndDate:this.leaveEndDate.value,
-        joiningDate: this.joiningDate.value,
-        resigningDate:this.resigningDate.value,
+        leaveStartDate:LeaveStartDate,
+        leaveEndDate:LeaveEndDate,
+        joiningDate: JoiningDate,
+        resigningDate:ResigningDate,
         internal: this.internal.value == 'internal'? true :false,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
@@ -565,27 +537,70 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         leader: this.leader.value,
         admin: this.admin.value,
         filer: this.filer.value,
-        coOwnerUserId: this.smeObj.coOwnerUserId,
+        coOwnerUserId: this.ownerDetails?.userId
       };
+      if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
 
-      console.log('finalReq', finalReq);
-      let requestData = JSON.parse(JSON.stringify(finalReq));
-      console.log('requestData', requestData);
-      this.userMsService.putMethod(param, requestData).subscribe(
-        (res) => {
-          console.log('SME assignment updated', res);
-          this.loading = false;
+        if (this.nriServiceToggle === true && this.smeObj.owner) {
+          finalReq.roles.push('OWNER_NRI');
+        } else if (this.nriServiceToggle === true && this.smeObj.filer) {
+          finalReq.roles.push('FILER_NRI');
+        } else if (this.nriServiceToggle === false && this.smeObj.owner){
+          let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
+          if(index >= 0) {
+            finalReq.roles.splice(index, 1);
+          }
+        } else if (this.nriServiceToggle === false && this.smeObj.filer) {
+          let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
+          if(index >= 0) {
+            finalReq.roles.splice(index, 1);
+          }
+        }
+
+      }
+      if(this.serviceRecords.length > 0) {
+        this.serviceRecords.forEach(service => {
+          finalReq.serviceType = service.serviceType;
+          finalReq.assignmentStart = service.assignmentStart;
+          finalReq.roles.push(service.role);
+          console.log(finalReq);
+          this.serviceApiCall(finalReq);
+        });
+      } else {
+        //update with as is
+        console.log(finalReq);
+        this.serviceApiCall(finalReq);
+      }
+    }
+  }
+
+  serviceApiCall(requestData: any) {
+    const userId = this.smeObj.userId;
+    console.log(userId);
+    const param = `/sme-details-new/${userId}`;
+
+    this.loading = true;
+    this.userMsService.putMethod(param, requestData).subscribe(
+      (res:any) => {
+        console.log('SME assignment updated', res);
+        this.loading = false;
+        if(res.success ===false){
+          this._toastMessageService.alert(
+            'false',
+            'failed to update sme details '
+          );
+        }else{
           this._toastMessageService.alert(
             'success',
             'sme details updated successfully'
           );
-        },
-        (error) => {
-          this._toastMessageService.alert('error', 'failed to update.');
-          this.loading = false;
         }
-      );
-    }
+      },
+      (error) => {
+        this._toastMessageService.alert('error', 'failed to update.');
+        this.loading = false;
+      }
+    );
   }
 
   convertToDDMMYY(date) {
@@ -648,5 +663,6 @@ export interface SmeObj {
   owner: boolean
   referredBy:string
   qualification:string
-  state:string
+  state:string,
+  smeOriginalEmail: string
 }

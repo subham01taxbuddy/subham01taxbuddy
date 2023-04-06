@@ -70,7 +70,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
         this.addMore(obj);
       });
     }
-
+    this.calculateTotalLosses();
     this.disableSILoss();
   }
 
@@ -160,8 +160,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       totalSTCGLoss += Number(element.STCGLoss);
 
       if (element.assessmentPastYear === '2018-19' || element.assessmentPastYear === '2019-20' || element.assessmentPastYear === '2020-21' || element.assessmentPastYear === '2021-22') {
-        debugger
-        totalSIBusinessLoss += Number(element.speculativeBusinessLoss);
+       totalSIBusinessLoss += Number(element.speculativeBusinessLoss);
       } else {
         totalSIBusinessLoss = 0
       }

@@ -21,13 +21,14 @@ declare let $: any;
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [RoleBaseAuthGuardService, UserMsService]
+  providers: [RoleBaseAuthGuardService, UserMsService],
 })
 export class LoginComponent implements OnInit {
 
   component_link: string = 'login';
   public form!: FormGroup;
   public loading: boolean = false;
+  public showPassword: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -157,7 +158,7 @@ export class LoginComponent implements OnInit {
       id_token: data.signInUserSession.accessToken.jwtToken,
       cognitoId: data.attributes.sub,
       userId: jhi.userId,
-      role: jhi.role
+      role: jhi.role,
     };
     NavbarService.getInstance().setUserData(userData);
     this.utilsService.getStoredSmeList();
@@ -165,7 +166,6 @@ export class LoginComponent implements OnInit {
     this.getAgentList();
     this.getSmeInfoDetails(jhi.userId);
     this.getDueDateDetails();
-
   }
   getDueDateDetails() {
     //https://uat-api.taxbuddy.com/itr/due-date
@@ -277,16 +277,16 @@ export class LoginComponent implements OnInit {
             userId: loginSMEInfo.userId,
             password: '',
             metadata: {
-              'userId': loginSMEInfo.userId,
-              'contactNumber': loginSMEInfo.mobileNumber,
-              'email': loginSMEInfo['email'],
-              'Platform': 'Website'
-            }
+              userId: loginSMEInfo.userId,
+              contactNumber: loginSMEInfo.mobileNumber,
+              email: loginSMEInfo['email'],
+              Platform: 'Website',
+            },
           };
           (window as any).Kommunicate.updateChatContext(chatContext);
 
           (window as any).Kommunicate.updateUser(userDetail);
-        }
+        },
       };
       var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
       s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
@@ -312,25 +312,22 @@ export class LoginComponent implements OnInit {
 
     waitForGlobal('Kommunicate', function () {
       var defaultSettings = {
-        'defaultBotIds': '3eb13dbd656feb3acdbdf650efbf437d1',
-        "skipRouting": true
+        defaultBotIds: '3eb13dbd656feb3acdbdf650efbf437d1',
+        skipRouting: true,
       };
 
       (window as any).Kommunicate.displayKommunicateWidget(true);
       const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
       const loginSMEInfo = data[0];
-      var css = "#km-faq{display:none!important;}";
+      var css = '#km-faq{display:none!important;}';
       (window as any).Kommunicate.customizeWidgetCss(css);
 
       (window as any).Kommunicate.updateSettings(defaultSettings);
       // (window as any).Kommunicate.startConversation(defaultSettings, function (response) {
       //         console.log("new conversation created");
       //     });
-
-
     });
   }
-
 
   mode: string = 'SIGN_IN';
   username: string = '';
@@ -348,4 +345,3 @@ export class LoginComponent implements OnInit {
     this.mode = event.view;
   }
 }
-

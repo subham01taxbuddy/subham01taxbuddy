@@ -70,7 +70,7 @@ export class NavbarComponent implements DoCheck {
     }
   }
   navigateToHome() {
-    this.router.navigate(['/tasks/assigned-users']);
+    this.router.navigate(['/tasks/assigned-users-new']);
   }
 
 

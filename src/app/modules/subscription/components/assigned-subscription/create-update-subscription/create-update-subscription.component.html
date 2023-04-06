@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div>
   <div class="align-items-center row">
     <div class="col-sm-10">
@@ -5,7 +6,7 @@
     </div>
   </div>
   <div class="content-wrapper">
-    <div class="container">
+    <div class="container" *ngIf="userSubscription.userSelectedPlan !== null && userSubscription.userSelectedPlan.servicesType === 'ITR'">
       <div class="row">
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
@@ -26,8 +27,9 @@
           </div>
         </div>
       </div>
+      <hr>
     </div>
-    <hr>
+
     <div class="container" >
       <div class="col-sm-10" style="margin-top: 10px;">
         <b style="font-size: 20px">User Information </b>
@@ -45,7 +47,7 @@
         <div class="col-sm-4">
           <mat-label> Mobile Number </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field" />
+            <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field" readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -54,7 +56,7 @@
         <div class="col-sm-4">
           <mat-label> Email ID </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="email id" [formControl]="email" class="input-field" />
+            <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field" readonly />
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -65,25 +67,26 @@
         <div class="col-sm-4">
           <mat-label> GSTN No </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="email id" [formControl]="gstNo" class="input-field" />
+            <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field"
+            (blur)="updateIgstFlag()"/>
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Reminder Mobile Number </mat-label>
+          <mat-label> Secondary Mobile Number </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Reminder Mobile Number" [formControl]="reminderMobileNumber" class="input-field" />
+            <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Reminder Email </mat-label>
+          <mat-label> Secondary Email </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Reminder Mobile Number" [formControl]="reminderEmail" class="input-field" />
+            <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderEmail" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -94,25 +97,34 @@
         <div class="col-sm-4">
           <mat-label> PIN No </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="PIN No." [formControl]="pin" class="input-field" />
+            <input type="text" trim matInput placeholder="Pin Code" class="input-field" [formControl]="pin"
+              (blur)="updateDataByPincode()" style="line-height: 21px" />
+            <!-- <input type="text" matInput placeholder="PIN No." [formControl]="pin" class="input-field" /> -->
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> state </mat-label>
+          <mat-label> State </mat-label>
           <mat-form-field appearance="outline">
+          <mat-select placeholder="Select state"  [formControl]="state" style="line-height: 21px">
+            <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+              {{ state.stateName | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+          <!-- <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
-          </mat-form-field>
+            <mat-error
+                  *ngIf="state?.hasError('required') ">
+                  This field is required</mat-error>
+          </mat-form-field> -->
         </div>
         <div class="col-sm-4">
-          <mat-label> city </mat-label>
+          <mat-label> City </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" />
+            <input type="text" matInput placeholder="City" [formControl]="city" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -148,6 +160,11 @@
           </mat-form-field>
         </div>
       </div>
+      <div class="row">
+        <div style="text-align: center;">
+          <button class="tbd-btn"  (click)=" updateUserDetails()">Save </button>
+        </div>
+      </div>
     </div>
     <hr>
     <div class="row">
@@ -161,22 +178,22 @@
               <!-- <span class="head">Description:</span><br> -->
               <span class="head">Validation For Days:</span><br>
               <span class="head">Base Price:</span><br>
-              <span class="head">CGST:</span><br>
-              <span class="head">SGST:</span><br>
-              <span class="head">IGST:</span><br>
+              <span class="head" *ngIf="!showIgst">CGST:</span><br>
+              <span class="head" *ngIf="!showIgst">SGST:</span><br>
+              <span class="head" *ngIf="showIgst">IGST:</span><br>
               <span class="head">Total Tax:</span><br>
               <span class="head">Total Amount:</span>
             </div>
             <div class="col-sm-6"
-              *ngIf="this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.userSelectedPlan)">
-              <span class="head">{{userSubscription.userSelectedPlan.name}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.validForDays}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.basePrice | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.cgst | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.sgst | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.igst | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.totalTax | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan.totalAmount | currency:'INR'}}</span>
+              *ngIf="userSubscription && userSubscription.userSelectedPlan">
+              <span class="head">{{userSubscription.userSelectedPlan?.name}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan?.validForDays}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan?.basePrice | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="!showIgst">{{userSubscription.userSelectedPlan?.cgst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="!showIgst">{{userSubscription.userSelectedPlan?.sgst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="showIgst">{{userSubscription.userSelectedPlan?.igst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan?.totalTax | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan?.totalAmount | currency:'INR'}}</span>
             </div>
 
           </div>
@@ -239,64 +256,91 @@
             <th>Amount</th>
           </tr>
           <tr>
-            <td>change in plan/Actual plan amount</td>
+            <td>{{userSubscription?.smeSelectedPlan === null || userSubscription?.userSelectedPlan?.planId === userSubscription?.smeSelectedPlan?.planId ? 'Actual Plan Amount' : 'Change in Plan'}}</td>
             <td></td>
-            <td>{{userSubscription?.smeSelectedPlan?.totalAmount | currency:'INR'}}</td>
+            <td>{{(userSubscription?.smeSelectedPlan !== null ? userSubscription?.smeSelectedPlan?.totalAmount : userSubscription?.userSelectedPlan?.totalAmount) | currency:'INR'}}</td>
           </tr>
-          <tr>
-            <td>Less Paid for schedule call</td>
+          <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+            <td>Less: {{item.title}}</td>
             <td></td>
-            <td>500</td>
-          </tr>
-          <tr>
-            <td>Less Paid for TPA</td>
-            <td></td>
-            <td>500</td>
+            <td><span class="head">{{item.amount | currency:'INR'}}</span></td>
           </tr>
           <tr>
             <td>Total</td>
             <td></td>
-            <td>500</td>
+            <td>{{totalCon | currency:'INR'}}</td>
           </tr>
           <tr>
-            <td>Promo Code : </td>
-            <td></td>
-            <td>500</td>
+            <td>Promo Code :
+              <div class="row">
+                <div class="col-sm-5">
+                  <mat-label>Search & Select Promo Code</mat-label>
+                  <mat-form-field  appearance="outline">
+                    <input type="text" placeholder="Start typing..." matInput [disabled]="!smeSelectedPlanId"
+                      [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+                    <mat-error *ngIf="searchedPromoCode.invalid">
+                      Please select value from dropdown only.
+                    </mat-error>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+                        {{option.title}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-5">
+                  <button class="btn " style=" background: #00AECA;
+                  border-radius: 2px;" (click)="applyPromo(smeSelectedPlanId)" [disabled]="!smeSelectedPlanId">Apply</button> &nbsp;
+                  <button class="btn " style=" background: #00AECA;
+                  border-radius: 2px;" (click)="removePromoCode()" type="reset">Remove</button>
+                </div>
+              </div>
+
+            </td>
+            <td>
+
+            </td>
+            <td><span class="head" *ngIf="this?.userSubscription && this?.userSubscription?.promoCode"><b>
+              {{getExactPromoDiscount() |
+              currency:'INR'}}
+            </b><br></span><br></td>
           </tr>
           <tr>
             <th>Final Amount To Pay  </th>
             <td></td>
-            <th>500</th>
+            <th>{{this?.userSubscription?.payableSubscriptionAmount |
+              currency:'INR'}}</th>
           </tr>
           <tr>
             <td></td>
-            <td>base Price</td>
-            <td>{{userSubscription?.smeSelectedPlan?.basePrice | currency:'INR'}}</td>
+            <td>Base Price</td>
+            <td>{{this?.userSubscription?.basePrice| currency:'INR'}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!showIgst">
             <td></td>
             <td>CGST</td>
-            <td>{{userSubscription?.smeSelectedPlan?.cgst | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.cgst | currency:'INR'}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="!showIgst">
             <td></td>
             <td>SGST</td>
-            <td>{{userSubscription?.smeSelectedPlan?.sgst | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.sgst | currency:'INR'}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="showIgst">
             <td></td>
             <td>IGST</td>
-            <td>{{userSubscription?.smeSelectedPlan?.igst | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.igst | currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>Total Tax</td>
-            <td>{{userSubscription?.smeSelectedPlan?.totalTax | currency:'INR'}}</td>
+            <td>{{this?.userSubscription?.totalTax | currency:'INR'}}</td>
           </tr>
           <tr>
             <td></td>
             <td>Total Amount</td>
-            <td></td>
+            <td><span class="head"><b>{{this?.userSubscription?.payableSubscriptionAmount |
+              currency:'INR'}}</b></span></td>
           </tr>
         </tbody>
       </table>
@@ -312,18 +356,31 @@
         <div class="col-sm-8">
           <div class="row">
             <div class="col-sm-6">
-              <mat-label> Service</mat-label>
+              <mat-label>Select Service</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="service" [formControl]="service" class="input-field" />
 
-              </mat-form-field>
+                <mat-select [(ngModel)]="service" [ngModelOptions]="{standalone: true}" matInput
+                    placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()">
+                    <mat-option value="ITR"> ITR Filing </mat-option>
+                    <mat-option value="GST"> GST </mat-option>
+                    <mat-option value="NOTICE"> Notice response </mat-option>
+<!--                    <mat-option value="TDS filing"> TDS filing </mat-option>-->
+                    <mat-option value="TPA"> TPA </mat-option>
+                    <mat-option value="OTHER"> Other Services </mat-option>
+                </mat-select>
+            </mat-form-field>
             </div>
             <div class="col-sm-6">
-              <mat-label> Service Details</mat-label>
+              <mat-label>Service Detail</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="service details" [formControl]="serviceDetails" class="input-field" />
 
-              </mat-form-field>
+                <mat-select [(ngModel)]="serviceDetail" [ngModelOptions]="{standalone: true}"
+                    (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail"
+                    autocomplete="off" required>
+                    <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
+                        {{details.details}} </mat-option>
+                </mat-select>
+            </mat-form-field>
             </div>
           </div>
           <div class="row">
@@ -337,7 +394,11 @@
             <div class="col-sm-6">
               <mat-label> Financial Year</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="Financial Year" [formControl]="financialYear" class="input-field" />
+                <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" >
+                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                    {{year.financialYear}}
+                  </mat-option>
+                </mat-select>
 
               </mat-form-field>
             </div>
@@ -346,22 +407,30 @@
         <div class="col-sm-4">
           <mat-label> Description</mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="description" [formControl]="description" class="input-field" />
-            <!-- <mat-error
-                        *ngIf="callingNumber?.hasError('required') ">
-                        This field is required</mat-error> -->
-          </mat-form-field>
+            <mat-label>Description</mat-label>
+            <input [formControl]="description"  matInput
+                placeholder="Description" autocomplete="off">
+        </mat-form-field>
         </div>
       </div>
       <hr>
       <div  style="float: right;">
         <button  class="btn " style=" background: #4F9A20;
-        border-radius: 5px;"><i class="fas fa-wallet"></i> Refund Request </button>
+        border-radius: 5px;" (click)="updateSubscription()" *ngIf="this?.userSubscription?.payableSubscriptionAmount > 0 "><i class="fas fa-wallet"></i> Save & Generate Invoice </button>
       </div>
+      <div  style="float: right;">
+        <button  class="btn " style=" background: #4F9A20;
+        border-radius: 5px;" *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0 "><i class="fas fa-wallet"></i> Save & Issue Refund Request </button>
+      </div>
+      <div style="float: right;">
+        <button  class="btn " style=" background: #4F9A20;
+        border-radius: 5px;" (click)="location.back()"> Cancel </button>
+      </div>
+
     </div>
   </div>
 </div>
-<div style="margin-top: 50px;">
+<div style="margin-top: 50px;" class="d-none" *ngIf="false">
   <div class="col-sm-10">
     <b style="font-size: 20px">In case Of GST </b>
   </div>

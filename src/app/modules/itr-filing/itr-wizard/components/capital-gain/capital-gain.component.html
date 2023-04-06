@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div *ngIf="showList">
+<div *ngIf="showList" class="spcTp">
   <div>
     <mat-accordion class="headers-align">
       <mat-expansion-panel *ngFor="let topic of topicList" hideToggle>
@@ -13,10 +13,10 @@
       </mat-expansion-panel>
     </mat-accordion>
   </div>
-  <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+  <div class="flex justify-between p-[30px] back-foot">
     <button
-      class="display-flex btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
-      (click)="goBack()"><mat-icon>keyboard_backspace</mat-icon>
+      class="lgtBtn"
+      (click)="goBack()"><mat-icon class="icoAdj">keyboard_backspace</mat-icon>
       <span class="font-semibold">&nbsp;Back to Source Page</span>
     </button>
   </div>
