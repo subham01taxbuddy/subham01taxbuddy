@@ -755,7 +755,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   updateSubscription(){
     this.loading = true;
-    if (this.userSubscription.smeSelectedPlan !=null) {
+    if (this.userSubscription.smeSelectedPlan !=null && this.pin.value) {
       console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
       let param = '/subscription';
       let reqBody = {
@@ -795,7 +795,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
     }
     else {
-      this.toastMessage.alert("error", "plz Select Plan.")
+      this.toastMessage.alert("error", "plz Select Plan. & pin code")
+      this.loading=false;
     }
   }
 
