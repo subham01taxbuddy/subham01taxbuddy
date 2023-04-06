@@ -684,6 +684,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   updateUserDetails(){
+    this.loading=true;
     // https://api.taxbuddy.com/user/profile/735121
     // this.userSubscription.userId
     let param = `/profile/${this.userSubscription.userId}`;
@@ -737,6 +738,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     let requestData = JSON.parse(JSON.stringify(reqBody));
       console.log('requestData', requestData);
     this.userService.putMethod(param,reqBody).subscribe((res: any) => {
+      this.loading=false;
     console.log('user upadted res: ', res);
     this.loading = false;
           this.toastMessage.alert(

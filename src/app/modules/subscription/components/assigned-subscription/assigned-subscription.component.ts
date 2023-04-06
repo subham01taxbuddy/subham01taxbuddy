@@ -206,6 +206,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('this.searchVal -> ', this.searchVal)
     if (this.utilsService.isNonEmpty(this.searchVal)) {
       if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 10) {
+        this.mobileNumber.setValue(this.searchVal);
         this.getUserByMobileNum(this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
