@@ -11,29 +11,28 @@
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
             <div>
-              <b style="font-size: 20px">{{cardTitles}} </b>
+              <b style="font-size: 20px">{{cardTitle}} View </b>
             </div>
             <div  >
               <div class="row">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
+                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" (blur)="disableFields(searchOwner.value,searchFiler.value)">
                     <button (click)="searchByOwner()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button>
-
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                      <mat-option *ngFor="let options  of filteredOptions | async" [value]="options.name" (click)="getOwnerNameId(options)">
-                        {{options.name}}
+                    <mat-autocomplete #auto="matAutocomplete" >
+                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option)">
+                        {{option.name}}
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6" >
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchFiler" >
+                    <input type="text" matInput [formControl]="searchFiler" (blur)="disableFields(searchOwner.value,searchFiler.value)" >
                     <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button>
