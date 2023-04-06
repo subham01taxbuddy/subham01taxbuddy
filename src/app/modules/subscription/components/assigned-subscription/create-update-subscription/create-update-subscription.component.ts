@@ -684,12 +684,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   updateUserDetails(){
-
-    let param = `/profile/${this.userSubscription.userId}`;
+      let param = `/profile/${this.userSubscription.userId}`;
      let reqBody ={
-      createdDate: this.subscriptionObj.createdDate,
-      id: this.subscriptionObj.id,
-      userId: this.subscriptionObj.userId,
+      createdDate: this.selectedUserInfo.createdDate,
+      id: this.selectedUserInfo.id,
+      userId: this.selectedUserInfo.userId,
       fName:this.selectedUserInfo.fName,
       mName:this.selectedUserInfo.mName,
       lName: this.selectedUserInfo.lName,
