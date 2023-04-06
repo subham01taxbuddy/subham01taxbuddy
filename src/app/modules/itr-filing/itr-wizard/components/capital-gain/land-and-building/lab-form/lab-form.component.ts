@@ -667,12 +667,17 @@ export class LabFormComponent implements OnInit {
     ).controls[index] as FormGroup;
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[this.currentCgIndex] as FormGroup;
+    ).controls[0] as FormGroup;
 
     const shareValue = buyersDetails.controls['share'].value;
     if (shareValue >= 0 && shareValue <= 100) {
       buyersDetails.controls['amount'].setValue(
         (assetDetails.controls['valueInConsideration'].value * shareValue) / 100
+      );
+    } else {
+      console.log(
+        this.immovableForm.controls['assetDetails'],
+        this.currentCgIndex
       );
     }
   }
@@ -1118,7 +1123,10 @@ export class LabFormComponent implements OnInit {
 
     // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
-    improve.length === 0 ? this.isImprovements.setValue(false) : null;
+    if (improve.length === 0) {
+      this.isImprovements.setValue(false);
+    }
+    // improve.length === 0 ? this.isImprovements.setValue(false) : null;
 
     this.calculateCapitalGain(formGroupName, '', index);
   }
@@ -1186,6 +1194,7 @@ export class LabFormComponent implements OnInit {
   minPurchaseDate: any;
   calMinPurchaseDate = new Date();
   changeInvestmentSection(ref, index) {
+    console.log(index);
     // const investDetails = this.InvestSectionDropdown.filter(item => item.investmentSection === this.investmentForm.controls['underSection'].value);
     // this.calMinPurchaseDate = new Date(this.data.assetSelected.sellDate);
     // if (investDetails.length > 0) {
@@ -1207,11 +1216,12 @@ export class LabFormComponent implements OnInit {
 
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[index] as FormGroup;
+    ).controls[0] as FormGroup;
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC'
     ) {
+      console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
         Validators.required,
         Validators.pattern(AppConstants.amountWithoutDecimal),
@@ -1258,7 +1268,7 @@ export class LabFormComponent implements OnInit {
       .controls[index] as FormGroup;
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[index] as FormGroup;
+    ).controls[0] as FormGroup;
 
     let saleValue = assetDetails.controls['valueInConsideration'].value
       ? assetDetails.controls['valueInConsideration'].value
