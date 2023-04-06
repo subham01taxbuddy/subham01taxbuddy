@@ -11,7 +11,7 @@
 
       <div class="card" style="background: #ffffff">
         <form [formGroup]="immovableForm">
-          <div class="spBlw">
+          <div>
             <span class="sectionTitle"
               >Add details of capital gain from Land / Building /
               Property?</span
@@ -45,6 +45,7 @@
                     readonly
                     [matDatepicker]="purchaseDate"
                     placeholder="Date of Acquisition"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMinImproveDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
@@ -100,6 +101,7 @@
                     [matDatepicker]="sellDate"
                     placeholder="Date of Sale"
                     (blur)="this.calculateIndexCost(i)"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMaxPurchaseDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
@@ -153,6 +155,7 @@
                     placeholder="Full Value of Sale Consideration"
                     name="asset[i]"
                     formControlName="valueInConsideration"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     required
                   />
                   <!-- (selectionChange)="calculateCapitalGain(this.immovableForm)" -->
@@ -228,6 +231,7 @@
                     maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     (blur)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                   />
                   <mat-error
                     *ngIf="
@@ -272,10 +276,10 @@
 
         <div class="card cardYes" formArrayName="improvement" *ngIf="isImprovements.value">
           <div class="card__row" *ngFor="let improve of getImprovementsArrayForImmovable.controls;let i=index" [formGroupName]="i">
-            <div class="col-lg-12 col-md-12 col-sm-12"> 
+            <div class="col-lg-12 col-md-12 col-sm-12">
             <mat-checkbox name="improve[i]" formControlName="selected"></mat-checkbox>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">              
+            <div class="card__col-xs-12 card__col-sm-4">
               <mat-label>Year Of Improvement</mat-label>
               <mat-form-field class="input-field-width">
                 <mat-select placeholder="Year of Improvement" name="improve[i]" formControlName="dateOfImprovement"
@@ -299,6 +303,7 @@
                       class="input-field"
                       maxlength="14"
                       (blur)="isImprovementValid(this.immovableForm, i)"
+                      (change)="isImprovementValid(this.immovableForm, i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       required
                     />
@@ -389,6 +394,7 @@
                     let deduction of getDeductionsArray.controls;
                     let i = index
                   "
+                  (click)="active = i"
                   [formGroupName]="fieldGlobalIndex(i)"
                 >
                   <div class="card__row">
@@ -404,7 +410,8 @@
                       >
                       <mat-form-field class="input-field-width">
                         <mat-select placeholder="Investment Under Section" name="underSection" formControlName="underSection"
-                                    (selectionChange)="changeInvestmentSection('HTML', i)">
+                                    (selectionChange)="changeInvestmentSection('HTML', i)"
+									(change)="calculateDeduction(i)">
                           <mat-option value="54" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'"> 54 </mat-option>
                           <mat-option value="54B"> 54B </mat-option>
                           <mat-option
@@ -432,11 +439,14 @@
                       <mat-label>Date of Purchase</mat-label>
                       <mat-form-field appearance="outline">
                         <input
+                          (blur)="calculateDeduction(i)"
+                          (dateChange)="calculateDeduction(i)"
                           matInput
                           formControlName="purchaseDate"
                           name="deductions[i]"
                           class="input-field"
                           [matDatepicker]="purchaseDate"
+                          [matDatepickerFilter]="disableFutureDates"
                           required
                         />
                         <mat-datepicker-toggle
@@ -462,6 +472,7 @@
                           class="input-field"
                           required
                           (blur)="calculateDeduction(i)"
+                          (change)="calculateDeduction(i)"
                         />
                       </mat-form-field>
                     </div>
@@ -479,6 +490,8 @@
                       <mat-label>CGAS Amount</mat-label>
                       <mat-form-field appearance="outline">
                         <input
+                          (blur)="calculateDeduction(i)"
+                          (change)="calculateDeduction(i)"
                           matInput
                           class="input-field"
                           name="deductions[i]"
