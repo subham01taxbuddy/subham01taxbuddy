@@ -3,12 +3,9 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 <div class="main clearfix whole-padding">
-  <h2
-    class="topSps capitalize text-gray-1100 font-bold text-2xl leading-[35px] dark:text-gray-dark-1100 pb-[18px]"
-  >
+  <h2 class="topSps capitalize font-bold text-2xl leading-[35px] pb-[18px]">
     ITR Filing Process
   </h2>
-  <<<<<<<<< Temporary merge branch 1
   <div class="aligBtn">
     <button
       class="action-buttons1"
@@ -109,176 +106,54 @@
               ITR_JSON.panNumber
             }}</span>
           </div>
-
-          =========
-          <div style="padding: 0 !important">
-            <div class="card__row">
-              <div class="card__col-lg-12">
-                <div
-                  class="card__col-lg-8 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]"
-                >
-                  <div class="flex items-center gap-x-1">
-                    <img
-                      src="../../../../assets/icon-font/icon-home-2.svg"
-                      alt="home icon"
-                    />
-                    <a
-                      [ngClass]="
-                        showPrefill
-                          ? 'capitalize'
-                          : 'capitalize text-color-brands'
-                      "
-                      (click)="showPrefillView()"
-                      >Pre-fill Data</a
-                    >
-                  </div>
-                  <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
-                    <img
-                      src="../../../../assets/icon-font/icon-arrow-right.svg"
-                      alt="arrow right icon"
-                    />
-                    <a
-                      (click)="gotoSources()"
-                      [ngClass]="
-                        showIncomeSources
-                          ? 'capitalize'
-                          : 'capitalize text-color-brands'
-                      "
-                    >
-                      Sources</a
-                    >
-                  </div>
-                  <div
-                    class="flex items-center gap-x-1"
-                    *ngIf="!showIncomeSources && !showPrefill"
-                  >
-                    <img
-                      src="../../../../assets/icon-font/icon-arrow-right.svg"
-                      alt="arrow right icon"
-                    />
-                    <a
-                      (click)="gotoCgSchedule()"
-                      [ngClass]="
-                        breadcrumb
-                          ? 'capitalize text-color-brands'
-                          : !showIncomeSources && !showPrefill
-                          ? 'capitalize'
-                          : 'capitalize text-color-brands'
-                      "
-                      >{{ selectedSchedule }}</a
-                    >
-                  </div>
-                  <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
-                    <img
-                      src="../../../../assets/icon-font/icon-arrow-right.svg"
-                      alt="arrow right icon"
-                    />
-                    <span
-                      [ngClass]="
-                        breadcrumb
-                          ? 'capitalize'
-                          : 'capitalize text-color-brands'
-                      "
-                      >{{ breadcrumb }}</span
-                    >
-                  </div>
-                </div>
-                <div class="card__col-lg-4" style="text-align: right">
-                  <div>
-                    {{ customerName }} :&nbsp;&nbsp;<span>{{
-                      ITR_JSON.panNumber
-                    }}</span>
-                  </div>
-                  <div>
-                    <button
-                      class="action-buttons"
-                      title="Users notes"
-                      (click)="openNotesDialog()"
-                    >
-                      <i
-                        class="fa fa-sticky-note-o fa-1x"
-                        aria-hidden="true"
-                        style="color: green"
-                      ></i>
-                    </button>
-                    <button
-                      class="action-buttons"
-                      title="Chat with user"
-                      (click)="openChat()"
-                    >
-                      <i
-                        class="fa fa-weixin fa-1x"
-                        aria-hidden="true"
-                        style="color: green"
-                      ></i>
-                    </button>
-                    <button
-                      class="action-buttons"
-                      title="Call user"
-                      (click)="startCalling()"
-                    >
-                      <i
-                        class="fa fa-phone fa-1x"
-                        aria-hidden="true"
-                        style="color: green"
-                      ></i>
-                    </button>
-                  </div>
-                </div>
-                >>>>>>>>> Temporary merge branch 2
-              </div>
-            </div>
-            <div *ngIf="showPrefill">
-              <app-prefill-id
-                [data]="navigationData"
-                (skipPrefill)="skipPrefill($event)"
-              ></app-prefill-id>
-            </div>
-            <div *ngIf="showIncomeSources">
-              <app-source-of-incomes
-                (scheduleSelected)="updateSchedules($event)"
-              ></app-source-of-incomes>
-              <!-- <div class="txHd alTxH">Enter <span color="source-color">Salary related Information below:</div> -->
-              <div class="spc-blw">
-                <mat-accordion class="headers-align">
-                  <mat-expansion-panel
-                    *ngFor="let schedule of componentsList"
-                    hideToggle
-                  >
-                    <mat-expansion-panel-header
-                      (click)="gotoSchedule(schedule)"
-                    >
-                      <mat-panel-title>{{
-                        schedules.getTitle(schedule)
-                      }}</mat-panel-title>
-                      <mat-icon> arrow_forward_ios </mat-icon>
-                    </mat-expansion-panel-header>
-                  </mat-expansion-panel>
-                </mat-accordion>
-              </div>
-              <hr />
-              <!-- action-buttons  -->
-              <div class="flex justify-between p-[30px] back-foot">
-                <button (click)="showPrefillView()" class="lgtBtn">
-                  Back to Prefill Data
-                </button>
-
-                <button (click)="gotoSummary()" class="darkBtn">
-                  <span class="adjust">Go to Summary</span>
-                  <i class="material-icons icoAd">arrow_right_alt </i>
-                </button>
-              </div>
-            </div>
-
-            <div *ngIf="!showIncomeSources && !showPrefill">
-              <router-outlet
-                (activate)="subscribeToEmmiter($event)"
-                (deactivate)="unsubscribe()"
-              ></router-outlet>
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+    <div *ngIf="showPrefill">
+      <app-prefill-id
+        [data]="navigationData"
+        (skipPrefill)="skipPrefill($event)"
+      ></app-prefill-id>
+    </div>
+    <div *ngIf="showIncomeSources">
+      <app-source-of-incomes
+        (scheduleSelected)="updateSchedules($event)"
+      ></app-source-of-incomes>
+      <!-- <div class="txHd alTxH">Enter <span color="source-color">Salary related Information below:</div> -->
+      <div class="spc-blw">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel
+            *ngFor="let schedule of componentsList"
+            hideToggle
+          >
+            <mat-expansion-panel-header (click)="gotoSchedule(schedule)">
+              <mat-panel-title>{{
+                schedules.getTitle(schedule)
+              }}</mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      <hr />
+      <!-- action-buttons  -->
+      <div class="flex justify-between p-[30px] back-foot">
+        <button (click)="showPrefillView()" class="lgtBtn">
+          Back to Prefill Data
+        </button>
+
+        <button (click)="gotoSummary()" class="darkBtn">
+          <span class="adjust">Go to Summary</span>
+          <i class="material-icons icoAd">arrow_right_alt </i>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!showIncomeSources && !showPrefill">
+      <router-outlet
+        (activate)="subscribeToEmmiter($event)"
+        (deactivate)="unsubscribe()"
+      ></router-outlet>
     </div>
   </div>
 </div>

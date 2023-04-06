@@ -1,16 +1,15 @@
 export const environment = {
   production: false,
-  url_dev: 'https://dev-api.taxbuddy.com',
-  portal_url: 'https://uat-admin.taxbuddy.com/',
-  url: 'https://uat-api.taxbuddy.com',
+  portal_url: 'https://dev-admin.taxbuddy.com/',
+  url: 'https://dev-api.taxbuddy.com',
   eri_url: 'https://api.taxbuddy.com',
   gst_gov_url: 'https://devapi.gst.gov.in',
   ifsc_url: 'https://ifsc.razorpay.com',
   amazonaws_url: 'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com',
-  reviewUrl: 'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/',
+  reviewUrl: 'https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/',
   isValidItr: false,
   assistedKmScript: '../assets/assisted-km-script-uat.html',
-  environment: 'UAT',
+  environment: 'DEV',
 
   s3_cred: {
     // user_name: "ashish@ssbainnovations.com",
@@ -27,7 +26,7 @@ export const environment = {
   AMPLIFY_CONFIG: {
     aws_project_region: 'ap-south-1',
     aws_cognito_identity_pool_id:
-      'ap-south-1:f7280802-a172-4b2a-a3b2-adf642b67b38',
+      'ap-south-1:7a42574d-ac52-44b8-81d8-93a724392687',
     aws_cognito_region: 'ap-south-1',
     aws_user_pools_id: 'ap-south-1_7GHESh9rb',
     aws_user_pools_web_client_id: 'pdtpeogn8a2viimond1u0debi',
