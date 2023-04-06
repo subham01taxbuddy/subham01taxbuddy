@@ -120,11 +120,15 @@ export class PerformaInvoiceComponent implements OnInit {
     };
   }
 
-  cardTitles = 'Filer View';
+  cardTitle:any
+  // cardTitles = ['Filer View','Owner View','Leader/Admin'];
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.cardTitle=this.roles?.includes("ROLE_ADMIN")?
+    'Leader/Admin':this.roles?.includes("ROLE_OWNER")?
+    'Owner':this.roles?.includes("ROLE_FILER")?'Filer':"NA"
     console.log('roles', this.roles);
     // this.getInvoice();
     this.getOwner();
@@ -152,6 +156,17 @@ export class PerformaInvoiceComponent implements OnInit {
     );
   }
 
+  disableFields(searchOwner,searchFiler){
+    this.searchFiler.enable()
+    this.searchOwner.enable()
+    if(searchOwner!=''){
+      this.searchFiler.disable()
+    }
+    else if(searchFiler!=''){
+      this.searchOwner.disable()
+    }
+
+  }
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
@@ -242,15 +257,24 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
+    let param=''
+    if (this.roles?.includes('ROLE_ADMIN')) {
+      if(this.ownerDetails.userId){
+        param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userId}&paymentStatus=${status}`
+        }
+      else{
+        param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.filerDetails.userId}&paymentStatus=${status}`
 
-    if(this.roles?.includes('ROLE_OWNER')){
-      let param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userID}&paymentStatus=${status}`
+      }
     }
     else if (this.roles?.includes('ROLE_OWNER')){
+      param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userId}&paymentStatus=${status}`
 
+    }else{
+      param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}&paymentStatus=${status}`;
     }
 
-    let param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}&paymentStatus=${status}`;
+
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;

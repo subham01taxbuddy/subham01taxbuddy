@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SubscriptionComponent } from './subscription.component';
 import { CreateUpdateSubscriptionComponent } from './components/assigned-subscription/create-update-subscription/create-update-subscription.component';
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
+import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 
 // const routes: Routes = [{ path: '', component: SubscriptionComponent }];
 
@@ -14,6 +15,7 @@ const routes: Routes = [
       children: [
           {path: 'assigned-subscription', component: AssignedSubscriptionComponent },
           {path :'create-subscription', component:CreateUpdateSubscriptionComponent},
+          // {path :'add-subscription', component:AddSubscriptionComponent},
           {path :'performa-invoice', component:PerformaInvoiceComponent},
           {path :'tax-invoice', component:TaxInvoiceComponent},
           { path: '', redirectTo: '/subscription/assigned-subscription', pathMatch: 'full' }

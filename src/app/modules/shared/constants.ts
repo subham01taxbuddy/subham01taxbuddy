@@ -40,6 +40,7 @@ export class AppConstants {
     public static LOGGED_IN_SME_INFO = environment.production ? 'LOGGED_IN_SME_INFO' : 'LOGGED_IN_SME_INFO';
     public static BANK_LIST = environment.production ? 'BANK_LIST' : 'BANK_LIST';
     public static gstFyList = [
+        { financialYear: '2023-24' },
         { financialYear: '2022-23' },
         { financialYear: '2021-22' },
         { financialYear: '2020-21' },
