@@ -84,10 +84,10 @@ export class ScheduledCallComponent implements OnInit {
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
-    var param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=500`;
+    var param2 = `/schedule-call-details/${id}?page=${page}&size=500`;
     this.userMsService.getMethod(param2).subscribe((result: any) => {
-      if (result instanceof Array && result.length > 0) {
-        this.scheduleCallsData = result;
+      if (result.content instanceof Array && result.content.length > 0) {
+        this.scheduleCallsData = result.content;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData(this.scheduleCallsData));
       } else {
         this.scheduleCallsData = [];
@@ -110,8 +110,10 @@ export class ScheduledCallComponent implements OnInit {
         userId: scheduleCalls[i]['userId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
-        smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
-        smeName: scheduleCalls[i]['smeName'],
+        smeMobileNumber: scheduleCalls[i]['filerNumber'],
+        smeName: scheduleCalls[i]['filerName'],
+        ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
+        ownerName: scheduleCalls[i]['ownerName'],
         scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
         serviceType: scheduleCalls[i]['serviceType'] !== null ? scheduleCalls[i]['serviceType'] : 'ITR'
@@ -146,7 +148,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'userName',
-        width: 180,
+        width: 80,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -159,7 +161,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'userMobile',
-        width: 130,
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -172,7 +174,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Schedule Call Date',
         field: 'scheduleCallTime',
-        width: 150,
+        width: 155,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -190,7 +192,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Time',
         field: 'time',
-        width: 120,
+        width: 80,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -201,9 +203,35 @@ export class ScheduledCallComponent implements OnInit {
         }
       },
       {
-        headerName: 'SME Name',
-        field: 'smeName',
-        width: 150,
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 110,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Owner Name',
+        field: 'ownerName',
+        width: 110,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Service',
+        field: 'serviceType',
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -247,7 +275,7 @@ export class ScheduledCallComponent implements OnInit {
               <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
              </button>`;
         },
-        width: 60,
+        width: 95,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -258,7 +286,7 @@ export class ScheduledCallComponent implements OnInit {
         },
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -269,7 +297,7 @@ export class ScheduledCallComponent implements OnInit {
               <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
              </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -279,28 +307,28 @@ export class ScheduledCallComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: 'User Info',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="User Information"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-              <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
-             </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'User Info',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="User Information"
+      //       style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+      //         <i class="fa fa-mobile" style="font-size:18px" aria-hidden="true" data-action-type="userInfo"></i>
+      //        </button>`;
+      //   },
+      //   width: 80,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       {
         headerName: 'Call',
         editable: false,
@@ -333,7 +361,7 @@ export class ScheduledCallComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Update Call Status"
             style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
         },
-        width: 80,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

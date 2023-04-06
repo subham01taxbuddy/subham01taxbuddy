@@ -126,6 +126,11 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.selectedSme.enable();
   }
 
+  selectSme(sme){
+    this.selectedSme.setValue(sme.name);
+    this.smeCode = sme.userId;
+    this.sendSme.emit(this.smeCode);
+  }
 
   changeSme(sme: String) {
     console.log('SME in change:', sme, this.selectedSme)
