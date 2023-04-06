@@ -667,7 +667,7 @@ export class LabFormComponent implements OnInit {
     ).controls[index] as FormGroup;
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[index] as FormGroup;
+    ).controls[this.currentCgIndex] as FormGroup;
 
     const shareValue = buyersDetails.controls['share'].value;
     if (shareValue >= 0 && shareValue <= 100) {
