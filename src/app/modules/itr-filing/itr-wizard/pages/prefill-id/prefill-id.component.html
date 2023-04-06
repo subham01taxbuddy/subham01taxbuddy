@@ -11,7 +11,9 @@
       *ngIf="!showEriView"
     >
       <div>
-        <div class="flex justify-between items-center rounded-2x1 px-[25px] txwdt">
+        <div
+          class="flex justify-between items-center rounded-2x1 px-[25px] txwdt"
+        >
           <!-- Prefill-Header  -->
 
           <div class="txHd">
@@ -24,7 +26,11 @@
               *ngIf="!data?.eriClientValidUpto"
               class="flex flex-row items-center space-between"
             >
-              <button class="lgtBtn btn1" type="button" (click)="addClientOverBot()">
+              <button
+                class="lgtBtn btn1"
+                type="button"
+                (click)="addClientOverBot()"
+              >
                 <span class="font-semibold">
                   Initiate Add Client & Prefill over Bot
                 </span>
@@ -194,7 +200,8 @@
                   </div>
                 </div>
                 <!-- upload-json  -->
-                <div *ngIf="false"
+                <div
+                  *ngIf="false"
                   class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
                 >
                   <div

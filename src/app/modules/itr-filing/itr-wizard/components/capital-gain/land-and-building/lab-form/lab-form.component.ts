@@ -1144,10 +1144,22 @@ export class LabFormComponent implements OnInit {
   }
 
   haveDeductions(formGroupName) {
-    const improve = <FormArray>formGroupName.get('deductions');
+    const deductions = <FormArray>formGroupName.get('deductions');
+    let srn = this.currentCgIndex;
     if (this.isDeductions.value) {
+      const obj = {
+        srn: srn,
+        selected: [false],
+        underSection: null,
+        purchaseDate: null,
+        costOfNewAssets: null,
+        investmentInCGAccount: null,
+        totalDeductionClaimed: null,
+      };
+
+      deductions.push(this.createDeductionForm(obj));
     } else {
-      improve.clear();
+      deductions.clear();
       let otherDeductions = this.cgArrayElement.deduction.filter(
         (ded) => ded.srn != this.data.assetSelected.srn
       );
@@ -1189,8 +1201,10 @@ export class LabFormComponent implements OnInit {
     this.maxPurchaseDate = this.calMaxPurchaseDate.toISOString().slice(0, 10); */
     this.maxPurchaseDate = new Date();
 
-    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
-      .controls[index] as FormGroup;
+    const deductionForm = (
+      this.immovableForm.controls['deductions'] as FormArray
+    ).controls[index] as FormGroup;
+
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[index] as FormGroup;
@@ -1422,7 +1436,7 @@ export class LabFormComponent implements OnInit {
       investmentInCGAccount: null,
       totalDeductionClaimed: null,
     };
-    if (deductions.valid ) {
+    if (deductions.valid) {
       deductions.push(this.createDeductionForm(obj));
     } else {
       console.log('add above details first');

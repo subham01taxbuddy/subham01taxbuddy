@@ -1,22 +1,34 @@
-import {Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  ITR_JSON,
+  NewCapitalGain,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
-import {LabFormComponent} from "./lab-form/lab-form.component";
-import {WizardNavigation} from "../../../../../itr-shared/WizardNavigation";
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { LabFormComponent } from './lab-form/lab-form.component';
+import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 
 @Component({
   selector: 'app-land-and-building',
   templateUrl: './land-and-building.component.html',
-  styleUrls: ['./land-and-building.component.scss']
+  styleUrls: ['./land-and-building.component.scss'],
 })
-export class LandAndBuildingComponent extends WizardNavigation implements OnInit, OnChanges {
-
+export class LandAndBuildingComponent
+  extends WizardNavigation
+  implements OnInit, OnChanges
+{
   @ViewChild(LabFormComponent) labFormComponent;
 
   loading = false;
@@ -43,19 +55,23 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    this.labData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'PLOT_OF_LAND'
+    );
     this.getAssetDetails();
     this.cgCreateRowData();
 
     let array = [];
-    this.properties.forEach(prop => {
-      array.push(fb.group({
-          index: prop.id -1,
-          selected: false
-        }));
-    })
+    this.properties.forEach((prop) => {
+      array.push(
+        fb.group({
+          index: prop.id - 1,
+          selected: false,
+        })
+      );
+    });
     this.propertiesForm = fb.group({
-      propertiesArray: fb.array(array)
+      propertiesArray: fb.array(array),
     });
 
     // TODO Add this in edit or add section
@@ -65,12 +81,13 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
       mode: 'ADD',
       // assetSelected: assetSelected,
     };
-
   }
 
   isPropertySelected() {
     let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
-    let selected = array.controls.filter((control: FormGroup) => control.controls['selected'].value === true);
+    let selected = array.controls.filter(
+      (control: FormGroup) => control.controls['selected'].value === true
+    );
     return selected.length > 0;
   }
 
@@ -79,20 +96,22 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
   }
   updatePropertySelection(event, id) {
     let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
-    let selected = array.controls.filter((control: FormGroup) => control.controls['index'].value === id-1)[0];
+    let selected = array.controls.filter(
+      (control: FormGroup) => control.controls['index'].value === id - 1
+    )[0];
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('+++++++++', changes)
+    console.log('+++++++++', changes);
   }
-
-
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    let labData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'PLOT_OF_LAND'
+    );
     if (labData?.length > 0) {
-      this.labView = 'TABLE'
+      this.labView = 'TABLE';
     }
   }
 
@@ -100,11 +119,17 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('Edit CG:', assetSelected);
     let assetDetails = null;
-    if(mode === 'EDIT') {
-      let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
-      let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
+    if (mode === 'EDIT') {
+      let filtered = this.Copy_ITR_JSON.capitalGain.filter(
+        (item) => item.assetType !== assetSelected.assetType
+      );
+      let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(
+        (item) => item.assetType === assetSelected.assetType
+      )[0];
       if (selectedTypeList) {
-        assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn === assetSelected.srn))[0];
+        assetDetails = selectedTypeList.assetDetails.filter(
+          (itm) => itm.srn === assetSelected.srn
+        )[0];
       }
     }
     this.labView = 'FORM';
@@ -121,27 +146,35 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
     this.isExmptAvail = false;
     this.properties = [];
     const dataToReturn = [];
-    let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    let labData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'PLOT_OF_LAND'
+    );
     for (let i = 0; labData && i < labData[0]?.assetDetails?.length; i++) {
       let assetDetails = labData[0].assetDetails[i];
-      let buyerDetails = labData[0].buyersDetails?.filter(buyer => (buyer.srn === assetDetails.srn))[0];
+      let buyerDetails = labData[0].buyersDetails?.filter(
+        (buyer) => buyer.srn === assetDetails.srn
+      )[0];
       // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
       //   cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
       // }
 
       let costOfImprovement = 0;
-      let improvements = labData[0].improvement?.filter(imp => (imp.srn == assetDetails.srn));
+      let improvements = labData[0].improvement?.filter(
+        (imp) => imp.srn == assetDetails.srn
+      );
       for (let j = 0; j < improvements.length; j++) {
-        costOfImprovement = costOfImprovement + improvements[j].costOfImprovement;
+        costOfImprovement =
+          costOfImprovement + improvements[j].costOfImprovement;
       }
       console.log('cost', improvements.length, costOfImprovement);
 
       let totalDeductions = 0;
-      let deductions = labData[0].deduction?.filter(ded => (parseInt(ded.srn) == assetDetails.srn));
+      let deductions = labData[0].deduction?.filter(
+        (ded) => parseInt(ded.srn) == assetDetails.srn
+      );
       for (let j = 0; j < deductions?.length; j++) {
         totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
       }
-
 
       this.properties.push({
         id: i + 1,
@@ -150,11 +183,11 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
         description: assetDetails.description,
         sellDate: assetDetails.sellDate,
         costOfAcquisition: assetDetails.indexCostOfAcquisition,
-        valueInConsideration: /* value */assetDetails.valueInConsideration,
+        valueInConsideration: /* value */ assetDetails.valueInConsideration,
         // totalCost: tCost,
         gainType: assetDetails.gainType,
         cgIncome: assetDetails.capitalGain,
-        deductions: totalDeductions,//TODO
+        deductions: totalDeductions, //TODO
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
         address: buyerDetails?.address,
@@ -168,22 +201,23 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
     }
   }
 
-
   getAssetDetails() {
     // todo
     const param = '/assetDetails';
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Asset Details =', result);
-      this.assestTypesDropdown = result;
-      this.cgCreateRowData();
-      if (this.ITR_JSON.capitalGain?.length > 0) {
-        //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
-        // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        console.log('Asset Details =', result);
+        this.assestTypesDropdown = result;
+        this.cgCreateRowData();
+        if (this.ITR_JSON.capitalGain?.length > 0) {
+          //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
+          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
+        }
+      },
+      (error) => {
+        this.getAssetDetails();
       }
-    }, error => {
-      this.getAssetDetails();
-    });
-
+    );
   }
 
   cancelForm(event) {
@@ -196,23 +230,37 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
 
   deleteCapitalGain() {
     let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
-    let selected = array.controls.filter((control: FormGroup) => control.controls['selected'].value === true);
+    let selected = array.controls.filter(
+      (control: FormGroup) => control.controls['selected'].value === true
+    );
 
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
-    selected.forEach(selectedProp => {
+    selected.forEach((selectedProp) => {
       let assetSelected = this.properties[selectedProp.value.index];
       let selectedObject = JSON.parse(assetSelected.assetSelected);
-      let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
-      let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
+      let filtered = this.Copy_ITR_JSON.capitalGain.filter(
+        (item) => item.assetType !== assetSelected.assetType
+      );
+      let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(
+        (item) => item.assetType === assetSelected.assetType
+      )[0];
       if (selectedTypeList) {
-        selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
-        selectedTypeList.deduction = selectedTypeList.deduction?.filter(itm => (itm.srn !== selectedObject.srn));
-        selectedTypeList.improvement = selectedTypeList.improvement?.filter(itm => (itm.srn !== selectedObject.srn));
-        selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(itm => (itm.srn !== selectedObject.srn));
+        selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(
+          (itm) => itm.srn !== selectedObject.srn
+        );
+        selectedTypeList.deduction = selectedTypeList.deduction?.filter(
+          (itm) => itm.srn !== selectedObject.srn
+        );
+        selectedTypeList.improvement = selectedTypeList.improvement?.filter(
+          (itm) => itm.srn !== selectedObject.srn
+        );
+        selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(
+          (itm) => itm.srn !== selectedObject.srn
+        );
       }
       this.Copy_ITR_JSON.capitalGain = filtered;
       if (selectedTypeList && selectedTypeList.assetDetails.length > 0) {
@@ -220,24 +268,25 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
       }
     });
 
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Capital gain deleted successfully');
-      console.log('Capital gain save result=', result);
-      this.utilsService.smoothScrollToTop();
-      this.loading = false;
-      this.labView = 'TABLE';
-      this.cgCreateRowData();
-    }, error => {
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to delete capital gain data');
-      this.utilsService.smoothScrollToTop();
-    });
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+      (result: any) => {
+        this.ITR_JSON = result;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Capital gain deleted successfully');
+        console.log('Capital gain save result=', result);
+        this.utilsService.smoothScrollToTop();
 
+        this.cgCreateRowData();
+      },
+      (error) => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to delete capital gain data');
+        this.utilsService.smoothScrollToTop();
+      }
+    );
   }
 
   goBack() {

@@ -43,6 +43,7 @@
                 <mat-label>Buy Date*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
+                    [max]="maxDate"
                     matInput
                     class="input-field"
                     readonly
@@ -124,6 +125,8 @@
                 <mat-label>Sale Date*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
+                    [min]="minDate"
+                    [max]="maxDate"
                     matInput
                     class="input-field"
                     (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
