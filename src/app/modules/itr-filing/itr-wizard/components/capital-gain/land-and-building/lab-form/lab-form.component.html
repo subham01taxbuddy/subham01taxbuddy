@@ -56,6 +56,7 @@
                     readonly
                     [matDatepicker]="purchaseDate"
                     placeholder="Date of Acquisition"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMinImproveDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
@@ -111,6 +112,7 @@
                     [matDatepicker]="sellDate"
                     placeholder="Date of Sale"
                     (blur)="this.calculateIndexCost(i)"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMaxPurchaseDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
@@ -164,6 +166,7 @@
                     placeholder="Full Value of Sale Consideration"
                     name="asset[i]"
                     formControlName="valueInConsideration"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     required
                   />
                   <!-- (selectionChange)="calculateCapitalGain(this.immovableForm)" -->
@@ -239,6 +242,7 @@
                     maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     (blur)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                   />
                   <mat-error
                     *ngIf="
@@ -343,6 +347,7 @@
                       class="input-field"
                       maxlength="14"
                       (blur)="isImprovementValid(this.immovableForm, i)"
+                      (change)="calculateCapitalGain(this.immovableForm, '', i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       required
                     />
@@ -433,6 +438,7 @@
                     let deduction of getDeductionsArray.controls;
                     let i = index
                   "
+                  (click)="active = i"
                   [formGroupName]="fieldGlobalIndex(i)"
                 >
                   <div class="card__row">
@@ -451,6 +457,7 @@
                           name="underSection"
                           formControlName="underSection"
                           (selectionChange)="changeInvestmentSection('HTML', i)"
+                          (change)="calculateDeduction(i)"
                         >
                           <mat-option
                             value="54"
@@ -487,11 +494,14 @@
                       <mat-label>Date of Purchase</mat-label>
                       <mat-form-field appearance="outline">
                         <input
+                          (blur)="calculateDeduction(i)"
+                          (dateChange)="calculateDeduction(i)"
                           matInput
                           formControlName="purchaseDate"
                           name="deductions[i]"
                           class="input-field"
                           [matDatepicker]="purchaseDate"
+                          [matDatepickerFilter]="disableFutureDates"
                           required
                         />
                         <mat-datepicker-toggle
@@ -522,6 +532,7 @@
                           class="input-field"
                           required
                           (blur)="calculateDeduction(i)"
+                          (change)="calculateDeduction(i)"
                         />
                       </mat-form-field>
                     </div>
@@ -539,6 +550,8 @@
                       <mat-label>CGAS Amount</mat-label>
                       <mat-form-field appearance="outline">
                         <input
+                          (blur)="calculateDeduction(i)"
+                          (change)="calculateDeduction(i)"
                           matInput
                           class="input-field"
                           name="deductions[i]"
