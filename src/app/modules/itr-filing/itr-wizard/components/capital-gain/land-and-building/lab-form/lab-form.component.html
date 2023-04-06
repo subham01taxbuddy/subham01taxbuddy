@@ -294,7 +294,11 @@
             </div>
           </div>
 
-          <div class="card cardYes" formArrayName="improvement">
+          <div
+            class="card cardYes"
+            formArrayName="improvement"
+            *ngIf="isImprovements.value"
+          >
             <div
               style="padding: 25px"
               class="card"
@@ -306,10 +310,9 @@
               [formGroupName]="i"
             >
               <div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card__col-xs-12 card__col-sm-4">
                   <mat-label
                     ><mat-checkbox
-                      style="margin-right: 5px"
                       name="improve[i]"
                       formControlName="selected"
                     ></mat-checkbox>
@@ -428,7 +431,11 @@
                 </div>
               </div>
 
-              <div formArrayName="deductions">
+              <div
+                class="card cardYes"
+                formArrayName="deductions"
+                *ngIf="isDeductions.value"
+              >
                 <div
                   style="padding: 25px"
                   class="card"
@@ -447,12 +454,11 @@
                           style="margin-right: 5px"
                           name="deduction[i]"
                           formControlName="selected"
-                        ></mat-checkbox
-                        >Investment Under Section</mat-label
+                        ></mat-checkbox>
+                        Investment Under Section</mat-label
                       >
                       <mat-form-field class="input-field-width">
                         <mat-select
-                          placeholder="Investment Under Section"
                           name="underSection"
                           formControlName="underSection"
                           (selectionChange)="changeInvestmentSection('HTML', i)"
@@ -582,6 +588,7 @@
                           class="input-field"
                           maxlength="6"
                           type="number"
+                          readonly
                           required
                         />
                       </mat-form-field>

@@ -1144,10 +1144,22 @@ export class LabFormComponent implements OnInit {
   }
 
   haveDeductions(formGroupName) {
-    const improve = <FormArray>formGroupName.get('deductions');
+    const deductions = <FormArray>formGroupName.get('deductions');
+    let srn = this.currentCgIndex;
     if (this.isDeductions.value) {
+      const obj = {
+        srn: srn,
+        selected: [false],
+        underSection: null,
+        purchaseDate: null,
+        costOfNewAssets: null,
+        investmentInCGAccount: null,
+        totalDeductionClaimed: null,
+      };
+
+      deductions.push(this.createDeductionForm(obj));
     } else {
-      improve.clear();
+      deductions.clear();
       let otherDeductions = this.cgArrayElement.deduction.filter(
         (ded) => ded.srn != this.data.assetSelected.srn
       );
