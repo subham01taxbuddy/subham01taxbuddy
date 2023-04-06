@@ -19,7 +19,7 @@
   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
     <mat-option *ngIf="addSelfAll" value="ALL">All</mat-option>
     <mat-option *ngIf="addSelfAll" value="SELF">My Self</mat-option>
-    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name" (click)="selectSme(option)">
       {{option.name}} - {{option.serviceType}}
     </mat-option>
   </mat-autocomplete>
