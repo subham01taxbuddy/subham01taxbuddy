@@ -57,22 +57,12 @@ font-weight: bold;">More options for: {{data.name}}</label>
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button> -->
     <button type="button" title="Delete User" class="mt-5 delete-user tbd-btn-small"
-      *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])" (click)="deleteUser()">
+      *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" (click)="deleteUser()">
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button>
   </span>
   &nbsp;&nbsp;
-  <span>
-    <!-- <button type="button" title="Delete User" [disabled]="isDisable"
-   class="delete-user tbd-btn-small" [style.cursor]="isDisable ? 'no-drop': 'pointer'"
-      (click)="deleteUser()">
-      Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-    </button> -->
-    <button type="button" title="Delete User" class="mt-5 delete-user tbd-btn-small"
-      *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])" (click)="deleteUser()">
-      Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-    </button>
-  </span>
+
 
 </div>
 <div class="card__row" *ngIf="showDetails === 'OPT_SERVICE'">
