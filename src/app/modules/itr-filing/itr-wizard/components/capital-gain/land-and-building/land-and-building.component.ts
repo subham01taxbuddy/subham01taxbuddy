@@ -25,19 +25,21 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
   Copy_ITR_JSON: ITR_JSON;
   isExmptAvail = false;
   assestTypesDropdown = [];
-  labView: string = "FORM";
+  labView: string = 'FORM';
 
   public investmentGridOptions: GridOptions;
   showInvestmentTable = false;
 
   propertiesForm: FormGroup;
   properties = [];
-  data: any
-  constructor(private itrMsService: ItrMsService,
+  data: any;
+  constructor(
+    private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public matDialog: MatDialog,
-              private fb: FormBuilder,
-    private location: Location) {
+    private fb: FormBuilder,
+    private location: Location
+  ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -160,7 +162,7 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
         // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
         isShow: true,
         rowSpan: 1,
-        assetSelected: JSON.stringify(assetDetails)
+        assetSelected: JSON.stringify(assetDetails),
       });
       console.log('row', assetDetails, costOfImprovement);
     }
@@ -185,8 +187,10 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
   }
 
   cancelForm(event) {
+    this.data = event.data;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.getAssetDetails();
     this.labView = event.view;
   }
 
@@ -224,7 +228,8 @@ export class LandAndBuildingComponent extends WizardNavigation implements OnInit
       this.utilsService.showSnackBar('Capital gain deleted successfully');
       console.log('Capital gain save result=', result);
       this.utilsService.smoothScrollToTop();
-
+      this.loading = false;
+      this.labView = 'TABLE';
       this.cgCreateRowData();
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));

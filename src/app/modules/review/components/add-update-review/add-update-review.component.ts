@@ -7,6 +7,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ReviewService } from '../../services/review.service';
 import {ConfirmModel} from "../../../itr-filing/kommunicate-dialog/kommunicate-dialog.component";
+import {UtilsService} from "../../../../services/utils.service";
 
 export const MY_FORMATS = {
   parse: {
@@ -34,7 +35,6 @@ export class AddUpdateReviewComponent implements OnInit {
   sourceList: any = AppConstants.sourceList;
   reviewStatusList: any = AppConstants.reviewStatusList;
   ratingList: any = AppConstants.ratingList;
-  userData: any;
   reviewForm: FormGroup;
   loading: boolean;
   isError: boolean;
@@ -45,9 +45,8 @@ export class AddUpdateReviewComponent implements OnInit {
     private reviewService: ReviewService,
     private _toastMessageService: ToastMessageService,
     public dialogRef: MatDialogRef<AddUpdateReviewComponent>,
+    private utilsService: UtilsService
   ) {
-
-    this.userData = JSON.parse(localStorage.getItem('UMD'));
   }
 
   ngOnInit(): void {
@@ -67,11 +66,11 @@ export class AddUpdateReviewComponent implements OnInit {
       isReviewNegative: ['', Validators.required],
       productName: ['Taxbuddy', Validators.required],
       status: ['OPEN'],
-      userId: [this.userData.USER_UNIQUE_ID],
+      userId: [this.utilsService.getLoggedInUserID()],
       smeId: [""],
       smeNotes: [""],
       reviewSentiment: [""],
-      addedBy: [this.userData.USER_UNIQUE_ID],
+      addedBy: [this.utilsService.getLoggedInUserID()],
     })
   }
 

@@ -1,20 +1,21 @@
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import {UtilsService} from "./utils.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     publicUrl: any = ["/", '/login'];
     startWithUrl: any = [];
-    constructor(private router: Router) {
-        
+    constructor(private router: Router,
+                private utilsService: UtilsService) {
+
     }
 
     canActivate(route) {
-        
+
         let queryParamas = route.queryParams || {};
-        let userData: any = JSON.parse(localStorage.getItem("UMD")) || {};
-        var x_aut_token = (userData && userData.id_token) ? userData.id_token : null
+        var x_aut_token = this.utilsService.getIdToken();
 
         let startWithUrlFound = 0;
         for (var i = 0, stwLen = this.startWithUrl.length; i < stwLen; i++) {

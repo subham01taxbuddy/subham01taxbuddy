@@ -77,6 +77,7 @@ export class UsersComponent implements OnInit {
   }
 
   advanceSearch(key) {
+    debugger;
     this.user_data = [];
     if (this.searchVal !== '') {
       this.getUserSearchList(key, this.searchVal);

@@ -43,7 +43,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 10,
+    pageSize: 30,
     assigned:true,
     // owner:true,
     mobileNumber: null,
@@ -70,7 +70,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 30,
       currentPage: 1,
       totalItems: null,
     };
@@ -94,7 +94,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     });
 
     this.getAssignedSubscription(0);
-    this. getFilerList();
+    this.getFilerList();
     this.filteredOptions = this.searchName.valueChanges.pipe(
       startWith(''),
       map((value) => {
@@ -138,9 +138,9 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.queryParam=`?subscriptionAssigneeId=${loggedInSmeUserId}`
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
-    let pagination = `?page=${pageNo}&pageSize=10`;
+    let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
-      pagination = `&page=${pageNo}&pageSize=10`;
+      pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
     var param = `/subscription-dashboard-new/${loggedInSmeUserId}?${pagination}`;
     this.loading = true;
@@ -153,7 +153,7 @@ export class AssignedSubscriptionComponent implements OnInit {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data.content)
           );
-          this.config.totalItems = response.data.content.totalElements;
+          this.config.totalItems = response.data.totalElements;
         } else {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData([])
@@ -177,9 +177,9 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   searchByName(pageNo=0){
      let selectedSmeUserId =this.filerDetails.userId
-    let pagination = `?page=${pageNo}&pageSize=10`;
+    let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
-      pagination = `&page=${pageNo}&pageSize=10`;
+      pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
     var param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
     this.loading = true;
@@ -222,7 +222,7 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.subscriptionListGridOptions.api?.setRowData(
           this.createRowData(response.data)
         );
-        this.config.totalItems = response.data.content.totalElements;
+        this.config.totalItems = response.data.totalElements;
       } else {
         this._toastMessageService.alert("error", "no user with given no.");
       }

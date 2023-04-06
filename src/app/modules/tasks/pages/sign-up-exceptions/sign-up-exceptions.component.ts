@@ -45,7 +45,7 @@ export class SignUpExceptionsComponent implements OnInit {
       totalItems: 0
     };
 
-    this.selectedAgentUserId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+    this.selectedAgentUserId = this.utilsService.getLoggedInUserID();
     this.getSignUpExceptionList(this.selectedAgentUserId, 0);
   }
 
@@ -233,7 +233,7 @@ export class SignUpExceptionsComponent implements OnInit {
             <i class="fa fa-comments-o" aria-hidden="true"></i>
            </button>`;
         },
-        width: 50,
+        width: 55,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -261,7 +261,7 @@ export class SignUpExceptionsComponent implements OnInit {
             <i class="fa fa-whatsapp" aria-hidden="true"></i>
            </button>`;
         },
-        width: 60,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -283,7 +283,7 @@ export class SignUpExceptionsComponent implements OnInit {
             <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
            </button>`;
         },
-        width: 60,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -316,7 +316,7 @@ export class SignUpExceptionsComponent implements OnInit {
         },
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -509,7 +509,7 @@ export class SignUpExceptionsComponent implements OnInit {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
-      this.selectedAgentUserId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      this.selectedAgentUserId = this.utilsService.getLoggedInUserID();
     } else {
       this.selectedAgentUserId = event;
     }

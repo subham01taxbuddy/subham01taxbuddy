@@ -35,10 +35,8 @@
             >
           </div>
 
-          <div class="card" formArrayName="assetDetails">
+          <div class="card" formArrayName="assetDetails" class="inpSp">
             <div
-              style="padding: 25px"
-              class="card__row"
               *ngFor="
                 let asset of getAssetDetailsArrayForImmovable.controls;
                 let i = index
@@ -263,7 +261,6 @@
               <span class="sectionTitle"
                 >Add details of cost of improvements</span
               >
-
               <mat-radio-group
                 name="isImprovements"
                 (change)="haveImprovements(this.immovableForm)"
@@ -297,7 +294,7 @@
             </div>
           </div>
 
-          <div formArrayName="improvement">
+          <div class="card cardYes" formArrayName="improvement">
             <div
               style="padding: 25px"
               class="card"
@@ -309,7 +306,7 @@
               [formGroupName]="i"
             >
               <div>
-                <div class="card__col-xs-12 card__col-sm-4">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                   <mat-label
                     ><mat-checkbox
                       style="margin-right: 5px"
@@ -347,7 +344,6 @@
                       class="input-field"
                       maxlength="14"
                       (blur)="isImprovementValid(this.immovableForm, i)"
-                      (change)="calculateCapitalGain(this.immovableForm, '', i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       required
                     />
@@ -362,6 +358,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
+
                 <div class="card__col-xs-12 card__col-sm-4">
                   <mat-label>Index Cost Of Improvement</mat-label>
                   <mat-form-field class="input-field-width">
@@ -379,6 +376,7 @@
               </div>
             </div>
           </div>
+
           <div>
             <button
               class="delete-btn"
@@ -454,6 +452,7 @@
                       >
                       <mat-form-field class="input-field-width">
                         <mat-select
+                          placeholder="Investment Under Section"
                           name="underSection"
                           formControlName="underSection"
                           (selectionChange)="changeInvestmentSection('HTML', i)"
@@ -590,15 +589,16 @@
                   </div>
                 </div>
               </div>
+
               <div>
                 <button
-                  class="delete-btn"
+                  class="delete-btn btnGry"
                   (click)="deleteInvestment(active)"
+                  [disabled]="!deductionSelected()"
                   [disabled]="!deductionSelected()"
                   *ngIf="isDeductions.value"
                 >
-                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                  Delete
+                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
                 </button>
               </div>
             </div>
@@ -621,7 +621,7 @@
               <div formArrayName="buyersDetails">
                 <div
                   style="padding: 25px"
-                  class="card"
+                  class="card cardYes"
                   *ngFor="
                     let buyer of getBuyersDetailsArrayForImmovable.controls;
                     let i = index
@@ -668,6 +668,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
+
                     <div class="card__col-xs-12 card__col-sm-3">
                       <mat-label>Name</mat-label>
                       <mat-form-field appearance="outline">

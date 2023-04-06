@@ -435,6 +435,9 @@ export class UtilsService {
             smeList.sort((a, b) => a.name > b.name ? 1 : -1)
             return smeList;
         } else {
+            if(!this.getLoggedInUserID()){
+              return [];
+            }
             let res: any = await this.getSmeList().catch(error => {
                 this.loading = false;
                 console.log(error);
@@ -464,6 +467,9 @@ export class UtilsService {
             agentList.sort((a, b) => a.name > b.name ? 1 : -1)
             return agentList;
         } else {
+          if(!this.getLoggedInUserID()){
+            return [];
+          }
             let res: any = await this.getAgentList().catch(error => {
                 this.loading = false;
                 console.log(error);
@@ -479,8 +485,8 @@ export class UtilsService {
         return [];
     }
     async getAgentList() {
-        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        const loggedInUserId = this.getLoggedInUserID();
+        const param = `/sme/${loggedInUserId}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -524,10 +530,9 @@ export class UtilsService {
     }
 
     getMyCallingNumber() {
-        // const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
         const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
-        if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].mobileNumber))) {
-            return loggedInSmeInfo[0].mobileNumber;
+        if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].callingNumber))) {
+            return loggedInSmeInfo[0].callingNumber;
         }
         // const SME_LIST: any = await this.getStoredSmeList();
         // const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);
@@ -561,8 +566,8 @@ export class UtilsService {
         }
     }
     async getMyAgentList() {
-        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        const loggedInUserId = this.getLoggedInUserID();
+        const param = `/sme/${loggedInUserId}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -810,4 +815,35 @@ export class UtilsService {
     getInt(value) {
       return value ? parseInt(value) : 0;
     }
+
+  findAssesseeType(panNumber) {
+      let assesseeType = '';
+      if (panNumber.substring(4, 3) === 'P') {
+        assesseeType = 'INDIVIDUAL';
+      } else if (panNumber.substring(4, 3) === 'H') {
+        assesseeType = 'HUF';
+      } else {
+        assesseeType = 'INDIVIDUAL';
+      }
+      return assesseeType;
+  }
+
+  getLoggedInUserID(){
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].userId))) {
+      return loggedInSmeInfo[0].userId;
+    }
+  }
+
+  getIdToken() {
+    let userData = JSON.parse(localStorage.getItem('UMD'));
+    return (userData) ? userData.id_token : null;
+  }
+
+  getUserRoles(){
+    const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+    if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].roles))) {
+      return loggedInSmeInfo[0].roles;
+    }
+  }
 }

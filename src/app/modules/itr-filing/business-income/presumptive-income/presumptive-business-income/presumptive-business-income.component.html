@@ -47,10 +47,10 @@
             </thead>
             <tbody>
               <tr *ngFor="let business of businessArray; let i=index">
-                <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(business) : null"
-                              [checked]="selection.isSelected(business)">
-                </mat-checkbox>
+                <td class="regular-td"><mat-checkbox  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(business) : null"
+                  [checked]="selection.isSelected(business)" >
+                  </mat-checkbox></td>
                 <td class="label-td">{{getBusinessName(business)}}</td>
                 <td class="regular-td">{{business.tradeName}}</td>
                 <td class="regular-td">{{getByBank(business,'BANK','receipts')}}</td>

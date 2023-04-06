@@ -51,12 +51,13 @@ export class HousePropertyComponent implements OnInit {
   loanSectionDropDown = [
     {
       value: '80EE',
-      label: 'Interest on loan taken for residential house property (80EE)'
+      label: 'Interest on loan taken for residential house property (80EE)',
     },
     {
       value: '80EEA',
-      label: 'Deduction in respect of interest on loan taken for certain house property (80EEA)'
-    }
+      label:
+        'Deduction in respect of interest on loan taken for certain house property (80EEA)',
+    },
   ];
   stateDropdown = AppConstants.stateDropdown;
   thirtyPctOfAnnualValue = 0;
@@ -409,7 +410,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  loanSection= '';
+  loanSection = '';
 
   currentIndex: number = null;
   housingView = '';
@@ -418,6 +419,10 @@ export class HousePropertyComponent implements OnInit {
   addHousingIncome() {
     // ASHISH HULWAN because of new view changes changes the below values as per need
     // this.housingView = 'INITIAL';
+    // if(this.isSelfOccupied >= this.maxSopAllowed){
+    //       this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
+    //        return;
+    // }
     this.hpView = 'FORM';
     // this.housingView = 'FORM';
     this.mode = 'ADD';
@@ -435,7 +440,6 @@ export class HousePropertyComponent implements OnInit {
     this.mode = 'UPDATE';
 
     this.housePropertyForm = this.createHousePropertyForm();
-
 
     this.changePropType(
       this.housePropertyForm.controls['propertyType'].value,
@@ -472,7 +476,9 @@ export class HousePropertyComponent implements OnInit {
     }
     if (this.ITR_JSON.houseProperties[index].loans instanceof Array) {
       const loans = <FormArray>this.housePropertyForm.get('loans');
-      loans.controls[0].patchValue(this.ITR_JSON.houseProperties[index].loans[0]);
+      loans.controls[0].patchValue(
+        this.ITR_JSON.houseProperties[index].loans[0]
+      );
       // this.ITR_JSON.houseProperties[index].loans.forEach(obj => {
       //   loans.push(this.createLoanForm(obj));
       // });
@@ -579,11 +585,23 @@ export class HousePropertyComponent implements OnInit {
     return panRepeat;
   }
 
-  createLoanForm(obj: { loanType?: string, principalAmount?: number, interestAmount?: number } = {}): FormGroup {
+  createLoanForm(
+    obj: {
+      loanType?: string;
+      principalAmount?: number;
+      interestAmount?: number;
+    } = {}
+  ): FormGroup {
     return this.fb.group({
       loanType: ['HOUSING'],
-      principalAmount: [obj.principalAmount || null, Validators.pattern(AppConstants.numericRegex)],
-      interestAmount: [obj.interestAmount || null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
+      principalAmount: [
+        obj.principalAmount || null,
+        Validators.pattern(AppConstants.numericRegex),
+      ],
+      interestAmount: [
+        obj.interestAmount || null,
+        [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
+      ],
     });
   }
   get getLoansArray() {
@@ -591,21 +609,46 @@ export class HousePropertyComponent implements OnInit {
   }
 
   chekIsSOPAdded() {
+    this.isSelfOccupied = 0;
     if (this.ITR_JSON.houseProperties.length > 0) {
       for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
-          this.isSelfOccupied = true;
-          break;
+          this.isSelfOccupied++;
+          // break;
         }
       }
-    } else {
-      this.isSelfOccupied = false;
     }
   }
 
+   isDisable = false;
   changePropType(type, mode?) {
     console.log(type);
+    this.isDisable=false;
     if (type === 'SOP') {
+      if (this.isSelfOccupied >= this.maxSopAllowed) {
+        this.utilsService.showSnackBar(
+          'You cannot add more than ' +
+            this.maxSopAllowed +
+            ' self occupied properties'
+
+        );
+
+         this.isDisable = true;
+        // this.housePropertyForm.controls['loans'].disable();
+        this.housePropertyForm.controls['address'].reset();
+        this.housePropertyForm.controls['city'].reset();
+        this.housePropertyForm.controls['state'].reset();
+        this.housePropertyForm.controls['pinCode'].reset();
+        this.housePropertyForm.controls['country'].reset();
+        // this.isCoOwners.disable();
+        // this.housePropertyForm.controls['coOwners'].disable();
+
+        //   for (var control in this.housePropertyForm.controls) {
+        //     this.housePropertyForm.controls[control].disable();
+        // }
+        // this.housePropertyForm.disable();
+        return ;
+      }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
@@ -629,8 +672,8 @@ export class HousePropertyComponent implements OnInit {
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
       ).controls['interestAmount'].updateValueAndValidity();
-    } else if (type === 'LOP') {
-
+    }
+     else if (type === 'LOP') {
       if (mode != 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
@@ -713,7 +756,8 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  saveHouseProperty(view) {
+  maxSopAllowed = 2;
+  saveHouseProperty(view, mode = 'ADD') {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -738,10 +782,8 @@ export class HousePropertyComponent implements OnInit {
       };
     }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
-    if (
-      this.housePropertyForm
-        .valid /* && (!this.coOwnerPanValidation()) && (!this.calPercentage()) && (!this.tenantPanValidation()) */
-    ) {
+
+    if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
       // if (this.isCoOwners.value) {
@@ -809,10 +851,13 @@ export class HousePropertyComponent implements OnInit {
 
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
+      this.utilsService.showSnackBar(
+        'failed to save.'
+      );
       $('input.ng-invalid').first().focus();
     }
   }
-  isSelfOccupied: boolean;
+  isSelfOccupied = 0;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
@@ -826,15 +871,14 @@ export class HousePropertyComponent implements OnInit {
             this.ITR_JSON = result;
             this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+            this.isSelfOccupied = 0;
             for (let i = 0; i < this.ITR_JSON?.houseProperties?.length; i++) {
               if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
-                // this.isSelfOccupied = true;
-              } else {
-                // this.isSelfOccupied = false;
+                this.isSelfOccupied++;
               }
             }
 
-            // console.log('this.isSelfOccupied == ', this.isSelfOccupied);
+            console.log('this.isSelfOccupied == ', this.isSelfOccupied);
 
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
@@ -861,7 +905,7 @@ export class HousePropertyComponent implements OnInit {
               this.housePropertyForm = this.createHousePropertyForm();
             }
             this.utilsService.showSnackBar(
-              'Rental income updated successfully'
+              'House Property income updated successfully.'
             );
             // TODO
             // this.RuleServiceCall();

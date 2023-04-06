@@ -72,8 +72,8 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    const UMD = JSON.parse(localStorage.getItem('UMD'))
-    this.agentId = UMD.USER_UNIQUE_ID;
+    const userId = this.utilsService.getLoggedInUserID();
+    this.agentId = userId;
     this.getMasterStatusList();
     this.search();
     this.getAgentList();
@@ -90,13 +90,13 @@ export class AssignedUsersComponent implements OnInit {
   }
   fromSme(event) {
     if (event === '' || event === 'ALL') {
-      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      let loggedInId = this.utilsService.getLoggedInUserID();
       if (this.agentId !== loggedInId) {
         this.agentId = loggedInId;
         this.search('agent');
       }
     } else if (event === 'SELF') {
-      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID;
+      let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
       this.search('agent', true);
     } else {
@@ -106,10 +106,11 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   getAgentList() {
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agents = result.data;
@@ -117,25 +118,6 @@ export class AssignedUsersComponent implements OnInit {
       })
     }
   }
-  // getUserData(pageNo: any) {
-  //   this.loading = true;
-  //   const UMD = JSON.parse(localStorage.getItem('UMD'))
-  //   let param = `/sme/${UMD.USER_UNIQUE_ID}/user-list?page=${pageNo}&pageSize=20`;
-  //   this.userMsService.getMethod(param).subscribe((result: any) => {
-  //     console.log('result -> ', result);
-  //     this.loading = false;
-  //     if (result.success) {
-  //       this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-  //       this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-  //       this.userInfo = result.data['content'];
-  //       this.config.totalItems = result.totalElements;
-  //     }
-  //   }, error => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-  //     console.log('Error during getting Leads data. -> ', error)
-  //   })
-  // }
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -813,7 +795,7 @@ export class AssignedUsersComponent implements OnInit {
   async startFiling(data) {
     console.log(data);
 
-    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
+    const loggedInId = this.utilsService.getLoggedInUserID();
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 

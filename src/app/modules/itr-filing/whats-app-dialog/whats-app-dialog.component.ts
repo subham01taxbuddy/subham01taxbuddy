@@ -7,12 +7,13 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { environment } from 'src/environments/environment';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {AppConstants} from "../../shared/constants";
 
 @Component({
   selector: 'app-whats-app-dialog',
   templateUrl: './whats-app-dialog.component.html',
   styleUrls: ['./whats-app-dialog.component.css'],
-  
+
 })
 export class WhatsAppDialogComponent implements OnInit {
 
@@ -77,7 +78,10 @@ export class WhatsAppDialogComponent implements OnInit {
                private utileService: UtilsService,
               private fb: FormBuilder) {
                 this.environmentPath = environment.url;
-                this.smeInfo = JSON.parse(localStorage.getItem("UMD"));
+                const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+                if (loggedInSmeInfo && loggedInSmeInfo[0]) {
+                  this.smeInfo = loggedInSmeInfo[0];
+                }
                }
 
   ngOnInit() {
@@ -125,7 +129,7 @@ export class WhatsAppDialogComponent implements OnInit {
         console.log(res, typeof res);
         console.log('CHECK', res.hasOwnProperty('userInfo'))
         this.startConversation = false;
-       
+
         if(res.hasOwnProperty('userInfo')){
           this.getServicesAvailed(res['userInfo'].userId);
           this.selectedUser = res['userInfo'];
@@ -139,7 +143,7 @@ export class WhatsAppDialogComponent implements OnInit {
           this.userchatData = res['chat'];
           this.loading = false;
         }
-        
+
       },
       (error) => {
         this.loading = false;
@@ -295,16 +299,13 @@ export class WhatsAppDialogComponent implements OnInit {
         // let userFullName = this.selectedUser.name + ' ' + this.selectedUser.lName
         this.oldAttributes.push(this.selectedUser.name);
       } else if (tempMessage.attributes[i] === "smeName") {
-        let smeFullName =
-          (this.smeInfo.USER_F_NAME ? this.smeInfo.USER_F_NAME : "") +
-          " " +
-          (this.selectedUser.USER_L_NAME ? this.selectedUser.USER_L_NAME : "");
+        let smeFullName = this.smeInfo.name;
         this.oldAttributes.push(smeFullName);
       } else if (tempMessage.attributes[i] === "smeNumber") {
-        this.oldAttributes.push(this.smeInfo.USER_MOBILE);
+        this.oldAttributes.push(this.smeInfo.mobileNumber);
       } else if (tempMessage.attributes[i] === "whatsAppContactLink") {
         let whatsAppLink =
-          "https://wa.me/+91" + this.smeInfo.USER_MOBILE + "/?text=hello";
+          "https://wa.me/+91" + this.smeInfo.mobileNumber + "/?text=hello";
         // let whatsAppLink = 'https://wa.me/+919545428497/?text=hello'
         this.oldAttributes.push(whatsAppLink);
       } else if (tempMessage.attributes[i] === "appLink") {
@@ -391,7 +392,7 @@ export class WhatsAppDialogComponent implements OnInit {
           // body = {
           //   whatsAppNumber: this.selectedUser.whatsAppNumber,
           //   templateName: templateMsgInfo.templateName,
-          //   attributes: this.newAttributes, 
+          //   attributes: this.newAttributes,
           //   templateMessage: this.whatsAppForm.controls["sentMessage"].value,
           //   source: 'BO'
           // };

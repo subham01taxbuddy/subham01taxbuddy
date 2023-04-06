@@ -63,10 +63,10 @@ export class DirectUploadComponent implements OnInit {
       let formData: FormData = new FormData();
       formData.append('file', myfile);
       // const user = JSON.parse(sessionStorage.getItem('user_object'));
-      const user = JSON.parse(localStorage.getItem('UMD'));
+      const userIdToken = this.utilsService.getIdToken();
       const httpOptions = {
         headers: new HttpHeaders({
-          'Authorization': `Bearer ${user.id_token}`
+          'Authorization': `Bearer ${userIdToken}`
         }),
         reportProgress: true
       };
@@ -101,7 +101,7 @@ export class DirectUploadComponent implements OnInit {
 
           // this.callerObj.getXml();
           break;
-        
+
           case HttpEventType.User:
             console.log('Done!', HttpEventType.User);
         }
@@ -162,10 +162,10 @@ export class DirectUploadComponent implements OnInit {
       formData.append('file', myfile);
       formData.append('userId', this.ITR_JSON.userId.toString());
       // const user = JSON.parse(sessionStorage.getItem('user_object'));
-      const user = JSON.parse(localStorage.getItem('UMD'));
+      const userIdToken = this.utilsService.getIdToken();
       const httpOptions = {
         headers: new HttpHeaders({
-          'Authorization': `Bearer ${user.id_token}`
+          'Authorization': `Bearer ${userIdToken}`
         }),
         reportProgress: true
       };

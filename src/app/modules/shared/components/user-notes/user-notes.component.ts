@@ -40,7 +40,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
   // userId: number;
   noteDetails = new FormControl('', Validators.required);
   serviceType = new FormControl('', Validators.required);
-  loggedInUserDetails: any;
+  loggedInUserRoles: any;
 
   dataSource = new MatTableDataSource<any>(this.notes);
 
@@ -64,8 +64,8 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     private utilsService: UtilsService
   ) {
     console.log('Selected UserID for notes', this.data.userId);
-    this.loggedInUserDetails = JSON.parse(localStorage.getItem('UMD') || '');
-    console.info('this.loggedInUserDetails:', this.loggedInUserDetails);
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    console.info('this.loggedInUserDetails:', this.loggedInUserRoles);
     this.serviceType.setValue(this.data.serviceType);
   }
 
@@ -89,7 +89,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
         userId: this.data.userId,
         notes: [
           {
-            createdBy: this.loggedInUserDetails['USER_UNIQUE_ID'],
+            createdBy: this.utilsService.getLoggedInUserID(),
             assessmentYear: currentFyDetails[0].assessmentYear,
             note: this.noteDetails.value,
             serviceType: this.serviceType.value,

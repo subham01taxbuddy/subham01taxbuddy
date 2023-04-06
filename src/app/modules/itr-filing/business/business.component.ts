@@ -142,7 +142,7 @@ export class BusinessComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.calculateTotal1();
     this.calculateTotal2();
-    
+
   }
 
   addBusinessIncome() {
@@ -159,19 +159,19 @@ export class BusinessComponent implements OnInit {
   }
 
   deleteFile(fileName){
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+    let adminId = this.utilsService.getLoggedInUserID();
+    var path = '/itr/cloud/files?actionBy='+adminId;
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
     console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
    // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
-        console.log('Doc delete responce: ',responce); 
+        console.log('Doc delete responce: ',responce);
         this.utilsService.showSnackBar(responce.response);
         this.getItrDocuments();
     },
     error=>{
-     console.log('Doc delete ERROR responce: ',error.responce); 
+     console.log('Doc delete ERROR responce: ',error.responce);
      this.utilsService.showSnackBar(error.response);
     })
    }
@@ -189,11 +189,11 @@ export class BusinessComponent implements OnInit {
        this.loading = false;
      })
    }
- 
+
    closeDialog(){
      this.deletedFileData = [];
    }
-   
+
 
   afterUploadDocs(fileUpload){
     if(fileUpload === 'File uploaded successfully'){
@@ -246,7 +246,7 @@ export class BusinessComponent implements OnInit {
       }
     }
   }
-  
+
   getMastersData() {
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
@@ -755,7 +755,7 @@ export class BusinessComponent implements OnInit {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    
+
     if (this.businessMode === 'TABLE') {
       if (this.commonForm.valid) {
         this.loading = true;
@@ -780,7 +780,7 @@ export class BusinessComponent implements OnInit {
           id:null,
           investment:null,
           difference: null
-          
+
         };
         // SERVICE CALL MAIN NEXT BUTTON
         this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {

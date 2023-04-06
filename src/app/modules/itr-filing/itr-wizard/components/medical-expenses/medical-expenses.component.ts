@@ -76,9 +76,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   initForm() {
-    // let maxPremium = this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty ? 50000 : 25000;
+    // let maxPremium = this.userAge >= 60 ? 50000 : 25000;
     this.investmentDeductionForm = this.fb.group({
-      selfPremium: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(25000)]],
+      selfPremium: [null, [Validators.pattern(AppConstants.numericRegex)]],
       selfPreventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
       selfMedicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex),],
       premium: [null, [Validators.pattern(AppConstants.numericRegex)]],
@@ -386,17 +386,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['us80ddb'].disable();
     }
 
-    if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(
-        null
-      );
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
-    } else if (
-      this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0
-    ) {
-      this.investmentDeductionForm.controls['selfPremium'].setValue(null);
-      this.investmentDeductionForm.controls['selfPremium'].disable();
-    }
   }
 
   saveInvestmentDeductions() {
@@ -420,10 +409,11 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         return;
       }
     }
+    let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
     let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value) +
       this.utilsService.getInt(this.investmentDeductionForm.controls['selfPremium'].value) +
       this.utilsService.getInt(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value);
-    if(totalExpenses > 25000) {
+    if(totalExpenses > maxExpenseLimit) {
       this.utilsService.showSnackBar('Medical expenses for self cannot exceed 25000');
       return;
     }

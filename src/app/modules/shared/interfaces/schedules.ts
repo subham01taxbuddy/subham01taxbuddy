@@ -10,7 +10,7 @@ export class Schedules {
   public CAPITAL_GAIN = 'capitalGain';
   public SPECULATIVE_INCOME = 'speculativeIncome';
   public FOREIGN_INCOME = 'foreignIncome';
-  public MORE_INFORMATION = 'moreInformation'
+  public MORE_INFORMATION = 'moreInformation';
 
   titleMap: any = {};
   pathMap: any = {};

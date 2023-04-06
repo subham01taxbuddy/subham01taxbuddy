@@ -78,7 +78,7 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-label>Area/ Locality</mat-label>
                     <mat-form-field appearance="outline">
-                        <input type="text" trim matInput placeholder="Area/ Locality" [pattern]="charRegex" name="area"
+                        <input type="text" trim matInput placeholder="Area/ Locality Characters Only" [pattern]="charRegex" name="area"
                             formControlName="area" class="input-field" maxlength="50" required>
                         <mat-error
                             *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('required')">

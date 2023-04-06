@@ -9,6 +9,23 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { Schedules } from 'src/app/modules/shared/interfaces/schedules';
+import {Location} from "@angular/common";
+
+// export class Schedules {
+//   public PERSONAL_INFO = 'PERSONAL_INFO';
+//   public OTHER_SOURCES = 'otherSources';
+//   public INVESTMENTS_DEDUCTIONS = 'investmentsDeductions';
+//   public TAXES_PAID = 'taxesPaid';
+//   public DECLARATION = 'declaration';
+//   public SALARY = 'SALARY';
+//   public HOUSE_PROPERTY = 'HOUSE_PROPERTY';
+//   public BUSINESS_INCOME = 'BUSINESS_INCOME';
+//   public CAPITAL_GAIN = 'capitalGain';
+//   public SPECULATIVE_INCOME = 'speculativeIncome';
+//   public FOREIGN_INCOME = 'foreignIncome';
+//   public MORE_INFORMATION = 'moreInformation'
+// }
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -16,6 +33,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
   styleUrls: ['./create-update-subscription.component.scss'],
 })
 export class CreateUpdateSubscriptionComponent implements OnInit {
+
   searchedPromoCode = new FormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
   serviceDetails = [];
@@ -27,7 +45,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   loading!: boolean;
   userSubscription: any;
   sourcesList =[]
-  subscriptionObj: any;
+  subscriptionObj: userInfo;
   smeSelectedPlanId: any;
   loggedInSme:any;
   allPlans: any;
@@ -65,7 +83,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     public utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
-    private toastMessage: ToastMessageService
+    private toastMessage: ToastMessageService,
+     private schedules: Schedules,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -84,32 +104,57 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       );
 
     this.subscriptionObj = JSON.parse(
-      sessionStorage.getItem('subscriptionObject'));
+      sessionStorage.getItem('subscriptionObject'))?.data;
     console.log('subscriptionObj', this.subscriptionObj);
-    if( this.subscriptionObj.type ==='edit'){
-      this.personalInfoForm.patchValue(this.subscriptionObj.data); // all
-      // this.otherDetailsForm.patchValue(this.subscriptionObj.data);
-    }else if (this.subscriptionObj.type ==='create') {
-      this.personalInfoForm.patchValue(null); // all
-      // this.otherDetailsForm.patchValue(null);
-    }
+    this.personalInfoForm.patchValue(this.subscriptionObj)
+    // if( this.subscriptionObj.type ==='edit'){
+    //   this.personalInfoForm.patchValue(this.subscriptionObj); // all
+    //    this.otherDetailsForm.patchValue(this.subscriptionObj.data);
+    // }else if (this.subscriptionObj.type ==='create') {
+    //   this.personalInfoForm.patchValue(null); // all
+    //    this.otherDetailsForm.patchValue(null);
+    // }
 
     this.sourcesList = [
-      { name: 'Salary' },
-      { name: 'House Property' },
-      { name: 'Business/Profession' },
-      { name: 'Capital Gain' },
-      { name: 'Futures / Options' },
+      {
+        name: 'Salary',
+        schedule:'SALARY'
+      },
+      {
+        name: 'House Property',
+        schedule:'HOUSE_PROPERTY'
+      },
+      {
+        name: 'Business / Profession',
+        schedule:'BUSINESS_AND_PROFESSION'
+      },
+      {
+        name: 'Capital Gain',
+        schedule: 'CAPITAL_GAINS'
+      },
+      {
+        name: 'Futures / Options',
+        schedule: 'FUTURE_AND_OPTIONS'
+      },
+      {
+        name: 'NRI / Foreign',
+        schedule: 'FOREIGN_INCOME_NRI_EXPAT'
+      },
+      {
+        name: 'Crypto',
+        schedule: 'CRYPTOCURRENCY'
+      },
     ];
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    if(this.subscriptionObj.data == null){
+    if(this.subscriptionObj === null){
       this.getUserPlanInfo(this?.loggedInSme[0]?.userId)
       this.getAllPlanInfo(this.serviceType)
 
     }else{
-      this.getUserPlanInfo(this.subscriptionObj?.data?.subscriptionId)
+      this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
     }
 
+    this.getOwnerFilerName()
     this.setFormValues(this.selectedUserInfo);
   }
 
@@ -136,20 +181,22 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   async updateDataByPincode() {
     await this.utilsService
-      .getPincodeData(this.pin.value)
+      .getPincodeData(this.personalInfoForm.controls['pin'])
       .then((result) => {
         console.log('pindata', result);
         this.city.setValue(result.city);
         // this.country.setValue(result.countryCode);
         this.state.setValue(result.stateCode);
+        this.updateIgstFlag();
       });
   }
 
   setFormValues(data) {
     console.log('data',data)
-    this.pin.setValue(data.address[0]?.pinCode);
-    this.state.setValue(data.address[0]?.state);
-    this.city.setValue(data.address[0]?.city);
+    this.pin.setValue(data?.address[0]?.pinCode);
+    this.state.setValue(data?.address[0]?.state);
+    this.city.setValue(data?.address[0]?.city);
+    this.zipcode.setValue(data?.address[0]?.pinCode)
   }
 
   sourcesUpdated(source) {
@@ -157,10 +204,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       (item) => item.name === source.name
     )[0];
     clickedSource.selected = !clickedSource.selected;
+
     let event = {
       schedule: clickedSource,
       sources: this.sourcesList,
     };
+    console.log('updated source:',this.sourcesList);
+    this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
   }
 
   personalInfoForm :FormGroup = this.fb.group({
@@ -281,10 +331,15 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
   }
 
-  applyPromo() {
+  applyPromo(selectedPlan) {
     console.log('selectedPromoCode:', this.selectedPromoCode);
-    const param = `/subscription/apply-promocode`;
+    this.smeSelectedPlanId = selectedPlan;
+    const param = `/subscription/recalculate`;
     const request = {
+      userId: this.userSubscription.userId,
+      planId: selectedPlan,
+      selectedBy: 'SME',
+      smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode
     }
@@ -313,13 +368,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   getExactPromoDiscount() {
-    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
-      return this.userSubscription.smeSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
-    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-      return this.userSubscription.userSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
-    } else {
-      return 'NA'
-    }
+    return this.userSubscription.promoApplied.discountedAmount;
   }
 
   getConcessionsApplied(){
@@ -338,7 +387,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   totalCon :any;
   totalConcession(){
-    this.totalCon= this.scheduleCallPay.value +this.tpaPaid.value
+    let concession = 0;
+    this?.userSubscription?.concessionsApplied?.forEach(item=> {
+      concession += item.amount;
+    });
+    this.totalCon= this.userSubscription?.smeSelectedPlan?.totalAmount - concession;
   }
 
   showPromoCode(code) {
@@ -355,6 +408,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       console.log("user Subscription",this.userSubscription)
       this.gstUserInfoByUserId(subscription.userId);
       this.loading = false;
+      this.reminderMobileNumber.setValue(subscription.reminderMobileNumber)
+      this.reminderEmail.setValue(subscription.reminderEmail)
       let myDate = new Date();
       console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear())
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
@@ -381,13 +436,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       }
       this.subscriptionAssigneeId.setValue(this.userSubscription.subscriptionAssigneeId);
       if (!this.utilsService.isNonEmpty(this.subscriptionAssigneeId.value)) {
-        const smeInfo = JSON.parse(localStorage.getItem('UMD'));
-        this.subscriptionAssigneeId.setValue(smeInfo.USER_UNIQUE_ID);
+        const smeId = this.utilsService.getLoggedInUserID();
+        this.subscriptionAssigneeId.setValue(smeId);
       }
-
-       this.setFinalPricing();
-       this.getConcessionsApplied();
-       this.totalConcession();
+      this.setFinalPricing();
+      this.getConcessionsApplied();
+      this.totalConcession();
     },
       error => {
         this.loading = false
@@ -395,6 +449,18 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
   }
 
+  setServiceDetails() {
+    this.service = this.serviceType;
+    this.changeService();
+    switch (this.serviceType) {
+      case 'ITR':
+        //set plan list for service details and selected plan as seletced detail
+        this.serviceDetail = this.userSubscription.smeSelectedPlan ?
+          this.userSubscription.smeSelectedPlan.name :
+          this.userSubscription.userSelectedPlan.name;
+        break;
+    }
+  }
 
   gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
@@ -406,6 +472,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         this.personalInfoForm.patchValue(this.selectedUserInfo); // all
         // this.otherDetailsForm.patchValue(this.selectedUserInfo);
         this.setFormValues(this.selectedUserInfo);
+        this.updateIgstFlag();
         if (this.utilsService.isNonEmpty(this.selectedUserInfo) && this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
           this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType)
           if (this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails.gstType) && this.selectedUserInfo.gstDetails.gstType === 'REGULAR') {
@@ -444,10 +511,37 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   }
 
+  showIgst = true;
+
+  updateIgstFlag() {
+    if(this.state.value === '19'){
+      this.showIgst = false;
+    } else if(this.personalInfoForm.controls['gstNo'].value.startsWith('27')){
+      this.showIgst = false;
+    }
+  }
+  // selectedPlan=this.sourcesList.filter((item:any) => item.selected===true)
+
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
+    let selected = '';
+    this.sourcesList.forEach((item:any) => {
+      if(item.selected === true){
+        console.log(item.schedule);
+        if(this.utilsService.isNonEmpty(selected)) {
+          selected += ',' + item.schedule ;
+        } else {
+          selected += item.schedule;
+        }
+      }
+    });
+
+    if(this.utilsService.isNonEmpty(selected)){
+      param += '?serviceType=ITR&eligilities=' + selected + '&userId=' + this.userSubscription.userId;
+    }
+
     this.itrService.getMethod(param).subscribe((plans: any) => {
-      console.log(' all plans',plans)
+      console.log(' all plans',plans);
       if (plans instanceof Array) {
         const activePlans = plans.filter((item: any) => item.isActive === true);
         if (this.utilsService.isNonEmpty(serviceType))
@@ -455,8 +549,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         else
           this.allPlans = activePlans;
       } else {
-        this.allPlans = plans;
+        this.allPlans = [plans];
       }
+        this.setServiceDetails();
     },
       error => {
         console.log('Error during getting all plans: ', error)
@@ -464,23 +559,27 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   applySmeSelectedPlan(selectedPlan) {
+    this.loading=true;
     this.smeSelectedPlanId = selectedPlan;
-    const smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    const param = '/subscription';
+    const param = '/subscription/recalculate';
     const request = {
       userId: this.userSubscription.userId,
       planId: selectedPlan,
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId
     }
-    this.loading = true;
+
     this.itrService.postMethod(param, request).subscribe((response: any) => {
+      this.loading=false;
       console.log('SME Selected plan:', response);
       this.userSubscription = response;
+      this.loading = false;
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         this.maxEndDate.setDate(this.maxEndDate.getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
       }
+      this.setServiceDetails();
       this.setFinalPricing();
+      this.totalConcession();
       // this.selectedPlan()
       this.loading = false;
     }, error => {
@@ -499,34 +598,36 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   changeService() {
-    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR Filing' },
-    { service: 'GST Filing', details: 'GST Registration' },
-    { service: 'GST Filing', details: 'GST Annual Subscription' },
-    { service: 'GST Filing', details: 'GSTR Annual return' },
-    { service: 'GST Filing', details: 'GSTR Filing' },
-    { service: 'GST Filing', details: 'GST Notice' },
-    { service: 'GST Filing', details: 'Any other services' },
-    { service: 'Notice response', details: 'Defective Notice response u/s 139 (9)' },
-    { service: 'Notice response', details: 'Notice response and rectification  u/s 143 (1)' },
-    { service: 'Notice response', details: 'Notice response u/s 142 (1)' },
-    { service: 'Notice response', details: 'Notice response u/s 148' },
-    { service: 'Notice response', details: 'Notice e-proceeding response' },
-    { service: 'Notice response', details: 'Notice response u/s 143 (3)' },
-    { service: 'Notice response', details: 'Notice response to outstanding demand u/s 245' },
-    { service: 'Notice response', details: 'Any Other Notice' },
-    { service: 'TDS filing', details: 'TDS (26Q ) filing' },
-    { service: 'TDS filing', details: 'TDS (24Q ) filing' },
-    { service: 'TDS filing', details: 'TDS (27Q ) filing' },
-    { service: 'TDS filing', details: 'TDS Notice' },
-    { service: 'TDS filing', details: 'Any other services' },
+    const serviceArray = [
+    //   { service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
+    // { service: 'ITR Filing', details: 'ITR Filing' },
+    { service: 'GST', details: 'GST Registration' },
+    { service: 'GST', details: 'GST Annual Subscription' },
+    { service: 'GST', details: 'GSTR Annual return' },
+    { service: 'GST', details: 'GSTR Filing' },
+    { service: 'GST', details: 'GST Notice' },
+    { service: 'GST', details: 'Any other services' },
+    { service: 'NOTICE', details: 'Defective Notice response u/s 139 (9)' },
+    { service: 'NOTICE', details: 'Notice response and rectification  u/s 143 (1)' },
+    { service: 'NOTICE', details: 'Notice response u/s 142 (1)' },
+    { service: 'NOTICE', details: 'Notice response u/s 148' },
+    { service: 'NOTICE', details: 'Notice e-proceeding response' },
+    { service: 'NOTICE', details: 'Notice response u/s 143 (3)' },
+    { service: 'NOTICE', details: 'Notice response to outstanding demand u/s 245' },
+    { service: 'NOTICE', details: 'Any Other Notice' },
     { service: 'TPA', details: 'TPA' },
       { service: 'TPA', details: 'HNI' },
-    { service: 'Other Services', details: 'Accounting' },
+      { service: 'Other Services', details: 'TDS (26Q ) filing' },
+      { service: 'Other Services', details: 'TDS (24Q ) filing' },
+      { service: 'Other Services', details: 'TDS (27Q ) filing' },
+      { service: 'Other Services', details: 'TDS Notice' },
+      { service: 'Other Services', details: 'Any other services' },
+
+      { service: 'Other Services', details: 'Accounting' },
     { service: 'Other Services', details: 'TDS Registration' },
     { service: 'Other Services', details: 'TDS Filing' },
     { service: 'Other Services', details: 'ROC / Firm Registration' },
@@ -540,10 +641,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     { service: 'Other Services', details: 'PF / ESIC Registration' },
     { service: 'Other Services', details: 'Audit (Professional / Free Lancer' },
     { service: 'Other Services', details: 'Other Services' }];
-    this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
-    // if (this.service === "TPA") {
-    //   this.serviceDetail = "TPA";
-    // }
+
+    if (this.service === "ITR") {
+      this.serviceDetails = this.allPlans.map((item) => {
+        return { service: 'ITR', details:item.name  };
+      });
+    } else {
+      this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
+    }
   }
 
   // selectedPlan() {
@@ -555,21 +660,113 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   getOwnerFilerName(){
     // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
-    let param =`/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=`
+
+    let param =`/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`
+    this.userService.getMethod(param).subscribe((result: any) => {
+      console.log('owner filer name  -> ', result);
+      this.filerName.setValue(result.data[0]?.name);
+      this.ownerName.setValue(result.data[0]?.parentName)
+    })
+  }
+
+  updateUserDetails(){
+    // https://api.taxbuddy.com/user/profile/735121
+    // this.userSubscription.userId
+    let param = `/profile/${this.userSubscription.userId}`;
+     let reqBody ={
+      createdDate: this.subscriptionObj.createdDate,
+      id: this.subscriptionObj.id,
+      userId: this.subscriptionObj.userId,
+      fName:this.selectedUserInfo.fName,
+      mName:this.selectedUserInfo.mName,
+      lName: this.selectedUserInfo.lName,
+      fatherName:this.selectedUserInfo.fatherName,
+      gender: this.selectedUserInfo.gender,
+      dateOfBirth: this.selectedUserInfo.dateOfBirth,
+      maritalStatus: this.selectedUserInfo.maritalStatus,
+      emailAddress: this.emailAddress.value,
+      aadharNumber: this.selectedUserInfo.aadharNumber,
+      panNumber: this.selectedUserInfo.panNumber,
+      imageURL: this.selectedUserInfo.imageURL,
+      mobileNumber: this.mobileNumber.value,
+      residentialStatus: this.selectedUserInfo.residentialStatus,
+      zohoDeskId: this.selectedUserInfo.zohoDeskId,
+      address:[{
+        premisesName:this.selectedUserInfo?.address[0]?.premisesName,
+        road: this.selectedUserInfo?.address[0]?.road,
+        area: this.selectedUserInfo?.address[0]?.area,
+        city: this.city.value,
+        state: this.state.value,
+        pinCode: this.pin.value
+      }
+      ],
+      whatsAppNumber:this.selectedUserInfo.whatsAppNumber,
+      optinDate: this.selectedUserInfo.optinDate,
+      optoutDate: this.selectedUserInfo.optoutDate,
+      isUserOpted: this.selectedUserInfo.isUserOpted,
+      isWhatsAppMsgAllowed: this.selectedUserInfo.isWhatsAppMsgAllowed,
+      bankDetails:this.selectedUserInfo.bankDetails,
+      gstDetails: this.selectedUserInfo.gstDetails,
+      messageSentCount: this.selectedUserInfo.messageSentCount,
+      countryCode:this.selectedUserInfo.countryCode,
+      theFlyLink: this.selectedUserInfo.theFlyLink,
+      language:  this.selectedUserInfo.language,
+      eriClientValidUpto: this.selectedUserInfo.eriClientValidUpto,
+      eriClientotpSourceFlag: this.selectedUserInfo.eriClientotpSourceFlag,
+      reviewGiven: this.selectedUserInfo.reviewGiven,
+      assesseeType: this.selectedUserInfo.assesseeType,
+      subscriptionId:this.selectedUserInfo.subscriptionId,
+      subscriptionAssigneeId:this.selectedUserInfo.subscriptionAssigneeId,
+
+    }
+
+    let requestData = JSON.parse(JSON.stringify(reqBody));
+      console.log('requestData', requestData);
+    this.userService.putMethod(param,reqBody).subscribe((res: any) => {
+    console.log('user upadted res: ', res);
+    this.loading = false;
+          this.toastMessage.alert(
+            'success',
+            'user details updated successfully'
+          );
+        },
+        (error) => {
+          this.toastMessage.alert('error', 'failed to update.');
+          this.loading = false;}
+        )
+
   }
 
   updateSubscription(){
-    if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan.planId)) {
+    if (this.userSubscription.smeSelectedPlan !=null) {
       console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
       let param = '/subscription';
-      const smeInfo = JSON.parse(localStorage.getItem('UMD'));
       let reqBody = {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: "SME", // USER or SME
+        item:{
+          itemDescription:this.description?.value,
+          quantity: this.userSubscription?.item[0]?.quantity,
+          rate: this?.userSubscription?.payableSubscriptionAmount,
+          cgstPercent: this?.userSubscription?.cgstPercent,
+          cgstAmount: this?.userSubscription?.cgstAmount,
+          igstAmount:  this?.userSubscription?.igstAmount,
+          igstPercent: this?.userSubscription?.igstPercent,
+          sgstPercent: this?.userSubscription?.sgstPercent,
+          sgstAmount: this?.userSubscription?.sgstAmount,
+          amount: this?.userSubscription?.payableSubscriptionAmount,
+          sacCode: this.sacNumber.value,
+        },
+        financialYear:this.assessmentYear.value,
+        service:this.service,
+        serviceDetail:this.serviceDetail,
+        reminderEmail:this.reminderEmail.value,
+        reminderMobileNumber:this.reminderMobileNumber.value
       }
       console.log('Req Body: ', reqBody)
-      this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
+      let requestData = JSON.parse(JSON.stringify(reqBody));
+      this.itrService.postMethod(param, requestData).subscribe((res: any) => {
         console.log('After subscription plan added res:', res);
         this.toastMessage.alert("success", "Subscription created successfully.")
         // let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
@@ -580,8 +777,47 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
     }
     else {
-      this.toastMessage.alert("error", "Select Plan.")
+      this.toastMessage.alert("error", "plz Select Plan.")
     }
   }
 
+}
+
+
+export interface userInfo {
+  createdDate: string
+  id: string
+  userId: number
+  fName: string
+  mName: any
+  lName: string
+  fatherName: any
+  gender: any
+  dateOfBirth: string
+  maritalStatus: any
+  emailAddress: string
+  aadharNumber: any
+  panNumber: any
+  imageURL: any
+  mobileNumber: string
+  residentialStatus: any
+  zohoDeskId: any
+  address: any[]
+  whatsAppNumber: string
+  optinDate: any
+  optoutDate: any
+  isUserOpted: boolean
+  isWhatsAppMsgAllowed: string
+  bankDetails: any[]
+  gstDetails: any
+  messageSentCount: number
+  countryCode: string
+  theFlyLink: any
+  language: string
+  eriClientValidUpto: any
+  eriClientotpSourceFlag: any
+  reviewGiven: boolean
+  assesseeType: string
+  subscriptionId:number
+  subscriptionAssigneeId:number
 }

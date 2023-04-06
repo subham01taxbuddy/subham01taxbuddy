@@ -182,7 +182,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
-      this.ownerList = result.data.content;
+      this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
       this.ownerNames = this.ownerList.map((item) => {
         return { name: item.name, userId:item.userId  };
@@ -203,7 +203,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
 
-      this.leaderList = result.data.content;
+      this.leaderList = result.data;
       console.log('leader list result -> ', result);
       this.leaderNames = this.leaderList.map((item) => {
         return { name: item.name, userId:item.userId  };
@@ -289,7 +289,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
 
 
-
+    if(this.leader.value || this.utilsService.isNonEmpty(this.searchLeader.value) || (this.utilsService.isNonEmpty(this.searchOwner.value))){
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
@@ -306,7 +306,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         languages:this.languages.value,
         qualification:this.qualification.value,
         referredBy:this.referredBy.value,
-
+        state:this.state.value,
         botId: this.smeObj.botId,
         displayName: this.smeObj.displayName,
         active: this.smeObj.active,
@@ -351,9 +351,15 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.loading = false;
         }
       );
-    // }else {
-    //   this._toastMessageService.alert('error', 'failed to update plz select owner name.');
-    //   this.loading = false;}
+    }else {
+      if(this.owner.value && !this.utilsService.isNonEmpty(this.searchLeader.value)) {
+        this._toastMessageService.alert('error', 'Please select leader name.');
+        this.loading = false;
+      } else if (this.filer.value && !this.utilsService.isNonEmpty(this.searchOwner.value)) {
+        this._toastMessageService.alert('error', 'Please select owner name.');
+        this.loading = false;
+      }
+    }
   }
 }
 

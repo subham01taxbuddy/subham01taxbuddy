@@ -174,7 +174,7 @@
           <mat-form-field appearance="outline" class="movable-assets">
             <input matInput class="input-field" name="jwelleryAmount" formControlName="jwelleryAmount" maxlength="14"
               digitsOnly placeholder="Amount">
-            <mat-error *ngIf="movableAssetsForm.controls['jwelleryAmount'].hasError('required')">
+            <mat-error *ngIf="movableAssetsForm?.controls['jwelleryAmount'].hasError('required')">
               Enter Amount.</mat-error>
           </mat-form-field>
         </div>
@@ -249,7 +249,7 @@
     <div class="display-flex mb-3">
       <div class="card__col-xs-12">
         <div class="" style="text-align: right;">
-          <button type="submit" class="tbd-btn save-btn" [disabled]="movableAssetsForm.invalid"
+          <button type="submit" class="tbd-btn save-btn" [disabled]="movableAssetsForm?.invalid"
             (click)="saveMovableAssets()">Save</button>
         </div>
       </div>

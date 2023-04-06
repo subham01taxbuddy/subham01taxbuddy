@@ -23,7 +23,7 @@ export class UploadDocComponent implements OnInit {
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.currentPath = `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
+    this.currentPath = `ITR/${this?.utilsService?.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
     this.getDocuments();
   }
 
@@ -88,8 +88,8 @@ export class UploadDocComponent implements OnInit {
   }
 
   deleteFile(fileName) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    let adminId = this.utilsService.getLoggedInUserID();
+    var path = '/itr/cloud/files?actionBy=' + adminId;
     let filePath = `${fileName}`;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);

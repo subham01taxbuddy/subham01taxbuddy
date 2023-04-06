@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div>
   <div class="align-items-center row">
     <div class="col-sm-10">
@@ -190,7 +191,7 @@
     <div class="col-sm-5" style="margin-top: 60px;" *ngIf="filer.value">
       <mat-label> <b style="font-size: 12px">Search Owner Name</b> <span class="text-danger">*</span></mat-label>
       <mat-form-field appearance="outline">
-        <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
+        <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" required>
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
               <mat-option *ngFor="let option  of filteredOptions | async" [value]="option"  (click)="getownerNameId(option)">
                    {{option.name}}
@@ -204,7 +205,7 @@
     <div class="col-sm-5" style="margin-top: 60px;" *ngIf="owner.value">
       <mat-label> <b style="font-size: 12px">Search Leader Name</b> <span class="text-danger">*</span></mat-label>
       <mat-form-field appearance="outline">
-        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto">
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" required>
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn1">
               <mat-option *ngFor="let option1  of filteredOptions1 | async" [value]="option1"  (click)="getLeaderNameId(option1)">
                    {{option1.name}}

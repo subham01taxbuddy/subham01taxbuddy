@@ -1,6 +1,5 @@
 import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
-import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
@@ -72,8 +71,8 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    const UMD = JSON.parse(localStorage.getItem('UMD'))
-    this.agentId = UMD.USER_UNIQUE_ID;
+    const userId = this.utilsService.getLoggedInUserID();
+    this.agentId = userId;
     this.getMasterStatusList();
     this.search();
     this.getAgentList();
@@ -90,13 +89,13 @@ export class AssignedNewUsersComponent implements OnInit {
   }
   fromSme(event) {
     if (event === '' || event === 'ALL') {
-      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      let loggedInId = this.utilsService.getLoggedInUserID();
       if (this.agentId !== loggedInId) {
         this.agentId = loggedInId;
         this.search('agent');
       }
     } else if (event === 'SELF') {
-      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID;
+      let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
       this.search('agent', true);
     } else {
@@ -106,10 +105,11 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   getAgentList() {
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agents = result.data;
@@ -117,25 +117,6 @@ export class AssignedNewUsersComponent implements OnInit {
       })
     }
   }
-  // getUserData(pageNo: any) {
-  //   this.loading = true;
-  //   const UMD = JSON.parse(localStorage.getItem('UMD'))
-  //   let param = `/sme/${UMD.USER_UNIQUE_ID}/user-list?page=${pageNo}&pageSize=20`;
-  //   this.userMsService.getMethod(param).subscribe((result: any) => {
-  //     console.log('result -> ', result);
-  //     this.loading = false;
-  //     if (result.success) {
-  //       this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-  //       this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-  //       this.userInfo = result.data['content'];
-  //       this.config.totalItems = result.totalElements;
-  //     }
-  //   }, error => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-  //     console.log('Error during getting Leads data. -> ', error)
-  //   })
-  // }
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -207,11 +188,17 @@ export class AssignedNewUsersComponent implements OnInit {
         }
       },
       {
-        headerName: 'Language',
-        field: 'laguage',
-        width: 100,
+        headerName: 'ERI Client',
+        field: 'eriClientValidUpto',
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value !== null)
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          else
+            return '-';
+        },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -222,6 +209,30 @@ export class AssignedNewUsersComponent implements OnInit {
         headerName: 'PAN Number',
         field: 'panNumber',
         width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Language',
+        field: 'laguage',
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -264,36 +275,6 @@ export class AssignedNewUsersComponent implements OnInit {
         }
       },
       {
-        headerName: 'Service Type',
-        field: 'serviceType',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'ERI Client',
-        field: 'eriClientValidUpto',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (data: any) => {
-          if (data.value !== null)
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
-          else
-            return '-';
-        },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
         headerName: 'User Id',
         field: 'userId',
         width: 80,
@@ -305,18 +286,18 @@ export class AssignedNewUsersComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Agent Name',
-        field: 'callerAgentName',
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+      // {
+      //   headerName: 'Agent Name',
+      //   field: 'callerAgentName',
+      //   width: 180,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
       {
         headerName: 'Call',
         editable: false,
@@ -351,29 +332,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
-      {
-        headerName: 'See/Add Notes',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
-           </button>`;
-        },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -406,21 +365,18 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Add Client',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
-            return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
-          }
-          return 'NA'
         },
-        width: 50,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -432,7 +388,7 @@ export class AssignedNewUsersComponent implements OnInit {
       },
       {
         headerName: 'Actions',
-        width: 50,
+        width: 68,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -471,143 +427,6 @@ export class AssignedNewUsersComponent implements OnInit {
           }
         },
       },
-      /* {
-        headerName: 'Inv',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Redirect toward Invoice"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      }, */
-      /* {
-        headerName: 'Sub',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      }, */
-      {
-        headerName: 'Re Assign',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED')
-              ||  params.data.serviceType != 'ITR') {
-            return `<button type="button" class="action_icon add_button" title="Re Assignment"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-              <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
-            </button>`;
-          }
-          return 'NA'
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
-      /* {
-        headerName: 'Cloud',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      }, */
-      /* {
-        headerName: 'User Profile',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `
-           <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      }, */
-      // {
-      //   headerName: 'FNB',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
       {
         headerName: 'More',
         editable: false,
@@ -620,7 +439,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
-        width: 50,
+        width: 55,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -630,70 +449,6 @@ export class AssignedNewUsersComponent implements OnInit {
           }
         },
       },
-
-      // {
-      //   headerName: "Review",
-      //   field: "isReviewGiven",
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellRenderer: (params: any) => {
-      //     return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
-      //   },
-      //   cellStyle: (params: any) => {
-      //     return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
-      //       : '';
-      //   }
-      // },
-
-
-
-
-
-      // {
-      //   headerName: 'More',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     //     var a = document.createElement('div');
-      //     //     a.innerHTML = ` <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-      //     //   <mat-icon>more_vert</mat-icon>
-
-      //     // </button>
-      //     // <mat-menu #menu="matMenu">
-      //     //   <button mat-menu-item>
-      //     //     <mat-icon>dialpad</mat-icon>
-      //     //     <span>Redial</span>
-      //     //   </button>
-      //     //   <button mat-menu-item disabled>
-      //     //     <mat-icon>voicemail</mat-icon>
-      //     //     <span>Check voice mail</span>
-      //     //   </button>
-      //     //   <button mat-menu-item>
-      //     //     <mat-icon>notifications_off</mat-icon>
-      //     //     <span>Disable alerts</span>
-      //     //   </button>
-      //     // </mat-menu>`;
-      //     //     return a;
-
-      //     return (
-      //       "<div class='buttons'>" +
-
-      //       "<div class='front'><button>Option A1</button><br><button>Option A</button><br><button>Option B</button><br><button>Option c</button> </div>" +
-      //       "</div>"
-      //     );;
-      //   },
-      //   width: 60,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
     ]
   }
 
@@ -753,31 +508,6 @@ export class AssignedNewUsersComponent implements OnInit {
           this.updateStatus('Update Status', params.data)
           break;
         }
-        case 'add-client': {
-          if (params.data.statusId !== 11) {
-            const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${params.data.userId}`;
-            this.userMsService.getMethod(reqParam).subscribe((res: any) => {
-              console.log('Result DOB:', res);
-              this.router.navigate(['/eri'], {
-                state:
-                {
-                  userId: params.data.userId,
-                  panNumber: params.data.panNumber ? params.data.panNumber : res.data.panNumber,
-                  eriClientValidUpto: params.data.eriClientValidUpto,
-                  callerAgentUserId: params.data.callerAgentUserId,
-                  assessmentYear: params.data.assessmentYear,
-                  name: params.data.name,
-                  dateOfBirth: res.data.dateOfBirth,
-                  mobileNumber: params.data.mobileNumber
-                }
-              });
-            })
-
-          } else {
-            this._toastMessageService.alert("success", 'This user ITR is filed');
-          }
-          break;
-        }
         case 'call': {
           this.call(params.data);
           break;
@@ -788,10 +518,6 @@ export class AssignedNewUsersComponent implements OnInit {
         }
         case 'open-chat': {
           this.openChat(params.data)
-          break;
-        }
-        case 're-assign': {
-          this.reAssignUser(params.data)
           break;
         }
         case 'more-options': {
@@ -813,7 +539,7 @@ export class AssignedNewUsersComponent implements OnInit {
   async startFiling(data) {
     console.log(data);
 
-    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
+    const loggedInId = this.utilsService.getLoggedInUserID();
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
@@ -1089,23 +815,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   }
 
-  reAssignUser(client) {
-    let disposable = this.dialog.open(ReAssignDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType
-      }
-    })
 
-    disposable.afterClosed().subscribe(result => {
-      if (result.data === 'success') {
-        this.search();
-      }
-    });
-  }
 
   moreOptions(client) {
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {

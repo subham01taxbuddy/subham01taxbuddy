@@ -55,7 +55,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       filter: true,
       floatingFilter: true
     };
-    this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
 
     if(this.router.getCurrentNavigation().extras.state) {
       this.mobileNumber = this.router.getCurrentNavigation().extras.state['mobileNumber'];
@@ -72,7 +72,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       currentPage: 1,
       totalItems: 0
     };
-    this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
   }
@@ -102,10 +102,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   getAgentList() {
-    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
         if (result.success) {
           this.agents = result.data;
@@ -118,7 +119,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
-      this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     } else {
       this.selectedFilingTeamMemberId = event;
     }
@@ -303,7 +304,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       },
       {
         headerName: 'Actions',
-        width: 50,
+        width: 70,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -346,7 +347,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       },
       {
         headerName: 'Status',
-        width: 50,
+        width: 70,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -375,7 +376,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width:50,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -401,7 +402,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
       {
         headerName: 'E-Verify',
-        width: 50,
+        width: 75,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -449,7 +450,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
            </button>`;
         },
-        width: 50,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -484,7 +485,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -495,7 +496,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         },
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -506,7 +507,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
