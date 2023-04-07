@@ -11,6 +11,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { Observable, map, startWith } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -23,6 +24,11 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
+
+export interface User {
+  name: string;
+  userId:Number;
+}
 
 @Component({
   selector: 'app-tax-invoice',
@@ -42,6 +48,15 @@ export class TaxInvoiceComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   roles: any;
+  ownerList: any;
+  ownerNames: User[];
+  filerList: any;
+  filerNames:User[];
+  options1:User[] = [];
+  options: User[] = [];
+  filteredOptions: Observable<User[]>;
+  filteredOptions1: Observable<User[]>;
+
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -76,6 +91,7 @@ export class TaxInvoiceComponent implements OnInit {
       endDate: new Date('2021-03-31'),
     },
   ];
+
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
@@ -102,16 +118,49 @@ export class TaxInvoiceComponent implements OnInit {
     };
   }
 
-  cardTitles = 'Filer View';
+  cardTitle:any;
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.cardTitle=this.roles?.includes("ROLE_ADMIN")?
+    'Leader/Admin':this.roles?.includes("ROLE_OWNER")?
+    'Owner':this.roles?.includes("ROLE_FILER")?'Filer':"NA"
     console.log('roles', this.roles);
     // this.getInvoice();
 
-    this.startDate.setValue(new Date());
+    this.getOwner();
+    this.getFilers();
+    this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
+    console.log('ed',this.endDate)
+    this.filteredOptions = this.searchOwner.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options.slice();
+      })
+    );
+
+    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options1.slice();
+      })
+    );
+  }
+
+  displayFn(user: User): string {
+    return user && user.name ? user.name : '';
+  }
+
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
   }
 
   invoiceFormGroup: FormGroup = this.fb.group({
@@ -141,23 +190,58 @@ export class TaxInvoiceComponent implements OnInit {
     return this.invoiceFormGroup.controls['searchOwner'] as FormControl;
   }
 
+  getOwner() {
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      this.ownerList = result.data;
+      console.log("ownerlist",this.ownerList)
+      this.ownerNames = this.ownerList.map((item) => {
+        return { name: item.name, userId:item.userId  };
+      });
+      this.options = this.ownerNames;
+      console.log(' ownerName -> ', this.ownerNames);
+    });
+  }
+
+
+  getFilers() {
+    // API to get filers under owner-
+    // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    let param = '';
+    if(this.ownerDetails?.userId){
+       param = `/sme-details-new/${this.ownerDetails?.userId}?owner=true&assigned=true`;
+    }else{
+       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
+    }
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('filer list result -> ', result);
+      this.filerList = result.data;
+      console.log("filerList",this.filerList)
+      this.filerNames = this.ownerList.map((item) => {
+        return { name: item.name, userId:item.userId  };
+      });
+      this.options1 = this.filerNames;
+      console.log(' filerNames -> ', this.filerNames);
+    });
+  }
+
   ownerDetails: any;
   getOwnerNameId(option) {
     this.filerDetails = option;
     console.log(option);
   }
-  searchByOwner() {
 
-  }
 
   filerDetails: any;
   getFilerNameId(option) {
     this.filerDetails = option;
     console.log(option);
   }
-  searchByFiler() {
 
-  }
 
   getInvoice() {
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
@@ -185,7 +269,21 @@ export class TaxInvoiceComponent implements OnInit {
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
-    let param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}`;
+
+    let param = '';
+
+    let userFilter = '';
+    if(this.ownerDetails?.userId){
+      userFilter = `&invoiceAssignedTo=${this.ownerDetails.userId}`;
+    }
+    if(this.filerDetails?.userId){
+      userFilter = `&invoiceAssignedTo=${this.filerDetails.userId}`;
+    }
+    if(!this.ownerDetails?.userId && !this.ownerDetails?.userId){
+      userFilter = `&invoiceAssignedTo=${loggedInSmeUserId}`;
+    }
+
+    param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}${userFilter}`;
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -236,14 +334,14 @@ export class TaxInvoiceComponent implements OnInit {
       // let fromData = this.invoiceFormGroup.value.fromDate;
       // let toData = this.invoiceFormGroup.value.toDate;
       let fromData = this.datePipe.transform(
-        this.invoiceFormGroup.value.fromDate,
+        this.startDate.value,
         'yyyy-MM-dd'
       );
       let toData = this.datePipe.transform(
-        this.invoiceFormGroup.value.toDate,
+        this.endDate.value,
         'yyyy-MM-dd'
       );
-      if (this.utilService.isNonEmpty(this.invoiceFormGroup.value.status)) {
+      if (this.utilService.isNonEmpty(this.status.value)) {
         location.href =
           environment.url +
           '/itr/invoice/csv-report?fromDate=' +
@@ -251,7 +349,7 @@ export class TaxInvoiceComponent implements OnInit {
           '&toDate=' +
           toData +
           '&paymentStatus=' +
-          this.invoiceFormGroup.value.status;
+          this.status.value;
       } else {
         location.href =
           environment.url +
@@ -336,6 +434,38 @@ export class TaxInvoiceComponent implements OnInit {
         },
       },
       {
+        headerName: 'Status',
+        field: 'paymentStatus',
+        width: 100,
+        suppressMovable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['startsWith', 'contains', 'notContains'],
+          debounceMs: 0,
+        },
+        cellStyle: function (params: any) {
+          if (params.data.paymentStatus === 'Paid') {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              backgroundColor: 'green',
+              color: 'white',
+            };
+          } else {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              backgroundColor: 'red',
+              color: 'white',
+            };
+          }
+        },
+      },
+      {
         headerName: 'Services',
         field: 'serviceType',
         width: 120,
@@ -348,14 +478,39 @@ export class TaxInvoiceComponent implements OnInit {
         },
       },
       {
-        headerName: 'Amount Payable',
+        headerName: 'Payment Mode',
+        field: '',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Paid Date',
+        field: '',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+
+      {
+        headerName: 'Amount Paid',
         field: 'total',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
       {
-        headerName: 'Assigned to',
+        headerName: 'Prepared By',
         field: 'invoicePreparedBy',
         width: 140,
         suppressMovable: true,
@@ -380,89 +535,31 @@ export class TaxInvoiceComponent implements OnInit {
         },
       },
       {
-        headerName: 'Status',
-        field: 'paymentStatus',
-        width: 100,
+        headerName: 'Assigned to',
+        field: '',
+        width: 140,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ['startsWith', 'contains', 'notContains'],
+          filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellStyle: function (params: any) {
-          if (params.data.paymentStatus === 'Paid') {
-            return {
-              textAlign: 'center',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-              backgroundColor: 'green',
-              color: 'white',
-            };
-          } else if (params.data.paymentStatus === 'Failed') {
-            return {
-              textAlign: 'center',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-              backgroundColor: 'orange',
-              color: 'white',
-            };
-          } else {
-            return {
-              textAlign: 'center',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-              backgroundColor: 'red',
-              color: 'white',
-            };
+        valueGetter: function nameFromCode(params) {
+          if (smeList.length !== 0) {
+            const nameArray = smeList.filter(
+              (item: any) =>
+                item.userId.toString() === params.data.invoicePreparedBy
+            );
+            if (nameArray.length !== 0) {
+              return nameArray[0].name;
+            }
+            return '-';
           }
+          return params.data.statusId;
         },
       },
-      {
-        headerName: 'Send Reminder',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          if (params.data.paymentStatus === 'Paid') {
-            return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
-            style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed">
-            <i class="fa fa-bell" aria-hidden="true"></i>
-           </button>`;
-          } else {
-            return `<button type="button" class="action_icon add_button" title="Mail reminder"
-            style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
-            <i class="fa fa-bell" aria-hidden="true" data-action-type="mail-reminder"></i>
-           </button>`;
-          }
-        },
-        width: 55,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          if (params.data.paymentStatus === 'Paid') {
-            return {
-              textAlign: 'center',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-              backgroundColor: '#dddddd',
-              color: '#dddddd',
-            };
-          } else {
-            return {
-              textAlign: 'center',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-            };
-          }
-        },
-      },
+
       {
         headerName: 'Download invoice',
         editable: false,
@@ -483,22 +580,6 @@ export class TaxInvoiceComponent implements OnInit {
           'align-items': 'center',
           'justify-content': 'center',
         },
-      },
-      {
-        headerName: 'Call',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
-            style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
-           </button>`;
-        },
-        width: 55,
-        pinned: 'right',
       },
       {
         headerName: 'See/Add Notes',
@@ -530,19 +611,12 @@ export class TaxInvoiceComponent implements OnInit {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'mail-reminder': {
-          this.sendMailReminder(params.data);
-          break;
-        }
+
         case 'download-invoice': {
           this.downloadInvoice(params.data);
           break;
         }
-        case 'place-call': {
-          // this.deleteInvoice(params.data);
-          this.placeCall(params.data);
-          break;
-        }
+
         case 'addNotes': {
           this.showNotes(params.data);
           break;
@@ -551,63 +625,10 @@ export class TaxInvoiceComponent implements OnInit {
     }
   }
 
-  sendMailReminder(invoiceInfo) {
-    this.loading = true;
-    const param = '/itr/invoice/send-reminder';
-    this.userMsService.postMethodInfo(param, invoiceInfo).subscribe(
-      (result: any) => {
-        this.loading = false;
-        console.log('Email sent response: ', result);
-        this._toastMessageService.alert(
-          'success',
-          'Mail Reminder sent successfully.'
-        );
-      },
-      (error) => {
-        this.loading = false;
-        this._toastMessageService.alert(
-          'error',
-          'Failed to send Mail Reminder.'
-        );
-      }
-    );
-  }
 
   downloadInvoice(data) {
     location.href =
       environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
-  }
-
-  async placeCall(user) {
-    console.log('user: ', user);
-    const param = `/prod/call-support/call`;
-    const agentNumber = await this.utilService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this._toastMessageService.alert('error', "You don't have calling role.");
-      return;
-    }
-    this.loading = true;
-    const reqBody = {
-      agent_number: agentNumber,
-      customer_number: user.phone,
-    };
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
-      (result: any) => {
-        console.log('Call Result: ', result);
-        this.loading = false;
-        if (result.success.status) {
-          this._toastMessageService.alert('success', result.success.message);
-        }
-      },
-      (error) => {
-        this._toastMessageService.alert(
-          'error',
-          'Error while making call, Please try again.'
-        );
-        this.loading = false;
-      }
-    );
   }
 
   showNotes(client) {

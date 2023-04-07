@@ -56,8 +56,12 @@ export class PerformaInvoiceComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   roles: any;
+  filerList: any;
+  filerNames:User[];
+  options1:User[] = [];
   ownerNames: User[];
   options: User[] = [];
+  filteredOptions1: Observable<User[]>;
   filteredOptions: Observable<User[]>;
   ownerList: any;
   searchParam: any = {
@@ -132,15 +136,24 @@ export class PerformaInvoiceComponent implements OnInit {
     'Owner':this.roles?.includes("ROLE_FILER")?'Filer':"NA"
     console.log('roles', this.roles);
     // this.getInvoice();
+
     this.getOwner();
-    this.startDate.setValue(new Date());
+    this.getFilers();
+    this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
-    console.log('filteroptions',this.filteredOptions)
+
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
         const name = typeof value === 'string' ? value : value?.name;
         return name ? this._filter(name as string) : this.options.slice();
+      })
+    );
+    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options1.slice();
       })
     );
   }
@@ -157,17 +170,6 @@ export class PerformaInvoiceComponent implements OnInit {
     );
   }
 
-  disableFields(searchOwner,searchFiler){
-    this.searchFiler.enable()
-    this.searchOwner.enable()
-    if(searchOwner!=''){
-      this.searchFiler.disable()
-    }
-    else if(searchFiler!=''){
-      this.searchOwner.disable()
-    }
-
-  }
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
@@ -217,17 +219,34 @@ export class PerformaInvoiceComponent implements OnInit {
     this.ownerDetails = option;
     console.log(option);
   }
-  searchByOwner() {
 
+  getFilers() {
+    // API to get filers under owner-
+    // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    let param = '';
+    if(this.ownerDetails?.userId){
+       param = `/sme-details-new/${this.ownerDetails?.userId}?owner=true&assigned=true`;
+    }else{
+       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
+    }
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('filer list result -> ', result);
+      this.filerList = result.data;
+      console.log("filerList",this.filerList)
+      this.filerNames = this.ownerList.map((item) => {
+        return { name: item.name, userId:item.userId  };
+      });
+      this.options1 = this.filerNames;
+      console.log(' filerNames -> ', this.filerNames);
+    });
   }
 
   filerDetails: any;
   getFilerNameId(option) {
     this.filerDetails = option;
     console.log(option);
-  }
-  searchByFiler() {
-
   }
 
   getInvoice() {
@@ -326,14 +345,14 @@ export class PerformaInvoiceComponent implements OnInit {
       // let fromData = this.invoiceFormGroup.value.fromDate;
       // let toData = this.invoiceFormGroup.value.toDate;
       let fromData = this.datePipe.transform(
-        this.invoiceFormGroup.value.fromDate,
+        this.startDate.value,
         'yyyy-MM-dd'
       );
       let toData = this.datePipe.transform(
-        this.invoiceFormGroup.value.toDate,
+        this.endDate.value,
         'yyyy-MM-dd'
       );
-      if (this.utilService.isNonEmpty(this.invoiceFormGroup.value.status)) {
+      if (this.utilService.isNonEmpty(this.status.value)) {
         location.href =
           environment.url +
           '/itr/invoice/csv-report?fromDate=' +
@@ -341,7 +360,7 @@ export class PerformaInvoiceComponent implements OnInit {
           '&toDate=' +
           toData +
           '&paymentStatus=' +
-          this.invoiceFormGroup.value.status;
+          this.status.value;
       } else {
         location.href =
           environment.url +
@@ -426,50 +445,6 @@ export class PerformaInvoiceComponent implements OnInit {
         },
       },
       {
-        headerName: 'Services',
-        field: 'serviceType',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Amount Payable',
-        field: 'total',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-      {
-        headerName: 'Assigned to',
-        field: 'invoicePreparedBy',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          if (smeList.length !== 0) {
-            const nameArray = smeList.filter(
-              (item: any) =>
-                item.userId.toString() === params.data.invoicePreparedBy
-            );
-            if (nameArray.length !== 0) {
-              return nameArray[0].name;
-            }
-            return '-';
-          }
-          return params.data.statusId;
-        },
-      },
-      {
         headerName: 'Status',
         field: 'paymentStatus',
         width: 100,
@@ -510,6 +485,77 @@ export class PerformaInvoiceComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'Services',
+        field: 'serviceType',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Amount Payable',
+        field: 'total',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
+        headerName: 'Prepared By',
+        field: 'invoicePreparedBy',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {
+          if (smeList.length !== 0) {
+            const nameArray = smeList.filter(
+              (item: any) =>
+                item.userId.toString() === params.data.invoicePreparedBy
+            );
+            if (nameArray.length !== 0) {
+              return nameArray[0].name;
+            }
+            return '-';
+          }
+          return params.data.statusId;
+        },
+      },
+      {
+        headerName: 'Assigned to',
+        field: 'invoicePreparedBy',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {
+          if (smeList.length !== 0) {
+            const nameArray = smeList.filter(
+              (item: any) =>
+                item.userId.toString() === params.data.invoicePreparedBy
+            );
+            if (nameArray.length !== 0) {
+              return nameArray[0].name;
+            }
+            return '-';
+          }
+          return params.data.statusId;
+        },
+      },
+
+
       {
         headerName: 'Send Reminder',
         editable: false,
