@@ -86,13 +86,13 @@ export class AddSubscriptionComponent implements OnInit {
     this.loading=true
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
       console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
-      let param = '/subscription';
-      const smeInfo = JSON.parse(localStorage.getItem('UMD'));
+      let param = '/subscription/recalculate';
+      // const smeInfo = JSON.parse(localStorage.getItem('UMD'));
       let reqBody = {
         userId: this.data.userId,
         planId: this.selectedPlanInfo.planId,
         selectedBy: "SME", // USER or SME
-        smeUserId: smeInfo.USER_UNIQUE_ID
+        smeUserId: this?.loggedInSme[0]?.userId
       }
       console.log('Req Body: ', reqBody)
       this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
