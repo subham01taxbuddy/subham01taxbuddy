@@ -106,8 +106,10 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   goToSubscription() {
     this.router.navigate(['/subscription/assigned-subscription'], {
-      queryParams: { userMobNo: this.data.mobileNumber },
-    });
+      queryParams: { userMobNo: this.data.mobileNumber,
+        userId: this.data.userId },
+      });
+      // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
     this.dialogRef.close();
   }
   goToCloud() {

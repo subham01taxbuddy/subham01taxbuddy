@@ -684,14 +684,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   }
 
   updateUserDetails(){
-    this.loading=true;
-    // https://api.taxbuddy.com/user/profile/735121
-    // this.userSubscription.userId
-    let param = `/profile/${this.userSubscription.userId}`;
+      let param = `/profile/${this.userSubscription.userId}`;
      let reqBody ={
-      createdDate: this.subscriptionObj.createdDate,
-      id: this.subscriptionObj.id,
-      userId: this.subscriptionObj.userId,
+      createdDate: this.selectedUserInfo.createdDate,
+      id: this.selectedUserInfo.id,
+      userId: this.selectedUserInfo.userId,
       fName:this.selectedUserInfo.fName,
       mName:this.selectedUserInfo.mName,
       lName: this.selectedUserInfo.lName,
@@ -734,7 +731,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       subscriptionAssigneeId:this.selectedUserInfo.subscriptionAssigneeId,
 
     }
-
+    this.loading=true;
     let requestData = JSON.parse(JSON.stringify(reqBody));
       console.log('requestData', requestData);
     this.userService.putMethod(param,reqBody).subscribe((res: any) => {
@@ -755,7 +752,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   updateSubscription(){
     this.loading = true;
-    if (this.userSubscription.smeSelectedPlan !=null) {
+    if (this.userSubscription.smeSelectedPlan !=null && this.pin.value) {
       console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
       let param = '/subscription';
       let reqBody = {
@@ -795,7 +792,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       })
     }
     else {
-      this.toastMessage.alert("error", "plz Select Plan.")
+      this.toastMessage.alert("error", "plz Select Plan. & pin code")
+      this.loading=false;
     }
   }
 

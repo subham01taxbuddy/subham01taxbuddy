@@ -86,8 +86,8 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('roles',this.roles)
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("99999999999999999:", params)
-      if (this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-') {
-        this.userId = params['userMobNo'];
+      if (this.utilsService.isNonEmpty(params['userId']) && params['userMobNo'] !== '-') {
+        this.userId = params['userId'];
         this.selectedUserName = this.userId
         this.searchVal = params['userMobNo'];
         this.queryParam = `?userId=${this.userId}`;
@@ -204,6 +204,7 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   advanceSearch() {
     console.log('this.searchVal -> ', this.searchVal)
+    this.mobileNumber.setValue('')
     if (this.utilsService.isNonEmpty(this.searchVal)) {
       if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 10) {
         this.mobileNumber.setValue(this.searchVal);
