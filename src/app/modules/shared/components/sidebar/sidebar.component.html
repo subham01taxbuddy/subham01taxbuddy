@@ -61,11 +61,11 @@
     <!--       (click)="closeSideBar()">-->
     <!--      <span class="sidebar__name norTx">User Management</span>-->
     <!--    </a>-->
-    <a class="sidebar__item" routerLink="/review" routerLinkActive="sidebar__item_active"
+    <a *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" class="sidebar__item" routerLink="/review" routerLinkActive="sidebar__item_active"
        (click)="closeSideBar()">
       <span class="sidebar__name norTx">Review</span>
     </a>
-    <a class="sidebar__item" routerLink="/bo-partners" routerLinkActive="sidebar__item_active"
+    <a *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" class="sidebar__item" routerLink="/bo-partners" routerLinkActive="sidebar__item_active"
        (click)="closeSideBar()">
       <span class="sidebar__name norTx">Bo-Partners</span>
     </a>
