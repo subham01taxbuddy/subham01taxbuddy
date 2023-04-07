@@ -19,6 +19,10 @@ import { result } from 'lodash';
 })
 export class UserNotesComponent implements OnInit, AfterViewInit {
   notes: any[] = [];
+
+  currentPage: 0;
+  pageSize: number;
+
   serviceTypes = [
     {
       label: 'ITR',
@@ -51,7 +55,11 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     'Notes',
   ];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false })
+  set paginator(value: MatPaginator) {
+    this.dataSource.paginator = value;
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -127,6 +135,11 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
           result.notes instanceof Array
         ) {
           this.notes = result.notes;
+          let data = result.notes.sort((a, b) =>
+            a.dateAndTime < b.dateAndTime ? 1 : -1
+          );
+          // this.dataSource = new MatTableDataSource<any>(this.notes);
+          this.dataSource.data = data;
         }
       },
       (error) => {
@@ -134,10 +147,16 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       }
     );
   }
+
+  pageChangeData(event: any) {
+    this.currentPage = event;
+    this.getNotes();
+  }
 }
 
 export interface ConfirmModel {
   userId: any;
   clientName: string;
   serviceType?: string;
+  title?: string;
 }

@@ -8,7 +8,7 @@
 .notes {
   /* max-height: 80%;
     overflow-y: scroll; */
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .text {
@@ -18,7 +18,7 @@
 }
 
 .tableFixHead {
-  overflow: hidden;
+  overflow: scroll;
   /* height: 400px;
     margin: 20px 5px; */
   font-size: 14px;
@@ -29,6 +29,9 @@
 table {
   border-collapse: collapse;
   width: 100%;
+  height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 th,
 td {
@@ -56,4 +59,10 @@ th {
 
 .add-notes {
   width: 100%;
+}
+.fordialnotes {
+  max-width: 80vw;
+  width: 100%;
+  height: 50%;
+  position: static;
 }
