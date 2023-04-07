@@ -71,6 +71,7 @@ export class PerformaInvoiceComponent implements OnInit {
   };
   invoiceListGridOptions: GridOptions;
   Status: any = [
+    { label: '', value: '' },
     { label: 'Unpaid', value: 'Unpaid' },
     { label: 'Failed', value: 'Failed' },
   ];
@@ -257,23 +258,23 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
-    let param=''
-    if (this.roles?.includes('ROLE_ADMIN')) {
-      if(this.ownerDetails.userId){
-        param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userId}&paymentStatus=${status}`
-        }
-      else{
-        param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.filerDetails.userId}&paymentStatus=${status}`
-
-      }
+    let param = '';
+    let statusFilter = '';
+    if(status){
+      statusFilter = `&paymentStatus=${status}`;
     }
-    else if (this.roles?.includes('ROLE_OWNER')){
-      param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userId}&paymentStatus=${status}`
-
-    }else{
-      param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}&paymentStatus=${status}`;
+    let userFilter = '';
+    if(this.ownerDetails?.userId){
+      userFilter = `&invoiceAssignedTo=${this.ownerDetails.userId}`;
+    }
+    if(this.filerDetails?.userId){
+      userFilter = `&invoiceAssignedTo=${this.filerDetails.userId}`;
+    }
+    if(!this.ownerDetails?.userId && !this.ownerDetails?.userId){
+      userFilter = `&invoiceAssignedTo=${loggedInSmeUserId}`;
     }
 
+    param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}${userFilter}${statusFilter}`;
 
 
     this.itrService.getMethod(param).subscribe((response: any) => {
