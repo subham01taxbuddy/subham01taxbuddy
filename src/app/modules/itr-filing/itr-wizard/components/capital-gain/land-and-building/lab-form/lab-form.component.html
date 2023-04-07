@@ -499,7 +499,6 @@
                       <mat-label>Date of Purchase</mat-label>
                       <mat-form-field appearance="outline">
                         <input
-                          (blur)="calculateDeduction(i)"
                           (dateChange)="calculateDeduction(i)"
                           matInput
                           formControlName="purchaseDate"
@@ -602,7 +601,6 @@
                   class="delete-btn btnGry"
                   (click)="deleteInvestment(active)"
                   [disabled]="!deductionSelected()"
-                  [disabled]="!deductionSelected()"
                   *ngIf="isDeductions.value"
                 >
                   <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
@@ -614,9 +612,10 @@
 
           <div>
             <div>
-              <span class="sectionTitle"
-                >Buyers details (At least one Buyer detail is mandatory)</span
-              >
+              <span>
+                <span class="sectionTitle">Buyers details </span>
+                <i>(At least one Buyer detail is mandatory)</i>
+              </span>
               <button
                 mat-button
                 class="save-btn"

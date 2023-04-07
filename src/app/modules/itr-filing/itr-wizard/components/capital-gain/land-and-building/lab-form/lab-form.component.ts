@@ -1264,11 +1264,13 @@ export class LabFormComponent implements OnInit {
   calculateDeduction(index) {
     //itr/calculate/capital-gain/deduction
 
-    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
-      .controls[index] as FormGroup;
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[0] as FormGroup;
+    console.log(this.currentCgIndex);
+
+    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
+      .controls[index] as FormGroup;
 
     let saleValue = assetDetails.controls['valueInConsideration'].value
       ? assetDetails.controls['valueInConsideration'].value
@@ -1651,11 +1653,19 @@ export class LabFormComponent implements OnInit {
     //   otherDeductions = [];
     // }
     // this.cgArrayElement.deduction = otherDeductions.concat(deductions);
-    console.log(this.cgArrayElement.deduction);
-    const deductionsArray = (<FormArray>(
-      this.immovableForm.get('deductions')
-    )) as FormArray;
-    deductionsArray.removeAt(index);
+    // console.log(this.cgArrayElement.deduction);
+    // const deductionsArray = (<FormArray>(
+    //   this.immovableForm.get('deductions')
+    // )) as FormArray;
+
+    console.log('Remove Index', index);
+    const deductions = <FormArray>this.immovableForm.get('deductions');
+    deductions.removeAt(index);
+    console.log(deductions.length);
+
+    if (deductions.length === 0) {
+      this.isDeductions.setValue(false);
+    }
   }
 
   pageChanged(event) {
