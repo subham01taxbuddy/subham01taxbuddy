@@ -26,7 +26,7 @@
                     </button>
                 </div>
             </mat-expansion-panel-header>
-            <app-tds-other-than-salary [addData]="isAddOther" [showHeadOfIncome]="'TDTS'"
+            <app-tds-other-than-salary #other [addData]="isAddOther" [showHeadOfIncome]="'TDTS'"
                 (onSave)="saveAll()"></app-tds-other-than-salary>
         </mat-expansion-panel>
 
@@ -44,7 +44,7 @@
                     </button>
                 </div>
             </mat-expansion-panel-header>
-            <app-tds-other-than-salary [addData]="isAddPanBased" [showHeadOfIncome]="'TDTSP'"
+            <app-tds-other-than-salary #panBased [addData]="isAddPanBased" [showHeadOfIncome]="'TDTSP'"
                 (onSave)="saveAll()"></app-tds-other-than-salary>
         </mat-expansion-panel>
 

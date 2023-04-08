@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, ViewChild} from '@angular/core';
 import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -8,6 +8,7 @@ import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
 import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
+import {TdsOtherThanSalaryComponent} from "../../components/tds-other-than-salary/tds-other-than-salary.component";
 @Component({
   selector: 'app-taxes-paid',
   templateUrl: './taxes-paid.component.html',
@@ -15,6 +16,8 @@ import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
 })
 export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
+  @ViewChild("other") private tdsOtherThanSalaryComponent;
+  @ViewChild("panBased") private tdsOtherThanSalaryComponent1;
   onSalaryGridOptions: GridOptions;
   tdsOtherThanSalary16AGridOptions: GridOptions;
   tdsOtherThanSalary26QBGridOptions: GridOptions;
@@ -137,9 +140,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     if (type === 'salary') {
       this.isAddSalary = Math.random();
     } else if (type === 'other') {
-      this.isAddOther = Math.random();
+      this.tdsOtherThanSalaryComponent.addSalary();
     } else if (type === 'panBased') {
-      this.isAddPanBased = Math.random();
+      this.tdsOtherThanSalaryComponent1.addSalary();
     } else if (type === 'tcs') {
       this.isAddTcs = Math.random();
     } else if (type === 'advance') {

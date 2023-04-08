@@ -20,7 +20,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
   templateUrl: './itr-wizard.component.html',
   styleUrls: ['./itr-wizard.component.css']
 })
-export class ItrWizardComponent implements OnInit, AfterContentChecked {
+export class ItrWizardComponent implements OnInit {
 
   tabIndex = 0;
   ITR_JSON: ITR_JSON;
@@ -102,10 +102,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  ngAfterContentChecked() {
-    this.cdRef.detectChanges();
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-  }
+  // ngAfterContentChecked() {
+  //   this.cdRef.detectChanges();
+  //   this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  // }
 
   subscription: Subscription;
   breadcrumb: String;
@@ -204,7 +204,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
       this.location.back();
       this.showIncomeSources = true;
       this.showPrefill = false;
-      this.ngAfterContentChecked();
+      // this.ngAfterContentChecked();
     }
   }
 

@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import {delay} from "rxjs";
 declare let $: any;
 @Component({
   selector: 'app-tds-other-than-salary',
@@ -45,6 +46,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
+      id: this.showHeadOfIncome,
       itemsPerPage: 2,
       currentPage: 1,
     };
@@ -64,26 +66,30 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.salaryForm.disable();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    setTimeout(() => {
-      if (this.addData) {
-        this.addSalary();
-      }
-    }, 1000);
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   setTimeout(() => {
+  //     if (this.addData) {
+  //       this.addSalary();
+  //     }
+  //   }, 1000);
+  // }
 
   addSalary() {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid) {
-      this.addMoreSalary();
-    } else {
-      salaryArray.controls.forEach(element => {
-        if ((element as FormGroup).invalid) {
-          element.markAsDirty();
-          element.markAllAsTouched();
-        }
-      });
-    }
+    // const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    // if (salaryArray.valid) {
+    setTimeout(() => {
+          // if (this.addData) {
+            this.addMoreSalary();
+          // }
+        }, 1000);
+    // } else {
+    //   salaryArray.controls.forEach(element => {
+    //     if ((element as FormGroup).invalid) {
+    //       element.markAsDirty();
+    //       element.markAllAsTouched();
+    //     }
+    //   });
+    // }
   }
 
   initForm() {
@@ -174,7 +180,8 @@ export class TdsOtherThanSalaryComponent implements OnInit {
 
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.push(this.createForm(item));
+    salaryArray.insert(0, this.createForm(item));
+    delay(0);
     this.changed();
   }
 
