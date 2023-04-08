@@ -56,13 +56,13 @@ export class SpeculativeIncomeComponent implements OnInit {
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(acIncome => (acIncome.businessType === 'SPECULATIVEINCOME'))[0];
     this.specIncomeFormArray = new FormArray([]);
     if(specBusiness?.incomes) {
-      let index = 0
+      let index = 0;
       for(let income of specBusiness.incomes) {
-        let form = this.createSpecIncomeForm(index, income);
+        let form = this.createSpecIncomeForm(index++, income);
         form.disable();
         this.specIncomeFormArray.push(form);
       }
-      this.speculativeIncome = specBusiness?.incomes[0];
+      // this.speculativeIncome = specBusiness?.incomes[0];
     } else {
       let form = this.createSpecIncomeForm(0, null);
       this.specIncomeFormArray.push(form);
@@ -82,7 +82,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       index: [index],
       hasEdit: [false],
       brokerName: [income?.brokerName],
-      turnover: [income?.turnOver],
+      turnOver: [income?.turnOver],
       grossProfit: [income?.grossProfit],
       expenditure: [income?.expenditure],
       netIncome: [0]
@@ -129,10 +129,11 @@ export class SpeculativeIncomeComponent implements OnInit {
       if(!this.Copy_ITR_JSON.business.profitLossACIncomes) {
         this.Copy_ITR_JSON.business.profitLossACIncomes = [];
       }
-      if(!specBusiness) {
+      if(!specBusiness || specBusiness.length === 0) {
         this.Copy_ITR_JSON.business.profitLossACIncomes.push(specBusinessIncome);
       } else {
         // specBusiness[0].incomes = this.specIncomeForm.controls['specIncomesArray'].value;
+        specBusiness[0].incomes = [];
         let businessIncomes = this.Copy_ITR_JSON.business.profitLossACIncomes.filter(item => item.businessType != 'SPECULATIVEINCOME');
         (this.specIncomeForm.controls['specIncomesArray'] as FormArray).controls.forEach((form: FormGroup) => {
           specBusiness[0].incomes.push(form.value);
@@ -140,6 +141,9 @@ export class SpeculativeIncomeComponent implements OnInit {
 
         businessIncomes.push(specBusiness[0]);
       }
+      let nonSpec = this.Copy_ITR_JSON.business?.profitLossACIncomes?.filter(acIncome => (acIncome.businessType !== 'SPECULATIVEINCOME'));
+      nonSpec.push(specBusiness[0]);
+      this.Copy_ITR_JSON.business.profitLossACIncomes = nonSpec;
 
       console.log(this.Copy_ITR_JSON);
       this.loading = true;
