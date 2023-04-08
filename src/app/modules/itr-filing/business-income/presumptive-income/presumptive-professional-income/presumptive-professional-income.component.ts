@@ -45,7 +45,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44ADA');
     } else {
       // this.getMastersData();
-      this.dataSource;
+      // this.dataSource;
     }
   }
 
@@ -68,15 +68,17 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       }
       else {
         // this.getProfessionalTableData([]);
-        localStorage.setItem('data',JSON.stringify(professionalData));
-        var parsedData = JSON.parse(localStorage.getItem('data'));
-        this.dataSource = new MatTableDataSource(parsedData);
+        // localStorage.setItem('data',JSON.stringify(professionalData));
+        // var parsedData = JSON.parse(localStorage.getItem('data'));
+        // this.dataSource = new MatTableDataSource(parsedData);
+        this.dataSource = new MatTableDataSource(data);
       }
     } else {
       // this.getProfessionalTableData([]);
-      localStorage.setItem('data',JSON.stringify(professionalData));
-      var parsedData = JSON.parse(localStorage.getItem('data'));
-      this.dataSource = new MatTableDataSource(parsedData);
+      // localStorage.setItem('data',JSON.stringify(professionalData));
+      // var parsedData = JSON.parse(localStorage.getItem('data'));
+      // this.dataSource = new MatTableDataSource(parsedData);
+      this.dataSource = new MatTableDataSource([]);
     }
   }
 
