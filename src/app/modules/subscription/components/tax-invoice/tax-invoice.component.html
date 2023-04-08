@@ -11,32 +11,28 @@
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
             <div>
-              <b style="font-size: 20px">{{cardTitles}} </b>
+              <b style="font-size: 20px">{{cardTitle}} View </b>
             </div>
-            <div *ngIf="roles?.includes('ROLE_LEADER','ROLE_ADMIN')" >
+            <div *ngIf="roles?.includes('ROLE_ADMIN')" >
               <div class="row">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchOwner" >
-                    <button (click)="searchByOwner()" mat-button matSuffix mat-icon-button>
-                      <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
-                    <!-- <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
+                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getFilerNameId(option)">
+                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option)">
                         {{option.name}}
                       </mat-option>
-                    </mat-autocomplete> -->
+                    </mat-autocomplete>
                   </mat-form-field>
                 </div>
                 <div class="col-sm-6">
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="searchFiler" >
-                    <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
+                    <!-- <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
+                    </button> -->
 
                   </mat-form-field>
                 </div>
@@ -49,9 +45,9 @@
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="searchFiler" >
-                    <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
+                    <!-- <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
+                    </button> -->
 
                   </mat-form-field>
                 </div>
@@ -97,7 +93,7 @@
                       than from date</mat-error>
               </mat-form-field>
               </div>
-              <div class="col-sm-3">
+              <!-- <div class="col-sm-3">
                 <mat-label>Select Status </mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select placeholder="Select Status" [formControl]="status">
@@ -106,7 +102,7 @@
                       </mat-option>
                   </mat-select>
               </mat-form-field>
-              </div>
+              </div> -->
             </div>
             <hr>
             <div class="row">
@@ -122,11 +118,11 @@
       </div>
       <div class="row" style="float: right; margin-top: 20px; margin-right: 10px;">
         <span style="float: right;"> Total Count: <b>{{totalInvoice}}</b>  |
-          Unpaid:
-          <b>{{getCount('unpaid')}}</b> | Failed: <b>{{getCount('failed')}}</b></span>
+          paid:
+          <b>{{getCount('paid')}}</b></span>
       </div>
        <br>
-       <div class="row" style="margin-top: 45px;">
+       <div class="row" style="margin-top: 55px;">
         <div class="col-12">
           <table>
             <tr *ngFor="let item of invoiceInfo | paginate : config"></tr>
