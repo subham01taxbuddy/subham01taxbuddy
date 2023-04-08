@@ -493,10 +493,14 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('send data',data)
     disposable.afterClosed().subscribe(result => {
       if (result && result.data) {
-        let subID=result.data['subscriptionId'];
-        console.log('Afetr dialog close -> ', result);
-        this.router.navigate(['/subscription/create-subscription'],{ queryParams:{subID} }
-        );
+        let subData={
+          type:'create',
+          data:result.data
+        }
+        sessionStorage.setItem('createSubscriptionObject',JSON.stringify(subData))
+        // let subID=result.data['subscriptionId'];
+        console.log('Afetr dialog close -> ', subData);
+        this.router.navigate(['/subscription/create-subscription']);
         // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
       }
     })

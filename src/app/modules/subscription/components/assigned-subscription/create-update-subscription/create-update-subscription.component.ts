@@ -1,7 +1,7 @@
 import { state } from '@angular/animations';
 import { data } from 'jquery';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -33,7 +33,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './create-update-subscription.component.html',
   styleUrls: ['./create-update-subscription.component.scss'],
 })
-export class CreateUpdateSubscriptionComponent implements OnInit {
+export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
   subId:any;
   searchedPromoCode = new FormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
@@ -47,6 +47,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   userSubscription: any;
   sourcesList =[]
   subscriptionObj: userInfo;
+  createSubscriptionObj:userInfo;
   smeSelectedPlanId: any;
   loggedInSme:any;
   allPlans: any;
@@ -90,14 +91,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.queryParamMap.subscribe((params) => {
-    console.log('param',params)
-     this.subId=params['params'].subID
-    console.log('subId',this.subId);
 
-
-    // this.getUserPlanInfo(subId);
-  });
     this.getAllPromoCode();
 
     this.filteredOptions = this.searchedPromoCode.valueChanges
@@ -112,17 +106,22 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         })
       );
 
-    this.subscriptionObj = JSON.parse(
-      sessionStorage.getItem('subscriptionObject'))?.data;
+    this.createSubscriptionObj=JSON.parse(sessionStorage.getItem('createSubscriptionObject'))?.data
+    console.log('createSubscriptionObject', this.createSubscriptionObj);
+
+    this.subscriptionObj = JSON.parse(sessionStorage.getItem('subscriptionObject'))?.data;
     console.log('subscriptionObj', this.subscriptionObj);
-    this.personalInfoForm.patchValue(this.subscriptionObj)
-    // if( this.subscriptionObj.type ==='edit'){
-    //   this.personalInfoForm.patchValue(this.subscriptionObj); // all
-    //    this.otherDetailsForm.patchValue(this.subscriptionObj.data);
-    // }else if (this.subscriptionObj.type ==='create') {
-    //   this.personalInfoForm.patchValue(null); // all
-    //    this.otherDetailsForm.patchValue(null);
-    // }
+
+    if( this.subscriptionObj !=null){
+      this.personalInfoForm.patchValue(this.subscriptionObj);
+      this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
+
+    }
+    if(this.createSubscriptionObj !=null){
+      this.personalInfoForm.patchValue(this.createSubscriptionObj);
+      this.gstUserInfoByUserId(this.createSubscriptionObj?.userId);
+      this.userSubscription=this.createSubscriptionObj;
+    }
 
     this.sourcesList = [
       {
@@ -156,18 +155,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
     ];
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
-    if(this.subscriptionObj === null){
-      this.getUserPlanInfo(this?.loggedInSme[0]?.userId)
-      this.getAllPlanInfo(this.serviceType)
-
-    }
-    else if(this.subId != null){
-      this.getUserPlanInfo(this.subId)
-    }
-    else{
-      this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
-    }
-
+    this.getAllPlanInfo(this.serviceType)
     this.getOwnerFilerName()
     this.setFormValues(this.selectedUserInfo);
   }
@@ -207,11 +195,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
 
   setFormValues(data) {
     console.log('data',data)
-    this.userName.setValue(data?.fName+' '+data?.lName)
+    this.userName.setValue(data?.fName+' '+data?.lName);
+    this.mobileNumber.setValue(data?.mobileNumber);
+    this.emailAddress.setValue(data?.emailAddress)
     this.pin.setValue(data?.address[0]?.pinCode);
     this.state.setValue(data?.address[0]?.state);
     this.city.setValue(data?.address[0]?.city);
-    this.zipcode.setValue(data?.address[0]?.pinCode)
+    this.zipcode.setValue(data?.address[0]?.pinCode);
   }
 
   sourcesUpdated(source) {
@@ -225,7 +215,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       sources: this.sourcesList,
     };
     console.log('updated source:',this.sourcesList);
-    this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
+    this.getAllPlanInfo(this?.userSubscription?.userSelectedPlan?.servicesType);
   }
 
   personalInfoForm :FormGroup = this.fb.group({
@@ -434,11 +424,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
         this.noOfMonths.setValue(Math.round(this.userSubscription.smeSelectedPlan.validForDays / 30));
         this.getAllPlanInfo(this.userSubscription.smeSelectedPlan.servicesType);
       } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-        myDate.setDate(new Date().getDate() + this.userSubscription.userSelectedPlan.validForDays - 1)
+        myDate.setDate(new Date().getDate() + this?.userSubscription?.userSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
-        this.serviceType = this.userSubscription.userSelectedPlan.servicesType;
-        this.noOfMonths.setValue(Math.round(this.userSubscription.userSelectedPlan.validForDays / 30));
-        this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
+        this.serviceType = this?.userSubscription?.userSelectedPlan?.servicesType;
+        this.noOfMonths.setValue(Math.round(this?.userSubscription?.userSelectedPlan?.validForDays / 30));
+        this.getAllPlanInfo(this?.userSubscription?.userSelectedPlan?.servicesType);
       }
       if (this.serviceType !== 'GST') {
         this.maxEndDate = new Date(myDate.getMonth() <= 2 ? myDate.getFullYear() : myDate.getFullYear() + 1, 2, 31);
@@ -795,6 +785,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit {
       this.toastMessage.alert("error", "plz Select Plan. & pin code")
       this.loading=false;
     }
+  }
+
+  ngOnDestroy(){
+    sessionStorage.removeItem('subscriptionObject');
+    sessionStorage.removeItem('createSubscriptionObject');
+
   }
 
 }
