@@ -56,8 +56,12 @@ export class PerformaInvoiceComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   roles: any;
+  filerList: any;
+  filerNames:User[];
+  options1:User[] = [];
   ownerNames: User[];
   options: User[] = [];
+  filteredOptions1: Observable<User[]>;
   filteredOptions: Observable<User[]>;
   ownerList: any;
   searchParam: any = {
@@ -71,6 +75,7 @@ export class PerformaInvoiceComponent implements OnInit {
   };
   invoiceListGridOptions: GridOptions;
   Status: any = [
+    { label: '', value: 'Unpaid,Failed' },
     { label: 'Unpaid', value: 'Unpaid' },
     { label: 'Failed', value: 'Failed' },
   ];
@@ -120,22 +125,44 @@ export class PerformaInvoiceComponent implements OnInit {
     };
   }
 
-  cardTitles = 'Filer View';
+  cardTitle:any
+  // cardTitles = ['Filer View','Owner View','Leader/Admin'];
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.cardTitle=this.roles?.includes("ROLE_ADMIN")?
+    'Leader/Admin':this.roles?.includes("ROLE_OWNER")?
+    'Owner':this.roles?.includes("ROLE_FILER")?'Filer':"NA"
     console.log('roles', this.roles);
     // this.getInvoice();
+
     this.getOwner();
-    this.startDate.setValue(new Date());
+    this.getFilers();
+    this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
     console.log('filteroptions',this.filteredOptions)
+
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
+        console.log('change', value);
+        if(!this.utilService.isNonEmpty(value)){
+          this.ownerDetails = null;
+        }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
+        return name ? this._filter(name as string, this.options) : this.options.slice();
+      })
+    );
+    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        if(!this.utilService.isNonEmpty(value)){
+          this.filerDetails = null;
+        }
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string, this.options1) : this.options1.slice();
       })
     );
   }
@@ -144,10 +171,10 @@ export class PerformaInvoiceComponent implements OnInit {
     return user && user.name ? user.name : '';
   }
 
-  private _filter(name: string): User[] {
+  private _filter(name: string, options): User[] {
     const filterValue = name.toLowerCase();
 
-    return this.options.filter((option) =>
+    return options.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
   }
@@ -201,17 +228,34 @@ export class PerformaInvoiceComponent implements OnInit {
     this.ownerDetails = option;
     console.log(option);
   }
-  searchByOwner() {
 
+  getFilers() {
+    // API to get filers under owner-
+    // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    let param = '';
+    if(this.ownerDetails?.userId){
+       param = `/sme-details-new/${this.ownerDetails?.userId}?owner=true&assigned=true`;
+    }else{
+       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
+    }
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('filer list result -> ', result);
+      this.filerList = result.data;
+      console.log("filerList",this.filerList)
+      this.filerNames = this.ownerList.map((item) => {
+        return { name: item.name, userId:item.userId  };
+      });
+      this.options1 = this.filerNames;
+      console.log(' filerNames -> ', this.filerNames);
+    });
   }
 
   filerDetails: any;
   getFilerNameId(option) {
     this.filerDetails = option;
     console.log(option);
-  }
-  searchByFiler() {
-
   }
 
   getInvoice() {
@@ -242,15 +286,23 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
-
-    if(this.roles?.includes('ROLE_OWNER')){
-      let param =`/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${this.ownerDetails.userID}&paymentStatus=${status}`
+    let param = '';
+    let statusFilter = '';
+    if(status){
+      statusFilter = `&paymentStatus=${status}`;
     }
-    else if (this.roles?.includes('ROLE_OWNER')){
-
+    let userFilter = '';
+    if(this.ownerDetails?.userId){
+      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
+    }
+    if(this.filerDetails?.userId){
+      userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
 
-    let param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}&invoiceAssignedTo=${loggedInSmeUserId}&paymentStatus=${status}`;
+    ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
+    ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -301,14 +353,14 @@ export class PerformaInvoiceComponent implements OnInit {
       // let fromData = this.invoiceFormGroup.value.fromDate;
       // let toData = this.invoiceFormGroup.value.toDate;
       let fromData = this.datePipe.transform(
-        this.invoiceFormGroup.value.fromDate,
+        this.startDate.value,
         'yyyy-MM-dd'
       );
       let toData = this.datePipe.transform(
-        this.invoiceFormGroup.value.toDate,
+        this.endDate.value,
         'yyyy-MM-dd'
       );
-      if (this.utilService.isNonEmpty(this.invoiceFormGroup.value.status)) {
+      if (this.utilService.isNonEmpty(this.status.value)) {
         location.href =
           environment.url +
           '/itr/invoice/csv-report?fromDate=' +
@@ -316,7 +368,7 @@ export class PerformaInvoiceComponent implements OnInit {
           '&toDate=' +
           toData +
           '&paymentStatus=' +
-          this.invoiceFormGroup.value.status;
+          this.status.value;
       } else {
         location.href =
           environment.url +
@@ -401,50 +453,6 @@ export class PerformaInvoiceComponent implements OnInit {
         },
       },
       {
-        headerName: 'Services',
-        field: 'serviceType',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Amount Payable',
-        field: 'total',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-      {
-        headerName: 'Assigned to',
-        field: 'invoicePreparedBy',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          if (smeList.length !== 0) {
-            const nameArray = smeList.filter(
-              (item: any) =>
-                item.userId.toString() === params.data.invoicePreparedBy
-            );
-            if (nameArray.length !== 0) {
-              return nameArray[0].name;
-            }
-            return '-';
-          }
-          return params.data.statusId;
-        },
-      },
-      {
         headerName: 'Status',
         field: 'paymentStatus',
         width: 100,
@@ -485,6 +493,77 @@ export class PerformaInvoiceComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'Services',
+        field: 'serviceType',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Amount Payable',
+        field: 'total',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
+        headerName: 'Prepared By',
+        field: 'invoicePreparedBy',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {
+          if (smeList.length !== 0) {
+            const nameArray = smeList.filter(
+              (item: any) =>
+                item.userId.toString() === params.data.invoicePreparedBy
+            );
+            if (nameArray.length !== 0) {
+              return nameArray[0].name;
+            }
+            return '-';
+          }
+          return params.data.statusId;
+        },
+      },
+      {
+        headerName: 'Assigned to',
+        field: 'invoicePreparedBy',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {
+          if (smeList.length !== 0) {
+            const nameArray = smeList.filter(
+              (item: any) =>
+                item.userId.toString() === params.data.invoicePreparedBy
+            );
+            if (nameArray.length !== 0) {
+              return nameArray[0].name;
+            }
+            return '-';
+          }
+          return params.data.statusId;
+        },
+      },
+
+
       {
         headerName: 'Send Reminder',
         editable: false,

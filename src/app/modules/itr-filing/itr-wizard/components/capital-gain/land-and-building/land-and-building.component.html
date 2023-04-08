@@ -1,41 +1,61 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 
-<div style="padding-top: 20px;">
+<div style="padding-top: 20px">
   <div *ngIf="labView === 'TABLE'">
     <div class="card__row">
       <span class="pageTitle">Land & Building</span>
-      <button class="tbd-btn save-btn" style="float: right;" (click)="addCapitalGain('ADD','')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
-          aria-hidden="true"></i>
+      <button
+        class="tbd-btn save-btn"
+        style="float: right"
+        (click)="addCapitalGain('ADD', '')"
+      >
+        Add More&nbsp;&nbsp; <i class="fa fa-plus" aria-hidden="true"></i>
       </button>
     </div>
     <form [formGroup]="propertiesForm">
       <div formArrayName="propertiesArray">
-        <mat-accordion class="headers-align" [formGroupName]="i"
-                       *ngFor="let prop of getPropertiesArrayForForm.controls; let i=index"  hideToggle>
+        <mat-accordion
+          class="headers-align"
+          [formGroupName]="i"
+          *ngFor="let prop of getPropertiesArrayForForm.controls; let i = index"
+          hideToggle
+        >
           <mat-expansion-panel>
-            <mat-expansion-panel-header class="card__row" (click)="addCapitalGain('EDIT', properties[i])">
-              <mat-checkbox name="prop[i]"
-                formControlName="selected" (click)="$event.stopPropagation(); updatePropertySelection($event, properties[i].id)"></mat-checkbox>
+            <mat-expansion-panel-header
+              class="card__row"
+              (click)="addCapitalGain('EDIT', properties[i])"
+            >
+              <mat-checkbox
+                name="prop[i]"
+                formControlName="selected"
+                (click)="
+                  $event.stopPropagation();
+                  updatePropertySelection($event, properties[i].id)
+                "
+              ></mat-checkbox>
               <div class="card__col-xs-12">
                 <div class="card__col-xs-12 card__col-sm-3">
                   <div class="title">Date of Sale</div>
-                  <div class="value">{{properties[i].sellDate | date}}</div>
+                  <div class="value">{{ properties[i].sellDate | date }}</div>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-2">
                   <div class="title">Type of Gain</div>
-                  <div class="value">{{properties[i].gainType}}</div>
+                  <div class="value">{{ properties[i].gainType }}</div>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-2">
                   <div class="title">Total Capital Gain</div>
-                  <div class="value">{{properties[i].cgIncome}}</div>
+                  <div class="value">{{ properties[i].cgIncome }}</div>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-3">
                   <div class="title">City</div>
-                  <div class="value">{{properties[i].address}}</div>
+                  <div class="value">{{ properties[i].address }}</div>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-2">
                   <div class="title">Pin Code</div>
-                  <div class="value">{{properties[i].pin}}</div>
+                  <div class="value">{{ properties[i].pin }}</div>
                 </div>
               </div>
               <mat-icon>arrow_forward_ios</mat-icon>
@@ -43,26 +63,44 @@
           </mat-expansion-panel>
         </mat-accordion>
       </div>
-      <mat-hint *ngIf="isExmptAvail">Note: (**) indicates you got an exemption upto 1,00,000 against the asset
-        class.</mat-hint>
+      <mat-hint *ngIf="isExmptAvail"
+        >Note: (**) indicates you got an exemption upto 1,00,000 against the
+        asset class.</mat-hint
+      >
       <div>
-        <button class="delete-btn" (click)="deleteCapitalGain()" [disabled]="!isPropertySelected()">
-          <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete </button>
+        <button
+          class="delete-btn"
+          (click)="deleteCapitalGain()"
+          [disabled]="!isPropertySelected()"
+        >
+          <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
+        </button>
       </div>
     </form>
   </div>
   <div *ngIf="labView === 'FORM'">
-    <app-lab-form [data]="data" (cancelForm)="cancelForm($event)"></app-lab-form>
+    <app-lab-form
+      [data]="data"
+      (cancelForm)="cancelForm($event)"
+    ></app-lab-form>
   </div>
-  <hr>
-  <div class="flex justify-between p-[30px] back-foot">
-    <button (click)="goBack()" class="lgtBtn">
+  <hr />
+  <div class="flex justify-between border-t mt-[75px] m-[25px] py-[25px]">
+    <button
+      (click)="goBack()"
+      class="btn normal-case h-fit min-h-fit transition-all duration-300 bg-white hover:bg-sky-700 hover:border-sky-700 py-3 px-7 hover:text-white"
+    >
       <span class="font-semibold">Back to Capital Gain Topics</span>
     </button>
 
-    <button (click)="labFormComponent.saveImmovableCG(labFormComponent.immovableForm, 0)" 
-            *ngIf="labView === 'FORM'"
-            class="saveBtnIn">
+    <button
+      (click)="
+        labFormComponent.saveImmovableCG(labFormComponent.immovableForm, 0)
+      "
+      style="background: #4f9a20"
+      *ngIf="labView === 'FORM'"
+      class="btn normal-case h-fit min-h-fit transition-all duration-300 py-3 px-7 text-white"
+    >
       <span class="font-semibold">Save All</span>
     </button>
   </div>

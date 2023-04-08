@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="content-wrapper">
-    <div class="container" *ngIf="userSubscription.userSelectedPlan !== null && userSubscription.userSelectedPlan.servicesType === 'ITR'">
+    <div class="container" *ngIf="userSubscription?.userSelectedPlan !== null && userSubscription?.userSelectedPlan?.servicesType === 'ITR'">
       <div class="row">
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
@@ -185,15 +185,15 @@
               <span class="head">Total Amount:</span>
             </div>
             <div class="col-sm-6"
-              *ngIf="userSubscription && userSubscription.userSelectedPlan">
-              <span class="head">{{userSubscription.userSelectedPlan?.name}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan?.validForDays}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan?.basePrice | currency:'INR'}}</span><br>
-              <span class="head" *ngIf="!showIgst">{{userSubscription.userSelectedPlan?.cgst | currency:'INR'}}</span><br>
-              <span class="head" *ngIf="!showIgst">{{userSubscription.userSelectedPlan?.sgst | currency:'INR'}}</span><br>
-              <span class="head" *ngIf="showIgst">{{userSubscription.userSelectedPlan?.igst | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan?.totalTax | currency:'INR'}}</span><br>
-              <span class="head">{{userSubscription.userSelectedPlan?.totalAmount | currency:'INR'}}</span>
+              *ngIf="userSubscription && userSubscription?.userSelectedPlan">
+              <span class="head">{{userSubscription?.userSelectedPlan?.name}}</span><br>
+              <span class="head">{{userSubscription?.userSelectedPlan?.validForDays}}</span><br>
+              <span class="head">{{userSubscription?.userSelectedPlan?.basePrice | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="!showIgst">{{userSubscription?.userSelectedPlan?.cgst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="!showIgst">{{userSubscription?.userSelectedPlan?.sgst | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="showIgst">{{userSubscription?.userSelectedPlan?.igst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription?.userSelectedPlan?.totalTax | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription?.userSelectedPlan?.totalAmount | currency:'INR'}}</span>
             </div>
 
           </div>
@@ -366,7 +366,7 @@
                     <mat-option value="NOTICE"> Notice response </mat-option>
 <!--                    <mat-option value="TDS filing"> TDS filing </mat-option>-->
                     <mat-option value="TPA"> TPA </mat-option>
-                    <mat-option value="OTHER"> Other Services </mat-option>
+                    <mat-option value="Other Services"> Other Services </mat-option>
                 </mat-select>
             </mat-form-field>
             </div>

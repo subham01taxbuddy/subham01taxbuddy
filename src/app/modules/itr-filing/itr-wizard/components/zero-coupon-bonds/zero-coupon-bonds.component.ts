@@ -34,6 +34,8 @@ export class ZeroCouponBondsComponent
   loading: boolean = false;
   config: any;
   deduction = true;
+  minDate: Date;
+  maxDate: Date;
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -50,6 +52,13 @@ export class ZeroCouponBondsComponent
     private activateRoute: ActivatedRoute
   ) {
     super();
+    // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
+    const currentYear = new Date().getFullYear() - 1;
+    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
   }
 
   ngOnInit(): void {

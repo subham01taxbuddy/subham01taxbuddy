@@ -9,6 +9,8 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { map, Observable, startWith } from 'rxjs';
+import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface User {
   name: string;
@@ -52,6 +54,7 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private dialog: MatDialog,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -83,17 +86,18 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('roles',this.roles)
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("99999999999999999:", params)
-      if (this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-') {
-        this.userId = params['userMobNo'];
+      if (this.utilsService.isNonEmpty(params['userId']) && params['userMobNo'] !== '-') {
+        this.userId = params['userId'];
         this.selectedUserName = this.userId
         this.searchVal = params['userMobNo'];
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
         // console.log('this.queryParam --> ',this.queryParam)
+      }else{
+        this.getAssignedSubscription(0);
       }
     });
 
-    this.getAssignedSubscription(0);
     this.getFilerList();
     this.filteredOptions = this.searchName.valueChanges.pipe(
       startWith(''),
@@ -200,8 +204,10 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   advanceSearch() {
     console.log('this.searchVal -> ', this.searchVal)
+    this.mobileNumber.setValue('')
     if (this.utilsService.isNonEmpty(this.searchVal)) {
       if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 10) {
+        this.mobileNumber.setValue(this.searchVal);
         this.getUserByMobileNum(this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
@@ -226,6 +232,11 @@ export class AssignedSubscriptionComponent implements OnInit {
       } else {
         this._toastMessageService.alert("error", "no user with given no.");
       }
+      this.selectedUserName = response.data[0].userName;
+        this.userId = response.data[0].userId;
+
+        this.queryParam = `?userId=${this.userId}`;
+        this.utilsService.sendMessage(this.queryParam);
     },
       error => {
         this.loading = false;
@@ -373,9 +384,11 @@ export class AssignedSubscriptionComponent implements OnInit {
         headerName: 'Update',
         field: '',
         width: 100,
-        suppressMovable: true,
+        pinned: 'right',
+         lockPosition: true,
+         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
+        // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -467,13 +480,38 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   createSub(){
-    let subscriptionData = {
-      type:'create',
-      data:null,
-    };
-    sessionStorage.setItem('subscriptionObject',JSON.stringify(subscriptionData))
-    this.router.navigate(['/subscription/create-subscription'])
+    let disposable = this.dialog.open(AddSubscriptionComponent, {
+      width: '80%',
+      height: 'auto',
+      data: {
+        userId: this.userId,
+        mobileNo:this.mobileNumber.value,
+
+      },
+
+    })
+    console.log('send data',data)
+    disposable.afterClosed().subscribe(result => {
+      if (result && result.data) {
+        let subData={
+          type:'create',
+          data:result.data
+        }
+        sessionStorage.setItem('createSubscriptionObject',JSON.stringify(subData))
+        // let subID=result.data['subscriptionId'];
+        console.log('Afetr dialog close -> ', subData);
+        this.router.navigate(['/subscription/create-subscription']);
+        // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
+      }
+    })
   }
+    // let subscriptionData = {
+    //   type:'create',
+    //   data:null,
+    // };
+    // sessionStorage.setItem('subscriptionObject',JSON.stringify(subscriptionData))
+    // this.router.navigate(['/subscription/add-subscription'])
+
 
   getFilerList(){
 
@@ -506,4 +544,8 @@ getFilerNameId(option){
   fromSme(event) {
     this.queryParam = `?subscriptionAssigneeId=${event}`;
   }
+}
+export interface ConfirmModel {
+  userId: number
+  mobileNo:number
 }

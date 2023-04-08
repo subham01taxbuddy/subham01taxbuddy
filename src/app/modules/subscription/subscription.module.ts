@@ -20,6 +20,7 @@ import { ItrFilingModule } from '../itr-filing/itr-filing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
 import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.component';
+import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.compon
     CreateUpdateSubscriptionComponent,
     PerformaInvoiceComponent,
     TaxInvoiceComponent,
+    AddSubscriptionComponent,
   ],
 })
 export class SubscriptionModule { }

@@ -2,7 +2,7 @@
 <div>
   <div class="align-items-center row">
     <div class="col-sm-10">
-      <b style="font-size: 25px">Performa Invoices </b>
+      <b style="font-size: 25px">Proforma Invoices </b>
     </div>
   </div>
   <div class="content-wrapper">
@@ -11,32 +11,30 @@
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
             <div>
-              <b style="font-size: 20px">{{cardTitles}} </b>
+              <b style="font-size: 20px">{{cardTitle}} View </b>
             </div>
             <div  >
-              <div class="row">
+              <div class="row"  *ngIf="roles?.includes('ROLE_ADMIN')">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
-                    <button (click)="searchByOwner()" mat-button matSuffix mat-icon-button>
-                      <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
-
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                      <mat-option *ngFor="let options  of filteredOptions | async" [value]="options.name" (click)="getOwnerNameId(options)">
-                        {{options.name}}
+                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" >
+                    <mat-autocomplete #auto>
+                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option)">
+                        {{option.name}}
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6" >
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchFiler" >
-                    <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
-                      <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
+                    <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto1" >
+                    <mat-autocomplete #auto1>
+                      <mat-option *ngFor="let option1  of filteredOptions1 | async" [value]="option1.name" (click)="getFilerNameId(option1)">
+                        {{option1.name}}
+                      </mat-option>
+                    </mat-autocomplete>
 
                   </mat-form-field>
                 </div>
@@ -48,10 +46,12 @@
                 <div >
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchFiler" >
-                    <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
-                      <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
+                    <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" >
+                      <mat-option *ngFor="let option1  of filteredOptions1 | async" [value]="option1.name" (click)="getFilerNameId(option1)">
+                        {{option1.name}}
+                      </mat-option>
+                    </mat-autocomplete>
 
                   </mat-form-field>
                 </div>
@@ -63,11 +63,7 @@
                 <mat-label> Select FY </mat-label>
                 <mat-form-field appearance="outline">
                   <input type="text" matInput [formControl]="assessmentYear" readonly>
-                  <!-- <mat-select placeholder="Select FY" [formControl]="assessmentYear" (selectionChange)="setDates()">
-                      <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
-                          {{item.label}}
-                      </mat-option>
-                  </mat-select> -->
+
               </mat-form-field>
               </div>
               <div class="col-sm-3">
@@ -126,7 +122,7 @@
           <b>{{getCount('unpaid')}}</b> | Failed: <b>{{getCount('failed')}}</b></span>
       </div>
        <br>
-       <div class="row" style="margin-top: 45px;">
+       <div class="row" style="margin-top: 55px;">
         <div class="col-12">
           <table>
             <tr *ngFor="let item of invoiceInfo | paginate : config"></tr>

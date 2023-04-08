@@ -2,11 +2,12 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import {ReAssignDialogComponent} from "../re-assign-dialog/re-assign-dialog.component";
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -27,6 +28,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
@@ -104,8 +106,10 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   goToSubscription() {
     this.router.navigate(['/subscription/assigned-subscription'], {
-      queryParams: { userMobNo: this.data.mobileNumber },
-    });
+      queryParams: { userMobNo: this.data.mobileNumber,
+        userId: this.data.userId },
+      });
+      // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
     this.dialogRef.close();
   }
   goToCloud() {
@@ -183,6 +187,32 @@ export class MoreOptionsDialogComponent implements OnInit {
     );
   }
 
+  addClient(){
+    this.dialogRef.close();
+    if (this.data.statusId !== 11) {
+      const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${this.data.userId}`;
+      this.userMsService.getMethod(reqParam).subscribe((res: any) => {
+        console.log('Result DOB:', res);
+        this.router.navigate(['/eri'], {
+          state:
+            {
+              userId: this.data.userId,
+              panNumber: this.data.panNumber ? this.data.panNumber : res.data.panNumber,
+              eriClientValidUpto: this.data.eriClientValidUpto,
+              callerAgentUserId: this.data.callerAgentUserId,
+              assessmentYear: this.data.assessmentYear,
+              name: this.data.name,
+              dateOfBirth: res.data.dateOfBirth,
+              mobileNumber: this.data.mobileNumber
+            }
+        });
+      })
+
+    } else {
+      this.utilsService.showSnackBar('This user ITR is filed');
+    }
+  }
+
   getUserJourney() {
     const params = `/status-info/${this.data.mobileNumber}`;
     this.userMsService.getMethod(params).subscribe(
@@ -198,6 +228,18 @@ export class MoreOptionsDialogComponent implements OnInit {
       },
       () => {}
     );
+  }
+
+  reAssignUser() {
+    let disposable = this.dialog.open(ReAssignDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: this.data.userId,
+        clientName: this.data.name,
+        serviceType: this.data.serviceType
+      }
+    });
   }
 
   createRowData(data) {
