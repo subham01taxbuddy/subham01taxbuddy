@@ -114,13 +114,20 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
 
     if( this.subscriptionObj !=null){
       this.personalInfoForm.patchValue(this.subscriptionObj);
+      // this.otherInfoForm.patchValue(this.subscriptionObj);
       this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
 
     }
     if(this.createSubscriptionObj !=null){
       this.personalInfoForm.patchValue(this.createSubscriptionObj);
+      // this.otherInfoForm.patchValue(this.createSubscriptionObj);
       this.gstUserInfoByUserId(this.createSubscriptionObj?.userId);
       this.userSubscription=this.createSubscriptionObj;
+      this.smeSelectedPlanId=this?.createSubscriptionObj?.smeSelectedPlan?.planId;
+      // this.service=this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
+      this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
+      // this.setServiceDetails()
+      // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
     }
 
     this.sourcesList = [
@@ -832,4 +839,6 @@ export interface userInfo {
   assesseeType: string
   subscriptionId:number
   subscriptionAssigneeId:number
+  smeSelectedPlan:any
+  item:any
 }
