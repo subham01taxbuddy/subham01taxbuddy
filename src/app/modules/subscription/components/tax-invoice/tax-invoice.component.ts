@@ -137,16 +137,22 @@ export class TaxInvoiceComponent implements OnInit {
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
+        if(!this.utilService.isNonEmpty(value)){
+          this.ownerDetails = null;
+        }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
+        return name ? this._filter(name as string, this.options) : this.options.slice();
       })
     );
 
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
+        if(!this.utilService.isNonEmpty(value)){
+          this.filerDetails = null;
+        }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options1.slice();
+        return name ? this._filter(name as string, this.options1) : this.options1.slice();
       })
     );
   }
@@ -155,10 +161,10 @@ export class TaxInvoiceComponent implements OnInit {
     return user && user.name ? user.name : '';
   }
 
-  private _filter(name: string): User[] {
+  private _filter(name: string, options): User[] {
     const filterValue = name.toLowerCase();
 
-    return this.options.filter((option) =>
+    return options.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
   }
@@ -167,7 +173,7 @@ export class TaxInvoiceComponent implements OnInit {
     assessmentYear: new FormControl('2023-24'),
     startDate: new FormControl(''),
     endDate: new FormControl(''),
-    status: new FormControl(''),
+    status: new FormControl('Paid'),
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
   });
@@ -231,7 +237,7 @@ export class TaxInvoiceComponent implements OnInit {
 
   ownerDetails: any;
   getOwnerNameId(option) {
-    this.filerDetails = option;
+    this.ownerDetails = option;
     console.log(option);
   }
 
@@ -244,6 +250,7 @@ export class TaxInvoiceComponent implements OnInit {
 
 
   getInvoice() {
+
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
     //  this.loading = true;
@@ -264,26 +271,29 @@ export class TaxInvoiceComponent implements OnInit {
     //    } else {
     //     // param = `/invoice/sme/`
     //   }
-
+    let status = this.status.value;
+    console.log("selected status",this.status)
     let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
-
     let param = '';
-
+    let statusFilter = '';
+    if(status){
+      statusFilter = `&paymentStatus=${status}`;
+    }
     let userFilter = '';
     if(this.ownerDetails?.userId){
-      userFilter = `&invoiceAssignedTo=${this.ownerDetails.userId}`;
+      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
     if(this.filerDetails?.userId){
-      userFilter = `&invoiceAssignedTo=${this.filerDetails.userId}`;
-    }
-    if(!this.ownerDetails?.userId && !this.ownerDetails?.userId){
-      userFilter = `&invoiceAssignedTo=${loggedInSmeUserId}`;
+      userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
 
-    param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}${userFilter}`;
+    ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
+    ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -479,7 +489,7 @@ export class TaxInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Payment Mode',
-        field: '',
+        field: 'modeOfPayment',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -491,7 +501,7 @@ export class TaxInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Paid Date',
-        field: '',
+        field: 'paymentDate',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -499,6 +509,9 @@ export class TaxInvoiceComponent implements OnInit {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd MMM yyyy', this.locale);
         },
       },
 
