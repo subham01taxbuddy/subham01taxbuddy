@@ -147,15 +147,19 @@ export class PerformaInvoiceComponent implements OnInit {
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
+        console.log('change', value);
+        if(!this.utilService.isNonEmpty(value)){
+          this.ownerDetails = null;
+        }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
+        return name ? this._filter(name as string, this.options) : this.options.slice();
       })
     );
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options1.slice();
+        return name ? this._filter(name as string, this.options1) : this.options1.slice();
       })
     );
   }
@@ -164,10 +168,10 @@ export class PerformaInvoiceComponent implements OnInit {
     return user && user.name ? user.name : '';
   }
 
-  private _filter(name: string): User[] {
+  private _filter(name: string, options): User[] {
     const filterValue = name.toLowerCase();
 
-    return this.options.filter((option) =>
+    return options.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
   }
