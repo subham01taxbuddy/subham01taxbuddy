@@ -75,7 +75,7 @@ export class PerformaInvoiceComponent implements OnInit {
   };
   invoiceListGridOptions: GridOptions;
   Status: any = [
-    { label: '', value: '' },
+    { label: '', value: 'Unpaid,Failed' },
     { label: 'Unpaid', value: 'Unpaid' },
     { label: 'Failed', value: 'Failed' },
   ];
@@ -141,19 +141,28 @@ export class PerformaInvoiceComponent implements OnInit {
     this.getFilers();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
+    console.log('filteroptions',this.filteredOptions)
 
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
+        console.log('change', value);
+        if(!this.utilService.isNonEmpty(value)){
+          this.ownerDetails = null;
+        }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
+        return name ? this._filter(name as string, this.options) : this.options.slice();
       })
     );
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
+        if(!this.utilService.isNonEmpty(value)){
+          this.filerDetails = null;
+        }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options1.slice();
+        return name ? this._filter(name as string, this.options1) : this.options1.slice();
       })
     );
   }
@@ -162,10 +171,10 @@ export class PerformaInvoiceComponent implements OnInit {
     return user && user.name ? user.name : '';
   }
 
-  private _filter(name: string): User[] {
+  private _filter(name: string, options): User[] {
     const filterValue = name.toLowerCase();
 
-    return this.options.filter((option) =>
+    return options.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
   }
@@ -284,16 +293,15 @@ export class PerformaInvoiceComponent implements OnInit {
     }
     let userFilter = '';
     if(this.ownerDetails?.userId){
-      userFilter = `&invoiceAssignedTo=${this.ownerDetails.userId}`;
+      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
     if(this.filerDetails?.userId){
-      userFilter = `&invoiceAssignedTo=${this.filerDetails.userId}`;
-    }
-    if(!this.ownerDetails?.userId && !this.ownerDetails?.userId){
-      userFilter = `&invoiceAssignedTo=${loggedInSmeUserId}`;
+      userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
 
-    param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&${data}${userFilter}${statusFilter}`;
+    ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
+    ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
 
 
     this.itrService.getMethod(param).subscribe((response: any) => {
