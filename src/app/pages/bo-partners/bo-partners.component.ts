@@ -93,8 +93,8 @@ export class BoPartnersComponent implements OnInit {
   }
   pageChanged(event: any) {
     this.config.currentPage = event;
+    this.searchParam.page = event - 1;
     this.getBoPartners();
-    // this.searchParam.page = event - 1;
   }
 
   boPartnersColumnDef() {
@@ -330,7 +330,7 @@ export class BoPartnersComponent implements OnInit {
           if (Array.isArray(response.content)) {
             this.loading = false;
             this.boPartnersInfo = response.content;
-            this.config.totalItems = response.content.length;
+            this.config.totalItems = response.totalElements;
             this.partnersGridOptions.api?.setRowData(
               this.createRowData(this.boPartnersInfo)
             );
