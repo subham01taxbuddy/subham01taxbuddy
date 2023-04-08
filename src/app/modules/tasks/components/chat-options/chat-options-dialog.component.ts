@@ -31,28 +31,18 @@ export class ChatOptionsDialogComponent implements OnInit {
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService) {
-    
+
   }
 
   ngOnInit() {
     console.log(this.data);
     this.loading = true;
     let paramKomm = `/kommunicate/chat-link?userId=${this.data.userId}&serviceType=${this.data.serviceType}`;
-    let paramWa =  `/kommunicate/whatsApp-chat-link?userId=${this.data.userId}`;
+    //let paramWa =  `/kommunicate/whatsApp-chat-link?userId=${this.data.userId}`;
     this.userMsService.getMethod(paramKomm).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.kommChatLink = response.data.chatLink;
-      } else {
-        // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
-      }
-    }, error => {
-      // this.utilsService.showErrorMsg('Error during fetching chat, try after some time.');
-      this.loading = false;
-    });
-    this.userMsService.getMethod(paramWa).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
         this.waChatLink = response.data.whatsAppChatLink;
       } else {
         // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
@@ -61,6 +51,17 @@ export class ChatOptionsDialogComponent implements OnInit {
       // this.utilsService.showErrorMsg('Error during fetching chat, try after some time.');
       this.loading = false;
     });
+    // this.userMsService.getMethod(paramWa).subscribe((response: any) => {
+    //   this.loading = false;
+    //   if (response.success) {
+    //     this.waChatLink = response.data.whatsAppChatLink;
+    //   } else {
+    //     // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
+    //   }
+    // }, error => {
+    //   // this.utilsService.showErrorMsg('Error during fetching chat, try after some time.');
+    //   this.loading = false;
+    // });
     console.log(this.kommChatLink);
     console.log(this.waChatLink);
   }
@@ -80,12 +81,12 @@ export class ChatOptionsDialogComponent implements OnInit {
       this.dialogRef.close();
     }
   }
-  
+
   close() {
     this.dialogRef.close();
   }
 
-  
 
-  
+
+
 }
