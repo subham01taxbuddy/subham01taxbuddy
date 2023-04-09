@@ -16,7 +16,7 @@ const routes: Routes = [
           {path: 'assigned-subscription', component: AssignedSubscriptionComponent },
           {path :'create-subscription', component:CreateUpdateSubscriptionComponent},
           // {path :'add-subscription', component:AddSubscriptionComponent},
-          {path :'performa-invoice', component:PerformaInvoiceComponent},
+          {path :'proforma-invoice', component:PerformaInvoiceComponent},
           {path :'tax-invoice', component:TaxInvoiceComponent},
           { path: '', redirectTo: '/subscription/assigned-subscription', pathMatch: 'full' }
       ]

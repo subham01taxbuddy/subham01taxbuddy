@@ -640,8 +640,9 @@ export class TaxInvoiceComponent implements OnInit {
 
 
   downloadInvoice(data) {
+    //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
     location.href =
-      environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+      environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
   }
 
   showNotes(client) {
