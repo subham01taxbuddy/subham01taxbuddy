@@ -109,15 +109,8 @@ export class PerformaInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    const smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
-    this.invoiceListGridOptions = <GridOptions>{
-      rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(smeList),
-      enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      onGridReady: (params) => {},
-      sortable: true,
-    };
+    this.utilService.getStoredSmeList();
+
     this.config = {
       itemsPerPage: 10,
       currentPage: 1,
@@ -137,6 +130,16 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('roles', this.roles);
     // this.getInvoice();
 
+    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
+
+    this.invoiceListGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.invoicesCreateColumnDef(smeList),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {},
+      sortable: true,
+    };
     this.getOwner();
     this.getFilers();
     this.startDate.setValue('2023-04-01');
@@ -322,7 +325,7 @@ export class PerformaInvoiceComponent implements OnInit {
           billTo: userInvoices[i].billTo,
           phone: userInvoices[i].phone,
           email: userInvoices[i].email,
-          invoiceNo: userInvoices[i].invoiceNo,
+          // invoiceNo: userInvoices[i].txbdyInvoiceId,
           txbdyInvoiceId: userInvoices[i].txbdyInvoiceId,
           invoiceDate: userInvoices[i].invoiceDate,
           dueDate: userInvoices[i].dueDate,
@@ -380,7 +383,7 @@ export class PerformaInvoiceComponent implements OnInit {
     }
   }
 
-  invoicesCreateColumnDef(smeList) {
+  invoicesCreateColumnDef(smeList: any[]) {
     return [
       {
         headerName: 'User Id',
@@ -396,7 +399,7 @@ export class PerformaInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Invoice No',
-        field: 'invoiceNo',
+        field: 'txbdyInvoiceId',
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -697,8 +700,9 @@ export class PerformaInvoiceComponent implements OnInit {
 
   sendMailReminder(invoiceInfo) {
     this.loading = true;
-    const param = '/itr/invoice/send-reminder';
-    this.userMsService.postMethodInfo(param, invoiceInfo).subscribe(
+    //https://uat-api.taxbuddy.com/itr/v1/invoice/reminder/mail?txbdyInvoiceId={txbdyInvoiceId}
+    const param = `/v1/invoice/reminder/mail?txbdyInvoiceId=${invoiceInfo.txbdyInvoiceId}`;
+    this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
         console.log('Email sent response: ', result);
@@ -718,8 +722,9 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   downloadInvoice(data) {
+    //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
     location.href =
-      environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+      environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
   }
 
   async placeCall(user) {
