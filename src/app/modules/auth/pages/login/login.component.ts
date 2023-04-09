@@ -128,12 +128,14 @@ export class LoginComponent implements OnInit {
   }
 
   getUserByCognitoId(data: any) {
+    let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
+      'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
     NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
       console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))
       if (res && data.signInUserSession.accessToken.jwtToken) {
         this.setUserDataInsession(data, res);
-      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))) {
+      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, allowedRoles))) {
         this._toastMessageService.alert("error", "Access Denied.");
       } else {
         this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
@@ -225,7 +227,7 @@ export class LoginComponent implements OnInit {
         }, 2000);
 
         let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
-          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER'];
+          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
         let roles = res.data[0]?.roles;
         if (roles.indexOf("ROLE_ADMIN") !== -1) {
           this.router.navigate(['/tasks/assigned-users-new']);
