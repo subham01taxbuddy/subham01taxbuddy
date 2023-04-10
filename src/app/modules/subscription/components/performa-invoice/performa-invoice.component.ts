@@ -150,7 +150,7 @@ export class PerformaInvoiceComponent implements OnInit {
       sortable: true,
     };
     this.getOwner();
-     this.getFilers();
+    //  this.getFilers();
     // this.startDate.setValue('2023-04-01');
     // this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);

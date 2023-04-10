@@ -136,7 +136,7 @@ export class TaxInvoiceComponent implements OnInit {
     // this.getInvoice();
 
     this.getOwner();
-     this.getFilers();
+    //  this.getFilers();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
 
