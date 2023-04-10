@@ -130,7 +130,7 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('roles', this.roles);
     // this.getInvoice();
 
-    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
+    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
@@ -334,6 +334,7 @@ export class PerformaInvoiceComponent implements OnInit {
           paymentStatus: userInvoices[i].paymentStatus,
           purpose: userInvoices[i].itemList[0].itemDescription,
           invoicePreparedBy: userInvoices[i].inovicePreparedBy,
+          invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total
         })
@@ -534,6 +535,8 @@ export class PerformaInvoiceComponent implements OnInit {
             );
             if (nameArray.length !== 0) {
               return nameArray[0].name;
+            } else{
+              console.log('not found', params.data.invoicePreparedBy);
             }
             return '-';
           }
@@ -542,7 +545,7 @@ export class PerformaInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Assigned to',
-        field: 'invoicePreparedBy',
+        field: 'invoiceAssignedTo',
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -555,7 +558,7 @@ export class PerformaInvoiceComponent implements OnInit {
           if (smeList.length !== 0) {
             const nameArray = smeList.filter(
               (item: any) =>
-                item.userId.toString() === params.data.invoicePreparedBy
+                item.userId === params.data.invoiceAssignedTo
             );
             if (nameArray.length !== 0) {
               return nameArray[0].name;
@@ -698,10 +701,10 @@ export class PerformaInvoiceComponent implements OnInit {
     }
   }
 
-  sendMailReminder(invoiceInfo) {
+  sendMailReminder(data) {
     this.loading = true;
     //https://uat-api.taxbuddy.com/itr/v1/invoice/reminder/mail?txbdyInvoiceId={txbdyInvoiceId}
-    const param = `/v1/invoice/reminder/mail?txbdyInvoiceId=${invoiceInfo.txbdyInvoiceId}`;
+    const param = `/v1/invoice/reminder/mail?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
