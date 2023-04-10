@@ -10,10 +10,13 @@
         <p style="float: right;"> Total Count: <b>{{scheduleCallsData.length}}</b></p>
         <br>
         <div class="card__row">
+          <table>
+            <tr *ngFor="let item of scheduleCallsData | paginate : config"></tr>
+          </table>
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="scheduleCallGridOptions"
                 (rowClicked)="onScheduledCallClicked($event)">
             </ag-grid-angular>
-
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
             <!--  <div class="col-md-12">
                 <button class="btn" style="border: none;" *ngIf="pageCount !== 0" (click)="previous()">Previous</button>
                 <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>

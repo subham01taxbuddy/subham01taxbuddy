@@ -57,6 +57,7 @@ export class TaxInvoiceComponent implements OnInit {
   options: User[] = [];
   filteredOptions: Observable<User[]>;
   filteredOptions1: Observable<User[]>;
+  allFilers:any;
 
   searchParam: any = {
     statusId: null,
@@ -104,6 +105,10 @@ export class TaxInvoiceComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string
   ) {
     const smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+    this.allFilers=smeList.map((item) => {
+      return { name: item.name, userId:item.userId  };
+    });
+    this.options1=this.allFilers;
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColumnDef(smeList),
@@ -113,7 +118,7 @@ export class TaxInvoiceComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 15,
       currentPage: 1,
       totalItems: null,
     };
@@ -131,21 +136,16 @@ export class TaxInvoiceComponent implements OnInit {
     // this.getInvoice();
 
     this.getOwner();
-    this.getFilers();
+     this.getFilers();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
-    console.log('ed',this.endDate)
-    this.filteredOptions = this.searchOwner.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        if(!this.utilService.isNonEmpty(value)){
-          this.ownerDetails = null;
-        }
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string, this.options) : this.options.slice();
-      })
-    );
 
+    this.setFiletedOptions1()
+    this.setFiletedOptions2();
+
+  }
+
+  setFiletedOptions2(){
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
@@ -156,6 +156,26 @@ export class TaxInvoiceComponent implements OnInit {
         return name ? this._filter(name as string, this.options1) : this.options1.slice();
       })
     );
+  }
+
+  setFiletedOptions1(){
+    this.filteredOptions = this.searchOwner.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        if(!this.utilService.isNonEmpty(value)){
+          this.ownerDetails = null;
+        }
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string, this.options) : this.options.slice();
+      })
+    );
+  }
+
+  setList(){
+    if(this.searchOwner.value==''){
+      this.options1=this.allFilers;
+      this.setFiletedOptions2()
+    }
   }
 
   displayFn(user: User): string {
@@ -225,6 +245,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
+      this.options1=[];
       console.log('filer list result -> ', result);
       this.filerList = result.data;
       console.log("filerList",this.filerList)
@@ -232,6 +253,7 @@ export class TaxInvoiceComponent implements OnInit {
         return { name: item.name, userId:item.userId  };
       });
       this.options1 = this.filerNames;
+      this.setFiletedOptions2()
       console.log(' filerNames -> ', this.filerNames);
     });
   }
@@ -299,8 +321,9 @@ export class TaxInvoiceComponent implements OnInit {
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       this.invoiceData = response.data.content;
-      this.totalInvoice = this.invoiceData.length;
+      this.totalInvoice = response?.data?.totalElements;
       this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+      this.config.totalItems = response?.data?.totalElements;
     });
   }
 
