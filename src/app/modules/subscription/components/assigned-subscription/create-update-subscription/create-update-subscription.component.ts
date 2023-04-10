@@ -54,6 +54,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
   maxEndDate: any;
   minEndDate: any;
   selectedPromoCode = '';
+  appliedPromo:any;
   allPromoCodes: any[] = [];
   promoCodeInfo: any;
   serviceType = '';
@@ -357,6 +358,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
     }
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       console.log('apply promo res',res)
+      this.appliedPromo=res.promoCode;
+      console.log('applied promo',this.appliedPromo)
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
         return;
@@ -755,8 +758,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
       let reqBody = {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
-        selectedBy: "SME", // USER or SME
-        promoCode: this.selectedPromoCode,
+        selectedBy: "SME",
+        promoCode: this.appliedPromo,
         item:{
           itemDescription:this.description?.value,
           quantity: this.userSubscription?.item[0]?.quantity,
