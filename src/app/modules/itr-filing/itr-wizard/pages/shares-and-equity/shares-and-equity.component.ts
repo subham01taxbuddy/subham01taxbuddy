@@ -198,7 +198,7 @@ export class SharesAndEquityComponent
         }
       });
     } else {
-      if(!this.compactView) {
+      if (!this.compactView) {
         this.compactView = false;
         this.addMoreData();
       }
@@ -266,7 +266,7 @@ export class SharesAndEquityComponent
   createForm(srn, item?): FormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      brokerName: [item? item.brokerName : ''],
+      brokerName: [item ? item.brokerName : ''],
       srn: [item ? item.srn : srn],
       sellOrBuyQuantity: [
         item ? item.sellOrBuyQuantity : null,
@@ -310,7 +310,13 @@ export class SharesAndEquityComponent
       nameOfTheUnits: [item ? item.nameOfTheUnits : ''],
       fmvAsOn31Jan2018: [item ? item.fmvAsOn31Jan2018 : null],
       gainType: [item ? item.gainType : null],
-      grandFatheredValue: [item ? item.grandFatheredValue : null],
+      grandFatheredValue: [
+        item
+          ? item.grandFatheredValue
+          : null || item
+          ? item.purchaseCost
+          : null,
+      ],
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       algorithm: ['cgSharesMF'],
       stampDutyValue: [item ? item.stampDutyValue : null],
@@ -505,7 +511,7 @@ export class SharesAndEquityComponent
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    if(this.compactView) {
+    if (this.compactView) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {
         this.Copy_ITR_JSON.capitalGain = [];
@@ -661,10 +667,14 @@ export class SharesAndEquityComponent
           this.utilsService.smoothScrollToTop();
         }
       );
-    } else if(!this.securitiesForm.valid) {
-      this.utilsService.showSnackBar("Please verify securities data and try again.");
+    } else if (!this.securitiesForm.valid) {
+      this.utilsService.showSnackBar(
+        'Please verify securities data and try again.'
+      );
     } else {
-      this.utilsService.showSnackBar("Please verify deduction form and try again");
+      this.utilsService.showSnackBar(
+        'Please verify deduction form and try again'
+      );
     }
   }
 
