@@ -701,10 +701,10 @@ export class PerformaInvoiceComponent implements OnInit {
     }
   }
 
-  sendMailReminder(invoiceInfo) {
+  sendMailReminder(data) {
     this.loading = true;
     //https://uat-api.taxbuddy.com/itr/v1/invoice/reminder/mail?txbdyInvoiceId={txbdyInvoiceId}
-    const param = `/v1/invoice/reminder/mail?txbdyInvoiceId=${invoiceInfo.txbdyInvoiceId}`;
+    const param = `/v1/invoice/reminder/mail?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;

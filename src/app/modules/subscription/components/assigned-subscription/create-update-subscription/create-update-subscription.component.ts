@@ -756,6 +756,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: "SME", // USER or SME
+        promoCode: this.selectedPromoCode,
         item:{
           itemDescription:this.description?.value,
           quantity: this.userSubscription?.item[0]?.quantity,
