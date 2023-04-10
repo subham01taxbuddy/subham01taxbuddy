@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Observable, map, startWith } from 'rxjs';
+import {AppConstants} from "../../../shared/constants";
 
 export const MY_FORMATS = {
   parse: {
@@ -102,7 +103,7 @@ export class TaxInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    const smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColumnDef(smeList),
@@ -322,6 +323,7 @@ export class TaxInvoiceComponent implements OnInit {
           paymentStatus: userInvoices[i].paymentStatus,
           purpose: userInvoices[i].itemList[0].itemDescription,
           invoicePreparedBy: userInvoices[i].inovicePreparedBy,
+          invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total
         })
@@ -549,7 +551,7 @@ export class TaxInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Assigned to',
-        field: '',
+        field: 'invoiceAssignedTo',
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -562,7 +564,7 @@ export class TaxInvoiceComponent implements OnInit {
           if (smeList.length !== 0) {
             const nameArray = smeList.filter(
               (item: any) =>
-                item.userId.toString() === params.data.invoicePreparedBy
+                item.userId === params.data.invoiceAssignedTo
             );
             if (nameArray.length !== 0) {
               return nameArray[0].name;
