@@ -188,6 +188,30 @@ export class AssignedNewUsersComponent implements OnInit {
         }
       },
       {
+        headerName: 'Owner Name',
+        field: 'ownerName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'ERI Client',
         field: 'eriClientValidUpto',
         width: 120,
@@ -387,7 +411,7 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Actions',
+        headerName: 'Start Filing',
         width: 68,
         sortable: true,
         pinned: 'right',
@@ -464,6 +488,8 @@ export class AssignedNewUsersComponent implements OnInit {
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
+        ownerName: userData[i].ownerName,
+        filerName: userData[i].filerName,
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
