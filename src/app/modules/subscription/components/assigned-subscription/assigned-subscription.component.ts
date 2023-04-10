@@ -120,6 +120,10 @@ export class AssignedSubscriptionComponent implements OnInit {
     );
   }
 
+  isAllowed(){
+    let filtered = this.roles.filter(item => item === 'ROLE_ADMIN'|| item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+    return filtered && filtered.length > 0 ? true : false;
+  }
 
   subscriptionFormGroup: FormGroup = this.fb.group({
     searchName :new FormControl(''),
