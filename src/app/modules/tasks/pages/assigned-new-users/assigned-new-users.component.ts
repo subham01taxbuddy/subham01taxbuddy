@@ -33,7 +33,7 @@ export class AssignedNewUsersComponent implements OnInit {
   userInfo: any = [];
   itrStatus: any = [];
   searchParam: any = {
-    // serviceType: 'ITR',
+    serviceType: null,
     statusId: null,
     page: 0,
     pageSize: 20,
@@ -876,6 +876,12 @@ export class AssignedNewUsersComponent implements OnInit {
       this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
+      this.searchParam.serviceType = null;
+      this.searchParam.mobileNumber = null
+      this.searchParam.emailId = null
+    } else if (form == 'serviceType') {
+      this.searchParam.page = 0;
+      this.searchParam.status = null;
       this.searchParam.mobileNumber = null
       this.searchParam.emailId = null
     } else if (form == 'agent') {
