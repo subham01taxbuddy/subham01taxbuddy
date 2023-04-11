@@ -793,7 +793,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
         service:this.service,
         serviceDetail:this.serviceDetail,
         reminderEmail:this.reminderEmail.value,
-        reminderMobileNumber:this.reminderMobileNumber.value
+        reminderMobileNumber:this.reminderMobileNumber.value,
+        subscriptionId:this.subscriptionObj.subscriptionId
       }
       console.log('Req Body: ', reqBody)
       let requestData = JSON.parse(JSON.stringify(reqBody));
