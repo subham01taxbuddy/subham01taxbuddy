@@ -104,7 +104,7 @@ export class TaxInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
     this.allFilers=smeList.map((item) => {
       return { name: item.name, userId:item.userId  };
     });

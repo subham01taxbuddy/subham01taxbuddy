@@ -11,18 +11,19 @@
     </div>
     <br> -->
     <div><br><br>
-      <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]="service.includes('ITR')"
+      <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]=" service && service.includes('ITR')"
         (click)="showSelectedServicePlans('ITR')">ITR</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR-U' ? true : false" href="javascript:"
-        (click)="showSelectedServicePlans('ITR-U')">ITR-U</a>
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('ITRU')">ITR-U</a>
       <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
       <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('GST')">GST</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" [class.disabled]="service.includes('TPA')"
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" [class.disabled]="service && service.includes('TPA')"
         (click)="showSelectedServicePlans('TPA')">TPA</a>
       <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('OTHER')">OTHER SERVICE</a>
+
       <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('ALL')">ALL</a>
     </div><br><br><br><br>
@@ -32,7 +33,7 @@
 
       <div *ngFor="let plan of filteredPlans">
         <div class="card__col-lg-2 plan" id="plans" (click)="selectPlan(plan)" style="cursor: pointer;"
-        [class.disabled]=" serviceDetails.includes('Schedule call') && plan.name === 'Schedule call'"
+        [class.disabled]="serviceDetails && serviceDetails.includes('Schedule call') && plan.name === 'Schedule call'"
           [style.background-color]="plan.planId === selectedPlanInfo?.planId ? 'lightgreen':''">
           <h1 class="plan-head"><b>₹ {{plan.totalAmount}}</b></h1><br>
           <p class="plan-info">{{plan.name}}</p><br>

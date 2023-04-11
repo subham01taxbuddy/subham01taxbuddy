@@ -69,8 +69,8 @@ export class AddSubscriptionComponent implements OnInit {
       console.log('Get user  by mobile number responce: ', response);
       this.allSubscriptions=response.data
       console.log("All Sub",this.allSubscriptions)
-      this.service=this.allSubscriptions.map((item: any) => item?.item?.service)
-      this.serviceDetails=this.allSubscriptions.map((item:any) => item?.item?.serviceDetail)
+      this.service = this.allSubscriptions?.map((item: any) => item?.item?.service)
+      this.serviceDetails = this.allSubscriptions?.map((item:any) => item?.item?.serviceDetail)
       console.log("services of user",this.service)
     })
   }
@@ -120,8 +120,8 @@ export class AddSubscriptionComponent implements OnInit {
     if (serviceType === 'ITR') {
       this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'ITR');
     }
-    else if (serviceType === 'ITR-U') {
-      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'ITR-U');
+    else if (serviceType === 'ITRU') {
+      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'ITRU');
     }
     else if (serviceType === 'GST') {
       this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'GST');

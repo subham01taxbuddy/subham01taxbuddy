@@ -97,7 +97,8 @@ export class ScheduledCallComponent implements OnInit {
     var param2 = `/schedule-call-details/${id}?${data}`;
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       if (result.content instanceof Array && result.content.length > 0) {
-        this.scheduleCallsData = result.content;
+        this.scheduleCallsData =
+          result.content;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData(this.scheduleCallsData));
       } else {
         this.scheduleCallsData = [];
@@ -159,9 +160,10 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'userName',
-        width: 80,
+        width: 180,
         suppressMovable: true,
         sortable: true,
+        pinned: 'left',
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {

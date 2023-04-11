@@ -8,7 +8,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridOptions } from 'ag-grid-community';
+import {GridApi, GridOptions} from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -109,7 +109,7 @@ export class PerformaInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    this.utilService.getStoredSmeList();
+    // this.getAgentList();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this.config = {
@@ -121,6 +121,8 @@ export class PerformaInvoiceComponent implements OnInit {
 
   cardTitle:any
   // cardTitles = ['Filer View','Owner View','Leader/Admin'];
+  smeList: any;
+  gridApi: GridApi;
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -131,9 +133,9 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('roles', this.roles);
     // this.getInvoice();
 
-    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
-    console.log('smelist',smeList)
-    this.allFilers=smeList.map((item) => {
+    this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    console.log('smelist',this.smeList)
+    this.allFilers= this.smeList.map((item) => {
       return { name: item.name, userId:item.userId  };
     });
     this.options1=this.allFilers;
@@ -143,12 +145,15 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(smeList),
+      columnDefs: this.invoicesCreateColumnDef(this.smeList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => {
+        this.gridApi = params.api;
+      },
       sortable: true,
     };
+
     this.getOwner();
     //  this.getFilers();
     // this.startDate.setValue('2023-04-01');
@@ -159,6 +164,40 @@ export class PerformaInvoiceComponent implements OnInit {
     this.setFiletedOptions1()
     this.setFiletedOptions2();
   }
+
+  // async getAgentList() {
+  //
+  //   let loggedInUserRoles = this.utilService.getUserRoles();
+  //   let loggedInUserId = this.utilService.getLoggedInUserID();
+  //   // const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+  //   // if (isAgentListAvailable) {
+  //     const param = `/sme/${loggedInUserId}/child-details`;
+  //     this.userMsService.getMethod(param).subscribe((res: any) => {
+  //       if (res && res.data instanceof Array) {
+  //         res.data.sort((a, b) => a.name > b.name ? 1 : -1)
+  //         sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data));
+  //         this.smeList = res.data;
+  //         this.allFilers=this.smeList.map((item) => {
+  //           return { name: item.name, userId:item.userId  };
+  //         });
+  //         this.options1=this.allFilers;
+  //         // if(this.searchOwner.value==null){
+  //         //   this.options1=this.allFilers;
+  //         // }
+  //
+  //         this.invoiceListGridOptions = <GridOptions>{
+  //           rowData: [],
+  //           columnDefs: this.invoicesCreateColumnDef(this.smeList),
+  //           enableCellChangeFlash: true,
+  //           enableCellTextSelection: true,
+  //           onGridReady: (params) => {},
+  //           sortable: true,
+  //         };
+  //       }
+  //     })
+  //   // }
+  //
+  // }
 
   setFiletedOptions2(){
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
@@ -338,7 +377,8 @@ export class PerformaInvoiceComponent implements OnInit {
       this.loading = false;
       this.invoiceData = response.data.content;
       this.totalInvoice = response?.data?.totalElements;
-      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+      // this.invoicesCreateColumnDef(this.smeList);
+      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
       this.config.totalItems = response?.data?.totalElements;
     });
   }

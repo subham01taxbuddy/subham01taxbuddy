@@ -39,7 +39,7 @@
               <div class="col-sm-3">
                 <mat-label> Search Mobile Number</mat-label>
                 <mat-form-field appearance="outline" class="customBg">
-                  <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto">
+                  <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto" maxlength="10">
                   <button (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
                     <mat-icon style="color: #00AECA">search</mat-icon>
                   </button>
@@ -52,7 +52,7 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-3 ">
-                <button *ngIf=isAllowed() class="btn " style=" background: #00AECA;
+                <button *ngIf="isAllowed" class="btn " style=" background: #00AECA;
                 border-radius: 5px;" (click)="createSub()" > Create Subscription </button>
               </div>
             </div>
