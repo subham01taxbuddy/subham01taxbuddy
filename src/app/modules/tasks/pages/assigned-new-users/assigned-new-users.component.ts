@@ -87,6 +87,12 @@ export class AssignedNewUsersComponent implements OnInit {
     this.searchParam.page = event - 1
     this.search();
   }
+
+  fromServiceType(event){
+    this.searchParam.serviceType = event;
+    this.search('serviceType');
+  }
+
   fromSme(event) {
     if (event === '' || event === 'ALL') {
       let loggedInId = this.utilsService.getLoggedInUserID();
