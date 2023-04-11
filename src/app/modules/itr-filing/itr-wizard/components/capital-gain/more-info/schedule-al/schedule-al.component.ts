@@ -2,7 +2,11 @@ import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -22,17 +26,22 @@ export const MY_FORMATS = {
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
-  }
+  },
 };
 
 @Component({
   selector: 'app-schedule-al',
   templateUrl: './schedule-al.component.html',
   styleUrls: ['./schedule-al.component.scss'],
-  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
-
 export class ScheduleALComponent extends WizardNavigation implements OnInit {
   step = 1;
   @Output() onSave = new EventEmitter();
@@ -51,7 +60,8 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     public fb: FormBuilder,
     private utilsService: UtilsService,
     private itrMsService: ItrMsService,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     super();
   }
 
@@ -59,7 +69,9 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     // this.immovableAssetForm = this.createImmovableAssetForm();
     this.stateDropdown = this.stateDropdownMaster;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
@@ -68,28 +80,28 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     this.immovableAssetForm = this.initForm();
 
     if (this.Copy_ITR_JSON.immovableAsset) {
-      this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
+      this.Copy_ITR_JSON.immovableAsset.forEach((obj) => {
         this.addMoreAssetsData(obj);
       });
     } else {
       this.addMoreAssetsData();
     }
     if (this.Copy_ITR_JSON.movableAsset) {
-      this.Copy_ITR_JSON.movableAsset.forEach(obj => {
+      this.Copy_ITR_JSON.movableAsset.forEach((obj) => {
         this.createMovableAssetsForm(obj);
       });
     } else {
       this.createMovableAssetsForm();
     }
 
-    this.immovableAssetForm?.disable();
-    this.movableAssetsForm?.disable();
+    // this.immovableAssetForm?.disable();
+    // this.movableAssetsForm?.disable();
   }
 
   initForm() {
     return this.fb.group({
       immovableAssetArray: this.fb.array([]),
-    })
+    });
   }
 
   createImmovableAssetForm(srn, item?): FormGroup {
@@ -105,7 +117,15 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
       state: [item ? item.state : '', Validators.required],
       country: [item ? item.country : '91', Validators.required],
       city: [item ? item.city : '', Validators.required],
-      pinCode: [item ? item.pinCode : '', Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.required, Validators.pattern(AppConstants.PINCode)])]
+      pinCode: [
+        item ? item.pinCode : '',
+        Validators.compose([
+          Validators.minLength(6),
+          Validators.maxLength(6),
+          Validators.required,
+          Validators.pattern(AppConstants.PINCode),
+        ]),
+      ],
     });
   }
 
@@ -120,13 +140,13 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
       insuranceAmount: [item ? item.insuranceAmount : null],
       loanAmount: [item ? item.loanAmount : null],
       cashInHand: [item ? item.cashInHand : null],
-      assetLiability: [item ? item.assetLiability : null]
+      assetLiability: [item ? item.assetLiability : null],
     });
   }
 
   async updateDataByPincode(immovableAssets) {
     let pincode = immovableAssets.controls['pinCode'].value;
-    await this.utilsService.getPincodeData(pincode).then(result => {
+    await this.utilsService.getPincodeData(pincode).then((result) => {
       immovableAssets.controls['city'].setValue(result.city);
       immovableAssets.controls['country'].setValue(result.countryCode);
       immovableAssets.controls['state'].setValue(result.stateCode);
@@ -134,11 +154,13 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
   }
 
   addMore() {
-    const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
-    if (immovableAssetArray.valid) {
+    const immovableAssetArray = <FormArray>(
+      this.immovableAssetForm.get('immovableAssetArray')
+    );
+    if (immovableAssetArray.valid || immovableAssetArray === null) {
       this.addMoreAssetsData();
     } else {
-      immovableAssetArray.controls.forEach(element => {
+      immovableAssetArray.controls.forEach((element) => {
         if ((element as FormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
@@ -149,7 +171,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
 
   editAssetForm(i, type) {
     if (type === 'immovable') {
-      ((this.immovableAssetForm?.controls['immovableAssetArray'] as FormGroup).controls[i] as FormGroup).enable();
+      (
+        (this.immovableAssetForm?.controls['immovableAssetArray'] as FormGroup)
+          .controls[i] as FormGroup
+      ).enable();
     } else if (type === 'movable') {
       this.movableAssetsForm.enable();
     }
@@ -159,22 +184,26 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     return <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
   }
 
-
   addMoreAssetsData(item?) {
-    const immovableAssetArray = <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
-    immovableAssetArray.push(this.createImmovableAssetForm(immovableAssetArray.length, item));
+    const immovableAssetArray = <FormArray>(
+      this.immovableAssetForm?.get('immovableAssetArray')
+    );
+
+    immovableAssetArray.push(
+      this.createImmovableAssetForm(immovableAssetArray.length, item)
+    );
   }
 
-
   deleteImmovableAssetsArray() {
-    const immovableAssetArray = <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
+    const immovableAssetArray = <FormArray>(
+      this.immovableAssetForm?.get('immovableAssetArray')
+    );
     immovableAssetArray.controls.forEach((element, index) => {
       if ((element as FormGroup).controls['hasEdit'].value) {
         immovableAssetArray.removeAt(index);
       }
-    })
+    });
   }
-
 
   pageChanged(event) {
     this.config.currentPage = event;
@@ -188,24 +217,34 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     if (this.immovableAssetForm.valid) {
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      const immovableAssetArray = <FormArray>this.immovableAssetForm.get('immovableAssetArray');
+      const immovableAssetArray = <FormArray>(
+        this.immovableAssetForm.get('immovableAssetArray')
+      );
 
       this.Copy_ITR_JSON.immovableAsset = [];
       this.Copy_ITR_JSON.immovableAsset = immovableAssetArray.getRawValue();
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+      );
       this.loading = true;
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Immovable Properties Saved Successfully');
-        this.loading = false;
-        this.utilsService.smoothScrollToTop();
-      }, error => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Failed to Save Immovable Properties');
-        this.loading = false;
-        this.utilsService.smoothScrollToTop();
-      });
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          this.ITR_JSON = result;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Immovable Properties Saved Successfully'
+          );
+          this.loading = false;
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar('Failed to Save Immovable Properties');
+          this.loading = false;
+          this.utilsService.smoothScrollToTop();
+        }
+      );
     }
   }
 
@@ -214,23 +253,35 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-      this.Copy_ITR_JSON.movableAsset = [];
-      this.Copy_ITR_JSON.movableAsset.push(this.movableAssetsForm.getRawValue());
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      const movableAssetArray = <FormArray>(
+        this.movableAssetsForm.get('immovableAssetArray')
+      );
+
+      this.Copy_ITR_JSON.immovableAsset = [];
+      this.Copy_ITR_JSON.immovableAsset = movableAssetArray.getRawValue();
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+      );
 
       this.loading = true;
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Movable Properties Saved Successfully');
-        this.loading = false;
-        this.utilsService.smoothScrollToTop();
-      }, error => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Failed to Save Movable Properties');
-        this.loading = false;
-        this.utilsService.smoothScrollToTop();
-      });
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          this.ITR_JSON = result;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Movable Properties Saved Successfully'
+          );
+          this.loading = false;
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar('Failed to Save Movable Properties');
+          this.loading = false;
+          this.utilsService.smoothScrollToTop();
+        }
+      );
     }
   }
 

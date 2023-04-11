@@ -34,7 +34,7 @@
             class="card__row drop"
             (click)="showBroker(securities.brokerName)"
           >
-            <div class="card__col-xs-12 ">
+            <div class="card__col-xs-12">
               <div class="card__col-xs-12 card__col-sm-3">
                 <div class="title">Broker Name</div>
                 <div class="value">{{ securities.brokerName }}</div>
@@ -379,7 +379,7 @@
                       placeholder="ISIN Code"
                       name="isinCode"
                       (blur)="calculateFMV(securities)"
-                      (change)="calculateTotalCG(securities)"
+                      (change)="calculateFMV(securities)"
                     />
                     <mat-hint style="font-size: 75%"
                       >If ISIN Code is not available, you can enter
@@ -703,12 +703,11 @@
   <button class="lgtBtn">
     <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
     <span class="font-semibold" (click)="goBack()"
-      >&nbsp;Back to Source Page</span>
+      >&nbsp;Back to Source Page</span
+    >
   </button>
 
-  <button
-    class="saveBtnIn"
-  >
+  <button class="saveBtnIn">
     <span class="font-semibold" (click)="saveAll()">Save All</span>
   </button>
 </div>

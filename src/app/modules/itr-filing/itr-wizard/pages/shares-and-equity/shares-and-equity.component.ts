@@ -311,11 +311,7 @@ export class SharesAndEquityComponent
       fmvAsOn31Jan2018: [item ? item.fmvAsOn31Jan2018 : null],
       gainType: [item ? item.gainType : null],
       grandFatheredValue: [
-        item
-          ? item.grandFatheredValue
-          : null || item
-          ? item.purchaseCost
-          : null,
+        item ? item.grandFatheredValue || item.purchaseCost : null,
       ],
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       algorithm: ['cgSharesMF'],
@@ -429,6 +425,7 @@ export class SharesAndEquityComponent
         }
       });
     }
+    this.calculateTotalCG(securities);
   }
 
   calculateTotalCG(securities) {
@@ -473,7 +470,9 @@ export class SharesAndEquityComponent
               res.assetDetails[0].grandFatheredValue
             );
           } else {
-            securities.controls['grandFatheredValue'].setValue(0);
+            securities.controls['grandFatheredValue'].setValue(
+              res.assetDetails[0].purchaseCost
+            );
           }
         },
         (error) => {
