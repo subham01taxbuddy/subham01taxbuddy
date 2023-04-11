@@ -18,9 +18,9 @@
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto">
+                    <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" (blur)="setList()">
                     <mat-autocomplete #auto>
-                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option)">
+                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option);getFilers()">
                         {{option.name}}
                       </mat-option>
                     </mat-autocomplete>
@@ -119,7 +119,7 @@
         </div>
       </div>
       <div class="row" style="float: right; margin-top: 20px; margin-right: 10px;">
-        <span style="float: right;"> Total Count: <b>{{totalInvoice}}</b>  |
+        <span style="float: right;"> Total Invoice Count: <b>{{totalInvoice}}</b>  |
           paid:
           <b>{{getCount('paid')}}</b></span>
       </div>

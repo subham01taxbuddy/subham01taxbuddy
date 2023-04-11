@@ -16,7 +16,7 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
   styleUrls: ['./scheduled-call.component.css']
 })
 export class ScheduledCallComponent implements OnInit {
-
+  config: any;
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
@@ -27,6 +27,10 @@ export class ScheduledCallComponent implements OnInit {
   pageCount: number = 0;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
+  searchParam: any = {
+    page: 0,
+    pageSize: 20,
+  };
 
   constructor(private toastMsgService: ToastMessageService,
     private userMsService: UserMsService,
@@ -42,6 +46,11 @@ export class ScheduledCallComponent implements OnInit {
       onGridReady: params => {
       },
       sortable: true,
+    };
+    this.config = {
+      itemsPerPage: 15,
+      currentPage: 1,
+      totalItems: null,
     };
   }
 
@@ -67,7 +76,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   showScheduleCallList() {
-    this.getScheduledCallsInfo(this.loggedUserId, 0);
+    this.getScheduledCallsInfo(this.loggedUserId);
   }
 
   fromSme(event) {
@@ -75,16 +84,17 @@ export class ScheduledCallComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.searchMobNo = '';
       this.showByAdminUserId = false;
-      this.getScheduledCallsInfo(this.selectedAgent, 0);
+      this.getScheduledCallsInfo(this.selectedAgent);
     }
     else {
-      this.getScheduledCallsInfo(this.loggedUserId, 0);
+      this.getScheduledCallsInfo(this.loggedUserId);
     }
   }
 
-  getScheduledCallsInfo(id, page) {
+  getScheduledCallsInfo(id) {
     this.loading = true;
-    var param2 = `/schedule-call-details/${id}?page=${page}&size=500`;
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    var param2 = `/schedule-call-details/${id}?${data}`;
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       if (result.content instanceof Array && result.content.length > 0) {
         this.scheduleCallsData =
@@ -94,6 +104,7 @@ export class ScheduledCallComponent implements OnInit {
         this.scheduleCallsData = [];
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData(this.scheduleCallsData));
       }
+      this.config.totalItems = result?.totalElements;
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -520,17 +531,23 @@ export class ScheduledCallComponent implements OnInit {
 
   }
 
-  previous() {
-    this.pageCount++;
-    this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
-  }
+  // previous() {
+  //   this.pageCount++;
+  //   this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
+  // }
 
-  next() {
-    this.pageCount--;
-    this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
-  }
+  // next() {
+  //   this.pageCount--;
+  //   this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
+  // }
 
   navigateToWhatsappChat(data) {
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
+  }
+
+  pageChanged(event: any) {
+    this.config.currentPage = event;
+    this.searchParam.page = event - 1;
+    this.getScheduledCallsInfo(this.loggedUserId)
   }
 }
