@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 export interface User {
   name: string;
-  userId:Number;
+  userId: Number;
 }
 @Component({
   selector: 'app-assigned-subscription',
@@ -28,9 +28,9 @@ export class AssignedSubscriptionComponent implements OnInit {
   @Output() sendTotalCount = new EventEmitter<any>();
 
   searchVal: any;
-  filerList:any;
-  filerNames:any;
-  queryParam: any ;
+  filerList: any;
+  filerNames: any;
+  queryParam: any;
   userInfo: any = [];
   options: User[] = [];
   filteredOptions: Observable<User[]>;
@@ -41,12 +41,12 @@ export class AssignedSubscriptionComponent implements OnInit {
   loading!: boolean;
   financialYear = AppConstants.gstFyList;
   loggedInSme: any;
-  roles:any;
+  roles: any;
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 30,
-    assigned:true,
+    pageSize: 10,
+    assigned: true,
     // owner:true,
     mobileNumber: null,
     emailId: null,
@@ -73,7 +73,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 30,
+      itemsPerPage: 10,
       currentPage: 1,
       totalItems: null,
     };
@@ -123,7 +123,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   isAllowed = false;
 
   subscriptionFormGroup: FormGroup = this.fb.group({
-    searchName :new FormControl(''),
+    searchName: new FormControl(''),
     mobileNumber: new FormControl(''),
     assessmentYear: new FormControl('2023-24'),
   });
@@ -139,8 +139,8 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   allSubscriptions = [];
   getAssignedSubscription(pageNo) {
-    const loggedInSmeUserId=this?.loggedInSme[0]?.userId
-    this.queryParam=`?subscriptionAssigneeId=${loggedInSmeUserId}`
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
+    this.queryParam = `?subscriptionAssigneeId=${loggedInSmeUserId}`;
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
     let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
@@ -376,8 +376,8 @@ export class AssignedSubscriptionComponent implements OnInit {
       },
       {
         headerName: 'Invoice No',
-        field: 'txbdyInvoiceId',
-        width: 100,
+        field: 'invoiceNo',
+        width: 300,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -403,8 +403,8 @@ export class AssignedSubscriptionComponent implements OnInit {
         field: '',
         width: 100,
         pinned: 'right',
-         lockPosition: true,
-         suppressMovable: false,
+        lockPosition: true,
+        suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
@@ -420,8 +420,19 @@ export class AssignedSubscriptionComponent implements OnInit {
   rowMultiSelectWithClick: true;
 
   createRowData(subscriptionData) {
+    console.log('SUBSCRIPTIONDATA:', subscriptionData);
+    // var invoiceDetail = [];
+    // invoiceDetail.push('invoiceNo');
+    // console.log('invoiceNoFormArray:', invoiceDetail);
+
     const newData = [];
     for (let i = 0; i < subscriptionData.length; i++) {
+      // var invoiceNumber = '';
+      const invoiceNumber = [];
+      for (let x = 0; x < subscriptionData[i].invoiceDetail.length; x++) {
+        invoiceNumber.push(subscriptionData[i].invoiceDetail[x].invoiceNo);
+        // invoiceNumber =invoiceNumber + subscriptionData[i].invoiceDetail[x].invoiceNo + ',';
+      }
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
         userId: subscriptionData[i].userId,
@@ -445,7 +456,7 @@ export class AssignedSubscriptionComponent implements OnInit {
           : '-',
         startDate: subscriptionData[i].startDate,
         endDate: subscriptionData[i].endDate,
-        txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
+        invoiceNo: invoiceNumber.toString(),
         subscriptionAssigneeId:
           subscriptionData[i].subscriptionAssigneeId !== 0
             ? subscriptionData[i].subscriptionAssigneeId
@@ -488,13 +499,16 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
   }
 
-  createUpdateSubscription(subscription){
+  createUpdateSubscription(subscription) {
     let subscriptionData = {
-      type:'edit',
-      data:subscription
+      type: 'edit',
+      data: subscription,
     };
-    sessionStorage.setItem('subscriptionObject',JSON.stringify(subscriptionData))
-    this.router.navigate(['/subscription/create-subscription'])
+    sessionStorage.setItem(
+      'subscriptionObject',
+      JSON.stringify(subscriptionData)
+    );
+    this.router.navigate(['/subscription/create-subscription']);
   }
 
   createSub(){
@@ -523,13 +537,6 @@ export class AssignedSubscriptionComponent implements OnInit {
       }
     })
   }
-    // let subscriptionData = {
-    //   type:'create',
-    //   data:null,
-    // };
-    // sessionStorage.setItem('subscriptionObject',JSON.stringify(subscriptionData))
-    // this.router.navigate(['/subscription/add-subscription'])
-
 
   getFilerList(){
 
@@ -548,11 +555,11 @@ export class AssignedSubscriptionComponent implements OnInit {
 
 }
 
-filerDetails :any;
-getFilerNameId(option){
-  this.filerDetails =option
-  console.log(option)
-}
+  filerDetails: any;
+  getFilerNameId(option) {
+    this.filerDetails = option;
+    console.log(option);
+  }
 
   pageChanged(event: any) {
     this.config.currentPage = event;
