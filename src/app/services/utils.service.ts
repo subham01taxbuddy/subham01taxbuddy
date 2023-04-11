@@ -803,6 +803,12 @@ export class UtilsService {
         return this.itrMsService.getMethod(param);
     }
 
+    getUserDetailsByMobile(loggedInSmeId, mobile) {
+      //https://uat-api.taxbuddy.com/user/3000/user-list-new?mobileNumber=9850872656
+        const param = `/${loggedInSmeId}/user-list-new?mobileNumber=${mobile}`;
+        return this.userMsService.getMethod(param);
+    }
+
     getCgSummary(userId, assessmentYear) {
         const param = '/cg-summary';
         let request = {

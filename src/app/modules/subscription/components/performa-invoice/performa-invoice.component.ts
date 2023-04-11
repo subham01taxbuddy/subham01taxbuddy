@@ -1,3 +1,4 @@
+
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -7,7 +8,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridOptions } from 'ag-grid-community';
+import {GridApi, GridOptions} from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -56,6 +57,7 @@ export class PerformaInvoiceComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   roles: any;
+  allFilers:any;
   filerList: any;
   filerNames:User[];
   options1:User[] = [];
@@ -68,8 +70,6 @@ export class PerformaInvoiceComponent implements OnInit {
     statusId: null,
     page: 0,
     pageSize: 20,
-    // assigned:false,
-    // owner:true,
     mobileNumber: null,
     emailId: null,
   };
@@ -109,10 +109,11 @@ export class PerformaInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    this.utilService.getStoredSmeList();
-
+    // this.getAgentList();
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 15,
       currentPage: 1,
       totalItems: null,
     };
@@ -120,6 +121,8 @@ export class PerformaInvoiceComponent implements OnInit {
 
   cardTitle:any
   // cardTitles = ['Filer View','Owner View','Leader/Admin'];
+  smeList: any;
+  gridApi: GridApi;
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -130,23 +133,86 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('roles', this.roles);
     // this.getInvoice();
 
-    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+    this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    console.log('smelist',this.smeList)
+    this.allFilers= this.smeList.map((item) => {
+      return { name: item.name, userId:item.userId  };
+    });
+    this.options1=this.allFilers;
+    // if(this.searchOwner.value==null){
+    //   this.options1=this.allFilers;
+    // }
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(smeList),
+      columnDefs: this.invoicesCreateColumnDef(this.smeList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => {
+        this.gridApi = params.api;
+      },
       sortable: true,
     };
+
     this.getOwner();
-    this.getFilers();
-    this.startDate.setValue('2023-04-01');
-    this.endDate.setValue(new Date());
+    //  this.getFilers();
+    // this.startDate.setValue('2023-04-01');
+    // this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
     console.log('filteroptions',this.filteredOptions)
 
+    this.setFiletedOptions1()
+    this.setFiletedOptions2();
+  }
+
+  // async getAgentList() {
+  //
+  //   let loggedInUserRoles = this.utilService.getUserRoles();
+  //   let loggedInUserId = this.utilService.getLoggedInUserID();
+  //   // const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+  //   // if (isAgentListAvailable) {
+  //     const param = `/sme/${loggedInUserId}/child-details`;
+  //     this.userMsService.getMethod(param).subscribe((res: any) => {
+  //       if (res && res.data instanceof Array) {
+  //         res.data.sort((a, b) => a.name > b.name ? 1 : -1)
+  //         sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data));
+  //         this.smeList = res.data;
+  //         this.allFilers=this.smeList.map((item) => {
+  //           return { name: item.name, userId:item.userId  };
+  //         });
+  //         this.options1=this.allFilers;
+  //         // if(this.searchOwner.value==null){
+  //         //   this.options1=this.allFilers;
+  //         // }
+  //
+  //         this.invoiceListGridOptions = <GridOptions>{
+  //           rowData: [],
+  //           columnDefs: this.invoicesCreateColumnDef(this.smeList),
+  //           enableCellChangeFlash: true,
+  //           enableCellTextSelection: true,
+  //           onGridReady: (params) => {},
+  //           sortable: true,
+  //         };
+  //       }
+  //     })
+  //   // }
+  //
+  // }
+
+  setFiletedOptions2(){
+    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        if(!this.utilService.isNonEmpty(value)){
+          this.filerDetails = null;
+        }
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string, this.options1) : this.options1.slice();
+      })
+    );
+  }
+
+  setFiletedOptions1(){
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
@@ -158,16 +224,12 @@ export class PerformaInvoiceComponent implements OnInit {
         return name ? this._filter(name as string, this.options) : this.options.slice();
       })
     );
-    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        if(!this.utilService.isNonEmpty(value)){
-          this.filerDetails = null;
-        }
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string, this.options1) : this.options1.slice();
-      })
-    );
+  }
+  setList(){
+    if(this.searchOwner.value==''){
+      this.options1=this.allFilers;
+      this.setFiletedOptions2()
+    }
   }
 
   displayFn(user: User): string {
@@ -233,8 +295,10 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   getFilers() {
+
     // API to get filers under owner-
     // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
+    // this.options1=this.allFilers;
     const loggedInSmeUserId=this.loggedInSme[0].userId;
     let param = '';
     if(this.ownerDetails?.userId){
@@ -244,6 +308,7 @@ export class PerformaInvoiceComponent implements OnInit {
     }
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
+      this.options1=[];
       console.log('filer list result -> ', result);
       this.filerList = result.data;
       console.log("filerList",this.filerList)
@@ -251,7 +316,8 @@ export class PerformaInvoiceComponent implements OnInit {
         return { name: item.name, userId:item.userId  };
       });
       this.options1 = this.filerNames;
-      console.log(' filerNames -> ', this.filerNames);
+      this.setFiletedOptions2()
+      console.log(' filerNames -> ', this.options1);
     });
   }
 
@@ -262,9 +328,9 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   getInvoice() {
-
+    // let pagination = `page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    let data = this.utilService.createUrlParams(this.searchParam);
+     let data = this.utilService.createUrlParams(this.searchParam);
     //  this.loading = true;
     // var param;
     // if (this.invoiceFormGroup.valid) {
@@ -283,11 +349,11 @@ export class PerformaInvoiceComponent implements OnInit {
     //    } else {
     //     // param = `/invoice/sme/`
     //   }
-    let status = this.status.value;
+    let status = this.status.value || 'Unpaid,Failed';
     console.log("selected status",this.status)
-    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
+    let fromData =  this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||this.startDate.value ;
     console.log('fromdate', fromData);
-    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') ;
     console.log('todate', toData);
     let param = '';
     let statusFilter = '';
@@ -310,8 +376,10 @@ export class PerformaInvoiceComponent implements OnInit {
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       this.invoiceData = response.data.content;
-      this.totalInvoice = this.invoiceData.length;
-      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+      this.totalInvoice = response?.data?.totalElements;
+      // this.invoicesCreateColumnDef(this.smeList);
+      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+      this.config.totalItems = response?.data?.totalElements;
     });
   }
 
