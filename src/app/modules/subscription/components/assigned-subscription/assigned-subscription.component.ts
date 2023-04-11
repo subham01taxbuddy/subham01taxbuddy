@@ -122,7 +122,8 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   isAllowed(){
     let filtered = this.roles.filter(item => item === 'ROLE_ADMIN'|| item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
-    return filtered && filtered.length > 0 ? true : false;
+    console.log(this.config.totalItems);
+    return filtered && filtered.length > 0 && this.config.totalItems === 0 ? true : false;
   }
 
   subscriptionFormGroup: FormGroup = this.fb.group({
@@ -235,6 +236,10 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.config.totalItems = response.data.totalElements;
       } else {
         this._toastMessageService.alert("error", "no user with given no.");
+        this.subscriptionListGridOptions.api?.setRowData(
+          this.createRowData([])
+        );
+        this.config.totalItems = 0;
       }
       this.selectedUserName = response.data[0].userName;
         this.userId = response.data[0].userId;

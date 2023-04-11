@@ -110,26 +110,35 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
     this.createSubscriptionObj=JSON.parse(sessionStorage.getItem('createSubscriptionObject'))?.data
     console.log('createSubscriptionObject', this.createSubscriptionObj);
 
-    this.subscriptionObj = JSON.parse(sessionStorage.getItem('subscriptionObject'))?.data;
-    console.log('subscriptionObj', this.subscriptionObj);
+    if(this.createSubscriptionObj === null) {
+      this.subscriptionObj = JSON.parse(sessionStorage.getItem('subscriptionObject'))?.data;
+      console.log('subscriptionObj', this.subscriptionObj);
+    } else {
+      this.subscriptionObj = this.createSubscriptionObj;
+      this.userSubscription = this.createSubscriptionObj;
+      this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
+      this.smeSelectedPlanId = this?.createSubscriptionObj?.smeSelectedPlan?.planId;
+    }
 
     if( this.subscriptionObj !=null){
       this.personalInfoForm.patchValue(this.subscriptionObj);
       // this.otherInfoForm.patchValue(this.subscriptionObj);
-      this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
+      if(this.subscriptionObj.subscriptionId) {
+        this.getUserPlanInfo(this.subscriptionObj?.subscriptionId)
+      }
 
     }
-    if(this.createSubscriptionObj !=null){
-      this.personalInfoForm.patchValue(this.createSubscriptionObj);
-      // this.otherInfoForm.patchValue(this.createSubscriptionObj);
-      this.gstUserInfoByUserId(this.createSubscriptionObj?.userId);
-      this.userSubscription=this.createSubscriptionObj;
-      this.smeSelectedPlanId=this?.createSubscriptionObj?.smeSelectedPlan?.planId;
-      // this.service=this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
-      this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
-      // this.setServiceDetails()
-      // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
-    }
+    // if(this.createSubscriptionObj !=null){
+    //   this.personalInfoForm.patchValue(this.createSubscriptionObj);
+    //   // this.otherInfoForm.patchValue(this.createSubscriptionObj);
+    //   this.gstUserInfoByUserId(this.createSubscriptionObj?.userId);
+    //   this.userSubscription=this.createSubscriptionObj;
+    //   this.smeSelectedPlanId=this?.createSubscriptionObj?.smeSelectedPlan?.planId;
+    //   // this.service=this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
+    //   this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
+    //   // this.setServiceDetails()
+    //   // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
+    // }
 
     this.sourcesList = [
       {
@@ -656,9 +665,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
     { service: 'Other Services', details: 'Audit (Professional / Free Lancer' },
     { service: 'Other Services', details: 'Other Services' }];
 
-    if (this.service === "ITR") {
+    if (this.service === "ITR" || this.service === "ITRU") {
       this.serviceDetails = this.allPlans.map((item) => {
-        return { service: 'ITR', details:item.name  };
+        return { service: this.service, details:item.name  };
       });
     } else {
       this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
