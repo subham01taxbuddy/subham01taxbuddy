@@ -110,7 +110,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
     this.createSubscriptionObj=JSON.parse(sessionStorage.getItem('createSubscriptionObject'))?.data
     console.log('createSubscriptionObject', this.createSubscriptionObj);
 
-    if(this.createSubscriptionObj === null) {
+    if(!this.createSubscriptionObj) {
       this.subscriptionObj = JSON.parse(sessionStorage.getItem('subscriptionObject'))?.data;
       console.log('subscriptionObj', this.subscriptionObj);
     } else {
@@ -120,7 +120,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
       this.smeSelectedPlanId = this?.createSubscriptionObj?.smeSelectedPlan?.planId;
     }
 
-    if( this.subscriptionObj !=null){
+    if(this.subscriptionObj !=null){
       this.personalInfoForm.patchValue(this.subscriptionObj);
       // this.otherInfoForm.patchValue(this.subscriptionObj);
       if(this.subscriptionObj.subscriptionId) {

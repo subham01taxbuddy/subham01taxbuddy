@@ -120,11 +120,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     );
   }
 
-  isAllowed(){
-    let filtered = this.roles.filter(item => item === 'ROLE_ADMIN'|| item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
-    console.log(this.config.totalItems);
-    return filtered && filtered.length > 0 && this.config.totalItems === 0 ? true : false;
-  }
+  isAllowed = false;
 
   subscriptionFormGroup: FormGroup = this.fb.group({
     searchName :new FormControl(''),
@@ -185,13 +181,14 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   searchByName(pageNo=0){
-     let selectedSmeUserId =this.filerDetails.userId
+    let selectedSmeUserId =this.filerDetails.userId
     let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
     var param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
     this.loading = true;
+    this.isAllowed = false;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
         this.loading = false;
@@ -223,36 +220,48 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   getUserByMobileNum(number) {
     console.log('number',number)
-    const loggedInSmeUserId=this?.loggedInSme[0]?.userId
-    this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
-    this.itrService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      console.log('Get user  by mobile number responce: ', response);
-      if (response.data instanceof Array && response.data.length > 0) {
-        this.subscriptionListGridOptions.api?.setRowData(
-          this.createRowData(response.data)
-        );
-        this.config.totalItems = response.data.totalElements;
-      } else {
-        this._toastMessageService.alert("error", "no user with given no.");
-        this.subscriptionListGridOptions.api?.setRowData(
-          this.createRowData([])
-        );
-        this.config.totalItems = 0;
-      }
-      this.selectedUserName = response.data[0].userName;
-        this.userId = response.data[0].userId;
+    if (this.utilsService.isNonEmpty(number)) {
+      const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+      this.loading = true;
+      let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
+      this.itrService.getMethod(param).subscribe((response: any) => {
+          this.loading = false;
+          console.log('Get user  by mobile number responce: ', response);
+          let filtered = this.roles.filter(item => item === 'ROLE_ADMIN'|| item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+          if (response.data instanceof Array && response.data.length > 0) {
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData(response.data)
+            );
+            this.config.totalItems = response.data.totalElements;
+            this.selectedUserName = response.data[0].userName;
+            this.userId = response.data[0].userId;
 
-        this.queryParam = `?userId=${this.userId}`;
-        this.utilsService.sendMessage(this.queryParam);
-    },
-      error => {
-        this.loading = false;
-        this.selectedUserName = '';
-        console.log('Error -> ', error);
-        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
-      })
+            this.queryParam = `?userId=${this.userId}`;
+            this.utilsService.sendMessage(this.queryParam);
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          } else {
+            if(response.data.error === 'User not found'){
+              this._toastMessageService.alert("error", "No user with this mobile number found. " +
+                "Please create user before creating subscription.");
+              this.isAllowed = false;
+              return;
+            }
+
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            this.config.totalItems = 0;
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          }
+
+        },
+        error => {
+          this.loading = false;
+          this.selectedUserName = '';
+          console.log('Error -> ', error);
+          this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
+        })
+    }
   }
 
   subscriptionCreateColumnDef() {
