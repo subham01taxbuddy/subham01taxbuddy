@@ -6,17 +6,17 @@
       <div class="card">
 
         <div class="card__row">
-<!--          <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">-->
-<!--            &lt;!&ndash;  <mat-form-field appearance="outline">-->
-<!--              <mat-label>Select Agent</mat-label>-->
-<!--              <mat-select placeholder="Select Agent" [(ngModel)]="agentId" (selectionChange)="this.search('agent')">-->
-<!--                <mat-option *ngFor="let agent of agents" [value]="agent.userId">-->
-<!--                  {{ agent.name}} - {{agent.serviceType}}-->
-<!--                </mat-option>-->
-<!--              </mat-select>-->
-<!--            </mat-form-field> &ndash;&gt;-->
-<!--            <app-sme-list-drop-down addSelfAll="true" (sendSme)="fromSme($event)"></app-sme-list-drop-down>-->
-<!--          </div>-->
+          <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">
+            <!--  <mat-form-field appearance="outline">
+              <mat-label>Select Agent</mat-label>
+              <mat-select placeholder="Select Agent" [(ngModel)]="agentId" (selectionChange)="this.search('agent')">
+                <mat-option *ngFor="let agent of agents" [value]="agent.userId">
+                  {{ agent.name}} - {{agent.serviceType}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field> -->
+            <app-sme-list-drop-down *ngIf=false addSelfAll="true" (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+          </div>
           <div class="filter__col card__col-sm-3 card__col-xs-12">
             <app-service-drop-down (sendService)="fromServiceType($event)" [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
           </div>

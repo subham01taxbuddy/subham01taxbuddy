@@ -204,6 +204,7 @@ export class LoginComponent implements OnInit {
 
   async getAgentList() {
     await this.utilsService.getStoredAgentList();
+    await this.utilsService.getStoredMyAgentList();
   }
   async getFyList() {
     await this.utilsService.getStoredFyList();
