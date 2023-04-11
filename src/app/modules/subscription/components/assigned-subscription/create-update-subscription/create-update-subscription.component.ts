@@ -484,6 +484,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
           this.userSubscription.smeSelectedPlan.name :
           this.userSubscription.userSelectedPlan.name;
         break;
+      case 'ITRU':
+        //set plan list for service details and selected plan as seletced detail
+        this.serviceDetail = this.userSubscription.smeSelectedPlan ?
+          this.userSubscription.smeSelectedPlan.name :
+          this.userSubscription.userSelectedPlan.name;
+        break;
     }
   }
 
