@@ -1,14 +1,17 @@
-
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { DatePipe,formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import {GridApi, GridOptions} from 'ag-grid-community';
+import { GridApi, GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +33,7 @@ export const MY_FORMATS = {
 
 export interface User {
   name: string;
-  userId:Number;
+  userId: Number;
 }
 
 @Component({
@@ -57,10 +60,10 @@ export class PerformaInvoiceComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   roles: any;
-  allFilers:any;
+  allFilers: any;
   filerList: any;
-  filerNames:User[];
-  options1:User[] = [];
+  filerNames: User[];
+  options1: User[] = [];
   ownerNames: User[];
   options: User[] = [];
   filteredOptions1: Observable<User[]>;
@@ -112,6 +115,7 @@ export class PerformaInvoiceComponent implements OnInit {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
     this.config = {
       itemsPerPage: 15,
       currentPage: 1,
@@ -119,7 +123,7 @@ export class PerformaInvoiceComponent implements OnInit {
     };
   }
 
-  cardTitle:any
+  cardTitle: any;
   // cardTitles = ['Filer View','Owner View','Leader/Admin'];
   smeList: any;
   gridApi: GridApi;
@@ -127,18 +131,22 @@ export class PerformaInvoiceComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
-    this.cardTitle=this.roles?.includes("ROLE_ADMIN")?
-    'Leader/Admin':this.roles?.includes("ROLE_OWNER")?
-    'Owner':this.roles?.includes("ROLE_FILER")?'Filer':"NA"
+    this.cardTitle = this.roles?.includes('ROLE_ADMIN')
+      ? 'Leader/Admin'
+      : this.roles?.includes('ROLE_OWNER')
+      ? 'Owner'
+      : this.roles?.includes('ROLE_FILER')
+      ? 'Filer'
+      : 'NA';
     console.log('roles', this.roles);
     // this.getInvoice();
 
     this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    console.log('smelist',this.smeList)
-    this.allFilers= this.smeList.map((item) => {
-      return { name: item.name, userId:item.userId  };
+    console.log('smelist', this.smeList);
+    this.allFilers = this.smeList.map((item) => {
+      return { name: item.name, userId: item.userId };
     });
-    this.options1=this.allFilers;
+    this.options1 = this.allFilers;
     // if(this.searchOwner.value==null){
     //   this.options1=this.allFilers;
     // }
@@ -158,10 +166,10 @@ export class PerformaInvoiceComponent implements OnInit {
     //  this.getFilers();
     // this.startDate.setValue('2023-04-01');
     // this.endDate.setValue(new Date());
-    this.status.setValue(this.Status[0].value);
-    console.log('filteroptions',this.filteredOptions)
+    // this.Status.setValue(this.Status[0].value);
+    console.log('filteroptions', this.filteredOptions);
 
-    this.setFiletedOptions1()
+    this.setFiletedOptions1();
     this.setFiletedOptions2();
   }
 
@@ -199,36 +207,40 @@ export class PerformaInvoiceComponent implements OnInit {
   //
   // }
 
-  setFiletedOptions2(){
+  setFiletedOptions2() {
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
-        if(!this.utilService.isNonEmpty(value)){
+        if (!this.utilService.isNonEmpty(value)) {
           this.filerDetails = null;
         }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string, this.options1) : this.options1.slice();
+        return name
+          ? this._filter(name as string, this.options1)
+          : this.options1.slice();
       })
     );
   }
 
-  setFiletedOptions1(){
+  setFiletedOptions1() {
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
         console.log('change', value);
-        if(!this.utilService.isNonEmpty(value)){
+        if (!this.utilService.isNonEmpty(value)) {
           this.ownerDetails = null;
         }
         const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string, this.options) : this.options.slice();
+        return name
+          ? this._filter(name as string, this.options)
+          : this.options.slice();
       })
     );
   }
-  setList(){
-    if(this.searchOwner.value==''){
-      this.options1=this.allFilers;
-      this.setFiletedOptions2()
+  setList() {
+    if (this.searchOwner.value == '') {
+      this.options1 = this.allFilers;
+      this.setFiletedOptions2();
     }
   }
 
@@ -243,7 +255,6 @@ export class PerformaInvoiceComponent implements OnInit {
       option.name.toLowerCase().includes(filterValue)
     );
   }
-
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
@@ -272,16 +283,15 @@ export class PerformaInvoiceComponent implements OnInit {
     return this.invoiceFormGroup.controls['searchOwner'] as FormControl;
   }
 
-
   getOwner() {
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
-      console.log("ownerlist",this.ownerList)
+      console.log('ownerlist', this.ownerList);
       this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId:item.userId  };
+        return { name: item.name, userId: item.userId };
       });
       this.options = this.ownerNames;
       console.log(' ownerName -> ', this.ownerNames);
@@ -295,28 +305,27 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   getFilers() {
-
     // API to get filers under owner-
     // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
     // this.options1=this.allFilers;
-    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
-    if(this.ownerDetails?.userId){
-       param = `/sme-details-new/${this.ownerDetails?.userId}?owner=true&assigned=true`;
-    }else{
-       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
+    if (this.ownerDetails?.userId) {
+      param = `/sme-details-new/${this.ownerDetails?.userId}?owner=true&assigned=true`;
+    } else {
+      param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
     }
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
-      this.options1=[];
+      this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;
-      console.log("filerList",this.filerList)
+      console.log('filerList', this.filerList);
       this.filerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId:item.userId  };
+        return { name: item.name, userId: item.userId };
       });
       this.options1 = this.filerNames;
-      this.setFiletedOptions2()
+      this.setFiletedOptions2();
       console.log(' filerNames -> ', this.options1);
     });
   }
@@ -330,7 +339,7 @@ export class PerformaInvoiceComponent implements OnInit {
   getInvoice() {
     // let pagination = `page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-     let data = this.utilService.createUrlParams(this.searchParam);
+    let data = this.utilService.createUrlParams(this.searchParam);
     //  this.loading = true;
     // var param;
     // if (this.invoiceFormGroup.valid) {
@@ -350,28 +359,29 @@ export class PerformaInvoiceComponent implements OnInit {
     //     // param = `/invoice/sme/`
     //   }
     let status = this.status.value || 'Unpaid,Failed';
-    console.log("selected status",this.status)
-    let fromData =  this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||this.startDate.value ;
+    console.log('selected status', this.status);
+    let fromData =
+      this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
+      this.startDate.value;
     console.log('fromdate', fromData);
-    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') ;
+    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
     let param = '';
     let statusFilter = '';
-    if(status){
+    if (status) {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if(this.ownerDetails?.userId){
+    if (this.ownerDetails?.userId) {
       userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
-    if(this.filerDetails?.userId){
+    if (this.filerDetails?.userId) {
       userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
 
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
-
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -384,29 +394,28 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   createRowData(userInvoices) {
-    console.log('userInvoices: ', userInvoices)
+    console.log('userInvoices: ', userInvoices);
     var invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoices[i],
-        {
-          userId: userInvoices[i].userId,
-          billTo: userInvoices[i].billTo,
-          phone: userInvoices[i].phone,
-          email: userInvoices[i].email,
-          // invoiceNo: userInvoices[i].txbdyInvoiceId,
-          txbdyInvoiceId: userInvoices[i].txbdyInvoiceId,
-          invoiceDate: userInvoices[i].invoiceDate,
-          dueDate: userInvoices[i].dueDate,
-          modeOfPayment: userInvoices[i].modeOfPayment,
-          paymentDate: userInvoices[i].paymentDate,
-          paymentStatus: userInvoices[i].paymentStatus,
-          purpose: userInvoices[i].itemList[0].itemDescription,
-          invoicePreparedBy: userInvoices[i].inovicePreparedBy,
-          invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
-          ifaLeadClient: userInvoices[i].ifaLeadClient,
-          total: userInvoices[i].total
-        })
-      invoices.push(updateInvoice)
+      let updateInvoice = Object.assign({}, userInvoices[i], {
+        userId: userInvoices[i].userId,
+        billTo: userInvoices[i].billTo,
+        phone: userInvoices[i].phone,
+        email: userInvoices[i].email,
+        // invoiceNo: userInvoices[i].txbdyInvoiceId,
+        txbdyInvoiceId: userInvoices[i].txbdyInvoiceId,
+        invoiceDate: userInvoices[i].invoiceDate,
+        dueDate: userInvoices[i].dueDate,
+        modeOfPayment: userInvoices[i].modeOfPayment,
+        paymentDate: userInvoices[i].paymentDate,
+        paymentStatus: userInvoices[i].paymentStatus,
+        purpose: userInvoices[i].itemList[0].itemDescription,
+        invoicePreparedBy: userInvoices[i].inovicePreparedBy,
+        invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
+        ifaLeadClient: userInvoices[i].ifaLeadClient,
+        total: userInvoices[i].total,
+      });
+      invoices.push(updateInvoice);
     }
     console.log('user invoices: ', invoices);
     return invoices;
@@ -428,10 +437,7 @@ export class PerformaInvoiceComponent implements OnInit {
         this.startDate.value,
         'yyyy-MM-dd'
       );
-      let toData = this.datePipe.transform(
-        this.endDate.value,
-        'yyyy-MM-dd'
-      );
+      let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
       if (this.utilService.isNonEmpty(this.status.value)) {
         location.href =
           environment.url +
@@ -603,7 +609,7 @@ export class PerformaInvoiceComponent implements OnInit {
             );
             if (nameArray.length !== 0) {
               return nameArray[0].name;
-            } else{
+            } else {
               console.log('not found', params.data.invoicePreparedBy);
             }
             return '-';
@@ -625,8 +631,7 @@ export class PerformaInvoiceComponent implements OnInit {
         valueGetter: function nameFromCode(params) {
           if (smeList.length !== 0) {
             const nameArray = smeList.filter(
-              (item: any) =>
-                item.userId === params.data.invoiceAssignedTo
+              (item: any) => item.userId === params.data.invoiceAssignedTo
             );
             if (nameArray.length !== 0) {
               return nameArray[0].name;
@@ -636,7 +641,6 @@ export class PerformaInvoiceComponent implements OnInit {
           return params.data.statusId;
         },
       },
-
 
       {
         headerName: 'Send Reminder',
@@ -795,7 +799,8 @@ export class PerformaInvoiceComponent implements OnInit {
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
     location.href =
-      environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+      environment.url +
+      `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
   }
 
   async placeCall(user) {
