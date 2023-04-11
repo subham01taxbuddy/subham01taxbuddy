@@ -118,9 +118,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit,OnDestroy {
       this.userSubscription = this.createSubscriptionObj;
       this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
       this.smeSelectedPlanId = this?.createSubscriptionObj?.smeSelectedPlan?.planId;
+      this.gstUserInfoByUserId(this.subscriptionObj.userId);
     }
 
-    if(this.subscriptionObj !=null){
+    if(this.subscriptionObj != null){
       this.personalInfoForm.patchValue(this.subscriptionObj);
       // this.otherInfoForm.patchValue(this.subscriptionObj);
       if(this.subscriptionObj.subscriptionId) {
