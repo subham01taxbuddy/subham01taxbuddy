@@ -15,10 +15,8 @@
     </div>
   </div>
 
-  <div class="card__row">
-    <div
-      class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12"
-    >
+  <div class="card__row" style="width: 100%; height: 35px; margin: 0px">
+    <div class="card__col-xs-12 card__col-sm-3 card__col-md-3 card__col-lg-3">
       <mat-label>Service Type: </mat-label>
       <mat-form-field class="service-input" appearance="outline">
         <mat-select placeholder="Service type" [formControl]="serviceType">
@@ -34,9 +32,7 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div
-      class="card__col-xs-12 card__col-sm-12 card__col-md-12 card__col-lg-12"
-    >
+    <div class="card__col-xs-12 card__col-sm-6 card__col-md-6 card__col-lg-6">
       <mat-label>Notes: </mat-label>
       <mat-form-field class="notes-input" appearance="outline">
         <textarea
@@ -53,13 +49,13 @@
         >
       </mat-form-field>
     </div>
-    <div class="add-notes">
-      <button type="submit" class="tbd-btn" (click)="addNote()">
+    <div class="card__col-xs-12 card__col-sm-3 card__col-md-3 card__col-lg-3">
+      <button type="submit" class="btn btn-success" (click)="addNote()">
         Add Notes
       </button>
     </div>
   </div>
-  <hr />
+  <br />
 
   <div class="mat-elevation-z8" *ngIf="notes.length > 0">
     <table mat-table [dataSource]="dataSource">
@@ -89,7 +85,11 @@
         <td mat-cell *matCellDef="let element">{{ element.note }}</td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-header-row
+        style="height: 20px"
+        *matHeaderRowDef="displayedColumns"
+      ></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
     <mat-paginator
