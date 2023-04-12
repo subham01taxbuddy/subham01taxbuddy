@@ -163,10 +163,9 @@ export class LoginComponent implements OnInit {
       role: jhi.role,
     };
     NavbarService.getInstance().setUserData(userData);
-    this.utilsService.getStoredSmeList();
-    this.getFyList();
-    this.getAgentList();
+
     this.getSmeInfoDetails(jhi.userId);
+    this.getFyList();
     this.getDueDateDetails();
   }
   getDueDateDetails() {
@@ -226,6 +225,9 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.InitChat();
         }, 2000);
+
+        this.utilsService.getStoredSmeList();
+        this.getAgentList();
 
         let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
           'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];

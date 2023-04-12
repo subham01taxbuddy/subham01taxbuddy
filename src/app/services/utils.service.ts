@@ -476,17 +476,18 @@ export class UtilsService {
                 this.showSnackBar('Error While getting SME list.');
                 return [];
             });
-            if (res && res.data instanceof Array) {
-                res.data.sort((a, b) => a.name > b.name ? 1 : -1)
-                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data));
-                return res.data;
+            if (res && res.data.content instanceof Array) {
+                res.data.content.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data.content));
+                return res.data.content;
             }
         }
         return [];
     }
     async getAgentList() {
+      //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
         const loggedInUserId = this.getLoggedInUserID();
-        const param = `/sme/${loggedInUserId}/child-details`;
+        const param = `/sme-details-new/${loggedInUserId}?filer=true`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
@@ -567,7 +568,7 @@ export class UtilsService {
     }
     async getMyAgentList() {
         const loggedInUserId = this.getLoggedInUserID();
-        const param = `/sme/${loggedInUserId}/child-details`;
+        const param = `/sme-details-new/${loggedInUserId}?filer=true`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
