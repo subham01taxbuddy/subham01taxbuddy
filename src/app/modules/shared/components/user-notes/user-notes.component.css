@@ -14,7 +14,7 @@
 .text {
   text-align: center;
   font-size: 16px;
-  padding: 40px 20px;
+  padding: 2px 2px;
 }
 
 .tableFixHead {
@@ -28,15 +28,16 @@
 /* Just common table stuff. */
 table {
   border-collapse: collapse;
+
   width: 100%;
   height: 100px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow: scroll; */
 }
 th,
 td {
-  padding: 8px 16px;
+  padding: 2px 2px;
   text-align: left;
+  height: 18px;
 }
 th {
   background: #eee;
@@ -46,7 +47,7 @@ th {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 5px 0;
 }
 
 .service-input {
@@ -58,11 +59,15 @@ th {
 }
 
 .add-notes {
-  width: 100%;
+  width: 98%;
+  height: 50%;
+  /* margin: 0px; */
 }
 .fordialnotes {
-  max-width: 80vw;
+  /* max-width: 80vw;
+  max-height: 80vw; */
   width: 100%;
   height: 50%;
-  position: static;
+  position: inherit;
+  overflow: scroll;
 }
