@@ -81,7 +81,7 @@ export class PerformaInvoiceComponent implements OnInit {
   };
   invoiceListGridOptions: GridOptions;
   Status: any = [
-    { label: '', value: 'Unpaid,Failed' },
+    { label: 'Both', value: 'Unpaid,Failed' },
     { label: 'Unpaid', value: 'Unpaid' },
     { label: 'Failed', value: 'Failed' },
   ];
@@ -125,6 +125,7 @@ export class PerformaInvoiceComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     };
+    this.getInvoice();
   }
 
   cardTitle: any;
@@ -143,7 +144,6 @@ export class PerformaInvoiceComponent implements OnInit {
       ? 'Filer'
       : 'NA';
     console.log('roles', this.roles);
-    this.getInvoice();
 
     this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
     console.log('smelist', this.smeList);
@@ -410,14 +410,46 @@ export class PerformaInvoiceComponent implements OnInit {
       )}&toDate=${this.datePipe.transform(
         this.endDate.value,
         'yyyy-MM-dd'
-      )}&pageSize=${this.config.itemsPerPage}&page=${this.config.page || 1}`;
+      )}&pageSize=${this.config.itemsPerPage}&page=${
+        this.config.currentPage || 1
+      }`;
 
       this.itrService.getMethod(param).subscribe(
         (res: any) => {
           this.loading = false;
           this.loading = false;
           console.log(res);
-          this.toastMsgService.alert('success', 'Successful');
+          this.invoiceData = res.data.content;
+          this.totalInvoice = res?.data?.totalElements;
+          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+          this.config.totalItems = res?.data?.totalElements;
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    } else if (this.roles?.includes('ROLE_FILER')) {
+      this.loading = true;
+      const param = `/v1/invoice/back-office?filerUserId=${
+        this.loggedInSme[0].userId
+      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
+        this.startDate.value,
+        'yyyy-MM-dd'
+      )}&toDate=${this.datePipe.transform(
+        this.endDate.value,
+        'yyyy-MM-dd'
+      )}&pageSize=${this.config.itemsPerPage}&page=${
+        this.config.currentPage || 1
+      }`;
+
+      this.itrService.getMethod(param).subscribe(
+        (res: any) => {
+          this.loading = false;
+          console.log(res);
           this.invoiceData = res.data.content;
           this.totalInvoice = res?.data?.totalElements;
           this.gridApi?.setRowData(this.createRowData(this.invoiceData));
@@ -433,21 +465,22 @@ export class PerformaInvoiceComponent implements OnInit {
       );
     } else {
       this.loading = true;
-      const param = `/v1/invoice/back-office?filerUserId=${
-        this.loggedInSme[0].userId
-      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
+      const param = `/v1/invoice/back-office?paymentStatus=${
+        this.status.value
+      }&fromDate=${this.datePipe.transform(
         this.startDate.value,
         'yyyy-MM-dd'
       )}&toDate=${this.datePipe.transform(
         this.endDate.value,
         'yyyy-MM-dd'
-      )}&pageSize=${this.config.itemsPerPage}&page=${this.config.page || 1}`;
+      )}&pageSize=${this.config.itemsPerPage}&page=${
+        this.config.currentPage || 1
+      }`;
 
       this.itrService.getMethod(param).subscribe(
         (res: any) => {
           this.loading = false;
           console.log(res);
-          this.toastMsgService.alert('success', 'Successful');
           this.invoiceData = res.data.content;
           this.totalInvoice = res?.data?.totalElements;
           this.gridApi?.setRowData(this.createRowData(this.invoiceData));
