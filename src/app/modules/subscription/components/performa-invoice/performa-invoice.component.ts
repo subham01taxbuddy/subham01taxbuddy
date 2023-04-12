@@ -18,6 +18,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { map, Observable, startWith } from 'rxjs';
 // import { User } from 'src/app/modules/sme-management-new/components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
+import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
+import { ToastMessage } from 'src/app/classes/toast';
 
 export const MY_FORMATS = {
   parse: {
@@ -69,6 +71,7 @@ export class PerformaInvoiceComponent implements OnInit {
   filteredOptions1: Observable<User[]>;
   filteredOptions: Observable<User[]>;
   ownerList: any;
+  SidebarComponent: SidebarComponent;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -104,18 +107,19 @@ export class PerformaInvoiceComponent implements OnInit {
   ];
   constructor(
     private fb: FormBuilder,
-    private datePipe: DatePipe,
+    public datePipe: DatePipe,
     private utilService: UtilsService,
     private userMsService: UserMsService,
     private itrService: ItrMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
-    @Inject(LOCALE_ID) private locale: string
+    @Inject(LOCALE_ID) private locale: string,
+    private toastMsgService: ToastMessageService
   ) {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
-    this.status.setValue(this.Status[0].value);
+    this.status.setValue(this.Status[1].value);
     this.config = {
       itemsPerPage: 15,
       currentPage: 1,
@@ -139,7 +143,7 @@ export class PerformaInvoiceComponent implements OnInit {
       ? 'Filer'
       : 'NA';
     console.log('roles', this.roles);
-    // this.getInvoice();
+    this.getInvoice();
 
     this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
     console.log('smelist', this.smeList);
@@ -237,6 +241,7 @@ export class PerformaInvoiceComponent implements OnInit {
       })
     );
   }
+
   setList() {
     if (this.searchOwner.value == '') {
       this.options1 = this.allFilers;
@@ -264,6 +269,7 @@ export class PerformaInvoiceComponent implements OnInit {
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
   });
+
   get assessmentYear() {
     return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
   }
@@ -338,8 +344,6 @@ export class PerformaInvoiceComponent implements OnInit {
 
   getInvoice() {
     // let pagination = `page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
-    const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    let data = this.utilService.createUrlParams(this.searchParam);
     //  this.loading = true;
     // var param;
     // if (this.invoiceFormGroup.valid) {
@@ -348,7 +352,6 @@ export class PerformaInvoiceComponent implements OnInit {
     //   let fromData = this.datePipe.transform(this.invoiceFormGroup.value.fromDate, 'yyyy-MM-dd');
     //   let toData = this.datePipe.transform(this.invoiceFormGroup.value.toDate, 'yyyy-MM-dd');
     //    if (this.utilService.isNonEmpty(this.invoiceFormGroup.value.status)){
-
     //       param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&invoiceAssignedTo=${loggedInSmeUserId}`;
     //      }
     //      else {
@@ -358,39 +361,107 @@ export class PerformaInvoiceComponent implements OnInit {
     //    } else {
     //     // param = `/invoice/sme/`
     //   }
-    let status = this.status.value || 'Unpaid,Failed';
-    console.log('selected status', this.status);
-    let fromData =
-      this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
-      this.startDate.value;
-    console.log('fromdate', fromData);
-    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
-    console.log('todate', toData);
-    let param = '';
-    let statusFilter = '';
-    if (status) {
-      statusFilter = `&paymentStatus=${status}`;
-    }
-    let userFilter = '';
-    if (this.ownerDetails?.userId) {
-      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
-    }
-    if (this.filerDetails?.userId) {
-      userFilter += `&filerUserId=${this.filerDetails.userId}`;
-    }
-
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
-    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+    /////////////////////////////////////////////////////////////////////////////
+    // const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
+    // let data = this.utilService.createUrlParams(this.searchParam);
+    // let status = this.status.value || 'Unpaid';
+    // console.log('selected status', this.status);
+    // let fromData =
+    //   this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
+    //   this.startDate.value;
+    // console.log('fromdate', fromData);
+    // let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+    // console.log('todate', toData);
+    // let param = '';
+    // let statusFilter = '';
+    // if (status) {
+    //   statusFilter = `&paymentStatus=${status}`;
+    // }
+    // let userFilter = '';
+    // if (this.ownerDetails?.userId) {
+    //   userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
+    // }
+    // if (this.filerDetails?.userId) {
+    //   userFilter += `&filerUserId=${this.filerDetails.userId}`;
+    // }
+    // param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+    // this.itrService.getMethod(param).subscribe((response: any) => {
+    //   this.loading = false;
+    //   this.invoiceData = response.data.content;
+    //   this.totalInvoice = response?.data?.totalElements;
+    //   // this.invoicesCreateColumnDef(this.smeList);
+    //   this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+    //   this.config.totalItems = response?.data?.totalElements;
+    // });
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      this.invoiceData = response.data.content;
-      this.totalInvoice = response?.data?.totalElements;
-      // this.invoicesCreateColumnDef(this.smeList);
-      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-      this.config.totalItems = response?.data?.totalElements;
-    });
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
+    console.log(this.loggedInSme[0].userId);
+
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.loading = true;
+      const param = `/v1/invoice/back-office?ownerUserId=${
+        this.loggedInSme[0].userId
+      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
+        this.startDate.value,
+        'yyyy-MM-dd'
+      )}&toDate=${this.datePipe.transform(
+        this.endDate.value,
+        'yyyy-MM-dd'
+      )}&pageSize=${this.config.itemsPerPage}&page=${this.config.page || 1}`;
+
+      this.itrService.getMethod(param).subscribe(
+        (res: any) => {
+          this.loading = false;
+          this.loading = false;
+          console.log(res);
+          this.toastMsgService.alert('success', 'Successful');
+          this.invoiceData = res.data.content;
+          this.totalInvoice = res?.data?.totalElements;
+          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+          this.config.totalItems = res?.data?.totalElements;
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    } else {
+      this.loading = true;
+      const param = `/v1/invoice/back-office?filerUserId=${
+        this.loggedInSme[0].userId
+      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
+        this.startDate.value,
+        'yyyy-MM-dd'
+      )}&toDate=${this.datePipe.transform(
+        this.endDate.value,
+        'yyyy-MM-dd'
+      )}&pageSize=${this.config.itemsPerPage}&page=${this.config.page || 1}`;
+
+      this.itrService.getMethod(param).subscribe(
+        (res: any) => {
+          this.loading = false;
+          console.log(res);
+          this.toastMsgService.alert('success', 'Successful');
+          this.invoiceData = res.data.content;
+          this.totalInvoice = res?.data?.totalElements;
+          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+          this.config.totalItems = res?.data?.totalElements;
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    }
   }
 
   createRowData(userInvoices) {
