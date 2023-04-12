@@ -17,7 +17,7 @@
               <b style="font-size: 20px">{{ cardTitle }} View </b>
             </div> -->
             <div>
-              <div class="row" *ngIf="roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER') ">
+              <div class="row" *ngIf="roles?.includes('ROLE_ADMIN')">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">

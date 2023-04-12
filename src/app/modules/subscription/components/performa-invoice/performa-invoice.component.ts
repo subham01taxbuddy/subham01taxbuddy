@@ -485,8 +485,9 @@ export class PerformaInvoiceComponent implements OnInit {
         paymentDate: userInvoices[i].paymentDate,
         paymentStatus: userInvoices[i].paymentStatus,
         purpose: userInvoices[i].itemList[0].itemDescription,
-        invoicePreparedBy: userInvoices[i].inovicePreparedByName,
-        invoiceAssignedTo: userInvoices[i].invoiceAssignedToName,
+        //Ashwini: as per discussion with Ajay & Karan this is a quick fix done
+        invoicePreparedBy: userInvoices[i].agentName,
+        invoiceAssignedTo: userInvoices[i].agentName,
         ifaLeadClient: userInvoices[i].ifaLeadClient,
         total: userInvoices[i].total,
       });
