@@ -485,8 +485,9 @@ export class UtilsService {
         return [];
     }
     async getAgentList() {
+      //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
         const loggedInUserId = this.getLoggedInUserID();
-        const param = `/sme/${loggedInUserId}/child-details`;
+        const param = `/sme-details-new/${loggedInUserId}?filer=true`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
