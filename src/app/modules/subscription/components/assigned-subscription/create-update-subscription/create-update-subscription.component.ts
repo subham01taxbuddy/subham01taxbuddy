@@ -80,6 +80,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     totalTax: null,
     totalAmount: null,
   };
+  subscriptionObjType: any;
+  isButtonDisable: boolean;
 
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
@@ -101,6 +103,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllPromoCode();
+
+    const subType = (this.subscriptionObjType = JSON.parse(
+      sessionStorage.getItem('subscriptionObject')
+    )?.type);
+
+    if (subType !== 'edit') {
+      this.isButtonDisable = false;
+    } else {
+      this.isButtonDisable = true;
+    }
 
     this.filteredOptions = this.searchedPromoCode.valueChanges.pipe(
       startWith(''),
@@ -469,6 +481,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
         this.reminderEmail.setValue(subscription.reminderEmail);
+        this.description.setValue(subscription.item.itemDescription);
+        this.sacNumber.setValue(subscription.item.sacCode);
+        this.assessmentYear.setValue(subscription.item.financialYear);
+
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
         if (
@@ -802,7 +818,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       },
       { service: 'Other Services', details: 'Other Services' },
       { service: 'Other Services', details: 'Schedule Call' },
-
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
@@ -923,10 +938,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           sgstAmount: this?.userSubscription?.sgstAmount,
           amount: this?.userSubscription?.payableSubscriptionAmount,
           sacCode: this.sacNumber.value,
+          financialYear: this.assessmentYear.value,
+          service: this.service,
+          serviceDetail: this.serviceDetail,
         },
-        financialYear: this.assessmentYear.value,
-        service: this.service,
-        serviceDetail: this.serviceDetail,
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
@@ -953,7 +968,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         }
       );
     } else {
-      this.toastMessage.alert('error', 'plz Select Plan. & pin code');
+      this.toastMessage.alert('error', 'Please select Plan & Pincode');
       this.loading = false;
     }
   }
