@@ -603,6 +603,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   setFinalPricing() {
     this.selectedPromoCode = this.userSubscription.promoCode;
+    this.searchedPromoCode.setValue(this.userSubscription.promoAppliedTitle);
     if (
       this.utilsService.isNonEmpty(this.selectedPromoCode) &&
       this.utilsService.isNonEmpty(this.allPromoCodes)

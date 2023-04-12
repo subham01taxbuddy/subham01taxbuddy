@@ -476,10 +476,10 @@ export class UtilsService {
                 this.showSnackBar('Error While getting SME list.');
                 return [];
             });
-            if (res && res.data.content instanceof Array) {
-                res.data.content.sort((a, b) => a.name > b.name ? 1 : -1)
-                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data.content));
-                return res.data.content;
+            if (res && res.data instanceof Array) {
+                res.data.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data));
+                return res.data;
             }
         }
         return [];

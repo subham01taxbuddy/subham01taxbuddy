@@ -164,11 +164,11 @@ export class AssignedSubscriptionComponent implements OnInit {
             this.createRowData([])
           );
           this.config.totalItems = 0;
-          let msg = 'There is no records of subscription against this user';
-          if (this.from === 'MY_SUB') {
-            msg = 'You dont have any assigned subscriptions';
-          }
-          this.utilsService.showSnackBar(msg);
+          // let msg = 'There is no records of subscription against this user';
+          // if (this.from === 'MY_SUB') {
+          //   msg = 'You dont have any assigned subscriptions';
+          // }
+          // this.utilsService.showSnackBar(msg);
         }
         this.sendTotalCount.emit(this.config.totalItems);
       },
