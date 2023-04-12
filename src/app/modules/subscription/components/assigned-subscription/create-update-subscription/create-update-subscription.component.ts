@@ -801,6 +801,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         details: 'Audit (Professional / Free Lancer',
       },
       { service: 'Other Services', details: 'Other Services' },
+      { service: 'Other Services', details: 'Schedule Call' },
+
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
