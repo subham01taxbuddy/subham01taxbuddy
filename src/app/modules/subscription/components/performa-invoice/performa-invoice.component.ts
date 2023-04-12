@@ -125,7 +125,6 @@ export class PerformaInvoiceComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     };
-    this.getInvoice();
   }
 
   cardTitle: any;
@@ -175,6 +174,7 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.setFiletedOptions1();
     this.setFiletedOptions2();
+    this.getInvoice();
   }
 
   // async getAgentList() {

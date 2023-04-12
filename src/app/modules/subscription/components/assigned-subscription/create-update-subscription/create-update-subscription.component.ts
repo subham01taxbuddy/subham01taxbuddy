@@ -80,6 +80,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     totalTax: null,
     totalAmount: null,
   };
+  subscriptionObjType: any;
+  isButtonDisable: boolean;
 
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
@@ -101,6 +103,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllPromoCode();
+
+    const subType = (this.subscriptionObjType = JSON.parse(
+      sessionStorage.getItem('subscriptionObject')
+    )?.type);
+
+    if (subType !== 'edit') {
+      this.isButtonDisable = false;
+    } else {
+      this.isButtonDisable = true;
+    }
 
     this.filteredOptions = this.searchedPromoCode.valueChanges.pipe(
       startWith(''),
@@ -950,7 +962,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         }
       );
     } else {
-      this.toastMessage.alert('error', 'plz Select Plan. & pin code');
+      this.toastMessage.alert('error', 'Please select Plan & Pincode');
       this.loading = false;
     }
   }

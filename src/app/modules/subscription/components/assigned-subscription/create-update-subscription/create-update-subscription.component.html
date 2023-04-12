@@ -573,6 +573,7 @@
                   placeholder="Select Service"
                   autocomplete="off"
                   (selectionChange)="changeService()"
+                  [disabled]="isButtonDisable"
                 >
                   <mat-option value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
