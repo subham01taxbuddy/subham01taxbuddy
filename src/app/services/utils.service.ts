@@ -568,7 +568,7 @@ export class UtilsService {
     }
     async getMyAgentList() {
         const loggedInUserId = this.getLoggedInUserID();
-        const param = `/sme/${loggedInUserId}/child-details`;
+        const param = `/sme-details-new/${loggedInUserId}?filer=true`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
