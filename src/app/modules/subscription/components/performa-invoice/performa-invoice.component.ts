@@ -119,7 +119,7 @@ export class PerformaInvoiceComponent implements OnInit {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
-    this.status.setValue(this.Status[1].value);
+    this.status.setValue(this.Status[0].value);
     this.config = {
       itemsPerPage: 15,
       currentPage: 1,
@@ -337,7 +337,7 @@ export class PerformaInvoiceComponent implements OnInit {
     ///////////////////////////////////////////////////////////////////////////
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
-    let status = this.status.value || 'Unpaid';
+    let status = this.status.value;
     console.log('selected status', this.status);
     let fromData =
       this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||

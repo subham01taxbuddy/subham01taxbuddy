@@ -10,9 +10,9 @@
       <div class="row">
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
-            <div>
-              <b style="font-size: 20px">{{cardTitle}} View </b>
-            </div>
+<!--            <div>-->
+<!--              <b style="font-size: 20px">{{cardTitle}} View </b>-->
+<!--            </div>-->
             <div *ngIf="roles?.includes('ROLE_ADMIN')" >
               <div class="row">
                 <div class="col-sm-6">
@@ -119,9 +119,11 @@
         </div>
       </div>
       <div class="row" style="float: right; margin-top: 20px; margin-right: 10px;">
-        <span style="float: right;"> Total Invoice Count: <b>{{totalInvoice}}</b>  |
-          paid:
-          <b>{{getCount('paid')}}</b></span>
+        <span style="float: right;"> Total Invoice Count: <b>{{totalInvoice}}</b>
+<!--          |-->
+<!--          paid:-->
+<!--          <b>{{getCount('paid')}}</b>-->
+        </span>
       </div>
        <br>
        <div class="row" style="margin-top: 55px;">
