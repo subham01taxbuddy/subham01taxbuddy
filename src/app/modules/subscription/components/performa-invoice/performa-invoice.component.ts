@@ -125,7 +125,7 @@ export class PerformaInvoiceComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     };
-    this.getInvoice();
+
   }
 
   cardTitle: any;
@@ -145,19 +145,33 @@ export class PerformaInvoiceComponent implements OnInit {
       : 'NA';
     console.log('roles', this.roles);
 
-    this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    console.log('smelist', this.smeList);
-    this.allFilers = this.smeList.map((item) => {
-      return { name: item.name, userId: item.userId };
-    });
-    this.options1 = this.allFilers;
+    if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
+      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+      console.log('smelist', this.smeList);
+      this.allFilers = this.smeList.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+      this.options1 = this.allFilers;
+    } else if(this.roles?.includes('ROLE_OWNER')){
+      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+      console.log('smelist', this.smeList);
+      this.allFilers = this.smeList.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+      this.options1 = this.allFilers;
+    }
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerDetails = this.loggedInSme[0];
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerDetails = this.loggedInSme[0];
+    }
     // if(this.searchOwner.value==null){
     //   this.options1=this.allFilers;
     // }
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(this.smeList),
+      columnDefs: this.invoicesCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -175,48 +189,19 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.setFiletedOptions1();
     this.setFiletedOptions2();
+
+    this.getInvoice();
   }
 
-  // async getAgentList() {
-  //
-  //   let loggedInUserRoles = this.utilService.getUserRoles();
-  //   let loggedInUserId = this.utilService.getLoggedInUserID();
-  //   // const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
-  //   // if (isAgentListAvailable) {
-  //     const param = `/sme/${loggedInUserId}/child-details`;
-  //     this.userMsService.getMethod(param).subscribe((res: any) => {
-  //       if (res && res.data instanceof Array) {
-  //         res.data.sort((a, b) => a.name > b.name ? 1 : -1)
-  //         sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data));
-  //         this.smeList = res.data;
-  //         this.allFilers=this.smeList.map((item) => {
-  //           return { name: item.name, userId:item.userId  };
-  //         });
-  //         this.options1=this.allFilers;
-  //         // if(this.searchOwner.value==null){
-  //         //   this.options1=this.allFilers;
-  //         // }
-  //
-  //         this.invoiceListGridOptions = <GridOptions>{
-  //           rowData: [],
-  //           columnDefs: this.invoicesCreateColumnDef(this.smeList),
-  //           enableCellChangeFlash: true,
-  //           enableCellTextSelection: true,
-  //           onGridReady: (params) => {},
-  //           sortable: true,
-  //         };
-  //       }
-  //     })
-  //   // }
-  //
-  // }
-
-  setFiletedOptions2() {
+  setFiletedOptions2(){
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
         if (!this.utilService.isNonEmpty(value)) {
           this.filerDetails = null;
+          if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+            this.filerDetails.userId = this.loggedInSme.userId;
+          }
         }
         const name = typeof value === 'string' ? value : value?.name;
         return name
@@ -233,6 +218,9 @@ export class PerformaInvoiceComponent implements OnInit {
         console.log('change', value);
         if (!this.utilService.isNonEmpty(value)) {
           this.ownerDetails = null;
+          if (this.roles?.includes('ROLE_OWNER')) {
+            this.ownerDetails.userId = this.loggedInSme.userId;
+          }
         }
         const name = typeof value === 'string' ? value : value?.name;
         return name
@@ -343,60 +331,43 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   getInvoice() {
-    // let pagination = `page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
-    //  this.loading = true;
-    // var param;
-    // if (this.invoiceFormGroup.valid) {
-    //    this.loading = true;
-    //   var param;
-    //   let fromData = this.datePipe.transform(this.invoiceFormGroup.value.fromDate, 'yyyy-MM-dd');
-    //   let toData = this.datePipe.transform(this.invoiceFormGroup.value.toDate, 'yyyy-MM-dd');
-    //    if (this.utilService.isNonEmpty(this.invoiceFormGroup.value.status)){
-    //       param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&invoiceAssignedTo=${loggedInSmeUserId}`;
-    //      }
-    //      else {
-    //         param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
-    //       param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}`;
-    //     // }
-    //    } else {
-    //     // param = `/invoice/sme/`
-    //   }
+
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
-    /////////////////////////////////////////////////////////////////////////////
-    // const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    // let data = this.utilService.createUrlParams(this.searchParam);
-    // let status = this.status.value || 'Unpaid';
-    // console.log('selected status', this.status);
-    // let fromData =
-    //   this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
-    //   this.startDate.value;
-    // console.log('fromdate', fromData);
-    // let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
-    // console.log('todate', toData);
-    // let param = '';
-    // let statusFilter = '';
-    // if (status) {
-    //   statusFilter = `&paymentStatus=${status}`;
-    // }
-    // let userFilter = '';
-    // if (this.ownerDetails?.userId) {
-    //   userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
-    // }
-    // if (this.filerDetails?.userId) {
-    //   userFilter += `&filerUserId=${this.filerDetails.userId}`;
-    // }
-    // param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
-    // this.itrService.getMethod(param).subscribe((response: any) => {
-    //   this.loading = false;
-    //   this.invoiceData = response.data.content;
-    //   this.totalInvoice = response?.data?.totalElements;
-    //   // this.invoicesCreateColumnDef(this.smeList);
-    //   this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-    //   this.config.totalItems = response?.data?.totalElements;
-    // });
+    ///////////////////////////////////////////////////////////////////////////
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
+    let data = this.utilService.createUrlParams(this.searchParam);
+    let status = this.status.value || 'Unpaid';
+    console.log('selected status', this.status);
+    let fromData =
+      this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
+      this.startDate.value;
+    console.log('fromdate', fromData);
+    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+    console.log('todate', toData);
+    let param = '';
+    let statusFilter = '';
+    if (status) {
+      statusFilter = `&paymentStatus=${status}`;
+    }
+    let userFilter = '';
+    if (this.ownerDetails?.userId) {
+      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
+    }
+    if (this.filerDetails?.userId) {
+      userFilter += `&filerUserId=${this.filerDetails.userId}`;
+    }
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+    this.itrService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      this.invoiceData = response.data.content;
+      this.totalInvoice = response?.data?.totalElements;
+      // this.invoicesCreateColumnDef(this.smeList);
+      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+      this.config.totalItems = response?.data?.totalElements;
+    });
 
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     console.log(this.loggedInSme[0].userId);
 
@@ -494,7 +465,7 @@ export class PerformaInvoiceComponent implements OnInit {
           );
         }
       );
-    }
+    }*/
   }
 
   createRowData(userInvoices) {
@@ -514,8 +485,8 @@ export class PerformaInvoiceComponent implements OnInit {
         paymentDate: userInvoices[i].paymentDate,
         paymentStatus: userInvoices[i].paymentStatus,
         purpose: userInvoices[i].itemList[0].itemDescription,
-        invoicePreparedBy: userInvoices[i].inovicePreparedBy,
-        invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
+        invoicePreparedBy: userInvoices[i].inovicePreparedByName,
+        invoiceAssignedTo: userInvoices[i].invoiceAssignedToName,
         ifaLeadClient: userInvoices[i].ifaLeadClient,
         total: userInvoices[i].total,
       });
@@ -562,7 +533,7 @@ export class PerformaInvoiceComponent implements OnInit {
     }
   }
 
-  invoicesCreateColumnDef(smeList: any[]) {
+  invoicesCreateColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -705,21 +676,21 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        valueGetter: function nameFromCode(params) {
-          if (smeList.length !== 0) {
-            const nameArray = smeList.filter(
-              (item: any) =>
-                item.userId.toString() === params.data.invoicePreparedBy
-            );
-            if (nameArray.length !== 0) {
-              return nameArray[0].name;
-            } else {
-              console.log('not found', params.data.invoicePreparedBy);
-            }
-            return '-';
-          }
-          return params.data.statusId;
-        },
+        // valueGetter: function nameFromCode(params) {
+        //   if (smeList.length !== 0) {
+        //     const nameArray = smeList.filter(
+        //       (item: any) =>
+        //         item.userId.toString() === params.data.invoicePreparedBy
+        //     );
+        //     if (nameArray.length !== 0) {
+        //       return nameArray[0].name;
+        //     } else {
+        //       console.log('not found', params.data.invoicePreparedBy);
+        //     }
+        //     return '-';
+        //   }
+        //   return params.data.statusId;
+        // },
       },
       {
         headerName: 'Assigned to',
@@ -732,18 +703,18 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        valueGetter: function nameFromCode(params) {
-          if (smeList.length !== 0) {
-            const nameArray = smeList.filter(
-              (item: any) => item.userId === params.data.invoiceAssignedTo
-            );
-            if (nameArray.length !== 0) {
-              return nameArray[0].name;
-            }
-            return '-';
-          }
-          return params.data.statusId;
-        },
+        // valueGetter: function nameFromCode(params) {
+        //   if (smeList.length !== 0) {
+        //     const nameArray = smeList.filter(
+        //       (item: any) => item.userId === params.data.invoiceAssignedTo
+        //     );
+        //     if (nameArray.length !== 0) {
+        //       return nameArray[0].name;
+        //     }
+        //     return '-';
+        //   }
+        //   return params.data.statusId;
+        // },
       },
 
       {
