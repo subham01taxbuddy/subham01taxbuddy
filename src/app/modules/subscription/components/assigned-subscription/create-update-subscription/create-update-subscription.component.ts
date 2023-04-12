@@ -416,10 +416,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.utilsService.showSnackBar(
         `Promo Code ${this.selectedPromoCode} removed successfully!`
       );
+      this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
       console.log('PROMO code removed', res);
-      this.userSubscription = res;
-      this.setFinalPricing();
-      this.promoCodeInfo = null;
+      // this.userSubscription = res;
+      // this.setFinalPricing();
+      // this.promoCodeInfo = null;
     });
   }
 
