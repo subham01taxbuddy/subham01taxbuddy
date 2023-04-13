@@ -819,7 +819,7 @@ export class AssignedNewUsersComponent implements OnInit {
   }
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
-      width: '50%',
+      width: '75vw',
       height: 'auto',
       data: {
         userId: client.userId,
