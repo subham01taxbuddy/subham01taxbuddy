@@ -32,6 +32,7 @@ export class AssignedNewUsersComponent implements OnInit {
   config: any;
   userInfo: any = [];
   itrStatus: any = [];
+  ogStatusList: any = [];
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -80,6 +81,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   async getMasterStatusList() {
     this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
   pageChanged(event: any) {
@@ -91,6 +93,13 @@ export class AssignedNewUsersComponent implements OnInit {
   fromServiceType(event){
     this.searchParam.serviceType = event;
     this.search('serviceType');
+
+    if(this.searchParam.serviceType) {
+      setTimeout(() => {
+        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
+      }, 100);
+    }
+
   }
 
   fromSme(event) {
