@@ -68,7 +68,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       columnDefs: this.subscriptionCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -81,9 +81,9 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    console.log('loggedIn Sme Details' ,this.loggedInSme)
-    this.roles =this.loggedInSme[0]?.roles
-    console.log('roles',this.roles)
+    console.log('loggedIn Sme Details', this.loggedInSme)
+    this.roles = this.loggedInSme[0]?.roles
+    console.log('roles', this.roles)
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("99999999999999999:", params)
       if (this.utilsService.isNonEmpty(params['userId']) && params['userMobNo'] !== '-') {
@@ -93,7 +93,7 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
         // console.log('this.queryParam --> ',this.queryParam)
-      }else{
+      } else {
         this.getAssignedSubscription(0);
       }
     });
@@ -180,8 +180,8 @@ export class AssignedSubscriptionComponent implements OnInit {
     );
   }
 
-  searchByName(pageNo=0){
-    let selectedSmeUserId =this.filerDetails.userId
+  searchByName(pageNo = 0) {
+    let selectedSmeUserId = this.filerDetails.userId
     let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
@@ -219,14 +219,14 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   getUserByMobileNum(number) {
-    console.log('number',number)
+    console.log('number', number)
     if (this.utilsService.isNonEmpty(number)) {
       const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-      if(!this.userId){
+      if (!this.userId) {
         //https://uat-api.taxbuddy.com/user/3000/user-list-new?mobileNumber=9850872656
         this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, number).subscribe((res: any) => {
           console.log(res);
-          if(res.data.content){
+          if (res.data.content) {
             this.userId = res.data.content[0].userId;
           }
         });
@@ -235,36 +235,36 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.loading = true;
       let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
       this.itrService.getMethod(param).subscribe((response: any) => {
-          this.loading = false;
-          console.log('Get user  by mobile number responce: ', response);
-          let filtered = this.roles.filter(item => item === 'ROLE_ADMIN'|| item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
-          if (response.data instanceof Array && response.data.length > 0) {
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData(response.data)
-            );
-            this.config.totalItems = response.data.totalElements;
-            this.selectedUserName = response.data[0].userName;
-            this.userId = response.data[0].userId;
+        this.loading = false;
+        console.log('Get user  by mobile number responce: ', response);
+        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+        if (response.data instanceof Array && response.data.length > 0) {
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData(response.data)
+          );
+          this.config.totalItems = response.data.totalElements;
+          this.selectedUserName = response.data[0].userName;
+          this.userId = response.data[0].userId;
 
-            this.queryParam = `?userId=${this.userId}`;
-            this.utilsService.sendMessage(this.queryParam);
-            this.isAllowed = filtered && filtered.length > 0 ? true : false;
-          } else {
-            if(response.data.error === 'User not found'){
-              this._toastMessageService.alert("error", "No user with this mobile number found. " +
-                "Please create user before creating subscription.");
-              this.isAllowed = false;
-              return;
-            }
-
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData([])
-            );
-            this.config.totalItems = 0;
-            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          this.queryParam = `?userId=${this.userId}`;
+          this.utilsService.sendMessage(this.queryParam);
+          this.isAllowed = filtered && filtered.length > 0 ? true : false;
+        } else {
+          if (response.data.error === 'User not found') {
+            this._toastMessageService.alert("error", "No user with this mobile number found. " +
+              "Please create user before creating subscription.");
+            this.isAllowed = false;
+            return;
           }
 
-        },
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData([])
+          );
+          this.config.totalItems = 0;
+          this.isAllowed = filtered && filtered.length > 0 ? true : false;
+        }
+
+      },
         error => {
           this.loading = false;
           this.selectedUserName = '';
@@ -285,7 +285,7 @@ export class AssignedSubscriptionComponent implements OnInit {
 
         lockPosition: true,
         suppressMovable: false,
-        cellRenderer: (params) => {},
+        cellRenderer: (params) => { },
       },
       {
         headerName: 'User Id',
@@ -462,8 +462,8 @@ export class AssignedSubscriptionComponent implements OnInit {
         )
           ? subscriptionData[i].userSelectedPlan.servicesType
           : this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan)
-          ? subscriptionData[i].smeSelectedPlan.servicesType
-          : '-',
+            ? subscriptionData[i].smeSelectedPlan.servicesType
+            : '-',
         startDate: subscriptionData[i].startDate,
         endDate: subscriptionData[i].endDate,
         invoiceNo: invoiceNumber.toString(),
@@ -487,10 +487,10 @@ export class AssignedSubscriptionComponent implements OnInit {
         )
           ? subscriptionData[i].promoApplied.totalAmount
           : this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan)
-          ? subscriptionData[i].smeSelectedPlan.totalAmount
-          : this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan)
-          ? subscriptionData[i].userSelectedPlan.totalAmount
-          : '0',
+            ? subscriptionData[i].smeSelectedPlan.totalAmount
+            : this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan)
+              ? subscriptionData[i].userSelectedPlan.totalAmount
+              : '0',
         // invoiceDetails: invoiceDetails,
       });
     }
@@ -521,25 +521,25 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.router.navigate(['/subscription/create-subscription']);
   }
 
-  createSub(){
+  createSub() {
     let disposable = this.dialog.open(AddSubscriptionComponent, {
       width: '80%',
       height: 'auto',
       data: {
         userId: this.userId,
-        mobileNo:this.mobileNumber.value,
+        mobileNo: this.mobileNumber.value,
 
       },
 
     })
-    console.log('send data',data)
+    console.log('send data', data)
     disposable.afterClosed().subscribe(result => {
       if (result && result.data) {
-        let subData={
-          type:'create',
-          data:result.data
+        let subData = {
+          type: 'create',
+          data: result.data
         }
-        sessionStorage.setItem('createSubscriptionObject',JSON.stringify(subData))
+        sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
         // let subID=result.data['subscriptionId'];
         console.log('Afetr dialog close -> ', subData);
         this.router.navigate(['/subscription/create-subscription']);
@@ -548,22 +548,24 @@ export class AssignedSubscriptionComponent implements OnInit {
     })
   }
 
-  getFilerList(){
+  getFilerList() {
 
-    const loggedInSmeUserId=this?.loggedInSme[0]?.userId
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param =`/sme-details-new/${loggedInSmeUserId}?${data}`
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}`
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
-        console.log('owner list result -> ', result);
-         this.filerList = result.data?.content;
-         this.filerNames = this.filerList?.map((item) => {
-          return { name: item.name, userId:item.userId  };
+      console.log('owner list result -> ', result);
+      if (result.success) {
+        this.filerList = result.data.content;
+        this.filerNames = this.filerList.map((item) => {
+          return { name: item.name, userId: item.userId };
         });
-         this.options = this.filerNames;
-      })
+        this.options = this.filerNames;
+      }
+    })
 
-}
+  }
 
   filerDetails: any;
   getFilerNameId(option) {
@@ -582,5 +584,5 @@ export class AssignedSubscriptionComponent implements OnInit {
 }
 export interface ConfirmModel {
   userId: number
-  mobileNo:number
+  mobileNo: number
 }
