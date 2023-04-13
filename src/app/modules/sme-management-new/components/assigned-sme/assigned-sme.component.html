@@ -21,7 +21,7 @@
         <tr *ngFor="let item of smeInfo | paginate : config"></tr>
       </table>
       <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
-        (rowClicked)="onSmeRowClicked($event)">
+        (rowClicked)="onSmeRowClicked($event)" >
       </ag-grid-angular>
       <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
