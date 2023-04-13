@@ -21,11 +21,11 @@
           *ngIf="mode === 'SIGN_IN'"
         >
           <div class="card__row">
-            <mat-label style="color: #07070c">E-mail or Phone Number</mat-label>
+            <mat-label style="color: #07070c">Mobile Number</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="E-mail or Phone Number"
+                placeholder="Mobile Number"
                 formControlName="user"
                 maxlength="10"
                 appearance="outline"
@@ -33,7 +33,7 @@
                 onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                 required
               />
-              <span class="fa fa-envelope errspan" aria-hidden="true"></span>
+              <span class="fa fa-mobile errspan" aria-hidden="true"></span>
             </mat-form-field>
           </div>
           <!--  <button [disabled]="!form.controls['user.valid" type="submit" class="btn"

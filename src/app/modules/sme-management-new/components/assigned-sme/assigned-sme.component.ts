@@ -186,6 +186,11 @@ export class AssignedSmeComponent implements OnInit {
           'align-items': 'center',
           'justify-content': 'center',
         },
+        cellRenderer: (params: any) => {
+          // console.log('param',params)
+        const items = params.value;
+        const itemsHtml = items.map(item => `<li>${item}</li>`).join('');
+        return `<ul>${itemsHtml}</ul>`;}
       },
       {
         headerName: 'Assigned Services',
@@ -203,8 +208,19 @@ export class AssignedSmeComponent implements OnInit {
           'align-items': 'center',
           'justify-content': 'center',
         },
-        // cellRenderer: function (params: any) {
-        //   return
+        // cellRenderer: (params: any) => {
+        //   console.log('param',params)
+        //   const smeServices = params.value;
+        //   let result = '';
+        //   smeServices.forEach((element) => {
+        //     if (element.serviceType == "ITR" && element.assignmentStart == true) {
+        //       result='<i class="fa fa-check" aria-hidden="true"></i>' +'ITR'
+        //     }
+        //     else if (element.serviceType == "TPA" && element.assignmentStart == true) {
+        //       result='<i class="fa fa-check" aria-hidden="true"></i>' +'TPA'
+        //     }
+        //   })
+        //   return result;
         // }
       },
       {

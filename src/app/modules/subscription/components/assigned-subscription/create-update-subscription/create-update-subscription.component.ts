@@ -956,6 +956,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
             'success',
             'Subscription created successfully.'
           );
+          this.location.back();
           // let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
           // console.log('subInfo: ', subInfo)
         },

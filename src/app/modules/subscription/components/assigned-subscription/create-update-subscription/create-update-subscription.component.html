@@ -660,8 +660,7 @@
           class="btn"
           style="background: #4f9a20; border-radius: 5px"
           (click)="updateSubscription()"
-          (click)="location.back()"
-          *ngIf="this?.userSubscription?.payableSubscriptionAmount > 0"
+          *ngIf="this?.userSubscription?.payableSubscriptionAmount >= 0"
         >
           <i class="fas fa-wallet"></i> Save & Generate Invoice
         </button>
