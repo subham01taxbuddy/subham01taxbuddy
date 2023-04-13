@@ -1,26 +1,59 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: false }"
+></ngx-loading>
 
-<div class="main clearfix" style="padding-top: 0px;">
-    <div class="card">
-        <div class="card__row" *ngIf="agentList.length>0">
-            <div class="filter__col card__col-sm-4 card__col-xs-12">
-                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
-            </div>
+<div class="main clearfix" style="padding-top: 0px">
+  <div class="content content_full">
+    <div class="content__container">
+      <div class="card">
+        <div class="card__row" >
+          <div class="filter__col card__col-sm-4 card__col-xs-12" *ngIf="agentList.length > 0">
+            <app-sme-list-drop-down
+              (sendSme)="fromSme($event)"
+            ></app-sme-list-drop-down>
+          </div>
+          <p style="float: right; margin-bottom: 30px;">
+            Total Count: <b>{{ config.totalItems }}</b>
+          </p>
         </div>
-        <p style="float: right;"> Total Count: <b>{{scheduleCallsData.length}}</b></p>
-        <br>
+
+
         <div class="card__row">
           <table>
-            <tr *ngFor="let item of scheduleCallsData | paginate : config"></tr>
+            <tr
+              *ngFor="
+                let item of scheduleCallsData
+                  | paginate
+                    : {
+                        itemsPerPage: this.config.itemsPerPage,
+                        currentPage: this.config.currentPage,
+                        totalItems: this.config.totalItems
+                      }
+              "
+            ></tr>
           </table>
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="scheduleCallGridOptions"
-                (rowClicked)="onScheduledCallClicked($event)">
-            </ag-grid-angular>
-            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-            <!--  <div class="col-md-12">
+          <ag-grid-angular
+            style="width: 100%; height: 100%"
+            class="ag-theme-balham"
+            [gridOptions]="scheduleCallGridOptions"
+            (rowClicked)="onScheduledCallClicked($event)"
+          >
+          </ag-grid-angular>
+
+          <!--  <div class="col-md-12">
                 <button class="btn" style="border: none;" *ngIf="pageCount !== 0" (click)="previous()">Previous</button>
                 <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
             </div> -->
+          <pagination-controls
+            pagesize="10"
+            [directionLinks]="true"
+            previousLabel=""
+            nextLabel=""
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
         </div>
+      </div>
     </div>
+  </div>
 </div>

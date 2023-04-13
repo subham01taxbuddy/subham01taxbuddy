@@ -121,7 +121,7 @@ export class PerformaInvoiceComponent implements OnInit {
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
     };
@@ -220,6 +220,7 @@ export class PerformaInvoiceComponent implements OnInit {
           this.ownerDetails = null;
           if (this.roles?.includes('ROLE_OWNER')) {
             this.ownerDetails.userId = this.loggedInSme.userId;
+            this.getFilers();
           }
         }
         const name = typeof value === 'string' ? value : value?.name;
@@ -296,6 +297,7 @@ export class PerformaInvoiceComponent implements OnInit {
   getOwnerNameId(option) {
     this.ownerDetails = option;
     console.log(option);
+    this.getFilers();
   }
 
   getFilers() {
@@ -360,11 +362,13 @@ export class PerformaInvoiceComponent implements OnInit {
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      this.invoiceData = response.data.content;
-      this.totalInvoice = response?.data?.totalElements;
-      // this.invoicesCreateColumnDef(this.smeList);
-      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-      this.config.totalItems = response?.data?.totalElements;
+      if(response.success) {
+        this.invoiceData = response.data.content;
+        this.totalInvoice = response?.data?.totalElements;
+        // this.invoicesCreateColumnDef(this.smeList);
+        this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+        this.config.totalItems = response?.data?.totalElements;
+      }
     });
 
     /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));

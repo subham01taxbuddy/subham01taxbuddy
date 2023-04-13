@@ -1,23 +1,43 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<label style="font-size: 18px;
-font-weight: bold;">Chat options for: {{data.clientName}}</label>
-<button mat-dialog-close tabindex="-1" (click)="close()"
-  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+<label style="font-size: 18px; font-weight: bold"
+  >Chat options for: {{ data.clientName }}</label
+>
+<button
+  mat-dialog-close
+  tabindex="-1"
+  (click)="close()"
+  style="float: right"
+  class="tbd-btn-close"
+>
+  <i class="fa fa-times" aria-hidden="true"></i>
 </button>
 <div class="card__row">
   <span>
-    <button type="button" class="tbd-btn" title="Kommunicate" (click)="goToKommunicate()"
-    [disabled]="!kommChatLink">
-      Kommunicate&nbsp;&nbsp; <i class="fa fa-comments-o" aria-hidden="true"></i>
+    <button
+      type="button"
+      class="tbd-btn"
+      title="Kommunicate"
+      (click)="goToKommunicate()"
+      [disabled]="kommChatLink === null"
+    >
+      Kommunicate&nbsp;&nbsp;
+      <i class="fa fa-comments-o" aria-hidden="true"></i>
     </button>
   </span>
   &nbsp;&nbsp;
   <span>
-    <button type="button" class="tbd-btn" title="Whatsapp" (click)="goToWhatsapp()"
-    [disabled]="!waChatLink">
+    <button
+      type="button"
+      class="tbd-btn"
+      title="Whatsapp"
+      (click)="goToWhatsapp()"
+      [disabled]="waChatLink === null"
+    >
       Whatsapp&nbsp;&nbsp; <i class="fa fa-whatsapp" aria-hidden="true"></i>
     </button>
   </span>
   &nbsp;&nbsp;
-
 </div>
