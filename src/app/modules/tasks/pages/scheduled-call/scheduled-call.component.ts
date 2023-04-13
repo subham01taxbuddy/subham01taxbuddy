@@ -9,11 +9,13 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { environment } from 'src/environments/environment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { event } from 'jquery';
+import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 
 @Component({
   selector: 'app-scheduled-call',
   templateUrl: './scheduled-call.component.html',
-  styleUrls: ['./scheduled-call.component.css']
+  styleUrls: ['./scheduled-call.component.css'],
 })
 export class ScheduledCallComponent implements OnInit {
   loading!: boolean;
@@ -292,28 +294,6 @@ export class ScheduledCallComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
-      {
-        headerName: 'Whats App',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-              <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
-             </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
             textAlign: 'center',
             display: 'flex',
             'align-items': 'center',
@@ -321,6 +301,29 @@ export class ScheduledCallComponent implements OnInit {
           };
         },
       },
+      // {
+      //   headerName: 'Whats App',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
+      //       style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+      //         <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
+      //        </button>`;
+      //   },
+      //   width: 60,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center',
+      //       display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center',
+      //     };
+      //   },
+      // },
       {
         headerName: 'Notes',
         editable: false,
@@ -496,33 +499,47 @@ export class ScheduledCallComponent implements OnInit {
     );
   }
 
-  openChat(client) {
-    console.log('client: ', client);
-    this.loading = true;
-    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe(
-      (response: any) => {
-        console.log('open chat link res: ', response);
-        this.loading = false;
-        if (response.success) {
-          window.open(response.data.chatLink);
-        } else {
-          this.toastMsgService.alert(
-            'error',
-            'User has not initiated chat on kommunicate'
-          );
-        }
-      },
-      (error) => {
-        this.toastMsgService.alert(
-          'error',
-          'Error during fetching chat, try after some time.'
-        );
-        this.loading = false;
-      }
-    );
-  }
+  // openChat(client) {
+  //   console.log('client: ', client);
+  //   this.loading = true;
+  //   let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
+  //   this.userMsService.getMethod(param).subscribe(
+  //     (response: any) => {
+  //       console.log('open chat link res: ', response);
+  //       this.loading = false;
+  //       if (response.success) {
+  //         window.open(response.data.chatLink);
+  //       } else {
+  //         this.toastMsgService.alert(
+  //           'error',
+  //           'User has not initiated chat on kommunicate'
+  //         );
+  //       }
+  //     },
+  //     (error) => {
+  //       this.toastMsgService.alert(
+  //         'error',
+  //         'Error during fetching chat, try after some time.'
+  //       );
+  //       this.loading = false;
+  //     }
+  //   );
+  // }
 
+  openChat(client) {
+    console.log('client:', client);
+    let disposable = this.dialog.open(ChatOptionsDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.userName,
+        serviceType: client.serviceType,
+      },
+    });
+
+    disposable.afterClosed().subscribe((result) => {});
+  }
   showUserInformation(user) {
     if (this.utilsService.isNonEmpty(user.userMobile)) {
       this.route.navigate(['/pages/dashboard/quick-search'], {
@@ -534,7 +551,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   callStatusChange(callInfo) {
-    console.log('callInfo: ', callInfo)
+    console.log('callInfo: ', callInfo);
     this.loading = false;
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
@@ -575,11 +592,11 @@ export class ScheduledCallComponent implements OnInit {
   //   this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
   // }
 
-  navigateToWhatsappChat(data) {
-    window.open(
-      `${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`
-    );
-  }
+  // navigateToWhatsappChat(data) {
+  //   window.open(
+  //     `${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`
+  //   );
+  // }
   pageChanged(event) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
