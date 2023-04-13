@@ -116,7 +116,7 @@ export class TaxInvoiceComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
     };
@@ -184,8 +184,12 @@ export class TaxInvoiceComponent implements OnInit {
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
-        if(!this.utilService.isNonEmpty(value)){
+        if (!this.utilService.isNonEmpty(value)) {
           this.ownerDetails = null;
+          if (this.roles?.includes('ROLE_OWNER')) {
+            this.ownerDetails.userId = this.loggedInSme.userId;
+            this.getFilers();
+          }
         }
         const name = typeof value === 'string' ? value : value?.name;
         return name ? this._filter(name as string, this.options) : this.options.slice();
@@ -284,6 +288,7 @@ export class TaxInvoiceComponent implements OnInit {
   getOwnerNameId(option) {
     this.ownerDetails = option;
     console.log(option);
+    this.getFilers();
   }
 
 
@@ -324,11 +329,13 @@ export class TaxInvoiceComponent implements OnInit {
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      this.invoiceData = response.data.content;
-      this.totalInvoice = response?.data?.totalElements;
-      // this.invoicesCreateColumnDef(this.smeList);
-      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-      this.config.totalItems = response?.data?.totalElements;
+      if(response.success) {
+        this.invoiceData = response.data.content;
+        this.totalInvoice = response?.data?.totalElements;
+        // this.invoicesCreateColumnDef(this.smeList);
+        this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+        this.config.totalItems = response?.data?.totalElements;
+      }
     });
 
     /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));

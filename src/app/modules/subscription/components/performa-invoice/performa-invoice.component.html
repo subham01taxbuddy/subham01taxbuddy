@@ -32,7 +32,7 @@
                       <mat-option
                         *ngFor="let option of filteredOwners | async"
                         [value]="option.name"
-                        (click)="getOwnerNameId(option); getFilers()"
+                        (click)="getOwnerNameId(option);"
                       >
                         {{ option.name }}
                       </mat-option>
