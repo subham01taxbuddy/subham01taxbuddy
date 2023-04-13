@@ -439,7 +439,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     for (let i = 0; i < subscriptionData.length; i++) {
       // var invoiceNumber = '';
       const invoiceNumber = [];
-      for (let x = 0; x < subscriptionData[i].invoiceDetail.length; x++) {
+      for (let x = 0; x < subscriptionData[i].invoiceDetail?.length; x++) {
         invoiceNumber.push(subscriptionData[i].invoiceDetail[x].invoiceNo);
         // invoiceNumber =invoiceNumber + subscriptionData[i].invoiceDetail[x].invoiceNo + ',';
       }

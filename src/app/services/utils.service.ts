@@ -568,7 +568,8 @@ export class UtilsService {
     }
     async getMyAgentList() {
         const loggedInUserId = this.getLoggedInUserID();
-        const param = `/sme-details-new/${loggedInUserId}?filer=true`;
+        //https://api.taxbuddy.com/user/sme-details-new/24346?owner=true&assigned=true
+        const param = `/sme-details-new/${loggedInUserId}?owner=true&assigned=true`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
