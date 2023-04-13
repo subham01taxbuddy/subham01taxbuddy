@@ -6,7 +6,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridOptions } from 'ag-grid-community';
+import {GridApi, GridOptions} from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -110,7 +110,9 @@ export class TaxInvoiceComponent implements OnInit {
       columnDefs: this.invoicesCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => {
+        this.gridApi = params.api;
+      },
       sortable: true,
     };
     this.config = {
@@ -122,6 +124,7 @@ export class TaxInvoiceComponent implements OnInit {
 
   cardTitle:any;
   smeList: any;
+  gridApi: GridApi;
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -148,6 +151,11 @@ export class TaxInvoiceComponent implements OnInit {
       this.options1 = this.allFilers;
     }
 
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerDetails = this.loggedInSme[0];
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerDetails = this.loggedInSme[0];
+    }
     this.getOwner();
     //  this.getFilers();
     this.startDate.setValue('2023-04-01');
@@ -288,57 +296,140 @@ export class TaxInvoiceComponent implements OnInit {
 
   getInvoice() {
 
+    ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
+    ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
+    ///////////////////////////////////////////////////////////////////////////
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
-    //  this.loading = true;
-    // var param;
-    // if (this.invoiceFormGroup.valid) {
-    //    this.loading = true;
-    //   var param;
-    //   let fromData = this.datePipe.transform(this.invoiceFormGroup.value.fromDate, 'yyyy-MM-dd');
-    //   let toData = this.datePipe.transform(this.invoiceFormGroup.value.toDate, 'yyyy-MM-dd');
-    //    if (this.utilService.isNonEmpty(this.invoiceFormGroup.value.status)){
-
-    //       param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}&invoiceAssignedTo=${loggedInSmeUserId}`;
-    //      }
-    //      else {
-    //         param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
-    //       param = `/invoice/sme/${loggedInSmeUserId}?from=${fromData}&to=${toData}`;
-    //     // }
-    //    } else {
-    //     // param = `/invoice/sme/`
-    //   }
     let status = this.status.value;
-    console.log("selected status",this.status)
-    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
+    console.log('selected status', this.status);
+    let fromData =
+      this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
+      this.startDate.value;
     console.log('fromdate', fromData);
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     console.log('todate', toData);
     let param = '';
     let statusFilter = '';
-    if(status){
+    if (status) {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if(this.ownerDetails?.userId){
+    if (this.ownerDetails?.userId) {
       userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
-    if(this.filerDetails?.userId){
+    if (this.filerDetails?.userId) {
       userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
-
-    ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
-    ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
-
-
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       this.invoiceData = response.data.content;
       this.totalInvoice = response?.data?.totalElements;
-      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+      // this.invoicesCreateColumnDef(this.smeList);
+      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
       this.config.totalItems = response?.data?.totalElements;
     });
+
+    /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
+    console.log(this.loggedInSme[0].userId);
+
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.loading = true;
+      const param = `/v1/invoice/back-office?ownerUserId=${
+        this.loggedInSme[0].userId
+      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
+        this.startDate.value,
+        'yyyy-MM-dd'
+      )}&toDate=${this.datePipe.transform(
+        this.endDate.value,
+        'yyyy-MM-dd'
+      )}&pageSize=${this.config.itemsPerPage}&page=${
+        this.config.currentPage || 1
+      }`;
+
+      this.itrService.getMethod(param).subscribe(
+        (res: any) => {
+          this.loading = false;
+          this.loading = false;
+          console.log(res);
+          this.invoiceData = res.data.content;
+          this.totalInvoice = res?.data?.totalElements;
+          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+          this.config.totalItems = res?.data?.totalElements;
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    } else if (this.roles?.includes('ROLE_FILER')) {
+      this.loading = true;
+      const param = `/v1/invoice/back-office?filerUserId=${
+        this.loggedInSme[0].userId
+      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
+        this.startDate.value,
+        'yyyy-MM-dd'
+      )}&toDate=${this.datePipe.transform(
+        this.endDate.value,
+        'yyyy-MM-dd'
+      )}&pageSize=${this.config.itemsPerPage}&page=${
+        this.config.currentPage || 1
+      }`;
+
+      this.itrService.getMethod(param).subscribe(
+        (res: any) => {
+          this.loading = false;
+          console.log(res);
+          this.invoiceData = res.data.content;
+          this.totalInvoice = res?.data?.totalElements;
+          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+          this.config.totalItems = res?.data?.totalElements;
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    } else {
+      this.loading = true;
+      const param = `/v1/invoice/back-office?paymentStatus=${
+        this.status.value
+      }&fromDate=${this.datePipe.transform(
+        this.startDate.value,
+        'yyyy-MM-dd'
+      )}&toDate=${this.datePipe.transform(
+        this.endDate.value,
+        'yyyy-MM-dd'
+      )}&pageSize=${this.config.itemsPerPage}&page=${
+        this.config.currentPage || 1
+      }`;
+
+      this.itrService.getMethod(param).subscribe(
+        (res: any) => {
+          this.loading = false;
+          console.log(res);
+          this.invoiceData = res.data.content;
+          this.totalInvoice = res?.data?.totalElements;
+          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+          this.config.totalItems = res?.data?.totalElements;
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    }*/
   }
 
   createRowData(userInvoices) {
