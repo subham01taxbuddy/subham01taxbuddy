@@ -104,14 +104,10 @@ export class TaxInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    const smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    this.allFilers=smeList.map((item) => {
-      return { name: item.name, userId:item.userId  };
-    });
-    this.options1=this.allFilers;
+
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(smeList),
+      columnDefs: this.invoicesCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {},
@@ -125,6 +121,7 @@ export class TaxInvoiceComponent implements OnInit {
   }
 
   cardTitle:any;
+  smeList: any;
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -134,6 +131,22 @@ export class TaxInvoiceComponent implements OnInit {
     'Owner':this.roles?.includes("ROLE_FILER")?'Filer':"NA"
     console.log('roles', this.roles);
     // this.getInvoice();
+
+    if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
+      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+      console.log('all filers', this.smeList);
+      this.allFilers = this.smeList.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+      this.options1 = this.allFilers;
+    } else if(this.roles?.includes('ROLE_OWNER')){
+      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+      console.log('my agents', this.smeList);
+      this.allFilers = this.smeList.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+      this.options1 = this.allFilers;
+    }
 
     this.getOwner();
     //  this.getFilers();
@@ -397,7 +410,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
   }
 
-  invoicesCreateColumnDef(smeList) {
+  invoicesCreateColumnDef() {
     return [
       {
         headerName: 'User Id',
