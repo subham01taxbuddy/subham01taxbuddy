@@ -7,16 +7,17 @@
   <div class="content content_full">
     <div class="content__container">
       <div class="card">
-        <div class="card__row" *ngIf="agentList.length > 0">
-          <div class="filter__col card__col-sm-4 card__col-xs-12">
+        <div class="card__row" >
+          <div class="filter__col card__col-sm-4 card__col-xs-12" *ngIf="agentList.length > 0">
             <app-sme-list-drop-down
               (sendSme)="fromSme($event)"
             ></app-sme-list-drop-down>
           </div>
+          <p style="float: right; margin-bottom: 30px;">
+            Total Count: <b>{{ config.totalItems }}</b>
+          </p>
         </div>
-        <p style="float: right">
-          Total Count: <b>{{ config.totalItems }}</b>
-        </p>
+
 
         <div class="card__row">
           <table>
