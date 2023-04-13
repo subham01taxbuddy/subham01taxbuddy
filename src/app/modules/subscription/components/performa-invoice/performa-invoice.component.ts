@@ -68,8 +68,8 @@ export class PerformaInvoiceComponent implements OnInit {
   options1: User[] = [];
   ownerNames: User[];
   options: User[] = [];
-  filteredOptions1: Observable<User[]>;
-  filteredOptions: Observable<User[]>;
+  filteredFilers: Observable<User[]>;
+  filteredOwners: Observable<User[]>;
   ownerList: any;
   SidebarComponent: SidebarComponent;
   searchParam: any = {
@@ -147,14 +147,14 @@ export class PerformaInvoiceComponent implements OnInit {
 
     if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-      console.log('smelist', this.smeList);
+      console.log('all filers', this.smeList);
       this.allFilers = this.smeList.map((item) => {
         return {name: item.name, userId: item.userId};
       });
       this.options1 = this.allFilers;
     } else if(this.roles?.includes('ROLE_OWNER')){
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
-      console.log('smelist', this.smeList);
+      console.log('my agents', this.smeList);
       this.allFilers = this.smeList.map((item) => {
         return {name: item.name, userId: item.userId};
       });
@@ -185,7 +185,7 @@ export class PerformaInvoiceComponent implements OnInit {
     // this.startDate.setValue('2023-04-01');
     // this.endDate.setValue(new Date());
     // this.Status.setValue(this.Status[0].value);
-    console.log('filteroptions', this.filteredOptions);
+    console.log('filteroptions', this.filteredOwners);
 
     this.setFiletedOptions1();
     this.setFiletedOptions2();
@@ -194,7 +194,7 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   setFiletedOptions2(){
-    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
+    this.filteredFilers = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
         if (!this.utilService.isNonEmpty(value)) {
@@ -212,7 +212,7 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   setFiletedOptions1() {
-    this.filteredOptions = this.searchOwner.valueChanges.pipe(
+    this.filteredOwners = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
         console.log('change', value);

@@ -438,28 +438,28 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           }
         },
       },
-      {
-        headerName: 'Cloud',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'Cloud',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
+      //      </button>`;
+      //   },
+      //   width: 60,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       // {
       //   headerName: "Review",
       //   field: "isReviewGiven",
