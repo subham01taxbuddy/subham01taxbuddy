@@ -439,7 +439,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     for (let i = 0; i < subscriptionData.length; i++) {
       // var invoiceNumber = '';
       const invoiceNumber = [];
-      for (let x = 0; x < subscriptionData[i].invoiceDetail.length; x++) {
+      for (let x = 0; x < subscriptionData[i].invoiceDetail?.length; x++) {
         invoiceNumber.push(subscriptionData[i].invoiceDetail[x].invoiceNo);
         // invoiceNumber =invoiceNumber + subscriptionData[i].invoiceDetail[x].invoiceNo + ',';
       }
@@ -556,8 +556,8 @@ export class AssignedSubscriptionComponent implements OnInit {
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
         console.log('owner list result -> ', result);
-         this.filerList = result.data.content;
-         this.filerNames = this.filerList.map((item) => {
+         this.filerList = result.data?.content;
+         this.filerNames = this.filerList?.map((item) => {
           return { name: item.name, userId:item.userId  };
         });
          this.options = this.filerNames;
