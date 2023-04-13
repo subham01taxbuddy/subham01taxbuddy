@@ -12,6 +12,12 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Location } from '@angular/common';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 export const MY_FORMATS = {
   parse: {
@@ -33,6 +39,14 @@ export interface User {
   selector: 'app-edit-update-resigned-sme',
   templateUrl: './edit-update-resigned-sme.component.html',
   styleUrls: ['./edit-update-resigned-sme.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class EditUpdateResignedSmeComponent implements OnInit {
   smeObj: SmeObj;
@@ -648,7 +662,6 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         leaveEndDate: LeaveEndDate,
         joiningDate: JoiningDate,
         resigningDate: ResigningDate,
-        rejoin: rejoin,
         internal: this.internal.value == 'internal' ? true : false,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
@@ -719,6 +732,10 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     }
   }
 
+  goBack() {
+    this.location.back();
+  }
+
   // this.leaveStartDate = moment(new Date(this.form.controls.myDate.value)).format("YYYY/MM/DD").toString();
 }
 export interface SmeObj {
@@ -760,5 +777,4 @@ export interface SmeObj {
   referredBy: string;
   qualification: string;
   state: string;
-  rejoin: boolean;
 }
