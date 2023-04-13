@@ -12,6 +12,12 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Location } from '@angular/common';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 export const MY_FORMATS = {
   parse: {
@@ -33,6 +39,14 @@ export interface User {
   selector: 'app-edit-update-resigned-sme',
   templateUrl: './edit-update-resigned-sme.component.html',
   styleUrls: ['./edit-update-resigned-sme.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class EditUpdateResignedSmeComponent implements OnInit {
   smeObj: SmeObj;
@@ -637,11 +651,11 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         qualification: this.qualification.value,
         state: this.state.value,
         callingNumber: this.callingNumber.value,
-        serviceType: this.smeObj.serviceType,
-        roles: this.smeObj.roles,
+        serviceType: null,
+        roles: null,
         languages: this.languages.value,
-        parentId: this.smeObj.parentId,
-        botId: this.smeObj.botId,
+        parentId: null,
+        botId: null,
         displayName: this.displayName.value,
         active: this.smeObj.active,
         leaveStartDate: LeaveStartDate,
@@ -649,18 +663,18 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         joiningDate: JoiningDate,
         resigningDate: ResigningDate,
         rejoin: rejoin,
-        internal: this.internal.value == 'internal' ? true : false,
-        assignmentStart: this.smeObj.assignmentStart,
+        internal: null,
+        assignmentStart: null,
         itrTypes: this.itrTypes.value,
         roundRobinCount: this.smeObj.roundRobinCount,
         assessmentYears: this.smeObj.assessmentYears,
-        parentName: this.parentName.value,
+        parentName: null,
         roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
-        owner: this.owner.value,
-        leader: this.leader.value,
-        admin: this.admin.value,
-        filer: this.filer.value,
-        coOwnerUserId: this.ownerDetails?.userId,
+        owner: null,
+        leader: null,
+        admin: null,
+        filer: null,
+        coOwnerUserId: null,
       };
 
       console.log('finalReq', finalReq);
@@ -719,6 +733,10 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     }
   }
 
+  goBack() {
+    this.location.back();
+  }
+
   // this.leaveStartDate = moment(new Date(this.form.controls.myDate.value)).format("YYYY/MM/DD").toString();
 }
 export interface SmeObj {
@@ -760,5 +778,4 @@ export interface SmeObj {
   referredBy: string;
   qualification: string;
   state: string;
-  rejoin: boolean;
 }
