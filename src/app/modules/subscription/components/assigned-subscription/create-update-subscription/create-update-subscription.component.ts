@@ -580,6 +580,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           : this.userSubscription.userSelectedPlan.name;
         break;
     }
+    this.description.setValue(this.userSubscription.item.itemDescription);
   }
 
   gstUserInfoByUserId(userId) {
