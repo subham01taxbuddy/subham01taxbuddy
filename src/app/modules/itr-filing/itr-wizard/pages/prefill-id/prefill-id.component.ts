@@ -153,36 +153,88 @@ export class PrefillIdComponent implements OnInit {
     }
 
     //Finding the way
-    console.log(ItrJSON[this.ITR_Type]);
+
+    console.log(ItrJSON[this.ITR_Type].PersonalInfo.PAN);
 
     // HAVE TO CREATE SEPERATE AS THE JSON STRUCTURE IS DIFFERENT FOR DIFFERENT ITR TYPES
-    if ((this.ITR_Type = 'ITR1')) {
+    if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
       // CUSTOMER PROFILE
-      this.ITR_Obj.panNumber = ItrJSON[this.ITR_Type].PersonalInfo.PAN;
-      this.ITR_Obj.contactNumber =
-        ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo;
-      this.ITR_Obj.email =
-        ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
-      this.ITR_Obj.family[0].fName =
-        ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
-      this.ITR_Obj.family[0].lName =
-        ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
-      this.ITR_Obj.family[0].fatherName =
-        ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
-      // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 - PENDING
-      this.ITR_Obj.residentialStatus = 'Resident';
+      {
+        this.ITR_Obj.panNumber = ItrJSON[this.ITR_Type].PersonalInfo.PAN;
+        this.ITR_Obj.contactNumber =
+          ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo;
+        this.ITR_Obj.email =
+          ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
+        this.ITR_Obj.family[0].fName =
+          ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
+        this.ITR_Obj.family[0].lName =
+          ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
+        this.ITR_Obj.family[0].fatherName =
+          ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+        // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 - PENDING
+        this.ITR_Obj.residentialStatus = 'Resident';
 
-      // HAVE TO CHECK WHAT IS THE VALUE THAT WE ARE TAKING FOR EMPLOYER CATEGORY AS THE KEY IN JSON MIGHT BE DIFFERENT - PENDING
-      this.ITR_Obj.employerCategory =
-        ItrJSON[this.ITR_Type].PersonalInfo.EmployerCategory;
-      // HAVE TO SET THE RETURN TYPE HERE - PENDING
-      // this.ITR_Obj.returnType =
-      //   ItrJSON[this.ITR_Type].FilingStatus.ReturnFileSec;
-      this.ITR_Obj.aadharNumber =
-        ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
-      this.ITR_Obj.family[0].dateOfBirth =
-        ItrJSON[this.ITR_Type].PersonalInfo.DOB;
+        // HAVE TO CHECK WHAT IS THE VALUE THAT WE ARE TAKING FOR EMPLOYER CATEGORY AS THE KEY IN JSON MIGHT BE DIFFERENT - PENDING
+        // this.ITR_Obj.employerCategory =
+        //   ItrJSON[this.ITR_Type].PersonalInfo.EmployerCategory;
+        // HAVE TO SET THE RETURN TYPE HERE - PENDING
+        // this.ITR_Obj.returnType =
+        //   ItrJSON[this.ITR_Type].FilingStatus.ReturnFileSec;
+        this.ITR_Obj.aadharNumber =
+          ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
+        this.ITR_Obj.family[0].dateOfBirth =
+          ItrJSON[this.ITR_Type].PersonalInfo.DOB;
+      }
+      // PERSONAL DETAILS
+      {
+        // ADDRESS DETAILS
+        {
+          this.ITR_Obj.address.pinCode =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
+          this.ITR_Obj.address.country =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.CountryCode;
+          this.ITR_Obj.address.state =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.StateCode;
+          this.ITR_Obj.address.city =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.CityOrTownOrDistrict;
+          this.ITR_Obj.address.flatNo =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceNo;
+          this.ITR_Obj.address.premisesName =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceName;
+          this.ITR_Obj.address.area =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.RoadOrStreet +
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.LocalityOrArea;
+        }
+        //BANK DETAILS
+        {
+          const UtilityBankDetails =
+            ItrJSON[this.ITR_Type].Refund.BankAccountDtls.AddtnlBankDetails;
 
+          if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
+            this.ITR_Obj.bankDetails = [];
+            this.utilsService.showSnackBar(
+              'There are no bank details in the JSON that you have provided'
+            );
+          } else {
+            this.ITR_Obj.bankDetails = UtilityBankDetails.map(
+              ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
+                return {
+                  id: null,
+                  bankType: null,
+                  ifsCode: IFSCCode,
+                  name: BankName,
+                  accountNumber: BankAccountNo,
+                  hasRefund: UseForRefund === 'true',
+                  swiftcode: null,
+                  countryName: '91',
+                };
+              }
+            );
+          }
+        }
+      }
+
+      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.ITR_Obj)
@@ -190,47 +242,30 @@ export class PrefillIdComponent implements OnInit {
       console.log(this.ITR_Obj);
     }
 
-    this.ITR_Obj.employerCategory = ItrJSON.PersonalInfo.EmployerCategory;
-    this.ITR_Obj.regime = ItrJSON.FilingStatus.NewTaxRegime;
-
-    let address = ItrJSON.PersonalInfo.Address;
-    this.ITR_Obj.email = address.EmailAddress;
-    this.ITR_Obj.contactNumber = address.MobileNo;
-    this.ITR_Obj.contactNumber = address.MobileNo;
-
-    let hole_address =
-      (address.hasOwnProperty('ResidenceNo') ? address.ResidenceNo : '') +
-      ' ,' +
-      (address.hasOwnProperty('ResidenceName') ? address.ResidenceName : '') +
-      ' ,' +
-      (address.hasOwnProperty('RoadOrStreet') ? address.RoadOrStreet : '') +
-      ' ,' +
-      (address.hasOwnProperty('LocalityOrArea') ? address.LocalityOrArea : '');
-    this.ITR_Obj.address.premisesName = hole_address;
-    this.ITR_Obj.address.pinCode = address.PinCode;
+    // this.ITR_Obj.regime = ItrJSON.FilingStatus.NewTaxRegime;
 
     //country, city, state data getting through api call unsin pine code
 
-    var assessmentYear;
-    if (ItrJSON.hasOwnProperty('Form_ITR1')) {
-      assessmentYear = ItrJSON.Form_ITR1.AssessmentYear;
-    } else if (ItrJSON.hasOwnProperty('Form_ITR4')) {
-      assessmentYear = ItrJSON.Form_ITR4.AssessmentYear;
-    }
+    // var assessmentYear;
+    // if (ItrJSON.hasOwnProperty('Form_ITR1')) {
+    //   assessmentYear = ItrJSON.Form_ITR1.AssessmentYear;
+    // } else if (ItrJSON.hasOwnProperty('Form_ITR4')) {
+    //   assessmentYear = ItrJSON.Form_ITR4.AssessmentYear;
+    // }
 
-    if (assessmentYear === '2023') {
-      this.ITR_Obj.assessmentYear = '2023-24';
-      this.ITR_Obj.financialYear = '2022-23';
-    } else if (assessmentYear === '2022') {
-      this.ITR_Obj.assessmentYear = '2022-23';
-      this.ITR_Obj.financialYear = '2021-22';
-    } else if (assessmentYear === '2021') {
-      this.ITR_Obj.assessmentYear = '2021-22';
-      this.ITR_Obj.financialYear = '2020-21';
-    } else if (assessmentYear === '2020') {
-      this.ITR_Obj.assessmentYear = '2020-21';
-      this.ITR_Obj.financialYear = '2019-20';
-    }
+    // if (assessmentYear === '2023') {
+    //   this.ITR_Obj.assessmentYear = '2023-24';
+    //   this.ITR_Obj.financialYear = '2022-23';
+    // } else if (assessmentYear === '2022') {
+    //   this.ITR_Obj.assessmentYear = '2022-23';
+    //   this.ITR_Obj.financialYear = '2021-22';
+    // } else if (assessmentYear === '2021') {
+    //   this.ITR_Obj.assessmentYear = '2021-22';
+    //   this.ITR_Obj.financialYear = '2020-21';
+    // } else if (assessmentYear === '2020') {
+    //   this.ITR_Obj.assessmentYear = '2020-21';
+    //   this.ITR_Obj.financialYear = '2019-20';
+    // }
 
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
   }
