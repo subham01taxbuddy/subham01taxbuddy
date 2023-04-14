@@ -891,7 +891,7 @@ export class AssignedNewUsersComponent implements OnInit {
       this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
-      this.searchParam.serviceType = null;
+      // this.searchParam.serviceType = null;
       this.searchParam.mobileNumber = null
       this.searchParam.emailId = null
     } else if (form == 'serviceType') {
