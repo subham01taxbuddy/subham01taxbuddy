@@ -259,6 +259,7 @@ export class PerformaInvoiceComponent implements OnInit {
     searchOwner: new FormControl(''),
     mobile: new FormControl(''),
     email: new FormControl(''),
+    txbdyInvoiceId: new FormControl(''),
   });
 
   get assessmentYear() {
@@ -285,6 +286,10 @@ export class PerformaInvoiceComponent implements OnInit {
 
   get email() {
     return this.invoiceFormGroup.controls['email'] as FormControl;
+  }
+
+  get txbdyInvoiceId() {
+    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as FormControl;
   }
 
   getOwner() {
@@ -376,7 +381,11 @@ export class PerformaInvoiceComponent implements OnInit {
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid){
       emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
     }
-    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}`;
+    let invoiceFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['txbdyInvoiceId'].value)){
+      invoiceFilter = '&txbdyInvoiceId=' + this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
+    }
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if(response.success) {
