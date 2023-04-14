@@ -26,17 +26,12 @@ export class ScheduledCallComponent implements OnInit {
   // isAdmin: boolean;
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
-  config: any = {
-    itemsPerPage: 10,
-    currentPage: 1,
-    totalItems: null,
-    pageCount: null,
-  };
+  config: any;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
   searchParam: any = {
     page: 0,
-    pageSize: 10,
+    pageSize: 30,
     totalPages: null,
   };
 
@@ -49,6 +44,12 @@ export class ScheduledCallComponent implements OnInit {
     private dialog: MatDialog,
     private route: Router
   ) {
+    this.config = {
+      itemsPerPage: this.searchParam.pageSize,
+      currentPage: 1,
+      totalItems: null,
+      pageCount: null,
+    };
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColumnDef(),
