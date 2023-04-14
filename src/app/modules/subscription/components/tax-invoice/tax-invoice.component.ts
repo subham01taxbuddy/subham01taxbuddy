@@ -223,6 +223,9 @@ export class TaxInvoiceComponent implements OnInit {
     status: new FormControl('Paid'),
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
+    mobile: new FormControl(''),
+    email: new FormControl(''),
+    invoiceNo: new FormControl(''),
   });
   get assessmentYear() {
     return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
@@ -241,6 +244,18 @@ export class TaxInvoiceComponent implements OnInit {
   }
   get searchOwner() {
     return this.invoiceFormGroup.controls['searchOwner'] as FormControl;
+  }
+
+  get mobile() {
+    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+  }
+
+  get email() {
+    return this.invoiceFormGroup.controls['email'] as FormControl;
+  }
+
+  get invoiceNo() {
+    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
   getOwner() {
@@ -326,7 +341,19 @@ export class TaxInvoiceComponent implements OnInit {
     if (this.filerDetails?.userId) {
       userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
-    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+    let mobileFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid){
+      mobileFilter = '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
+    }
+    let emailFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid){
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+    }
+    let invoiceFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['invoiceNo'].value)){
+      invoiceFilter = '&invoiceNo=' + this.invoiceFormGroup.controls['invoiceNo'].value;
+    }
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if(response.success) {
