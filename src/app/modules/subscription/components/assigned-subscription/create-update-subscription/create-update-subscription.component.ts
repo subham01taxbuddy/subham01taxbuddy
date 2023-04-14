@@ -423,17 +423,22 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   removePromoCode() {
-    const param = `/subscription/remove-promocode?subscriptionId=${this.userSubscription.subscriptionId}`;
-    this.itrService.deleteMethod(param).subscribe((res: any) => {
-      this.utilsService.showSnackBar(
-        `Promo Code ${this.selectedPromoCode} removed successfully!`
-      );
+    if(this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0 ) {
+      const param = `/subscription/remove-promocode?subscriptionId=${this.userSubscription.subscriptionId}`;
+      this.itrService.deleteMethod(param).subscribe((res: any) => {
+        this.utilsService.showSnackBar(
+          `Promo Code ${this.selectedPromoCode} removed successfully!`
+        );
+        this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
+        console.log('PROMO code removed', res);
+        // this.userSubscription = res;
+        // this.setFinalPricing();
+        // this.promoCodeInfo = null;
+      });
+    } else {
+      this.selectedPromoCode = '';
       this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
-      console.log('PROMO code removed', res);
-      // this.userSubscription = res;
-      // this.setFinalPricing();
-      // this.promoCodeInfo = null;
-    });
+    }
   }
 
   getExactPromoDiscount() {
@@ -795,29 +800,29 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       { service: 'NOTICE', details: 'Any Other Notice' },
       { service: 'TPA', details: 'TPA' },
       { service: 'TPA', details: 'HNI' },
-      { service: 'Other Services', details: 'TDS (26Q ) filing' },
-      { service: 'Other Services', details: 'TDS (24Q ) filing' },
-      { service: 'Other Services', details: 'TDS (27Q ) filing' },
-      { service: 'Other Services', details: 'TDS Notice' },
-      { service: 'Other Services', details: 'Any other services' },
-      { service: 'Other Services', details: 'Accounting' },
-      { service: 'Other Services', details: 'TDS Registration' },
-      { service: 'Other Services', details: 'TDS Filing' },
-      { service: 'Other Services', details: 'ROC / Firm Registration' },
-      { service: 'Other Services', details: 'PT Registration' },
-      { service: 'Other Services', details: 'PT Return Filing' },
-      { service: 'Other Services', details: 'PF Withdrawal' },
-      { service: 'Other Services', details: 'Food Licence' },
-      { service: 'Other Services', details: 'Shop Licence / adhhr Udhuyog' },
-      { service: 'Other Services', details: 'Company registration' },
-      { service: 'Other Services', details: 'Import / Export Certificate' },
-      { service: 'Other Services', details: 'PF / ESIC Registration' },
+      { service: 'OTHER', details: 'TDS (26Q ) filing' },
+      { service: 'OTHER', details: 'TDS (24Q ) filing' },
+      { service: 'OTHER', details: 'TDS (27Q ) filing' },
+      { service: 'OTHER', details: 'TDS Notice' },
+      { service: 'OTHER', details: 'Any other services' },
+      { service: 'OTHER', details: 'Accounting' },
+      { service: 'OTHER', details: 'TDS Registration' },
+      { service: 'OTHER', details: 'TDS Filing' },
+      { service: 'OTHER', details: 'ROC / Firm Registration' },
+      { service: 'OTHER', details: 'PT Registration' },
+      { service: 'OTHER', details: 'PT Return Filing' },
+      { service: 'OTHER', details: 'PF Withdrawal' },
+      { service: 'OTHER', details: 'Food Licence' },
+      { service: 'OTHER', details: 'Shop Licence / adhhr Udhuyog' },
+      { service: 'OTHER', details: 'Company registration' },
+      { service: 'OTHER', details: 'Import / Export Certificate' },
+      { service: 'OTHER', details: 'PF / ESIC Registration' },
       {
-        service: 'Other Services',
+        service: 'OTHER',
         details: 'Audit (Professional / Free Lancer',
       },
-      { service: 'Other Services', details: 'Other Services' },
-      { service: 'Other Services', details: 'Schedule Call' },
+      { service: 'OTHER', details: 'Other Services' },
+      { service: 'OTHER', details: 'Schedule Call' },
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
@@ -828,6 +833,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.serviceDetails = serviceArray.filter(
         (item: any) => item.service === this.service
       );
+      let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === this.userSubscription.userSelectedPlan.name.toLowerCase());
+      if(filtered.length === 1){
+        this.serviceDetail = filtered[0].details;
+      }
     }
   }
 
