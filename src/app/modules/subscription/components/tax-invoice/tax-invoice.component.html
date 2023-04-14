@@ -20,7 +20,7 @@
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" (blur)="setList()">
                     <mat-autocomplete #auto>
-                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option);getFilers()">
+                      <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getOwnerNameId(option);">
                         {{option.name}}
                       </mat-option>
                     </mat-autocomplete>
@@ -94,6 +94,38 @@
                   <mat-error *ngIf="endDate.hasError('min')">To date always greater
                       than from date</mat-error>
               </mat-form-field>
+              </div>
+
+              <div class="col-sm-3">
+                <mat-label> Mobile Number </mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    type="number" maxlength="10"
+                    matInput
+                    [formControl]="mobile"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-3">
+                <mat-label> Email </mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    type="text"
+                    matInput
+                    [formControl]="email"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-3">
+                <mat-label> Invoice No. </mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    type="text"
+                    matInput
+                    [formControl]="invoiceNo"
+                  />
+                </mat-form-field>
               </div>
               <!-- <div class="col-sm-3">
                 <mat-label>Select Status </mat-label>

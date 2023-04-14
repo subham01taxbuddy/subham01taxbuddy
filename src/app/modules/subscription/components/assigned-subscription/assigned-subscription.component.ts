@@ -222,15 +222,15 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('number', number)
     if (this.utilsService.isNonEmpty(number)) {
       const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-      if (!this.userId) {
-        //https://uat-api.taxbuddy.com/user/3000/user-list-new?mobileNumber=9850872656
+      // if (!this.userId) {
+        //https://uat-api.taxbuddy.com/user/search/userprofile/query?mobileNumber=3210000078
         this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, number).subscribe((res: any) => {
           console.log(res);
-          if (res.data.content) {
-            this.userId = res.data.content[0].userId;
+          if (res.records) {
+            this.userId = res.records[0].userId;
           }
         });
-      }
+      // }
 
       this.loading = true;
       let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;

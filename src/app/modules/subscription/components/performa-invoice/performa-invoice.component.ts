@@ -121,7 +121,7 @@ export class PerformaInvoiceComponent implements OnInit {
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
     };
@@ -220,6 +220,7 @@ export class PerformaInvoiceComponent implements OnInit {
           this.ownerDetails = null;
           if (this.roles?.includes('ROLE_OWNER')) {
             this.ownerDetails.userId = this.loggedInSme.userId;
+            this.getFilers();
           }
         }
         const name = typeof value === 'string' ? value : value?.name;
@@ -256,6 +257,9 @@ export class PerformaInvoiceComponent implements OnInit {
     status: new FormControl(''),
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
+    mobile: new FormControl(''),
+    email: new FormControl(''),
+    txbdyInvoiceId: new FormControl(''),
   });
 
   get assessmentYear() {
@@ -275,6 +279,17 @@ export class PerformaInvoiceComponent implements OnInit {
   }
   get searchOwner() {
     return this.invoiceFormGroup.controls['searchOwner'] as FormControl;
+  }
+  get mobile() {
+    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+  }
+
+  get email() {
+    return this.invoiceFormGroup.controls['email'] as FormControl;
+  }
+
+  get txbdyInvoiceId() {
+    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as FormControl;
   }
 
   getOwner() {
@@ -296,6 +311,7 @@ export class PerformaInvoiceComponent implements OnInit {
   getOwnerNameId(option) {
     this.ownerDetails = option;
     console.log(option);
+    this.getFilers();
   }
 
   getFilers() {
@@ -357,14 +373,28 @@ export class PerformaInvoiceComponent implements OnInit {
     if (this.filerDetails?.userId) {
       userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
-    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}`;
+    let mobileFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid){
+      mobileFilter = '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
+    }
+    let emailFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid){
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+    }
+    let invoiceFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['txbdyInvoiceId'].value)){
+      invoiceFilter = '&txbdyInvoiceId=' + this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
+    }
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      this.invoiceData = response.data.content;
-      this.totalInvoice = response?.data?.totalElements;
-      // this.invoicesCreateColumnDef(this.smeList);
-      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-      this.config.totalItems = response?.data?.totalElements;
+      if(response.success) {
+        this.invoiceData = response.data.content;
+        this.totalInvoice = response?.data?.totalElements;
+        // this.invoicesCreateColumnDef(this.smeList);
+        this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+        this.config.totalItems = response?.data?.totalElements;
+      }
     });
 
     /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
