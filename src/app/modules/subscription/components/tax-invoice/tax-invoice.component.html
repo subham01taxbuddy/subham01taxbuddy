@@ -95,6 +95,28 @@
                       than from date</mat-error>
               </mat-form-field>
               </div>
+
+              <div class="col-sm-3">
+                <mat-label> Mobile Number </mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    type="number" maxlength="10"
+                    matInput
+                    [formControl]="mobile"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-3">
+                <mat-label> Email </mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    type="text"
+                    matInput
+                    [formControl]="email"
+                  />
+                </mat-form-field>
+              </div>
               <!-- <div class="col-sm-3">
                 <mat-label>Select Status </mat-label>
                 <mat-form-field appearance="outline">
