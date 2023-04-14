@@ -194,34 +194,86 @@ export class AssignedSmeComponent implements OnInit {
       },
       {
         headerName: 'Assigned Services',
-        field: 'serviceType',
-        width: 120,
+        field: 'services',
+        width: 150,
         display: 'flex',
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
-        cellStyle: {
-          'white-space': 'normal',
-          'overflow-wrap': 'break-word',
-          textAlign: 'center',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-        },
-        // cellRenderer: (params: any) => {
-        //   console.log('param',params)
-        //   const smeServices = params.value;
-        //   let result = '';
-        //   smeServices.forEach((element) => {
-        //     if (element.serviceType == "ITR" && element.assignmentStart == true) {
-        //       result='<i class="fa fa-check" aria-hidden="true"></i>' +'ITR'
-        //     }
-        //     else if (element.serviceType == "TPA" && element.assignmentStart == true) {
-        //       result='<i class="fa fa-check" aria-hidden="true"></i>' +'TPA'
-        //     }
-        //   })
-        //   return result;
-        // }
+        // cellStyle: {
+        //   'white-space': 'normal',
+        //   'overflow-wrap': 'break-word',
+        //   textAlign: 'center',
+        //   // display: 'flex',
+        //   // 'align-items': 'center',
+        //   // 'justify-content': 'center',
+        // },
+        cellRenderer: (params: any) => {
+          // console.log('param',params)
+          const smeServices = params.value;
+           let result=[] ; let result1='';let result2='';let result3='';let result4='';let result5='';let result6='';let result7='';let result8='';
+          smeServices.forEach((element) => {
+            if (element.serviceType == "ITR") {
+              var r1='ITR'
+              if(element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true" ></i>&nbsp;'
+              }
+               result1=r2+r1 ;
+            }
+            else if (element.serviceType == "NRI") {
+              var r1='NRI'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+              }
+               result2=(r2+r1)||'';
+            }
+            else if (element.serviceType == "TPA") {
+              var r1='TPA'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+              }
+               result3=r2+r1;
+            }
+            else if (element.serviceType == "GST") {
+              var r1='GST'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+              }
+               result4=r2+r1;
+            }
+            else if (element.serviceType == "NOTICE") {
+              var r1='NOTICE'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i> &nbsp;'
+              }
+               result5=r2+r1;
+            }
+            else if (element.serviceType == "WB") {
+              var r1='WB'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+              }
+               result6=r2+r1;
+            }
+            else if (element.serviceType == "PD") {
+              var r1='PD'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+              }
+               result7=r2+r1;
+            }
+            else if (element.serviceType == "MF") {
+              var r1='MF'
+              if( element.assignmentStart == true){
+                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+              }
+               result8=r2+r1;
+            }
+          })
+            result.push(result1,result2,result3,result4,result5,result6,result7,result8);
+            const itemsHtml = result.map(item => `<li>${item}</li>`).join('');
+           return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
+        }
       },
       {
         headerName: 'Parent Name',

@@ -225,6 +225,7 @@ export class TaxInvoiceComponent implements OnInit {
     searchOwner: new FormControl(''),
     mobile: new FormControl(''),
     email: new FormControl(''),
+    invoiceNo: new FormControl(''),
   });
   get assessmentYear() {
     return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
@@ -251,6 +252,10 @@ export class TaxInvoiceComponent implements OnInit {
 
   get email() {
     return this.invoiceFormGroup.controls['email'] as FormControl;
+  }
+
+  get invoiceNo() {
+    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
   getOwner() {
@@ -344,7 +349,11 @@ export class TaxInvoiceComponent implements OnInit {
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid){
       emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
     }
-    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}`;
+    let invoiceFilter = '';
+    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['invoiceNo'].value)){
+      invoiceFilter = '&invoiceNo=' + this.invoiceFormGroup.controls['invoiceNo'].value;
+    }
+    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if(response.success) {
