@@ -9013,3 +9013,10 @@ body[dir=rtl] .checkbox[checked=true] {
   height: auto !important;
   /*sc: scroll !important;*/
 }
+
+.services-list i{
+    color:#4F9A20;
+ }
+ .services-list .content{
+  color:#00AECA;
+}

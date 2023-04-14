@@ -21,7 +21,7 @@
       class="tbd-btn"
       title="Kommunicate"
       (click)="goToKommunicate()"
-      [disabled]="kommChatLink === null"
+      [disabled]="!kommChatLink"
     >
       Kommunicate&nbsp;&nbsp;
       <i class="fa fa-comments-o" aria-hidden="true"></i>
@@ -34,7 +34,7 @@
       class="tbd-btn"
       title="Whatsapp"
       (click)="goToWhatsapp()"
-      [disabled]="waChatLink === null"
+      [disabled]="!waChatLink"
     >
       Whatsapp&nbsp;&nbsp; <i class="fa fa-whatsapp" aria-hidden="true"></i>
     </button>

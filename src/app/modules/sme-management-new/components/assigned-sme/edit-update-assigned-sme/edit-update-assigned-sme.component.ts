@@ -49,6 +49,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   loggedInSme:any;
   smeRecords:any;
   smeServices:any;
+  smeRoles:any;
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
   'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
   'Santali', 'Sindhi', 'Urdu']
@@ -79,42 +80,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       })
     );
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
+    console.log('this.smeobject',this.smeObj)
     this.smeFormGroup.patchValue(this.smeObj); // all
     this.otherSmeInfo.patchValue(this.smeObj);
-    this.roles.patchValue(this.smeObj);
-    this.services.patchValue(this.smeObj);
-    this.setFormValues(this.smeObj);
+    // this.roles.patchValue(this.smeObj);
+    // this.services.patchValue(this.smeObj);
+
     console.log('sme obj', this.smeObj);
-    this.getSmeRecords();
-
-    if(this.smeObj.internal === true ){
-      this.internal.setValue("internal")
-    }else {
-      this.internal.setValue("external")
-    }
-
-    if(this.smeObj.leaveStartDate !== null){
-      let leaveStartDate = this.smeObj.leaveStartDate;
-      this.leaveStartDate.setValue(moment(leaveStartDate, 'DD/MM/YYYY').toDate());
-    }
-
-    if(this.smeObj.leaveEndDate !== null){
-      let leaveEndDate = this.smeObj.leaveEndDate;
-      this.leaveEndDate.setValue(moment(leaveEndDate, 'DD/MM/YYYY').toDate())
-    }
-
-    if(this.smeObj.joiningDate !== null){
-      let joiningDate = this.smeObj.joiningDate;
-      this.joiningDate.setValue(moment(joiningDate, 'DD/MM/YYYY').toDate())
-    }
-
-    if(this.smeObj.resigningDate !== null){
-      let resigningDate = this.smeObj.resigningDate;
-      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
-    }
-    this.roles.valueChanges.subscribe((item) => {
-      console.log(item, this.roles);
-    });
+     this.getSmeRecords();
 
   }
 
@@ -131,15 +104,39 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   setFormValues(data){
-    this.mobileNumber.setValue(data.mobileNumber)
-    this.parentName.setValue(data.parentName)
-    this.leaveStartDate.setValue(data.leaveStartDate)
-    this.itrTypesData = this.itrTypes.value;
+    // this.mobileNumber.setValue(data.mobileNumber)
+    // this.parentName.setValue(data.parentName)
+    // this.leaveStartDate.setValue(data.leaveStartDate)
+    // this.referredBy.setValue(data.referredBy);
+    // this.itrTypes.setValue(data.itrTypes);
+    // this.itrTypesData = this.itrTypes.value;
+    // this.admin.setValue(data.admin);
+    // this.callingNumber.setValue(data.callingNumber);
+    if(data.internal === true ){
+      this.internal.setValue("internal")
+    }else {
+      this.internal.setValue("external")
+    }
 
-    // this.itrTypes.setValue(data.setItrData)
+    if(data.leaveStartDate !== null){
+      let leaveStartDate = data.leaveStartDate;
+      this.leaveStartDate.setValue(moment(leaveStartDate, 'DD/MM/YYYY').toDate());
+    }
 
-    // this.admin.seValue(data.admin)
-    // this.callingNumber.setValue(data.callingNumber)
+    if(data.leaveEndDate !== null){
+      let leaveEndDate = data.leaveEndDate;
+      this.leaveEndDate.setValue(moment(leaveEndDate, 'DD/MM/YYYY').toDate())
+    }
+
+    if(data.joiningDate !== null){
+      let joiningDate = data.joiningDate;
+      this.joiningDate.setValue(moment(joiningDate, 'DD/MM/YYYY').toDate())
+    }
+
+    if(data.resigningDate !== null){
+      let resigningDate = data.resigningDate;
+      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
+    }
 
   }
 
@@ -293,7 +290,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   // smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
-  //   const userId = this.smeObj.userId;
+  //   const userId = this.smeRoles.userId;
   //   const loggedInSmeUserId=this.loggedInSme[0].userId
   //   const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
   //   const request = serviceRecord;
@@ -426,7 +423,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
     console.log('sme record by service  -> ', result);
     this.smeRecords=result.data;
-
+      this.smeRoles=this.smeRecords[0];
+      console.log('sme Roles Patch values',this.smeRoles)
+      this.smeFormGroup.patchValue(this.smeRoles); // all
+      this.otherSmeInfo.patchValue(this.smeRoles);
+      this.roles.patchValue(this.smeRoles);
+       this.setFormValues(this.smeRoles);
     this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
     this.smeServices =this.smeRecords.map((item) => {
       return { serviceType: item.serviceType , assignmentStart :item.assignmentStart};
@@ -665,4 +667,5 @@ export interface SmeObj {
   qualification:string
   state:string,
   smeOriginalEmail: string
+  services:any
 }
