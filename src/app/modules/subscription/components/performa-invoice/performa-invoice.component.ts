@@ -321,7 +321,7 @@ export class PerformaInvoiceComponent implements OnInit {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
     if (this.ownerDetails?.userId) {
-      param = `/sme-details-new/${this.ownerDetails?.userId}?owner=true&assigned=true`;
+      param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
     } else {
       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
     }
@@ -334,7 +334,7 @@ export class PerformaInvoiceComponent implements OnInit {
       this.filerNames = this.ownerList.map((item) => {
         return { name: item.name, userId: item.userId };
       });
-      this.options1 = this.filerNames;
+      this.options1 = this.filerList;//this.filerNames;
       this.setFiletedOptions2();
       console.log(' filerNames -> ', this.options1);
     });
