@@ -583,21 +583,6 @@ export class ScheduledCallComponent implements OnInit {
     );
   }
 
-  // previous() {
-  //   this.pageCount++;
-  //   this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
-  // }
-
-  // next() {
-  //   this.pageCount--;
-  //   this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
-  // }
-
-  // navigateToWhatsappChat(data) {
-  //   window.open(
-  //     `${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`
-  //   );
-  // }
   pageChanged(event) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;

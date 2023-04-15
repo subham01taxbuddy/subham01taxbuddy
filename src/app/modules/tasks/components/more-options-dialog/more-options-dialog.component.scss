@@ -7,16 +7,15 @@ td {
 }
 
 th {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .delete-user {
-    background-color: red !important;
-    color:#ffffff !important;
+  background-color: red !important;
 }
 
 .mt-5 {
-    margin:5px;
+  margin: 5px;
 }
 
 .more {
@@ -41,4 +40,9 @@ th {
     background-color:#edffff;
     border:1px solid #cccccc;
     margin:15px 10px 0px 0px;
+.tablejrn {
+  overflow-y: scroll;
+  padding: 13px;
+  height: 400px;
+  width: 100%;
 }
