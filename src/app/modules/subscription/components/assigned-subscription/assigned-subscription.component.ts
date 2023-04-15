@@ -482,15 +482,7 @@ export class AssignedSubscriptionComponent implements OnInit {
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode)
           ? subscriptionData[i].promoCode
           : '-',
-        invoiceAmount: this.utilsService.isNonEmpty(
-          subscriptionData[i].promoApplied
-        )
-          ? subscriptionData[i].promoApplied.totalAmount
-          : this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan)
-            ? subscriptionData[i].smeSelectedPlan.totalAmount
-            : this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan)
-              ? subscriptionData[i].userSelectedPlan.totalAmount
-              : '0',
+        invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         // invoiceDetails: invoiceDetails,
       });
     }

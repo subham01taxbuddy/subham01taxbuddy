@@ -13,7 +13,7 @@
 <!--            <div>-->
 <!--              <b style="font-size: 20px">{{cardTitle}} View </b>-->
 <!--            </div>-->
-            <div *ngIf="roles?.includes('ROLE_ADMIN')" >
+            <div *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')" >
               <div class="row">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>

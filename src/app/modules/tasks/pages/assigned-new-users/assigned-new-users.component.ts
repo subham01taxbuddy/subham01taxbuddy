@@ -136,6 +136,9 @@ export class AssignedNewUsersComponent implements OnInit {
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     var statusSequence = 0;
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let filtered = loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+    let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
         headerName: 'Name',
@@ -207,6 +210,7 @@ export class AssignedNewUsersComponent implements OnInit {
         field: 'ownerName',
         width: 200,
         suppressMovable: true,
+        hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -219,6 +223,7 @@ export class AssignedNewUsersComponent implements OnInit {
         field: 'filerName',
         width: 200,
         suppressMovable: true,
+        hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -345,7 +350,7 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
@@ -891,7 +896,7 @@ export class AssignedNewUsersComponent implements OnInit {
       this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
-      this.searchParam.serviceType = null;
+      // this.searchParam.serviceType = null;
       this.searchParam.mobileNumber = null
       this.searchParam.emailId = null
     } else if (form == 'serviceType') {
