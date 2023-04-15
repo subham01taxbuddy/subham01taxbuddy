@@ -150,7 +150,7 @@ export class OldInvoicesComponent implements OnInit {
     })
     }else{
       this.loading = false;
-        this._toastMessageService.alert("error", "PLZ select FY and Start and End Date and Status.");
+        this._toastMessageService.alert("error", "Please select Financial Year, Start and End Date and Status.");
     }
 
 
@@ -165,7 +165,7 @@ export class OldInvoicesComponent implements OnInit {
         billTo: userInvoices[i].billTo,
         phone: userInvoices[i].phone,
         email: userInvoices[i].email,
-        // invoiceNo: userInvoices[i].txbdyInvoiceId,
+        invoiceNo: userInvoices[i].invoiceNo,
         txbdyInvoiceId: userInvoices[i].txbdyInvoiceId,
         invoiceDate: userInvoices[i].invoiceDate,
         dueDate: userInvoices[i].dueDate,
@@ -201,7 +201,7 @@ export class OldInvoicesComponent implements OnInit {
       },
       {
         headerName: 'Invoice No',
-        field: 'txbdyInvoiceId',
+        field: 'invoiceNo',
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -348,10 +348,20 @@ export class OldInvoicesComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
-         <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
-        </button>`;
+          console.log('params',params)
+          if(params?.data?.invoiceNo == null){
+            return `<button type="button" class="action_icon add_button" disabled title="Download Invoice" style="border: none;
+              background: transparent; font-size: 16px; cursor:not-allowed"">
+              <i class="fa fa-download" aria-hidden="true"></i>
+              </button>`;
+
+          }else{
+            return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
+              background: transparent; font-size: 16px; cursor:pointer">
+              <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
+              </button>`;
+          }
+
         },
         width: 55,
         pinned: 'right',
@@ -369,13 +379,19 @@ export class OldInvoicesComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if (params.data.paymentStatus === 'Paid') {
+          if(params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
             style="border: none;
             background: transparent; font-size: 16px; cursor:not-allowed">
             <i class="fa fa-bell" aria-hidden="true"></i>
            </button>`;
-          } else {
+          }else if(params.data.invoiceNo == null) {
+            return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
+            style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+           </button>`;
+          }else{
             return `<button type="button" class="action_icon add_button" title="Mail reminder"
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -454,13 +470,14 @@ export class OldInvoicesComponent implements OnInit {
     downloadInvoice(data) {
       location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
     }
-    sendMailReminder(invoiceInfo) {
-      this.loading = true;
-      const param = '/itr/invoice/send-reminder';
-      this.userMsService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
-        this.loading = false;
+    sendMailReminder(data) {
+      this.loading=true
+      console.log('invoice info',data)
+       const param = '/invoice/reminder?invoiceNo='+ data.invoiceNo;
+       this.itrService.getMethod(param).subscribe((result: any) => {
+         this.loading = false;
         console.log('Email sent response: ', result);
-        this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
+        this._toastMessageService.alert("success", "Reminder sent successfully.");
       }, error => {
         this.loading = false;
         this._toastMessageService.alert("error", "Failed to send Mail Reminder.");
