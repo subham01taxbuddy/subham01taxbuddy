@@ -6,6 +6,7 @@ import { SubscriptionComponent } from './subscription.component';
 import { CreateUpdateSubscriptionComponent } from './components/assigned-subscription/create-update-subscription/create-update-subscription.component';
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
 import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
+import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
 
 // const routes: Routes = [{ path: '', component: SubscriptionComponent }];
 
@@ -18,6 +19,7 @@ const routes: Routes = [
           // {path :'add-subscription', component:AddSubscriptionComponent},
           {path :'proforma-invoice', component:PerformaInvoiceComponent},
           {path :'tax-invoice', component:TaxInvoiceComponent},
+          {path :'old-invoices', component:OldInvoicesComponent},
           { path: '', redirectTo: '/subscription/assigned-subscription', pathMatch: 'full' }
       ]
   }
