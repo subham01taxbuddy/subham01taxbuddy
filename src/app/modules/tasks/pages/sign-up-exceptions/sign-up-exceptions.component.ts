@@ -280,7 +280,7 @@ export class SignUpExceptionsComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="User Information"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
+            <i class="fa fa-user-circle-o" style="font-size:16px" aria-hidden="true" data-action-type="userInfo"></i>
            </button>`;
         },
         width: 80,
@@ -301,7 +301,7 @@ export class SignUpExceptionsComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
