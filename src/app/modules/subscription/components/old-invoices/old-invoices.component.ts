@@ -124,6 +124,8 @@ export class OldInvoicesComponent implements OnInit {
   }
 
   getInvoices(){
+    this.loading=true;
+    if(this.invoiceFormGroup.valid){
       let data = this.utilService.createUrlParams(this.searchParam);
       let status = this.status.value;
       let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -143,7 +145,14 @@ export class OldInvoicesComponent implements OnInit {
       this.gridApi?.setRowData(this.createRowData(this.invoiceData));
       this.config.totalItems = res?.totalElements;
 
+    },error => {
+      this.loading = false;
     })
+    }else{
+      this.loading = false;
+        this._toastMessageService.alert("error", "PLZ select FY and Start and End Date and Status.");
+    }
+
 
   }
 
