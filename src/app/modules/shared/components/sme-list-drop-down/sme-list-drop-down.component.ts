@@ -13,16 +13,12 @@ import {AppConstants} from "../../constants";
   styleUrls: ['./sme-list-drop-down.component.scss']
 })
 export class SmeListDropDownComponent implements OnInit, OnChanges {
-  @Output() sendSme = new EventEmitter<any>();
-  @Input() serviceType: any;
-  @Input() listType: any;
+  @Output() sendOwner = new EventEmitter<any>();
+  @Output() sendFiler = new EventEmitter<any>();
   @Input() disabled: any;
-  @Input() addSelfAll: any;
-  @Input() showSme: any;
 
 
   smeList: any[] = [];
-  selectedSme = new FormControl('');
   searchFiler = new FormControl('');
   searchOwner = new FormControl('');
   filteredOptions!: Observable<any[]>;
@@ -50,6 +46,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.roles = this.loggedInSme[0]?.roles;
 
     this.getOwners();
+    this.setFiletedOptions1();
     if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
       console.log('all filers', this.smeList);
@@ -66,11 +63,22 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.options1 = this.allFilers;
     }
     if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerDetails = this.loggedInSme[0];
+      this.setOwner(this.loggedInSme[0]);
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-      this.filerDetails = this.loggedInSme[0];
+      this.setFiler(this.loggedInSme[0]);
     }
 
+  }
+
+  setOwner(owner: any){
+    this.ownerDetails = owner;
+    this.sendOwner.emit(this.ownerDetails);
+    console.log('emitting value', this.ownerDetails);
+  }
+
+  setFiler(filer: any){
+    this.filerDetails = filer;
+    this.sendFiler.emit(this.filerDetails);
   }
 
   setFiletedOptions1() {
@@ -79,7 +87,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       map((value) => {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
-          this.ownerDetails = null;
+          this.setOwner(null);
           if (this.roles?.includes('ROLE_OWNER')) {
             this.ownerDetails.userId = this.loggedInSme.userId;
             this.getFilers();
@@ -98,7 +106,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       startWith(''),
       map((value) => {
         if (!this.utilsService.isNonEmpty(value)) {
-          this.filerDetails = null;
+          this.setFiler(null);
           if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
             this.filerDetails.userId = this.loggedInSme.userId;
           }
@@ -112,13 +120,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
   getOwnerNameId(option) {
-    this.ownerDetails = option;
+    this.setOwner(option);
     console.log(option);
     this.getFilers();
   }
 
   getFilerNameId(option) {
-    this.filerDetails = option;
+    this.setFiler(option);
     console.log(option);
   }
   setList() {
@@ -182,82 +190,16 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     );
   }
 
-  async getSmeList() {
-    if (this.listType === 'ALL' && this.utilsService.isNonEmpty(this.serviceType)) {
-      let res: any = await this.getMyAgentList(this.serviceType).catch(error => {
-        console.log(error);
-        this.utilsService.showSnackBar('Error While getting My Agent list.');
-        this.smeList = []
-        return;
-      });
-      if (res.success && res.data instanceof Array) {
-        res.data.sort((a, b) => a.name > b.name ? 1 : -1)
-        this.smeList = res.data;
-        if (this.showSme) {
-          let data = this.smeList.find(item =>
-            item.userId === this.showSme
-          );
-          this.selectedSme.setValue(data?.name);
-        }
-        return;
-      }
-      return [];
-    }
-    this.smeList = await this.utilsService.getStoredMyAgentList() || [];
-    if (this.showSme) {
-      let data = this.smeList.find(item =>
-        item.userId === this.showSme
-      );
-      this.selectedSme.setValue(data?.name);
-    }
-  }
-
-  async getMyAgentList(serviceType) {
-    if (serviceType === 'TPA' || serviceType === 'OTHER') {
-      serviceType = 'ITR';
-    }
-    const param = `/sme/${serviceType}?isActive=true`;//&isAssignmentStart=true`;
-    return await this.userMsService.getMethod(param).toPromise();
-  }
-
   ngOnChanges() {
     this.ngOnInit();
     if (this.disabled) {
-      this.selectedSme.disable();
-      this.selectedSme.setValue('');
+      this.searchOwner.disable();
+      this.searchOwner.setValue('');
+      this.searchFiler.disable();
+      this.searchFiler.setValue('');
       return;
     }
-    this.selectedSme.enable();
-  }
-
-  selectSme(sme){
-    this.selectedSme.setValue(sme.name);
-    this.smeCode = sme.userId;
-    this.sendSme.emit(this.smeCode);
-  }
-
-  changeSme(sme: String) {
-    console.log('SME in change:', sme, this.selectedSme)
-    this.sendSme.emit(this.selectedSme.value);
-  }
-  smeCode: any;
-  getCodeFromLabelOnBlur() {
-    if (this.utilsService.isNonEmpty(this.selectedSme.value) && this.utilsService.isNonEmpty(this.selectedSme.value)) {
-      this.smeCode = this.smeList.filter((item: any) => item.name.toLowerCase() === this.selectedSme.value.toLowerCase());
-      if (this.smeCode.length !== 0) {
-        this.smeCode = this.smeCode[0].userId;
-        console.log('smeCode on blur = ', this.smeCode);
-        this.sendSme.emit(this.smeCode);
-      } else {
-        if (this.selectedSme.value === 'ALL' || this.selectedSme.value === 'SELF') {
-          this.sendSme.emit(this.selectedSme.value);
-          return;
-        }
-        this.selectedSme.setErrors({ invalid: true });
-        console.log('smeCode on blur = ', this.smeCode);
-      }
-    } else {
-      this.sendSme.emit('');
-    }
+    this.searchOwner.enable();
+    this.searchFiler.enable();
   }
 }

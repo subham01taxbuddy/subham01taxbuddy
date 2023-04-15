@@ -15,7 +15,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field> -->
-            <app-sme-list-drop-down addSelfAll="true" (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+            <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
           </div>
         </div>
         <div class="card__row">
