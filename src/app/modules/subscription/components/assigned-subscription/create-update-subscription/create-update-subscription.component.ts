@@ -90,6 +90,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     { label: 'Quarterly', value: 'QUARTERLY' },
   ];
 
+  subType: string;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -104,11 +105,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getAllPromoCode();
 
-    const subType = (this.subscriptionObjType = JSON.parse(
+    this.subType = (this.subscriptionObjType = JSON.parse(
       sessionStorage.getItem('subscriptionObject')
     )?.type);
 
-    if (subType !== 'edit') {
+    if (this.subType !== 'edit') {
       this.isButtonDisable = false;
     } else {
       this.isButtonDisable = true;
@@ -827,6 +828,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
+      if(this.subType === 'edit') {
+        this.isButtonDisable = false;
+      }
       this.serviceDetails = this.allPlans.map((item) => {
         return { service: this.service, details: item.name };
       });
