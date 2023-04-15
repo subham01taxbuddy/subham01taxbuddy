@@ -77,7 +77,8 @@ export class SidebarComponent implements DoCheck {
       submenu: [
         { name: 'Assigned-Sub', url: '/subscription/assigned-subscription', roles: [] },
         { name: 'Proforma Invoice', url: '/subscription/proforma-invoice', roles: [] },
-        { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] }
+        { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
+        {name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
       ]
     },
     {
