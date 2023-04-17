@@ -237,7 +237,15 @@ export class PrefillIdComponent implements OnInit {
           }
         }
       }
+      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_Obj)
+      );
+      console.log(this.ITR_Obj);
+    }
 
+    if (this.ITR_Type === 'ITR1') {
       // SALARY
       {
         if (ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.GrossSalary) {
@@ -364,6 +372,225 @@ export class PrefillIdComponent implements OnInit {
 
       // HOUSE PROPERTY
       {
+        if (ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TypeOfHP) {
+          if (this.ITR_Obj.houseProperties) {
+            this.ITR_Obj.houseProperties.push({
+              // NEED TO ADD A CONDITION TO CHECK TYPEOFHP AND BASED ON TYPEOFHP NEED TO SET IT TO SOP, LOP, DLOP
+              propertyType:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TypeOfHP === 'S'
+                  ? 'SOP'
+                  : ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TypeOfHP ===
+                    'L'
+                  ? 'LOP'
+                  : ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TypeOfHP ===
+                    'D'
+                  ? 'DLOP'
+                  : ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TypeOfHP,
+
+              grossAnnualRentReceived:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.GrossRentReceived,
+              propertyTax:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TaxPaidlocalAuth,
+              ownerPercentage: null,
+              address: '',
+              city: '',
+              state: '',
+              country: '',
+              pinCode: '',
+              taxableIncome:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TotalIncomeOfHP,
+              exemptIncome: null,
+              isEligibleFor80EE: false,
+              isEligibleFor80EEA: false,
+              tenant: [],
+              coOwners: [],
+              loans: [
+                {
+                  loanType: 'HOUSING',
+                  principalAmount: null,
+                  interestAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .InterestPayable,
+                },
+              ],
+            });
+          }
+        }
+      }
+
+      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_Obj)
+      );
+      console.log(this.ITR_Obj);
+    }
+
+    if (this.ITR_Type === 'ITR4') {
+      // SALARY
+      {
+        if (ItrJSON[this.ITR_Type].IncomeDeductions.GrossSalary) {
+          if (this.ITR_Obj.employers) {
+            this.ITR_Obj.employers.push({
+              id: '',
+              employerName: '',
+              address: '',
+              city: '',
+              pinCode: '',
+              state: '',
+              employerPAN: '',
+              employerTAN: '',
+              periodFrom: '',
+              periodTo: '',
+              taxableIncome:
+                ItrJSON[this.ITR_Type].IncomeDeductions.IncomeFromSal,
+              standardDeduction:
+                ItrJSON[this.ITR_Type].IncomeDeductions.DeductionUs16ia,
+              employerCategory: '',
+              exemptIncome:
+                ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                  .TotalAllwncExemptUs10,
+              taxRelief: null,
+              taxDeducted: null,
+              salary: [
+                {
+                  salaryType: 'SEC17_1',
+                  taxableAmount: ItrJSON[this.ITR_Type].IncomeDeductions.Salary,
+                  exemptAmount: 0,
+                },
+              ],
+              allowance: [
+                {
+                  allowanceType: 'HOUSE_RENT',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                      .AllwncExemptUs10Dtls[2].SalOthAmount,
+                },
+                {
+                  allowanceType: 'LTA',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                      .AllwncExemptUs10Dtls[3].SalOthAmount,
+                },
+                {
+                  allowanceType: 'CHILDREN_EDUCATION',
+                  taxableAmount: 0,
+                  exemptAmount: 0,
+                },
+                {
+                  allowanceType: 'GRATUITY',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                      .AllwncExemptUs10Dtls[6].SalOthAmount,
+                },
+                {
+                  allowanceType: 'COMMUTED_PENSION',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                      .AllwncExemptUs10Dtls[9].SalOthAmount,
+                },
+                {
+                  allowanceType: 'LEAVE_ENCASHMENT',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                      .AllwncExemptUs10Dtls[7].SalOthAmount,
+                },
+                {
+                  allowanceType: 'ANY_OTHER',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.AllwncExemptUs10
+                      .AllwncExemptUs10Dtls[8].SalOthAmount,
+                },
+                {
+                  allowanceType: 'ALL_ALLOWANCES',
+                  taxableAmount: 0,
+                  exemptAmount: 141200,
+                },
+              ],
+              perquisites: [
+                {
+                  perquisiteType: 'SEC17_2',
+                  taxableAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.PerquisitesValue,
+                  exemptAmount: 0,
+                },
+              ],
+              profitsInLieuOfSalaryType: [
+                {
+                  salaryType: 'SEC17_3',
+                  taxableAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.ProfitsInSalary,
+                  exemptAmount: 0,
+                },
+              ],
+              deductions: [
+                // NEED TO ADD ONE FOR ENTERTAINMENT ALLOWANCE
+                {
+                  deductionType: 'PROFESSIONAL_TAX',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions
+                      .ProfessionalTaxUs16iii,
+                },
+              ],
+              upload: [],
+              calculators: null,
+            });
+          } else {
+            // NEED TO UPDATE THE EXISTING OBJECT WITH THE NEW DATA
+          }
+        }
+      }
+
+      // HOUSE PROPERTY
+      {
+        if (ItrJSON[this.ITR_Type].IncomeDeductions.TypeOfHP) {
+          if (this.ITR_Obj.houseProperties) {
+            this.ITR_Obj.houseProperties.push({
+              // NEED TO ADD A CONDITION TO CHECK TYPEOFHP AND BASED ON TYPEOFHP NEED TO SET IT TO SOP, LOP, DLOP
+              propertyType:
+                ItrJSON[this.ITR_Type].IncomeDeductions.TypeOfHP === 'S'
+                  ? 'SOP'
+                  : ItrJSON[this.ITR_Type].IncomeDeductions.TypeOfHP === 'L'
+                  ? 'LOP'
+                  : ItrJSON[this.ITR_Type].IncomeDeductions.TypeOfHP === 'D'
+                  ? 'DLOP'
+                  : ItrJSON[this.ITR_Type].IncomeDeductions.TypeOfHP,
+
+              grossAnnualRentReceived:
+                ItrJSON[this.ITR_Type].IncomeDeductions.GrossRentReceived,
+              propertyTax:
+                ItrJSON[this.ITR_Type].IncomeDeductions.TaxPaidlocalAuth,
+              ownerPercentage: null,
+              address: '',
+              city: '',
+              state: '',
+              country: '',
+              pinCode: '',
+              taxableIncome:
+                ItrJSON[this.ITR_Type].IncomeDeductions.TotalIncomeOfHP,
+              exemptIncome: null,
+              isEligibleFor80EE: false,
+              isEligibleFor80EEA: false,
+              tenant: [],
+              coOwners: [],
+              loans: [
+                {
+                  loanType: 'HOUSING',
+                  principalAmount: null,
+                  interestAmount:
+                    ItrJSON[this.ITR_Type].IncomeDeductions.InterestPayable,
+                },
+              ],
+            });
+          }
+        }
       }
 
       // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
