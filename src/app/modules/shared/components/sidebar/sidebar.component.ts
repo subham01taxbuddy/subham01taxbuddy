@@ -7,6 +7,13 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Input } from '@angular/core';
 import { PerformaInvoiceComponent } from 'src/app/modules/subscription/components/performa-invoice/performa-invoice.component';
+import {AssignedUsersComponent} from "../../../tasks/pages/assigned-users/assigned-users.component";
+import {AssignedNewUsersComponent} from "../../../tasks/pages/assigned-new-users/assigned-new-users.component";
+import {ScheduledCallComponent} from "../../../tasks/pages/scheduled-call/scheduled-call.component";
+import {FilingsComponent} from "../../../tasks/pages/filings/filings.component";
+import {ExceptionsComponent} from "../../../tasks/pages/exceptions/exceptions.component";
+import {SignUpExceptionsComponent} from "../../../tasks/pages/sign-up-exceptions/sign-up-exceptions.component";
+import {EriExceptionsComponent} from "../../../tasks/pages/exceptions/eri-exceptions/eri-exceptions.component";
 
 @Component({
   selector: 'app-sidebar',
@@ -52,9 +59,21 @@ export class SidebarComponent implements DoCheck {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
       active: true,
-      url: '/tasks',
+      url: null,
       roles: [],
-      submenu: []
+      submenu: [
+        { name: 'Assigned Users', url: '/tasks/assigned-users-new', roles:[] },
+        { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles:[] },
+        { name: 'ITRs', url: '/tasks/filings', roles:[]  },
+        // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
+        { name: 'Exceptions', url: '/tasks/exceptions', roles:[] }
+          // children: [
+          //   { path: 'signup', component: SignUpExceptionsComponent },
+          //   { path: 'eri', component: EriExceptionsComponent },
+          //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
+          // ]
+
+      ]
     },
     {
       name: 'SME Management',
