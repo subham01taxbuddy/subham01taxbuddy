@@ -102,22 +102,25 @@ export class AssignedNewUsersComponent implements OnInit {
 
   }
 
+  ownerId: number;
+  filerId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    // if (event === '' || event === 'ALL') {
-    //   let loggedInId = this.utilsService.getLoggedInUserID();
-    //   if (this.agentId !== loggedInId) {
-    //     this.agentId = loggedInId;
-    //     this.search('agent');
-    //   }
-    // } else if (event === 'SELF') {
-    //   let loggedInId = this.utilsService.getLoggedInUserID();
-    //   this.agentId = loggedInId;
-    //   this.search('agent', true);
-    // } else {
-    //   this.agentId = event;
-    //   this.search('agent');
-    // }
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.search('agent');
   }
 
   getAgentList() {
