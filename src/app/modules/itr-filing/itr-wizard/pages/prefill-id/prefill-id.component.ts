@@ -11,6 +11,7 @@ import { OtherIncomeComponent } from '../../../other-income/other-income.compone
 import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
 import { Subscription } from 'rxjs';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { update } from 'lodash';
 
 @Component({
   selector: 'app-prefill-id',
@@ -158,80 +159,211 @@ export class PrefillIdComponent implements OnInit {
 
     // HAVE TO CREATE SEPERATE AS THE JSON STRUCTURE IS DIFFERENT FOR DIFFERENT ITR TYPES
     if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
-      // CUSTOMER PROFILE
+      // PERSONAL INFORMATION
       {
-        this.ITR_Obj.panNumber = ItrJSON[this.ITR_Type].PersonalInfo.PAN;
-        this.ITR_Obj.contactNumber =
-          ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo;
-        this.ITR_Obj.email =
-          ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
-        this.ITR_Obj.family[0].fName =
-          ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
-        this.ITR_Obj.family[0].lName =
-          ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
-        this.ITR_Obj.family[0].fatherName =
-          ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
-        // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 - PENDING
-        this.ITR_Obj.residentialStatus = 'Resident';
-
-        // HAVE TO CHECK WHAT IS THE VALUE THAT WE ARE TAKING FOR EMPLOYER CATEGORY AS THE KEY IN JSON MIGHT BE DIFFERENT - PENDING
-        // this.ITR_Obj.employerCategory =
-        //   ItrJSON[this.ITR_Type].PersonalInfo.EmployerCategory;
-        // HAVE TO SET THE RETURN TYPE HERE - PENDING
-        // this.ITR_Obj.returnType =
-        //   ItrJSON[this.ITR_Type].FilingStatus.ReturnFileSec;
-        this.ITR_Obj.aadharNumber =
-          ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
-        this.ITR_Obj.family[0].dateOfBirth =
-          ItrJSON[this.ITR_Type].PersonalInfo.DOB;
-      }
-      // PERSONAL DETAILS
-      {
-        // ADDRESS DETAILS
+        // CUSTOMER PROFILE
         {
-          this.ITR_Obj.address.pinCode =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
-          this.ITR_Obj.address.country =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.CountryCode;
-          this.ITR_Obj.address.state =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.StateCode;
-          this.ITR_Obj.address.city =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.CityOrTownOrDistrict;
-          this.ITR_Obj.address.flatNo =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceNo;
-          this.ITR_Obj.address.premisesName =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceName;
-          this.ITR_Obj.address.area =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.RoadOrStreet +
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.LocalityOrArea;
+          this.ITR_Obj.panNumber = ItrJSON[this.ITR_Type].PersonalInfo.PAN;
+          this.ITR_Obj.contactNumber =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo;
+          this.ITR_Obj.email =
+            ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
+          this.ITR_Obj.family[0].fName =
+            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
+          this.ITR_Obj.family[0].lName =
+            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
+          this.ITR_Obj.family[0].fatherName =
+            ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+          // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 - PENDING
+          this.ITR_Obj.residentialStatus = 'Resident';
+
+          // HAVE TO CHECK WHAT IS THE VALUE THAT WE ARE TAKING FOR EMPLOYER CATEGORY AS THE KEY IN JSON MIGHT BE DIFFERENT - PENDING
+          // this.ITR_Obj.employerCategory =
+          //   ItrJSON[this.ITR_Type].PersonalInfo.EmployerCategory;
+          // HAVE TO SET THE RETURN TYPE HERE - PENDING
+          // this.ITR_Obj.returnType =
+          //   ItrJSON[this.ITR_Type].FilingStatus.ReturnFileSec;
+          this.ITR_Obj.aadharNumber =
+            ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
+          this.ITR_Obj.family[0].dateOfBirth =
+            ItrJSON[this.ITR_Type].PersonalInfo.DOB;
         }
-        //BANK DETAILS
+        // PERSONAL DETAILS
         {
-          const UtilityBankDetails =
-            ItrJSON[this.ITR_Type].Refund.BankAccountDtls.AddtnlBankDetails;
+          // ADDRESS DETAILS
+          {
+            this.ITR_Obj.address.pinCode =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
+            this.ITR_Obj.address.country =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.CountryCode;
+            this.ITR_Obj.address.state =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.StateCode;
+            this.ITR_Obj.address.city =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.CityOrTownOrDistrict;
+            this.ITR_Obj.address.flatNo =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceNo;
+            this.ITR_Obj.address.premisesName =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceName;
+            this.ITR_Obj.address.area =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.RoadOrStreet +
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.LocalityOrArea;
+          }
+          //BANK DETAILS
+          {
+            const UtilityBankDetails =
+              ItrJSON[this.ITR_Type].Refund.BankAccountDtls.AddtnlBankDetails;
 
-          if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
-            this.ITR_Obj.bankDetails = [];
-            this.utilsService.showSnackBar(
-              'There are no bank details in the JSON that you have provided'
-            );
-          } else {
-            this.ITR_Obj.bankDetails = UtilityBankDetails.map(
-              ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
-                return {
-                  id: null,
-                  bankType: null,
-                  ifsCode: IFSCCode,
-                  name: BankName,
-                  accountNumber: BankAccountNo,
-                  hasRefund: UseForRefund === 'true',
-                  swiftcode: null,
-                  countryName: '91',
-                };
-              }
-            );
+            if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
+              this.ITR_Obj.bankDetails = [];
+              this.utilsService.showSnackBar(
+                'There are no bank details in the JSON that you have provided'
+              );
+            } else {
+              this.ITR_Obj.bankDetails = UtilityBankDetails.map(
+                ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
+                  return {
+                    id: null,
+                    bankType: null,
+                    ifsCode: IFSCCode,
+                    name: BankName,
+                    accountNumber: BankAccountNo,
+                    hasRefund: UseForRefund === 'true',
+                    swiftcode: null,
+                    countryName: '91',
+                  };
+                }
+              );
+            }
           }
         }
+      }
+
+      // SALARY
+      {
+        if (ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.GrossSalary) {
+          if (this.ITR_Obj.employers) {
+            this.ITR_Obj.employers.push({
+              id: '',
+              employerName: '',
+              address: '',
+              city: '',
+              pinCode: '',
+              state: '',
+              employerPAN: '',
+              employerTAN: '',
+              periodFrom: '',
+              periodTo: '',
+              taxableIncome:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.IncomeFromSal,
+              standardDeduction:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.DeductionUs16ia,
+              employerCategory: '',
+              exemptIncome:
+                ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
+                  .TotalAllwncExemptUs10,
+              taxRelief: null,
+              taxDeducted: null,
+              salary: [
+                {
+                  salaryType: 'SEC17_1',
+                  taxableAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.Salary,
+                  exemptAmount: 0,
+                },
+              ],
+              allowance: [
+                {
+                  allowanceType: 'HOUSE_RENT',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .AllwncExemptUs10.AllwncExemptUs10Dtls[2].SalOthAmount,
+                },
+                {
+                  allowanceType: 'LTA',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .AllwncExemptUs10.AllwncExemptUs10Dtls[3].SalOthAmount,
+                },
+                {
+                  allowanceType: 'CHILDREN_EDUCATION',
+                  taxableAmount: 0,
+                  exemptAmount: 0,
+                },
+                {
+                  allowanceType: 'GRATUITY',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .AllwncExemptUs10.AllwncExemptUs10Dtls[6].SalOthAmount,
+                },
+                {
+                  allowanceType: 'COMMUTED_PENSION',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .AllwncExemptUs10.AllwncExemptUs10Dtls[9].SalOthAmount,
+                },
+                {
+                  allowanceType: 'LEAVE_ENCASHMENT',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .AllwncExemptUs10.AllwncExemptUs10Dtls[7].SalOthAmount,
+                },
+                {
+                  allowanceType: 'ANY_OTHER',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .AllwncExemptUs10.AllwncExemptUs10Dtls[8].SalOthAmount,
+                },
+                {
+                  allowanceType: 'ALL_ALLOWANCES',
+                  taxableAmount: 0,
+                  exemptAmount: 141200,
+                },
+              ],
+              perquisites: [
+                {
+                  perquisiteType: 'SEC17_2',
+                  taxableAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .PerquisitesValue,
+                  exemptAmount: 0,
+                },
+              ],
+              profitsInLieuOfSalaryType: [
+                {
+                  salaryType: 'SEC17_3',
+                  taxableAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .ProfitsInSalary,
+                  exemptAmount: 0,
+                },
+              ],
+              deductions: [
+                // NEED TO ADD ONE FOR ENTERTAINMENT ALLOWANCE
+                {
+                  deductionType: 'PROFESSIONAL_TAX',
+                  taxableAmount: 0,
+                  exemptAmount:
+                    ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
+                      .ProfessionalTaxUs16iii,
+                },
+              ],
+              upload: [],
+              calculators: null,
+            });
+          } else {
+            // NEED TO UPDATE THE EXISTING OBJECT WITH THE NEW DATA
+          }
+        }
+      }
+
+      // HOUSE PROPERTY
+      {
       }
 
       // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
