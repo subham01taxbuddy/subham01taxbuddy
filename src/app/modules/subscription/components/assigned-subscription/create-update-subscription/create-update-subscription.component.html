@@ -577,11 +577,11 @@
                 >
                   <mat-option value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
-                  <mat-option value="GST"> GST </mat-option>
-                  <mat-option value="NOTICE"> Notice response </mat-option>
+                  <mat-option value="GST" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> GST </mat-option>
+                  <mat-option value="NOTICE" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> Notice response </mat-option>
                   <!--                    <mat-option value="TDS filing"> TDS filing </mat-option>-->
-                  <mat-option value="TPA"> TPA </mat-option>
-                  <mat-option value="OTHER">
+                  <mat-option value="TPA" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> TPA </mat-option>
+                  <mat-option value="OTHER" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')">
                     Other Services
                   </mat-option>
                 </mat-select>
