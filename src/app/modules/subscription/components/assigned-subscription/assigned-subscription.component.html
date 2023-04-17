@@ -10,6 +10,18 @@
       <div class="row">
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
+            <div class="card__row">
+              <div class="filter__col card__col-xs-12">
+                <!--  <mat-form-field appearance="outline">
+                  <mat-label>Select Agent</mat-label>
+                  <mat-select placeholder="Select Agent" [(ngModel)]="agentId" (selectionChange)="this.search('agent')">
+                    <mat-option *ngFor="let agent of agents" [value]="agent.userId">
+                      {{ agent.name}} - {{agent.serviceType}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+                <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              </div>
             <div class="row" style="margin-top: 15px;">
               <div class="col-sm-3">
                 <mat-label> Financial Year </mat-label>
