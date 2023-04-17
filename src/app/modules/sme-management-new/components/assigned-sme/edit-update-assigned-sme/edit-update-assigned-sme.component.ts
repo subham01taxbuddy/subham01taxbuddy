@@ -8,6 +8,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import {Location} from "@angular/common";
 
 
 export const MY_FORMATS = {
@@ -66,6 +67,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
+    private location: Location,
   ) { }
 
   ngOnInit() {
@@ -508,39 +510,31 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     if (this.smeFormGroup.valid && this.roles.valid) {
 
-      let finalReq = {
-        userId: this.smeObj.userId,
-        name: this.name.value,
-        email: this.email.value,
-        mobileNumber: this.mobileNumber.value,
-        referredBy:this.referredBy.value,
-        qualification:this.qualification.value,
-        state:this.state.value,
-        callingNumber: this.callingNumber.value,
-        serviceType: this.smeObj.serviceType,
-        roles: this.smeObj.roles,
-        languages:this.languages.value,
-        parentId: this.smeObj.parentId,
-        botId: this.smeObj.botId,
-        displayName: this.displayName.value,
-        active: this.smeObj.active,
-        leaveStartDate:LeaveStartDate,
-        leaveEndDate:LeaveEndDate,
-        joiningDate: JoiningDate,
-        resigningDate:ResigningDate,
-        internal: this.internal.value == 'internal'? true :false,
-        assignmentStart: this.smeObj.assignmentStart,
-        itrTypes: this.itrTypes.value,
-        roundRobinCount: this.smeObj.roundRobinCount,
-        assessmentYears: this.smeObj.assessmentYears,
-        parentName: this.parentName.value,
-        roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
-        owner: this.owner.value,
-        leader: this.leader.value,
-        admin: this.admin.value,
-        filer: this.filer.value,
-        coOwnerUserId: this.ownerDetails?.userId
-      };
+      let finalReq: any = {};
+      Object.assign(finalReq, this.smeRecords[0]);
+
+        finalReq.name =  this.name.value;
+        finalReq.email = this.email.value;
+        finalReq.mobileNumber = this.mobileNumber.value;
+        finalReq.referredBy =this.referredBy.value;
+        finalReq.qualification =this.qualification.value;
+        finalReq.state =this.state.value;
+        finalReq.callingNumber = this.callingNumber.value;
+        finalReq.languages =this.languages.value;
+        finalReq.displayName = this.displayName.value;
+        finalReq.leaveStartDate =LeaveStartDate;
+        finalReq.leaveEndDate =LeaveEndDate;
+        finalReq.joiningDate = JoiningDate;
+        finalReq.resigningDate =ResigningDate;
+        finalReq.internal = this.internal.value === 'internal'? true : false;
+        finalReq.itrTypes = this.itrTypes.value;
+        finalReq.parentName = this.parentName.value;
+        finalReq.owner = this.owner.value;
+        finalReq.leader = this.leader.value;
+        finalReq.admin = this.admin.value;
+        finalReq.filer = this.filer.value;
+        finalReq.coOwnerUserId = this.ownerDetails?.userId;
+
       if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
 
         if (this.nriServiceToggle === true && this.smeObj.owner) {
@@ -596,6 +590,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
             'success',
             'sme details updated successfully'
           );
+          this.location.back();
         }
       },
       (error) => {

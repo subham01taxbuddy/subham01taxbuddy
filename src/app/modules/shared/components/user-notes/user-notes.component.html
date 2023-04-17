@@ -55,9 +55,13 @@
       </button>
     </div>
   </div>
-  <br />
-
-  <div class="mat-elevation-z8" *ngIf="notes.length > 0">
+  <!-- <br /> -->
+  &nbsp;
+  <div
+    class="mat-elevation-z8"
+    *ngIf="notes.length > 0"
+    style="margin-top: 25px"
+  >
     <table mat-table [dataSource]="dataSource">
       <!-- Symbol Column -->
       <ng-container matColumnDef="Date">

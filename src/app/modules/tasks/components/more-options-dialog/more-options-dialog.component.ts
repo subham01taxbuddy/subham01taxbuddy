@@ -124,7 +124,8 @@ export class MoreOptionsDialogComponent implements OnInit {
   optedServices() {
     this.loading = false;
     this.showDetails = 'OPT_SERVICE';
-    const param = `/sme/assignee-details?userId=${this.data.userId}`;
+    //https://uat-api.taxbuddy.com/user/customer?userId=10156
+    const param = `/customer?userId=${this.data.userId}`;
     this.userMsService.getMethod(param).subscribe(
       (res: any) => {
         console.log(res);

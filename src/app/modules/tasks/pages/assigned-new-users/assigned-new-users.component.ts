@@ -102,21 +102,22 @@ export class AssignedNewUsersComponent implements OnInit {
 
   }
 
-  fromSme(event) {
-    if (event === '' || event === 'ALL') {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      if (this.agentId !== loggedInId) {
-        this.agentId = loggedInId;
-        this.search('agent');
-      }
-    } else if (event === 'SELF') {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-      this.search('agent', true);
-    } else {
-      this.agentId = event;
-      this.search('agent');
-    }
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    // if (event === '' || event === 'ALL') {
+    //   let loggedInId = this.utilsService.getLoggedInUserID();
+    //   if (this.agentId !== loggedInId) {
+    //     this.agentId = loggedInId;
+    //     this.search('agent');
+    //   }
+    // } else if (event === 'SELF') {
+    //   let loggedInId = this.utilsService.getLoggedInUserID();
+    //   this.agentId = loggedInId;
+    //   this.search('agent', true);
+    // } else {
+    //   this.agentId = event;
+    //   this.search('agent');
+    // }
   }
 
   getAgentList() {
@@ -136,6 +137,9 @@ export class AssignedNewUsersComponent implements OnInit {
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     var statusSequence = 0;
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    let filtered = loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+    let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
         headerName: 'Name',
@@ -207,6 +211,7 @@ export class AssignedNewUsersComponent implements OnInit {
         field: 'ownerName',
         width: 200,
         suppressMovable: true,
+        hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -219,6 +224,7 @@ export class AssignedNewUsersComponent implements OnInit {
         field: 'filerName',
         width: 200,
         suppressMovable: true,
+        hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
