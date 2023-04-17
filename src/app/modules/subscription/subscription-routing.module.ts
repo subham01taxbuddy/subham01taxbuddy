@@ -7,6 +7,7 @@ import { CreateUpdateSubscriptionComponent } from './components/assigned-subscri
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
 import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
+import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
 
 // const routes: Routes = [{ path: '', component: SubscriptionComponent }];
 
@@ -20,6 +21,7 @@ const routes: Routes = [
           {path :'proforma-invoice', component:PerformaInvoiceComponent},
           {path :'tax-invoice', component:TaxInvoiceComponent},
           {path :'old-invoices', component:OldInvoicesComponent},
+          {path :'pause-reminders', component:PauseInvoiceReminderComponent},
           { path: '', redirectTo: '/subscription/assigned-subscription', pathMatch: 'full' }
       ]
   }
