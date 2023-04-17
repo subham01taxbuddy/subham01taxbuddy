@@ -33,6 +33,8 @@ export class ScheduledCallComponent implements OnInit {
     page: 0,
     pageSize: 30,
     totalPages: null,
+    mobileNumber: null,
+    email: null,
   };
 
   constructor(
@@ -67,7 +69,7 @@ export class ScheduledCallComponent implements OnInit {
       this.loggedUserId = userInfo.USER_UNIQUE_ID;
     }
     this.showScheduleCallList();
-    this.config;
+    this.search();
   }
 
   /* async */ getAgentList() {
@@ -137,6 +139,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   createRowData(scheduleCalls) {
+    // console.log('scheduleCalls -> ', scheduleCalls);
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
@@ -148,6 +151,9 @@ export class ScheduledCallComponent implements OnInit {
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
         ownerName: scheduleCalls[i]['ownerName'],
+        userEmail: scheduleCalls[i]['userEmail'],
+        smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
+        smeName: scheduleCalls[i]['smeName'],
         scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
         serviceType:
@@ -157,7 +163,7 @@ export class ScheduledCallComponent implements OnInit {
       });
       scheduleCallsArray.push(scheduleCallsInfo);
     }
-    console.log('scheduleCallsArray-> ', scheduleCallsArray);
+    console.log('scheduleCallsArrayShow-> ', scheduleCallsArray);
     return scheduleCallsArray;
   }
 
@@ -200,6 +206,19 @@ export class ScheduledCallComponent implements OnInit {
         headerName: 'Mobile No',
         field: 'userMobile',
         width: 130,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Mail Id',
+        field: 'userEmail',
+        width: 300,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -587,5 +606,58 @@ export class ScheduledCallComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showScheduleCallList();
+    this.search();
+  }
+
+  search(form?) {
+    if (form == 'mobile') {
+      this.searchParam.page = 0;
+      if (
+        this.searchParam.mobileNumber == null ||
+        this.searchParam.mobileNumber == ''
+      ) {
+        this.searchParam.mobileNumber = null;
+      } else {
+        this.searchParam.email = null;
+      }
+      if (this.searchParam.email == null || this.searchParam.email == '') {
+        this.searchParam.email = null;
+      } else {
+        this.searchParam.mobileNumber = null;
+      }
+    }
+    this.loading = false;
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    var param = `/schedule-call-details/${this.loggedUserId}?${data}`;
+
+    this.userMsService.getMethod(param).subscribe(
+      (result: any) => {
+        console.log('MOBsearchScheCALL:', result);
+
+        if (result.content instanceof Array && result.content.length > 0) {
+          this.scheduleCallsData = result.content;
+          this.scheduleCallGridOptions.api?.setRowData(
+            this.createRowData(this.scheduleCallsData)
+          );
+
+          this.config.totalItems = result.content.numberOfElements;
+          // this.scheduleCallGridOptions.api?.setRowData(
+          //   this.createRowData(this.scheduleCallsData)
+          // );
+        } else {
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+          this.toastMsgService.alert('error', result.message);
+        }
+      }
+      // (error) => {
+      //   this.loading = false;
+      //   this.config.totalItems = 0;
+      //   this.toastMsgService.alert(
+      //     'error',
+      //     'Fail to getting leads data, try after some time.'
+      //   );
+      // }
+    );
   }
 }
