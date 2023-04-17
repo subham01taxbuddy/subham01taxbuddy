@@ -80,6 +80,9 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   ngOnInit() {
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    this.agentId = loggedInId;
+
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
@@ -140,14 +143,14 @@ export class AssignedSubscriptionComponent implements OnInit {
   allSubscriptions = [];
   getAssignedSubscription(pageNo) {
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    this.queryParam = `?subscriptionAssigneeId=${loggedInSmeUserId}`;
+    this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
     let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
-    var param = `/subscription-dashboard-new/${loggedInSmeUserId}?${pagination}`;
+    var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
@@ -570,8 +573,25 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.getAssignedSubscription(event - 1);
   }
 
-  fromSme(event) {
-    this.queryParam = `?subscriptionAssigneeId=${event}`;
+  ownerId: number;
+  filerId: number;
+  agentId: number;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+    }else if(this.ownerId) {
+      this.agentId = this.ownerId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.getAssignedSubscription(0);
   }
 }
 export interface ConfirmModel {

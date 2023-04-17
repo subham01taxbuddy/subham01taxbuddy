@@ -139,6 +139,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
             a.dateAndTime < b.dateAndTime ? 1 : -1
           );
           // this.dataSource = new MatTableDataSource<any>(this.notes);
+          // this.dataSource.data = data;
           this.dataSource.data = data;
         }
       },
@@ -148,6 +149,10 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     );
   }
 
+  // pageChangeData(event: any) {
+  //   this.currentPage = event;
+  //   this.getNotes();
+  // }
   pageChangeData(event: any) {
     this.currentPage = event;
     this.getNotes();

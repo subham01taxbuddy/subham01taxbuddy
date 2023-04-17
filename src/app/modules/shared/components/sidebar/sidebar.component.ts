@@ -72,13 +72,21 @@ export class SidebarComponent implements DoCheck {
       name: 'Subscription',
       // iconClass: 'fa fa-globe',
       active: false,
+      url: '/subscription/assigned-subscription',
+      roles: [],
+      submenu: []
+    },
+    {
+      name: 'Invoice',
+      // iconClass: 'fa fa-globe',
+      active: false,
       url: null,
       roles: [],
       submenu: [
-        { name: 'Assigned-Sub', url: '/subscription/assigned-subscription', roles: [] },
         { name: 'Proforma Invoice', url: '/subscription/proforma-invoice', roles: [] },
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
-        {name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
+        { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
+        { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
       ]
     },
     {
