@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -27,12 +29,23 @@ export class AssignedSmeComponent implements OnInit {
     mobileNumber: null,
     emailId: null,
   };
+  searchMenus = [{
+    value: 'mobileNumber', name: 'Mobile Number'
+  },{
+    value: 'name', name: 'Name'
+  }, {
+    value: 'kommunicateEmailId', name: 'Kommunicate Email Id'
+  },];
+  searchVal: string = "";
+  key: any;
+
 
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
+    private http: HttpClient,
     private matDialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
@@ -55,6 +68,43 @@ export class AssignedSmeComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getSmeList();
+  }
+  clearValue() {
+    this.searchVal = "";
+  }
+  advanceSearch(key: any) {
+    if (this.searchVal !== "") {
+      this.getSmeSearchList(key, this.searchVal);
+    }else{
+      this._toastMessageService.alert('error','Plz enter value.');
+    }
+  }
+
+  getSmeSearchList(key: any, searchValue: any) {
+    this.loading = true;
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+        this.loading = false;
+        console.log("Search result:", result)
+        if (Array.isArray(result.data.content) && result.data.content.length > 0
+        ) {
+          this.loading = false;
+          this.smeInfo = result.data.content;
+          this.config.totalItems = result.data.totalElements;
+          this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert('error','No Lead Data Found .');
+          // this.getSmeList();
+        }
+     },(error) => {
+      this.loading = false;
+      this._toastMessageService.alert('error','No Lead Data Found .');
+    });
+
   }
 
   getSmeList() {
@@ -188,8 +238,8 @@ export class AssignedSmeComponent implements OnInit {
         },
         cellRenderer: (params: any) => {
           // console.log('param',params)
-        const items = params.value;
-        const itemsHtml = items.map(item => `<li>${item}</li>`).join('');
+        const items = params?.value;
+        const itemsHtml = items?.map(item => `<li>${item}</li>`)?.join('');
         return `<ul>${itemsHtml}</ul>`;}
       },
       {
@@ -210,68 +260,68 @@ export class AssignedSmeComponent implements OnInit {
         // },
         cellRenderer: (params: any) => {
           // console.log('param',params)
-          const smeServices = params.value;
+          const smeServices = params?.value;
            let result=[] ; let result1='';let result2='';let result3='';let result4='';let result5='';let result6='';let result7='';let result8='';
-          smeServices.forEach((element) => {
-            if (element.serviceType == "ITR") {
+          smeServices?.forEach((element) => {
+            if (element?.serviceType == "ITR") {
               var r1='ITR'
-              if(element.assignmentStart == true){
+              if(element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true" ></i>&nbsp;'
               }
                result1=r2+r1 ;
             }
-            else if (element.serviceType == "NRI") {
+            else if (element?.serviceType == "NRI") {
               var r1='NRI'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result2=(r2+r1)||'';
             }
-            else if (element.serviceType == "TPA") {
+            else if (element?.serviceType == "TPA") {
               var r1='TPA'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result3=r2+r1;
             }
-            else if (element.serviceType == "GST") {
+            else if (element?.serviceType == "GST") {
               var r1='GST'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result4=r2+r1;
             }
-            else if (element.serviceType == "NOTICE") {
+            else if (element?.serviceType == "NOTICE") {
               var r1='NOTICE'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i> &nbsp;'
               }
                result5=r2+r1;
             }
-            else if (element.serviceType == "WB") {
+            else if (element?.serviceType == "WB") {
               var r1='WB'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result6=r2+r1;
             }
-            else if (element.serviceType == "PD") {
+            else if (element?.serviceType == "PD") {
               var r1='PD'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result7=r2+r1;
             }
-            else if (element.serviceType == "MF") {
+            else if (element?.serviceType == "MF") {
               var r1='MF'
-              if( element.assignmentStart == true){
+              if( element?.assignmentStart == true){
                 var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result8=r2+r1;
             }
           })
             result.push(result1,result2,result3,result4,result5,result6,result7,result8);
-            const itemsHtml = result.map(item => `<li>${item}</li>`).join('');
+            const itemsHtml = result?.map(item => `<li>${item}</li>`)?.join('');
            return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
         }
       },
