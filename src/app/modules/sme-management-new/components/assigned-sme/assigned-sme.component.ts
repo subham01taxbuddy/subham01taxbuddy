@@ -198,7 +198,7 @@ export class AssignedSmeComponent implements OnInit {
       },
       {
         headerName: 'Official Mail ID ',
-        field: 'email',
+        field: 'smeOfficialEmail',
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -210,7 +210,7 @@ export class AssignedSmeComponent implements OnInit {
       },
       {
         headerName: 'Komm ID',
-        field: 'kommId',
+        field: 'email',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
