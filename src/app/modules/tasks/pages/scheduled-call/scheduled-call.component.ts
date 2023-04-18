@@ -128,7 +128,7 @@ export class ScheduledCallComponent implements OnInit {
     this.loading = true;
     var param2 = `/schedule-call-details/${id}?&page=${
       this.config.currentPage - 1
-    }&size=10`;
+    }&size=${this.searchParam.pageSize}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
         if (result.content instanceof Array && result.content.length > 0) {
