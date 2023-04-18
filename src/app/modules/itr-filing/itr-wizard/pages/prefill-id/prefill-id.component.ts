@@ -12,6 +12,7 @@ import { AddClientsComponent } from '../../components/add-clients/add-clients.co
 import { Subscription } from 'rxjs';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { update } from 'lodash';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-prefill-id',
@@ -28,6 +29,9 @@ export class PrefillIdComponent implements OnInit {
   showEriView = false;
   ITR_JSON: ITR_JSON;
   ITR_Type: string;
+  localDate: Date;
+  utcDate: string;
+  uploadedJson: any;
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
@@ -113,6 +117,171 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
+  parseDate(dateStr: string) {
+    const parts = dateStr.split('-');
+    return new Date(+parts[0], +parts[1] - 1, +parts[2]);
+  }
+
+  // Looping over exemptIncome and checking all types at once
+  updateExemptIncomes(exemptIncomeTypes, ITR_Type) {
+    for (let i = 0; i < exemptIncomeTypes.length; i++) {
+      console.log('i ==>>>>', i);
+      const type = exemptIncomeTypes[i];
+
+      try {
+        // finding and storing the object with the same NatureDesc (type) present in JSON Object
+        const JsonDetail = this.uploadedJson[
+          ITR_Type
+        ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
+          (jsonAllowance) => jsonAllowance.NatureDesc === type
+        );
+        console.log('JSONDETAILS====>>>>', JsonDetail);
+
+        if (JsonDetail) {
+          // finding and storing the object with the same NatureDesc (type) present in ITR Object
+          const itrObjAllowance = this.ITR_Obj.exemptIncomes.find(
+            (itrObjAllowance) => itrObjAllowance.natureDesc === type
+          );
+          console.log('ITROBJALLOWANCE====>>>>', itrObjAllowance);
+
+          // If same type is not found in the ITR Object then show an error message
+          if (!itrObjAllowance) {
+            this.utilsService.showSnackBar(
+              `Exempt Income - ${type} Income was not found in the ITR Object`
+            );
+          }
+
+          if (
+            JsonDetail &&
+            itrObjAllowance &&
+            JsonDetail.NatureDesc === itrObjAllowance.natureDesc
+          ) {
+            itrObjAllowance.amount = JsonDetail.OthAmount;
+          } else {
+            this.utilsService.showSnackBar(`Exempt Income - ${type} not found`);
+          }
+        }
+      } catch (error) {
+        console.log(`Error occurred for type ${type}: `, error);
+        this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+      }
+    }
+  }
+
+  updateOtherIncomes(otherIncomes, ITR_Type) {
+    console.log('otherIncomes List =>', otherIncomes);
+    // create a mapping object to map the JSON names to the new names of ITR Object
+    const mapping = {
+      SAV: 'SAVING_INTEREST',
+      IFD: 'FD_RD_INTEREST',
+      DIV: '', // we have a different object of dividend Income.It is taken care of below
+      FAP: 'FAMILY_PENSION',
+      TAX: 'TAX_REFUND_INTEREST',
+      OTH: 'ANY_OTHER',
+    };
+
+    for (let i = 0; i < otherIncomes.length; i++) {
+      console.log('i ==>>>>', i);
+      const type = otherIncomes[i];
+      // For dividend Income mapping
+      {
+        const typeDiv = this.uploadedJson[
+          ITR_Type
+        ].ITR1_IncomeDeductions.OthersInc.OthersIncDtlsOthSrc.find(
+          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'DIV'
+        );
+        if (typeDiv) {
+          const itrObjectDividendQuarterList = this.ITR_Obj.dividendIncomes.map(
+            (key) => key
+          );
+          const jsonDividendObj =
+            this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions.OthersInc
+              .OthersIncDtlsOthSrc[0].DividendInc.DateRange;
+          console.log(
+            'Dividend Income =>>>',
+            typeDiv,
+            itrObjectDividendQuarterList,
+            jsonDividendObj
+          );
+
+          if (jsonDividendObj.Upto15Of6) {
+            const individualDividendIncomes = itrObjectDividendQuarterList.find(
+              (dividendIncomes) => dividendIncomes.quarter === 1
+            );
+            individualDividendIncomes.income = jsonDividendObj.Upto15Of6;
+          }
+
+          if (jsonDividendObj.Upto15Of9) {
+            const individualDividendIncomes = itrObjectDividendQuarterList.find(
+              (dividendIncomes) => dividendIncomes.quarter === 2
+            );
+            individualDividendIncomes.income = jsonDividendObj.Upto15Of9;
+          }
+
+          if (jsonDividendObj.Up16Of9To15Of12) {
+            const individualDividendIncomes = itrObjectDividendQuarterList.find(
+              (dividendIncomes) => dividendIncomes.quarter === 3
+            );
+            individualDividendIncomes.income = jsonDividendObj.Up16Of9To15Of12;
+          }
+          if (jsonDividendObj.Up16Of12To15Of3) {
+            const individualDividendIncomes = itrObjectDividendQuarterList.find(
+              (dividendIncomes) => dividendIncomes.quarter === 4
+            );
+            individualDividendIncomes.income = jsonDividendObj.Up16Of12To15Of3;
+          }
+          if (jsonDividendObj.Up16Of3To31Of3) {
+            const individualDividendIncomes = itrObjectDividendQuarterList.find(
+              (dividendIncomes) => dividendIncomes.quarter === 5
+            );
+            individualDividendIncomes.income = jsonDividendObj.Up16Of3To31Of3;
+          }
+        }
+
+        // this.ITR_Obj.dividendIncomes[0].income =
+        //   this.uploadedJson[
+        //     this.ITR_Type
+        //   ].ITR1_IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[0].DividendInc.DateRange.Upto15Of6;
+      }
+
+      // For all the other incomes mapping
+      {
+        // use the mapping object to get the new name for the current type
+        const newName = mapping[type];
+
+        try {
+          // finding and storing the object with the same NatureDesc (type) present in JSON Object
+          const JsonDetail = this.uploadedJson[
+            ITR_Type
+          ].ITR1_IncomeDeductions.OthersInc.OthersIncDtlsOthSrc.find(
+            (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === type
+          );
+          console.log('JSONOTHERINCOME====>>>>', JsonDetail);
+
+          if (JsonDetail) {
+            // finding and storing the object with the same NatureDesc (type) present in ITR Object
+            const itrObjOtherIncome = this.ITR_Obj.incomes.find(
+              (itrObjOtherIncome) => itrObjOtherIncome.incomeType === newName
+            );
+            console.log('ITROBJOTHERINCOME====>>>>', itrObjOtherIncome);
+
+            // If same type is not found in the ITR Object then show an error message
+            if (!itrObjOtherIncome) {
+              this.utilsService.showSnackBar(
+                `Exempt Income - ${type} Income was not found in the ITR Object`
+              );
+            }
+
+            itrObjOtherIncome.amount = JsonDetail.OthSrcOthAmount;
+          }
+        } catch (error) {
+          console.log(`Error occurred for type ${type}: `, error);
+          this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+        }
+      }
+    }
+  }
+
   // Uploading Utility JSON
   uploadUtilityItrJson(file: FileList) {
     if (file.length > 0) {
@@ -124,7 +293,9 @@ export class PrefillIdComponent implements OnInit {
         let jsonRes = e.target.result;
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
-        this.mapItrJson(JSONData.ITR);
+
+        this.uploadedJson = JSONData.ITR;
+        this.mapItrJson(this.uploadedJson);
       };
       reader.readAsText(this.uploadDoc);
     }
@@ -154,7 +325,6 @@ export class PrefillIdComponent implements OnInit {
     }
 
     //Finding the way
-
     console.log(ItrJSON[this.ITR_Type].PersonalInfo.PAN);
 
     // HAVE TO CREATE SEPERATE AS THE JSON STRUCTURE IS DIFFERENT FOR DIFFERENT ITR TYPES
@@ -185,12 +355,30 @@ export class PrefillIdComponent implements OnInit {
           //   ItrJSON[this.ITR_Type].FilingStatus.ReturnFileSec;
           this.ITR_Obj.aadharNumber =
             ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
-          this.ITR_Obj.family[0].dateOfBirth =
-            ItrJSON[this.ITR_Type].PersonalInfo.DOB;
+          // NEED TO CONVERT THIS DATE TO UTC
+          this.localDate = this.parseDate(
+            ItrJSON[this.ITR_Type].PersonalInfo.DOB
+          );
+          this.utcDate = formatDate(
+            this.localDate,
+            'yyyy-MM-ddTHH:mm:ss.SSSZ',
+            'en-US',
+            '+0000'
+          );
+
+          // console.log(
+          //   'UTCDate =>>>>>>>>>>>>>>>',
+          //   ItrJSON[this.ITR_Type].PersonalInfo.DOB,
+          //   this.localDate,
+          //   this.utcDate
+          // );
+
+          this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
         }
+
         // PERSONAL DETAILS
         {
-          // ADDRESS DETAILS
+          // ADDRESS DETAILS -  - NEED TO INITIATE ARRAY ONCE THE ITRJSON IS GENERATED FIRST TIME
           {
             this.ITR_Obj.address.pinCode =
               ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
@@ -280,6 +468,7 @@ export class PrefillIdComponent implements OnInit {
                 },
               ],
               allowance: [
+                // HAVE CREATED THIS BASED ON INDEX BUT NEED TO MODIFY IT BY FINDING THE REQUIRED ONE AND THEN ASSIGNING THEAT VALUE IN THE ITR OBJECT
                 {
                   allowanceType: 'HOUSE_RENT',
                   taxableAmount: 0,
@@ -365,6 +554,7 @@ export class PrefillIdComponent implements OnInit {
               calculators: null,
             });
           } else {
+            this.utilsService.showSnackBar('ITR_Obj.Employers already exists');
             // NEED TO UPDATE THE EXISTING OBJECT WITH THE NEW DATA
           }
         }
@@ -414,8 +604,67 @@ export class PrefillIdComponent implements OnInit {
                 },
               ],
             });
+          } else {
+            // TO DO - NEED TO UPDATE THE EXISTING OBJECT WITH THE NEW DATA
+            this.utilsService.showSnackBar(
+              'ITR_Obj.houseProperties already exists'
+            );
           }
+        } else {
+          this.utilsService.showSnackBar(
+            'ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.TypeOfHP does not exist in JSON'
+          );
         }
+      }
+
+      // OTHER INCOMES - NEED TO INITIATE ARRAY ONCE THE ITRJSON IS GENERATED FIRST TIME
+      {
+        if (
+          ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.OthersInc
+            .OthersIncDtlsOthSrc
+        ) {
+          // All other incomes
+          if (this.ITR_Obj.incomes) {
+            //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+            const availableOtherIncomes = this.uploadedJson[
+              this.ITR_Type
+            ].ITR1_IncomeDeductions.OthersInc.OthersIncDtlsOthSrc.map(
+              (value) => value.OthSrcNatureDesc
+            );
+            console.log('OtherIncomes => ', availableOtherIncomes);
+            this.updateOtherIncomes(availableOtherIncomes, this.ITR_Type);
+          } else {
+            this.utilsService.showSnackBar('this.ITR_Obj.incomes is empty');
+          }
+        } else {
+          this.utilsService.showSnackBar(
+            'ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.OthersInc.OthersIncDtlsOthSrc does not exist'
+          );
+        }
+      }
+
+      // EXEMPT INCOME
+      if (
+        ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ExemptIncAgriOthUs10
+          .ExemptIncAgriOthUs10Dtls
+      ) {
+        if (this.ITR_Obj.exemptIncomes) {
+          //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+          const availableExemptIncomes = this.uploadedJson[
+            this.ITR_Type
+          ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+            (value) => value.NatureDesc
+          );
+          this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+        } else {
+          this.utilsService.showSnackBar(
+            'There are no details under exemptIncomes in the ITR Obj'
+          );
+        }
+      } else {
+        this.utilsService.showSnackBar(
+          'ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON'
+        );
       }
 
       // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -460,6 +709,7 @@ export class PrefillIdComponent implements OnInit {
                 },
               ],
               allowance: [
+                // HAVE CREATED THIS BASED ON INDEX BUT NEED TO MODIFY IT BY FINDING THE REQUIRED ONE AND THEN ASSIGNING THEAT VALUE IN THE ITR OBJECT
                 {
                   allowanceType: 'HOUSE_RENT',
                   taxableAmount: 0,
@@ -544,6 +794,7 @@ export class PrefillIdComponent implements OnInit {
             });
           } else {
             // NEED TO UPDATE THE EXISTING OBJECT WITH THE NEW DATA
+            this.utilsService.showSnackBar('ITR_Obj.Employers already exists');
           }
         }
       }
@@ -589,7 +840,82 @@ export class PrefillIdComponent implements OnInit {
                 },
               ],
             });
+          } else {
+            // NEED TO UPDATE THE EXISTING OBJECT WITH THE NEW DATA
+            this.utilsService.showSnackBar(
+              'ITR_Obj.HouseProperty already exists'
+            );
           }
+        }
+      }
+
+      // OTHER INCOMES - NEED TO DO THIS AS PER ITR 1 BY CALLING THE FUNCTION
+      {
+        if (
+          ItrJSON[this.ITR_Type].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc
+        ) {
+          // All other incomes
+          if (this.ITR_Obj.incomes) {
+            // saving interest
+            this.ITR_Obj.incomes[0].amount =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[1].OthSrcOthAmount;
+            // fixed deposit interest
+            this.ITR_Obj.incomes[1].amount =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[2].OthSrcOthAmount;
+            //income tax refund
+            this.ITR_Obj.incomes[2].amount =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[4].OthSrcOthAmount;
+            // any other income
+            this.ITR_Obj.incomes[3].amount =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[5].OthSrcOthAmount;
+            // family pension income
+            this.ITR_Obj.incomes[4].amount =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[3].OthSrcOthAmount;
+          } else {
+            this.utilsService.showSnackBar('this.ITR_Obj.incomes is empty');
+          }
+
+          // Dividend Income
+          if (this.ITR_Obj.dividendIncomes) {
+            this.ITR_Obj.dividendIncomes[0].income =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[0].DividendInc.DateRange.Upto15Of6;
+            this.ITR_Obj.dividendIncomes[1].income =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[0].DividendInc.DateRange.Upto15Of9;
+            this.ITR_Obj.dividendIncomes[2].income =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[0].DividendInc.DateRange.Up16Of9To15Of12;
+            this.ITR_Obj.dividendIncomes[3].income =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[0].DividendInc.DateRange.Up16Of12To15Of3;
+            this.ITR_Obj.dividendIncomes[4].income =
+              ItrJSON[
+                this.ITR_Type
+              ].IncomeDeductions.OthersInc.OthersIncDtlsOthSrc[0].DividendInc.DateRange.Up16Of3To31Of3;
+          } else {
+            this.utilsService.showSnackBar(
+              'this.ITR_Obj.dividendIncomes is empty'
+            );
+          }
+        } else {
+          this.utilsService.showSnackBar(
+            'ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.OthersInc.OthersIncDtlsOthSrc does not exist'
+          );
         }
       }
 
