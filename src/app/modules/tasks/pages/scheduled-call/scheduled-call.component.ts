@@ -21,9 +21,12 @@ export class ScheduledCallComponent implements OnInit {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
-  // config: any;
+  statusId: null;
   agentList: any = [];
-  // isAdmin: boolean;
+  statuslist: any = [
+    { statusName: 'Open', statusId: '17' },
+    { statusName: 'Done', statusId: '18' },
+  ];
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
@@ -74,7 +77,10 @@ export class ScheduledCallComponent implements OnInit {
     this.search();
   }
 
-  /* async */ getAgentList() {
+  // async getMasterStatusList() {
+  //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
+  // }
+  getAgentList() {
     // this.agentList = await this.utilsService.getStoredAgentList();
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
     const isAgentListAvailable =
@@ -122,7 +128,7 @@ export class ScheduledCallComponent implements OnInit {
     this.loading = true;
     var param2 = `/schedule-call-details/${id}?&page=${
       this.config.currentPage - 1
-    }&size=10`;
+    }&size=${this.searchParam.pageSize}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
         if (result.content instanceof Array && result.content.length > 0) {
@@ -169,6 +175,8 @@ export class ScheduledCallComponent implements OnInit {
         smeName: scheduleCalls[i]['smeName'],
         scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
+        statusName: scheduleCalls[i]['statusName'],
+        statusId: scheduleCalls[i]['statusId'],
         serviceType:
           scheduleCalls[i]['serviceType'] !== null
             ? scheduleCalls[i]['serviceType']
@@ -273,6 +281,33 @@ export class ScheduledCallComponent implements OnInit {
         },
       },
       {
+        headerName: 'Status',
+        field: 'statusId',
+        width: 100,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        valueGetter: function nameFromCode(params) {
+          if (params.data.statusId == 18) {
+            return 'Done';
+          } else {
+            return 'Open';
+          }
+        },
+        // cellRenderer: (data: any) => {
+        //   if (data.value) {
+        //     return data.statusName;
+        //   } else {
+        //     return '-';
+        //   }
+        // },
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
         headerName: 'Filer Name',
         field: 'filerName',
         width: 150,
@@ -334,29 +369,6 @@ export class ScheduledCallComponent implements OnInit {
           };
         },
       },
-      // {
-      //   headerName: 'Whats App',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
-      //       style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-      //         <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
-      //        </button>`;
-      //   },
-      //   width: 60,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
       {
         headerName: 'Notes',
         editable: false,
@@ -410,9 +422,15 @@ export class ScheduledCallComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Update Call Status"
-            style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
+          if (params.data.statusId == 18) {
+            return `<button type="button" class="action_icon add_button" title="Update Call Status"
+            style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;" data-action-type="call-done" 'disabled'  >Done</button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Update Call Status"
+            style="font-size: 12px; width:50px; background-color:#008000;color: #fff; cursor:pointer;" data-action-type="call-done">Done</button>`;
+          }
         },
+
         width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
@@ -589,8 +607,8 @@ export class ScheduledCallComponent implements OnInit {
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
-      statusName: 'Done',
-      statusId: 18,
+      // statusName: this.statuslist.statusName,
+      statusId: this.statuslist.statusId,
     };
     let param = `/schedule-call-details`;
     this.userMsService.putMethod(param, reqBody).subscribe(
@@ -603,7 +621,7 @@ export class ScheduledCallComponent implements OnInit {
         );
         setTimeout(() => {
           this.showScheduleCallList();
-        }, 3000);
+        }, 300);
       },
       (error) => {
         this.toastMsgService.alert(
@@ -636,39 +654,34 @@ export class ScheduledCallComponent implements OnInit {
       if (!this.searchParam.emailId) {
         this.searchParam.emailId = null;
       }
+      this.statusId = null;
+    } else if (form == 'status') {
+      this.searchParam.page = 0;
+      this.searchParam.mobileNumber = null;
+      this.searchParam.email = null;
     }
+
     this.loading = false;
     let data = this.utilsService.createUrlParams(this.searchParam);
     var param = `/schedule-call-details/${this.agentId}?${data}`;
 
-    this.userMsService.getMethod(param).subscribe(
-      (result: any) => {
-        console.log('MOBsearchScheCALL:', result);
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('MOBsearchScheCALL:', result);
 
-        if (result.content instanceof Array && result.content.length > 0) {
-          this.scheduleCallsData = result.content;
-          this.scheduleCallGridOptions.api?.setRowData(
-            this.createRowData(this.scheduleCallsData)
-          );
-
-          this.config.totalItems = result.content.numberOfElements;
-          // this.scheduleCallGridOptions.api?.setRowData(
-          //   this.createRowData(this.scheduleCallsData)
-          // );
-        } else {
-          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
-          this.toastMsgService.alert('error', result.message);
-        }
+      if (result.content instanceof Array && result.content.length > 0) {
+        this.scheduleCallsData = result.content;
+        this.scheduleCallGridOptions.api?.setRowData(
+          this.createRowData(this.scheduleCallsData)
+        );
+        // this.scheduleCallGridOptions.api.setColumnDefs(
+        //   this.createColumnDef(this.statuslist)
+        // );
+        this.config.totalItems = result.totalElements;
+      } else {
+        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+        this.toastMsgService.alert('error', result.message);
       }
-      // (error) => {
-      //   this.loading = false;
-      //   this.config.totalItems = 0;
-      //   this.toastMsgService.alert(
-      //     'error',
-      //     'Fail to getting leads data, try after some time.'
-      //   );
-      // }
-    );
+    });
   }
 }
