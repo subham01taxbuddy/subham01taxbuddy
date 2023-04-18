@@ -264,58 +264,66 @@ export class AssignedSmeComponent implements OnInit {
            let result=[] ; let result1='';let result2='';let result3='';let result4='';let result5='';let result6='';let result7='';let result8='';
           smeServices?.forEach((element) => {
             if (element?.serviceType == "ITR") {
-              var r1='ITR'
+              var r1='ITR';
+              let r2 = '';
               if(element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true" ></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true" ></i>&nbsp;'
               }
                result1=r2+r1 ;
             }
             else if (element?.serviceType == "NRI") {
-              var r1='NRI'
+              var r1='NRI';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result2=(r2+r1)||'';
             }
             else if (element?.serviceType == "TPA") {
-              var r1='TPA'
+              var r1='TPA';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result3=r2+r1;
             }
             else if (element?.serviceType == "GST") {
-              var r1='GST'
+              var r1='GST';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result4=r2+r1;
             }
             else if (element?.serviceType == "NOTICE") {
-              var r1='NOTICE'
+              var r1='NOTICE';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i> &nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i> &nbsp;'
               }
                result5=r2+r1;
             }
             else if (element?.serviceType == "WB") {
-              var r1='WB'
+              var r1='WB';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result6=r2+r1;
             }
             else if (element?.serviceType == "PD") {
-              var r1='PD'
+              var r1='PD';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result7=r2+r1;
             }
             else if (element?.serviceType == "MF") {
-              var r1='MF'
+              var r1='MF';
+              let r2 = '';
               if( element?.assignmentStart == true){
-                var r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
               }
                result8=r2+r1;
             }
