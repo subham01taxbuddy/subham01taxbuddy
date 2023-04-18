@@ -21,9 +21,12 @@ export class ScheduledCallComponent implements OnInit {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
-  // config: any;
+  statusId: null;
   agentList: any = [];
-  // isAdmin: boolean;
+  statuslist: any = [
+    { statusName: 'Open', statusId: '17' },
+    { statusName: 'Done', statusId: '18' },
+  ];
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
@@ -33,6 +36,8 @@ export class ScheduledCallComponent implements OnInit {
     page: 0,
     pageSize: 30,
     totalPages: null,
+    mobileNumber: null,
+    emailId: null,
   };
 
   constructor(
@@ -61,16 +66,21 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   ngOnInit() {
+    const userId = this.utilsService.getLoggedInUserID();
+    this.agentId = userId;
     this.getAgentList();
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
       this.loggedUserId = userInfo.USER_UNIQUE_ID;
     }
     this.showScheduleCallList();
-    this.config;
+    this.search();
   }
 
-  /* async */ getAgentList() {
+  // async getMasterStatusList() {
+  //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
+  // }
+  getAgentList() {
     // this.agentList = await this.utilsService.getStoredAgentList();
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
     const isAgentListAvailable =
@@ -92,22 +102,33 @@ export class ScheduledCallComponent implements OnInit {
     this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage - 1);
   }
 
-  fromSme(event) {
-    this.selectedAgent = event;
-    if (this.utilsService.isNonEmpty(this.selectedAgent)) {
-      this.searchMobNo = '';
-      this.showByAdminUserId = false;
-      this.getScheduledCallsInfo(this.selectedAgent, 0);
+  ownerId: number;
+  filerId: number;
+  agentId = null;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
     } else {
-      this.getScheduledCallsInfo(this.loggedUserId, 0);
+      this.filerId = event? event.userId : null;
     }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.search('agent');
   }
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
     var param2 = `/schedule-call-details/${id}?&page=${
       this.config.currentPage - 1
-    }&size=10`;
+    }&size=${this.searchParam.pageSize}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
         if (result.content instanceof Array && result.content.length > 0) {
@@ -137,6 +158,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   createRowData(scheduleCalls) {
+    // console.log('scheduleCalls -> ', scheduleCalls);
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
@@ -148,8 +170,13 @@ export class ScheduledCallComponent implements OnInit {
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
         ownerName: scheduleCalls[i]['ownerName'],
+        userEmail: scheduleCalls[i]['userEmail'],
+        smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
+        smeName: scheduleCalls[i]['smeName'],
         scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
+        statusName: scheduleCalls[i]['statusName'],
+        statusId: scheduleCalls[i]['statusId'],
         serviceType:
           scheduleCalls[i]['serviceType'] !== null
             ? scheduleCalls[i]['serviceType']
@@ -157,7 +184,7 @@ export class ScheduledCallComponent implements OnInit {
       });
       scheduleCallsArray.push(scheduleCallsInfo);
     }
-    console.log('scheduleCallsArray-> ', scheduleCallsArray);
+    console.log('scheduleCallsArrayShow-> ', scheduleCallsArray);
     return scheduleCallsArray;
   }
 
@@ -210,6 +237,19 @@ export class ScheduledCallComponent implements OnInit {
         },
       },
       {
+        headerName: 'Mail Id',
+        field: 'userEmail',
+        width: 300,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
         headerName: 'Schedule Call Date',
         field: 'scheduleCallTime',
         width: 150,
@@ -235,6 +275,33 @@ export class ScheduledCallComponent implements OnInit {
         sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Status',
+        field: 'statusId',
+        width: 100,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        valueGetter: function nameFromCode(params) {
+          if (params.data.statusId == 18) {
+            return 'Done';
+          } else {
+            return 'Open';
+          }
+        },
+        // cellRenderer: (data: any) => {
+        //   if (data.value) {
+        //     return data.statusName;
+        //   } else {
+        //     return '-';
+        //   }
+        // },
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
@@ -302,29 +369,6 @@ export class ScheduledCallComponent implements OnInit {
           };
         },
       },
-      // {
-      //   headerName: 'Whats App',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
-      //       style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-      //         <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
-      //        </button>`;
-      //   },
-      //   width: 60,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
       {
         headerName: 'Notes',
         editable: false,
@@ -378,9 +422,15 @@ export class ScheduledCallComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Update Call Status"
-            style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
+          if (params.data.statusId == 18) {
+            return `<button type="button" class="action_icon add_button" title="Update Call Status"
+            style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;" data-action-type="call-done" 'disabled'  >Done</button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Update Call Status"
+            style="font-size: 12px; width:50px; background-color:#008000;color: #fff; cursor:pointer;" data-action-type="call-done">Done</button>`;
+          }
         },
+
         width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
@@ -557,8 +607,8 @@ export class ScheduledCallComponent implements OnInit {
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
-      statusName: 'Done',
-      statusId: 18,
+      // statusName: this.statuslist.statusName,
+      statusId: this.statuslist.statusId,
     };
     let param = `/schedule-call-details`;
     this.userMsService.putMethod(param, reqBody).subscribe(
@@ -571,7 +621,7 @@ export class ScheduledCallComponent implements OnInit {
         );
         setTimeout(() => {
           this.showScheduleCallList();
-        }, 3000);
+        }, 300);
       },
       (error) => {
         this.toastMsgService.alert(
@@ -587,5 +637,51 @@ export class ScheduledCallComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showScheduleCallList();
+    this.search();
+  }
+
+  search(form?) {
+    if (form == 'mobile') {
+      this.searchParam.page = 0;
+      if (
+        this.searchParam.mobileNumber == null ||
+        this.searchParam.mobileNumber == ''
+      ) {
+        this.searchParam.mobileNumber = null;
+      } else {
+        this.searchParam.emailId = null;
+      }
+      if (!this.searchParam.emailId) {
+        this.searchParam.emailId = null;
+      }
+      this.statusId = null;
+    } else if (form == 'status') {
+      this.searchParam.page = 0;
+      this.searchParam.mobileNumber = null;
+      this.searchParam.email = null;
+    }
+
+    this.loading = false;
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    var param = `/schedule-call-details/${this.agentId}?${data}`;
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('MOBsearchScheCALL:', result);
+
+      if (result.content instanceof Array && result.content.length > 0) {
+        this.scheduleCallsData = result.content;
+        this.scheduleCallGridOptions.api?.setRowData(
+          this.createRowData(this.scheduleCallsData)
+        );
+        // this.scheduleCallGridOptions.api.setColumnDefs(
+        //   this.createColumnDef(this.statuslist)
+        // );
+        this.config.totalItems = result.totalElements;
+      } else {
+        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+        this.toastMsgService.alert('error', result.message);
+      }
+    });
   }
 }

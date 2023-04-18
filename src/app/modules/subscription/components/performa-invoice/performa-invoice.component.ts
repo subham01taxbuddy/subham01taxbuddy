@@ -367,7 +367,7 @@ export class PerformaInvoiceComponent implements OnInit {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerDetails?.userId) {
+    if (this.ownerDetails?.userId && !this.filerDetails?.userId) {
       userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
     if (this.filerDetails?.userId) {
