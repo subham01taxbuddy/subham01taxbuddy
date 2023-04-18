@@ -110,6 +110,14 @@ export class SidebarComponent implements DoCheck {
       ]
     },
     {
+      name: 'All Users',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: '/pages/user-management/users',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
+    },
+    {
       name: 'Review',
       // iconClass: 'fa fa-code',
       active: true,
