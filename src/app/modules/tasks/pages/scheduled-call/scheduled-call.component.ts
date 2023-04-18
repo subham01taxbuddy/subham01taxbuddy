@@ -34,7 +34,7 @@ export class ScheduledCallComponent implements OnInit {
     pageSize: 30,
     totalPages: null,
     mobileNumber: null,
-    email: null,
+    emailId: null,
   };
 
   constructor(
@@ -63,6 +63,8 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   ngOnInit() {
+    const userId = this.utilsService.getLoggedInUserID();
+    this.agentId = userId;
     this.getAgentList();
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
@@ -94,15 +96,26 @@ export class ScheduledCallComponent implements OnInit {
     this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage - 1);
   }
 
-  fromSme(event) {
-    this.selectedAgent = event;
-    if (this.utilsService.isNonEmpty(this.selectedAgent)) {
-      this.searchMobNo = '';
-      this.showByAdminUserId = false;
-      this.getScheduledCallsInfo(this.selectedAgent, 0);
+  ownerId: number;
+  filerId: number;
+  agentId = null;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
     } else {
-      this.getScheduledCallsInfo(this.loggedUserId, 0);
+      this.filerId = event? event.userId : null;
     }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.search('agent');
   }
 
   getScheduledCallsInfo(id, page) {
@@ -618,17 +631,15 @@ export class ScheduledCallComponent implements OnInit {
       ) {
         this.searchParam.mobileNumber = null;
       } else {
-        this.searchParam.email = null;
+        this.searchParam.emailId = null;
       }
-      if (this.searchParam.email == null || this.searchParam.email == '') {
-        this.searchParam.email = null;
-      } else {
-        this.searchParam.mobileNumber = null;
+      if (!this.searchParam.emailId) {
+        this.searchParam.emailId = null;
       }
     }
     this.loading = false;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    var param = `/schedule-call-details/${this.loggedUserId}?${data}`;
+    var param = `/schedule-call-details/${this.agentId}?${data}`;
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
