@@ -35,6 +35,8 @@ export class AssignedSmeComponent implements OnInit {
     value: 'name', name: 'Name'
   }, {
     value: 'kommunicateEmailId', name: 'Kommunicate Email Id'
+  },{
+    value:'smeOfficialEmail',name:'Official Email ID'
   },];
   searchVal: string = "";
   key: any;
@@ -76,7 +78,7 @@ export class AssignedSmeComponent implements OnInit {
     if (this.searchVal !== "") {
       this.getSmeSearchList(key, this.searchVal);
     }else{
-      this._toastMessageService.alert('error','Plz enter value.');
+      this._toastMessageService.alert('error','Please enter value.');
     }
   }
 
