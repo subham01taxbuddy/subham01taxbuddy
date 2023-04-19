@@ -384,6 +384,131 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
+  updateInvestments(investments, ITR_Type) {
+    console.log('updateInvestments==>>', investments, ITR_Type);
+    const investmentNames = investments.map((arr) => arr[0]);
+
+    let disabilities80dd = '';
+    const disabilities80ddArray = investments.find(
+      (disabilities80dd) => (disabilities80dd) =>
+        disabilities80dd[0] === 'Section80DD'
+    );
+    console.log('disabilities80ddArray=>', disabilities80ddArray);
+
+    if (disabilities80ddArray[1] > 75000) {
+      disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
+    } else {
+      disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
+    }
+
+    // create a mapping object to map the JSON names to the new names of ITR Object
+    const mapping = {
+      Section80C: 'ELSS', // done
+      Section80CCC: 'PENSION_FUND', // done
+      Section80CCDEmployeeOrSE: 'PS_EMPLOYEE', // done
+      Section80CCD1B: 'PENSION_SCHEME', // done
+      Section80CCDEmployer: 'PS_EMPLOYER', // done
+      Section80D: 36000,
+      Section80DD: disabilities80dd, // under disabilities, typeOfDisablilities
+      Section80DDB: 'SELF_OR_DEPENDENT' || 'SELF_OR_DEPENDENT_SENIOR_CITIZEN', // under disabilities, typeOfDisablilities
+      Section80E: 'EDUCATION', // done
+      Section80EE: 24000,
+      Section80EEA: 0,
+      Section80EEB: 'ELECTRIC_VEHICLE', // done
+      Section80G: 49197,
+      Section80GG: 'HOUSE_RENT_PAID', // done
+      Section80GGA: 0,
+      Section80GGC: 'POLITICAL', // done
+      Section80U: 'SELF_WITH_DISABILITY' || 'SELF_WITH_SEVERE_DISABILITY', // under disabilities, typeOfDisablilities
+      Section80TTA: 10000, // Did not find this in itrObject
+      Section80TTB: 0,
+    };
+    console.log('updateInvestmentsMapping==>>', mapping);
+
+    for (let i = 0; i < investments.length; i++) {
+      console.log('i ==>>>>', i);
+      const type = investmentNames[i];
+      {
+        // use the mapping object to get the new name for the current type
+        const newName = mapping[type];
+        if (newName === 'EDUCATION') {
+          const educationLoanDeduction =
+            (this.ITR_Obj.loans[0].interestPaidPerAnum = investments[i][1]);
+          console.log('educationLoanDeduction', educationLoanDeduction);
+        }
+
+        if (newName === 'HOUSE_RENT_PAID') {
+          const HouseRentDeduction80gg = (this.ITR_Obj.expenses[0].amount =
+            investments[i][1]);
+          console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
+        }
+
+        if (newName === 'ELECTRIC_VEHICLE') {
+          const electricVehicleDeduction = (this.ITR_Obj.expenses[1].amount =
+            investments[i][1]);
+          console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
+        }
+
+        if (newName === 'POLITICAL') {
+          const donation80ggc = this.ITR_Obj.donations.find(
+            (donation) => donation.donationType === 'POLITICAL'
+          );
+
+          const donation80ggcAmount = (donation80ggc.amountOtherThanCash =
+            investments[i][1]);
+          console.log('POLITICAL80GGC', donation80ggcAmount);
+        }
+
+        if (newName === disabilities80dd) {
+          console.log(disabilities80dd);
+          const disability80DD = this.ITR_Obj.disabilities?.find(
+            (disabilities) => disabilities.typeOfDisability
+          );
+          console.log('disability80DD', disability80DD);
+
+          const disabilities80DDAmount = (disability80DD.amount =
+            investments[i][1]);
+          console.log('disabilities80DDAmount', disabilities80DDAmount);
+        }
+
+        try {
+          // finding and storing the object with the same NatureDesc (type) present in JSON Object
+          const jsonInvestmentDetails = investmentNames.find(
+            (investmentDetail) => investmentDetail === type
+          );
+          console.log('jsonInvestmentDetails====>>>>', jsonInvestmentDetails);
+
+          if (jsonInvestmentDetails) {
+            {
+              // finding and storing the object with the same NatureDesc (type) present in ITR Object
+              const jsonItrObjInvestments = this.ITR_Obj.investments.find(
+                (jsonItrObjInvestment) =>
+                  jsonItrObjInvestment.investmentType === newName
+              );
+              console.log(
+                'jsonItrObjInvestments====>>>>',
+                jsonItrObjInvestments
+              );
+
+              // If same type is not found in the ITR Object then show an error message
+              if (!jsonItrObjInvestments) {
+                this.utilsService.showSnackBar(
+                  `Exempt Income - ${newName} Income was not found in the ITR Object`
+                );
+              }
+
+              jsonItrObjInvestments.amount = investments[i][1];
+              console.log('setting amounts===>', investments[i][1]);
+            }
+          }
+        } catch (error) {
+          console.log(`Error occurred for type ${type}: `, error);
+          this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+        }
+      }
+    }
+  }
+
   // Uploading Utility JSON
   uploadUtilityItrJson(file: FileList) {
     if (file.length > 0) {
@@ -817,27 +942,56 @@ export class PrefillIdComponent implements OnInit {
       }
 
       // EXEMPT INCOME
-      if (
-        ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ExemptIncAgriOthUs10
-          .ExemptIncAgriOthUs10Dtls
-      ) {
-        if (this.ITR_Obj.exemptIncomes) {
-          //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
-          const availableExemptIncomes = this.uploadedJson[
-            this.ITR_Type
-          ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
-            (value) => value.NatureDesc
-          );
-          this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+      {
+        if (
+          ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ExemptIncAgriOthUs10
+            .ExemptIncAgriOthUs10Dtls
+        ) {
+          if (this.ITR_Obj.exemptIncomes) {
+            //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+            const availableExemptIncomes = this.uploadedJson[
+              this.ITR_Type
+            ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+              (value) => value.NatureDesc
+            );
+            this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+          } else {
+            this.utilsService.showSnackBar(
+              'There are no details under exemptIncomes in the ITR Obj'
+            );
+          }
         } else {
           this.utilsService.showSnackBar(
-            'There are no details under exemptIncomes in the ITR Obj'
+            'ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON'
           );
         }
-      } else {
-        this.utilsService.showSnackBar(
-          'ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON'
-        );
+      }
+
+      // INVESTMENT AND DEDUCTIONS
+
+      {
+        if (ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.DeductUndChapVIA) {
+          if (this.ITR_Obj.investments) {
+            //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+            const availableInvestments = Object.entries(
+              this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
+                .DeductUndChapVIA
+            ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
+
+            // console.log('availableInvestments==>>', availableInvestments);
+            this.updateInvestments(availableInvestments, this.ITR_Type);
+          } else {
+            this.utilsService.showSnackBar(
+              'There are no details under investments in the ITR Obj'
+            );
+          }
+        } else {
+          this.utilsService.showSnackBar(
+            `ItrJSON ${[
+              this.ITR_Type,
+            ]}.ITR1_IncomeDeductions.DeductUndChapVIA does not exist in JSON`
+          );
+        }
       }
 
       // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
