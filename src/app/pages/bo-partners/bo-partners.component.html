@@ -4,6 +4,11 @@
 ></ngx-loading>
 
 <div class="main clearfix">
+  <div class="align-items-center row">
+    <div class="col-sm-10">
+      <b style="font-size: 20px">Review</b>
+    </div>
+  </div>
   <div class="content content_full">
     <div class="content__container">
       <div class="card">
@@ -79,8 +84,8 @@
                 Search
               </button> -->
               <button
-                class="btn"
-                style="border: none; cursor: pointer"
+                class="tbd-btn"
+                style=" cursor: pointer"
                 (click)="getBoPartners()"
               >
                 Search
@@ -88,10 +93,10 @@
             </div>
           </form>
         </div>
-        <br />
         <p style="float: right">
           Total Count: <b>{{ config.totalItems }}</b>
         </p>
+        
         <br />
         <div class="card__row">
           <table>
