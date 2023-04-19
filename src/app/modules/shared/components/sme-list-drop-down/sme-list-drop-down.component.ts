@@ -190,6 +190,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     );
   }
 
+  resetDropdown(){
+    this.searchOwner.setValue(null);
+    this.searchFiler.setValue(null);
+    this.ownerDetails = null;
+    this.filerDetails = null;
+  }
+
   ngOnChanges() {
     this.ngOnInit();
     if (this.disabled) {
