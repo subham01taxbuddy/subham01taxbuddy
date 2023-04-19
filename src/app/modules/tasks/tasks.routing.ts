@@ -8,6 +8,7 @@ import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-ex
 import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
 import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
 import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new-users.component";
+import { PotentialUserComponent } from './pages/potential-user/potential-user.component';
 
 const routes: Routes = [
     {
@@ -17,6 +18,7 @@ const routes: Routes = [
             { path: 'assigned-users-new', component: AssignedNewUsersComponent },
             { path: 'schedule-call', component: ScheduledCallComponent },
             { path: 'filings', component: FilingsComponent },
+            { path: 'potential-users', component: PotentialUserComponent },
             // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
             {
                 path: 'exceptions', component: ExceptionsComponent,
