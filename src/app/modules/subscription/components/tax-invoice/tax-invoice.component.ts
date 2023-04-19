@@ -313,6 +313,25 @@ export class TaxInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  resetFilters(){
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
+    this.mobile.setValue(null);
+    this.email.setValue(null);
+    this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
+    this.searchOwner.setValue(null);
+    this.searchFiler.setValue(null);
+
+    this.getInvoice();
+  }
 
   getInvoice() {
 
