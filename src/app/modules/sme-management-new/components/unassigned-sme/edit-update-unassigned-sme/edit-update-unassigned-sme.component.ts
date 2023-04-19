@@ -22,7 +22,7 @@ export interface User {
   styleUrls: ['./edit-update-unassigned-sme.component.scss'],
 })
 export class EditUpdateUnassignedSmeComponent implements OnInit {
-  smeObj: SmeObj;
+  smeObj: any;
   loading = false;
   minDate = new Date(1900, 0, 1);
   maxDate = new Date(
@@ -295,42 +295,42 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     const param = `/sme-details-new/${userId}`;
     // if (this.smeFormGroup.valid) {
       this.loading = true;
-      let finalReq = {
-        userId: this.smeObj.userId,
-        name: this.name.value,
-        email: this.email.value,
-        mobileNumber: this.mobileNumber.value,
-        callingNumber: this.smeObj.callingNumber,
-        serviceType: this.smeObj.serviceType,
-        roles: this.smeObj.roles,
-        languages:this.languages.value,
-        qualification:this.qualification.value,
-        referredBy:this.referredBy.value,
-        state:this.state.value,
-        botId: this.smeObj.botId,
-        displayName: this.smeObj.displayName,
-        active: this.smeObj.active,
-        joiningDate: this.smeObj.joiningDate,
-        internal: this.smeObj.internal,
-        assignmentStart: this.smeObj.assignmentStart,
-        itrTypes: this.itrTypes.value,
-        roundRobinCount: this.smeObj.roundRobinCount,
-        assessmentYears: this.smeObj.assessmentYears,
-        parentId:parentId ,
-        parentName:parentName,
-        roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
-        owner: this.owner.value,
-        leader: this.leader.value,
-        admin: this.admin.value,
-        filer: this.filer.value,
-        coOwnerUserId: this.smeObj.coOwnerUserId,
-      };
 
-      // let requestBody = this.smeFormGroup.getRawValue();
+      let finalReq: any = {};
+      Object.assign(finalReq, this.smeObj);
+
+      finalReq.userId = this.smeObj.userId;
+      finalReq.name = this.name.value;
+      finalReq.email = this.email.value;
+      finalReq.mobileNumber = this.mobileNumber.value;
+      finalReq.callingNumber = this.smeObj.callingNumber;
+      finalReq.serviceType = this.smeObj.serviceType;
+      finalReq.roles = this.smeObj.roles;
+      finalReq.languages =this.languages.value;
+      finalReq.qualification =this.qualification?.value;
+      finalReq.referredBy =this.referredBy.value;
+      finalReq.state =this.state.value;
+      finalReq.botId = this.smeObj.botId;
+      finalReq.displayName = this.smeObj.displayName;
+      finalReq.active = this.smeObj.active;
+      finalReq.joiningDate = this.smeObj.joiningDate;
+      finalReq.internal = this.smeObj.internal;
+      finalReq.assignmentStart = this.smeObj.assignmentStart;
+      finalReq.itrTypes = this.itrTypes.value;
+      finalReq.roundRobinCount = this.smeObj.roundRobinCount;
+      finalReq.assessmentYears = this.smeObj.assessmentYears;
+      finalReq.parentId = parentId;
+      finalReq.parentName = parentName;
+      finalReq.roundRobinOwnerCount = this.smeObj.roundRobinOwnerCount;
+      finalReq.owner = this.owner.value;
+      finalReq.leader = this.leader.value;
+      finalReq.admin = this.admin.value;
+      finalReq.filer = this.filer.value;
+      finalReq.coOwnerUserId = this.smeObj.coOwnerUserId;
       // console.log('reqBody', requestBody);
-      let requestData = JSON.parse(JSON.stringify(finalReq));
-      console.log('requestData', requestData);
-      this.userMsService.putMethod(param, requestData).subscribe(
+      // let requestData = JSON.parse(JSON.stringify(finalReq));
+      // console.log('requestData', requestData);
+      this.userMsService.putMethod(param, finalReq).subscribe(
         (res:any) => {
           console.log('SME assignment updated', res);
           this.loading = false;
