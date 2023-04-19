@@ -36,7 +36,7 @@ export class AssignedSmeComponent implements OnInit {
   }, {
     value: 'kommunicateEmailId', name: 'Kommunicate Email Id'
   },{
-    value:'smeOfficialEmail',name:'Official Email ID'
+    value:'smeOfficialEmailId',name:'Official Email ID'
   },];
   searchVal: string = "";
   key: any;
