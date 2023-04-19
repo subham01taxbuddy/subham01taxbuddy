@@ -74,7 +74,7 @@ export class ScheduledCallComponent implements OnInit {
       this.loggedUserId = userInfo.USER_UNIQUE_ID;
     }
     this.showScheduleCallList();
-    this.search();
+    // this.search();
   }
 
   // async getMasterStatusList() {
@@ -637,7 +637,7 @@ export class ScheduledCallComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showScheduleCallList();
-    this.search();
+    // this.search();
   }
 
   search(form?) {
