@@ -151,7 +151,7 @@ export class PotentialUserComponent implements OnInit {
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
-    // this.loading = true;
+     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
@@ -162,6 +162,7 @@ export class PotentialUserComponent implements OnInit {
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
+        this.loading = false;
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
             this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
