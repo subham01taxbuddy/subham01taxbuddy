@@ -18,6 +18,7 @@ export class CreateNewUserComponent implements OnInit {
   services = ['ITR', 'GST', 'TPA', 'NOTICE'];
   assignedToMe = true;
   disableAssignedToMe = false;
+  assessmentYear:string;
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
@@ -26,6 +27,7 @@ export class CreateNewUserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getFy();
     const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm = this.fb.group({
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
@@ -47,9 +49,44 @@ export class CreateNewUserComponent implements OnInit {
     });
   }
 
-  fromSme(event) {
-    this.signUpForm.controls['agentUserId'].setValue(event);
+  async getFy(){
+    const fyList = await this.utilsService.getStoredFyList();
+    console.log('fylist',fyList)
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    this.assessmentYear=currentFyDetails[0].assessmentYear
+    console.log("ay",this.assessmentYear)
   }
+
+  ownerId: number;
+  filerId: number;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+
+    if(this.ownerId && this.filerId){
+      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+    }
+
+    if(this.filerId) {
+      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+    } else if(this.ownerId) {
+      this.signUpForm.controls['agentUserId'].setValue(this.ownerId);
+
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+    }
+
+  }
+
+  // fromSme(event) {
+  //   console.log('event value',event)
+  //   this.signUpForm.controls['agentUserId'].setValue(event);
+  // }
   isAssignedToMe() {
     if (!this.assignedToMe) {
       this.signUpForm.controls['agentUserId'].setValue(null);
@@ -80,10 +117,17 @@ export class CreateNewUserComponent implements OnInit {
   }
 
   assignUser(userId, agentUserId, serviceType) {
-    const param = `/sme/agent-assignment-manually?userId=${userId}&agentUserId=${agentUserId}&serviceType=${serviceType}`;
+    // https://uat-api.taxbuddy.com/user/agent-assignment-manually-new?userId=9506&assessmentYear=2023-2024&serviceType=ITR&smeUserId=7002
+    const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
     this.userService.getMethod(param).subscribe((res: any) => {
-      this.utilSerive.showSnackBar("User created succesfully.");
-      this.loading = false;
+      if(res.success==true){
+        this.loading = false;
+        this.utilSerive.showSnackBar("User created succesfully.");
+      }else{
+        this.loading = false;
+        this.utilSerive.showSnackBar("Error while assigning user!!!");
+      }
+
     }, error => {
       this.loading = false;
       this.utilSerive.showSnackBar("Error while assigning user!!!");
