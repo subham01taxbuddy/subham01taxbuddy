@@ -696,7 +696,9 @@ export class ScheduledCallComponent implements OnInit {
       } else {
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        this.toastMsgService.alert('error', result.message);
+        if(result.message) {
+          this.toastMsgService.alert('error', result.message);
+        }
       }
     });
   }
