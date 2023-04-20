@@ -130,7 +130,7 @@ export class ScheduledCallComponent implements OnInit {
     this.loading = true;
     var param2 = `/schedule-call-details/${id}?&page=${
       this.config.currentPage - 1
-    }&size=${this.searchParam.pageSize}`;
+    }&size=${this.searchParam.size}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
         if (result.content instanceof Array && result.content.length > 0) {
@@ -609,10 +609,11 @@ export class ScheduledCallComponent implements OnInit {
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
-      // statusName: this.statuslist.statusName,
-      statusId: this.statuslist.statusId,
+      statusId: 18,
+     statusName:'Done',
     };
     let param = `/schedule-call-details`;
+
     this.userMsService.putMethod(param, reqBody).subscribe(
       (response: any) => {
         console.log('schedule-call Done response: ', response);
