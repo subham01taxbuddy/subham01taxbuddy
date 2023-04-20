@@ -385,20 +385,40 @@ export class PrefillIdComponent implements OnInit {
   }
 
   updateInvestments(investments, ITR_Type) {
-    console.log('updateInvestments==>>', investments, ITR_Type);
+    console.log('All investment list array==>>', investments, ITR_Type);
     const investmentNames = investments.map((arr) => arr[0]);
+    console.log('All investment Names => investmentNames', investmentNames);
 
+    // setting 80dd names with this logic
     let disabilities80dd = '';
-    const disabilities80ddArray = investments.find(
-      (disabilities80dd) => (disabilities80dd) =>
-        disabilities80dd[0] === 'Section80DD'
-    );
-    console.log('disabilities80ddArray=>', disabilities80ddArray);
+    {
+      const disabilities80ddArray = investments.find(
+        (disabilities80dd) => disabilities80dd[0] === 'Section80DD'
+      );
+      console.log('IndividualDisabilities80ddArray=>', disabilities80ddArray);
 
-    if (disabilities80ddArray[1] > 75000) {
-      disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
-    } else {
-      disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
+      if (disabilities80ddArray[1] > 75000) {
+        disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
+      } else {
+        disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
+      }
+      console.log('IndividualDisabilities80ddName', disabilities80dd);
+    }
+
+    // setting 80dd names with this logic
+    let disabilities80U = '';
+    {
+      const disabilities80UArray = investments.find(
+        (disabilities80U) => disabilities80U[0] === 'Section80U'
+      );
+      console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
+
+      if (disabilities80UArray[1] > 75000) {
+        disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
+      } else {
+        disabilities80U = 'SELF_WITH_DISABILITY';
+      }
+      console.log('IndividualDisabilities80UName', disabilities80U);
     }
 
     // create a mapping object to map the JSON names to the new names of ITR Object
@@ -419,11 +439,11 @@ export class PrefillIdComponent implements OnInit {
       Section80GG: 'HOUSE_RENT_PAID', // done
       Section80GGA: 0,
       Section80GGC: 'POLITICAL', // done
-      Section80U: 'SELF_WITH_DISABILITY' || 'SELF_WITH_SEVERE_DISABILITY', // under disabilities, typeOfDisablilities
+      Section80U: disabilities80U, // under disabilities, typeOfDisablilities
       Section80TTA: 10000, // Did not find this in itrObject
       Section80TTB: 0,
     };
-    console.log('updateInvestmentsMapping==>>', mapping);
+    // console.log('updateInvestmentsMapping==>>', mapping);
 
     for (let i = 0; i < investments.length; i++) {
       console.log('i ==>>>>', i);
@@ -434,19 +454,19 @@ export class PrefillIdComponent implements OnInit {
         if (newName === 'EDUCATION') {
           const educationLoanDeduction =
             (this.ITR_Obj.loans[0].interestPaidPerAnum = investments[i][1]);
-          console.log('educationLoanDeduction', educationLoanDeduction);
+          // console.log('educationLoanDeduction', educationLoanDeduction);
         }
 
         if (newName === 'HOUSE_RENT_PAID') {
           const HouseRentDeduction80gg = (this.ITR_Obj.expenses[0].amount =
             investments[i][1]);
-          console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
+          // console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
         }
 
         if (newName === 'ELECTRIC_VEHICLE') {
           const electricVehicleDeduction = (this.ITR_Obj.expenses[1].amount =
             investments[i][1]);
-          console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
+          // console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
         }
 
         if (newName === 'POLITICAL') {
@@ -460,15 +480,35 @@ export class PrefillIdComponent implements OnInit {
         }
 
         if (newName === disabilities80dd) {
-          console.log(disabilities80dd);
-          const disability80DD = this.ITR_Obj.disabilities?.find(
-            (disabilities) => disabilities.typeOfDisability
-          );
-          console.log('disability80DD', disability80DD);
+          console.log('disabilities80ddName', disabilities80dd);
 
+          // finding the 80DD array
+          const disability80DD = this.ITR_Obj.disabilities[1];
+          console.log('disability80DDObjFound', disability80DD);
+
+          // setting the field name in ITR Obj as per the new name
+          disability80DD.typeOfDisability = disabilities80dd;
+
+          // setting the amount in ITR object
           const disabilities80DDAmount = (disability80DD.amount =
             investments[i][1]);
           console.log('disabilities80DDAmount', disabilities80DDAmount);
+        }
+
+        if (newName === disabilities80U) {
+          console.log('disabilities80uName', disabilities80U);
+
+          // finding the 80U array
+          const disability80U = this.ITR_Obj.disabilities[0];
+          console.log('disability80UObjFound', disability80U);
+
+          // setting the field name in ITR Obj as per the new name
+          disability80U.typeOfDisability = disabilities80U;
+
+          // setting the amount in ITR object
+          const disabilities80UAmount = (disability80U.amount =
+            investments[i][1]);
+          console.log('disabilities80UAmount', disabilities80UAmount);
         }
 
         try {

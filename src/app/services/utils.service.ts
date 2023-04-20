@@ -529,8 +529,33 @@ export class UtilsService {
       ],
       investments: [],
       donations: [],
-      loans: [],
-      expenses: [],
+      loans: [
+        {
+          loanType: 'EDUCATION',
+          name: null,
+          interestPaidPerAnum: null,
+          principalPaidPerAnum: 0,
+          loanAmount: null,
+          details: null,
+        },
+      ],
+
+      expenses: [
+        {
+          expenseType: 'HOUSE_RENT_PAID',
+          expenseFor: null,
+          details: null,
+          amount: null,
+          noOfMonths: 0,
+        },
+        {
+          expenseType: 'ELECTRIC_VEHICLE',
+          expenseFor: null,
+          details: null,
+          amount: null,
+          noOfMonths: 0,
+        },
+      ],
       insurances: [],
       assetsLiabilities: null,
       bankDetails:
@@ -577,6 +602,20 @@ export class UtilsService {
       seventhProviso139: null,
       depPayInvClmUndDednVIA: 'N',
       declaration: undefined,
+      disabilities: [
+        {
+          typeOfDisability: null,
+          amount: null,
+        },
+        {
+          typeOfDisability: null,
+          amount: null,
+        },
+        {
+          typeOfDisability: null,
+          amount: null,
+        },
+      ],
       disability: undefined,
       movableAsset: [],
       immovableAsset: [],
