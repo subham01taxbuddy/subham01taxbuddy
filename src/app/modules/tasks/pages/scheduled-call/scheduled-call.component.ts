@@ -101,7 +101,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   showScheduleCallList() {
-    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage - 1);
+    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
   }
 
   ownerId: number;

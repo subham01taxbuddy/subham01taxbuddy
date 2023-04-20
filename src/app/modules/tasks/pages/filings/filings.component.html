@@ -1,5 +1,8 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="main clearfix" style="padding-top: 35px;">
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+<div class="main clearfix" style="padding-top: 35px">
   <div class="align-items-center row">
     <div class="col-sm-10">
       <b style="font-size: 20px">ITRs</b>
@@ -7,42 +10,109 @@
   </div>
   <div class="card">
     <div class="card__row">
+      <div
+        class="filter__col card__col-sm-5 card__col-xs-12"
+        *ngIf="agents.length > 0"
+      >
+        <!-- <app-sme-list-drop-down
+          (sendSme)="fromSme($event)"
+        ></app-sme-list-drop-down> -->
+         <app-sme-list-drop-down (sendOwner)="fromOwner($event)" (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
+      </div>
+      <div class="filter__col card__col-sm-2 card__col-xs-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address: </mat-label>
+          <input
+            matInput
+            placeholder="Enter Email Address"
+            [(ngModel)]="searchParams.email"
+            maxlength="50"
+          />
+        </mat-form-field>
+      </div>
+      <div class="filter__col card__col-sm-2 card__col-xs-12">
+        <mat-form-field appearance="outline">
+          <mat-label>PAN</mat-label>
+          <input
+            matInput
+            placeholder="PAN Number"
+            autocomplete="off"
+            type="text"
+            maxlength="10"
+            minlength="10"
+            upperCase
+            [(ngModel)]="searchParams.panNumber"
+          />
+          <!-- (blur)="getUserInfoByPan(personalInfoForm.controls['panNumber'])"
+                        <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('required')">
+                            Enter PAN number
+                        </mat-error>
+                        <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('pattern')">
+                            Enter valid PAN
+                            (e.g XXXXX1234X)</mat-error> -->
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="card__row">
       <div class="filter__col card__col-sm-2 card__col-xs-12">
         <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
       </div>
-<!--      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">-->
-<!--        <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>-->
-<!--      </div>-->
+
       <div class="filter__col card__col-sm-2 card__col-xs-12">
         <mat-form-field appearance="outline">
           <mat-label>Select Status</mat-label>
-          <mat-select placeholder="Select Status" [(ngModel)]="selectedStatusId"
-            (selectionChange)="this.filter()">
-            <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+          <mat-select
+            placeholder="Select Status"
+            [(ngModel)]="searchParams.selectedStatusId"
+            (selectionChange)="this.filter()"
+          >
+            <mat-option
+              *ngFor="let status of itrStatus"
+              [value]="status.statusId"
+            >
               {{ status.statusName }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="filter__col card__col-sm-3 card__col-xs-12">
+      <div class="filter__col card__col-sm-2 card__col-xs-12">
         <mat-form-field appearance="outline">
           <mat-label>Mobile Number: </mat-label>
-          <input matInput placeholder="Enter Mobile Number" [(ngModel)]="mobileNumber" onlyDigits maxlength="10">
+          <input
+            matInput
+            placeholder="Enter Mobile Number"
+            type="number"
+            [(ngModel)]="searchParams.mobileNumber"
+            maxlength="10"
+          />
         </mat-form-field>
       </div>
+
       <div class="filter__col card__col-sm-2 card__col-xs-12">
-        <button class="tbd-btn" (click)="this.search()"><i class="fa fa-search"
-            aria-hidden="true"></i>&nbsp;Search</button>
+        <button class="tbd-btn" (click)="this.search()">
+          <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+        </button>
       </div>
     </div>
-    <p><span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span></p><br>
+    <p>
+      <span style="float: right"
+        >Total Count: <b>{{ this.config.totalItems }}</b></span
+      >
+    </p>
+    <br />
     <div class="card__row">
       <table>
-        <tr *ngFor="let item of itrDataList | paginate:config"></tr>
+        <tr *ngFor="let item of itrDataList | paginate : config"></tr>
       </table>
-      <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions" (rowClicked)="onRowClicked($event)">
+      <ag-grid-angular
+        class="ag-theme-balham"
+        [gridOptions]="myItrsGridOptions"
+        (rowClicked)="onRowClicked($event)"
+      >
       </ag-grid-angular>
-      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+      ></pagination-controls>
     </div>
   </div>
 </div>
