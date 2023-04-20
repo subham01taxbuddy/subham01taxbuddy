@@ -929,119 +929,6 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ProfessionalTaxUs16iii;
 
           // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
-
-          // this.ITR_Obj.employers.push({
-          //   id: '',
-          //   employerName: '',
-          //   address: '',
-          //   city: '',
-          //   pinCode: '',
-          //   state: '',
-          //   employerPAN: '',
-          //   employerTAN: '',
-          //   periodFrom: '',
-          //   periodTo: '',
-          //   taxableIncome:
-          //     ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.IncomeFromSal,
-          //   standardDeduction:
-          //     ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.DeductionUs16ia,
-          //   employerCategory: '',
-          //   exemptIncome:
-          //     ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //       .TotalAllwncExemptUs10,
-          //   taxRelief: null,
-          //   taxDeducted: null,
-          //   salary: [
-          //     {
-          //       salaryType: 'SEC17_1',
-          //       taxableAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.Salary,
-          //       exemptAmount: 0,
-          //     },
-          //   ],
-          //   allowance: [
-          //     {
-          //       allowanceType: 'HOUSE_RENT',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //           .AllwncExemptUs10Dtls[2].SalOthAmount,
-          //     },
-          //     {
-          //       allowanceType: 'LTA',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //           .AllwncExemptUs10Dtls[3].SalOthAmount,
-          //     },
-          //     {
-          //       allowanceType: 'CHILDREN_EDUCATION',
-          //       taxableAmount: 0,
-          //       exemptAmount: 0,
-          //     },
-          //     {
-          //       allowanceType: 'GRATUITY',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //           .AllwncExemptUs10Dtls[6].SalOthAmount,
-          //     },
-          //     {
-          //       allowanceType: 'COMMUTED_PENSION',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //           .AllwncExemptUs10Dtls[9].SalOthAmount,
-          //     },
-          //     {
-          //       allowanceType: 'LEAVE_ENCASHMENT',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //           .AllwncExemptUs10Dtls[7].SalOthAmount,
-          //     },
-          //     {
-          //       allowanceType: 'ANY_OTHER',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.AllwncExemptUs10
-          //           .AllwncExemptUs10Dtls[8].SalOthAmount,
-          //     },
-          //     {
-          //       allowanceType: 'ALL_ALLOWANCES',
-          //       taxableAmount: 0,
-          //       exemptAmount: 141200,
-          //     },
-          //   ],
-          //   perquisites: [
-          //     {
-          //       perquisiteType: 'SEC17_2',
-          //       taxableAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.PerquisitesValue,
-          //       exemptAmount: 0,
-          //     },
-          //   ],
-          //   profitsInLieuOfSalaryType: [
-          //     {
-          //       salaryType: 'SEC17_3',
-          //       taxableAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.ProfitsInSalary,
-          //       exemptAmount: 0,
-          //     },
-          //   ],
-          //   deductions: [
-          //     // NEED TO ADD ONE FOR ENTERTAINMENT ALLOWANCE
-          //     {
-          //       deductionType: 'PROFESSIONAL_TAX',
-          //       taxableAmount: 0,
-          //       exemptAmount:
-          //         ItrJSON[this.ITR_Type].ITR1_IncomeDeductions
-          //           .ProfessionalTaxUs16iii,
-          //     },
-          //   ],
-          //   upload: [],
-          //   calculators: null,
-          // });
         }
       }
 
@@ -1155,7 +1042,6 @@ export class PrefillIdComponent implements OnInit {
       }
 
       // INVESTMENT AND DEDUCTIONS
-
       {
         if (ItrJSON[this.ITR_Type].ITR1_IncomeDeductions.DeductUndChapVIA) {
           if (this.ITR_Obj.investments) {
@@ -1178,6 +1064,154 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Type,
             ]}.ITR1_IncomeDeductions.DeductUndChapVIA does not exist in JSON`
           );
+        }
+      }
+
+      // TAXES PAID
+
+      {
+        //SALARY TDS
+        {
+          const jsonSalaryTDS =
+            ItrJSON[this.ITR_Type].TDSonSalaries.TDSonSalary;
+
+          if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
+            this.ITR_Obj.taxPaid.onSalary = [];
+            this.utilsService.showSnackBar(
+              'There are no tax paid salary details in the JSON that you have provided'
+            );
+          } else {
+            this.ITR_Obj.taxPaid.onSalary = jsonSalaryTDS.map(
+              ({
+                EmployerOrDeductorOrCollectDetl: {
+                  TAN,
+                  EmployerOrDeductorOrCollecterName,
+                },
+                IncChrgSal,
+                TotalTDSSal,
+              }) => {
+                return {
+                  id: null,
+                  srNo: null,
+                  deductorName: EmployerOrDeductorOrCollecterName,
+                  deductorTAN: TAN,
+                  totalAmountCredited: IncChrgSal,
+                  totalTdsDeposited: TotalTDSSal,
+                  taxDeduction: null,
+                };
+              }
+            );
+          }
+        }
+
+        // OTHER THAN SALARY
+        {
+          const jsonOtherThanSalaryTDS =
+            ItrJSON[this.ITR_Type].TDSonOthThanSals.TDSonOthThanSal;
+
+          if (!jsonOtherThanSalaryTDS || jsonOtherThanSalaryTDS.length === 0) {
+            this.ITR_Obj.taxPaid.otherThanSalary16A = [];
+            this.utilsService.showSnackBar(
+              'There are no tax paid other than salary details in the JSON that you have provided'
+            );
+          } else {
+            this.ITR_Obj.taxPaid.otherThanSalary16A =
+              jsonOtherThanSalaryTDS.map(
+                ({
+                  EmployerOrDeductorOrCollectDetl: {
+                    TAN,
+                    EmployerOrDeductorOrCollecterName,
+                  },
+                  AmtForTaxDeduct,
+                  ClaimOutOfTotTDSOnAmtPaid,
+                }) => {
+                  return {
+                    id: null,
+                    srNo: null,
+                    deductorName: EmployerOrDeductorOrCollecterName,
+                    deductorTAN: TAN,
+                    totalTdsDeposited: ClaimOutOfTotTDSOnAmtPaid,
+                    // "headOfIncome": "EI", need to remove this from UI and object as JSON does not ask it
+                    totalAmountCredited: AmtForTaxDeduct,
+                    uniqueTDSCerNo: null,
+                    taxDeduction: null,
+                  };
+                }
+              );
+          }
+        }
+
+        // TDS3Details / otherThanSalary26QB
+        {
+          const jsonOtherThanSalary26QBTDS3 =
+            ItrJSON[this.ITR_Type].ScheduleTDS3Dtls.TDS3Details;
+
+          if (
+            !jsonOtherThanSalary26QBTDS3 ||
+            jsonOtherThanSalary26QBTDS3.length === 0
+          ) {
+            this.ITR_Obj.taxPaid.otherThanSalary26QB = [];
+            // this.utilsService.showSnackBar(
+            //   'There are no tax paid other than salary 26QB / TDS3 details in the JSON that you have provided'
+            // );
+          } else {
+            this.ITR_Obj.taxPaid.otherThanSalary26QB =
+              jsonOtherThanSalary26QBTDS3.map(
+                ({
+                  PANofTenant,
+                  NameOfTenant,
+                  GrsRcptToTaxDeduct,
+                  TDSClaimed,
+                }) => {
+                  return {
+                    id: null,
+                    srNo: null,
+                    deductorName: NameOfTenant,
+                    deductorPAN: PANofTenant,
+                    totalTdsDeposited: TDSClaimed,
+                    uniqueTDSCerNo: null,
+                    taxDeduction: null,
+                    totalAmountCredited: GrsRcptToTaxDeduct,
+                    // "headOfIncome": "EI", need to remove this from UI and object as JSON does not ask it
+                  };
+                }
+              );
+          }
+        }
+
+        // TCS - TAX COLLECTED AT SOURCE
+        {
+          const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS.TCS;
+
+          if (!jsonTCS || jsonTCS.length === 0) {
+            this.ITR_Obj.taxPaid.otherThanSalary16A = [];
+            this.utilsService.showSnackBar(
+              'There are no TCS tax paid other than salary details in the JSON that you have provided'
+            );
+          } else {
+            this.ITR_Obj.taxPaid.otherThanSalary16A = jsonTCS.map(
+              ({
+                EmployerOrDeductorOrCollectDetl: {
+                  TAN,
+                  EmployerOrDeductorOrCollecterName,
+                },
+                AmtForTaxDeduct,
+                ClaimOutOfTotTDSOnAmtPaid,
+              }) => {
+                return {
+                  id: null,
+                  srNo: null,
+                  deductorName: EmployerOrDeductorOrCollecterName,
+                  deductorTAN: TAN,
+                  totalTdsDeposited: ClaimOutOfTotTDSOnAmtPaid,
+                  // "headOfIncome": "EI", need to remove this from UI and object as JSON does not ask it
+                  totalAmountCredited: AmtForTaxDeduct,
+                  uniqueTDSCerNo: null,
+                  taxDeduction: null,
+                };
+              }
+            );
+          }
         }
       }
 
