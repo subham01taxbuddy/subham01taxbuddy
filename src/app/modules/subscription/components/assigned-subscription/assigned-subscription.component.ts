@@ -1,5 +1,5 @@
 import { data } from 'jquery';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -11,6 +11,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { map, Observable, startWith } from 'rxjs';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 export interface User {
   name: string;
@@ -275,6 +277,22 @@ export class AssignedSubscriptionComponent implements OnInit {
           this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
         })
     }
+  }
+
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters(){
+
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.subscriptionFormGroup.controls['searchName'].setValue(null);
+    this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
+    this.smeDropDown.resetDropdown();
+
+    this.getAssignedSubscription(0);
   }
 
   subscriptionCreateColumnDef() {

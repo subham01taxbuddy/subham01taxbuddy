@@ -43,6 +43,10 @@ export class ServiceDropDownComponent implements OnInit {
 
   }
 
+  resetService(){
+    this.selectedService.setValue(null);
+  }
+
   changeService(fy: String) {
     this.sendService.emit(this.selectedService.value);
   }

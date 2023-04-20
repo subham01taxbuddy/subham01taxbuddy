@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -11,6 +11,8 @@ import { environment } from 'src/environments/environment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { event } from 'jquery';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 @Component({
   selector: 'app-scheduled-call',
@@ -99,7 +101,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   showScheduleCallList() {
-    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage - 1);
+    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
   }
 
   ownerId: number;
@@ -640,6 +642,20 @@ export class ScheduledCallComponent implements OnInit {
     // this.search();
   }
 
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters(){
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+    this.searchParam.statusId = null;
+    this.statusId = null;
+
+    this.smeDropDown.resetDropdown();
+
+    this.search();
+  }
+
   search(form?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
@@ -680,7 +696,9 @@ export class ScheduledCallComponent implements OnInit {
       } else {
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        this.toastMsgService.alert('error', result.message);
+        if(result.message) {
+          this.toastMsgService.alert('error', result.message);
+        }
       }
     });
   }
