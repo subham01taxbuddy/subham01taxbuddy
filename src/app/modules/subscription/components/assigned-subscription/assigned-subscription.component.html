@@ -20,10 +20,10 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field> -->
-                <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
               </div>
             <div class="row" style="margin-top: 15px;">
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <mat-label> Financial Year </mat-label>
                 <mat-form-field appearance="outline" class="customBg">
                   <input type="text" matInput [formControl]="assessmentYear" readonly>
@@ -34,7 +34,7 @@
                   </mat-select> -->
                 </mat-form-field>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-3" *ngIf="false">
                 <mat-label> Search by Name </mat-label>
                 <mat-form-field appearance="outline" class="customBg">
                   <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
@@ -63,9 +63,23 @@
                   </mat-autocomplete> -->
                 </mat-form-field>
               </div>
-              <div class="col-sm-3 ">
+              <div class="col-sm-2 ">
                 <button *ngIf="isAllowed" class="btn " style=" background: #00AECA;
                 border-radius: 5px;" (click)="createSub()" > Create Subscription </button>
+              </div>
+              <div class="col-sm-2">
+                <!-- <a class="btn btn_stroke filter__add-link" (click)="this.search('mobile')"><i class="fa fa-search"
+                    aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a> -->
+                <button class="tbd-btn" (click)="this.resetFilters()">
+                  <!--              <div class="fa-layers fa-1x fa-fw">-->
+                  <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
+                  <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
+                  <!--              </div>-->
+                  <span class="fa-stack" style="width: 1.5em">
+                <i class="fa fa-filter fa-stack-1x"></i>
+                <i class="fa fa-slash fa-stack-1x"></i>
+              </span>Clear
+                </button>
               </div>
             </div>
           </div>

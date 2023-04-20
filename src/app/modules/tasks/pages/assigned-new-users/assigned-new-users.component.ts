@@ -2,7 +2,7 @@ import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -19,6 +19,8 @@ import { MoreOptionsDialogComponent } from '../../components/more-options-dialog
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { param } from 'jquery';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -883,6 +885,22 @@ export class AssignedNewUsersComponent implements OnInit {
   isNumeric(value) {
     return /^\d+$/.test(value);
   }
+
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters(){
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.smeDropDown.resetDropdown();
+    this.serviceDropDown.resetService();
+    this.search();
+  }
+
   search(form?, isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;

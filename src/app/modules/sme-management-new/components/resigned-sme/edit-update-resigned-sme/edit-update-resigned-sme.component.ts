@@ -49,7 +49,7 @@ export interface User {
   ],
 })
 export class EditUpdateResignedSmeComponent implements OnInit {
-  smeObj: SmeObj;
+  smeObj: any;
   loading = false;
   rolesList: any[] = [];
   minDate = new Date(1900, 0, 1);
@@ -243,7 +243,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     console.log(serviceRecord[0]);
 
     //add update api call
-    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+    // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
   }
 
   smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
@@ -302,7 +302,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
       }
     }
     console.log(itrRecord);
-    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
+    // this.smeInfoUpdateServiceCall(itrRecord, itr, null);
   }
 
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
@@ -315,7 +315,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         //existing record
         assignment.setValue(serviceRecord[0].assignmentStart);
 
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
       } else {
         assignment.setValue(false);
         let updated = this.smeRecords[0];
@@ -323,7 +323,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         updated.assignmentStart = false;
         this.smeRecords.push(updated);
 
-        this.smeInfoUpdateServiceCall(updated, service, assignment);
+        // this.smeInfoUpdateServiceCall(updated, service, assignment);
       }
     } else {
       //service is already added, set assignment start false
@@ -333,7 +333,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
       } else {
         assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
       }
     }
 
@@ -642,44 +642,39 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     if (this.smeFormGroup.valid && this.roles.valid && this.services.valid) {
       this.loading = true;
 
-      let finalReq = {
-        userId: this.smeObj.userId,
-        name: this.name.value,
-        email: this.email.value,
-        mobileNumber: this.mobileNumber.value,
-        referredBy: this.referredBy.value,
-        qualification: this.qualification.value,
-        state: this.state.value,
-        callingNumber: this.callingNumber.value,
-        serviceType: this.smeObj.serviceType,
-        roles: this.smeObj.roles,
-        languages: this.languages.value,
-        parentId: this.smeObj.parentId,
-        botId: this.smeObj.botId,
-        displayName: this.displayName.value,
-        active: this.smeObj.active,
-        leaveStartDate: LeaveStartDate,
-        leaveEndDate: LeaveEndDate,
-        joiningDate: JoiningDate,
-        resigningDate: ResigningDate,
-        internal: this.internal.value == 'internal' ? true : false,
-        assignmentStart: this.smeObj.assignmentStart,
-        itrTypes: this.itrTypes.value,
-        roundRobinCount: this.smeObj.roundRobinCount,
-        assessmentYears: this.smeObj.assessmentYears,
-        parentName: this.parentName.value,
-        roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
-        owner: this.owner.value,
-        leader: this.leader.value,
-        admin: this.admin.value,
-        filer: this.filer.value,
-        coOwnerUserId: this.ownerDetails?.userId,
-      };
+      let finalReq: any = {};
+      Object.assign(finalReq, this.smeObj);
 
-      console.log('finalReq', finalReq);
-      let requestData = JSON.parse(JSON.stringify(finalReq));
-      console.log('requestData', requestData);
-      this.userMsService.putMethod(param, requestData).subscribe(
+      finalReq.userId = this.smeObj.userId;
+      finalReq.name = this.name.value;
+      finalReq.email = this.email.value;
+      finalReq.mobileNumber = this.mobileNumber.value;
+      finalReq.callingNumber = this.smeObj.callingNumber;
+      finalReq.serviceType = this.smeObj.serviceType;
+      finalReq.roles = this.smeObj.roles;
+      finalReq.languages =this.languages.value;
+      finalReq.qualification =this.qualification?.value;
+      finalReq.referredBy =this.referredBy.value;
+      finalReq.state =this.state.value;
+      finalReq.botId = this.smeObj.botId;
+      finalReq.displayName = this.smeObj.displayName;
+      finalReq.active = this.smeObj.active;
+      finalReq.joiningDate = this.smeObj.joiningDate;
+      finalReq.internal = this.smeObj.internal;
+      finalReq.assignmentStart = this.smeObj.assignmentStart;
+      finalReq.itrTypes = this.itrTypes.value;
+      finalReq.roundRobinCount = this.smeObj.roundRobinCount;
+      finalReq.assessmentYears = this.smeObj.assessmentYears;
+      // finalReq.parentId = parentId;
+      // finalReq.parentName = parentName;
+      finalReq.roundRobinOwnerCount = this.smeObj.roundRobinOwnerCount;
+      finalReq.owner = this.owner.value;
+      finalReq.leader = this.leader.value;
+      finalReq.admin = this.admin.value;
+      finalReq.filer = this.filer.value;
+      finalReq.coOwnerUserId = this.smeObj.coOwnerUserId;
+      // console.log('requestData', requestData);
+      this.userMsService.putMethod(param, finalReq).subscribe(
         (res: any) => {
           console.log('SME assignment updated', res);
           this.loading = false;

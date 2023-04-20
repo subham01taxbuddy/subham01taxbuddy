@@ -67,7 +67,8 @@ export class SidebarComponent implements DoCheck {
         { name: 'ITRs', url: '/tasks/filings', roles:[]  },
         // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
         { name: 'Exceptions', url: '/tasks/exceptions', roles:[] },
-        { name: 'Create User', url: '/pages/user-management/create-user', roles:[] }
+        { name: 'Create User', url: '/pages/user-management/create-user', roles:[] },
+        { name: 'Potential Users', url: '/tasks/potential-users', roles:[] },
           // children: [
           //   { path: 'signup', component: SignUpExceptionsComponent },
           //   { path: 'eri', component: EriExceptionsComponent },

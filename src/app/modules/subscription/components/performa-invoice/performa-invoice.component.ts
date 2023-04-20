@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -20,6 +20,8 @@ import { map, Observable, startWith } from 'rxjs';
 // import { User } from 'src/app/modules/sme-management-new/components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
 import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
 import { ToastMessage } from 'src/app/classes/toast';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 export const MY_FORMATS = {
   parse: {
@@ -344,6 +346,26 @@ export class PerformaInvoiceComponent implements OnInit {
   getFilerNameId(option) {
     this.filerDetails = option;
     console.log(option);
+  }
+
+  resetFilters(){
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
+    this.mobile.setValue(null);
+    this.email.setValue(null);
+    this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
+    this.searchOwner.setValue(null);
+    this.searchFiler.setValue(null);
+
+    this.getInvoice();
   }
 
   getInvoice() {
