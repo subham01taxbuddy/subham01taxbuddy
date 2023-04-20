@@ -242,6 +242,7 @@
                     (change)="serviceUpdated('ITR', itr, itrToggle)"
                     >ITR</mat-checkbox
                   ><mat-slide-toggle
+                  disabled
                     *ngIf="itr.value"
                     [formControl]="itrToggle"
                     style="float: right; margin-right: 10px"
@@ -253,7 +254,6 @@
                       *ngIf="itr.value"
                       disableRipple
                       [selected]="nriServiceToggle"
-                      (click)="nriUpdated($event, itr)"
                       ><i class="fa fa-check" *ngIf="nriServiceToggle"></i
                       >NRI</mat-chip
                     ></mat-chip-list
@@ -273,7 +273,7 @@
                     >Tax Planing (TPA)/NPS
                   </mat-checkbox>
                   <mat-slide-toggle
-                    readonly
+                    readonly disabled
                     *ngIf="tpa.value"
                     [formControl]="tpaToggle"
                     style="float: right; margin-right: 10px"
@@ -290,7 +290,7 @@
                     >Notice</mat-checkbox
                   >
                   <mat-slide-toggle
-                    readonly
+                    readonly disabled
                     *ngIf="notice.value"
                     [formControl]="noticeToggle"
                     style="float: right; margin-right: 10px"

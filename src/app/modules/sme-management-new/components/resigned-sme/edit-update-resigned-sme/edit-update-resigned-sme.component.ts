@@ -243,7 +243,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     console.log(serviceRecord[0]);
 
     //add update api call
-    this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+    // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
   }
 
   smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
@@ -302,7 +302,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
       }
     }
     console.log(itrRecord);
-    this.smeInfoUpdateServiceCall(itrRecord, itr, null);
+    // this.smeInfoUpdateServiceCall(itrRecord, itr, null);
   }
 
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
@@ -315,7 +315,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         //existing record
         assignment.setValue(serviceRecord[0].assignmentStart);
 
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
       } else {
         assignment.setValue(false);
         let updated = this.smeRecords[0];
@@ -323,7 +323,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         updated.assignmentStart = false;
         this.smeRecords.push(updated);
 
-        this.smeInfoUpdateServiceCall(updated, service, assignment);
+        // this.smeInfoUpdateServiceCall(updated, service, assignment);
       }
     } else {
       //service is already added, set assignment start false
@@ -333,7 +333,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
         this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
       } else {
         assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+        // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
       }
     }
 
