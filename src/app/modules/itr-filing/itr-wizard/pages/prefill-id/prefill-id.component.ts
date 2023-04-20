@@ -390,6 +390,22 @@ export class PrefillIdComponent implements OnInit {
     console.log('All investment Names => investmentNames', investmentNames);
 
     // setting 80dd names with this logic
+    let disabilities80U = '';
+    {
+      const disabilities80UArray = investments.find(
+        (disabilities80U) => disabilities80U[0] === 'Section80U'
+      );
+      console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
+
+      if (disabilities80UArray[1] > 75000) {
+        disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
+      } else {
+        disabilities80U = 'SELF_WITH_DISABILITY';
+      }
+      console.log('IndividualDisabilities80UName', disabilities80U);
+    }
+
+    // setting 80dd names with this logic
     let disabilities80dd = '';
     {
       const disabilities80ddArray = investments.find(
@@ -406,19 +422,19 @@ export class PrefillIdComponent implements OnInit {
     }
 
     // setting 80dd names with this logic
-    let disabilities80U = '';
+    let disabilities80DDB = '';
     {
-      const disabilities80UArray = investments.find(
-        (disabilities80U) => disabilities80U[0] === 'Section80U'
+      const disabilities80DDBArray = investments.find(
+        (disabilities80DDB) => disabilities80DDB[0] === 'Section80DDB'
       );
-      console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
+      console.log('IndividualDisabilities80DDBArray=>', disabilities80DDBArray);
 
-      if (disabilities80UArray[1] > 75000) {
-        disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
+      if (disabilities80DDBArray[1] > 40000) {
+        disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
       } else {
-        disabilities80U = 'SELF_WITH_DISABILITY';
+        disabilities80DDB = 'SELF_OR_DEPENDENT';
       }
-      console.log('IndividualDisabilities80UName', disabilities80U);
+      console.log('IndividualDisabilities80DDBName', disabilities80DDB);
     }
 
     // create a mapping object to map the JSON names to the new names of ITR Object
@@ -428,20 +444,20 @@ export class PrefillIdComponent implements OnInit {
       Section80CCDEmployeeOrSE: 'PS_EMPLOYEE', // done
       Section80CCD1B: 'PENSION_SCHEME', // done
       Section80CCDEmployer: 'PS_EMPLOYER', // done
-      Section80D: 36000,
-      Section80DD: disabilities80dd, // under disabilities, typeOfDisablilities
-      Section80DDB: 'SELF_OR_DEPENDENT' || 'SELF_OR_DEPENDENT_SENIOR_CITIZEN', // under disabilities, typeOfDisablilities
+      Section80D: 'Section80D',
+      Section80DD: disabilities80dd, // done
+      Section80DDB: disabilities80DDB, // done
       Section80E: 'EDUCATION', // done
-      Section80EE: 24000,
-      Section80EEA: 0,
+      Section80EE: 24000, // hp is not saving hence not able to do this as of now 20/04/2023
+      Section80EEA: 0, // hp is not saving hence not able to do this as of now 20/04/2023
       Section80EEB: 'ELECTRIC_VEHICLE', // done
       Section80G: 49197,
       Section80GG: 'HOUSE_RENT_PAID', // done
-      Section80GGA: 0,
+      Section80GGA: 0, // We don't have this in our BO
       Section80GGC: 'POLITICAL', // done
-      Section80U: disabilities80U, // under disabilities, typeOfDisablilities
+      Section80U: disabilities80U, // done
       Section80TTA: 10000, // Did not find this in itrObject
-      Section80TTB: 0,
+      Section80TTB: 0, // Did not find this in itrObject
     };
     // console.log('updateInvestmentsMapping==>>', mapping);
 
@@ -469,14 +485,20 @@ export class PrefillIdComponent implements OnInit {
           // console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
         }
 
-        if (newName === 'POLITICAL') {
-          const donation80ggc = this.ITR_Obj.donations.find(
-            (donation) => donation.donationType === 'POLITICAL'
-          );
+        if (newName === disabilities80U) {
+          console.log('disabilities80uName', disabilities80U);
 
-          const donation80ggcAmount = (donation80ggc.amountOtherThanCash =
+          // finding the 80U array
+          const disability80U = this.ITR_Obj.disabilities[0];
+          console.log('disability80UObjFound', disability80U);
+
+          // setting the field name in ITR Obj as per the new name
+          disability80U.typeOfDisability = disabilities80U;
+
+          // setting the amount in ITR object
+          const disabilities80UAmount = (disability80U.amount =
             investments[i][1]);
-          console.log('POLITICAL80GGC', donation80ggcAmount);
+          console.log('disabilities80UAmount', disabilities80UAmount);
         }
 
         if (newName === disabilities80dd) {
@@ -495,21 +517,146 @@ export class PrefillIdComponent implements OnInit {
           console.log('disabilities80DDAmount', disabilities80DDAmount);
         }
 
-        if (newName === disabilities80U) {
-          console.log('disabilities80uName', disabilities80U);
+        if (newName === disabilities80DDB) {
+          console.log('disabilities80DDBName', disabilities80DDB);
 
-          // finding the 80U array
-          const disability80U = this.ITR_Obj.disabilities[0];
-          console.log('disability80UObjFound', disability80U);
+          // finding the 80DDB array
+          const disability80DDB = this.ITR_Obj.disabilities[2];
+          console.log('disability80DDBObjFound', disability80DDB);
 
           // setting the field name in ITR Obj as per the new name
-          disability80U.typeOfDisability = disabilities80U;
+          disability80DDB.typeOfDisability = disabilities80DDB;
 
           // setting the amount in ITR object
-          const disabilities80UAmount = (disability80U.amount =
+          const disabilities80DDBAmount = (disability80DDB.amount =
             investments[i][1]);
-          console.log('disabilities80UAmount', disabilities80UAmount);
+          console.log('disabilities80DDBAmount', disabilities80DDBAmount);
         }
+
+        if (newName === 'Section80D') {
+          // finding the Section80D array for self in itr object
+          const itrObjSelf80D = this.ITR_Obj.insurances.find(
+            (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
+          );
+          console.log('self80DObjFound', itrObjSelf80D);
+
+          // finding the Section80D array for parents in itr object
+          const itrObjParents80D = this.ITR_Obj.insurances.find(
+            (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
+          );
+          console.log('itrObjParents80D', itrObjParents80D);
+
+          // finding the Section80D array for self in json
+          const json80DSeniorCitizen =
+            this.uploadedJson[
+              this.ITR_Type
+            ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+              'SeniorCitizenFlag'
+            );
+
+          if (json80DSeniorCitizen) {
+            const json80DSeniorCitizenFlag =
+              this.uploadedJson[this.ITR_Type].Schedule80D
+                .Sec80DSelfFamSrCtznHealth.SeniorCitizenFlag;
+
+            console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
+
+            if (json80DSeniorCitizenFlag === 'Y') {
+              // SELF HEALTH INSURANCE PREMIUM
+              itrObjSelf80D.premium =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremSlfFamSrCtzn;
+              // SELF PREVENTIVE HEALTH CHECK UP
+              itrObjSelf80D.preventiveCheckUp =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn;
+              // SELF MEDICAL EXPENDITURE
+              itrObjSelf80D.medicalExpenditure =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpSlfFamSrCtzn;
+            } else {
+              // SELF HEALTH INSURANCE PREMIUM
+              itrObjSelf80D.premium =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
+              // SELF PREVENTIVE HEALTH CHECK UP
+              itrObjSelf80D.preventiveCheckUp =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam;
+            }
+          }
+
+          // finding the Section80D array for parents in itr object
+          const json80DParentsSeniorCitizen = this.uploadedJson[
+            this.ITR_Type
+          ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+            'ParentsSeniorCitizenFlag'
+          );
+
+          if (json80DParentsSeniorCitizen) {
+            const json80DParentsSeniorCitizenFlag =
+              this.uploadedJson[this.ITR_Type].Schedule80D
+                .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
+
+            console.log(
+              'json80DSeniorCitizenFlag',
+              json80DParentsSeniorCitizenFlag
+            );
+
+            if (json80DParentsSeniorCitizenFlag === 'Y') {
+              // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
+              itrObjParents80D.premium =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
+
+              // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
+              itrObjParents80D.preventiveCheckUp =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
+
+              // PARENTS MEDICAL EXPENDITURE
+              itrObjParents80D.medicalExpenditure =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
+            } else {
+              // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
+              itrObjParents80D.premium =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
+
+              // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
+              itrObjParents80D.preventiveCheckUp =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
+            }
+          }
+
+          // // setting the amount in ITR object
+          // const disabilities80DDBAmount = (disability80DDB.amount =
+          //   investments[i][1]);
+          // console.log('disabilities80DDBAmount', disabilities80DDBAmount);
+        }
+
+        // There is some issue in this, need to fix later
+        // if (newName === 'POLITICAL') {
+        //   const donation80ggc = this.ITR_Obj.donations.find(
+        //     (donation) => donation.donationType === 'POLITICAL'
+        //   );
+
+        //   const donation80ggcAmount = (donation80ggc.amountOtherThanCash =
+        //     investments[i][1]);
+        //   console.log('POLITICAL80GGC', donation80ggcAmount);
+        // }
 
         try {
           // finding and storing the object with the same NatureDesc (type) present in JSON Object

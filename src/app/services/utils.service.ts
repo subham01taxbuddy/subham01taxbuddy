@@ -527,8 +527,45 @@ export class UtilsService {
         { natureDesc: '10(26AAA)', amount: null, othNatOfInc: null },
         { natureDesc: 'OTH', amount: null, othNatOfInc: null },
       ],
-      investments: [],
-      donations: [],
+      investments: [
+        { investmentType: 'ELSS', amount: null, details: 'ELSS' },
+        {
+          investmentType: 'PENSION_FUND',
+          amount: null,
+          details: 'PENSION_FUND',
+        },
+        {
+          investmentType: 'PS_EMPLOYEE',
+          amount: null,
+          details: 'PS_EMPLOYEE',
+        },
+        {
+          investmentType: 'PS_EMPLOYER',
+          amount: null,
+          details: 'PS_EMPLOYER',
+        },
+        {
+          investmentType: 'PENSION_SCHEME',
+          amount: null,
+          details: 'PENSION_SCHEME',
+        },
+      ],
+      donations: [
+        {
+          donationType: 'POLITICAL',
+          amountInCash: null,
+          amountOtherThanCash: null,
+          identifier: '',
+          schemeCode: '',
+          name: '',
+          address: '',
+          city: '',
+          pinCode: '',
+          state: '',
+          panNumber: '',
+          details: '',
+        },
+      ],
       loans: [
         {
           loanType: 'EDUCATION',
@@ -556,7 +593,28 @@ export class UtilsService {
           noOfMonths: 0,
         },
       ],
-      insurances: [],
+      insurances: [
+        {
+          typeOfPolicy: '',
+          sumAssured: null,
+          insuranceType: 'HEALTH',
+          policyFor: 'DEPENDANT',
+          premium: null,
+          medicalExpenditure: null,
+          preventiveCheckUp: null,
+          healthCover: null,
+        },
+        {
+          typeOfPolicy: '',
+          sumAssured: null,
+          insuranceType: 'HEALTH',
+          policyFor: 'PARENTS',
+          premium: null,
+          medicalExpenditure: null,
+          preventiveCheckUp: null,
+          healthCover: null,
+        },
+      ],
       assetsLiabilities: null,
       bankDetails:
         this.isNonEmpty(profile) && this.isNonEmpty(profile.bankDetails)
