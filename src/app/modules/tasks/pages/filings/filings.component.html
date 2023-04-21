@@ -81,7 +81,7 @@
           <input
             matInput
             placeholder="Enter Mobile Number"
-            type="number"
+            [numbersOnly]="true"
             [(ngModel)]="searchParams.mobileNumber"
             maxlength="10"
           />
