@@ -81,12 +81,12 @@
               Service type </mat-error>
           </mat-form-field>
         </div>
-<!--        <div class="card__col-lg-3">-->
-<!--          <app-sme-list-drop-down (sendSme)="fromSme($event)" listType="ALL"-->
-<!--            [serviceType]="signUpForm.controls['serviceType'].value" [disabled]="assignedToMe">-->
-<!--          </app-sme-list-drop-down>-->
-<!--        </div>-->
-        <div class="card__col-lg-3" *ngIf="false">
+       <div class="card__col-lg-8">
+         <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
+            [disabled]="assignedToMe">
+         </app-sme-list-drop-down>
+       </div>
+        <div class="card__col-lg-3" >
           <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
             to me!</mat-checkbox>

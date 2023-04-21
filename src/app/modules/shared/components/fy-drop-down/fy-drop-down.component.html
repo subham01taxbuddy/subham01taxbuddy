@@ -2,7 +2,7 @@
   <mat-label>Select Financial Year</mat-label>
   <mat-select placeholder="Select Financial Year" [formControl]="selectedFyYear"
     (selectionChange)="changeFy(selectedFyYear.value)" required>
-    <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+    <mat-option *ngFor="let year of financialYear" [value]="year.financialYear" [disabled] ="!roles.includes('ROLE_ADMIN') && !roles.includes( 'ROLE_LEADER') && (year.financialYear !== currentFy)">
       {{year.financialYear}}
     </mat-option>
   </mat-select>

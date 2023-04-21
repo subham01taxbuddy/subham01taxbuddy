@@ -65,8 +65,7 @@ export class SidebarComponent implements DoCheck {
         { name: 'Assigned Users', url: '/tasks/assigned-users-new', roles:[] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles:[] },
         { name: 'ITRs', url: '/tasks/filings', roles:[]  },
-        // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
-        { name: 'Exceptions', url: '/tasks/exceptions', roles:[] },
+        // { name: 'Exceptions', url: '/tasks/exceptions', roles:[] },
         { name: 'Create User', url: '/pages/user-management/create-user', roles:[] },
         { name: 'Potential Users', url: '/tasks/potential-users', roles:[] },
           // children: [

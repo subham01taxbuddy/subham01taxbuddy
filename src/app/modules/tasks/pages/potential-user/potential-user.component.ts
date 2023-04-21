@@ -312,18 +312,18 @@ export class PotentialUserComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Service Type',
-        field: 'serviceType',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+      // {
+      //   headerName: 'Service Type',
+      //   field: 'serviceType',
+      //   width: 100,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
       // {
       //   headerName: 'Language',
       //   field: 'laguage',
@@ -351,24 +351,24 @@ export class PotentialUserComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Status Updated On',
-        field: 'statusUpdatedDate',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (data: any) => {
-          if (data !== null)
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
-          else
-            return '-';
-        },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+      // {
+      //   headerName: 'Status Updated On',
+      //   field: 'statusUpdatedDate',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   cellRenderer: (data: any) => {
+      //     if (data !== null)
+      //       return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+      //     else
+      //       return '-';
+      //   },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
       {
         headerName: 'User Id',
         field: 'userId',
@@ -480,7 +480,7 @@ export class PotentialUserComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Active"
+          return `<button type="button" class="action_icon add_button" title="Activate User"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-door-open" aria-hidden="true" data-action-type="active"></i>
            </button>`;
@@ -575,6 +575,23 @@ export class PotentialUserComponent implements OnInit {
   }
 
   active(data){
+    // https://uat-api.taxbuddy.com/user/agent-assignment-new?userId=737178&assessmentYear=2023-2024&serviceType=ITR
+    console.log('data to active user',data);
+    this.loading = true;
+    const param = `/agent-assignment-new?userId=${data.userId}&assessmentYear=${data.assessmentYear}&serviceType=${data.serviceType}`;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('res after active ',result)
+      this.loading = false;
+      if (result.success==true) {
+        this.utilsService.showSnackBar('user activated successfully.');
+      }else{
+        this.utilsService.showSnackBar('Error while Activate User, Please try again.');
+      }
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Error while Activate User, Please try again.');
+
+    })
 
   }
 

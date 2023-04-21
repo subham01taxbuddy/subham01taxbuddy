@@ -721,6 +721,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   rsgnDateDisable() {
     if (this.rejoin.value === false) {
       this.resigningDate.setValue(null);
+      this.smeObj.parentId = null;
       this.smeObj.active = true;
     } else {
       this.smeObj.active = false;

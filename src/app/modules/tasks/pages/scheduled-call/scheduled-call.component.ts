@@ -101,7 +101,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   showScheduleCallList() {
-    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage - 1);
+    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
   }
 
   ownerId: number;
@@ -609,10 +609,11 @@ export class ScheduledCallComponent implements OnInit {
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
-      // statusName: this.statuslist.statusName,
-      statusId: this.statuslist.statusId,
+      statusId: 18,
+     statusName:'Done',
     };
     let param = `/schedule-call-details`;
+
     this.userMsService.putMethod(param, reqBody).subscribe(
       (response: any) => {
         console.log('schedule-call Done response: ', response);
@@ -696,7 +697,9 @@ export class ScheduledCallComponent implements OnInit {
       } else {
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        this.toastMsgService.alert('error', result.message);
+        if(result.message) {
+          this.toastMsgService.alert('error', result.message);
+        }
       }
     });
   }
