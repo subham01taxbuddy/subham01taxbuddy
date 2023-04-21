@@ -100,7 +100,8 @@
                 <mat-label> Mobile Number </mat-label>
                 <mat-form-field appearance="outline">
                   <input
-                    type="number" maxlength="10"
+                  [numbersOnly]="true"
+                   maxlength="10"
                     matInput
                     [formControl]="mobile"
                   />

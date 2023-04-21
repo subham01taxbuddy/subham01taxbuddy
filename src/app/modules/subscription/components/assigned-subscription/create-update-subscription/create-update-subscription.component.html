@@ -480,7 +480,7 @@
                     Apply
                   </button>
                   &nbsp;
-                  <button
+                  <button [disabled]="!selectedPromoCode"
                     class="btn"
                     style="background: #00aeca; border-radius: 2px"
                     (click)="removePromoCode()"
