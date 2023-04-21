@@ -38,19 +38,30 @@
         </div>
         <div class="card__col-lg-3">
           <mat-form-field appearance="outline">
+            <mat-label>Select country</mat-label>
+            <input type="text" placeholder="Select country" matInput formControlName="countryCode"
+              [matAutocomplete]="auto" required>
+              <mat-autocomplete  #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name" (click)="getCountry(option)">
+                {{ option.name| titlecase }}
+                </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
+
+          <!-- <mat-form-field appearance="outline">
             <mat-label>Select country code</mat-label>
             <mat-select placeholder="Select country" formControlName="countryCode" required>
               <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
                 {{ country.countryCode}} ({{ country.countryName | titlecase}})
               </mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
         </div>
         <div class="card__col-lg-3">
           <mat-form-field appearance="outline">
             <mat-label>Mobile Number</mat-label>
-            <input matInput type="number" [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
-              pattern=""  required />
+            <input matInput  [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
+              pattern="[0-9]{10,20}"  required maxlength="20" />
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
               is required</mat-error>
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
@@ -86,7 +97,7 @@
             [disabled]="assignedToMe">
          </app-sme-list-drop-down>
        </div>
-        <div class="card__col-lg-3" >
+        <div class="card__col-lg-3" *ngIf="roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')" >
           <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
             to me!</mat-checkbox>
