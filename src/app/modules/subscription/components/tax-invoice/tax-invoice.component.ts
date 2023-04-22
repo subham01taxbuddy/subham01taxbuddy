@@ -46,7 +46,9 @@ export class TaxInvoiceComponent implements OnInit {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate: any = new Date();
+  maxDate = new Date(2024,2,31);
+  minDate = new Date(2023, 3, 1);
+  // maxDate: any = new Date();
   toDateMin: any;
   roles: any;
   ownerList: any;
