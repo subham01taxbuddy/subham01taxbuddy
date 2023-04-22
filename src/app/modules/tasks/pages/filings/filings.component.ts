@@ -784,7 +784,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.userName,
+        clientName: client.fName + ' ' + client.lName,
         serviceType: client.serviceType,
       },
     });
