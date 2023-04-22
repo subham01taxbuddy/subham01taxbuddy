@@ -59,20 +59,20 @@ export class ChatOptionsDialogComponent implements OnInit {
         this.loading = false;
       }
     );
-    this.userMsService.getMethod(paramWa).subscribe(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.waChatLink = response.data.whatsAppChatLink;
-        } else {
-          // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
-        }
-      },
-      (error) => {
-        // this.utilsService.showErrorMsg('Error during fetching chat, try after some time.');
-        this.loading = false;
-      }
-    );
+    // this.userMsService.getMethod(paramWa).subscribe(
+    //   (response: any) => {
+    //     this.loading = false;
+    //     if (response.success) {
+    //       this.waChatLink = response.data.whatsAppChatLink;
+    //     } else {
+    //       // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
+    //     }
+    //   },
+    //   (error) => {
+    //     // this.utilsService.showErrorMsg('Error during fetching chat, try after some time.');
+    //     this.loading = false;
+    //   }
+    // );
     console.log(this.kommChatLink);
     console.log(this.waChatLink);
   }
