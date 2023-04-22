@@ -300,11 +300,11 @@ export class AssignedNewUsersComponent implements OnInit {
         cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        // filter: "agTextColumnFilter",
+        // filterParams: {
+        //   filterOptions: ["contains", "notContains"],
+        //   debounceMs: 0
+        // }
       },
       {
         headerName: 'Status Updated On',
@@ -318,11 +318,11 @@ export class AssignedNewUsersComponent implements OnInit {
           else
             return '-';
         },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        // filter: "agTextColumnFilter",
+        // filterParams: {
+        //   filterOptions: ["contains", "notContains"],
+        //   debounceMs: 0
+        // }
       },
       {
         headerName: 'User Id',
