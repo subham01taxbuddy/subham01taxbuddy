@@ -53,7 +53,7 @@ export class UserProfileComponent implements OnInit {
   userRoles: any = [
     { label: 'ITR - Filer', value: 'ROLE_FILING_TEAM' }, // ITR Filer
     { label: 'Calling Team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
-    { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead 
+    { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead
     { label: 'GST - Super Lead', value: 'GST_SUPER_LEAD' }, // GST Super lead
     { label: 'ITR - Team Lead', value: 'ITR_TEAM_LEAD' }, // ITR Team lead
     { label: 'GST - Team Lead', value: 'GST_TEAM_LEAD' }, // GST Team lead
@@ -336,8 +336,8 @@ export class UserProfileComponent implements OnInit {
   // }
 
   constructor(
-    private activatedRoute: ActivatedRoute, 
-    private userService: UserMsService, 
+    private activatedRoute: ActivatedRoute,
+    private userService: UserMsService,
     public utilsService: UtilsService,
      private fb: FormBuilder,
     private gstService: GstMsService,
@@ -524,7 +524,7 @@ export class UserProfileComponent implements OnInit {
         this.addressData = [];
       }
       this.bankData = this.userProfileForm.controls['bankDetails'].value;
-      
+
       this.updateUserRole(this.userInfo.mobileNumber)
     },
       error => {
@@ -560,14 +560,14 @@ export class UserProfileComponent implements OnInit {
         else if (result.data.from === 'Address') {
           if (result.data.action === 'Add') {
             console.log('result formValue-> ', result.data.formValue);
-            
+
             this.addressData.push(result.data.formValue);
             this.userInfo.address.push(result.data.formValue);
             this.userProfileForm.controls['address'].setValue(this.userInfo.address);
           }
           else if (result.data.action === 'Save') {
             console.log('result formValue-> ', result.data.formValue);
-            
+
             this.addressData.splice(result.data.index, 1, result.data.formValue);
             this.userInfo.address.splice(result.data.index, 1, result.data.formValue);
             console.log('uaerInfo after Edit -> ', this.userInfo.address)
@@ -610,7 +610,7 @@ export class UserProfileComponent implements OnInit {
         // this.merchantData.gstDetails.businessAddress.state = this.getStateName(partyInfo.stateName);
         // this.merchantData.gstDetails.businessAddress.pincode = partyInfo.pineCode;
         // this.merchantData.gstDetails.businessAddress.address = this.getAddress(partyInfo);
-        //this.gstForm.controls['gstr1Type'].setValue(this.titleCasePipe.transform(res['gstDetails']['gstr1Type'])); 
+        //this.gstForm.controls['gstr1Type'].setValue(this.titleCasePipe.transform(res['gstDetails']['gstr1Type']));
       }
     },
       error => {
@@ -805,7 +805,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   onCancelClick(){
-    this.router.navigate(['/pages/user-management/users']);
+    this.router.navigate(['/tasks/assigned-users-new']);
   }
 
 }
