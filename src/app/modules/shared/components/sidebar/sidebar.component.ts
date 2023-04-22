@@ -62,7 +62,7 @@ export class SidebarComponent implements DoCheck {
       url: null,
       roles: [],
       submenu: [
-        { name: 'Assigned Users', url: '/tasks/assigned-users-new', roles:[] },
+        { name: 'My Users', url: '/tasks/assigned-users-new', roles:[] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles:[] },
         { name: 'ITRs', url: '/tasks/filings', roles:[]  },
         // { name: 'Exceptions', url: '/tasks/exceptions', roles:[] },

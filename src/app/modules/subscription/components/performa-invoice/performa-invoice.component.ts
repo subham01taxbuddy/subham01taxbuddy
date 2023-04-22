@@ -61,7 +61,10 @@ export class PerformaInvoiceComponent implements OnInit {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate: any = new Date();
+  // maxDate: any = new Date();
+  // currentYear = new Date().getFullYear();
+  maxDate = new Date(2024,2,31);
+  minDate = new Date(2023, 3, 1);
   toDateMin: any;
   roles: any;
   allFilers: any;

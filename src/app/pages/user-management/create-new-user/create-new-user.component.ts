@@ -137,7 +137,7 @@ export class CreateNewUserComponent implements OnInit {
     this.signUpForm.controls['agentUserId'].setValue(loggedInId);
   }
   userSignUp() {
-    if (this.signUpForm.valid) {
+    if (this.signUpForm.valid ) {
       let reqBody=this.signUpForm.getRawValue();
       let finalReq: any = {};
       Object.assign(finalReq,reqBody );
@@ -170,7 +170,7 @@ export class CreateNewUserComponent implements OnInit {
         this.utilSerive.showSnackBar("User created succesfully.");
       }else{
         this.loading = false;
-        this.utilSerive.showSnackBar("Error while assigning user!!!");
+        this.utilSerive.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
       }
 
     }, error => {
