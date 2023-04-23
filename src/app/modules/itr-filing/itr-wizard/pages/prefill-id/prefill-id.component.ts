@@ -1165,6 +1165,7 @@ export class PrefillIdComponent implements OnInit {
         {
           const jsonSalaryTDS =
             ItrJSON[this.ITR_Type].TDSonSalaries.TDSonSalary;
+          console.log('jsonSalaryTDS', jsonSalaryTDS);
 
           if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
             this.ITR_Obj.taxPaid.onSalary = [];
@@ -1193,81 +1194,113 @@ export class PrefillIdComponent implements OnInit {
               }
             );
           }
+
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          console.log(this.ITR_Obj);
         }
 
-        // OTHER THAN SALARY 16A
+        // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
         {
-          const jsonOtherThanSalaryTDS =
-            ItrJSON[this.ITR_Type].TDSonOthThanSals.TDSonOthThanSal;
+          const otherThanSalary16A =
+            this.ITR_Type === 'ITR1'
+              ? 'TDSonOthThanSal'
+              : 'TDSonOthThanSalDtls';
+          console.log('otherThanSalary16A', otherThanSalary16A);
 
-          if (!jsonOtherThanSalaryTDS || jsonOtherThanSalaryTDS.length === 0) {
-            this.ITR_Obj.taxPaid.otherThanSalary16A = [];
-            this.utilsService.showSnackBar(
-              'There are no tax paid other than salary details in the JSON that you have provided'
-            );
-          } else {
-            this.ITR_Obj.taxPaid.otherThanSalary16A =
-              jsonOtherThanSalaryTDS.map(
-                ({
-                  EmployerOrDeductorOrCollectDetl: {
-                    TAN,
-                    EmployerOrDeductorOrCollecterName,
-                  },
-                  AmtForTaxDeduct,
-                  ClaimOutOfTotTDSOnAmtPaid,
-                }) => {
-                  return {
-                    id: null,
-                    srNo: null,
-                    deductorName: EmployerOrDeductorOrCollecterName,
-                    deductorTAN: TAN,
-                    totalTdsDeposited: ClaimOutOfTotTDSOnAmtPaid,
-                    // "headOfIncome": "EI", need to remove this from UI and object as JSON does not ask it
-                    totalAmountCredited: AmtForTaxDeduct,
-                    uniqueTDSCerNo: null,
-                    taxDeduction: null,
-                  };
-                }
-              );
-          }
+          const jsonOtherThanSalaryTDS =
+            ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
+          console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
+
+          const mapJsonToITRObj16A = ({
+            EmployerOrDeductorOrCollectDetl,
+            AmtForTaxDeduct,
+            ClaimOutOfTotTDSOnAmtPaid,
+            TANOfDeductor,
+            TDSClaimed,
+            GrossAmount,
+            HeadOfIncome,
+            TDSDeducted,
+            BroughtFwdTDSAmt,
+            TDSCreditCarriedFwd,
+          }) => {
+            const TAN =
+              this.ITR_Type === 'ITR1'
+                ? EmployerOrDeductorOrCollectDetl.TAN
+                : TANOfDeductor;
+            const deductorName =
+              this.ITR_Type === 'ITR1'
+                ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
+                : null;
+
+            return {
+              id: null,
+              srNo: null,
+              deductorName,
+              deductorTAN: TAN,
+              totalTdsDeposited:
+                this.ITR_Type === 'ITR1'
+                  ? ClaimOutOfTotTDSOnAmtPaid
+                  : TDSClaimed,
+              uniqueTDSCerNo: null,
+              taxDeduction: null,
+              totalAmountCredited:
+                this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
+              headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+            };
+          };
+
+          this.ITR_Obj.taxPaid.otherThanSalary16A =
+            jsonOtherThanSalaryTDS.map(mapJsonToITRObj16A);
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          console.log(this.ITR_Obj);
         }
 
         // TDS3Details / otherThanSalary26QB
         {
           const jsonOtherThanSalary26QBTDS3 =
-            ItrJSON[this.ITR_Type].ScheduleTDS3Dtls.TDS3Details;
+            ItrJSON[this.ITR_Type]?.ScheduleTDS3Dtls?.TDS3Details ?? [];
 
-          if (
-            !jsonOtherThanSalary26QBTDS3 ||
-            jsonOtherThanSalary26QBTDS3.length === 0
-          ) {
-            this.ITR_Obj.taxPaid.otherThanSalary26QB = [];
-            // this.utilsService.showSnackBar(
-            //   'There are no tax paid other than salary 26QB / TDS3 details in the JSON that you have provided'
-            // );
-          } else {
-            this.ITR_Obj.taxPaid.otherThanSalary26QB =
-              jsonOtherThanSalary26QBTDS3.map(
-                ({
-                  PANofTenant,
-                  NameOfTenant,
-                  GrsRcptToTaxDeduct,
-                  TDSClaimed,
-                }) => {
-                  return {
-                    id: null,
-                    srNo: null,
-                    deductorName: NameOfTenant,
-                    deductorPAN: PANofTenant,
-                    totalTdsDeposited: TDSClaimed,
-                    uniqueTDSCerNo: null,
-                    taxDeduction: null,
-                    totalAmountCredited: GrsRcptToTaxDeduct,
-                    // "headOfIncome": "EI", need to remove this from UI and object as JSON does not ask it
-                  };
-                }
-              );
-          }
+          const mapJsonToITRObj = ({
+            PANofTenant,
+            NameOfTenant,
+            GrsRcptToTaxDeduct,
+            TDSClaimed,
+            GrossAmount,
+            HeadOfIncome,
+            TDSDeducted,
+            TDSCreditCarriedFwd,
+            BroughtFwdTDSAmt,
+          }) => {
+            return {
+              id: null,
+              srNo: null,
+              deductorName: this.ITR_Type === 'ITR1' ? NameOfTenant : null,
+              deductorPAN: PANofTenant,
+              totalTdsDeposited: TDSClaimed,
+              uniqueTDSCerNo: null,
+              taxDeduction: null,
+              totalAmountCredited:
+                this.ITR_Type === 'ITR1' ? GrsRcptToTaxDeduct : GrossAmount,
+              headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+            };
+          };
+
+          this.ITR_Obj.taxPaid.otherThanSalary26QB =
+            jsonOtherThanSalary26QBTDS3.map(mapJsonToITRObj);
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          console.log(this.ITR_Obj);
         }
 
         // TCS - TAX COLLECTED AT SOURCE
@@ -1288,13 +1321,15 @@ export class PrefillIdComponent implements OnInit {
                 },
                 AmtTaxCollected,
                 AmtTCSClaimedThisYear,
+                Amtfrom26AS,
               }) => {
                 return {
                   id: null,
                   srNo: null,
                   collectorName: EmployerOrDeductorOrCollecterName,
                   collectorTAN: TAN,
-                  totalAmountPaid: AmtTaxCollected,
+                  totalAmountPaid:
+                    this.ITR_Type === 'ITR1' ? AmtTaxCollected : Amtfrom26AS,
                   totalTaxCollected: 0,
                   totalTcsDeposited: AmtTCSClaimedThisYear,
                   taxDeduction: null,
@@ -1302,11 +1337,21 @@ export class PrefillIdComponent implements OnInit {
               }
             );
           }
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          console.log(this.ITR_Obj);
         }
 
         // Advance and self assessment tax
         {
-          const jsonAdvSAT = ItrJSON[this.ITR_Type].TaxPayments.TaxPayment;
+          const taxPayment =
+            this.ITR_Type === 'ITR1' ? 'TaxPayments' : 'ScheduleIT';
+          console.log('taxPayment', taxPayment);
+          const jsonAdvSAT = ItrJSON[this.ITR_Type][taxPayment].TaxPayment;
+          console.log('jsonAdvSAT', jsonAdvSAT);
 
           if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
             this.ITR_Obj.taxPaid.otherThanTDSTCS = [];

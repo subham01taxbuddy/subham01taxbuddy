@@ -659,7 +659,13 @@ export class UtilsService {
       lastVisitedURL: '',
       seventhProviso139: null,
       depPayInvClmUndDednVIA: 'N',
-      declaration: undefined,
+      declaration: {
+        capacity: null,
+        childOf: null,
+        name: null,
+        panNumber: null,
+        place: '',
+      },
       disabilities: [
         {
           typeOfDisability: null,
