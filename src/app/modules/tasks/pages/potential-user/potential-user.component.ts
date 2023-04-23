@@ -429,28 +429,28 @@ export class PotentialUserComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: 'Chat',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-              <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
-             </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'Chat',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Open Chat"
+      //       style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+      //         <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+      //        </button>`;
+      //   },
+      //   width: 60,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       {
         headerName: 'Notes',
         editable: false,

@@ -46,7 +46,9 @@ export class TaxInvoiceComponent implements OnInit {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate: any = new Date();
+  maxDate = new Date(2024,2,31);
+  minDate = new Date(2023, 3, 1);
+  // maxDate: any = new Date();
   toDateMin: any;
   roles: any;
   ownerList: any;
@@ -769,7 +771,7 @@ export class TaxInvoiceComponent implements OnInit {
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -790,7 +792,7 @@ export class TaxInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

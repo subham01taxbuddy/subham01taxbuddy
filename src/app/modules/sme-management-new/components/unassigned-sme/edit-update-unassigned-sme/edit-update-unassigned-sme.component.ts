@@ -297,7 +297,11 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       this.loading = true;
 
       let finalReq: any = {};
-      Object.assign(finalReq, this.smeObj);
+      // if(this.smeRecords[0]) {
+      //   finalReq = this.smeRecords[0];
+      // }else {
+      //   finalReq = this.smeRoles;
+      // }
 
       finalReq.userId = this.smeObj.userId;
       finalReq.name = this.name.value;

@@ -61,7 +61,10 @@ export class PerformaInvoiceComponent implements OnInit {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate: any = new Date();
+  // maxDate: any = new Date();
+  // currentYear = new Date().getFullYear();
+  maxDate = new Date(2024,2,31);
+  minDate = new Date(2023, 3, 1);
   toDateMin: any;
   roles: any;
   allFilers: any;
@@ -792,7 +795,7 @@ export class PerformaInvoiceComponent implements OnInit {
            </button>`;
           }
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
@@ -826,7 +829,7 @@ export class PerformaInvoiceComponent implements OnInit {
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -863,7 +866,7 @@ export class PerformaInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

@@ -538,7 +538,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (this.smeFormGroup.valid && this.roles.valid) {
 
       let finalReq: any = {};
-      Object.assign(finalReq, this.smeRecords[0]);
+      if(this.smeRecords[0]) {
+        finalReq = this.smeRecords[0];
+      }else {
+        finalReq = this.smeRoles;
+      }
 
         finalReq.name =  this.name.value;
         finalReq.email = this.kommId.value;
@@ -564,6 +568,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         finalReq.filer = this.filer.value;
         finalReq.coOwnerUserId = this.ownerDetails?.userId;
 
+        if(!finalReq.roles) {
+          finalReq.roles = this.smeRoles.roles;
+        }
+        if(!finalReq.roles){
+          finalReq.roles = [];
+        }
+
       if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
 
         if (this.nriServiceToggle === true && this.smeObj.owner) {
@@ -584,7 +595,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       }
       if(this.serviceRecords.length > 0) {
-        this.serviceRecords.forEach(service => {
+        this.serviceRecords.forEach(async service => {
           finalReq.serviceType = service.serviceType;
           finalReq.assignmentStart = service.assignmentStart;
           finalReq.roles.push(service.role);
@@ -597,11 +608,15 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.serviceApiCall(finalReq);
       }
       setTimeout(()=>{
-        this.location.back();
+        if(this.updateSuccessful) {
+          this.location.back();
+        }
       }, 500);
 
     }
   }
+
+  updateSuccessful = false;
 
   serviceApiCall(requestData: any) {
     const userId = this.smeObj.userId;
@@ -609,6 +624,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     const param = `/sme-details-new/${userId}`;
 
     this.loading = true;
+    this.updateSuccessful = true;
     this.userMsService.putMethod(param, requestData).subscribe(
       (res:any) => {
         console.log('SME assignment updated', res);
@@ -616,19 +632,21 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         if(res.success ===false){
           this._toastMessageService.alert(
             'false',
-            'failed to update sme details '
+            res.error
           );
+          this.updateSuccessful = false;
         }else{
           this._toastMessageService.alert(
             'success',
             'sme details updated successfully'
           );
-
+          this.updateSuccessful = true;
         }
       },
       (error) => {
         this._toastMessageService.alert('error', 'failed to update.');
         this.loading = false;
+        this.updateSuccessful = false;
       }
     );
   }

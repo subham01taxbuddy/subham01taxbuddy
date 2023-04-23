@@ -47,6 +47,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
     this.getOwners();
     this.setFiletedOptions1();
+    this.setFiletedOptions2();
     if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
       console.log('all filers', this.smeList);

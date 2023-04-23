@@ -147,6 +147,7 @@ export class ViewReviewComponent implements OnInit {
         mobileNumber: this.mobileNo,
         environment: environment.environment,
       };
+      this.loading = true;
       this.reviewService.postMethod(param, param2).subscribe((result) => {
         console.log('Save User Data:', result);
         if (result.success) {

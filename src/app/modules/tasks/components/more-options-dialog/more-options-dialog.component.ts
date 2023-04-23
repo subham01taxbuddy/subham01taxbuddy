@@ -153,11 +153,15 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.loading = true;
       const param = `/agent-assignment-new?userId=${this.data.userId}&assessmentYear=2022-2023&serviceType=${this.selectedService}`;
       this.userMsService.getMethod(param).subscribe(
-        (res) => {
+        (res: any) => {
           this.optedServices();
-          this.utilsService.showSnackBar(
-            'Successfully opted the service type ' + this.selectedService
-          );
+          if(res.success) {
+            this.utilsService.showSnackBar(
+              'Successfully opted the service type ' + this.selectedService
+            );
+          }else {
+            this.utilsService.showSnackBar(res.message);
+          }
         },
         () => {
           this.loading = false;

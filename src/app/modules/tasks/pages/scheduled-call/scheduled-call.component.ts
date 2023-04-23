@@ -425,8 +425,8 @@ export class ScheduledCallComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if (params.data.statusId == 18) {
-            return `<button type="button" class="action_icon add_button" title="Update Call Status"
-            style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;" data-action-type="call-done" 'disabled'  >Done</button>`;
+            return `<button type="button" class="done" 
+            style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;"  'disabled'  >Done</button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Update Call Status"
             style="font-size: 12px; width:50px; background-color:#008000;color: #fff; cursor:pointer;" data-action-type="call-done">Done</button>`;
@@ -605,7 +605,7 @@ export class ScheduledCallComponent implements OnInit {
 
   callStatusChange(callInfo) {
     console.log('callInfo: ', callInfo);
-    this.loading = false;
+    this.loading = true;
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
@@ -678,7 +678,7 @@ export class ScheduledCallComponent implements OnInit {
       this.searchParam.email = null;
     }
 
-    this.loading = false;
+    this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     var param = `/schedule-call-details/${this.agentId}?${data}`;
 
@@ -701,6 +701,7 @@ export class ScheduledCallComponent implements OnInit {
           this.toastMsgService.alert('error', result.message);
         }
       }
+      this.loading = false;
     });
   }
 }

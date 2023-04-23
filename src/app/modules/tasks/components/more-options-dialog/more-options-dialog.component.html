@@ -1,8 +1,15 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="tablejrn">
-<label class="more">More options for: {{data.name}}</label>
-<button mat-dialog-close tabindex="-1" class="tbd-btn-close close" (click)="closeDialog()"><i class="fa fa-times"
-    aria-hidden="true"></i></button>
+  <label class="more">More options for: <span style="color: rgb(106, 123, 237);">{{ data.name }}</span></label>
+
+  <button
+    mat-dialog-close
+    tabindex="-1"
+    class="tbd-btn-close close"
+    (click)="closeDialog()"
+  >
+    <i class="fa fa-times" aria-hidden="true"></i>
+  </button>
 
   <span style="margin-left:-10px;" *ngIf="(data.serviceType === 'ITR' && data.itrObjectStatus !== 'ITR_FILED')
               ||  data.serviceType !== 'ITR'">

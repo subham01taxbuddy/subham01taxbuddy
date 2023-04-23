@@ -72,7 +72,7 @@
                 <mat-label> From Date </mat-label>
                 <mat-form-field appearance="outline">
                   <mat-label>From Date</mat-label>
-                  <input matInput [formControl]="startDate"  [matDatepicker]="picker1" [max]="maxDate"
+                  <input matInput [formControl]="startDate"  [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
                       autocomplete="off"
                       (dateChange)="setToDateValidation(startDate.value)">
                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -85,7 +85,7 @@
                 <mat-label> To Date </mat-label>
                 <mat-form-field appearance="outline">
                   <mat-label>To Date</mat-label>
-                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [max]="maxDate"
+                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
                       autocomplete="off" >
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
@@ -100,7 +100,8 @@
                 <mat-label> Mobile Number </mat-label>
                 <mat-form-field appearance="outline">
                   <input
-                    type="number" maxlength="10"
+                  [numbersOnly]="true"
+                   maxlength="10"
                     matInput
                     [formControl]="mobile"
                   />
