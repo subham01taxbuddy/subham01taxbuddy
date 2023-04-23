@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <label style="font-size: 18px;
-font-weight: bold;">View Documents of : {{data.partnerName}}</label>
-<button mat-dialog-close tabindex="-1" (click)="close()"
+font-weight: bold;">View Documents of : <span style="color: rgb(106, 123, 237);">{{data.partnerName}}</span></label>
+<button mat-dialog-close tabindex="-1" (click)="close()" style="float:right"
   class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i>
 </button>
 <div class="card__row">
@@ -35,5 +35,7 @@ font-weight: bold;">View Documents of : {{data.partnerName}}</label>
       CV &nbsp; 
     </button>
   </span>
-
+<div>
+  <span *ngIf="data?.aadhar=='' && data?.panCard=='' && data?.signedNDA=='' &&data?.certificateOfPractice=='' && data?.passbookOrCancelledCheque=='' &&data?.cvUrl==''">Document not found.</span>
+</div>
 </div>

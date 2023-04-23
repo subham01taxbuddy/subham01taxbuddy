@@ -46,7 +46,9 @@ export class TaxInvoiceComponent implements OnInit {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate: any = new Date();
+  maxDate = new Date(2024,2,31);
+  minDate = new Date(2023, 3, 1);
+  // maxDate: any = new Date();
   toDateMin: any;
   roles: any;
   ownerList: any;
@@ -313,6 +315,25 @@ export class TaxInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  resetFilters(){
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
+    this.mobile.setValue(null);
+    this.email.setValue(null);
+    this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
+    this.searchOwner.setValue(null);
+    this.searchFiler.setValue(null);
+
+    this.getInvoice();
+  }
 
   getInvoice() {
 
@@ -335,7 +356,7 @@ export class TaxInvoiceComponent implements OnInit {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerDetails?.userId) {
+    if (this.ownerDetails?.userId && !this.filerDetails?.userId) {
       userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
     if (this.filerDetails?.userId) {
@@ -750,7 +771,7 @@ export class TaxInvoiceComponent implements OnInit {
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -771,7 +792,7 @@ export class TaxInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

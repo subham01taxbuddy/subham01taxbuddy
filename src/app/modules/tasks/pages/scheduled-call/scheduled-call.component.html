@@ -1,13 +1,80 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="main clearfix" style="padding-top: 35px;">
-    <div class="card">
-        <div class="card__row" *ngIf="false">
-            <div class="filter__col card__col-sm-4 card__col-xs-12">
-                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
-            </div>
+<div class="main clearfix" style="padding-top: 0.5px">
+  <div class="content content_full">
+    <div class="content__container">
+      <div class="align-items-center row">
+        <div class="col-sm-10">
+          <b style="font-size: 20px">Scheduled Calls</b>
         </div>
-        <p style="float: right;"> Total Count: <b>{{scheduleCallsData.length}}</b></p>
+      </div>
+      <div class="card">
+        <div class="card__row">
+          <div class="filter__col card__col-xs-12">
+            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+          </div>
+        </div>
+        <div>
+          <div class="filter__col card__col-sm-2 card__col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-label>Select Status</mat-label>
+              <mat-select
+                placeholder="Select Status"
+                [(ngModel)]="searchParam.statusId"
+                (selectionChange)="this.search('status')"
+              >
+                <mat-option
+                  *ngFor="let status of statuslist"
+                  [value]="status.statusId"
+                >
+                  {{ status.statusName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="filter__col card__col-sm-3 card__col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-label>Mobile Number: </mat-label>
+              <input
+                matInput
+                placeholder="Enter Mobile Number"
+                [(ngModel)]="searchParam.mobileNumber"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                onkeypress=" event.charCode >= 48 && event.charCode <= 57"
+                maxlength="10"
+              />
+            </mat-form-field>
+          </div>
+          <div class="filter__col card__col-sm-3 card__col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-label>Email Address: </mat-label>
+              <input
+                matInput
+                placeholder="Enter Email Address"
+                [(ngModel)]="searchParam.emailId"
+                maxlength="50"
+              />
+            </mat-form-field>
+          </div>
+          <div class="filter__col card__col-sm-2 card__col-xs-12">
+            <button class="tbd-btn" (click)="this.search('mobile')">
+              <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+            </button>
+          </div>
+          <div class="filter__col card__col-sm-2 card__col-xs-12">
+            <!-- <a class="btn btn_stroke filter__add-link" (click)="this.search('mobile')"><i class="fa fa-search"
+                aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a> -->
+            <button class="tbd-btn" (click)="this.resetFilters()">
+              <!--              <div class="fa-layers fa-1x fa-fw">-->
+              <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
+              <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
+              <!--              </div>-->
+              <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
+              Clear
+            </button>
+          </div>
+        </div>
+        <p style="float: right;"> Total Count: <b>{{config.totalItems}}</b></p>
         <br>
         <div class="card__row">
           <table>

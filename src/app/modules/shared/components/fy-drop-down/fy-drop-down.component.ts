@@ -13,13 +13,18 @@ import { AppConstants } from '../../constants';
 export class FyDropDownComponent implements OnInit {
   @Output() sendFy = new EventEmitter<any>();
   @Input() serviceType: any;
-
+roles: any;
+  currentFy: any;
   financialYear: any[] = [];
   selectedFyYear = new FormControl('', Validators.required);
   constructor(public utilsService: UtilsService,
-    private itrMsService: ItrMsService) { }
+    private itrMsService: ItrMsService) { 
+    let loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = loggedInSme[0]?.roles;
+    }
 
   ngOnInit() {
+    
     console.log(this.serviceType);
     if (this.serviceType === 'GST') {
       this.financialYear = AppConstants.gstFyList;
@@ -37,6 +42,7 @@ export class FyDropDownComponent implements OnInit {
       this.financialYear = fyList;
       const currentFy = this.financialYear.filter((item: any) => item.isFilingActive);
       this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+      this.currentFy =currentFy.length > 0 ? currentFy[0].financialYear : null
       this.sendFy.emit(this.selectedFyYear.value);
     } else {
       // const param = `${ApiEndpoints.itrMs.filingDates}`;

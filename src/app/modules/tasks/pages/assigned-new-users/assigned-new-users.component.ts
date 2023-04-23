@@ -2,7 +2,7 @@ import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -19,6 +19,8 @@ import { MoreOptionsDialogComponent } from '../../components/more-options-dialog
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { param } from 'jquery';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -102,22 +104,25 @@ export class AssignedNewUsersComponent implements OnInit {
 
   }
 
+  ownerId: number;
+  filerId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    // if (event === '' || event === 'ALL') {
-    //   let loggedInId = this.utilsService.getLoggedInUserID();
-    //   if (this.agentId !== loggedInId) {
-    //     this.agentId = loggedInId;
-    //     this.search('agent');
-    //   }
-    // } else if (event === 'SELF') {
-    //   let loggedInId = this.utilsService.getLoggedInUserID();
-    //   this.agentId = loggedInId;
-    //   this.search('agent', true);
-    // } else {
-    //   this.agentId = event;
-    //   this.search('agent');
-    // }
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.search('agent');
   }
 
   getAgentList() {
@@ -295,11 +300,11 @@ export class AssignedNewUsersComponent implements OnInit {
         cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        // filter: "agTextColumnFilter",
+        // filterParams: {
+        //   filterOptions: ["contains", "notContains"],
+        //   debounceMs: 0
+        // }
       },
       {
         headerName: 'Status Updated On',
@@ -313,11 +318,11 @@ export class AssignedNewUsersComponent implements OnInit {
           else
             return '-';
         },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        // filter: "agTextColumnFilter",
+        // filterParams: {
+        //   filterOptions: ["contains", "notContains"],
+        //   debounceMs: 0
+        // }
       },
       {
         headerName: 'User Id',
@@ -880,6 +885,22 @@ export class AssignedNewUsersComponent implements OnInit {
   isNumeric(value) {
     return /^\d+$/.test(value);
   }
+
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters(){
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.smeDropDown.resetDropdown();
+    this.serviceDropDown.resetService();
+    this.search();
+  }
+
   search(form?, isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;

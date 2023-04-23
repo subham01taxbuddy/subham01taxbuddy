@@ -432,12 +432,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         );
         this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
         console.log('PROMO code removed', res);
+        this.searchedPromoCode.reset();
         // this.userSubscription = res;
         // this.setFinalPricing();
         // this.promoCodeInfo = null;
       });
     } else {
       this.selectedPromoCode = '';
+      this.searchedPromoCode.reset();
       this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
     }
   }
@@ -959,6 +961,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
+        smeUserId: this.loggedInSme.userId
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));

@@ -9,7 +9,7 @@
 </mat-dialog-content>
 
 <mat-dialog-content *ngIf="!isDataById">
-  <h2>Loading Data, please Wait...</h2>
+  <p style="font-size: smaller;">Loading Data, please Wait...</p>
 </mat-dialog-content>
 
 <mat-dialog-content *ngIf="isDataById">
@@ -70,28 +70,25 @@
     </div>
   </div>
   <br />
-  <!-- <div class="card-row">
+  
+  <!-- <div
+  class="card__row"
+  style="margin-top: 10px"
+  *ngIf="userDetails?.sourcePlatform === 'Kommunicate'"
+>
+  <button
+    mat-raised-button
+    class="btn-help"
+    (click)="openKommunicateDashboard('kommunicate')"
+  >
+    Open With Kommunicate &nbsp;&nbsp;<i
+      class="fa fa-comments-o"
+      aria-hidden="true"
+    ></i>
+  </button>
+</div>
+<br> -->
 
-    <h4><b>Search User with Mobile Number:</b></h4>
-    <div class="filter__col card__col-md-4 card__col-xs-12">
-      <mat-form-field appearance="outline">
-        <mat-label>Mobile Number: </mat-label>
-        <input
-          matInput
-          placeholder="Enter Mobile Number"
-          [(ngModel)]="searchParam.mobileNumber"
-          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-          onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-          maxlength="10"
-        />
-      </mat-form-field>
-    </div>
-    <div class="card__col-md-4 card__col-sm-12">
-      <button class="tbd-btn" (click)="this.search('mobile')">
-        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-      </button>
-    </div>
-  </div> -->
 
   <div class="card__row">
     <div class="card__col-xs-6 card__col-sm-12">
@@ -115,31 +112,11 @@
     </div>
   </div>
 </mat-dialog-content>
+&nbsp;&nbsp;
 
-<div
-  class="card__row"
-  style="margin-top: 10px"
-  *ngIf="userDetails?.sourcePlatform === 'Kommunicate'"
->
-  <button
-    mat-raised-button
-    class="btn-help"
-    (click)="openKommunicateDashboard('kommunicate')"
-  >
-    Open With Kommunicate &nbsp;&nbsp;<i
-      class="fa fa-comments-o"
-      aria-hidden="true"
-    ></i>
-  </button>
-</div>
 
-<div class="card__row" style="margin-top: 10px;"
-  *ngIf="userDetails?.sourcePlatform==='Play Store' || userDetails?.sourcePlatform==='Google My Business' ||  userDetails?.sourcePlatform==='GOOGLE_WORKSPACE'">
-  <button mat-raised-button class="btn-help" (click)="openKommunicateDashboard('NotKommunicate')"
-    [disabled]="waChatLink === null">Open With
-    Kommunicate &nbsp;&nbsp;<i class="fa fa-comments-o" aria-hidden="true"></i></button>
-</div>
 
+&nbsp;&nbsp;
 <div
   class="card__row"
   style="margin-top: 10px"

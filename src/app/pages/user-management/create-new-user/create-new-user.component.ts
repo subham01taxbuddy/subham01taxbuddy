@@ -1,10 +1,15 @@
 import { AppConstants } from './../../../modules/shared/constants';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable, map, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 
+export interface Country {
+  name: string;
+  code: string;
+}
 @Component({
   selector: 'app-create-new-user',
   templateUrl: './create-new-user.component.html',
@@ -16,8 +21,18 @@ export class CreateNewUserComponent implements OnInit {
   loading!: boolean;
   signUpForm!: FormGroup;
   services = ['ITR', 'GST', 'TPA', 'NOTICE'];
-  assignedToMe = true;
+  assignedToMe = false;
   disableAssignedToMe = false;
+  assessmentYear:string;
+  roles:any;
+  loggedInSme:any;
+  countryList: Country[] = this.countryDropdown.map(country => ({
+    name: country.countryName,
+    code: country.countryCode,
+  }));
+  countryCode:any;
+  options :Country[] = []
+  filteredOptions: Observable<any[]>;
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
@@ -26,6 +41,11 @@ export class CreateNewUserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.options=this.countryList
+    this.getFy();
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
+    console.log('roles',this.roles)
     const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm = this.fb.group({
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
@@ -33,7 +53,7 @@ export class CreateNewUserComponent implements OnInit {
       lastName: ['', Validators.required],
       middleName: [''],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
-      countryCode: ['91', Validators.required],
+      countryCode: ['', Validators.required],
       mobile: ['', Validators.required],
       authorities: [['ROLE_USER']],
       source: ['BACK_OFFICE'],
@@ -45,11 +65,69 @@ export class CreateNewUserComponent implements OnInit {
       agentUserId: [loggedInId || null, Validators.required],
       language: ['English'],
     });
+
+    this.filteredOptions =(this.signUpForm.controls['countryCode']).valueChanges.pipe(
+      startWith(''),
+      map(value =>{
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.options)
+          : this.options.slice();
+      }
+    ));
   }
 
-  fromSme(event) {
-    this.signUpForm.controls['agentUserId'].setValue(event);
+  private _filter(name: string, options): Country[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );;
   }
+  getCountry(option){
+    console.log(option)
+    this.countryCode=option.code
+    // this.signUpForm.controls['countryCode'].setValue(option.code)
+  }
+
+  async getFy(){
+    const fyList = await this.utilsService.getStoredFyList();
+    console.log('fylist',fyList)
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    this.assessmentYear=currentFyDetails[0].assessmentYear
+    console.log("ay",this.assessmentYear)
+  }
+
+  ownerId: number;
+  filerId: number;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+
+    if(this.ownerId && this.filerId){
+      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+    }
+
+    if(this.filerId) {
+      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+    } else if(this.ownerId) {
+      this.signUpForm.controls['agentUserId'].setValue(this.ownerId);
+
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+    }
+
+  }
+
+  // fromSme(event) {
+  //   console.log('event value',event)
+  //   this.signUpForm.controls['agentUserId'].setValue(event);
+  // }
   isAssignedToMe() {
     if (!this.assignedToMe) {
       this.signUpForm.controls['agentUserId'].setValue(null);
@@ -59,11 +137,15 @@ export class CreateNewUserComponent implements OnInit {
     this.signUpForm.controls['agentUserId'].setValue(loggedInId);
   }
   userSignUp() {
-    if (this.signUpForm.valid) {
-      console.log("request body : ", this.signUpForm.getRawValue());
+    if (this.signUpForm.valid ) {
+      let reqBody=this.signUpForm.getRawValue();
+      let finalReq: any = {};
+      Object.assign(finalReq,reqBody );
+      finalReq.countryCode=this.countryCode;
+      console.log("request body : ", finalReq);
       this.loading = true;
       let param = "/user_account";
-      this.userService.postMethod(param, this.signUpForm.getRawValue()).subscribe((res: any) => {
+      this.userService.postMethod(param, finalReq).subscribe((res: any) => {
         if (res.status === 406) {
           this.loading = false;
           this.utilSerive.showSnackBar(res.message);
@@ -80,10 +162,17 @@ export class CreateNewUserComponent implements OnInit {
   }
 
   assignUser(userId, agentUserId, serviceType) {
-    const param = `/sme/agent-assignment-manually?userId=${userId}&agentUserId=${agentUserId}&serviceType=${serviceType}`;
+    // https://uat-api.taxbuddy.com/user/agent-assignment-manually-new?userId=9506&assessmentYear=2023-2024&serviceType=ITR&smeUserId=7002
+    const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
     this.userService.getMethod(param).subscribe((res: any) => {
-      this.utilSerive.showSnackBar("User created succesfully.");
-      this.loading = false;
+      if(res.success==true){
+        this.loading = false;
+        this.utilSerive.showSnackBar("User created succesfully.");
+      }else{
+        this.loading = false;
+        this.utilSerive.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
+      }
+
     }, error => {
       this.loading = false;
       this.utilSerive.showSnackBar("Error while assigning user!!!");

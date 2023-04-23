@@ -2,8 +2,6 @@ import { CreateUpdateSubscriptionComponent } from './components/assigned-subscri
 import { AssignedSubscriptionComponent } from './components/assigned-subscription/assigned-subscription.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
 import { SubscriptionComponent } from './subscription.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +20,7 @@ import { PerformaInvoiceComponent } from './components/performa-invoice/performa
 import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.component';
 import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
+import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
 
 
 @NgModule({
@@ -38,6 +37,7 @@ import { OldInvoicesComponent } from './components/old-invoices/old-invoices.com
     MatCardModule,
     SubscriptionRoutingModule,
     MatFormFieldModule,
+    SharedModule,
 
   ],
   declarations: [
@@ -48,6 +48,7 @@ import { OldInvoicesComponent } from './components/old-invoices/old-invoices.com
     TaxInvoiceComponent,
     AddSubscriptionComponent,
     OldInvoicesComponent,
+    PauseInvoiceReminderComponent
   ],
 })
 export class SubscriptionModule { }

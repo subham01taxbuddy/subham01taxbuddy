@@ -2,11 +2,6 @@
 
 <div class="main clearfix" style="padding-top:38px;">
     <div class="card">
-      <div class="card__row">
-        <div class="filter__col card__col-sm-3 card__col-xs-12" >
-          <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
-        </div>
-      </div>
       <p><span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span></p><br>
         <div class="card__row" style="margin-top: 0px;">
             <div class="card__row">
@@ -14,7 +9,7 @@
                 <tr *ngFor="let item of signUpExceptionList | paginate:config"></tr>
               </table>
                 <ag-grid-angular class="ag-theme-balham" [gridOptions]="signupExceptionGridOptions"
-                (rowClicked)="onSignupExceptionClicked($event)">    
+                (rowClicked)="onSignupExceptionClicked($event)">
                 </ag-grid-angular>
                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
             </div>

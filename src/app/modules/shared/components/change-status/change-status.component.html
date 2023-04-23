@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="row">
-    <h1 mat-dialog-title>{{data.mode}} <span *ngIf="data.mode === 'Update Status'">For {{this.data.serviceType}}</span>
+    <h1 mat-dialog-title>{{data.mode}} <span *ngIf="data.mode === 'Update Status'">For <span style="color: rgb(106, 123, 237);">{{this.data.serviceType}}</span></span>
 
         <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i
                 class="fa fa-close"></i></button>

@@ -1,5 +1,5 @@
 import { data } from 'jquery';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -11,6 +11,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { map, Observable, startWith } from 'rxjs';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 export interface User {
   name: string;
@@ -80,6 +82,9 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   ngOnInit() {
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    this.agentId = loggedInId;
+
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
@@ -140,14 +145,14 @@ export class AssignedSubscriptionComponent implements OnInit {
   allSubscriptions = [];
   getAssignedSubscription(pageNo) {
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    this.queryParam = `?subscriptionAssigneeId=${loggedInSmeUserId}`;
+    this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
     let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
-    var param = `/subscription-dashboard-new/${loggedInSmeUserId}?${pagination}`;
+    var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
@@ -272,6 +277,22 @@ export class AssignedSubscriptionComponent implements OnInit {
           this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
         })
     }
+  }
+
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters(){
+
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.subscriptionFormGroup.controls['searchName'].setValue(null);
+    this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
+    this.smeDropDown.resetDropdown();
+
+    this.getAssignedSubscription(0);
   }
 
   subscriptionCreateColumnDef() {
@@ -570,8 +591,25 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.getAssignedSubscription(event - 1);
   }
 
-  fromSme(event) {
-    this.queryParam = `?subscriptionAssigneeId=${event}`;
+  ownerId: number;
+  filerId: number;
+  agentId: number;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+    }else if(this.ownerId) {
+      this.agentId = this.ownerId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.getAssignedSubscription(0);
   }
 }
 export interface ConfirmModel {

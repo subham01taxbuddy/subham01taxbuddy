@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -20,6 +20,8 @@ import { map, Observable, startWith } from 'rxjs';
 // import { User } from 'src/app/modules/sme-management-new/components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
 import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
 import { ToastMessage } from 'src/app/classes/toast';
+import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
+import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 export const MY_FORMATS = {
   parse: {
@@ -59,7 +61,10 @@ export class PerformaInvoiceComponent implements OnInit {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate: any = new Date();
+  // maxDate: any = new Date();
+  // currentYear = new Date().getFullYear();
+  maxDate = new Date(2024,2,31);
+  minDate = new Date(2023, 3, 1);
   toDateMin: any;
   roles: any;
   allFilers: any;
@@ -346,6 +351,26 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  resetFilters(){
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+    this.status.setValue(this.Status[0].value);
+    this.mobile.setValue(null);
+    this.email.setValue(null);
+    this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
+    this.searchOwner.setValue(null);
+    this.searchFiler.setValue(null);
+
+    this.getInvoice();
+  }
+
   getInvoice() {
 
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
@@ -367,7 +392,7 @@ export class PerformaInvoiceComponent implements OnInit {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerDetails?.userId) {
+    if (this.ownerDetails?.userId && !this.filerDetails?.userId) {
       userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
     }
     if (this.filerDetails?.userId) {
@@ -770,7 +795,7 @@ export class PerformaInvoiceComponent implements OnInit {
            </button>`;
           }
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
@@ -804,7 +829,7 @@ export class PerformaInvoiceComponent implements OnInit {
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -841,7 +866,7 @@ export class PerformaInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

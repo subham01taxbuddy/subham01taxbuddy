@@ -246,7 +246,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeFormGroup : FormGroup =this.fb.group({
     mobileNumber :new FormControl(''),
     name: new FormControl("",[Validators.required]),
-    email: new FormControl(''),
+    smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
@@ -262,8 +262,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   get name(){
     return this.smeFormGroup.controls['name'] as FormControl
   }
-  get email(){
-    return this.smeFormGroup.controls['email'] as FormControl
+  get smeOriginalEmail(){
+    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl
   }
   get languages(){
     return this.smeFormGroup.controls['languages'] as FormControl
@@ -359,8 +359,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   otherSmeInfo : FormGroup =this.fb.group({
     coOwner :new FormControl(''),
     callingNumber :new FormControl(''),
-    officialEmail: new FormControl(''),
-    kommId: new FormControl(''),
+    smeOfficialEmail: new FormControl(''),
+    email: new FormControl(''),
     displayName:new FormControl(''),
     internal:new FormControl(''),
     leaveStartDate:new FormControl(''),
@@ -375,8 +375,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   get callingNumber(){
     return this.otherSmeInfo.controls['callingNumber'] as FormControl
   }
-  get officialEmail(){
-    return this.otherSmeInfo.controls['officialEmail'] as FormControl
+  get smeOfficialEmail(){
+    return this.otherSmeInfo.controls['smeOfficialEmail'] as FormControl
+  }
+
+  get email(){
+    return this.otherSmeInfo.controls['email'] as FormControl
   }
   get displayName(){
     return this.otherSmeInfo.controls['displayName'] as FormControl
@@ -385,7 +389,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     return this.otherSmeInfo.controls['internal'] as FormControl
   }
   get kommId(){
-    return this.otherSmeInfo.controls['kommId'] as FormControl
+    return this.otherSmeInfo.controls['email'] as FormControl
   }
   get leaveStartDate(){
     return this.otherSmeInfo.controls['leaveStartDate'] as FormControl
@@ -437,6 +441,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     });
     console.log("servicesList",this.smeServices)
 
+   //Ashwini: We have temporarily disabled the assignment toggle buttons for owners.
+   //Need to remove this after re-assignment is done
    this.serviceRecords = this.smeServices;
     this.smeServices.forEach((element) => {
       if (element.serviceType == "ITR") {
@@ -447,6 +453,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         }
         if (element.assignmentStart == true) {
           this.itrToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.itrToggle.disable();
+          }
         }
       }
       else if (element.serviceType == "TPA") {
@@ -454,6 +463,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.tpa.disable();
         if (element.assignmentStart == true) {
           this.tpaToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.tpaToggle.disable();
+          }
         }
       }
       else if (element.serviceType == "GST") {
@@ -461,6 +473,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.gst.disable();
         if (element.assignmentStart == true) {
           this.gstToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.gstToggle.disable();
+          }
         }
       }
       else if (element.serviceType == "NOTICE") {
@@ -468,6 +483,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.notice.disable();
         if (element.assignmentStart == true) {
           this.noticeToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.noticeToggle.disable();
+          }
         }
       }
       else if (element.serviceType == "WB") {
@@ -475,6 +493,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.wb.disable();
         if (element.assignmentStart == true) {
           this.wbToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.wbToggle.disable();
+          }
         }
       }
       else if (element.serviceType == "PD") {
@@ -482,6 +503,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.pd.disable();
         if (element.assignmentStart == true) {
           this.pdToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.pdToggle.disable();
+          }
         }
       }
       else if (element.serviceType == "MF") {
@@ -489,6 +513,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.mf.disable();
         if (element.assignmentStart == true) {
           this.mfToggle.setValue(true);
+          if(this.roles.controls['owner'].value){
+            this.mfToggle.disable();
+          }
         }
       }
       });
@@ -511,10 +538,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (this.smeFormGroup.valid && this.roles.valid) {
 
       let finalReq: any = {};
-      Object.assign(finalReq, this.smeRecords[0]);
+      if(this.smeRecords[0]) {
+        finalReq = this.smeRecords[0];
+      }else {
+        finalReq = this.smeRoles;
+      }
 
         finalReq.name =  this.name.value;
-        finalReq.email = this.email.value;
+        finalReq.email = this.kommId.value;
+        finalReq.smeOriginalEmail = this.smeFormGroup.controls['smeOriginalEmail'].value;
+        finalReq.smeOfficialEmail = this.otherSmeInfo.controls['smeOfficialEmail'].value;
         finalReq.mobileNumber = this.mobileNumber.value;
         finalReq.referredBy =this.referredBy.value;
         finalReq.qualification =this.qualification.value;
@@ -534,6 +567,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         finalReq.admin = this.admin.value;
         finalReq.filer = this.filer.value;
         finalReq.coOwnerUserId = this.ownerDetails?.userId;
+
+        if(!finalReq.roles) {
+          finalReq.roles = this.smeRoles.roles;
+        }
+        if(!finalReq.roles){
+          finalReq.roles = [];
+        }
 
       if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
 
@@ -555,7 +595,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       }
       if(this.serviceRecords.length > 0) {
-        this.serviceRecords.forEach(service => {
+        this.serviceRecords.forEach(async service => {
           finalReq.serviceType = service.serviceType;
           finalReq.assignmentStart = service.assignmentStart;
           finalReq.roles.push(service.role);
@@ -567,8 +607,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         console.log(finalReq);
         this.serviceApiCall(finalReq);
       }
+      setTimeout(()=>{
+        if(this.updateSuccessful) {
+          this.location.back();
+        }
+      }, 500);
+
     }
   }
+
+  updateSuccessful = false;
 
   serviceApiCall(requestData: any) {
     const userId = this.smeObj.userId;
@@ -576,6 +624,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     const param = `/sme-details-new/${userId}`;
 
     this.loading = true;
+    this.updateSuccessful = true;
     this.userMsService.putMethod(param, requestData).subscribe(
       (res:any) => {
         console.log('SME assignment updated', res);
@@ -583,19 +632,21 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         if(res.success ===false){
           this._toastMessageService.alert(
             'false',
-            'failed to update sme details '
+            res.error
           );
+          this.updateSuccessful = false;
         }else{
           this._toastMessageService.alert(
             'success',
             'sme details updated successfully'
           );
-          this.location.back();
+          this.updateSuccessful = true;
         }
       },
       (error) => {
         this._toastMessageService.alert('error', 'failed to update.');
         this.loading = false;
+        this.updateSuccessful = false;
       }
     );
   }
