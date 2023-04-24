@@ -5,6 +5,7 @@ import {
   Component,
   OnInit,
   AfterContentChecked,
+  ViewChild,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -23,6 +24,8 @@ import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e
 import { FilingStatusDialogComponent } from 'src/app/modules/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
+import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
+import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 @Component({
   selector: 'app-filings',
@@ -46,8 +49,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     selectedFyYear: null,
     ownerUserId: null,
     filerUserId: null,
-    
-  }
+  };
   constructor(
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
@@ -135,53 +137,49 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     }
   }
 
- 
   fromOwner(event) {
     this.searchParams.ownerUserId = event ? event.userId : null;
-    console.log('fromowner:', event)
-     this.myItrsList( 0, this.selectedFilingTeamMemberId);
- }
+    console.log('fromowner:', event);
+    this.myItrsList(0, this.selectedFilingTeamMemberId);
+  }
   fromFiler(event) {
     this.searchParams.filerUserId = event ? event.userId : null;
-    this.myItrsList(0, this.selectedFilingTeamMemberId)
-}
+    this.myItrsList(0, this.selectedFilingTeamMemberId);
+  }
   search() {
-    this.myItrsList(
-      0,
-      this.selectedFilingTeamMemberId,
-    );
+    this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
   filter() {
-    this.myItrsList( 0, this.selectedFilingTeamMemberId);
+    this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
-  myItrsList(pageNo: any, filingTeamMemberId: number,) {
+  myItrsList(pageNo: any, filingTeamMemberId: number) {
     this.loading = true;
     return new Promise((resolve, reject) => {
       let param = `/itr-list?page=${pageNo}&pageSize=10`;
-      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) { 
-        param = param + `&filerUserId=${this.searchParams.filerUserId}`
+      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
+        param = param + `&filerUserId=${this.searchParams.filerUserId}`;
       }
-      if (this.utilsService.isNonEmpty(this.searchParams.ownerUserId)) { 
-        param = param + `&ownerUserId=${this.searchParams.ownerUserId}`
+      if (this.utilsService.isNonEmpty(this.searchParams.ownerUserId)) {
+        param = param + `&ownerUserId=${this.searchParams.ownerUserId}`;
       }
-      if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) { 
-        param = param + `&financialYear=${this.searchParams.selectedFyYear}`
+      if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
+        param = param + `&financialYear=${this.searchParams.selectedFyYear}`;
       }
-     if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) { 
-        param = param + `&status=${this.searchParams.selectedStatusId}`
+      if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) {
+        param = param + `&status=${this.searchParams.selectedStatusId}`;
       }
-       if (this.utilsService.isNonEmpty(this.searchParams.mobileNumber)) { 
-        param = param + `&mobileNumber=${this.searchParams.mobileNumber}`
+      if (this.utilsService.isNonEmpty(this.searchParams.mobileNumber)) {
+        param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
-       if (this.utilsService.isNonEmpty(this.searchParams.email)) { 
-        param = param + `&email=${this.searchParams.email}`
+      if (this.utilsService.isNonEmpty(this.searchParams.email)) {
+        param = param + `&email=${this.searchParams.email}`;
       }
-       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) { 
-        param = param + `&panNumber=${this.searchParams.panNumber}`
+      if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
+        param = param + `&panNumber=${this.searchParams.panNumber}`;
       }
-      console.log('My Params:', param)
+      console.log('My Params:', param);
       this.itrMsService.getMethod(param).subscribe(
         (res: any) => {
           console.log('filingTeamMemberId: ', res);
@@ -214,10 +212,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
-      this.myItrsList(
-        this.selectedPageNo,
-        this.selectedFilingTeamMemberId
-      );
+    this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId);
   }
 
   createOnSalaryRowData(data) {
@@ -312,12 +307,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           debounceMs: 0,
         },
       },
-      {
-        headerName: 'ITR ID',
-        field: 'itrId',
-        sortable: true,
-        width: 70,
-      },
+
       {
         headerName: 'Filing Date',
         field: 'eFillingDate',
@@ -325,6 +315,22 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         width: 100,
         valueFormatter: (data) =>
           data.value ? moment(data.value).format('DD MMM YYYY') : null,
+      },
+      {
+        headerName: 'Return Type',
+        field: 'isRevised',
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          defaultOption: 'startsWith',
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params.data.isRevised === 'Y') {
+            return 'Revised';
+          }
+          return 'Original';
+        },
       },
       {
         headerName: 'PAN Number',
@@ -366,21 +372,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           debounceMs: 0,
         },
       },
+
       {
-        headerName: 'Return Type',
-        field: 'isRevised',
+        headerName: 'ITR ID',
+        field: 'itrId',
         sortable: true,
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          defaultOption: 'startsWith',
-          debounceMs: 0,
-        },
-        valueGetter: function (params) {
-          if (params.data.isRevised === 'Y') {
-            return 'Revised';
-          }
-          return 'Original';
-        },
+        width: 70,
       },
       {
         headerName: 'Actions',
@@ -565,29 +562,29 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       //       : '';
       //   }
       // },
-      {
-        headerName: 'Update Status',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Update Status"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
-           </button>`;
-        },
-        width: 70,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
+      // {
+      //   headerName: 'Update Status',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Update Status"
+      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+      //      </button>`;
+      //   },
+      //   width: 70,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center',
+      //       display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center',
+      //     };
+      //   },
+      // },
       {
         headerName: 'Notes',
         editable: false,
@@ -785,7 +782,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       data: {
         userId: client.userId,
         clientName: client.fName + ' ' + client.lName,
-        serviceType: client.serviceType,
+        serviceType: 'ITR',
       },
     });
 
@@ -932,7 +929,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
-      width: '50%',
+      width: '75vw',
       height: 'auto',
       data: {
         userId: client.userId,
@@ -951,6 +948,20 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       this.selectedPageNo,
       this.selectedFilingTeamMemberId
     );
+  }
+
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters() {
+    this.searchParams.selectedStatusId = null;
+    this.config.page = 0;
+    this.config.itemsPerPage = 10;
+    this.searchParams.mobileNumber = null;
+    this.searchParams.email = null;
+
+    this.smeDropDown.resetDropdown();
+    this.serviceDropDown.resetService();
+    this.search();
   }
 
   eriITRLifeCycleStatus(data) {
