@@ -39,7 +39,7 @@ export class ScheduledCallComponent implements OnInit {
     pageSize: 30,
     totalPages: null,
     mobileNumber: null,
-    emailId: null,
+    email: null,
   };
 
   constructor(
@@ -648,7 +648,7 @@ export class ScheduledCallComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
-    this.searchParam.emailId = null;
+    this.searchParam.email = null;
     this.searchParam.statusId = null;
     this.statusId = null;
 
