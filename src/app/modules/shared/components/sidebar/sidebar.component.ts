@@ -136,6 +136,9 @@ export class SidebarComponent implements DoCheck {
   ];
   ngDoCheck() {
     this.showSidebar = NavbarService.getInstance().showSideBar;
+    // if(this.route?.url?.includes('user-docs')){
+    //   this.showSidebar=true;
+    // }
   }
 
   closeSideBar() {

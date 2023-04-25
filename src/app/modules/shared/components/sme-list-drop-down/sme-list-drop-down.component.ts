@@ -56,12 +56,14 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       });
       this.options1 = this.allFilers;
     } else if(this.roles?.includes('ROLE_OWNER')){
-      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
-      console.log('my agents', this.smeList);
-      this.allFilers = this.smeList.map((item) => {
-        return {name: item.name, userId: item.userId};
-      });
-      this.options1 = this.allFilers;
+      this.ownerDetails = this.loggedInSme[0];
+      this.getFilers();
+      // this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+      // console.log('my agents', this.smeList);
+      // this.allFilers = this.smeList.map((item) => {
+      //   return {name: item.name, userId: item.userId};
+      // });
+      // this.options1 = this.allFilers;
     }
     if (this.roles?.includes('ROLE_OWNER')) {
       this.setOwner(this.loggedInSme[0]);
@@ -90,7 +92,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         if (!this.utilsService.isNonEmpty(value)) {
           this.setOwner(null);
           if (this.roles?.includes('ROLE_OWNER')) {
-            this.ownerDetails.userId = this.loggedInSme.userId;
+            this.ownerDetails.userId = this.loggedInSme[0].userId;
             this.getFilers();
           }
         }
@@ -109,7 +111,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         if (!this.utilsService.isNonEmpty(value)) {
           this.setFiler(null);
           if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-            this.filerDetails = this.loggedInSme;
+            this.filerDetails = this.loggedInSme[0];
           }
         }
         const name = typeof value === 'string' ? value : value?.name;
@@ -131,9 +133,11 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     console.log(option);
   }
   setList() {
-    if (this.searchOwner.value == '') {
+    if (this.searchOwner.value == '' && !this.roles?.includes('ROLE_OWNER')) {
       this.options1 = this.allFilers;
       this.setFiletedOptions2();
+    } else if (this.roles?.includes('ROLE_OWNER')){
+      this.options1 = this.filerList;
     }
   }
 
