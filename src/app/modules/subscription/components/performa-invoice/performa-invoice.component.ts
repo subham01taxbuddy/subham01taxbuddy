@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -20,8 +20,8 @@ import { map, Observable, startWith } from 'rxjs';
 // import { User } from 'src/app/modules/sme-management-new/components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
 import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/sidebar.component';
 import { ToastMessage } from 'src/app/classes/toast';
-import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
-import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
+import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
+import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -130,7 +130,6 @@ export class PerformaInvoiceComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     };
-
   }
 
   cardTitle: any;
@@ -150,24 +149,34 @@ export class PerformaInvoiceComponent implements OnInit {
       : 'NA';
     console.log('roles', this.roles);
 
-    if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
-      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    if (
+      this.roles?.includes('ROLE_ADMIN') ||
+      this.roles?.includes('ROLE_LEADER')
+    ) {
+      this.smeList = JSON.parse(
+        sessionStorage.getItem(AppConstants.AGENT_LIST)
+      );
       console.log('all filers', this.smeList);
       this.allFilers = this.smeList.map((item) => {
-        return {name: item.name, userId: item.userId};
+        return { name: item.name, userId: item.userId };
       });
       this.options1 = this.allFilers;
-    } else if(this.roles?.includes('ROLE_OWNER')){
-      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+    } else if (this.roles?.includes('ROLE_OWNER')) {
+      this.smeList = JSON.parse(
+        sessionStorage.getItem(AppConstants.MY_AGENT_LIST)
+      );
       console.log('my agents', this.smeList);
       this.allFilers = this.smeList.map((item) => {
-        return {name: item.name, userId: item.userId};
+        return { name: item.name, userId: item.userId };
       });
       this.options1 = this.allFilers;
     }
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerDetails = this.loggedInSme[0];
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (
+      !this.roles?.includes('ROLE_ADMIN') &&
+      !this.roles?.includes('ROLE_LEADER')
+    ) {
       this.filerDetails = this.loggedInSme[0];
     }
     // if(this.searchOwner.value==null){
@@ -198,13 +207,16 @@ export class PerformaInvoiceComponent implements OnInit {
     this.getInvoice();
   }
 
-  setFiletedOptions2(){
+  setFiletedOptions2() {
     this.filteredFilers = this.searchFiler.valueChanges.pipe(
       startWith(''),
       map((value) => {
         if (!this.utilService.isNonEmpty(value)) {
           this.filerDetails = null;
-          if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+          if (
+            !this.roles?.includes('ROLE_ADMIN') &&
+            !this.roles?.includes('ROLE_LEADER')
+          ) {
             this.filerDetails.userId = this.loggedInSme.userId;
           }
         }
@@ -339,7 +351,7 @@ export class PerformaInvoiceComponent implements OnInit {
       this.filerNames = this.ownerList.map((item) => {
         return { name: item.name, userId: item.userId };
       });
-      this.options1 = this.filerList;//this.filerNames;
+      this.options1 = this.filerList; //this.filerNames;
       this.setFiletedOptions2();
       console.log(' filerNames -> ', this.options1);
     });
@@ -351,7 +363,7 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log(option);
   }
 
-  resetFilters(){
+  resetFilters() {
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
@@ -372,7 +384,6 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   getInvoice() {
-
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
@@ -399,21 +410,38 @@ export class PerformaInvoiceComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
     let mobileFilter = '';
-    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid){
-      mobileFilter = '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
+    if (
+      this.utilService.isNonEmpty(
+        this.invoiceFormGroup.controls['mobile'].value
+      ) &&
+      this.invoiceFormGroup.controls['mobile'].valid
+    ) {
+      mobileFilter =
+        '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
     }
     let emailFilter = '';
-    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid){
+    if (
+      this.utilService.isNonEmpty(
+        this.invoiceFormGroup.controls['email'].value
+      ) &&
+      this.invoiceFormGroup.controls['email'].valid
+    ) {
       emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
     }
     let invoiceFilter = '';
-    if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['txbdyInvoiceId'].value)){
-      invoiceFilter = '&txbdyInvoiceId=' + this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
+    if (
+      this.utilService.isNonEmpty(
+        this.invoiceFormGroup.controls['txbdyInvoiceId'].value
+      )
+    ) {
+      invoiceFilter =
+        '&txbdyInvoiceId=' +
+        this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
     }
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if(response.success) {
+      if (response.success) {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
         // this.invoicesCreateColumnDef(this.smeList);
@@ -725,7 +753,7 @@ export class PerformaInvoiceComponent implements OnInit {
       {
         headerName: 'Prepared By',
         field: 'invoicePreparedBy',
-        width: 140,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -752,7 +780,7 @@ export class PerformaInvoiceComponent implements OnInit {
       {
         headerName: 'Assigned to',
         field: 'invoiceAssignedTo',
-        width: 140,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',

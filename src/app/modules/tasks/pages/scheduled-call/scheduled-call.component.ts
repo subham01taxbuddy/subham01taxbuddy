@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -11,8 +11,8 @@ import { environment } from 'src/environments/environment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { event } from 'jquery';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
-import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
-import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
+import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
+import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -39,7 +39,7 @@ export class ScheduledCallComponent implements OnInit {
     pageSize: 30,
     totalPages: null,
     mobileNumber: null,
-    emailId: null,
+    email: null,
   };
 
   constructor(
@@ -319,8 +319,8 @@ export class ScheduledCallComponent implements OnInit {
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
-          debounceMs: 0
-        }
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Owner Name',
@@ -329,11 +329,11 @@ export class ScheduledCallComponent implements OnInit {
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Service',
@@ -425,7 +425,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if (params.data.statusId == 18) {
-            return `<button type="button" class="done" 
+            return `<button type="button" class="done"
             style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;"  'disabled'  >Done</button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Update Call Status"
@@ -610,7 +610,7 @@ export class ScheduledCallComponent implements OnInit {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
       statusId: 18,
-     statusName:'Done',
+      statusName: 'Done',
     };
     let param = `/schedule-call-details`;
 
@@ -648,7 +648,7 @@ export class ScheduledCallComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
-    this.searchParam.emailId = null;
+    this.searchParam.email = null;
     this.searchParam.statusId = null;
     this.statusId = null;
 
@@ -666,10 +666,12 @@ export class ScheduledCallComponent implements OnInit {
       ) {
         this.searchParam.mobileNumber = null;
       } else {
-        this.searchParam.emailId = null;
+        this.searchParam.email = null;
       }
-      if (!this.searchParam.emailId) {
-        this.searchParam.emailId = null;
+      if (this.searchParam.email == null || this.searchParam.email == '') {
+        this.searchParam.email = null;
+      } else {
+        this.searchParam.mobileNumber = null;
       }
       this.statusId = null;
     } else if (form == 'status') {
