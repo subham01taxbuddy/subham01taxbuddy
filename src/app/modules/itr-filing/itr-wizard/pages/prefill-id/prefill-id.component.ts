@@ -1278,7 +1278,7 @@ export class PrefillIdComponent implements OnInit {
           // console.log(this.ITR_Obj);
         }
 
-        // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
+        // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option - not working for new itr4 json
         {
           const otherThanSalary16A =
             this.ITR_Type === 'ITR1'
