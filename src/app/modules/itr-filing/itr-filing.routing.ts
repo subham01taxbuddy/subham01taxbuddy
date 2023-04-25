@@ -129,6 +129,9 @@ const routes: Routes = [
       { path: '', redirectTo: '/itr-filing/itr', pathMatch: 'full' },
     ],
   },
+  {
+    path:'docs/user-docs',component:ShowUserDocumnetsComponent,
+  }
 ];
 
 @NgModule({

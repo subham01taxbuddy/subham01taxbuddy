@@ -100,6 +100,7 @@ import { FileParserComponent } from './itr-wizard/components/file-parser/file-pa
 import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-gain/other-assets/other-asset-improvement/other-asset-improvement.component';
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new.component';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 @NgModule({
   imports: [
@@ -107,7 +108,8 @@ import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new
     FormsModule,
     ReactiveFormsModule,
     ItrFilingRoutingModule,
-    NgxLoadingModule.forRoot({}),
+    NgxImageZoomModule,
+    // NgxLoadingModule.forRoot({}),
     // NgxImageZoomModule.forRoot(),
     PdfViewerModule,
     SharedModule,
