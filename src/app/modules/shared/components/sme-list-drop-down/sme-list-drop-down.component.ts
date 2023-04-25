@@ -109,7 +109,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         if (!this.utilsService.isNonEmpty(value)) {
           this.setFiler(null);
           if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-            this.filerDetails.userId = this.loggedInSme.userId;
+            this.filerDetails = this.loggedInSme;
           }
         }
         const name = typeof value === 'string' ? value : value?.name;
