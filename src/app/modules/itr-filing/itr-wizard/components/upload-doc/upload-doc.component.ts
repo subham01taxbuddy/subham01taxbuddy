@@ -3,6 +3,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import {ItrMsService} from "../../../../../services/itr-ms.service";
 import {AppConstants} from "../../../../shared/constants";
 import {UtilsService} from "../../../../../services/utils.service";
+import {GoogleDriveService} from "../../../../../services/google-drive.service";
 
 @Component({
   selector: 'app-upload-doc',
@@ -19,7 +20,8 @@ export class UploadDocComponent implements OnInit {
   loading = false;
   ITR_JSON: ITR_JSON;
   constructor(private itrMsService: ItrMsService,
-              private utilsService: UtilsService,) { }
+              private utilsService: UtilsService,
+              private gdriveService: GoogleDriveService) { }
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -82,6 +84,22 @@ export class UploadDocComponent implements OnInit {
       this.docUrl = res['signedUrl'];
       console.log(this.docUrl);
       this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  editFile(document) {
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      console.log(this.docUrl);
+      this.loading = false;
+
+      //open file in gdrive
+      this.gdriveService.getUserConsent();
     }, error => {
       this.loading = false;
     })
