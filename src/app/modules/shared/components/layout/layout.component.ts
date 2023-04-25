@@ -1,6 +1,5 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
@@ -9,6 +8,7 @@ import { KnowlarityNotificationComponent } from '../knowlarity-notification/know
 import { AppConstants } from '../../constants';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { Router, NavigationStart, NavigationEnd, ActivatedRoute, ActivationEnd, Params } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
+  isDocumentCloud:boolean=true;
   timer: any;
   userMsgInfo: any;
   msgCount: any = 0;
@@ -42,7 +43,7 @@ export class LayoutComponent implements OnInit {
                                     // console.log('Knowlarity Received an event .......');
                                     // console.log(data);
                                     knowlarityData.push(data)
-                                    window.angularComponentReference.zone.run(() => { window.angularComponentReference.loadKnowlarityData(data); });  
+                                    window.angularComponentReference.zone.run(() => { window.angularComponentReference.loadKnowlarityData(data); });
                                }`
     knowlarityScript.id = '_webengage_script_tag';
     knowlarityScript.type = 'text/javascript';
@@ -60,6 +61,9 @@ export class LayoutComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    if(this.router?.url?.includes('user-docs')){
+      this.isDocumentCloud=false
+    }
     const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     let smeMobileNumber = '';
     if (data) {

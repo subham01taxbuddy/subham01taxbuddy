@@ -1,11 +1,23 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="main clearfix">
+<div class="main clearfix" style="padding-left: 0;" >
     <div class="card">
         <app-document-upload (uploadDocument)="afterUploadDocs($event)" [userId]="userId"></app-document-upload>
         <div class="card__title" style="padding: 20px;">Document Cloud </div>
         <!-- <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
                 <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
             </span> &nbsp;
+        </div> -->
+        <!-- <div class="card__row">
+          <div class="card__col-xs-4 card__col-lg-4 tpSpc">
+            <div class="container">
+              <div >
+                <button class="btn" (click)="getCloudFilePath(folder)">ITR</button>
+              </div>
+              <button class="btn">TPA</button>
+              <button class="btn">NOTICE</button>
+              <button class="btn">GST</button>
+            </div>
+          </div>
         </div> -->
         <div class="card__row">
             <ul class="breadcrumb breadTx" style="overflow: hidden;">
@@ -18,15 +30,15 @@
             </ul>
         </div>
         <div class="card__row">
-            <div class="card__col-xs-4 card__col-lg-4 tpSpc">
+            <div class="card__col-xs-3 card__col-lg-3 tpSpc">
                 <span *ngIf="!isFile">
                     <div class="inlinBx" *ngFor="let folder of folders; let k=index;">
-                        <span style="padding-left: 15px;"> <button mat-mini-fab
+                        <span style="padding-left: 15px;"> <button  class="btn"
                                 aria-label="Example icon button with a heart icon" title="Click to select media file"
-                                (click)="getCloudFilePath(folder)">
-                                <mat-icon>folder</mat-icon>
+                                (click)="getCloudFilePath(folder)">{{folder}}
+
                             </button></span><br>
-                        <button mat-button>{{folder}}</button>
+                        <!-- <button mat-button>{{folder}}</button> -->
 
 
                         <!--   <a (click)="getCloudFilePath(folder)"><i class="fa fa-folder" style="font-size: 40px;"
@@ -40,10 +52,15 @@
                     <span *ngFor="let folder of folders; let k=index;">
                         <div class="card__row">
                             <div class="card__col-xs-9">
-                                <a style="line-height: 16px;
-                                overflow-wrap: break-word;" href="javascript:void(0)"
-                                    (click)="getCommonDocsUrl(folder)">{{folder.fileName}}
+                              <ul class="bullet-list">
+                                <li>
+                                  <h5>{{folder.documentTag}}</h5>
+                                  <a style="line-height: 16px;
+                                  overflow-wrap: break-word;" href="javascript:void(0)"
+                                      (click)="getCommonDocsUrl(folder);preventDownload($event)">{{folder.fileName}}
                                 </a>
+                                </li>
+                              </ul>
                             </div>
                             <div class="card__col-xs-3">
                                 <i class="fa fa-info-circle" aria-hidden="true" *ngIf="isFile && folder.isDeleted"
@@ -52,9 +69,9 @@
                                 <i class="fa fa-trash" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
                                     (click)="deleteFile(folder.fileName)"
                                     style="float: right; font-size: 18px; cursor: pointer;"></i>
-                                <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
+                                <!-- <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
                                     (click)="downloadFile(folder.fileName)"
-                                    style="float: right; font-size: 18px; padding: inherit; cursor: pointer;"></i>
+                                    style="float: right; font-size: 18px; padding: inherit; cursor: pointer;"></i> -->
 
                             </div>
                         </div>
@@ -74,11 +91,12 @@
                         Download</button> -->
                 </div>
             </div>
-            <div class="card__col-xs-8 card__col-lg-8 tpSpc">
+            <div class="card__col-xs-9 card__col-lg-9 tpSpc">
                 <h2 class="msg" *ngIf="breadcrumbsPart.length === 0"><b>No document available</b></h2>
-                <ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="1"
-                    [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
-                </ngx-image-zoom>
+                <lib-ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="1"
+                    [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200"
+                    [lensHeight]="200" [scrollStepSize]="0.1">
+                </lib-ngx-image-zoom>
 
                 <ngx-doc-viewer *ngIf="viewer === 'DOC'" [url]="docUrl" viewer="google" style="width:100%;height:93vh;">
                 </ngx-doc-viewer>

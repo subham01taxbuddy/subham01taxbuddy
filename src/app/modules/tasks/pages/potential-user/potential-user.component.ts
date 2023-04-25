@@ -23,6 +23,10 @@ export class PotentialUserComponent implements OnInit {
   ogStatusList: any = [];
   usersGridOptions: GridOptions;
   config: any;
+  statuslist: any = [
+    { statusName: 'ITR Filed', statusId: '18' },
+    { statusName: 'Interested',statusId: '16' },
+  ];
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -202,7 +206,8 @@ export class PotentialUserComponent implements OnInit {
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
-        lastFiledItrId: userData[i].lastFiledItrId
+        lastFiledItrId: userData[i].lastFiledItrId,
+        source:userData[i].source
       })
       userArray.push(userInfo);
     }
@@ -254,7 +259,7 @@ export class PotentialUserComponent implements OnInit {
       },
       {
         headerName: 'Status',
-        field: 'statusId',
+        field: 'source',
         width: 100,
         suppressMovable: true,
         sortable: true,
@@ -265,20 +270,11 @@ export class PotentialUserComponent implements OnInit {
           debounceMs: 0
         },
         valueGetter: function nameFromCode(params) {
-          // console.log('params === ', params, params.data.statusId);
-          // console.log('itrStatus array === ', itrStatus);
-          if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter((item: any) => (item.statusId === params.data.statusId));
-            if (nameArray.length !== 0) {
-              statusSequence = nameArray[0].sequence;
-              return nameArray[0].statusName;
-            }
-            else {
-              return '-';
-            }
-          } else {
-            return params.data.statusId;
-          }
+         if(params.data.source == 'Customer Migration Script'){
+          return 'ITR Filed'
+         }else{
+          return 'Interested'
+         }
         }
       },
 
