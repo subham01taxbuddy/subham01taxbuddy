@@ -27,7 +27,6 @@ export const MY_FORMATS = {
   },
 };
 
-
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -398,7 +397,7 @@ export class UserProfileComponent implements OnInit {
       //   accountNumber: [''],
       //   ifscCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]]
       // })
-    })
+    });
 
     // const familyData = <FormArray>this.userProfileForm.get('address');
     // familyData.push(this.createAddressForm())
@@ -532,7 +531,6 @@ export class UserProfileComponent implements OnInit {
         console.log('Error -> ', error)
       })
   }
-
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
     let disposable = this.dialog.open(ProfileDialogComponent, {
@@ -741,7 +739,7 @@ export class UserProfileComponent implements OnInit {
     }
     else {
       $('input.ng-invalid').first().focus();
-      return
+      return;
     }
   }
 
@@ -752,11 +750,11 @@ export class UserProfileComponent implements OnInit {
           .then((result:any) => {
             return resolve(result);
           })
-          .catch((err:any) => {
-            return resolve("",);
+          .catch((err: any) => {
+            return resolve('');
           });
       } else {
-        return resolve("");
+        return resolve('');
       }
     });
   }
@@ -774,7 +772,6 @@ export class UserProfileComponent implements OnInit {
         console.log('Error during update user role: ', error);
       })
   }
-
 
   saveUserRole() {
     console.log("user Role: ", this.userRole, this.userRole.value);
@@ -807,5 +804,4 @@ export class UserProfileComponent implements OnInit {
   onCancelClick(){
     this.router.navigate(['/tasks/assigned-users-new']);
   }
-
 }

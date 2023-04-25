@@ -2,7 +2,7 @@ import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -19,8 +19,8 @@ import { MoreOptionsDialogComponent } from '../../components/more-options-dialog
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { param } from 'jquery';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
-import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
-import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
+import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
+import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -28,7 +28,6 @@ import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop
   styleUrls: ['./assigned-new-users.component.scss']
 })
 export class AssignedNewUsersComponent implements OnInit {
-
   loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
@@ -41,8 +40,8 @@ export class AssignedNewUsersComponent implements OnInit {
     page: 0,
     pageSize: 20,
     mobileNumber: null,
-    emailId: null
-  }
+    emailId: null,
+  };
   agents = [];
   agentId = null;
   constructor(
@@ -69,7 +68,7 @@ export class AssignedNewUsersComponent implements OnInit {
     this.config = {
       itemsPerPage: 20,
       currentPage: 1,
-      totalItems: null
+      totalItems: null,
     };
   }
 
@@ -88,7 +87,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.searchParam.page = event - 1
+    this.searchParam.page = event - 1;
     this.search();
   }
 
@@ -101,7 +100,6 @@ export class AssignedNewUsersComponent implements OnInit {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
       }, 100);
     }
-
   }
 
   ownerId: number;
@@ -135,7 +133,7 @@ export class AssignedNewUsersComponent implements OnInit {
         if (result.success) {
           this.agents = result.data;
         }
-      })
+      });
     }
   }
 
@@ -152,23 +150,24 @@ export class AssignedNewUsersComponent implements OnInit {
         width: 180,
         suppressMovable: true,
         pinned: 'left',
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
+        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Email',
@@ -176,40 +175,41 @@ export class AssignedNewUsersComponent implements OnInit {
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Status',
         field: 'statusId',
-        width: 100,
+        width: 150,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         valueGetter: function nameFromCode(params) {
           // console.log('params === ', params, params.data.statusId);
           // console.log('itrStatus array === ', itrStatus);
           if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter((item: any) => (item.statusId === params.data.statusId));
+            const nameArray = itrStatus.filter(
+              (item: any) => item.statusId === params.data.statusId
+            );
             if (nameArray.length !== 0) {
               statusSequence = nameArray[0].sequence;
               return nameArray[0].statusName;
-            }
-            else {
+            } else {
               return '-';
             }
           } else {
             return params.data.statusId;
           }
-        }
+        },
       },
       {
         headerName: 'Owner Name',
@@ -218,11 +218,11 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Filer Name',
@@ -231,11 +231,11 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'ERI Client',
@@ -246,38 +246,39 @@ export class AssignedNewUsersComponent implements OnInit {
         cellRenderer: (data: any) => {
           if (data.value !== null)
             return formatDate(data.value, 'dd/MM/yyyy', this.locale);
-          else
-            return '-';
+          else return '-';
         },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'PAN Number',
         field: 'panNumber',
         width: 120,
+        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
+        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Language',
@@ -285,11 +286,11 @@ export class AssignedNewUsersComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Created Date',
@@ -330,11 +331,11 @@ export class AssignedNewUsersComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       // {
       //   headerName: 'Agent Name',
@@ -364,10 +365,11 @@ export class AssignedNewUsersComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -386,10 +388,11 @@ export class AssignedNewUsersComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -408,10 +411,11 @@ export class AssignedNewUsersComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -430,10 +434,11 @@ export class AssignedNewUsersComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -471,10 +476,11 @@ export class AssignedNewUsersComponent implements OnInit {
         },
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -493,13 +499,14 @@ export class AssignedNewUsersComponent implements OnInit {
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center', display: 'flex',
+            textAlign: 'center',
+            display: 'flex',
             'align-items': 'center',
-            'justify-content': 'center'
-          }
+            'justify-content': 'center',
+          };
         },
       },
-    ]
+    ];
   }
 
   createRowData(userData: any) {
@@ -541,11 +548,13 @@ export class AssignedNewUsersComponent implements OnInit {
           break;
         }
         case 'subscription': {
-          this.redirectTowardSubscription(params.data)
+          this.redirectTowardSubscription(params.data);
           break;
         }
         case 'profile': {
-          this.router.navigate(['pages/user-management/profile/' + params.data.userId])
+          this.router.navigate([
+            'pages/user-management/profile/' + params.data.userId,
+          ]);
           break;
         }
         case 'link-to-finbingo': {
@@ -557,7 +566,7 @@ export class AssignedNewUsersComponent implements OnInit {
           break;
         }
         case 'updateStatus': {
-          this.updateStatus('Update Status', params.data)
+          this.updateStatus('Update Status', params.data);
           break;
         }
         case 'call': {
@@ -565,15 +574,15 @@ export class AssignedNewUsersComponent implements OnInit {
           break;
         }
         case 'addNotes': {
-          this.showNotes(params.data)
+          this.showNotes(params.data);
           break;
         }
         case 'open-chat': {
-          this.openChat(params.data)
+          this.openChat(params.data);
           break;
         }
         case 'more-options': {
-          this.moreOptions(params.data)
+          this.moreOptions(params.data);
           break;
         }
         case 'startFiling': {
@@ -631,7 +640,6 @@ export class AssignedNewUsersComponent implements OnInit {
       });
       this.loading = false;
       console.log('end');
-
     } else {
       //one more ITR objects in place, use existing ITR object
       let itrFilter = data.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${data.openItrId}` : '';
@@ -676,7 +684,6 @@ export class AssignedNewUsersComponent implements OnInit {
       });
 
     }
-
   }
 
   async getUserProfile(userId) {
