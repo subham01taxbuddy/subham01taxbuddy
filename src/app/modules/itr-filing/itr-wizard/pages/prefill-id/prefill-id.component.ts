@@ -33,6 +33,7 @@ export class PrefillIdComponent implements OnInit {
   utcDate: string;
   uploadedJson: any;
   ITR14_IncomeDeductions: string;
+  regime: string;
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
@@ -138,9 +139,9 @@ export class PrefillIdComponent implements OnInit {
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
   updateSalaryAllowances(salaryAllowances, ITR_Type) {
-    console.log('salaryAllowances List =>', salaryAllowances, ITR_Type);
-    // create a mapping object to map the JSON names to the new names of ITR Object
+    // console.log('salaryAllowances List =>', salaryAllowances, ITR_Type);
 
+    // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       '10(5)': 'LTA',
       '10(6)': 'ANY_OTHER',
@@ -162,7 +163,7 @@ export class PrefillIdComponent implements OnInit {
     };
 
     for (let i = 0; i < salaryAllowances.length; i++) {
-      console.log('i ==>>>>', i);
+      // console.log('i ==>>>>', i);
       const type = salaryAllowances[i];
 
       // For all the salaryAllowances mapping
@@ -177,7 +178,7 @@ export class PrefillIdComponent implements OnInit {
           ].AllwncExemptUs10.AllwncExemptUs10Dtls.find(
             (salaryAllowances) => salaryAllowances.SalNatureDesc === type
           );
-          console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
+          // console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
 
           if (salaryAllowancesDetail) {
             // TO DO (There are some issues in this) - create an array to store the values of the fields with the existing ANY_OTHER field and then add them and store them in others in itrObject
@@ -190,14 +191,14 @@ export class PrefillIdComponent implements OnInit {
                   )
                   .map((allowance) => allowance.exemptAmount),
               ];
-              console.log('anyOtherFields ==>>', anyOtherFields);
+              // console.log('anyOtherFields ==>>', anyOtherFields);
 
               // sum the values in the anyOtherFields array
               const totalAnyOtherAmount = anyOtherFields.reduce(
                 (acc, val) => acc + val,
                 0
               );
-              console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
+              // console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
 
               // update the existing ANY_OTHER field in the ITR object with the total amount
               const itrObjSalaryAllowancesDetail =
@@ -214,10 +215,10 @@ export class PrefillIdComponent implements OnInit {
                 (itrObjSalaryAllowances) =>
                   itrObjSalaryAllowances.allowanceType === newName
               );
-            console.log(
-              'itrObjSalaryAllowancesDetail====>>>>',
-              itrObjSalaryAllowancesDetail
-            );
+            // console.log(
+            //   'itrObjSalaryAllowancesDetail====>>>>',
+            //   itrObjSalaryAllowancesDetail
+            // );
 
             // If same type is not found in the ITR Object then show an error message
             if (!itrObjSalaryAllowancesDetail) {
@@ -240,7 +241,7 @@ export class PrefillIdComponent implements OnInit {
   // Looping over exemptIncome and checking all types at once
   updateExemptIncomes(exemptIncomeTypes, ITR_Type) {
     for (let i = 0; i < exemptIncomeTypes.length; i++) {
-      console.log('exemptIncome i ==>>>>', i);
+      // console.log('exemptIncome i ==>>>>', i);
       const type = exemptIncomeTypes[i];
 
       try {
@@ -253,14 +254,14 @@ export class PrefillIdComponent implements OnInit {
           ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
-          console.log('JSONALLOWANCEDETAILS====>>>>', JsonDetail);
+          // console.log('JSONALLOWANCEDETAILS====>>>>', JsonDetail);
         } else if (this.ITR_Type === 'ITR4') {
           JsonDetail = this.uploadedJson[
             ITR_Type
           ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
-          console.log('JSONALLOWANCEDETAILS====>>>>', JsonDetail);
+          // console.log('JSONALLOWANCEDETAILS====>>>>', JsonDetail);
         }
 
         if (JsonDetail) {
@@ -268,11 +269,11 @@ export class PrefillIdComponent implements OnInit {
           const itrObjAllowance = this.ITR_Obj.exemptIncomes.find(
             (itrObjAllowance) => itrObjAllowance.natureDesc === type
           );
-          console.log('ITROBJALLOWANCEDETAILS====>>>>', itrObjAllowance);
+          // console.log('ITROBJALLOWANCEDETAILS====>>>>', itrObjAllowance);
 
           // If same type is not found in the ITR Object then show an error message
           if (!itrObjAllowance) {
-            this.utilsService.showSnackBar(
+            console.log(
               `Exempt Income - ${type} Income was not found in the ITR Object`
             );
           }
@@ -284,7 +285,7 @@ export class PrefillIdComponent implements OnInit {
           ) {
             itrObjAllowance.amount = JsonDetail.OthAmount;
           } else {
-            this.utilsService.showSnackBar(`Exempt Income - ${type} not found`);
+            console.log(`Exempt Income - ${type} not found`);
           }
         }
       } catch (error) {
@@ -296,7 +297,7 @@ export class PrefillIdComponent implements OnInit {
 
   // Taking the other income name from json and checking for those income in our itr object. If it exists then mapping jsons amount to itr object amount
   updateOtherIncomes(otherIncomes, ITR_Type) {
-    console.log('otherIncomes List =>', otherIncomes);
+    // console.log('otherIncomes List =>', otherIncomes);
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       SAV: 'SAVING_INTEREST',
@@ -308,7 +309,7 @@ export class PrefillIdComponent implements OnInit {
     };
 
     for (let i = 0; i < otherIncomes.length; i++) {
-      console.log('i ==>>>>', i);
+      // console.log('i ==>>>>', i);
       const type = otherIncomes[i];
       // For dividend Income mapping
       {
@@ -322,12 +323,12 @@ export class PrefillIdComponent implements OnInit {
             (key) => key
           );
           const jsonDividendObj = typeDiv.DividendInc.DateRange;
-          console.log(
-            'Dividend Income =>>>',
-            typeDiv,
-            itrObjectDividendQuarterList,
-            jsonDividendObj
-          );
+          // console.log(
+          //   'Dividend Income =>>>',
+          //   typeDiv,
+          //   itrObjectDividendQuarterList,
+          //   jsonDividendObj
+          // );
 
           if (jsonDividendObj.Upto15Of6) {
             const individualDividendIncomes = itrObjectDividendQuarterList.find(
@@ -376,18 +377,18 @@ export class PrefillIdComponent implements OnInit {
           ].OthersInc.OthersIncDtlsOthSrc.find(
             (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === type
           );
-          console.log('JSONOTHERINCOME====>>>>', JsonDetail);
+          // console.log('JSONOTHERINCOME====>>>>', JsonDetail);
 
           if (JsonDetail) {
             // finding and storing the object with the same NatureDesc (type) present in ITR Object
             const itrObjOtherIncome = this.ITR_Obj.incomes.find(
               (itrObjOtherIncome) => itrObjOtherIncome.incomeType === newName
             );
-            console.log('ITROBJOTHERINCOME====>>>>', itrObjOtherIncome);
+            // console.log('ITROBJOTHERINCOME====>>>>', itrObjOtherIncome);
 
             // If same type is not found in the ITR Object then show an error message
             if (!itrObjOtherIncome) {
-              this.utilsService.showSnackBar(
+              console.log(
                 `Exempt Income - ${type} Income was not found in the ITR Object`
               );
             }
@@ -403,310 +404,342 @@ export class PrefillIdComponent implements OnInit {
   }
 
   updateInvestments(investments, ITR_Type) {
-    console.log('All investment list array==>>', investments, ITR_Type);
-    const investmentNames = investments.map((arr) => arr[0]);
-    console.log('All investment Names => investmentNames', investmentNames);
-
-    // setting 80dd names with this logic
-    let disabilities80U = '';
-    {
-      const disabilities80UArray = investments.find(
-        (disabilities80U) => disabilities80U[0] === 'Section80U'
-      );
-      console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
-
-      if (disabilities80UArray[1] > 75000) {
-        disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
-      } else {
-        disabilities80U = 'SELF_WITH_DISABILITY';
-      }
-      console.log('IndividualDisabilities80UName', disabilities80U);
-    }
-
-    // setting 80dd names with this logic
-    let disabilities80dd = '';
-    {
-      const disabilities80ddArray = investments.find(
-        (disabilities80dd) => disabilities80dd[0] === 'Section80DD'
-      );
-      console.log('IndividualDisabilities80ddArray=>', disabilities80ddArray);
-
-      if (disabilities80ddArray[1] > 75000) {
-        disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
-      } else {
-        disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
-      }
-      console.log('IndividualDisabilities80ddName', disabilities80dd);
-    }
-
-    // setting 80dd names with this logic
-    let disabilities80DDB = '';
-    {
-      const disabilities80DDBArray = investments.find(
-        (disabilities80DDB) => disabilities80DDB[0] === 'Section80DDB'
-      );
-      console.log('IndividualDisabilities80DDBArray=>', disabilities80DDBArray);
-
-      if (disabilities80DDBArray[1] > 40000) {
-        disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
-      } else {
-        disabilities80DDB = 'SELF_OR_DEPENDENT';
-      }
-      console.log('IndividualDisabilities80DDBName', disabilities80DDB);
-    }
-
-    // create a mapping object to map the JSON names to the new names of ITR Object
-    const mapping = {
-      Section80C: 'ELSS', // done
-      Section80CCC: 'PENSION_FUND', // done
-      Section80CCDEmployeeOrSE: 'PS_EMPLOYEE', // done
-      Section80CCD1B: 'PENSION_SCHEME', // done
-      Section80CCDEmployer: 'PS_EMPLOYER', // done
-      Section80D: 'Section80D',
-      Section80DD: disabilities80dd, // done
-      Section80DDB: disabilities80DDB, // done
-      Section80E: 'EDUCATION', // done
-      Section80EE: 24000, // hp is not saving hence not able to do this as of now 20/04/2023
-      Section80EEA: 0, // hp is not saving hence not able to do this as of now 20/04/2023
-      Section80EEB: 'ELECTRIC_VEHICLE', // done
-      Section80G: 49197,
-      Section80GG: 'HOUSE_RENT_PAID', // done
-      Section80GGA: 0, // We don't have this in our BO
-      Section80GGC: 'POLITICAL', // done
-      Section80U: disabilities80U, // done
-      Section80TTA: 10000, // Did not find this in itrObject
-      Section80TTB: 0, // Did not find this in itrObject
-    };
-    // console.log('updateInvestmentsMapping==>>', mapping);
-
-    for (let i = 0; i < investments.length; i++) {
-      console.log('i ==>>>>', i);
-      const type = investmentNames[i];
+    console.log('investments', investments);
+    let investmentNames: any;
+    if (this.regime === 'OLD') {
       {
-        // use the mapping object to get the new name for the current type
-        const newName = mapping[type];
-        if (newName === 'EDUCATION') {
-          const educationLoanDeduction =
-            (this.ITR_Obj.loans[0].interestPaidPerAnum = investments[i][1]);
-          // console.log('educationLoanDeduction', educationLoanDeduction);
-        }
-
-        if (newName === 'HOUSE_RENT_PAID') {
-          const HouseRentDeduction80gg = (this.ITR_Obj.expenses[0].amount =
-            investments[i][1]);
-          // console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
-        }
-
-        if (newName === 'ELECTRIC_VEHICLE') {
-          const electricVehicleDeduction = (this.ITR_Obj.expenses[1].amount =
-            investments[i][1]);
-          // console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
-        }
-
-        if (newName === disabilities80U) {
-          console.log('disabilities80uName', disabilities80U);
-
-          // finding the 80U array
-          const disability80U = this.ITR_Obj.disabilities[0];
-          console.log('disability80UObjFound', disability80U);
-
-          // setting the field name in ITR Obj as per the new name
-          disability80U.typeOfDisability = disabilities80U;
-
-          // setting the amount in ITR object
-          const disabilities80UAmount = (disability80U.amount =
-            investments[i][1]);
-          console.log('disabilities80UAmount', disabilities80UAmount);
-        }
-
-        if (newName === disabilities80dd) {
-          console.log('disabilities80ddName', disabilities80dd);
-
-          // finding the 80DD array
-          const disability80DD = this.ITR_Obj.disabilities[1];
-          console.log('disability80DDObjFound', disability80DD);
-
-          // setting the field name in ITR Obj as per the new name
-          disability80DD.typeOfDisability = disabilities80dd;
-
-          // setting the amount in ITR object
-          const disabilities80DDAmount = (disability80DD.amount =
-            investments[i][1]);
-          console.log('disabilities80DDAmount', disabilities80DDAmount);
-        }
-
-        if (newName === disabilities80DDB) {
-          console.log('disabilities80DDBName', disabilities80DDB);
-
-          // finding the 80DDB array
-          const disability80DDB = this.ITR_Obj.disabilities[2];
-          console.log('disability80DDBObjFound', disability80DDB);
-
-          // setting the field name in ITR Obj as per the new name
-          disability80DDB.typeOfDisability = disabilities80DDB;
-
-          // setting the amount in ITR object
-          const disabilities80DDBAmount = (disability80DDB.amount =
-            investments[i][1]);
-          console.log('disabilities80DDBAmount', disabilities80DDBAmount);
-        }
-
-        if (newName === 'Section80D') {
-          // finding the Section80D array for self in itr object
-          const itrObjSelf80D = this.ITR_Obj.insurances.find(
-            (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
+        investmentNames = investments.map((arr) => arr[0]);
+        console.log('All investment Names => investmentNames', investmentNames);
+        // setting 80dd names with this logic
+        let disabilities80U = '';
+        {
+          const disabilities80UArray = investments.find(
+            (disabilities80U) => disabilities80U[0] === 'Section80U'
           );
-          console.log('self80DObjFound', itrObjSelf80D);
+          // console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
 
-          // finding the Section80D array for parents in itr object
-          const itrObjParents80D = this.ITR_Obj.insurances.find(
-            (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
-          );
-          console.log('itrObjParents80D', itrObjParents80D);
-
-          // finding the Section80D array for self in json
-          const json80DSeniorCitizen =
-            this.uploadedJson[
-              this.ITR_Type
-            ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
-              'SeniorCitizenFlag'
-            );
-
-          if (json80DSeniorCitizen) {
-            const json80DSeniorCitizenFlag =
-              this.uploadedJson[this.ITR_Type].Schedule80D
-                .Sec80DSelfFamSrCtznHealth.SeniorCitizenFlag;
-
-            console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
-
-            if (json80DSeniorCitizenFlag === 'Y') {
-              // SELF HEALTH INSURANCE PREMIUM
-              itrObjSelf80D.premium =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremSlfFamSrCtzn;
-              // SELF PREVENTIVE HEALTH CHECK UP
-              itrObjSelf80D.preventiveCheckUp =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn;
-              // SELF MEDICAL EXPENDITURE
-              itrObjSelf80D.medicalExpenditure =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpSlfFamSrCtzn;
-            } else {
-              // SELF HEALTH INSURANCE PREMIUM
-              itrObjSelf80D.premium =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
-              // SELF PREVENTIVE HEALTH CHECK UP
-              itrObjSelf80D.preventiveCheckUp =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam;
-            }
+          if (disabilities80UArray[1] > 75000) {
+            disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
+          } else if (disabilities80UArray[1] < 75000) {
+            disabilities80U = 'SELF_WITH_DISABILITY';
+          } else if ((disabilities80UArray[1] = 0 || null)) {
+            disabilities80U = null;
           }
-
-          // finding the Section80D array for parents in itr object
-          const json80DParentsSeniorCitizen = this.uploadedJson[
-            this.ITR_Type
-          ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
-            'ParentsSeniorCitizenFlag'
-          );
-
-          if (json80DParentsSeniorCitizen) {
-            const json80DParentsSeniorCitizenFlag =
-              this.uploadedJson[this.ITR_Type].Schedule80D
-                .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
-
-            console.log(
-              'json80DSeniorCitizenFlag',
-              json80DParentsSeniorCitizenFlag
-            );
-
-            if (json80DParentsSeniorCitizenFlag === 'Y') {
-              // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
-              itrObjParents80D.premium =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
-
-              // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
-              itrObjParents80D.preventiveCheckUp =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
-
-              // PARENTS MEDICAL EXPENDITURE
-              itrObjParents80D.medicalExpenditure =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
-            } else {
-              // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
-              itrObjParents80D.premium =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
-
-              // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
-              itrObjParents80D.preventiveCheckUp =
-                this.uploadedJson[
-                  this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
-            }
-          }
+          // console.log('IndividualDisabilities80UName', disabilities80U);
         }
 
-        // There is some issue in this, need to fix later
-        // if (newName === 'POLITICAL') {
-        //   const donation80ggc = this.ITR_Obj.donations.find(
-        //     (donation) => donation.donationType === 'POLITICAL'
-        //   );
-
-        //   const donation80ggcAmount = (donation80ggc.amountOtherThanCash =
-        //     investments[i][1]);
-        //   console.log('POLITICAL80GGC', donation80ggcAmount);
-        // }
-
-        // All the other Deductions here
-        try {
-          // finding and storing the object with the same NatureDesc (type) present in JSON Object
-          const jsonInvestmentDetails = investmentNames.find(
-            (investmentDetail) => investmentDetail === type
+        // setting 80dd names with this logic
+        let disabilities80dd = '';
+        {
+          const disabilities80ddArray = investments.find(
+            (disabilities80dd) => disabilities80dd[0] === 'Section80DD'
           );
-          console.log('jsonInvestmentDetails====>>>>', jsonInvestmentDetails);
+          // console.log('IndividualDisabilities80ddArray=>', disabilities80ddArray);
 
-          if (jsonInvestmentDetails) {
-            {
-              // finding and storing the object with the same NatureDesc (type) present in ITR Object
-              const jsonItrObjInvestments = this.ITR_Obj.investments.find(
-                (jsonItrObjInvestment) =>
-                  jsonItrObjInvestment.investmentType === newName
-              );
-              console.log(
-                'jsonItrObjInvestments====>>>>',
-                jsonItrObjInvestments
-              );
+          if (disabilities80ddArray[1] > 75000) {
+            disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
+          } else if (disabilities80ddArray[1] < 75000) {
+            disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
+          } else if ((disabilities80ddArray[1] = 0 || null)) {
+            disabilities80dd = null;
+          }
+          // console.log('IndividualDisabilities80ddName', disabilities80dd);
+        }
 
-              // If same type is not found in the ITR Object then show an error message
-              if (!jsonItrObjInvestments) {
-                this.utilsService.showSnackBar(
-                  `Exempt Income - ${newName} Income was not found in the ITR Object`
+        // setting 80dd names with this logic
+        let disabilities80DDB = '';
+        {
+          const disabilities80DDBArray = investments.find(
+            (disabilities80DDB) => disabilities80DDB[0] === 'Section80DDB'
+          );
+          // console.log('IndividualDisabilities80DDBArray=>', disabilities80DDBArray);
+
+          if (disabilities80DDBArray[1] > 40000) {
+            disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
+          } else if (disabilities80DDBArray[1] < 40000) {
+            disabilities80DDB = 'SELF_OR_DEPENDENT';
+          } else if ((disabilities80DDBArray[1] = 0 || null)) {
+            disabilities80DDB = null;
+          }
+          // console.log('IndividualDisabilities80DDBName', disabilities80DDB);
+        }
+
+        // create a mapping object to map the JSON names to the new names of ITR Object
+        const mapping = {
+          Section80C: 'ELSS', // done
+          Section80CCC: 'PENSION_FUND', // done
+          Section80CCDEmployeeOrSE: 'PS_EMPLOYEE', // done
+          Section80CCD1B: 'PENSION_SCHEME', // done
+          Section80CCDEmployer: 'PS_EMPLOYER', // done
+          Section80D: 'Section80D',
+          Section80DD: disabilities80dd, // done
+          Section80DDB: disabilities80DDB, // done
+          Section80E: 'EDUCATION', // done
+          Section80EE: 0, // hp is not saving hence not able to do this as of now 20/04/2023
+          Section80EEA: 0, // hp is not saving hence not able to do this as of now 20/04/2023
+          Section80EEB: 'ELECTRIC_VEHICLE', // done
+          Section80G: 0,
+          Section80GG: 'HOUSE_RENT_PAID', // done
+          Section80GGA: 0, // We don't have this in our BO
+          Section80GGC: 'POLITICAL', // done
+          Section80U: disabilities80U, // done
+          Section80TTA: 0, // Did not find this in itrObject
+          Section80TTB: 0, // Did not find this in itrObject
+        };
+        // console.log('updateInvestmentsMapping==>>', mapping);
+
+        for (let i = 0; i < investments.length; i++) {
+          // console.log('i ==>>>>', i);
+          const type = investmentNames[i];
+          {
+            // use the mapping object to get the new name for the current type
+            const newName = mapping[type];
+            if (newName === 'EDUCATION') {
+              const educationLoanDeduction =
+                (this.ITR_Obj.loans[0].interestPaidPerAnum = investments[i][1]);
+              // console.log('educationLoanDeduction', educationLoanDeduction);
+            }
+
+            if (newName === 'HOUSE_RENT_PAID') {
+              const HouseRentDeduction80gg = (this.ITR_Obj.expenses[0].amount =
+                investments[i][1]);
+              // console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
+            }
+
+            if (newName === 'ELECTRIC_VEHICLE') {
+              const electricVehicleDeduction =
+                (this.ITR_Obj.expenses[1].amount = investments[i][1]);
+              // console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
+            }
+
+            if (newName === disabilities80U) {
+              // console.log('disabilities80uName', disabilities80U);
+
+              // finding the 80U array
+              const disability80U = this.ITR_Obj.disabilities[0];
+              // console.log('disability80UObjFound', disability80U);
+
+              // setting the field name in ITR Obj as per the new name
+              disability80U.typeOfDisability = disabilities80U;
+
+              // setting the amount in ITR object
+              const disabilities80UAmount = (disability80U.amount =
+                investments[i][1]);
+              // console.log('disabilities80UAmount', disabilities80UAmount);
+            }
+
+            if (newName === disabilities80dd) {
+              // console.log('disabilities80ddName', disabilities80dd);
+
+              // finding the 80DD array
+              const disability80DD = this.ITR_Obj.disabilities[1];
+              // console.log('disability80DDObjFound', disability80DD);
+
+              // setting the field name in ITR Obj as per the new name
+              disability80DD.typeOfDisability = disabilities80dd;
+
+              // setting the amount in ITR object
+              const disabilities80DDAmount = (disability80DD.amount =
+                investments[i][1]);
+              // console.log('disabilities80DDAmount', disabilities80DDAmount);
+            }
+
+            if (newName === disabilities80DDB) {
+              // console.log('disabilities80DDBName', disabilities80DDB);
+
+              // finding the 80DDB array
+              const disability80DDB = this.ITR_Obj.disabilities[2];
+              // console.log('disability80DDBObjFound', disability80DDB);
+
+              // setting the field name in ITR Obj as per the new name
+              disability80DDB.typeOfDisability = disabilities80DDB;
+
+              // setting the amount in ITR object
+              const disabilities80DDBAmount = (disability80DDB.amount =
+                investments[i][1]);
+              // console.log('disabilities80DDBAmount', disabilities80DDBAmount);
+            }
+
+            if (newName === 'Section80D') {
+              // finding the Section80D array for self in itr object
+              const itrObjSelf80D = this.ITR_Obj.insurances.find(
+                (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
+              );
+              // console.log('self80DObjFound', itrObjSelf80D);
+
+              // finding the Section80D array for parents in itr object
+              const itrObjParents80D = this.ITR_Obj.insurances.find(
+                (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
+              );
+              // console.log('itrObjParents80D', itrObjParents80D);
+
+              // finding the Section80D array for self in json
+              const json80DSeniorCitizen =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                  'SeniorCitizenFlag'
                 );
+
+              if (json80DSeniorCitizen) {
+                const json80DSeniorCitizenFlag =
+                  this.uploadedJson[this.ITR_Type].Schedule80D
+                    .Sec80DSelfFamSrCtznHealth.SeniorCitizenFlag;
+
+                // console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
+
+                if (json80DSeniorCitizenFlag === 'Y') {
+                  // SELF HEALTH INSURANCE PREMIUM
+                  itrObjSelf80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremSlfFamSrCtzn;
+                  // SELF PREVENTIVE HEALTH CHECK UP
+                  itrObjSelf80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn;
+                  // SELF MEDICAL EXPENDITURE
+                  itrObjSelf80D.medicalExpenditure =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpSlfFamSrCtzn;
+                } else {
+                  // SELF HEALTH INSURANCE PREMIUM
+                  itrObjSelf80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
+                  // SELF PREVENTIVE HEALTH CHECK UP
+                  itrObjSelf80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam;
+                }
               }
 
-              jsonItrObjInvestments.amount = investments[i][1];
-              console.log('setting amounts===>', investments[i][1]);
+              // finding the Section80D array for parents in itr object
+              const json80DParentsSeniorCitizen = this.uploadedJson[
+                this.ITR_Type
+              ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                'ParentsSeniorCitizenFlag'
+              );
+
+              if (json80DParentsSeniorCitizen) {
+                const json80DParentsSeniorCitizenFlag =
+                  this.uploadedJson[this.ITR_Type].Schedule80D
+                    .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
+
+                // console.log(
+                //   'json80DSeniorCitizenFlag',
+                //   json80DParentsSeniorCitizenFlag
+                // );
+
+                if (json80DParentsSeniorCitizenFlag === 'Y') {
+                  // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
+
+                  // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
+
+                  // PARENTS MEDICAL EXPENDITURE
+                  itrObjParents80D.medicalExpenditure =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
+                } else {
+                  // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
+
+                  // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
+                }
+              }
+            }
+
+            // There is some issue in this, need to fix later
+            // if (newName === 'POLITICAL') {
+            //   const donation80ggc = this.ITR_Obj.donations.find(
+            //     (donation) => donation.donationType === 'POLITICAL'
+            //   );
+
+            //   const donation80ggcAmount = (donation80ggc.amountOtherThanCash =
+            //     investments[i][1]);
+            //   console.log('POLITICAL80GGC', donation80ggcAmount);
+            // }
+
+            // All the other Deductions here
+            try {
+              // finding and storing the object with the same NatureDesc (type) present in JSON Object
+              const jsonInvestmentDetails = investmentNames.find(
+                (investmentDetail) => investmentDetail === type
+              );
+              // console.log('jsonInvestmentDetails====>>>>', jsonInvestmentDetails);
+
+              if (jsonInvestmentDetails) {
+                {
+                  // finding and storing the object with the same NatureDesc (type) present in ITR Object
+                  const jsonItrObjInvestments = this.ITR_Obj.investments.find(
+                    (jsonItrObjInvestment) =>
+                      jsonItrObjInvestment.investmentType === newName
+                  );
+                  // console.log(
+                  //   'jsonItrObjInvestments====>>>>',
+                  //   jsonItrObjInvestments
+                  // );
+
+                  // If same type is not found in the ITR Object then show an error message
+                  if (!jsonItrObjInvestments) {
+                    console.log(
+                      `Exempt Income - ${newName} Income was not found in the ITR Object`
+                    );
+                  }
+
+                  jsonItrObjInvestments.amount = investments[i][1];
+                  // console.log('setting amounts===>', investments[i][1]);
+                }
+              }
+            } catch (error) {
+              console.log(`Error occurred for type ${type}: `, error);
+              if (
+                error.message.includes(`Error handling ${mapping[newName]}`)
+              ) {
+              } else {
+                this.utilsService.showSnackBar(
+                  `Error occurred for type ${type}`
+                );
+              }
             }
           }
-        } catch (error) {
-          console.log(`Error occurred for type ${type}: `, error);
-          this.utilsService.showSnackBar(`Error occurred for type ${type}`);
         }
       }
+    } else if (this.regime === 'NEW') {
+      console.log(investments, 'something');
+      const employerPension80ccd2 = this.ITR_Obj.investments.find(
+        (jsonItrObjInvestment) =>
+          jsonItrObjInvestment.investmentType === 'PS_EMPLOYER'
+      );
+      console.log('employerPension80ccd2', employerPension80ccd2);
+
+      const employerPension80ccd2Json = investments.find((name) =>
+        name.includes('Section80CCDEmployer')
+      );
+
+      console.log('employerPension80ccd2Json', employerPension80ccd2Json);
+
+      employerPension80ccd2.amount = employerPension80ccd2Json[1];
     }
   }
 
@@ -805,7 +838,17 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj.family[0].fatherName =
             ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
 
-          // this.ITR_Obj.regime = ItrJSON.FilingStatus.NewTaxRegime; PENDING
+          if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
+            this.regime = 'OLD';
+            this.ITR_Obj.regime = this.regime;
+          } else if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
+            this.regime = 'NEW';
+            this.ITR_Obj.regime = this.regime;
+          } else {
+            this.utilsService.showSnackBar(
+              'Type of regime is not present in the uploaded JSON'
+            );
+          }
 
           // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
           this.ITR_Obj.residentialStatus = 'RESIDENT';
@@ -908,10 +951,12 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductionUs16ia;
 
           //Total of exempt income (Salary allowances total)
-          this.ITR_Obj.employers[0].exemptIncome =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].AllwncExemptUs10.TotalAllwncExemptUs10;
+          if (this.regime === 'OLD') {
+            this.ITR_Obj.employers[0].exemptIncome =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ]?.AllwncExemptUs10.TotalAllwncExemptUs10;
+          }
 
           // Salary 17(1)
           this.ITR_Obj.employers[0].salary[0].taxableAmount =
@@ -928,17 +973,21 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].ProfitsInSalary;
 
           // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-          const availableSalaryAllowances = this.uploadedJson[this.ITR_Type][
-            this.ITR14_IncomeDeductions
-          ].AllwncExemptUs10.AllwncExemptUs10Dtls.map(
-            (value) => value.SalNatureDesc
-          );
-          // console.log(
-          //   'Available salary allowances in JSON => ',
-          //   availableSalaryAllowances
-          // );
-          this.updateSalaryAllowances(availableSalaryAllowances, this.ITR_Type);
-
+          if (this.regime === 'OLD') {
+            const availableSalaryAllowances = this.uploadedJson[this.ITR_Type][
+              this.ITR14_IncomeDeductions
+            ].AllwncExemptUs10.AllwncExemptUs10Dtls.map(
+              (value) => value.SalNatureDesc
+            );
+            // console.log(
+            //   'Available salary allowances in JSON => ',
+            //   availableSalaryAllowances
+            // );
+            this.updateSalaryAllowances(
+              availableSalaryAllowances,
+              this.ITR_Type
+            );
+          }
           // DEDUCTIONS - PROFESSIONAL TAX
           this.ITR_Obj.employers[0].deductions[0].exemptAmount =
             ItrJSON[this.ITR_Type][
@@ -1162,6 +1211,7 @@ export class PrefillIdComponent implements OnInit {
             ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
 
             // console.log('availableInvestments==>>', availableInvestments);
+
             this.updateInvestments(availableInvestments, this.ITR_Type);
           } else {
             console.log(
@@ -1334,7 +1384,7 @@ export class PrefillIdComponent implements OnInit {
 
           if (!jsonTCS || jsonTCS.length === 0) {
             this.ITR_Obj.taxPaid.otherThanSalary16A = [];
-            this.utilsService.showSnackBar(
+            console.log(
               'There are no TCS tax paid other than salary details in the JSON that you have provided'
             );
           } else {
@@ -1667,6 +1717,8 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj.declaration.capacity = capacity;
           this.ITR_Obj.declaration.childOf =
             ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+          this.ITR_Obj.declaration.place =
+            ItrJSON[this.ITR_Type].Verification.Place;
         }
 
         // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -1685,10 +1737,10 @@ export class PrefillIdComponent implements OnInit {
       console.log(this.ITR_Obj);
     }
 
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
-
     if (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3') {
     }
+
+    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
   }
 
   upload(type: string) {
