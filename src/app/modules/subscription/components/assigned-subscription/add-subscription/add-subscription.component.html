@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<h1 mat-dialog-title><u>Add Subscription Plan</u></h1>
-
+<h1 mat-dialog-title>Add Subscription Plan</h1>
+<hr>
 <form>
 
   <mat-dialog-content>
@@ -10,23 +10,43 @@
           {{selectedPlanInfo.servicesType}}</b></span>
     </div>
     <br> -->
-    <div><br><br>
-      <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]=" service && service.includes('ITR')"
-        (click)="showSelectedServicePlans('ITR')">ITR</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false" href="javascript:"
-        (click)="showSelectedServicePlans('ITRU')">ITR-U</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:"
-        (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:"
-        (click)="showSelectedServicePlans('GST')">GST</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" [class.disabled]="service && service.includes('TPA')"
-        (click)="showSelectedServicePlans('TPA')">TPA</a>
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false" href="javascript:"
-        (click)="showSelectedServicePlans('OTHER')">OTHER SERVICE</a>
 
-      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:"
+    <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]=" service && service.includes('ITR')"
+          (click)="showSelectedServicePlans('ITR')">ITR</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('ITRU')">ITR-U</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('GST')">GST</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" [class.disabled]="service && service.includes('TPA')"
+        (click)="showSelectedServicePlans('TPA')">TPA</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('OTHER')">OTH SERVICE</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 space">
+          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('ALL')">ALL</a>
-    </div><br><br><br><br>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    
 
     <div *ngIf="serviceTypeSelected">
       <label *ngIf="filteredPlans.length === 0">Selected service plan detail not available.</label>
@@ -47,11 +67,15 @@
 
   </mat-dialog-content>
 
+  <hr>
+
   <mat-dialog-actions align="center">
+    
+
+    <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+
     <button mat-raised-button color="primary" style="margin-top: 0px;" (click)="createSubscription()" tabindex="1">
       Create
     </button>
-
-    <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
   </mat-dialog-actions>
 </form>
