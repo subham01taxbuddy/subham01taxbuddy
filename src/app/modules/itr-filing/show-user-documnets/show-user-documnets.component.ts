@@ -269,4 +269,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
   }
 
+  closeComponent() {
+    window.close();
+  }
+
 }

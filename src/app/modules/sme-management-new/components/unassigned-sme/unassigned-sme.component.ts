@@ -99,7 +99,7 @@ export class UnassignedSmeComponent implements OnInit {
         headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-
+        pinned: 'left',
         lockPosition: true,
         suppressMovable:false,
         cellRenderer: (params) => {
@@ -111,6 +111,7 @@ export class UnassignedSmeComponent implements OnInit {
         field: 'mobileNumber',
         width: 120,
         suppressMovable:true,
+        pinned: 'left',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -121,7 +122,7 @@ export class UnassignedSmeComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
-        width: 180,
+        width: 185,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -132,7 +133,7 @@ export class UnassignedSmeComponent implements OnInit {
       {
         headerName: 'Email',
         field: 'email',
-        width: 180,
+        width: 190,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -205,6 +206,7 @@ export class UnassignedSmeComponent implements OnInit {
         headerName: 'Update',
         field: '',
         width: 100,
+        pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
