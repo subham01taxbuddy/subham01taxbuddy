@@ -33,6 +33,7 @@ export class AssignedNewUsersComponent implements OnInit {
   config: any;
   userInfo: any = [];
   itrStatus: any = [];
+  filerUserId:any;
   ogStatusList: any = [];
   searchParam: any = {
     serviceType: null,
@@ -112,7 +113,9 @@ export class AssignedNewUsersComponent implements OnInit {
       this.filerId = event? event.userId : null;
     }
     if(this.filerId) {
-      this.agentId = this.filerId;
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+      this.filerUserId = this.filerId;
     } else if(this.ownerId) {
       this.agentId = this.ownerId;
       this.search('agent');
@@ -942,6 +945,9 @@ export class AssignedNewUsersComponent implements OnInit {
     let param = `/${this.agentId}/user-list-new?${data}`;
     if (isAgent) {
       param = param + '&isAgent=true';
+    }
+    if(this.filerUserId){
+      param= param + `&filerUserId=${this.filerUserId}`
     }
 
     this.userMsService.getMethod(param).subscribe(

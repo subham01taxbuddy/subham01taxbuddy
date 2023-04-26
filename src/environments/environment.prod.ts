@@ -11,6 +11,7 @@ export const environment = {
 	isValidItr:true,
 	assistedKmScript: '../assets/assisted-km-script-uat.html',
 	environment:'PROD',
+  admin_id:1067,
 
 
 	s3_cred: {

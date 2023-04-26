@@ -38,6 +38,7 @@ export class AppConstants {
     public static MY_AGENT_LIST = environment.production ? 'MY_AGENT_LIST' : 'MY_AGENT_LIST';
     public static SELECTED_AGENT = environment.production ? 'SELECTED_AGENT' : 'SELECTED_AGENT';
     public static LOGGED_IN_SME_INFO = environment.production ? 'LOGGED_IN_SME_INFO' : 'LOGGED_IN_SME_INFO';
+    public static ALL_FILERS_LIST = environment.production ? 'ALL_FILERS_LIST' : 'ALL_FILERS_LIST';
     public static BANK_LIST = environment.production ? 'BANK_LIST' : 'BANK_LIST';
     public static gstFyList = [
         { financialYear: '2023-24' },

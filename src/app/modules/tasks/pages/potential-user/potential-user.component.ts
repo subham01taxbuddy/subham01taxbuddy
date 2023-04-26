@@ -270,11 +270,11 @@ export class PotentialUserComponent implements OnInit {
           debounceMs: 0
         },
         valueGetter: function nameFromCode(params) {
-         if(params.data.source == 'Customer Migration Script'){
+         if(params.data.source === 'Old Customer Migration Script'){
           return 'ITR Filed'
-         }else{
+         }else if(params.data.source ==='Old Interested Customer Migration Script'){
           return 'Interested'
-         }
+         }else 'NA'
         }
       },
 
