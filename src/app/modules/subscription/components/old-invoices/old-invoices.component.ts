@@ -363,7 +363,7 @@ export class OldInvoicesComponent implements OnInit {
           }
 
         },
-        width: 55,
+        width: 95,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -399,7 +399,7 @@ export class OldInvoicesComponent implements OnInit {
            </button>`;
           }
         },
-        width: 55,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
@@ -433,7 +433,7 @@ export class OldInvoicesComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 95,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

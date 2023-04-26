@@ -293,7 +293,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'User Id',
         field: 'userId',
-        width: 80,
+        width: 100,
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -317,7 +317,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'User Selected',
         field: 'userSelected',
-        width: 180,
+        width: 220,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -329,7 +329,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'SME Selected',
         field: 'smeSelected',
-        width: 180,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -385,12 +385,12 @@ export class AssignedSubscriptionComponent implements OnInit {
         field: 'invoiceAmount',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'left' },
       },
       {
         headerName: 'Invoice No',
         field: 'invoiceNo',
-        width: 300,
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -402,7 +402,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'Subscription Prepared',
         field: 'assigneeName',
-        width: 100,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',

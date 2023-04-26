@@ -184,7 +184,7 @@ export class ReviewListComponent implements OnInit {
       {
         headerName: 'Rating',
         field: 'sourceRating',
-        width: 80,
+        width: 90,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -270,7 +270,7 @@ export class ReviewListComponent implements OnInit {
             <i class="fa fa-eye" aria-hidden="true" data-action-type="view"></i>
            </button>`;
         },
-        width: 60,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -292,7 +292,7 @@ export class ReviewListComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
            </button>`;
         },
-        width: 100,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -314,7 +314,7 @@ export class ReviewListComponent implements OnInit {
             <i class="fa fa-edit" aria-hidden="true" data-action-type="update-status"></i>
            </button>`;
         },
-        width: 100,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
