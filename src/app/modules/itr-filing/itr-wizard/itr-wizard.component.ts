@@ -1,27 +1,35 @@
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
-import { Component, OnInit, ViewChild, AfterContentChecked, Output, EventEmitter, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterContentChecked,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+  HostListener,
+} from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Schedules } from "../../shared/interfaces/schedules";
-import { NavigationEnd, Router } from "@angular/router";
+import { Schedules } from '../../shared/interfaces/schedules';
+import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import {fromEvent, Subscription } from "rxjs";
-import { WizardNavigation } from "../../itr-shared/WizardNavigation";
-import { CapitalGainComponent } from "./components/capital-gain/capital-gain.component";
-import {AllBusinessIncomeComponent} from "./pages/all-business-income/all-business-income.component";
-import {UserNotesComponent} from "../../shared/components/user-notes/user-notes.component";
-import {MatDialog} from "@angular/material/dialog";
-import {ChatOptionsDialogComponent} from "../../tasks/components/chat-options/chat-options-dialog.component";
+import { fromEvent, Subscription } from 'rxjs';
+import { WizardNavigation } from '../../itr-shared/WizardNavigation';
+import { CapitalGainComponent } from './components/capital-gain/capital-gain.component';
+import { AllBusinessIncomeComponent } from './pages/all-business-income/all-business-income.component';
+import { UserNotesComponent } from '../../shared/components/user-notes/user-notes.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-itr-wizard',
   templateUrl: './itr-wizard.component.html',
-  styleUrls: ['./itr-wizard.component.css']
+  styleUrls: ['./itr-wizard.component.css'],
 })
 export class ItrWizardComponent implements OnInit {
-
   tabIndex = 0;
   ITR_JSON: ITR_JSON;
 
@@ -41,14 +49,13 @@ export class ItrWizardComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
-    private router: Router, private location: Location,
+    private router: Router,
+    private location: Location,
     private cdRef: ChangeDetectorRef,
     private schedules: Schedules,
     private matDialog: MatDialog
   ) {
-
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
-
   }
 
   // @HostListener('window:popstate', ['$event'])
@@ -70,21 +77,27 @@ export class ItrWizardComponent implements OnInit {
     this.componentsList.push(this.schedules.TAXES_PAID);
     this.componentsList.push(this.schedules.DECLARATION);
     //for preventing going to specific schedule without initialization
-    if (this.router.url.startsWith('/itr-filing/itr') && this.router.url !== '/itr-filing/itr' && !this.showIncomeSources) {
+
+    if (
+      this.router.url.startsWith('/itr-filing/itr') &&
+      this.router.url !== '/itr-filing/itr' &&
+      !this.showIncomeSources
+    ) {
       this.router.navigate(['/itr-filing/itr']);
     }
 
-    this.subscription = fromEvent(window, 'popstate').subscribe(_ => {
+    this.subscription = fromEvent(window, 'popstate').subscribe((_) => {
       //history.pushState(null, null, location.href);
-      if(this.router.url.startsWith('/itr-filing/itr/eri')) {
+      if (this.router.url.startsWith('/itr-filing/itr/eri')) {
         this.skipPrefill(_);
-        this.utilsService.showSnackBar(`Using browser back button will reset the progress!`);
+        this.utilsService.showSnackBar(
+          `Using browser back button will reset the progress!`
+        );
       }
-
     });
 
     //check if prefill data is available, hide prefill view
-    if(this.ITR_JSON.prefillData){
+    if (this.ITR_JSON.prefillData) {
       this.showPrefill = false;
       this.showIncomeSources = true;
     }
@@ -92,7 +105,10 @@ export class ItrWizardComponent implements OnInit {
   }
 
   getCustomerName() {
-    if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
+    if (
+      this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
+      this.ITR_JSON.family instanceof Array
+    ) {
       this.ITR_JSON.family.filter((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           let mName = item.mName ? item.mName : '';
@@ -149,17 +165,17 @@ export class ItrWizardComponent implements OnInit {
     this.showPrefill = true;
     this.showIncomeSources = false;
 
-    setTimeout(function(){
-      this.subscription = fromEvent(window, 'popstate').subscribe(_ => {
+    setTimeout(function () {
+      this.subscription = fromEvent(window, 'popstate').subscribe((_) => {
         //history.pushState(null, null, location.href);
         if (this.router.url.startsWith('/itr-filing/itr/eri')) {
           this.skipPrefill(_);
-          this.utilsService.showSnackBar(`Using browser back button will reset the progress!`);
+          this.utilsService.showSnackBar(
+            `Using browser back button will reset the progress!`
+          );
         }
-
-      })
+      });
     }, 2000);
-
   }
 
   gotoSummary() {
@@ -173,14 +189,85 @@ export class ItrWizardComponent implements OnInit {
     // this.router.navigate(['/itr-filing/itr/summary']);
   }
 
+  validateItrObj() {
+    let userItrObj = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    const errors: any = {};
+
+    if (!userItrObj.assesseeType) {
+      errors.assesseeType = 'assesseeType is required';
+    }
+
+    if (!userItrObj.panNumber) {
+      errors.panNumber = 'panNumber is required';
+    }
+
+    if (!userItrObj.assessmentYear) {
+      errors.assessmentYear = 'assessmentYear is required';
+    }
+
+    if (!userItrObj.contactNumber) {
+      errors.contactNumber = 'contactNumber is required';
+    }
+
+    if (!userItrObj.employerCategory) {
+      errors.employerCategory = 'employerCategory is required';
+    }
+
+    if (!userItrObj.financialYear) {
+      errors.financialYear = 'financialYear is required';
+    }
+
+    if (!userItrObj.residentialStatus) {
+      errors.residentialStatus = 'residentialStatus is required';
+    }
+
+    if (!userItrObj.family[0].dateOfBirth) {
+      errors.dateOfBirth = 'dateOfBirth is required';
+    }
+
+    if (!userItrObj.bankDetails) {
+      errors.bankDetails = 'bankDetails is required';
+      console.log(userItrObj.bankDetails);
+    }
+
+    console.log('errorss', errors);
+
+    return Object.keys(errors).length ? errors : null;
+  }
+
   gotoSchedule(schedule) {
-    this.showIncomeSources = false;
-    this.breadcrumb = null;
-    this.selectedSchedule = this.schedules.getTitle(schedule);
-    let navigationPath = this.schedules.getNavigationPath(schedule);
-    this.router.navigate(['/itr-filing/' + navigationPath], {
-      state: this.navigationData
-    });
+    const errors = this.validateItrObj(); // invoke the function and store the result
+    console.log('errors', errors);
+
+    if (errors !== null) {
+      if (schedule === 'personalInfo') {
+        this.selectedSchedule = this.schedules.getTitle(schedule);
+        this.showIncomeSources = false;
+        this.breadcrumb = null;
+        let navigationPath = '/itr/personal-info';
+        this.router.navigate(['/itr-filing/' + navigationPath], {
+          state: this.navigationData,
+        });
+      } else {
+        let errorMessage = 'Please fill all the below details:\n';
+        Object.entries(errors).forEach(([key, value], index) => {
+          errorMessage += `${index + 1}. ${key}: ${value}\n`;
+        });
+        this.utilsService.showSnackBar(errorMessage);
+      }
+      return;
+    }
+
+    if (errors === null) {
+      this.selectedSchedule = this.schedules.getTitle(schedule);
+      this.showIncomeSources = false;
+      this.breadcrumb = null;
+      let navigationPath = this.schedules.getNavigationPath(schedule);
+      this.router.navigate(['/itr-filing/' + navigationPath], {
+        state: this.navigationData,
+      });
+      return;
+    }
   }
 
   gotoCgSchedule() {
@@ -188,10 +275,12 @@ export class ItrWizardComponent implements OnInit {
       this.location.back();
       let lastBreadcrumb = this.breadcrumb;
       this.breadcrumb = null;
-      if(this.breadcrumbComponent instanceof CapitalGainComponent) {
+      if (this.breadcrumbComponent instanceof CapitalGainComponent) {
         this.gotoSchedule(this.schedules.CAPITAL_GAIN);
         (this.breadcrumbComponent as CapitalGainComponent).initList();
-      } else if(this.breadcrumbComponent instanceof AllBusinessIncomeComponent) {
+      } else if (
+        this.breadcrumbComponent instanceof AllBusinessIncomeComponent
+      ) {
         this.gotoSchedule(this.schedules.BUSINESS_INCOME);
         (this.breadcrumbComponent as AllBusinessIncomeComponent).initList();
       }
@@ -199,7 +288,7 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSources() {
-    if(!this.showIncomeSources) {
+    if (!this.showIncomeSources) {
       this.breadcrumb = null;
       this.location.back();
       this.showIncomeSources = true;
@@ -211,50 +300,80 @@ export class ItrWizardComponent implements OnInit {
   updateSchedules(scheduleInfoEvent) {
     if (scheduleInfoEvent.schedule.selected) {
       let index = this.componentsList.indexOf(this.schedules.OTHER_SOURCES);
-      if (this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0) {
+      if (
+        this.componentsList.indexOf(scheduleInfoEvent.schedule.schedule) < 0
+      ) {
         //for future options, it shall be added inside business income
-        if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
+        if (
+          scheduleInfoEvent.schedule.schedule ===
+          this.schedules.SPECULATIVE_INCOME
+        ) {
           if (this.componentsList.indexOf(this.schedules.BUSINESS_INCOME) < 0) {
-            this.componentsList.splice(index, 0, this.schedules.BUSINESS_INCOME);
+            this.componentsList.splice(
+              index,
+              0,
+              this.schedules.BUSINESS_INCOME
+            );
           }
         } else {
           //for add more info when capital gain is selected
           if (scheduleInfoEvent.schedule.schedule === 'capitalGain') {
-            this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+            this.componentsList.splice(
+              index,
+              0,
+              scheduleInfoEvent.schedule.schedule
+            );
           } else {
-            this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
+            this.componentsList.splice(
+              index,
+              0,
+              scheduleInfoEvent.schedule.schedule
+            );
           }
         }
       }
     } else {
       //for removing future options, check if capital gain is there, if not remove
-      if (scheduleInfoEvent.schedule.schedule === this.schedules.SPECULATIVE_INCOME) {
-        let cgSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.BUSINESS_INCOME)[0];
+      if (
+        scheduleInfoEvent.schedule.schedule ===
+        this.schedules.SPECULATIVE_INCOME
+      ) {
+        let cgSource = scheduleInfoEvent.sources.filter(
+          (item) => item.schedule === this.schedules.BUSINESS_INCOME
+        )[0];
         if (!cgSource.selected) {
-          this.componentsList = this.componentsList.filter(item => item !== this.schedules.BUSINESS_INCOME);
+          this.componentsList = this.componentsList.filter(
+            (item) => item !== this.schedules.BUSINESS_INCOME
+          );
         }
-      } else if (scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN) {
+      } else if (
+        scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN
+      ) {
         // let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
         // if (!spSource.selected) {
-          this.componentsList = this.componentsList.filter(item => item !== this.schedules.CAPITAL_GAIN);
+        this.componentsList = this.componentsList.filter(
+          (item) => item !== this.schedules.CAPITAL_GAIN
+        );
         // }
       } else {
-        this.componentsList = this.componentsList.filter(item => item !== scheduleInfoEvent.schedule.schedule);
+        this.componentsList = this.componentsList.filter(
+          (item) => item !== scheduleInfoEvent.schedule.schedule
+        );
       }
     }
   }
 
   saveAndNext(event) {
     // need to check
-    console.log('save and next function', event)
+    console.log('save and next function', event);
     if (event.subTab) {
       if (event.tabName === 'PERSONAL') {
-        this.personalInfoSubTab = this.personalInfoSubTab + 1
+        this.personalInfoSubTab = this.personalInfoSubTab + 1;
       } else if (event.tabName === 'OTHER') {
-        this.personalInfoSubTab = this.personalInfoSubTab + 1
+        this.personalInfoSubTab = this.personalInfoSubTab + 1;
       } else if (event.tabName === 'CAPITAL') {
         //other sources tab is 3, as tabs before this don't have save button
-        this.incomeSubTab = 5
+        this.incomeSubTab = 5;
       }
     } else {
       // this.stepper.next();
@@ -268,39 +387,44 @@ export class ItrWizardComponent implements OnInit {
       data: {
         title: 'Add Notes',
         userId: this.ITR_JSON.userId,
-        clientName: this.ITR_JSON.family[0].fName + " " + this.ITR_JSON.family[0].lName,
-        serviceType: 'ITR'
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
+        clientName:
+          this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
+        serviceType: 'ITR',
+      },
     });
+
+    disposable.afterClosed().subscribe((result) => {});
   }
 
   async startCalling() {
     const agentNumber = await this.utilsService.getMyCallingNumber();
     if (!agentNumber) {
-      this.utilsService.showErrorMsg('You don\'t have calling role.');
+      this.utilsService.showErrorMsg("You don't have calling role.");
       return;
     }
     this.loading = true;
     let customerNumber = this.ITR_JSON.contactNumber;
     const param = `/prod/call-support/call`;
     const reqBody = {
-      "agent_number": agentNumber,
-      "customer_number": customerNumber
-    }
-    console.log('reqBody:', reqBody)
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-      console.log('Call Result: ', result);
-      this.loading = false;
-      if (result.success.status) {
-        this.utilsService.showSnackBar(result.success.message)
+      agent_number: agentNumber,
+      customer_number: customerNumber,
+    };
+    console.log('reqBody:', reqBody);
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
+      (result: any) => {
+        console.log('Call Result: ', result);
+        this.loading = false;
+        if (result.success.status) {
+          this.utilsService.showSnackBar(result.success.message);
+        }
+      },
+      (error) => {
+        this.utilsService.showSnackBar(
+          'Error while making call, Please try again.'
+        );
+        this.loading = false;
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+    );
   }
 
   openChat() {
@@ -310,13 +434,11 @@ export class ItrWizardComponent implements OnInit {
       data: {
         userId: this.ITR_JSON.userId,
         clientName: this.customerName,
-        serviceType: 'ITR'
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
+        serviceType: 'ITR',
+      },
     });
 
+    disposable.afterClosed().subscribe((result) => {});
   }
 
   ngOnDestroy() {
