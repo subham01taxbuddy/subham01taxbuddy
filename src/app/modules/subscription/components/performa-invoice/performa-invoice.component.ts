@@ -67,6 +67,7 @@ export class PerformaInvoiceComponent implements OnInit {
   minDate = new Date(2023, 3, 1);
   toDateMin: any;
   roles: any;
+  allFilerList:any;
   allFilers: any;
   filerList: any;
   filerNames: User[];
@@ -138,6 +139,8 @@ export class PerformaInvoiceComponent implements OnInit {
   gridApi: GridApi;
 
   ngOnInit() {
+    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    console.log('new Filer List ',this.allFilerList)
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     this.cardTitle = this.roles?.includes('ROLE_ADMIN')
@@ -185,7 +188,7 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(),
+      columnDefs: this.invoicesCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -570,8 +573,8 @@ export class PerformaInvoiceComponent implements OnInit {
         paymentStatus: userInvoices[i].paymentStatus,
         purpose: userInvoices[i].itemList[0].itemDescription,
         //Ashwini: as per discussion with Ajay & Karan this is a quick fix done
-        invoicePreparedBy: userInvoices[i].agentName,
-        invoiceAssignedTo: userInvoices[i].agentName,
+        inovicePreparedBy: userInvoices[i].inovicePreparedBy,
+        invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
         ifaLeadClient: userInvoices[i].ifaLeadClient,
         total: userInvoices[i].total,
       });
@@ -618,7 +621,7 @@ export class PerformaInvoiceComponent implements OnInit {
     }
   }
 
-  invoicesCreateColumnDef() {
+  invoicesCreateColumnDef(List) {
     return [
       {
         headerName: 'User Id',
@@ -752,7 +755,7 @@ export class PerformaInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Prepared By',
-        field: 'invoicePreparedBy',
+        field: 'inovicePreparedBy',
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -761,21 +764,16 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter(
-        //       (item: any) =>
-        //         item.userId.toString() === params.data.invoicePreparedBy
-        //     );
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     } else {
-        //       console.log('not found', params.data.invoicePreparedBy);
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.inovicePreparedBy)
+          let filer1=List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer
+        }
       },
       {
         headerName: 'Assigned to',
@@ -788,18 +786,16 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter(
-        //       (item: any) => item.userId === params.data.invoiceAssignedTo
-        //     );
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+        valueGetter: function(params) {
+          let createdUserId= params.data.invoiceAssignedTo
+          let filer1=List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+           return filer;
+        }
       },
 
       {
