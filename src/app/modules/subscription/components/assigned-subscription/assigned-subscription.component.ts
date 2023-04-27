@@ -441,7 +441,7 @@ export class AssignedSubscriptionComponent implements OnInit {
           //     return item.name;
           //    }else 'NA'
           //  })
-          let filer = filer1.filter((item) => {
+          let filer = filer1?.filter((item) => {
               return item.userId === createdUserId;
             }).map((item) => {
               return item.name;
