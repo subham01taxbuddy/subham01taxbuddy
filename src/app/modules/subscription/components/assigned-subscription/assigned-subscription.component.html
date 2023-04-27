@@ -51,7 +51,7 @@
               <div class="col-sm-3">
                 <mat-label> Search Mobile Number</mat-label>
                 <mat-form-field appearance="outline" class="customBg">
-                  <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto" maxlength="10">
+                  <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto" maxlength="10" digitsOnly>
                   <button (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
                     <mat-icon style="color: #00AECA">search</mat-icon>
                   </button>
