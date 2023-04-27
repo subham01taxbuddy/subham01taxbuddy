@@ -300,7 +300,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'ITR Type',
         field: 'itrType',
-        width: 70,
+        width: 90,
         filter: 'agTextColumnFilter',
         filterParams: {
           defaultOption: 'startsWith',
@@ -381,7 +381,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       },
       {
         headerName: 'Actions',
-        width: 70,
+        width: 90,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -462,7 +462,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width: 58,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -489,7 +489,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
       {
         headerName: 'E-Verify',
-        width: 75,
+        width: 85,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -574,7 +574,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       //       <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
       //      </button>`;
       //   },
-      //   width: 70,
+      //   width: 80,
       //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
@@ -597,7 +597,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 65,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

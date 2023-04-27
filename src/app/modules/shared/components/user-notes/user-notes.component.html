@@ -1,7 +1,8 @@
 <div class="fordialnotes">
   <div class="notes-header">
-    <div class="saved-notes mb-2">Saved Notes for <span style="color: rgb(106, 123, 237);">{{ data.clientName }}</span></div>
+    <div class="saved-notes mb-2"><b>Saved Notes for <span style="color: rgb(106, 123, 237);">{{ data.clientName }}</span></b></div>
     <div>
+
       <div class="card__col-lg-11" mat-dialog-title *ngIf="data.title">
         {{ data.title }}
       </div>
@@ -14,8 +15,8 @@
       </button>
     </div>
   </div>
-
-  <div class="card__row" style="width: 100%; height: 35px; margin: 0px">
+  <hr>
+  <div class="card__row" style="width: 100%; height: 35px; margin: 0px;">
     <div class="card__col-xs-12 card__col-sm-3 card__col-md-3 card__col-lg-3">
       <mat-label>Service Type: </mat-label>
       <mat-form-field class="service-input" appearance="outline">

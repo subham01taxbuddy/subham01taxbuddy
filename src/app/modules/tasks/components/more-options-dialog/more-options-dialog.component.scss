@@ -12,6 +12,7 @@ th {
 
 .delete-user {
   background-color: red !important;
+  color:#ffffff;
 }
 
 .mt-5 {
@@ -44,6 +45,6 @@ th {
 .tablejrn {
   overflow-y: scroll;
   padding: 13px;
-  height: 400px;
-  width: 100%;
+  height: auto;
+  width: 100%!important;
 }

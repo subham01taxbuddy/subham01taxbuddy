@@ -201,7 +201,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'User Id',
         field: 'userId',
-        width: 100,
+        width: 95,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -214,7 +214,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'userName',
-        width: 180,
+        width: 160,
         suppressMovable: true,
         sortable: true,
         pinned: 'left',
@@ -228,10 +228,10 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'userMobile',
-        width: 130,
+        width: 120,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'left' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -241,10 +241,10 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Mail Id',
         field: 'userEmail',
-        width: 300,
+        width: 200,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'left' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -254,10 +254,10 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Schedule Call Date',
         field: 'scheduleCallTime',
-        width: 150,
+        width: 120,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           let firstPoint = data.value.indexOf('T');
           let myDate = data.value.substring(0, firstPoint);
@@ -272,10 +272,10 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Time',
         field: 'time',
-        width: 120,
+        width: 100,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'left' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -285,7 +285,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Status',
         field: 'statusId',
-        width: 100,
+        width: 88,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -312,7 +312,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Filer Name',
         field: 'filerName',
-        width: 150,
+        width: 120,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -338,7 +338,7 @@ export class ScheduledCallComponent implements OnInit {
       {
         headerName: 'Service',
         field: 'serviceType',
-        width: 110,
+        width: 95,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -360,7 +360,7 @@ export class ScheduledCallComponent implements OnInit {
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
-        width: 60,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

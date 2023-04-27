@@ -263,7 +263,7 @@ export class UserListComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 95,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -286,7 +286,7 @@ export class UserListComponent implements OnInit {
             <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
            </button>`;
         },
-        width: 50,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -343,7 +343,7 @@ export class UserListComponent implements OnInit {
             <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
-        width: 60,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

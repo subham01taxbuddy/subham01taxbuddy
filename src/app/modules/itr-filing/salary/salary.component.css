@@ -38,7 +38,7 @@ tr:nth-child(even) {
 }
 
 .subTitle {
-  font-family: 'Poppins';
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -51,7 +51,7 @@ tr:nth-child(even) {
 }
 
 .inputLabel {
-  font-family: 'Poppins';
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 14.4296px;
@@ -67,7 +67,7 @@ tr:nth-child(even) {
 }
 
 .sectionTitle {
-  font-family: 'Poppins';
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
@@ -107,7 +107,7 @@ table {
 }
 
 .note {
-  font-family: 'Poppins';
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
