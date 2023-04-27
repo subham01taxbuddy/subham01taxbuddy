@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <div class="wrapper clearfix">
-  <app-sidebar></app-sidebar>
+  <app-sidebar *ngIf="isDocumentCloud"></app-sidebar>
   <div *ngIf="showNotification && (this.routePath !== '/pages/chat-corner')" class="example-box"
     style="z-index: 100000;" cdkDrag>
     <strong><a class="note-msg" routerLink="/pages/chat-corner">{{msgCount}} notification came, click here to see new
@@ -11,7 +11,7 @@
 
   <router-outlet></router-outlet>
   <!-- <div class="call-icon" style="z-index: 100000;">
-    <button mat-mini-fab color="primary" (click)="openCallDialog()"> 
+    <button mat-mini-fab color="primary" (click)="openCallDialog()">
       <mat-icon>phone</mat-icon>
     </button>
   </div> -->

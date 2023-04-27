@@ -96,7 +96,7 @@
                         <div class="card__row">
                             <div class="card__col-lg-4">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Marrital Status</mat-label>
+                                    <mat-label>Marital Status</mat-label>
                                     <mat-select placeholder="Marrital Status" formControlName="maritalStatus">
                                         <mat-option *ngFor="let type of marritalStatusData" [value]="type.value">
                                             {{type.label}}
@@ -107,7 +107,7 @@
 
                             <div class="card__col-lg-4">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Adhar Number</mat-label>
+                                    <mat-label>Aadhar Number</mat-label>
                                     <input placeholder="Aadhaar Number" formControlName="aadharNumber" maxlength="12"
                                         onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         autocomplete="off" matInput>

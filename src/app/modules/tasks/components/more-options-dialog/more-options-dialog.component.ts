@@ -113,9 +113,20 @@ export class MoreOptionsDialogComponent implements OnInit {
     this.dialogRef.close();
   }
   goToCloud() {
-    this.router.navigate(['/pages/itr-filing/user-docs/' + this.data.userId]);
-    this.dialogRef.close();
+    console.log('data to send to doc',this.data)
+    // const url=`https://uat-api.taxbuddy.com/itr-filing/docs/user-docs/${this.data.userId}`
+    // window.open(url,'_blank');
+    const url = this.router.createUrlTree(['itr-filing/docs/user-docs/'],{
+      queryParams:{
+        userId: this.data.userId,
+        serviceType:this.data.serviceType,
+      }
+    }).toString();
+    window.open(url, '_blank');
+    // this.router.navigate(['itr-filing/docs/user-docs/' + this.data.userId]);
+    // this.dialogRef.close();
   }
+
   goToProfile() {
     this.router.navigate(['pages/user-management/profile/' + this.data.userId]);
     this.dialogRef.close();

@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
       user: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
       passphrase: ['']
     });
+    this.utilsService.getFilersList();
     Auth.currentSession().then(res => {
       const userData = this.storageService.getLocalStorage(AppSetting.UMD_KEY);
       console.log('Auth.current session:', res, 'USER DATA', userData);
@@ -57,6 +58,8 @@ export class LoginComponent implements OnInit {
         this.utilsService.getStoredSmeList();
         this.getFyList();
         this.getAgentList();
+        this.utilsService.getFilersList();
+
 
         this.getSmeInfoDetails(userData.userId);
         // if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
@@ -206,6 +209,7 @@ export class LoginComponent implements OnInit {
   async getAgentList() {
     await this.utilsService.getStoredAgentList();
     await this.utilsService.getStoredMyAgentList();
+    await this.utilsService.getFilersList();
   }
   async getFyList() {
     await this.utilsService.getStoredFyList();

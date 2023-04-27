@@ -11,6 +11,7 @@ export const environment = {
   isValidItr:false,
   assistedKmScript: '../assets/assisted-km-script-uat.html',
   environment:'UAT',
+  admin_id:3000,
 
   s3_cred: {
     // user_name: "ashish@ssbainnovations.com",

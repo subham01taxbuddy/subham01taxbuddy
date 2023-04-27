@@ -16,11 +16,11 @@
 }
 
 .tpSpc {
-    margin-top:10px; 
+    margin-top:10px;
  }
  .inlinBx {
     display: inline-block;
-    margin-right:60px;          
+    margin-right:60px;
     /* width:100%;  */
 }
 .gryBx {
@@ -51,9 +51,9 @@
 .listVw {
     /* background-color: #fafafa;    */
     margin-bottom: 10px;
-    width:100%; 
+    width:100%;
     /* border-bottom: 1px solid #ececec;     */
-       
+
 }
 .txtLf {
     margin-left: 18px;
@@ -62,7 +62,7 @@
     /* width: 350px;
     height: 39px; */
     display: block;
-    padding-top: 6px; 
+    padding-top: 6px;
     color:#253386;
 }
 .txtRt {
@@ -86,10 +86,24 @@
     height: 27px;
     float: right;
     width: 120px;
-}  
+}
 
 .msg{
     text-align: center;
     padding: 80px 10px;
     font-size: 15px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn{
+  background: #E5F2F7;
+    border: 1px solid #797979;
+    border-radius: 6.86273px;
+}
+.bullet-list {
+  list-style-type: disc;
 }

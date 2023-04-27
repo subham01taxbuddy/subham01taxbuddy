@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
   providers: [DatePipe]
 })
 export class ShowUserDocumnetsComponent implements OnInit {
+  showSideBar:true
   loading: boolean = false;
   commonDocuments = []
   breadcrumbsPart: any = [];
@@ -20,18 +21,36 @@ export class ShowUserDocumnetsComponent implements OnInit {
   isFile: boolean = false;
   filePath: any = '';
   userId: any;
+  serviceType:any;
 
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
     private datePipe: DatePipe, private toastMessageService: ToastMessageService) { }
 
   ngOnInit() {
-    const temp = this.activatedRoute.params.subscribe(params => {
-      console.log("USER ID :", params)
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log("params from more  :", params)
       // this.getCommonDocuments(params['userId']);
       this.userId = params['userId'];
+      this.serviceType=params['serviceType']
       // For directly navigating to ITR folder docs
-      this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
-      this.getCloudFilePath("ITR");
+      if(this.serviceType=='ITR'){
+        this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
+      }
+      else if(this.serviceType=='TPA'){
+        this.breadcrumbsPart = ["Home", "TPA", "2023-24"];
+      }
+      else if(this.serviceType=='GST'){
+        this.breadcrumbsPart = ["Home", "GST", "2023-24",];
+      }
+      else if(this.serviceType=='NOTICE'){
+        this.breadcrumbsPart = ["Home", "NOTICE", "2021-22", "Original", "NOTICE Filing Docs"];
+      }
+      else{
+        this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
+      }
+
+
+      this.getCloudFilePath(this.serviceType);
     });
   }
 
@@ -188,7 +207,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     this.loading = true;
     const ext = document.fileName.split('.').pop();
     console.log('this.viewer', this.viewer);
-    if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+    if(ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
       this.viewer = 'DOC';
     } else {
       this.viewer = 'IMG';
@@ -202,12 +221,16 @@ export class ShowUserDocumnetsComponent implements OnInit {
       console.log(res);
       this.docUrl = res['signedUrl'];
       this.loading = false;
-      window.open(this.docUrl);
+      // window.open(this.docUrl);
       // this.utilsService.showSnackBar(res.response);
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar(error);
     })
+  }
+
+  preventDownload($event: MouseEvent){
+    event.preventDefault();
   }
 
   afterUploadDocs(fileUpload) {
@@ -244,6 +267,10 @@ export class ShowUserDocumnetsComponent implements OnInit {
         this.utilsService.showSnackBar(error.response);
       });
 
+  }
+
+  closeComponent() {
+    window.close();
   }
 
 }
