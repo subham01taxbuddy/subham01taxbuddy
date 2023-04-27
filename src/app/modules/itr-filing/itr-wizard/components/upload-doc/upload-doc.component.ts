@@ -89,6 +89,10 @@ export class UploadDocComponent implements OnInit {
     })
   }
 
+  // ngAfterViewInit(){
+  //   this.gdriveService.loadGoogleLib();
+  // }
+
   editFile(document) {
     this.loading = true;
     const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
@@ -99,7 +103,8 @@ export class UploadDocComponent implements OnInit {
       this.loading = false;
 
       //open file in gdrive
-      this.gdriveService.getUserConsent();
+      this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
+      // this.gdriveService.getUserConsent();
     }, error => {
       this.loading = false;
     })

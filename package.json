@@ -35,7 +35,6 @@
     "angular-highcharts": "^13.0.1",
     "bootstrap": "^5.2.3",
     "file-saver": "^2.0.5",
-    "googleapis": "^118.0.0",
     "highcharts": "^10.0.0",
     "jquery": "^3.6.4",
     "lodash": "^4.17.21",

@@ -1,80 +1,181 @@
-import { google } from 'googleapis';
 import { environment } from 'src/environments/environment';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Injectable} from "@angular/core";
+declare var google: any;
+declare var gapi: any;
 
-/*
- * Browse the link below to see the complete object returned for folder/file creation and search
- *
- * @link https://developers.google.com/drive/api/v3/reference/files#resource
- */
-type PartialDriveFile = {
-  id: string;
-  name: string;
-};
-
-type SearchResultResponse = {
-  kind: 'drive#fileList';
-  nextPageToken: string;
-  incompleteSearch: boolean;
-  files: PartialDriveFile[];
-};
-
-export class GoogleDriveService {
+const driveClientId = environment.gdrive.GOOGLE_DRIVE_CLIENT_ID;
+const driveApiKey = environment.gdrive.GOOGLE_DRIVE_API_KEY;
+@Injectable({
+  providedIn: 'root'
+})
+export class GoogleDriveService{
 
   driveClientId = environment.gdrive.GOOGLE_DRIVE_CLIENT_ID || '';
-  driveClientSecret = environment.gdrive.GOOGLE_DRIVE_CLIENT_SECRET || '';
-  driveRedirectUri = environment.gdrive.GOOGLE_DRIVE_REDIRECT_URI || '';
-  driveRefreshToken;// = environment.gdrive.GOOGLE_DRIVE_REFRESH_TOKEN || '';
-  private driveClient;
 
   public constructor(private http: HttpClient) {
-    // this.driveClient = this.createDriveClient(clientId, clientSecret, redirectUri, refreshToken);
-    this.driveClient = this.createDriveClient();
+    console.log('in constructor', this.driveClientId);
   }
 
-  createDriveClient() {
-    const client = new google.auth.OAuth2(this.driveClientId, this.driveClientSecret, this.driveRedirectUri);
+  fileUrl: string;
+  fileName: string;
+  loadGoogleLib(fileName, fileUrl) {
 
-    // client.setCredentials({ refresh_token: refreshToken });
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: driveClientId,
+      scope: 'https://www.googleapis.com/auth/drive',
+      callback: (tokenResponse) => {
+        console.log(tokenResponse);
+        if (tokenResponse && tokenResponse.access_token) {
+          if (google.accounts.oauth2.hasGrantedAnyScope(tokenResponse,
+            'https://www.googleapis.com/auth/drive')) {
 
-    return google.drive({
-      version: 'v3',
-      auth: client,
-    });
-  }
 
-  createFolder(folderName: string): Promise<PartialDriveFile> {
-    return this.driveClient.files.create({
-      resource: {
-        name: folderName,
-        mimeType: 'application/vnd.google-apps.folder',
-      },
-      fields: 'id, name',
-    });
-  }
+            gapi.load('client', ()=>{
+              gapi.client.setApiKey(driveApiKey);
+              gapi.client.setToken(tokenResponse.access_token);
 
-  searchFolder(folderName: string): Promise<PartialDriveFile | null> {
-    const driveId = '0AK1-Qhm_r1YrUk9PVA';
+              gapi.client.init({
+              }).then(() => {
+                const headers = new HttpHeaders();
+                this.http.get(fileUrl,{headers, responseType: 'blob' as 'json'}).subscribe(
+                  (response: any) =>{
+                    let dataType = response.type;
+                    let binaryData = [];
+                    binaryData.push(response);
+                    this.getDriveFiles(fileName, binaryData, dataType);
+                  });
 
-    return new Promise((resolve, reject) => {
-      this.driveClient.files.list(
-        {
-          q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}'`,
-          fields: 'files(id, name)',
-          includeItemsFromAllDrives: true,
-          supportsAllDrives: true,
-          // driveId: driveId,
-        },
-        (err, res: { data: SearchResultResponse }) => {
-          if (err) {
-            return reject(err);
+              });
+
+            });
           }
+        }
+      }
+    });
+    console.log(client);
+    client.requestAccessToken();
+  }
 
-          return resolve(res.data.files ? res.data.files[0] : null);
-        },
-      );
+  searchFolder(){
+    var folderName = 'Parser'
+    gapi.client.request({
+      method:'GET',
+      path: `https://www.googleapis.com/drive/v3/files?q=mimeType='application/vnd.google-apps.folder' and name='${folderName}'&supportsAllDrives=true&includeItemsFromAllDrives=true`,
+      'headers': {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + gapi.client.getToken()
+      },
+    }).execute((response)=>{});
+  }
+
+  getDriveFiles(fileName, fileData, dataType){
+    // showStatus("Loading Google Drive files...");
+    // gapi.client.init({
+    //   apiKey: driveApiKey,
+    //   clientId: driveClientId,
+    //   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+    //   scope: 'https://www.googleapis.com/auth/drive'
+    // });//.then(this.getDriveFiles);
+    // gapi.client.load('drive', 'v3', this.createExcelOnDrive2);
+    gapi.client.load('drive', 'v3', ()=>{
+      const driveId = '0AK1-Qhm_r1YrUk9PVA';
+
+      const fileMetadata = {
+        name: fileName,
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+        parents: folderId ? [folderId] : [],
+      };
+
+      //Folder id of Parser Folder on CG Parsing shared drive
+      var folderId = "1DlJN6xgPyrX_ijF7k6q4M_1rwiRFJkGt";
+      var file = new Blob(fileData, {type: dataType});
+
+      var form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify(fileMetadata)], { type: 'application/json' }));
+      form.append('file', file);
+
+      // gapi.client.request({
+      //   method:'POST',
+      //   path: `https://www.googleapis.com/drive/v3/files?uploadType=media&supportsAllDrives=true&driveId=${driveId}`,
+      //   'headers': {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': 'Bearer ' + gapi.client.getToken()
+      //   },
+      //   body:{
+      //     name: fileName,
+      //     mimeType: 'application/vnd.google-apps.spreadsheet',
+      //     parents: folderId ? [folderId] : [],
+      //     metadata: fileMetadata,
+      //     file: file
+      //   }
+      //   // body: form
+      // }).execute((response)=>{
+      //   console.log('create response', response);
+      // });
+
+      const contentType = dataType || 'application/octet-stream';
+      const baseRoot = gapi['config'].get('googleapis.config').root;
+      const authHeader = 'Bearer ' + gapi.client.getToken();//`Bearer ${gapi.client.getToken()}`;
+
+      const metadataHeaders = {
+        'Authorization': authHeader,
+        'Content-Type': 'application/json',
+        'X-Upload-Content-Length': file.size,
+        'X-Upload-Content-Type': contentType
+      };
+      // const metadataOptions = new RequestOptions({ headers: new Headers(metadataHeaders) });
+      var metadataOptions = new HttpHeaders();
+      metadataOptions = metadataOptions.append('Authorization', authHeader);
+      metadataOptions = metadataOptions.append('Content-Type', 'application/json');
+      metadataOptions = metadataOptions.append('X-Upload-Content-Length', file.size.toString());
+      metadataOptions = metadataOptions.append('X-Upload-Content-Type', contentType);
+
+      const url = `${baseRoot}/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true&driveId=${driveId}`;
+
+      const metadata = {
+        'name': fileName,
+        'mimeType': contentType,
+        'Content-Type': contentType,
+        'Content-Length': fileData.length
+      };
+
+      this.http.post(url, metadata, { headers : metadataOptions }).subscribe((metadataRes: any) => {
+
+        const locationUrl = `https://drive.google.com/file/d/${metadataRes.id}`//metadataRes.headers.get('Location');
+
+        const uploadHeaders = new HttpHeaders();
+        uploadHeaders.append('Content-Type', contentType);
+        uploadHeaders.append('X-Upload-Content-Type', contentType);
+        uploadHeaders.append('Authorization', authHeader);
+
+        // const uploadOptions = new RequestOptions({ headers: new Headers(uploadHeaders) });
+
+        this.http.put(locationUrl, file, {headers: uploadHeaders}).subscribe((uploadRes: any) => {
+          console.log(uploadRes.json());
+        });
+      }, (err) => {
+        console.error(err);
+      });
+          /*return gapi.client.drive.files.create({
+            resource: fileMetadata,
+            requestBody: {
+              name: 'Zerodha.xlsx',
+              mimeType: 'application/vnd.google-apps.spreadsheet',
+              parents: folderId ? [folderId] : [],
+            },
+            media: {
+              mimeType: 'application/vnd.google-apps.spreadsheet',
+              //TODO: add correct stream data
+              // body:got.default.stream(fileUrl),
+            },
+            supportsAllDrives: true,
+            driveId: driveId,
+          });*/
     });
   }
+
+
 
   //This is used to save file on the drive. Not needed for now
   // saveFile(fileName: string, filePath: string, fileMimeType: string, folderId?: string) {
@@ -115,7 +216,7 @@ export class GoogleDriveService {
 
     const driveId = '0AK1-Qhm_r1YrUk9PVA';
 
-    return this.driveClient.files.create({
+    return gapi.client.drive.files.create({
       resource: fileMetadata,
       requestBody: {
         name: fileName,
@@ -132,32 +233,61 @@ export class GoogleDriveService {
     });
   }
 
-  getUserConsent(){
-    let url = `https://accounts.google.com/o/oauth2/auth?client_id=${this.driveClientId}&redirect_uri=${this.driveRedirectUri}&response_type=code`;//&scope=${scope}
-    this.http.get(url).subscribe((res: any) => {
-      console.log(res);
-    });
-  }
-
-  async createExcelOnDrive(fileUrl: string) {
+  async createExcelOnDrive2() {
     // const googleDriveService = new GoogleDriveService();
 
     const folderName = 'Parser';
+    var folder;
 
-    let folder = await this.searchFolder(folderName).catch((error) => {
-      console.error(error);
-      return null;
-    });
+    gapi.client.drive.files.list(
+      {
+        q: ` mimeType='application/vnd.google-apps.folder' and name='${folderName}'`,
+        // fields: 'files(id, name)',
+        // includeItemsFromAllDrives: true,
+        supportsAllDrives: true,
+        // driveId: driveId,
+      }).then(response => {
+        // if (err) {
+        //   console.log(err);
+        // }
 
-    console.log('creating folder');
-    if (!folder) {
-      folder = await this.createFolder(folderName);
-    }
+        console.log(response)
+        folder = (response.data.files ? response.data.files[0] : null);
 
-    console.log('remote file:', fileUrl);
+        const fileMetadata = {
+          name: 'Zerodha.xlsx',
+          mimeType: 'application/vnd.google-apps.spreadsheet',
+        };
+
+        const driveId = '0AK1-Qhm_r1YrUk9PVA';
+        var folderId = folder.od;
+        return gapi.client.drive.files.create({
+          resource: fileMetadata,
+          requestBody: {
+            name: 'Zerodha.xlsx',
+            mimeType: 'application/vnd.google-apps.spreadsheet',
+            parents: folderId ? [folderId] : [],
+          },
+          media: {
+            mimeType: 'application/vnd.google-apps.spreadsheet',
+            //TODO: add correct stream data
+            // body:got.default.stream(fileUrl),
+          },
+          supportsAllDrives: true,
+          driveId: driveId,
+        });
+      },
+    );
+
+    // console.log('creating folder');
+    // if (!folder) {
+    //   folder = await this.createFolder(folderName);
+    // }
+
+    /*console.log('remote file:', this.fileUrl);
 
     console.log('saving to drive');
-    let createdFile = await this.saveExcel('Zerodha.xlsx', fileUrl, 'application/vnd.google-apps.spreadsheet', folder.id).catch((error) => {
+    let createdFile = await this.saveExcel('Zerodha.xlsx', this.fileUrl, 'application/vnd.google-apps.spreadsheet', folder.id).catch((error) => {
       console.error(error);
     });
 
@@ -165,6 +295,6 @@ export class GoogleDriveService {
     console.info('File uploaded successfully!', createdFile);
     console.info('File available at', redirectUrl);
 
-    window.open(redirectUrl);
+    window.open(redirectUrl);*/
   }
 }
