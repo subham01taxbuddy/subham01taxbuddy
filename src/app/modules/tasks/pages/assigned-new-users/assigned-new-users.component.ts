@@ -150,7 +150,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
-        width: 180,
+        width: 160,
         suppressMovable: true,
         pinned: 'left',
         filter: 'agTextColumnFilter',
@@ -187,7 +187,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Status',
         field: 'statusId',
-        width: 150,
+        width: 90,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -217,7 +217,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Owner Name',
         field: 'ownerName',
-        width: 200,
+        width: 110,
         suppressMovable: true,
         hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
@@ -230,7 +230,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Filer Name',
         field: 'filerName',
-        width: 200,
+        width: 150,
         suppressMovable: true,
         hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
@@ -286,7 +286,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Language',
         field: 'laguage',
-        width: 100,
+        width: 115,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -298,7 +298,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Created Date',
         field: 'createdDate',
-        width: 120,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
@@ -313,7 +313,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Status Updated On',
         field: 'statusUpdatedDate',
-        width: 120,
+        width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
@@ -364,7 +364,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -387,7 +387,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 70,
+        width:80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -410,7 +410,7 @@ export class AssignedNewUsersComponent implements OnInit {
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
-        width: 60,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -433,7 +433,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -498,7 +498,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
-        width: 55,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

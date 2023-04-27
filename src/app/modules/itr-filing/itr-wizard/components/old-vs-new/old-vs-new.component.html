@@ -72,12 +72,7 @@
               <div class="card__col-xs-4">
                 <mat-label class="option-label">Select F.Y.:</mat-label>
                 <mat-form-field appearance="outline">
-                  <mat-select
-                    placeholder="Select Financial Year"
-                    required
-                    name="assessmentYear"
-                    formControlName="assessmentYear"
-                  >
+                  <mat-select placeholder="Select Financial Year" required name="assessmentYear" formControlName="assessmentYear">
                     <mat-option
                       *ngFor="let year of financialYear"
                       [value]="year.financialYear"
