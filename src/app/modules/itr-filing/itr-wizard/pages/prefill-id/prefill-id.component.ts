@@ -850,6 +850,96 @@ export class PrefillIdComponent implements OnInit {
             );
           }
 
+          if (this.ITR_Type === 'ITR4') {
+            // everOptedNewRegime
+            {
+              // this.ITR_Obj.everOptedNewRegime.everOptedNewRegime
+              this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                ItrJSON[
+                  this.ITR_Type
+                ].FilingStatus.NewTaxRegimeDtls.AssessmentYear;
+              this.ITR_Obj.everOptedNewRegime.date =
+                ItrJSON[
+                  this.ITR_Type
+                ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEDate;
+
+              this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
+                ItrJSON[
+                  this.ITR_Type
+                ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo;
+            }
+
+            // everOptedOutOfNewRegime
+            // {
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'everOptedOutOfNewRegime'
+            //     ] as FormGroup
+            //   ).controls['assessmentYear'].setValue(
+            //     this.ITR_JSON.everOptedOutOfNewRegime.assessmentYear
+            //   );
+
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'everOptedOutOfNewRegime'
+            //     ] as FormGroup
+            //   ).controls['everOptedOutOfNewRegime'].setValue(
+            //     this.ITR_JSON.everOptedOutOfNewRegime.everOptedOutOfNewRegime
+            //   );
+
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'everOptedOutOfNewRegime'
+            //     ] as FormGroup
+            //   ).controls['date'].setValue(
+            //     this.ITR_JSON.everOptedOutOfNewRegime.date
+            //   );
+
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'everOptedOutOfNewRegime'
+            //     ] as FormGroup
+            //   ).controls['acknowledgementNumber'].setValue(
+            //     this.ITR_JSON.everOptedOutOfNewRegime.acknowledgementNumber
+            //   );
+            // }
+
+            // // optionForCurrentAY
+            // {
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'optionForCurrentAY'
+            //     ] as FormGroup
+            //   ).controls['assessmentYear'].setValue(
+            //     this.ITR_JSON.optionForCurrentAY.assessmentYear
+            //   );
+
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'optionForCurrentAY'
+            //     ] as FormGroup
+            //   ).controls['currentYearRegime'].setValue(
+            //     this.ITR_JSON.optionForCurrentAY.currentYearRegime
+            //   );
+
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'optionForCurrentAY'
+            //     ] as FormGroup
+            //   ).controls['date'].setValue(
+            //     this.ITR_JSON.optionForCurrentAY.date
+            //   );
+
+            //   (
+            //     this.regimeSelectionForm.controls[
+            //       'optionForCurrentAY'
+            //     ] as FormGroup
+            //   ).controls['acknowledgementNumber'].setValue(
+            //     this.ITR_JSON.optionForCurrentAY.acknowledgementNumber
+            //   );
+            // }
+          }
+
           // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
           this.ITR_Obj.residentialStatus = 'RESIDENT';
 
