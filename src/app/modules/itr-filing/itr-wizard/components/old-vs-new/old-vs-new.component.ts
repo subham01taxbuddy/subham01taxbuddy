@@ -194,12 +194,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   ngOnInit(): void {
     this.utilsService.smoothScrollToTop();
+<<<<<<< HEAD
     this.assesssmentYear = [
       { assesssmentYear: '2022-23' },
       { assesssmentYear: '2021-22' },
     ];
     this.updateRegimeLabels();
     this.getITRType();
+=======
+    this.financialYear = AppConstants.gstFyList;
+    this.updateRegimeLabels();
+>>>>>>> staging
 
     // everOptedNewRegime
     {
@@ -263,6 +268,15 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     {
       (
         this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+<<<<<<< HEAD
+=======
+      ).controls['assessmentYear'].setValue(
+        this.ITR_JSON.optionForCurrentAY.assessmentYear
+      );
+
+      (
+        this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+>>>>>>> staging
       ).controls['currentYearRegime'].setValue(
         this.ITR_JSON.optionForCurrentAY.currentYearRegime
       );
