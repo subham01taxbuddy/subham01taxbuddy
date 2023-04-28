@@ -230,10 +230,10 @@ export class AssignedSmeComponent implements OnInit {
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
-        cellStyle: {          
+        cellStyle: {
           textAlign: 'left',
-          display: 'block',  
-          margin: '0px 0px 0px 5px'  
+          display: 'block',
+          margin: '0px 0px 0px 5px'
         },
         cellRenderer: (params: any) => {
           // console.log('param',params)
@@ -367,7 +367,7 @@ export class AssignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="background-color: #00AECA; color: #ffffff; padding: 3px 8px; border-radius:5px; font-size: 14px; cursor:pointer;margin-top:2px;">
-          <i class="material-icons" style="font-size: 15px; padding-top: 5px; padding-right: 5px;">&#xe3c9;</i>Edit
+          <i class="material-icons" style="font-size: 15px; padding-top: 5px; padding-right: 5px;" data-action-type="edit">&#xe3c9;</i>Edit
           </button>`;
         },
       },
