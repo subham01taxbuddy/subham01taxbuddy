@@ -23,7 +23,7 @@
     </div>
     <div class="col-sm-3">
       <div class="input__label">
-        <button class="btn" style="background: #00aeca; border-radius: 5px; float: right" (click)="advanceSearch(advanceSearchKey.value)">
+        <button class="btn clrBtn"  (click)="advanceSearch(advanceSearchKey.value)">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
       </div>
@@ -33,8 +33,8 @@
 
 <div class="card__row" style="margin-top: 15px">
   <div class="card__col-xs-12 card__col-sm-12">
-    <p style="float: left">
-      Total Count: <b>{{this.config.totalItems }}</b>
+    <p class="count">
+      Total Count: <span class="txClr">{{this.config.totalItems }}</span>
     </p>
     <br />
   </div>

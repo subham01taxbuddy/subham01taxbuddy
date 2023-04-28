@@ -791,7 +791,7 @@ export class TaxInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 85,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

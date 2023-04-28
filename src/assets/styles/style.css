@@ -176,17 +176,23 @@ a {
 /* --[ SIDEBAR ]--*/
 
 .left-sidebar {
-  width: 160px;
-  float: left;
+  width: 205px!important;
+  float: left!important;
 }
 
 .left-sidebar.fixed {
   overflow: auto;
   position: fixed;
-  padding-top: 100px;
+  padding-top: 80px!important;
   top: 0;
   bottom: 0;
   z-index: 40;
+  padding-bottom:100px!important;
+  overflow-x: hidden!important;
+}
+
+ol, ul {
+  padding-left: 0rem !important;
 }
 
 .left-sidebar+.left-sidebar {
@@ -197,7 +203,14 @@ a {
   display: block;
   position: relative;
   z-index: 1;
+  text-align:left!important;
 }
+
+.submenu ng-star-inserted ul {
+  margin-left:20px;
+}
+
+
 
 .sidebar__item:visited,
 .sidebar__item {
@@ -245,17 +258,10 @@ a {
 /* TABS */
 
 .main {
-  /* max-width: 1300px;
-  padding-top: 30px;
-  padding-left: 170px;
-  padding-right: 30px;
-  margin: auto; */
-  max-width: 1400px;
-  padding-top: 5px;
-  padding-left: 170px;
-  padding-right: 5px;
-  margin: auto;
-
+  min-width: 1000px;
+  margin-top:20px;
+  margin-left:220px;
+  overflow-x:hidden;
 }
 
 .tab {

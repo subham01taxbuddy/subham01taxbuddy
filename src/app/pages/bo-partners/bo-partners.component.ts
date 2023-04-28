@@ -102,7 +102,7 @@ export class BoPartnersComponent implements OnInit {
       {
         headerName: 'Type - Individual/ Consultant',
         field: 'partnerType',
-        width: 150,
+        width: 170,
         pinned: 'left',
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
@@ -115,7 +115,7 @@ export class BoPartnersComponent implements OnInit {
       {
         headerName: 'Name/name of Organization',
         field: 'name',
-        width: 150,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -216,7 +216,7 @@ export class BoPartnersComponent implements OnInit {
         },
       },
       {
-        headerName: 'referred person',
+        headerName: 'Referred person',
         field: 'referredBy',
         width: 120,
         cellStyle: { textAlign: 'center' },
@@ -228,9 +228,9 @@ export class BoPartnersComponent implements OnInit {
         },
       },
       {
-        headerName: 'No. of employee working in organization',
+        headerName: 'No. of EMP in Org.',
         field: 'noOfEmployees',
-        width: 100,
+        width: 155,
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
         filter: 'agTextColumnFilter',
@@ -240,9 +240,9 @@ export class BoPartnersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Your Interest area of work',
+        headerName: 'Area Of Expertise',
         field: 'areaOfExpertise',
-        width: 200,
+        width: 150,
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
         filter: 'agTextColumnFilter',

@@ -99,7 +99,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'User Id',
         field: 'userId',
-        width: 80,
+        width: 95,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -112,7 +112,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
-        width: 150,
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -125,7 +125,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'mobile',
-        width: 120,
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -138,7 +138,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'Created Date',
         field: 'createdDate',
-        width: 130,
+        width: 110,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -154,7 +154,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'Service Type',
         field: 'serviceType',
-        width: 100,
+        width: 95,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -192,7 +192,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'Source',
         field: 'source',
-        width: 100,
+        width: 95,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -205,7 +205,7 @@ export class SignUpExceptionsComponent implements OnInit {
       {
         headerName: 'Caller Agent Name',
         field: 'callerAgentName',
-        width: 150,
+        width: 130,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -233,7 +233,7 @@ export class SignUpExceptionsComponent implements OnInit {
             <i class="fa fa-comments-o" aria-hidden="true"></i>
            </button>`;
         },
-        width: 55,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -305,7 +305,7 @@ export class SignUpExceptionsComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -333,7 +333,7 @@ export class SignUpExceptionsComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" ></i>
            </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

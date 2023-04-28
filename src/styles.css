@@ -3,7 +3,7 @@
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
 .ag-theme-balham {
-  font-family: Poppins !important;
+  font-family: 'DM Sans', sans-serif;
   margin: -35px 0px 10px 0px !important;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .ag-theme-balham .ag-header-cell, .ag-theme-balham .ag-header-group-cell {
-  padding-left: 0px;
+  padding-left: 12px;
   padding-right: 12px;
 }
 
@@ -51,7 +51,7 @@
 /*ag grid css changes end*/
 
 * {
-  font-family: Poppins;
+  font-family: 'DM Sans', sans-serif;
 }
 
 /*CSS changes by Sushma Start */
@@ -319,7 +319,7 @@ button {
   background: #FFE1E1;
   border: 1px solid #E20000;
   border-radius: 6px;
-  font-family: "Poppins";
+  font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -591,7 +591,7 @@ mat-step-header .mat-step-label.mat-step-label-active {
     align-items: center;
     padding: 19.4547px 29.1821px;
     gap: 19.45px;
-    font-family: "Poppins";
+    font-family: "DM Sans";
     font-style: normal;
     font-weight: 400;
     font-size: 19px;
@@ -693,6 +693,12 @@ h6 {
 a {
   color: inherit;
   text-decoration: inherit
+}
+
+.mat-placeholder-required {
+  margin-top: -15px!important;
+  margin-right: 55%!important;
+  float: right!important;
 }
 
 b,
@@ -988,7 +994,7 @@ html {
   --animate-duration: 1s;
   --animate-delay: 1s;
   --animate-repeat: 1;
-  font-family: Poppins, system-ui, sans-serif
+  font-family: 'DM Sans', sans-serif;
 }
 
 select {

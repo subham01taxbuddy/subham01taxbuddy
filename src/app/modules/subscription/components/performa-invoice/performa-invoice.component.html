@@ -88,7 +88,7 @@
             </div>
 
             <div class="row" style="margin-top: 20px">
-              <div class="col-sm-3">
+              <div class="col-sm-3 topAli">
                 <mat-label> Select FY </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -100,7 +100,7 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
-                <mat-label> From Date </mat-label>
+               
                 <mat-form-field appearance="outline">
                   <mat-label>From Date</mat-label>
                   <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate" autocomplete="off"
@@ -111,8 +111,7 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
-                <mat-label> To Date </mat-label>
-                <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline">
                   <mat-label>To Date</mat-label>
                   <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" autocomplete="off" />
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -121,7 +120,7 @@
                   <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-3 topAli">
                 <mat-label>Select Status </mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select
@@ -176,16 +175,14 @@
               <div>
                 <button
                   *ngIf="roles?.includes('ROLE_ADMIN')"
-                  class="btn"
-                  style="background: #00aeca; border-radius: 5px; float: right"
+                  class="btn btnClr"                
                   (click)="downloadInvoicesSummary()"
                 >
                   <i class="fa fa-download" aria-hidden="true"></i> Download
                   File
                 </button>
                 <button
-                  class="btn"
-                  style="background: #00aeca; border-radius: 5px; float: right"
+                  class="btn btnClr"            
                   (click)="getInvoice()"
                 >
                   <i class="fas fa-file-invoice" aria-hidden="true"></i> Show

@@ -10,16 +10,17 @@
 
 .plan{
   margin: 4px 10px;
-  border: 1px solid black;
-  padding: 5px;
-  width: 172px;
-  border-radius: 7px;
-  height: 120px;
+  border: 1px solid #cccccc;
+  padding: 15px;
+  width: 30%;
+  border-radius:8px;
+  height: 140px;
   display: block;
 }
 
+
 .plan:active{
-  color: white;
+  color: #ffffff!important;
   background-color: green;
   display: block;
 }
@@ -46,11 +47,18 @@ span{
   margin-bottom: -1.5rem;
 }
 
+.space {
+  margin-bottom:10px;
+  padding:10px;
+}
+
 .serviceBtn{
-  margin-left: 60px;
-  border: 1px solid black;
-  padding: 7px 17px;
-  border-radius: 3px;
+  border: 1px solid #b1e0ff;
+  padding: 8px 8px 8px 8px;
+  border-radius: 8px;
+  background-color: #ebf3ff;
+box-shadow: 0px 1px #888888;
+color: #07070c;
 }
 
 a.serviceBtn{

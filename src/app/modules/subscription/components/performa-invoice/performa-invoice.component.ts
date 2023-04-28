@@ -756,7 +756,7 @@ export class PerformaInvoiceComponent implements OnInit {
       {
         headerName: 'Prepared By',
         field: 'inovicePreparedBy',
-        width: 180,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -778,7 +778,7 @@ export class PerformaInvoiceComponent implements OnInit {
       {
         headerName: 'Assigned to',
         field: 'invoiceAssignedTo',
-        width: 180,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -819,7 +819,7 @@ export class PerformaInvoiceComponent implements OnInit {
            </button>`;
           }
         },
-        width: 95,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
@@ -842,7 +842,7 @@ export class PerformaInvoiceComponent implements OnInit {
         },
       },
       {
-        headerName: 'Download invoice',
+        headerName: 'Download Invoice',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -853,7 +853,7 @@ export class PerformaInvoiceComponent implements OnInit {
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
-        width: 95,
+        width: 93,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -871,11 +871,11 @@ export class PerformaInvoiceComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
             style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer; transform: rotate(90deg); color: #04a4bc; text-align:center;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
            </button>`;
         },
-        width: 55,
+        width: 60,
         pinned: 'right',
       },
       {
@@ -890,7 +890,7 @@ export class PerformaInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 85,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
