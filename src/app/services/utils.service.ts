@@ -710,6 +710,9 @@ export class UtilsService {
       everOptedNewRegime: null,
       everOptedOutOfNewRegime: null,
       optionForCurrentAY: null,
+      section89: null,
+      section90: null,
+      section91: null,
     };
 
     return ITR_JSON;
@@ -1296,5 +1299,28 @@ export class UtilsService {
     ) {
       return loggedInSmeInfo[0].roles;
     }
+  }
+
+  async getFilersList() {
+    // https://uat-api.taxbuddy.com/user/sme-details-new/3000?filer=true
+    let loggedInUserId = environment.admin_id;
+    console.log('logged in sme id ', loggedInUserId);
+    const param = `/sme-details-new/${loggedInUserId}?filer=true`;
+    // return await this.userMsService.getMethod(param).toPromise();
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      console.log('filer List Result', res);
+      if (res.success && res.data instanceof Array) {
+        let filerList = res.data;
+        sessionStorage.setItem(
+          AppConstants.ALL_FILERS_LIST,
+          JSON.stringify(filerList)
+        );
+        return filerList;
+      }
+      // if (res.success) {
+      //   sessionStorage.setItem(AppConstants.ALL_FILERS_LIST, JSON.stringify(res.data))
+      // }
+    });
+    // sessionStorage.setItem("autosave", field.value);
   }
 }
