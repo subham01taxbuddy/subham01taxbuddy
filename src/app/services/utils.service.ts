@@ -342,29 +342,300 @@ export class UtilsService {
           dateOfBirth: this.isNonEmpty(profile) ? profile.dateOfBirth : '',
         },
       ],
-      address:
-        this.isNonEmpty(profile) && this.isNonEmpty(profile.address)
-          ? profile.address[0]
-          : null,
+      address: {
+        flatNo: '',
+        premisesName: '',
+        road: '',
+        area: '',
+        city: '',
+        state: '',
+        country: '',
+        pinCode: '',
+      },
+      // this.isNonEmpty(profile) && this.isNonEmpty(profile.address) ? profile.address[0] : null,
       upload: [],
-      employers: [],
-      houseProperties: [],
+      employers: [
+        {
+          id: '',
+          employerName: '',
+          address: '',
+          city: '',
+          pinCode: '',
+          state: '',
+          employerPAN: '',
+          employerTAN: '',
+          periodFrom: '',
+          periodTo: '',
+          taxableIncome: null,
+          standardDeduction: null,
+          employerCategory: '',
+          exemptIncome: null,
+          taxRelief: null,
+          taxDeducted: null,
+          salary: [
+            { salaryType: 'SEC17_1', taxableAmount: null, exemptAmount: 0 },
+          ],
+          allowance: [
+            {
+              allowanceType: 'HOUSE_RENT',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+            { allowanceType: 'LTA', taxableAmount: 0, exemptAmount: null },
+            {
+              allowanceType: 'CHILDREN_EDUCATION',
+              taxableAmount: 0,
+              exemptAmount: 0,
+            },
+            {
+              allowanceType: 'GRATUITY',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+            {
+              allowanceType: 'COMMUTED_PENSION',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+            {
+              allowanceType: 'LEAVE_ENCASHMENT',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+            {
+              allowanceType: 'ANY_OTHER',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+            {
+              allowanceType: 'ALL_ALLOWANCES',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+          ],
+          perquisites: [
+            {
+              perquisiteType: 'SEC17_2',
+              taxableAmount: null,
+              exemptAmount: 0,
+            },
+          ],
+          profitsInLieuOfSalaryType: [
+            { salaryType: 'SEC17_3', taxableAmount: null, exemptAmount: 0 },
+          ],
+          deductions: [
+            {
+              deductionType: 'PROFESSIONAL_TAX',
+              taxableAmount: 0,
+              exemptAmount: null,
+            },
+            // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
+          ],
+          upload: [],
+          calculators: null,
+        },
+      ],
+      houseProperties: [
+        {
+          propertyType: 'LOP',
+          grossAnnualRentReceived: null,
+          propertyTax: null,
+          ownerPercentage: null,
+          address: '',
+          city: '',
+          state: '',
+          country: '',
+          pinCode: '',
+          taxableIncome: null,
+          exemptIncome: null,
+          isEligibleFor80EE: false,
+          isEligibleFor80EEA: false,
+          tenant: [],
+          coOwners: [],
+          loans: [
+            {
+              loanType: 'HOUSING',
+              principalAmount: null,
+              interestAmount: null,
+            },
+          ],
+        },
+      ],
       capitalGain: [],
       business: {
         presumptiveIncomes: [],
-        financialParticulars: null,
+        financialParticulars: {
+          difference: null,
+          id: null,
+          grossTurnOverAmount: null,
+          membersOwnCapital: null,
+          securedLoans: null,
+          unSecuredLoans: null,
+          advances: null,
+          sundryCreditorsAmount: null,
+          otherLiabilities: null,
+          totalCapitalLiabilities: null,
+          fixedAssets: null,
+          inventories: null,
+          sundryDebtorsAmount: null,
+          balanceWithBank: null,
+          cashInHand: null,
+          loanAndAdvances: null,
+          otherAssets: null,
+          totalAssets: null,
+          investment: null,
+          GSTRNumber: null,
+        },
         businessDescription: [],
         fixedAssetsDetails: [],
         profitLossACIncomes: [],
       },
       pastYearLosses: [],
       foreignIncome: null,
-      incomes: [],
-      investments: [],
-      donations: [],
-      loans: [],
-      expenses: [],
-      insurances: [],
+      incomes: [
+        {
+          incomeType: 'SAVING_INTEREST',
+          details: null,
+          amount: 0,
+          expenses: null,
+        },
+        {
+          incomeType: 'FD_RD_INTEREST',
+          details: null,
+          amount: 0,
+          expenses: null,
+        },
+        {
+          incomeType: 'TAX_REFUND_INTEREST',
+          details: null,
+          amount: 0,
+          expenses: null,
+        },
+        {
+          incomeType: 'ANY_OTHER',
+          details: null,
+          amount: 0,
+          expenses: null,
+        },
+        {
+          incomeType: 'FAMILY_PENSION',
+          details: 'FAMILY_PENSION',
+          amount: 0,
+          expenses: null,
+        },
+      ],
+      dividendIncomes: [
+        { income: null, date: '2022-04-28T18:30:00.000Z', quarter: 1 },
+        { income: null, date: '2022-07-28T18:30:00.000Z', quarter: 2 },
+        { income: null, date: '2022-09-28T18:30:00.000Z', quarter: 3 },
+        { income: null, date: '2022-12-28T18:30:00.000Z', quarter: 4 },
+        { income: null, date: '2023-03-20T18:30:00.000Z', quarter: 5 },
+      ],
+      exemptIncomes: [
+        { natureDesc: 'AGRI', amount: null, othNatOfInc: null },
+        { natureDesc: '10(10D)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(11)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(12)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(13)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(16)', amount: null, othNatOfInc: null },
+        { natureDesc: 'DMDP', amount: null, othNatOfInc: null },
+        { natureDesc: '10(17)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(17A)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(18)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(10BC)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(19)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(26)', amount: null, othNatOfInc: null },
+        { natureDesc: '10(26AAA)', amount: null, othNatOfInc: null },
+        { natureDesc: 'OTH', amount: null, othNatOfInc: null },
+      ],
+      investments: [
+        { investmentType: 'ELSS', amount: null, details: 'ELSS' },
+        {
+          investmentType: 'PENSION_FUND',
+          amount: null,
+          details: 'PENSION_FUND',
+        },
+        {
+          investmentType: 'PS_EMPLOYEE',
+          amount: null,
+          details: 'PS_EMPLOYEE',
+        },
+        {
+          investmentType: 'PS_EMPLOYER',
+          amount: null,
+          details: 'PS_EMPLOYER',
+        },
+        {
+          investmentType: 'PENSION_SCHEME',
+          amount: null,
+          details: 'PENSION_SCHEME',
+        },
+      ],
+      donations: [
+        {
+          donationType: 'POLITICAL',
+          amountInCash: null,
+          amountOtherThanCash: null,
+          identifier: '',
+          schemeCode: '',
+          name: '',
+          address: '',
+          city: '',
+          pinCode: '',
+          state: '',
+          panNumber: '',
+          details: '',
+        },
+      ],
+      loans: [
+        {
+          loanType: 'EDUCATION',
+          name: null,
+          interestPaidPerAnum: null,
+          principalPaidPerAnum: 0,
+          loanAmount: null,
+          details: null,
+        },
+      ],
+
+      expenses: [
+        {
+          expenseType: 'HOUSE_RENT_PAID',
+          expenseFor: null,
+          details: null,
+          amount: null,
+          noOfMonths: 0,
+        },
+        {
+          expenseType: 'ELECTRIC_VEHICLE',
+          expenseFor: null,
+          details: null,
+          amount: null,
+          noOfMonths: 0,
+        },
+      ],
+      insurances: [
+        {
+          typeOfPolicy: '',
+          sumAssured: null,
+          insuranceType: 'HEALTH',
+          policyFor: 'DEPENDANT',
+          premium: null,
+          medicalExpenditure: null,
+          preventiveCheckUp: null,
+          healthCover: null,
+        },
+        {
+          typeOfPolicy: '',
+          sumAssured: null,
+          insuranceType: 'HEALTH',
+          policyFor: 'PARENTS',
+          premium: null,
+          medicalExpenditure: null,
+          preventiveCheckUp: null,
+          healthCover: null,
+        },
+      ],
       assetsLiabilities: null,
       bankDetails:
         this.isNonEmpty(profile) && this.isNonEmpty(profile.bankDetails)
@@ -409,7 +680,27 @@ export class UtilsService {
       lastVisitedURL: '',
       seventhProviso139: null,
       depPayInvClmUndDednVIA: 'N',
-      declaration: undefined,
+      declaration: {
+        capacity: null,
+        childOf: null,
+        name: null,
+        panNumber: null,
+        place: '',
+      },
+      disabilities: [
+        {
+          typeOfDisability: null,
+          amount: null,
+        },
+        {
+          typeOfDisability: null,
+          amount: null,
+        },
+        {
+          typeOfDisability: null,
+          amount: null,
+        },
+      ],
       disability: undefined,
       movableAsset: [],
       immovableAsset: [],
@@ -419,9 +710,6 @@ export class UtilsService {
       everOptedNewRegime: null,
       everOptedOutOfNewRegime: null,
       optionForCurrentAY: null,
-      section89: null,
-      section90: null,
-      section91: null,
     };
 
     return ITR_JSON;
@@ -1008,28 +1296,5 @@ export class UtilsService {
     ) {
       return loggedInSmeInfo[0].roles;
     }
-  }
-
-  async getFilersList() {
-    // https://uat-api.taxbuddy.com/user/sme-details-new/3000?filer=true
-    let loggedInUserId = environment.admin_id;
-    console.log('logged in sme id ', loggedInUserId);
-    const param = `/sme-details-new/${loggedInUserId}?filer=true`;
-    // return await this.userMsService.getMethod(param).toPromise();
-    this.userMsService.getMethod(param).subscribe((res: any) => {
-      console.log('filer List Result', res);
-      if (res.success && res.data instanceof Array) {
-        let filerList = res.data;
-        sessionStorage.setItem(
-          AppConstants.ALL_FILERS_LIST,
-          JSON.stringify(filerList)
-        );
-        return filerList;
-      }
-      // if (res.success) {
-      //   sessionStorage.setItem(AppConstants.ALL_FILERS_LIST, JSON.stringify(res.data))
-      // }
-    });
-    // sessionStorage.setItem("autosave", field.value);
   }
 }
