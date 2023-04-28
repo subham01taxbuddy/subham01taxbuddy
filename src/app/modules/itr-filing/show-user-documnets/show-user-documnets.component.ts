@@ -218,9 +218,14 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
     const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
-      console.log(res);
-      this.docUrl = res['signedUrl'];
       this.loading = false;
+      console.log(res);
+      if(res['signedUrl']){
+        this.docUrl = res['signedUrl'];
+      }else{
+        this.utilsService.showSnackBar(res.response);
+      }
+
       // window.open(this.docUrl);
       // this.utilsService.showSnackBar(res.response);
     }, error => {
