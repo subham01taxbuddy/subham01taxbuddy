@@ -44,7 +44,10 @@
               <strong> Tax Regime Selection </strong>
             </div>
 
-            <div formGroupName="everOptedNewRegime">
+            <div
+              formGroupName="everOptedNewRegime"
+              *ngIf="this.itrType === '3' || this.itrType === '4'"
+            >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   1. Have you ever opted for New Regimes in earlier Years
@@ -149,10 +152,13 @@
                   </mat-form-field>
                 </div>
               </div>
+              <hr />
             </div>
-            <hr />
 
-            <div formGroupName="everOptedOutOfNewRegime">
+            <div
+              formGroupName="everOptedOutOfNewRegime"
+              *ngIf="this.itrType === '3' || this.itrType === '4'"
+            >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   2. Have you ever opted out of New Regime in earlier Years
@@ -256,10 +262,13 @@
                   </mat-form-field>
                 </div>
               </div>
+              <hr />
             </div>
-            <hr />
 
-            <div formGroupName="optionForCurrentAY">
+            <div
+              formGroupName="optionForCurrentAY"
+              *ngIf="this.itrType === '3' || this.itrType === '4'"
+            >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   3. Option for current Assessment year
@@ -344,7 +353,37 @@
                 </div>
               </div>
             </div>
-            <hr />
+
+            <div
+              formGroupName="optionForCurrentAY"
+              *ngIf="this.itrType === '1' || this.itrType === '2'"
+            >
+              <div class="card__row">
+                <div class="card__col-xs-9 question-label">
+                  Are you opting for New Tax Regime?
+                </div>
+                <div
+                  class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right"
+                >
+                  <mat-radio-group
+                    name="currentYearRegime"
+                    formControlName="currentYearRegime"
+                  >
+                    <mat-radio-button
+                      [value]="'NEW'"
+                      style="margin-left: 0px; margin-right: 2px"
+                      labelPosition="before"
+                    >
+                      Yes
+                    </mat-radio-button>
+                    <mat-radio-button [value]="'OLD'" labelPosition="before">
+                      No
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+              <hr />
+            </div>
           </div>
         </form>
 
