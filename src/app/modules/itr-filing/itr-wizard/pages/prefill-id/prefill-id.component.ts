@@ -853,91 +853,115 @@ export class PrefillIdComponent implements OnInit {
           if (this.ITR_Type === 'ITR4') {
             // everOptedNewRegime
             {
-              // this.ITR_Obj.everOptedNewRegime.everOptedNewRegime
-              this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                ItrJSON[
-                  this.ITR_Type
-                ].FilingStatus.NewTaxRegimeDtls.AssessmentYear;
-              this.ITR_Obj.everOptedNewRegime.date =
-                ItrJSON[
-                  this.ITR_Type
-                ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEDate;
+              //Setting 1st question as yes / no
+              if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
+                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
+              } else {
+                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
+              }
 
-              this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                ItrJSON[
-                  this.ITR_Type
-                ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo;
+              // setting first question details
+              {
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                  .AssessmentYear
+                  ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
+                  : null;
+
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                  .Form10IEDtls.Form10IEDate
+                  ? (this.ITR_Obj.everOptedNewRegime.date =
+                      this.parseAndFormatDate(
+                        ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                          .Form10IEDtls.Form10IEDate
+                      ))
+                  : null;
+
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                  .Form10IEDtls.Form10IEAckNo
+                  ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                  : null;
+              }
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
             }
 
-            // everOptedOutOfNewRegime
-            // {
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'everOptedOutOfNewRegime'
-            //     ] as FormGroup
-            //   ).controls['assessmentYear'].setValue(
-            //     this.ITR_JSON.everOptedOutOfNewRegime.assessmentYear
-            //   );
+            //  everOptedOutOfNewRegime
+            {
+              //Setting 1st question as yes / no
+              if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime === 'Y'
+              ) {
+                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                  true;
+              } else {
+                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                  false;
+              }
 
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'everOptedOutOfNewRegime'
-            //     ] as FormGroup
-            //   ).controls['everOptedOutOfNewRegime'].setValue(
-            //     this.ITR_JSON.everOptedOutOfNewRegime.everOptedOutOfNewRegime
-            //   );
+              // setting second question details
+              {
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                  .AssessmentYear
+                  ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
+                  : null;
 
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'everOptedOutOfNewRegime'
-            //     ] as FormGroup
-            //   ).controls['date'].setValue(
-            //     this.ITR_JSON.everOptedOutOfNewRegime.date
-            //   );
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                  .Form10IEDtls.Form10IEDate
+                  ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
+                      this.parseAndFormatDate(
+                        ItrJSON[this.ITR_Type].FilingStatus
+                          .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
+                      ))
+                  : null;
 
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'everOptedOutOfNewRegime'
-            //     ] as FormGroup
-            //   ).controls['acknowledgementNumber'].setValue(
-            //     this.ITR_JSON.everOptedOutOfNewRegime.acknowledgementNumber
-            //   );
-            // }
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                  .Form10IEDtls.Form10IEAckNo
+                  ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                  : null;
+              }
 
-            // // optionForCurrentAY
-            // {
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'optionForCurrentAY'
-            //     ] as FormGroup
-            //   ).controls['assessmentYear'].setValue(
-            //     this.ITR_JSON.optionForCurrentAY.assessmentYear
-            //   );
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
 
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'optionForCurrentAY'
-            //     ] as FormGroup
-            //   ).controls['currentYearRegime'].setValue(
-            //     this.ITR_JSON.optionForCurrentAY.currentYearRegime
-            //   );
+            // optionForCurrentAY
+            this.ITR_Obj.optionForCurrentAY.currentYearRegime =
+              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime;
 
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'optionForCurrentAY'
-            //     ] as FormGroup
-            //   ).controls['date'].setValue(
-            //     this.ITR_JSON.optionForCurrentAY.date
-            //   );
+            ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
+              ? (this.ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
+                ))
+              : null;
+            ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo
+              ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
+                  ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo)
+              : null;
 
-            //   (
-            //     this.regimeSelectionForm.controls[
-            //       'optionForCurrentAY'
-            //     ] as FormGroup
-            //   ).controls['acknowledgementNumber'].setValue(
-            //     this.ITR_JSON.optionForCurrentAY.acknowledgementNumber
-            //   );
-            // }
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
           }
 
           // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
