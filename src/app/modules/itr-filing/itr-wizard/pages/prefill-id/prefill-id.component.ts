@@ -162,77 +162,79 @@ export class PrefillIdComponent implements OnInit {
       OTH: 'ANY_OTHER',
     };
 
-    for (let i = 0; i < salaryAllowances.length; i++) {
-      // console.log('i ==>>>>', i);
-      const type = salaryAllowances[i];
+    if (salaryAllowances) {
+      for (let i = 0; i < salaryAllowances.length; i++) {
+        // console.log('i ==>>>>', i);
+        const type = salaryAllowances[i];
 
-      // For all the salaryAllowances mapping
-      {
-        // use the mapping object to get the new name for the current type
-        const newName = mapping[type];
+        // For all the salaryAllowances mapping
+        {
+          // use the mapping object to get the new name for the current type
+          const newName = mapping[type];
 
-        try {
-          // finding and storing the object with the same NatureDesc (type) present in JSON Object
-          const salaryAllowancesDetail = this.uploadedJson[ITR_Type][
-            this.ITR14_IncomeDeductions
-          ].AllwncExemptUs10.AllwncExemptUs10Dtls.find(
-            (salaryAllowances) => salaryAllowances.SalNatureDesc === type
-          );
-          // console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
+          try {
+            // finding and storing the object with the same NatureDesc (type) present in JSON Object
+            const salaryAllowancesDetail = this.uploadedJson[ITR_Type][
+              this.ITR14_IncomeDeductions
+            ].AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+              (salaryAllowances) => salaryAllowances.SalNatureDesc === type
+            );
+            // console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
 
-          if (salaryAllowancesDetail) {
-            // TO DO (There are some issues in this) - create an array to store the values of the fields with the existing ANY_OTHER field and then add them and store them in others in itrObject
-            if (newName === 'ANY_OTHER') {
-              const anyOtherFields = [
-                salaryAllowancesDetail.SalOthAmount,
-                ...Object.values(this.ITR_Obj.employers[0].allowance)
-                  .filter(
-                    (allowance) => allowance.allowanceType === 'ANY_OTHER'
-                  )
-                  .map((allowance) => allowance.exemptAmount),
-              ];
-              // console.log('anyOtherFields ==>>', anyOtherFields);
+            if (salaryAllowancesDetail) {
+              // TO DO (There are some issues in this) - create an array to store the values of the fields with the existing ANY_OTHER field and then add them and store them in others in itrObject
+              if (newName === 'ANY_OTHER') {
+                const anyOtherFields = [
+                  salaryAllowancesDetail.SalOthAmount,
+                  ...Object.values(this.ITR_Obj.employers[0].allowance)
+                    .filter(
+                      (allowance) => allowance.allowanceType === 'ANY_OTHER'
+                    )
+                    .map((allowance) => allowance.exemptAmount),
+                ];
+                // console.log('anyOtherFields ==>>', anyOtherFields);
 
-              // sum the values in the anyOtherFields array
-              const totalAnyOtherAmount = anyOtherFields.reduce(
-                (acc, val) => acc + val,
-                0
-              );
-              // console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
+                // sum the values in the anyOtherFields array
+                const totalAnyOtherAmount = anyOtherFields.reduce(
+                  (acc, val) => acc + val,
+                  0
+                );
+                // console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
 
-              // update the existing ANY_OTHER field in the ITR object with the total amount
+                // update the existing ANY_OTHER field in the ITR object with the total amount
+                const itrObjSalaryAllowancesDetail =
+                  this.ITR_Obj.employers[0].allowance.find(
+                    (itrObjSalaryAllowances) =>
+                      itrObjSalaryAllowances.allowanceType === 'ANY_OTHER'
+                  );
+                itrObjSalaryAllowancesDetail.exemptAmount = totalAnyOtherAmount;
+              }
+
+              // finding and storing the object with the same NatureDesc (type) present in ITR Object
               const itrObjSalaryAllowancesDetail =
                 this.ITR_Obj.employers[0].allowance.find(
                   (itrObjSalaryAllowances) =>
-                    itrObjSalaryAllowances.allowanceType === 'ANY_OTHER'
+                    itrObjSalaryAllowances.allowanceType === newName
                 );
-              itrObjSalaryAllowancesDetail.exemptAmount = totalAnyOtherAmount;
+              // console.log(
+              //   'itrObjSalaryAllowancesDetail====>>>>',
+              //   itrObjSalaryAllowancesDetail
+              // );
+
+              // If same type is not found in the ITR Object then show an error message
+              if (!itrObjSalaryAllowancesDetail) {
+                this.utilsService.showSnackBar(
+                  `Salary Allowance - ${newName} Income was not found in the ITR Object`
+                );
+              }
+
+              itrObjSalaryAllowancesDetail.exemptAmount =
+                salaryAllowancesDetail.SalOthAmount;
             }
-
-            // finding and storing the object with the same NatureDesc (type) present in ITR Object
-            const itrObjSalaryAllowancesDetail =
-              this.ITR_Obj.employers[0].allowance.find(
-                (itrObjSalaryAllowances) =>
-                  itrObjSalaryAllowances.allowanceType === newName
-              );
-            // console.log(
-            //   'itrObjSalaryAllowancesDetail====>>>>',
-            //   itrObjSalaryAllowancesDetail
-            // );
-
-            // If same type is not found in the ITR Object then show an error message
-            if (!itrObjSalaryAllowancesDetail) {
-              this.utilsService.showSnackBar(
-                `Salary Allowance - ${newName} Income was not found in the ITR Object`
-              );
-            }
-
-            itrObjSalaryAllowancesDetail.exemptAmount =
-              salaryAllowancesDetail.SalOthAmount;
+          } catch (error) {
+            console.log(`Error occurred for type ${type}: `, error);
+            this.utilsService.showSnackBar(`Error occurred for type ${type}`);
           }
-        } catch (error) {
-          console.log(`Error occurred for type ${type}: `, error);
-          this.utilsService.showSnackBar(`Error occurred for type ${type}`);
         }
       }
     }
@@ -418,12 +420,22 @@ export class PrefillIdComponent implements OnInit {
           );
           // console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
 
-          if (disabilities80UArray[1] > 75000) {
+          if (disabilities80UArray && disabilities80UArray[1] > 75000) {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
-          } else if (disabilities80UArray[1] < 75000) {
+          } else if (
+            disabilities80UArray[1] < 75000
+            // &&
+            // disabilities80UArray[1] !== 0 &&
+            // disabilities80UArray[1] !== null
+          ) {
             disabilities80U = 'SELF_WITH_DISABILITY';
-          } else if ((disabilities80UArray[1] = 0 || null)) {
+          } else if (
+            disabilities80UArray &&
+            (disabilities80UArray[1] === 0 || disabilities80UArray[1] === null)
+          ) {
             disabilities80U = null;
+            // need to implement this later where the whole object is deleted if amount is 0.
+            // this.ITR_Obj.disabilities.splice(0, 1);
           }
           // console.log('IndividualDisabilities80UName', disabilities80U);
         }
@@ -436,13 +448,25 @@ export class PrefillIdComponent implements OnInit {
           );
           // console.log('IndividualDisabilities80ddArray=>', disabilities80ddArray);
 
-          if (disabilities80ddArray[1] > 75000) {
+          if (disabilities80ddArray && disabilities80ddArray[1] > 75000) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
-          } else if (disabilities80ddArray[1] < 75000) {
+          } else if (
+            disabilities80ddArray[1] < 75000
+            // &&
+            // disabilities80ddArray[1] !== 0 &&
+            // disabilities80ddArray[1] !== null
+          ) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
-          } else if ((disabilities80ddArray[1] = 0 || null)) {
+          } else if (
+            disabilities80ddArray &&
+            (disabilities80ddArray[1] === 0 ||
+              disabilities80ddArray[1] === null)
+          ) {
             disabilities80dd = null;
+            // need to implement this later where the whole object is deleted if amount is 0.
+            // this.ITR_Obj.disabilities.splice(0, 2);
           }
+
           // console.log('IndividualDisabilities80ddName', disabilities80dd);
         }
 
@@ -454,12 +478,22 @@ export class PrefillIdComponent implements OnInit {
           );
           // console.log('IndividualDisabilities80DDBArray=>', disabilities80DDBArray);
 
-          if (disabilities80DDBArray[1] > 40000) {
+          if (disabilities80DDBArray && disabilities80DDBArray[1] > 40000) {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
-          } else if (disabilities80DDBArray[1] < 40000) {
+          } else if (
+            disabilities80DDBArray[1] < 40000
+            // &&  disabilities80DDBArray[1] !== 0 &&
+            // disabilities80DDBArray[1] !== null
+          ) {
             disabilities80DDB = 'SELF_OR_DEPENDENT';
-          } else if ((disabilities80DDBArray[1] = 0 || null)) {
+          } else if (
+            disabilities80DDBArray &&
+            (disabilities80DDBArray[1] =
+              0 || disabilities80DDBArray[1] === null)
+          ) {
             disabilities80DDB = null;
+            // need to implement this later where the whole object is deleted if amount is 0.
+            // this.ITR_Obj.disabilities.splice(0, 3);
           }
           // console.log('IndividualDisabilities80DDBName', disabilities80DDB);
         }
@@ -520,12 +554,13 @@ export class PrefillIdComponent implements OnInit {
               // console.log('disability80UObjFound', disability80U);
 
               // setting the field name in ITR Obj as per the new name
-              disability80U.typeOfDisability = disabilities80U;
-
-              // setting the amount in ITR object
-              const disabilities80UAmount = (disability80U.amount =
-                investments[i][1]);
-              // console.log('disabilities80UAmount', disabilities80UAmount);
+              if (disability80U) {
+                disability80U.typeOfDisability = disabilities80U;
+                // setting the amount in ITR object
+                const disabilities80UAmount = (disability80U.amount =
+                  investments[i][1]);
+                // console.log('disabilities80UAmount', disabilities80UAmount);
+              }
             }
 
             if (newName === disabilities80dd) {
@@ -536,12 +571,13 @@ export class PrefillIdComponent implements OnInit {
               // console.log('disability80DDObjFound', disability80DD);
 
               // setting the field name in ITR Obj as per the new name
-              disability80DD.typeOfDisability = disabilities80dd;
-
-              // setting the amount in ITR object
-              const disabilities80DDAmount = (disability80DD.amount =
-                investments[i][1]);
-              // console.log('disabilities80DDAmount', disabilities80DDAmount);
+              if (disability80DD) {
+                disability80DD.typeOfDisability = disabilities80dd;
+                // setting the amount in ITR object
+                const disabilities80DDAmount = (disability80DD.amount =
+                  investments[i][1]);
+                // console.log('disabilities80DDAmount', disabilities80DDAmount);
+              }
             }
 
             if (newName === disabilities80DDB) {
@@ -552,17 +588,18 @@ export class PrefillIdComponent implements OnInit {
               // console.log('disability80DDBObjFound', disability80DDB);
 
               // setting the field name in ITR Obj as per the new name
-              disability80DDB.typeOfDisability = disabilities80DDB;
-
-              // setting the amount in ITR object
-              const disabilities80DDBAmount = (disability80DDB.amount =
-                investments[i][1]);
-              // console.log('disabilities80DDBAmount', disabilities80DDBAmount);
+              if (disability80DDB) {
+                disability80DDB.typeOfDisability = disabilities80DDB;
+                // setting the amount in ITR object
+                const disabilities80DDBAmount = (disability80DDB.amount =
+                  investments[i][1]);
+                // console.log('disabilities80DDBAmount', disabilities80DDBAmount);
+              }
             }
 
             if (newName === 'Section80D') {
               // finding the Section80D array for self in itr object
-              const itrObjSelf80D = this.ITR_Obj.insurances.find(
+              const itrObjSelf80D = this.ITR_Obj.insurances?.find(
                 (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
               );
               // console.log('self80DObjFound', itrObjSelf80D);
@@ -577,7 +614,7 @@ export class PrefillIdComponent implements OnInit {
               const json80DSeniorCitizen =
                 this.uploadedJson[
                   this.ITR_Type
-                ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
                   'SeniorCitizenFlag'
                 );
 
@@ -621,7 +658,7 @@ export class PrefillIdComponent implements OnInit {
               // finding the Section80D array for parents in itr object
               const json80DParentsSeniorCitizen = this.uploadedJson[
                 this.ITR_Type
-              ].Schedule80D.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+              ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
                 'ParentsSeniorCitizenFlag'
               );
 
@@ -838,114 +875,55 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj.family[0].fatherName =
             ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
 
-          if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
-            this.regime = 'OLD';
-            this.ITR_Obj.regime = this.regime;
-          } else if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
-            this.regime = 'NEW';
-            this.ITR_Obj.regime = this.regime;
-          } else {
-            this.utilsService.showSnackBar(
-              'Type of regime is not present in the uploaded JSON'
-            );
+          if (this.ITR_Type === 'ITR1') {
+            if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
+              this.regime = 'OLD';
+              this.ITR_Obj.regime = this.regime;
+            } else if (
+              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y'
+            ) {
+              this.regime = 'NEW';
+              this.ITR_Obj.regime = this.regime;
+            } else {
+              this.utilsService.showSnackBar(
+                'Type of regime is not present in the uploaded JSON'
+              );
+            }
           }
 
           if (this.ITR_Type === 'ITR4') {
-            // everOptedNewRegime
-            {
-              //Setting 1st question as yes / no
-              if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
-                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
-              } else {
-                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
-              }
-
-              // setting first question details
-              {
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                  .AssessmentYear
-                  ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                  .Form10IEDtls.Form10IEDate
-                  ? (this.ITR_Obj.everOptedNewRegime.date =
-                      this.parseAndFormatDate(
-                        ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                          .Form10IEDtls.Form10IEDate
-                      ))
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                  .Form10IEDtls.Form10IEAckNo
-                  ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
-                  : null;
-              }
-
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
-            }
-
-            //  everOptedOutOfNewRegime
-            {
-              //Setting 1st question as yes / no
-              if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime === 'Y'
-              ) {
-                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                  true;
-              } else {
-                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                  false;
-              }
-
-              // setting second question details
-              {
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                  .AssessmentYear
-                  ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                  .Form10IEDtls.Form10IEDate
-                  ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                      this.parseAndFormatDate(
-                        ItrJSON[this.ITR_Type].FilingStatus
-                          .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
-                      ))
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                  .Form10IEDtls.Form10IEAckNo
-                  ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
-                  : null;
-              }
-
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
-            }
-
+            // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
             // optionForCurrentAY
-            this.ITR_Obj.optionForCurrentAY.currentYearRegime =
-              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime;
+            if (ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 1) {
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+            } else if (
+              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 2
+            ) {
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+            } else if (
+              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 3
+            ) {
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+            } else if (
+              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 4
+            ) {
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+            } else if (
+              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 5
+            ) {
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+            } else if (
+              !ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime
+            ) {
+              this.utilsService.showSnackBar(
+                'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
+              );
+            }
+
+            this.ITR_Obj.regime =
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime;
+
+            this.regime = this.ITR_Obj.optionForCurrentAY.currentYearRegime;
 
             ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
               ? (this.ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(
@@ -956,6 +934,98 @@ export class PrefillIdComponent implements OnInit {
               ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
                   ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo)
               : null;
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+          }
+
+          // everOptedNewRegime
+          {
+            //Setting 1st question as yes / no
+            if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
+              this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
+            } else {
+              this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
+            }
+
+            // setting first question details
+            {
+              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                ?.AssessmentYear
+                ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                    ItrJSON[
+                      this.ITR_Type
+                    ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
+                : null;
+
+              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls?.Form10IEDtls
+                .Form10IEDate
+                ? (this.ITR_Obj.everOptedNewRegime.date =
+                    this.parseAndFormatDate(
+                      ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                        .Form10IEDtls.Form10IEDate
+                    ))
+                : null;
+
+              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls?.Form10IEDtls
+                .Form10IEAckNo
+                ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
+                    ItrJSON[
+                      this.ITR_Type
+                    ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                : null;
+            }
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+          }
+
+          //  everOptedOutOfNewRegime
+          {
+            //Setting 1st question as yes / no
+            if (
+              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime === 'Y'
+            ) {
+              this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                true;
+            } else {
+              this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                false;
+            }
+
+            // setting second question details
+            {
+              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                ?.AssessmentYear
+                ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
+                    ItrJSON[
+                      this.ITR_Type
+                    ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
+                : null;
+
+              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                ?.Form10IEDtls?.Form10IEDate
+                ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
+                    this.parseAndFormatDate(
+                      ItrJSON[this.ITR_Type].FilingStatus
+                        .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
+                    ))
+                : null;
+
+              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                ?.Form10IEDtls?.Form10IEAckNo
+                ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                    ItrJSON[
+                      this.ITR_Type
+                    ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                : null;
+            }
 
             // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
@@ -1069,7 +1139,7 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.employers[0].exemptIncome =
               ItrJSON[this.ITR_Type][
                 this.ITR14_IncomeDeductions
-              ]?.AllwncExemptUs10.TotalAllwncExemptUs10;
+              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
           }
 
           // Salary 17(1)
@@ -1090,7 +1160,7 @@ export class PrefillIdComponent implements OnInit {
           if (this.regime === 'OLD') {
             const availableSalaryAllowances = this.uploadedJson[this.ITR_Type][
               this.ITR14_IncomeDeductions
-            ].AllwncExemptUs10.AllwncExemptUs10Dtls.map(
+            ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
               (value) => value.SalNatureDesc
             );
             // console.log(
@@ -1102,11 +1172,25 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Type
             );
           }
+
+          try {
+            const deductions = this.ITR_Obj.employers[0].deductions;
+            if (deductions && deductions[0]) {
+              deductions[0].exemptAmount =
+                ItrJSON[this.ITR_Type][
+                  this.ITR14_IncomeDeductions
+                ].ProfessionalTaxUs16iii;
+            } else {
+              console.error('Cannot access deductions or its first element');
+            }
+          } catch (error) {
+            console.error('Cannot access ITR_Obj or its properties', error);
+          }
           // DEDUCTIONS - PROFESSIONAL TAX
-          this.ITR_Obj.employers[0].deductions[0].exemptAmount =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].ProfessionalTaxUs16iii;
+          // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].ProfessionalTaxUs16iii;
 
           // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
         } else {
@@ -1400,7 +1484,7 @@ export class PrefillIdComponent implements OnInit {
               : 'TDSonOthThanSalDtls';
           // console.log('otherThanSalary16A', otherThanSalary16A);
 
-          const jsonOtherThanSalaryTDS =
+          const jsonOtherThanSalaryTDS: Array<object> =
             ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
           // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
 
@@ -1497,7 +1581,7 @@ export class PrefillIdComponent implements OnInit {
           const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS.TCS;
 
           if (!jsonTCS || jsonTCS.length === 0) {
-            this.ITR_Obj.taxPaid.otherThanSalary16A = [];
+            this.ITR_Obj.taxPaid.tcs = [];
             console.log(
               'There are no TCS tax paid other than salary details in the JSON that you have provided'
             );
