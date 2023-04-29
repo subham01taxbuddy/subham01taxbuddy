@@ -170,14 +170,14 @@
                         hidden
                         file-model="MeterFile"
                         class="inputfile"
-                        (change)="uploadJsonFile($event.target.files)"
+                        (change)="uploadJsonFile()"
                       />
 
                       <button
                         type="button"
                         size="12px"
                         class="btn btn-primary"
-                        (click)="upload()"
+                        (click)="upload('pre-filled')"
                         [disabled]="!uploadPrefillChecked"
                         style="background-color: #00aeca"
                       >
@@ -201,7 +201,7 @@
                 </div>
                 <!-- upload-json  -->
                 <div
-                  *ngIf="false"
+                  *ngIf="true"
                   class="bg-white whtAr border border-neutral-accent flex items-start justify-between flex-col gap-y-2 lg:items-center rounded-[10px] pt-[10px] pl-[25px] pb-[10px] pr-[25px] lg:flex-row"
                 >
                   <div
@@ -236,18 +236,18 @@
                     <div>
                       <input
                         type="file"
-                        id="input-jsonfile-id"
+                        id="input-utility-file-jsonfile-id"
                         hidden
                         file-model="MeterFile"
                         class="inputfile"
-                        (change)="uploadJsonFile($event.target.files)"
+                        (change)="uploadUtilityItrJson($event.target.files)"
                       />
 
                       <button
                         type="button"
                         size="12px"
                         class="btn btn-primary"
-                        (click)="upload()"
+                        (click)="upload('utility')"
                         [disabled]="!uploadJsonChecked"
                         style="background-color: #00aeca"
                       >
@@ -267,9 +267,6 @@
                       }}
                       on {{ this.ITR_JSON?.prefillDate | date }}
                     </div> -->
-                    <div *ngIf="uploadJsonChecked">
-                      <app-tax-summary></app-tax-summary>
-                    </div>
                   </div>
                 </div>
               </div>
