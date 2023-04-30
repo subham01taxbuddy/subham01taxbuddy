@@ -851,6 +851,9 @@ export class PrefillIdComponent implements OnInit {
       }
     }
 
+    // setting assesseType, need to set for HUF dynamically
+    this.ITR_Obj.assesseeType = 'INDIVIDUAL';
+
     //Finding the way
     // console.log(
     //   'Checking the JSON',
