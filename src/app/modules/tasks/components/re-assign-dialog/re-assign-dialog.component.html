@@ -1,14 +1,15 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <label style="font-size: 18px;
-font-weight: bold;">Re-Assign: {{data.clientName}}</label><button mat-dialog-close tabindex="-1"
+font-weight: bold;">Re-Assign: {{data.clientName}}</label><button style="float: right;" mat-dialog-close tabindex="-1"
   class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
 <div class="card__row">
-  <div class="card__col-xs-12 card__col-sm-8">
-    <app-sme-list-drop-down (sendSme)="fromSme($event)" listType="ALL" serviceType={{data.serviceType}}>
+  <!-- <label style="font-size: 14px;font-weight:normal; color:red;"> * Please select Both Owner And filer Name </label> -->
+  <div class="card__col-xs-12 card__col-sm-8" style="margin-top: 5px;">
+    <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL" serviceType={{data.serviceType}}>
     </app-sme-list-drop-down>
   </div>
   <div class="card__col-xs-12 card__col-sm-4">
-    <button type="submit" class="pull-right" class="tbd-btn" (click)="reAssign()"
+    <button class="tbd-btn3" (click)="reAssign()"
       [disabled]="loading">Re-Assign</button>
 
   </div>

@@ -11,24 +11,57 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ReAssignDialogComponent implements OnInit {
   selectedAgentId: any;
   loading = false;
+  ownerId: number;
+  filerId: number;
+  serviceType:any;
 
   constructor(public dialogRef: MatDialogRef<ReAssignDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     public utilsService: UtilsService
   ) {
-    console.log('Selected UserID for notes',
+    console.log('Selected UserID for reassignment',
       this.data.userId);
   }
 
-
   ngOnInit() {
+    console.log('data from more opt',this.data)
+    console.log('Selected User Service ',this.data.serviceType)
+    // this.ownerId=this.data.ownerId;
+    // this.filerId=this.data.filerId;
+    // this.serviceType=this.data.serviceType;
+  }
+
+  fromSme(event, isOwner) {
+
+    console.log('sme-drop-down', event, isOwner);
+
+    if(isOwner){
+       this.ownerId = event? event.userId : null;
+      if(this.data.ownerName != event.name){
+        this.serviceType='ALL';
+      }else{
+        this.serviceType=this.data.serviceType;
+      }
+      console.log('ownerID=',this.ownerId )
+
+    } else {
+      this.filerId = event? event.userId : null;
+      console.log('filerId=',this.filerId)
+    }
+
+    //  if( !this.ownerId && this.filerId) {
+    //   this.ownerId = this.filerId;
+    //   console.log('owner2',this.ownerId)
+    //  }
+
   }
 
   reAssign() {
-    if (this.utilsService.isNonEmpty(this.selectedAgentId)) {
+    // https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10363&serviceTypes=ITR&ownerUserId=7526&filerUserId=10341
+    if(this.ownerId && this.filerId){
       this.loading = true;
-      const param = `/sme/user-agent-update?userId=${this.data.userId}&agentUserId=${this.selectedAgentId}&serviceType=${this.data.serviceType}&subscriptionId=0`
+      const param = `/user-reassignment-new?userId=${this.data.userId}&serviceTypes=${this.serviceType}&ownerUserId=${this.ownerId}&filerUserId=${this.filerId}`
       this.userMsService.getMethod(param).subscribe((res: any) => {
         console.log(res);
         this.utilsService.showSnackBar('User re assigned successfully.');
@@ -39,11 +72,14 @@ export class ReAssignDialogComponent implements OnInit {
         this.utilsService.showSnackBar('Failed to re-assign the user, please try again');
         console.log(error);
       })
+    }else {
+      this.utilsService.showSnackBar('Please select Both Owner And Filer Name');
     }
+
   }
 
-  fromSme(event) {
-    this.selectedAgentId = event;
-    console.log('this.selectedAgentId', this.selectedAgentId)
-  }
+  // fromSme(event) {
+  //   this.selectedAgentId = event;
+  //   console.log('this.selectedAgentId', this.selectedAgentId)
+  // }
 }

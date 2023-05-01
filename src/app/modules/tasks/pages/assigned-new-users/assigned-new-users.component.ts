@@ -880,18 +880,20 @@ export class AssignedNewUsersComponent implements OnInit {
 
 
   moreOptions(client) {
+    console.log('client',client)
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',
       data: client
     })
-
-    // disposable.afterClosed().subscribe(result => {
-    //   if (result.data === 'success') {
-    //     this.search();
-    //   }
-    // });
+      disposable.afterClosed().subscribe(result => {
+        console.log('result after more option closed',result)
+       if (result.data === 'success') {
+         this.search();
+       }
+    });
   }
+
   isNumeric(value) {
     return /^\d+$/.test(value);
   }
