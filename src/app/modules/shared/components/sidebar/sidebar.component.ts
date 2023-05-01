@@ -56,10 +56,18 @@ export class SidebarComponent implements DoCheck {
 
   menus: Menu[] = [
     {
-      name: 'Dashboard',
+      name: 'Partner Dashboard',
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard',
+      roles: [],
+      submenu: []
+    },
+    {
+      name: 'Owner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard/owner',
       roles: [],
       submenu: []
     },
