@@ -45,7 +45,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   errorMessage: string;
   newSummaryIncome: any;
   oldSummaryIncome: any;
-  financialYear: any[] = [];
+  assesssmentYear: any[] = [];
+  itrType: any;
 
   newRegimeLabel = 'Opting in Now';
   oldRegimeLabel = 'Not Opting';
@@ -78,7 +79,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       }),
       optionForCurrentAY: this.fb.group({
         currentYearRegime: [],
-        assessmentYear: [],
         date: [],
         acknowledgementNumber: [],
       }),
@@ -194,93 +194,105 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   ngOnInit(): void {
     this.utilsService.smoothScrollToTop();
-    this.financialYear = AppConstants.gstFyList;
+    this.assesssmentYear = [
+      { assesssmentYear: '2022-23' },
+      { assesssmentYear: '2021-22' },
+    ];
     this.updateRegimeLabels();
+    this.getITRType();
 
-    // everOptedNewRegime
-    {
-      (
-        this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-      ).controls['assessmentYear'].setValue(
-        this.ITR_JSON.everOptedNewRegime.assessmentYear
-      );
+    if (this.itrType === '3' || this.itrType === '4') {
+      // everOptedNewRegime
+      {
+        (
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+        ).controls['assessmentYear'].setValue(
+          this.ITR_JSON.everOptedNewRegime.assessmentYear
+        );
 
-      (
-        this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-      ).controls['everOptedNewRegime'].setValue(
-        this.ITR_JSON.everOptedNewRegime.everOptedNewRegime
-      );
+        (
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+        ).controls['everOptedNewRegime'].setValue(
+          this.ITR_JSON.everOptedNewRegime.everOptedNewRegime
+        );
 
-      (
-        this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-      ).controls['date'].setValue(this.ITR_JSON.everOptedNewRegime.date);
+        (
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+        ).controls['date'].setValue(this.ITR_JSON.everOptedNewRegime.date);
 
-      (
-        this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-      ).controls['acknowledgementNumber'].setValue(
-        this.ITR_JSON.everOptedNewRegime.acknowledgementNumber
-      );
+        (
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+        ).controls['acknowledgementNumber'].setValue(
+          this.ITR_JSON.everOptedNewRegime.acknowledgementNumber
+        );
+      }
+
+      // everOptedOutOfNewRegime
+      {
+        (
+          this.regimeSelectionForm.controls[
+            'everOptedOutOfNewRegime'
+          ] as FormGroup
+        ).controls['assessmentYear'].setValue(
+          this.ITR_JSON.everOptedOutOfNewRegime.assessmentYear
+        );
+
+        (
+          this.regimeSelectionForm.controls[
+            'everOptedOutOfNewRegime'
+          ] as FormGroup
+        ).controls['everOptedOutOfNewRegime'].setValue(
+          this.ITR_JSON.everOptedOutOfNewRegime.everOptedOutOfNewRegime
+        );
+
+        (
+          this.regimeSelectionForm.controls[
+            'everOptedOutOfNewRegime'
+          ] as FormGroup
+        ).controls['date'].setValue(this.ITR_JSON.everOptedOutOfNewRegime.date);
+
+        (
+          this.regimeSelectionForm.controls[
+            'everOptedOutOfNewRegime'
+          ] as FormGroup
+        ).controls['acknowledgementNumber'].setValue(
+          this.ITR_JSON.everOptedOutOfNewRegime.acknowledgementNumber
+        );
+      }
+
+      // optionForCurrentAY
+      {
+        (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+        ).controls['assessmentYear'].setValue(
+          this.ITR_JSON.optionForCurrentAY.assessmentYear
+        );
+
+        (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+        ).controls['currentYearRegime'].setValue(
+          this.ITR_JSON.optionForCurrentAY.currentYearRegime
+        );
+
+        (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+        ).controls['date'].setValue(this.ITR_JSON.optionForCurrentAY.date);
+
+        (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+        ).controls['acknowledgementNumber'].setValue(
+          this.ITR_JSON.optionForCurrentAY.acknowledgementNumber
+        );
+      }
+    } else if (this.itrType === '1' || this.itrType === '2') {
+      // optionForCurrentAY
+      {
+        this.ITR_JSON.optionForCurrentAY.currentYearRegime = (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+        ).controls['currentYearRegime'].value;
+      }
     }
-
-    // everOptedOutOfNewRegime
-    {
-      (
-        this.regimeSelectionForm.controls[
-          'everOptedOutOfNewRegime'
-        ] as FormGroup
-      ).controls['assessmentYear'].setValue(
-        this.ITR_JSON.everOptedOutOfNewRegime.assessmentYear
-      );
-
-      (
-        this.regimeSelectionForm.controls[
-          'everOptedOutOfNewRegime'
-        ] as FormGroup
-      ).controls['everOptedOutOfNewRegime'].setValue(
-        this.ITR_JSON.everOptedOutOfNewRegime.everOptedOutOfNewRegime
-      );
-
-      (
-        this.regimeSelectionForm.controls[
-          'everOptedOutOfNewRegime'
-        ] as FormGroup
-      ).controls['date'].setValue(this.ITR_JSON.everOptedOutOfNewRegime.date);
-
-      (
-        this.regimeSelectionForm.controls[
-          'everOptedOutOfNewRegime'
-        ] as FormGroup
-      ).controls['acknowledgementNumber'].setValue(
-        this.ITR_JSON.everOptedOutOfNewRegime.acknowledgementNumber
-      );
-    }
-
-    // optionForCurrentAY
-    {
-      (
-        this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
-      ).controls['assessmentYear'].setValue(
-        this.ITR_JSON.optionForCurrentAY.assessmentYear
-      );
-
-      (
-        this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
-      ).controls['currentYearRegime'].setValue(
-        this.ITR_JSON.optionForCurrentAY.currentYearRegime
-      );
-
-      (
-        this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
-      ).controls['date'].setValue(this.ITR_JSON.optionForCurrentAY.date);
-
-      (
-        this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
-      ).controls['acknowledgementNumber'].setValue(
-        this.ITR_JSON.optionForCurrentAY.acknowledgementNumber
-      );
-    }
-
-    // Regime selection
+    // Relief selection
     {
       this.summaryToolReliefsForm.controls['section89'].setValue(
         this.ITR_JSON.section89
@@ -419,16 +431,31 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     );
   }
 
-  setFilingDate() {
-    var id = ''; //this.customerProfileForm.controls['form10IEAckNo'].value;
-    var lastSix = id.substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
-    let dateString = `20${year}-${month}-${day}`;
-    console.log(dateString, year, month, day);
+  getITRType() {
+    this.loading = true;
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+      (ITR_RESULT: ITR_JSON) => {
+        this.ITR_JSON = ITR_RESULT;
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+        this.itrType = ITR_RESULT.itrType;
+        console.log('this.itrType', this.itrType);
 
-    // this.customerProfileForm.controls['form10IEDate'].setValue(moment(dateString).toDate());
+        //if(this.ITR_JSON.itrType === '3') {
+        //  alert('This is ITR 3 and can not be filed from backoffice');
+        //  return;
+        //}
+        // this.saveAndNext.emit(true);
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Unable to update details, Please try again.'
+        );
+      }
+    );
   }
 
   goBack() {
@@ -475,5 +502,21 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  setFilingDate() {
+    var id = (
+      this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+    ).controls['assessmentYear'].value;
+    var lastSix = id.toString().substr(id.length - 6);
+    var day = lastSix.slice(0, 2);
+    var month = lastSix.slice(2, 4);
+    var year = lastSix.slice(4, 6);
+    let dateString = `20${year}-${month}-${day}`;
+    console.log(dateString, year, month, day);
+
+    (
+      this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+    ).controls['assessmentYear'].setValue(moment(dateString).toDate());
   }
 }
