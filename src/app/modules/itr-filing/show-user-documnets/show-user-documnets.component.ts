@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
+import {GoogleDriveService} from "../../../services/google-drive.service";
 
 @Component({
   selector: 'app-show-user-documnets',
@@ -24,7 +25,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
   serviceType:any;
 
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
-    private datePipe: DatePipe, private toastMessageService: ToastMessageService) { }
+    private datePipe: DatePipe, private toastMessageService: ToastMessageService,
+              private gdriveService: GoogleDriveService) { }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -54,6 +56,22 @@ export class ShowUserDocumnetsComponent implements OnInit {
     });
   }
 
+  editFile(document) {
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      console.log(this.docUrl);
+      this.loading = false;
+
+      //open file in gdrive
+      this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
+      // this.gdriveService.getUserConsent();
+    }, error => {
+      this.loading = false;
+    })
+  }
   // getCommonDocuments(userId) {
   //   const param = `/cloud/signed-s3-urls?currentPath=${userId}`;
   //   this.itrMsService.getMethod(param).subscribe((result: any) => {
