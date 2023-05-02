@@ -2333,14 +2333,12 @@ export class PrefillIdComponent implements OnInit {
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                 ?.CompDirectorPrvYrFlg === 'Y'
             ) {
+              this.ITR_Obj.systemFlags.directorInCompany = true;
               const directorDetails =
                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                   ?.CompDirectorPrvYr?.CompDirectorPrvYrDtls;
               if (!directorDetails || directorDetails.length === 0) {
-                this.ITR_Obj.bankDetails = [];
-                this.utilsService.showSnackBar(
-                  'There are no bank details in the JSON that you have provided'
-                );
+                this.ITR_Obj.directorInCompany = [];
               } else {
                 this.ITR_Obj.directorInCompany = directorDetails.map(
                   ({ NameOfCompany, CompanyType, PAN, SharesTypes, DIN }) => {
@@ -2355,6 +2353,67 @@ export class PrefillIdComponent implements OnInit {
                   }
                 );
               }
+            } else {
+              this.ITR_Obj.systemFlags.directorInCompany = false;
+            }
+          }
+
+          // setting unlisted shares details
+          {
+            if (
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                ?.HeldUnlistedEqShrPrYrFlg === 'Y'
+            ) {
+              this.ITR_Obj.systemFlags.haveUnlistedShares = true;
+
+              const HeldUnlistedEqShrPrYrFlg =
+                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                  ?.HeldUnlistedEqShrPrYr?.HeldUnlistedEqShrPrYrDtls;
+              if (
+                !HeldUnlistedEqShrPrYrFlg ||
+                HeldUnlistedEqShrPrYrFlg.length === 0
+              ) {
+                this.ITR_Obj.unlistedSharesDetails = [];
+              } else {
+                this.ITR_Obj.unlistedSharesDetails =
+                  HeldUnlistedEqShrPrYrFlg.map(
+                    ({
+                      NameOfCompany,
+                      CompanyType,
+                      PAN,
+                      OpngBalNumberOfShares,
+                      OpngBalCostOfAcquisition,
+                      ShrAcqDurYrNumberOfShares,
+                      DateOfSubscrPurchase,
+                      FaceValuePerShare,
+                      IssuePricePerShare,
+                      PurchasePricePerShare,
+                      ShrTrnfNumberOfShares,
+                      ShrTrnfSaleConsideration,
+                      ClsngBalNumberOfShares,
+                      ClsngBalCostOfAcquisition,
+                    }) => {
+                      return {
+                        companyName: NameOfCompany,
+                        typeOfCompany: CompanyType,
+                        companyPAN: PAN,
+                        openingShares: OpngBalNumberOfShares,
+                        openingCOA: OpngBalCostOfAcquisition,
+                        acquiredShares: ShrAcqDurYrNumberOfShares,
+                        purchaseDate: DateOfSubscrPurchase,
+                        faceValuePerShare: FaceValuePerShare,
+                        issuePricePerShare: IssuePricePerShare,
+                        purchasePricePerShare: PurchasePricePerShare,
+                        transferredShares: ShrTrnfNumberOfShares,
+                        saleConsideration: ShrTrnfSaleConsideration,
+                        closingShares: ClsngBalNumberOfShares,
+                        closingCOA: ClsngBalCostOfAcquisition,
+                      };
+                    }
+                  );
+              }
+            } else {
+              this.ITR_Obj.systemFlags.haveUnlistedShares = false;
             }
           }
         }
