@@ -2329,41 +2329,125 @@ export class PrefillIdComponent implements OnInit {
       // SALARY
       {
         if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
-          // Net salary Income
-          this.ITR_Obj.employers[0].taxableIncome =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].IncomeFromSal;
+          {
+            const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
+
+            const salaryAllowances =
+              ItrJSON[this.ITR_Type].ScheduleS?.AllwncExemptUs10;
+
+            const mapJsonSalaryToITRObj = ({
+              AddressDetail: {
+                AddrDetail,
+                CityOrTownOrDistrict,
+                StateCode,
+                PinCode,
+              },
+              Salarys: {
+                NatureOfSalary: {
+                  OthersIncDtls: [{ NatureDes, OthNatOfInc, OthAmount }],
+                },
+                GrossSalary,
+                Salary,
+                ValueOfPerquisites,
+                ProfitsinLieuOfSalary,
+                IncomeNotified89A,
+                IncomeNotifiedOther89A,
+              },
+              NameOfEmployer,
+              NatureOfEmployment,
+              TANofEmployer,
+            }) => {
+              // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
+              if (this.regime === 'OLD') {
+                const availableSalaryAllowances = ItrJSON[
+                  this.ITR_Type
+                ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+                  (value) => value.SalNatureDesc
+                );
+                console.log(
+                  'Available salary allowances in JSON => ',
+                  availableSalaryAllowances
+                );
+                this.updateSalaryAllowances(
+                  availableSalaryAllowances,
+                  this.ITR_Type
+                );
+
+                //Total of exempt income (Salary allowances total)
+                this.ITR_Obj.employers[0].exemptIncome =
+                  ItrJSON[this.ITR_Type].ScheduleS?.AllwncExtentExemptUs10;
+              }
+
+              return {
+                id: '',
+                employerName: NameOfEmployer,
+                address: AddrDetail,
+                city: CityOrTownOrDistrict,
+                pinCode: PinCode,
+                state: StateCode,
+                employerPAN: '',
+                employerTAN: TANofEmployer,
+                periodFrom: '',
+                periodTo: '',
+                taxableIncome: null,
+                standardDeduction: null,
+                employerCategory: NatureOfEmployment,
+                exemptIncome: null,
+                taxRelief: null,
+                taxDeducted: null,
+                salary: [
+                  {
+                    salaryType: 'SEC17_1',
+                    taxableAmount: Salary,
+                    exemptAmount: 0,
+                  },
+                ],
+                allowance: [],
+                perquisites: [
+                  {
+                    perquisiteType: 'SEC17_2',
+                    taxableAmount: ValueOfPerquisites,
+                    exemptAmount: 0,
+                  },
+                ],
+                profitsInLieuOfSalaryType: [
+                  {
+                    salaryType: 'SEC17_3',
+                    taxableAmount: ProfitsinLieuOfSalary,
+                    exemptAmount: 0,
+                  },
+                ],
+                deductions: [
+                  {
+                    deductionType: 'PROFESSIONAL_TAX',
+                    taxableAmount: 0,
+                    exemptAmount: null,
+                  },
+                  // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
+                ],
+                upload: [],
+                calculators: null,
+              };
+            };
+
+            this.ITR_Obj.employers = salaries.map(mapJsonSalaryToITRObj);
+
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+            console.log(this.ITR_Obj);
+          }
 
           // Standard deduction of 50k
           this.ITR_Obj.employers[0].standardDeduction =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductionUs16ia;
-
-          //Total of exempt income (Salary allowances total)
-          if (this.regime === 'OLD') {
-            this.ITR_Obj.employers[0].exemptIncome =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
-          }
-
-          // Salary 17(1)
-          this.ITR_Obj.employers[0].salary[0].taxableAmount =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].Salary;
-
-          // Salary 17(2)
-          this.ITR_Obj.employers[0].perquisites[0].taxableAmount =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].PerquisitesValue;
-
-          // Salary 17(3)
-          this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].ProfitsInSalary;
+            ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
 
           // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
           if (this.regime === 'OLD') {
-            const availableSalaryAllowances = this.uploadedJson[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+            const availableSalaryAllowances = ItrJSON[
+              this.ITR_Type
+            ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
               (value) => value.SalNatureDesc
             );
             // console.log(
@@ -2374,58 +2458,42 @@ export class PrefillIdComponent implements OnInit {
               availableSalaryAllowances,
               this.ITR_Type
             );
-          }
 
-          try {
-            const deductions = this.ITR_Obj.employers[0].deductions;
-            if (deductions && deductions[0]) {
-              deductions[0].exemptAmount =
-                ItrJSON[this.ITR_Type][
-                  this.ITR14_IncomeDeductions
-                ].ProfessionalTaxUs16iii;
-            } else {
-              console.error('Cannot access deductions or its first element');
-            }
-          } catch (error) {
-            console.error('Cannot access ITR_Obj or its properties', error);
+            //Total of exempt income (Salary allowances total)
+            this.ITR_Obj.employers[0].exemptIncome =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
           }
-          // DEDUCTIONS - PROFESSIONAL TAX
-          // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].ProfessionalTaxUs16iii;
-
-          // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
-        } else {
-          console.log(
-            'SALARY INCOME',
-            `ItrJSON[this.ITR_Type]${[
-              this.ITR14_IncomeDeductions,
-            ]}.GrossSalary does not exist`
-          );
         }
 
-        // {
-        //More optimized code for future
-        // const {
-        //   IncomeFromSal,
-        //   DeductionUs16ia,
-        //   AllwncExemptUs10,
-        //   Salary,
-        //   PerquisitesValue,
-        //   ProfitsInSalary,
-        //   ProfessionalTaxUs16iii,
-        // } = ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
-        // this.ITR_Obj.employers[0].taxableIncome = IncomeFromSal;
-        // this.ITR_Obj.employers[0].standardDeduction = DeductionUs16ia;
-        // this.ITR_Obj.employers[0].exemptIncome =
-        //   AllwncExemptUs10.TotalAllwncExemptUs10;
-        // this.ITR_Obj.employers[0].salary[0].taxableAmount = Salary;
-        // this.ITR_Obj.employers[0].perquisites[0].taxableAmount = PerquisitesValue;
-        // this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
-        //   ProfitsInSalary;
-        // this.ITR_Obj.employers[0].deductions[0].exemptAmount =
-        //   ProfessionalTaxUs16iii;
+        // try {
+        //   const deductions = this.ITR_Obj.employers[0].deductions;
+        //   if (deductions && deductions[0]) {
+        //     deductions[0].exemptAmount =
+        //       ItrJSON[this.ITR_Type][
+        //         this.ITR14_IncomeDeductions
+        //       ].ProfessionalTaxUs16iii;
+        //   } else {
+        //     console.error('Cannot access deductions or its first element');
+        //   }
+        // } catch (error) {
+        //   console.error('Cannot access ITR_Obj or its properties', error);
+        // }
+        // // DEDUCTIONS - PROFESSIONAL TAX
+        // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
+        //   ItrJSON[this.ITR_Type][
+        //     this.ITR14_IncomeDeductions
+        //   ].ProfessionalTaxUs16iii;
+
+        // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
+        // } else {
+        //   console.log(
+        //     'SALARY INCOME',
+        //     `ItrJSON[this.ITR_Type]${[
+        //       this.ITR14_IncomeDeductions,
+        //     ]}.GrossSalary does not exist`
+        //   );
         // }
       }
     }
