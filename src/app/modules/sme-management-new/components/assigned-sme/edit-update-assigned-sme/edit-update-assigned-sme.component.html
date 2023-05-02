@@ -261,8 +261,8 @@
           <mat-label> Add Co-Owner </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)" >
+            <mat-autocomplete #auto="matAutocomplete" >
+              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getownerNameId(option)" >
                    {{option.name}}
               </mat-option>
             </mat-autocomplete>

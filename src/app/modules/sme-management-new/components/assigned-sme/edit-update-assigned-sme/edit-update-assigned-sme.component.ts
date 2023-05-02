@@ -115,6 +115,17 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     // this.itrTypesData = this.itrTypes.value;
     // this.admin.setValue(data.admin);
     // this.callingNumber.setValue(data.callingNumber);
+
+    let coOwnerUserId= data.coOwnerUserId
+          let ownerList = this.ownerNames;
+          let coOwnerName = ownerList?.filter((item) => {
+              return item.userId === coOwnerUserId;
+            }).map((item) => {
+              return item.name;
+            });
+      console.log('coOwnerName',coOwnerName)
+    this.coOwner.setValue(coOwnerName);
+
     if(data.internal === true ){
       this.internal.setValue("internal")
     }else {
