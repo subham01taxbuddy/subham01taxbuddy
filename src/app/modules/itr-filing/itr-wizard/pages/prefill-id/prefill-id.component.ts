@@ -859,6 +859,7 @@ export class PrefillIdComponent implements OnInit {
               );
 
               if (json80DParentsSeniorCitizen) {
+                this.ITR_Obj.systemFlags.hasParentOverSixty = true;
                 const json80DParentsSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
                     .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
@@ -899,6 +900,8 @@ export class PrefillIdComponent implements OnInit {
                       this.ITR_Type
                     ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
                 }
+              } else {
+                this.ITR_Obj.systemFlags.hasParentOverSixty = false;
               }
             }
 
@@ -1069,6 +1072,8 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
           this.ITR_Obj.family[0].fName =
             ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
+          this.ITR_Obj.family[0].mName =
+            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.MiddleName;
           this.ITR_Obj.family[0].lName =
             ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
           this.ITR_Obj.family[0].fatherName =
