@@ -51,6 +51,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeRecords:any;
   smeServices:any;
   smeRoles:any;
+  checkRoles:any;
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
   'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
   'Santali', 'Sindhi', 'Urdu']
@@ -431,6 +432,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeRecords=result.data;
       this.smeRoles=this.smeRecords[0];
       console.log('sme Roles Patch values',this.smeRoles)
+      this.checkRoles=this.smeRoles.roles
       this.smeFormGroup.patchValue(this.smeRoles); // all
       this.otherSmeInfo.patchValue(this.smeRoles);
       this.roles.patchValue(this.smeRoles);

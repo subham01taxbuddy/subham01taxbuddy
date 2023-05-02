@@ -33,3 +33,19 @@ ul {
   text-align: center;
   color: #7E7E8F;
 }
+.my-table {
+  margin-top: 10px;
+  margin-left: 15px;
+  border: 1px solid #ccc;
+  width: 80%;
+}
+
+.my-table th, .my-table td {
+  padding: 4px;
+  text-align: left;
+}
+
+.my-table th {
+  background-color: #eee;
+  font-weight: bold;
+}
