@@ -498,6 +498,202 @@ export class PrefillIdComponent implements OnInit {
           // console.log('IndividualDisabilities80DDBName', disabilities80DDB);
         }
 
+        //setting 80G fields
+        let donations80G = '';
+        {
+          // 100% donation
+          {
+            const Don100Percent =
+              this.uploadedJson[this.ITR_Type].Schedule80G?.Don100Percent
+                ?.DoneeWithPan;
+            // console.log('donation100', Don100Percent);
+
+            const mapJsonToITRObjDon100Percent = ({
+              DoneeWithPanName,
+              DoneePAN,
+              AddressDetail: {
+                AddrDetail,
+                CityOrTownOrDistrict,
+                StateCode,
+                PinCode,
+              },
+              DonationAmtCash,
+              DonationAmtOtherMode,
+              DonationAmt,
+              EligibleDonationAmt,
+            }) => {
+              return {
+                id: null,
+                donationType: 'OTHER',
+                amountInCash: DonationAmtCash,
+                amountOtherThanCash: DonationAmtOtherMode,
+                amount: null,
+                identifier: '',
+                schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
+                name: DoneeWithPanName,
+                address: AddrDetail,
+                city: CityOrTownOrDistrict,
+                pinCode: PinCode,
+                state: StateCode,
+                panNumber: DoneePAN,
+              };
+            };
+            this.ITR_Obj.donations = Don100Percent.map(
+              mapJsonToITRObjDon100Percent
+            );
+          }
+
+          // 50% donation
+          {
+            const Don50PercentNoApprReqd =
+              this.uploadedJson[this.ITR_Type].Schedule80G
+                ?.Don50PercentNoApprReqd?.DoneeWithPan;
+            // console.log('donation50', Don50PercentNoApprReqd);
+
+            const mapJsonToITRObjDon50Percent = ({
+              DoneeWithPanName,
+              DoneePAN,
+              AddressDetail: {
+                AddrDetail,
+                CityOrTownOrDistrict,
+                StateCode,
+                PinCode,
+              },
+              DonationAmtCash,
+              DonationAmtOtherMode,
+              DonationAmt,
+              EligibleDonationAmt,
+            }) => {
+              return {
+                id: null,
+                donationType: 'OTHER',
+                amountInCash: DonationAmtCash,
+                amountOtherThanCash: DonationAmtOtherMode,
+                amount: null,
+                identifier: '',
+                schemeCode: 'PM_DROUGHT_RELF_FND',
+                name: DoneeWithPanName,
+                address: AddrDetail,
+                city: CityOrTownOrDistrict,
+                pinCode: PinCode,
+                state: StateCode,
+                panNumber: DoneePAN,
+              };
+            };
+
+            const Don50Percent = Don50PercentNoApprReqd.map(
+              mapJsonToITRObjDon50Percent
+            );
+
+            this.ITR_Obj.donations = [
+              ...this.ITR_Obj.donations,
+              ...Don50Percent,
+            ];
+          }
+
+          // 100% donation AGTI
+          {
+            const Don100PercentApprReqd =
+              this.uploadedJson[this.ITR_Type].Schedule80G
+                ?.Don100PercentApprReqd.DoneeWithPan;
+            // console.log('donation100AGTI', Don100PercentApprReqd);
+
+            const mapJsonToITRObjDon100PercentAGTI = ({
+              DoneeWithPanName,
+              DoneePAN,
+              AddressDetail: {
+                AddrDetail,
+                CityOrTownOrDistrict,
+                StateCode,
+                PinCode,
+              },
+              DonationAmtCash,
+              DonationAmtOtherMode,
+              DonationAmt,
+              EligibleDonationAmt,
+            }) => {
+              return {
+                id: null,
+                donationType: 'OTHER',
+                amountInCash: DonationAmtCash,
+                amountOtherThanCash: DonationAmtOtherMode,
+                amount: null,
+                identifier: '',
+                schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
+                name: DoneeWithPanName,
+                address: AddrDetail,
+                city: CityOrTownOrDistrict,
+                pinCode: PinCode,
+                state: StateCode,
+                panNumber: DoneePAN,
+              };
+            };
+
+            const Don100PercentAGTI = Don100PercentApprReqd.map(
+              mapJsonToITRObjDon100PercentAGTI
+            );
+
+            this.ITR_Obj.donations = [
+              ...this.ITR_Obj.donations,
+              ...Don100PercentAGTI,
+            ];
+          }
+
+          // 50% donation AGTI
+          {
+            const Don50PercentApprReqd =
+              this.uploadedJson[this.ITR_Type].Schedule80G?.Don50PercentApprReqd
+                .DoneeWithPan;
+            // console.log('donation50AGTI', Don50PercentApprReqd);
+
+            const mapJsonToITRObjDon50PercentAGTI = ({
+              DoneeWithPanName,
+              DoneePAN,
+              AddressDetail: {
+                AddrDetail,
+                CityOrTownOrDistrict,
+                StateCode,
+                PinCode,
+              },
+              DonationAmtCash,
+              DonationAmtOtherMode,
+              DonationAmt,
+              EligibleDonationAmt,
+            }) => {
+              return {
+                id: null,
+                donationType: 'OTHER',
+                amountInCash: DonationAmtCash,
+                amountOtherThanCash: DonationAmtOtherMode,
+                amount: null,
+                identifier: '',
+                schemeCode: 'FND_SEC80G',
+                name: DoneeWithPanName,
+                address: AddrDetail,
+                city: CityOrTownOrDistrict,
+                pinCode: PinCode,
+                state: StateCode,
+                panNumber: DoneePAN,
+              };
+            };
+
+            const Don50PercentAGTI = Don50PercentApprReqd.map(
+              mapJsonToITRObjDon50PercentAGTI
+            );
+
+            this.ITR_Obj.donations = [
+              ...this.ITR_Obj.donations,
+              ...Don50PercentAGTI,
+            ];
+          }
+
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+        }
+
         // create a mapping object to map the JSON names to the new names of ITR Object
         const mapping = {
           Section80C: 'ELSS', // done
@@ -663,6 +859,7 @@ export class PrefillIdComponent implements OnInit {
               );
 
               if (json80DParentsSeniorCitizen) {
+                this.ITR_Obj.systemFlags.hasParentOverSixty = true;
                 const json80DParentsSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
                     .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
@@ -703,6 +900,8 @@ export class PrefillIdComponent implements OnInit {
                       this.ITR_Type
                     ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
                 }
+              } else {
+                this.ITR_Obj.systemFlags.hasParentOverSixty = false;
               }
             }
 
@@ -873,6 +1072,8 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
           this.ITR_Obj.family[0].fName =
             ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
+          this.ITR_Obj.family[0].mName =
+            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.MiddleName;
           this.ITR_Obj.family[0].lName =
             ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
           this.ITR_Obj.family[0].fatherName =
