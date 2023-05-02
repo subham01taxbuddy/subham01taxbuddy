@@ -2324,6 +2324,40 @@ export class PrefillIdComponent implements OnInit {
             }
           }
         }
+
+        // OTHER INFORMATION
+        {
+          // setting director details
+          {
+            if (
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                ?.CompDirectorPrvYrFlg === 'Y'
+            ) {
+              const directorDetails =
+                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                  ?.CompDirectorPrvYr?.CompDirectorPrvYrDtls;
+              if (!directorDetails || directorDetails.length === 0) {
+                this.ITR_Obj.bankDetails = [];
+                this.utilsService.showSnackBar(
+                  'There are no bank details in the JSON that you have provided'
+                );
+              } else {
+                this.ITR_Obj.directorInCompany = directorDetails.map(
+                  ({ NameOfCompany, CompanyType, PAN, SharesTypes, DIN }) => {
+                    return {
+                      id: null,
+                      companyName: NameOfCompany,
+                      companyPAN: PAN,
+                      typeOfCompany: CompanyType,
+                      sharesType: SharesTypes === 'L' ? 'LISTED' : 'UN_LISTED',
+                      din: DIN,
+                    };
+                  }
+                );
+              }
+            }
+          }
+        }
       }
 
       // SALARY
