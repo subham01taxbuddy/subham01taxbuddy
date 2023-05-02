@@ -1,8 +1,7 @@
 <div *ngIf="hideOutlet">
   <h3 class="personal-info">Business Income:</h3>
   <mat-accordion class="headers-align">
-    <mat-expansion-panel hideToggle
-                         class="hide-close">
+    <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header (click)="addIncomeDetails('presumptive')">
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -11,10 +10,7 @@
       </mat-expansion-panel-header>
     </mat-expansion-panel>
 
-    <mat-expansion-panel
-      hideToggle
-      class="hide-close" *ngIf="isFnO"
-    >
+    <mat-expansion-panel hideToggle *ngIf="isFnO">
       <mat-expansion-panel-header (click)="addIncomeDetails('pnlaccounts')">
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -32,10 +28,7 @@
       <app-profit-loss-ac></app-profit-loss-ac>
     </mat-expansion-panel>
 
-    <mat-expansion-panel
-      hideToggle
-      class="hide-close"
-    >
+    <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header (click)="addIncomeDetails('balance-sheet')">
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -44,7 +37,8 @@
         <div class="card__row edit clearfix isShow">
           <button
             class="edit_btn"
-            (click)="$event.stopPropagation(); editForm('personal')">
+            (click)="$event.stopPropagation(); editForm('personal')"
+          >
             <mat-icon>
               {{ sheetData?.editForm ? "highlight_off" : "edit_square" }}
             </mat-icon>
@@ -53,26 +47,23 @@
         </div>
       </mat-expansion-panel-header>
     </mat-expansion-panel>
-
-
   </mat-accordion>
   <div class="flex justify-between p-[30px] back-foot">
-    <button
-      class="lgtBtn"
-    >
+    <button class="lgtBtn">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
       <span class="font-semibold" (click)="gotoSources()"
-      >&nbsp;Back to Source Page</span
+        >&nbsp;Back to Source Page</span
       >
     </button>
-
   </div>
 </div>
 
-<router-outlet *ngIf="!hideOutlet" (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>
+<router-outlet
+  *ngIf="!hideOutlet"
+  (activate)="subscribeToEmitter($event)"
+  (deactivate)="unsubscribe()"
+></router-outlet>
 <!--<div *ngIf="!hideOutlet">-->
 <!--  <h3 class="personal-info">Presumptive Income:</h3>-->
 <!--  <app-presumptive-income></app-presumptive-income>-->
 <!--</div>-->
-
-

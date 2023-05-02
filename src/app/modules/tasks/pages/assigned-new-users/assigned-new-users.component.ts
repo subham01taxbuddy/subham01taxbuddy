@@ -33,6 +33,7 @@ export class AssignedNewUsersComponent implements OnInit {
   config: any;
   userInfo: any = [];
   itrStatus: any = [];
+  filerUserId:any;
   ogStatusList: any = [];
   searchParam: any = {
     serviceType: null,
@@ -112,7 +113,9 @@ export class AssignedNewUsersComponent implements OnInit {
       this.filerId = event? event.userId : null;
     }
     if(this.filerId) {
-      this.agentId = this.filerId;
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+      this.filerUserId = this.filerId;
     } else if(this.ownerId) {
       this.agentId = this.ownerId;
       this.search('agent');
@@ -147,7 +150,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
-        width: 180,
+        width: 160,
         suppressMovable: true,
         pinned: 'left',
         filter: 'agTextColumnFilter',
@@ -184,7 +187,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Status',
         field: 'statusId',
-        width: 150,
+        width: 90,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -214,7 +217,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Owner Name',
         field: 'ownerName',
-        width: 200,
+        width: 110,
         suppressMovable: true,
         hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
@@ -227,7 +230,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Filer Name',
         field: 'filerName',
-        width: 200,
+        width: 150,
         suppressMovable: true,
         hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
@@ -283,7 +286,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Language',
         field: 'laguage',
-        width: 100,
+        width: 115,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -295,7 +298,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Created Date',
         field: 'createdDate',
-        width: 120,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
@@ -310,7 +313,7 @@ export class AssignedNewUsersComponent implements OnInit {
       {
         headerName: 'Status Updated On',
         field: 'statusUpdatedDate',
-        width: 120,
+        width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
@@ -361,7 +364,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -384,7 +387,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 70,
+        width:80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -407,7 +410,7 @@ export class AssignedNewUsersComponent implements OnInit {
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
-        width: 60,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -430,7 +433,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 70,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -495,7 +498,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
-        width: 55,
+        width: 65,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -877,18 +880,20 @@ export class AssignedNewUsersComponent implements OnInit {
 
 
   moreOptions(client) {
+    console.log('client',client)
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',
       data: client
     })
-
-    // disposable.afterClosed().subscribe(result => {
-    //   if (result.data === 'success') {
-    //     this.search();
-    //   }
-    // });
+      disposable.afterClosed().subscribe(result => {
+        console.log('result after more option closed',result)
+       if (result.data === 'success') {
+         this.search();
+       }
+    });
   }
+
   isNumeric(value) {
     return /^\d+$/.test(value);
   }
@@ -942,6 +947,9 @@ export class AssignedNewUsersComponent implements OnInit {
     let param = `/${this.agentId}/user-list-new?${data}`;
     if (isAgent) {
       param = param + '&isAgent=true';
+    }
+    if(this.filerUserId){
+      param= param + `&filerUserId=${this.filerUserId}`
     }
 
     this.userMsService.getMethod(param).subscribe(

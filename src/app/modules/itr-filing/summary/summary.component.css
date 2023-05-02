@@ -197,7 +197,26 @@ table {
   font-weight: 500;
   letter-spacing: 0.3px;
   margin-bottom: 15px;
-  cursor: pointer;
+}
+
+.regime {
+  line-height: 24px;
+  border-radius: 10px;
+  background: #39670b;
+  color: #fff;
+  text-transform: uppercase;
+  display: block;
+  font-size: 15px;
+  text-align: center;
+  margin-left: 10px;
+  border: #39670b solid 1px;
+  font-weight: 500;
+  float: left;
+  outline: none;
+  font-family: Avenir Book;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  margin-bottom: 15px;
 }
 
 .kommBut {
@@ -224,14 +243,14 @@ table {
 .whatsAppBut {
   line-height: 24px;
   border-radius: 0px;
-  background: #4FCE5D;
+  background: #4fce5d;
   color: #fff;
   text-transform: uppercase;
   display: block;
   font-size: 12px;
   text-align: center;
   margin-left: 10px;
-  border: #4FCE5D solid 1px;
+  border: #4fce5d solid 1px;
   font-weight: 500;
   float: left;
   outline: none;

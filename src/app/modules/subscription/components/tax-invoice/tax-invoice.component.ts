@@ -49,6 +49,7 @@ export class TaxInvoiceComponent implements OnInit {
   maxDate = new Date(2024,2,31);
   minDate = new Date(2023, 3, 1);
   // maxDate: any = new Date();
+  allFilerList:any;
   toDateMin: any;
   roles: any;
   ownerList: any;
@@ -106,10 +107,12 @@ export class TaxInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
+    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    console.log('new Filer List ',this.allFilerList)
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(),
+      columnDefs: this.invoicesCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -506,8 +509,8 @@ export class TaxInvoiceComponent implements OnInit {
           paymentDate: userInvoices[i].paymentDate,
           paymentStatus: userInvoices[i].paymentStatus,
           purpose: userInvoices[i].itemList[0].itemDescription,
-          invoicePreparedBy: userInvoices[i].agentName,
-          invoiceAssignedTo: userInvoices[i].agentName,
+          inovicePreparedBy: userInvoices[i].inovicePreparedBy,
+          invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total
         })
@@ -557,7 +560,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
   }
 
-  invoicesCreateColumnDef() {
+  invoicesCreateColumnDef(List) {
     return [
       {
         headerName: 'User Id',
@@ -710,7 +713,7 @@ export class TaxInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Prepared By',
-        field: 'invoicePreparedBy',
+        field: 'inovicePreparedBy',
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -719,19 +722,17 @@ export class TaxInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter(
-        //       (item: any) =>
-        //         item.userId.toString() === params.data.invoicePreparedBy
-        //     );
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.inovicePreparedBy)
+          let filer1=List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer
+        }
+
       },
       {
         headerName: 'Assigned to',
@@ -744,19 +745,17 @@ export class TaxInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter(
-        //       (item: any) =>
-        //         item.userId === params.data.invoiceAssignedTo
-        //     );
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+        valueGetter: function(params) {
+          let createdUserId= params.data.invoiceAssignedTo
+          let filer1=List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+           return filer;
+        }
+
       },
 
       {
@@ -792,7 +791,7 @@ export class TaxInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 85,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

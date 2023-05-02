@@ -165,10 +165,10 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'mobileNumber',
-        width: 120,
+        width: 110,
         suppressMovable: true,
         pinned: 'left',
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -178,7 +178,7 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
-        width: 180,
+        width: 110,
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -189,9 +189,9 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Calling No',
         field: 'callingNumber',
-        width: 120,
+        width: 110,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -201,9 +201,9 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Official Mail ID ',
         field: 'smeOfficialEmail',
-        width: 180,
+        width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'left' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -213,9 +213,9 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Komm ID',
         field: 'email',
-        width: 120,
+        width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold', 'overflow-wrap': 'break-word' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -225,18 +225,15 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Roles',
         field: 'roles',
-        width: 180,
+        width: 120,
         display: 'flex',
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
         cellStyle: {
-          'white-space': 'normal',
-          'overflow-wrap': 'break-word',
-          textAlign: 'center',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
+          textAlign: 'left',
+          display: 'block',
+          margin: '0px 0px 0px 5px'
         },
         cellRenderer: (params: any) => {
           // console.log('param',params)
@@ -247,8 +244,8 @@ export class AssignedSmeComponent implements OnInit {
       {
         headerName: 'Assigned Services',
         field: 'services',
-        width: 150,
-        display: 'flex',
+        width: 120,
+        display: 'block',
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
@@ -269,7 +266,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='ITR';
               let r2 = '';
               if(element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true" ></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true" ></i>&nbsp;'
               }
                result1=r2+r1 ;
             }
@@ -277,7 +274,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='NRI';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
                result2=(r2+r1)||'';
             }
@@ -285,7 +282,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='TPA';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
                result3=r2+r1;
             }
@@ -293,7 +290,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='GST';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
                result4=r2+r1;
             }
@@ -301,7 +298,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='NOTICE';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i> &nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i> &nbsp;'
               }
                result5=r2+r1;
             }
@@ -309,7 +306,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='WB';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
                result6=r2+r1;
             }
@@ -317,7 +314,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='PD';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
                result7=r2+r1;
             }
@@ -325,7 +322,7 @@ export class AssignedSmeComponent implements OnInit {
               var r1='MF';
               let r2 = '';
               if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check" aria-hidden="true"></i>&nbsp;'
+                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
                result8=r2+r1;
             }
@@ -340,7 +337,7 @@ export class AssignedSmeComponent implements OnInit {
         field: 'parentName',
         width: 120,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -369,9 +366,9 @@ export class AssignedSmeComponent implements OnInit {
 
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="edit">Edit</i>
-           </button>`;
+          style="background-color: #00AECA; color: #ffffff; padding: 3px 8px; border-radius:5px; font-size: 14px; cursor:pointer;margin-top:2px;">
+          <i class="material-icons" style="font-size: 15px; padding-top: 5px; padding-right: 5px;" data-action-type="edit">&#xe3c9;</i>Edit
+          </button>`;
         },
       },
     ];

@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { data } from 'jquery';
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -43,6 +44,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   loading!: boolean;
   financialYear = AppConstants.gstFyList;
   loggedInSme: any;
+  allFilerList:any;
   roles: any;
   searchParam: any = {
     statusId: null,
@@ -65,9 +67,11 @@ export class AssignedSubscriptionComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
+    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    console.log('new Filer List ',this.allFilerList)
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.subscriptionCreateColumnDef(),
+      columnDefs: this.subscriptionCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -295,7 +299,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.getAssignedSubscription(0);
   }
 
-  subscriptionCreateColumnDef() {
+  subscriptionCreateColumnDef(List) {
     return [
       {
         field: 'selection',
@@ -311,7 +315,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'User Id',
         field: 'userId',
-        width: 80,
+        width: 100,
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -335,7 +339,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'User Selected',
         field: 'userSelected',
-        width: 180,
+        width: 220,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -347,7 +351,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         headerName: 'SME Selected',
         field: 'smeSelected',
-        width: 180,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -403,12 +407,12 @@ export class AssignedSubscriptionComponent implements OnInit {
         field: 'invoiceAmount',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'left' },
       },
       {
         headerName: 'Invoice No',
         field: 'invoiceNo',
-        width: 300,
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -419,8 +423,8 @@ export class AssignedSubscriptionComponent implements OnInit {
       },
       {
         headerName: 'Subscription Prepared',
-        field: 'assigneeName',
-        width: 100,
+        field: 'subscriptionCreatedBy',
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -428,6 +432,22 @@ export class AssignedSubscriptionComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+         valueGetter: function(params) {
+          let createdUserId= params.data.subscriptionCreatedBy
+          let filer1=List;
+          // console.log('filer1',filer1)
+          //  let filer= filer1.filter(item=> item.userId {
+          //   if(item.userId==createdUserId){
+          //     return item.name;
+          //    }else 'NA'
+          //  })
+          let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+             return filer;
+          }
       },
       {
         headerName: 'Update',
@@ -504,6 +524,7 @@ export class AssignedSubscriptionComponent implements OnInit {
           ? subscriptionData[i].promoCode
           : '-',
         invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
+        subscriptionCreatedBy:subscriptionData[i].subscriptionCreatedBy
         // invoiceDetails: invoiceDetails,
       });
     }

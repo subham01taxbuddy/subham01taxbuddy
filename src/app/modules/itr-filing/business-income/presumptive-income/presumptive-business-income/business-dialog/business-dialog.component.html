@@ -1,109 +1,208 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <div>
-    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Business Income':'Update Business Income'}}
+  <div style="font-size: 20; font-weight: 600">
+    {{ data.mode === "ADD" ? "Add Business Income" : "Update Business Income" }}
+  </div>
+  <form [formGroup]="businessForm" style="margin-top: 20px">
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-6">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-label>Nature of Business</mat-label>
+        </div>
+        <mat-form-field class="input-field-width">
+          <mat-select
+            placeholder="Nature of Business"
+            formControlName="natureOfBusiness"
+            name="natureOfBusiness"
+            matTooltip="{{ getFullName() }}"
+          >
+            <mat-option
+              *ngFor="let business of natureOfBusinessDropdown"
+              [value]="business.code"
+              [disabled]="business.disabled"
+              matTooltip="{{ business.label }}-{{ business.code }}"
+            >
+              {{ business.label }}-{{ business.code }}
+            </mat-option></mat-select
+          >
+          <mat-error
+            *ngIf="
+              businessForm?.controls['natureOfBusiness'].hasError('required')
+            "
+            >Please select nature of business</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-6">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-label>Trade of Business</mat-label>
+        </div>
+        <mat-form-field class="input-field-width">
+          <input
+            matInput
+            class="input-field"
+            placeholder="Trade of Business"
+            formControlName="tradeName"
+            maxlength="30"
+          />
+          <mat-error
+            *ngIf="businessForm?.controls['tradeName'].hasError('required')"
+            >Please enter trade of business</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div
+        class="card__col-xs-12 card__col-sm-12"
+        style="margin-bottom: 10px; margin-top: 10px"
+      >
+        <h4>Gross Turn Over of the year - Received in Bank</h4>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-6">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-label>Receipt received in bank</mat-label>
+        </div>
+        <mat-form-field class="input-field-width">
+          <input
+            matInput
+            class="input-field"
+            digitsOnly
+            placeholder="Receipt received in bank"
+            matTooltip="Total collection from client received in bank (including cheque)"
+            matTooltipClass="tab-tooltip"
+            matTooltipPosition="above"
+            formControlName="receipts"
+            (blur)="calculateSixPer()"
+            maxlength="14"
+          />
+          <mat-error
+            *ngIf="businessForm?.controls['receipts'].hasError('required')"
+            >Please enter receipt received in bank</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-6">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-label>presumptive income at 6%</mat-label>
+        </div>
+        <mat-form-field class="input-field-width">
+          <input
+            matInput
+            class="input-field"
+            placeholder="presumptive income at 6%"
+            formControlName="preIncome"
+            name="preIncome"
+            maxlength="14"
+          />
+          <mat-error
+            *ngIf="businessForm?.controls['preIncome'].hasError('required')"
+            >Please the amount</mat-error
+          >
+          <mat-error *ngIf="businessForm?.controls['preIncome'].hasError('min')"
+            >Amount should be greater than {{ amountSix }}
+          </mat-error>
+
+          <mat-error *ngIf="businessForm?.controls['preIncome'].hasError('max')"
+            >Amount cannot be greater than {{ maxSixAmt }}
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              businessForm?.controls['preIncome'].hasError(
+                'secondInputGreaterThanFirst'
+              )
+            "
+            >Presumptive Income cannot be greater than Gross Receipt</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div
+        class="card__col-xs-12 card__col-sm-12"
+        style="margin-bottom: 10px; margin-top: 10px"
+      >
+        <h4>Gross Turn Over of the year - Received in Other Mode</h4>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-6">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-label>Receipt received in Cash</mat-label>
+        </div>
+        <mat-form-field class="input-field-width">
+          <input
+            matInput
+            class="input-field"
+            name="receivedInCash"
+            digitsOnly
+            placeholder="Receipt received in any other mode"
+            formControlName="receivedInCash"
+            (blur)="calculateEightPer()"
+            maxlength="14"
+          />
+          <mat-error
+            *ngIf="
+              businessForm?.controls['receivedInCash'].hasError('required')
+            "
+            >Please enter amount</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-6">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-label>Presumptive income at 8%</mat-label>
+        </div>
+        <mat-form-field class="input-field-width">
+          <input
+            matInput
+            class="input-field"
+            name="minimumPresumptiveIncome"
+            placeholder="Presumptive income at 8%"
+            formControlName="minimumPresumptiveIncome"
+            maxlength="14"
+            digitsOnly
+          />
+          <mat-error
+            *ngIf="
+              businessForm?.controls['minimumPresumptiveIncome'].hasError(
+                'required'
+              )
+            "
+            >Please enter amount</mat-error
+          >
+          <mat-error
+            *ngIf="
+              businessForm?.controls['minimumPresumptiveIncome'].hasError('min')
+            "
+            >Amount should be greater than {{ amountEight }}</mat-error
+          >
+
+          <mat-error
+            *ngIf="
+              businessForm?.controls['minimumPresumptiveIncome'].hasError('max')
+            "
+            >Amount cannot be greater than {{ maxEightAmt }}</mat-error
+          >
+        </mat-form-field>
+      </div>
     </div>
-    <form [formGroup]="businessForm" style="margin-top: 20px">
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-6">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-label>Nature of Business</mat-label>
-                </div>
-                <mat-form-field class="input-field-width">
-                    <mat-select placeholder="Nature of Business" formControlName="natureOfBusiness"
-                        name="natureOfBusiness" matTooltip="{{getFullName()}}">
-                        <mat-option *ngFor="let business of natureOfBusinessDropdown" [value]="business.code"
-                            [disabled]="business.disabled" matTooltip="{{business.label}}-{{business.code}}">
-                            {{business.label}}-{{business.code}}
-                        </mat-option></mat-select>
-                    <mat-error *ngIf="businessForm?.controls['natureOfBusiness'].hasError('required')">Please select
-                        nature of business</mat-error>
-                </mat-form-field>
-            </div>
-
-            <div class="card__col-xs-12 card__col-sm-6">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-label>Trade of Business</mat-label>
-                </div>
-                <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="Trade of Business" formControlName="tradeName"
-                        maxlength="30">
-                    <mat-error *ngIf="businessForm?.controls['tradeName'].hasError('required')">Please enter
-                        trade of business</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-12" style="margin-bottom: 10px; margin-top: 10px;">
-                <h4>Gross Turn Over of the year - Received in Bank</h4>
-            </div>
-
-            <div class="card__col-xs-12 card__col-sm-6">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-label>Receipt received in bank</mat-label>
-                </div>
-                <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" digitsOnly placeholder="Receipt received in bank"
-                        matTooltip="Total collection from client received in bank (including cheque)"
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="receipts"
-                        (blur)="calculateSixPer()" maxlength="14">
-                    <mat-error *ngIf="businessForm?.controls['receipts'].hasError('required')">Please enter
-                        receipt received in bank</mat-error>
-                </mat-form-field>
-            </div>
-
-            <div class="card__col-xs-12 card__col-sm-6">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-label>presumptive income at 6%</mat-label>
-                </div>
-                <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" placeholder="presumptive income at 6%"
-                        formControlName="preIncome" name="preIncome" maxlength="14">
-                    <mat-error *ngIf="businessForm?.controls['preIncome'].hasError('required')">Please the
-                        amount</mat-error>
-                    <mat-error *ngIf="businessForm?.controls['preIncome'].hasError('min')">Amount should be
-                        greater than {{amountSix}} </mat-error>
-
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-12" style=" margin-bottom: 10px; margin-top: 10px;">
-                <h4>Gross Turn Over of the year - Received in Other Mode </h4>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-label>Receipt received in Cash</mat-label>
-                </div>
-                <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" name="receivedInCash" digitsOnly
-                        placeholder="Receipt received in any other mode" formControlName="receivedInCash"
-                        (blur)="calculateEightPer()" maxlength="14">
-                    <mat-error *ngIf="businessForm?.controls['receivedInCash'].hasError('required')">Please enter
-                        amount</mat-error>
-
-                </mat-form-field>
-            </div>
-
-            <div class="card__col-xs-12 card__col-sm-6">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-label>Presumptive income at 8%</mat-label>
-                </div>
-                <mat-form-field class="input-field-width">
-                    <input matInput class="input-field" name="minimumPresumptiveIncome"
-                        placeholder="Presumptive income at 8%" formControlName="minimumPresumptiveIncome" maxlength="14"
-                        digitsOnly>
-                    <mat-error *ngIf="businessForm?.controls['minimumPresumptiveIncome'].hasError('required')">Please
-                        enter
-                        amount</mat-error>
-                    <mat-error *ngIf="businessForm?.controls['minimumPresumptiveIncome'].hasError('min')">Amount should
-                        be greater
-                        than {{amountEight}}</mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row dialog-button">
-            <div class="sub_btn top-space">
-                <button type="submit" class="tbd-btn" [disabled]="businessForm.invalid"
-                    (click)="saveBusinessDetails()">Save</button>
-                <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
-            </div>
-        </div>
-    </form>
+    <div class="row dialog-button">
+      <div class="sub_btn top-space">
+        <button
+          type="submit"
+          class="tbd-btn"
+          [disabled]="businessForm.invalid"
+          (click)="saveBusinessDetails()"
+        >
+          Save
+        </button>
+        <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
-

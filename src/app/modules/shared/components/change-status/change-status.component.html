@@ -1,13 +1,13 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="row">
-    <h1 mat-dialog-title>{{data.mode}} <span *ngIf="data.mode === 'Update Status'">For <span style="color: rgb(106, 123, 237);">{{this.data.serviceType}}</span></span>
+    <h5>{{data.mode}} <span *ngIf="data.mode === 'Update Status'">For <span style="color: rgb(106, 123, 237);">{{this.data.serviceType}}</span></span>
 
-        <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i
+        <button style="float: right" mat-dialog-close tabindex="-1"><i
                 class="fa fa-close"></i></button>
-    </h1>
+    </h5>
 
 </div>
-
+<hr class="hrAdj">
 
 <mat-dialog-content>
     <form [formGroup]="changeStatus">

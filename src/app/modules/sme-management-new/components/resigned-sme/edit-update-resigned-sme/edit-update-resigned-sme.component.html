@@ -193,7 +193,7 @@
     </div>
     <div class="row">
       <div class="col-sm-4" style="margin-top: 10px">
-        <div class="card" style="margin-top: 10px">
+        <div class="card cardesign">
           <b style="font-size: 18px">Roles: </b>
           <section class="example-section" [formGroup]="roles">
             <p>
@@ -230,7 +230,7 @@
         </div>
       </div>
       <div class="col-sm-8" style="margin-top: 10px">
-        <div class="card" style="margin-top: 10px">
+        <div class="card cardesign">
           <b style="font-size: 18px">Services: </b>
           <div class="row">
             <div class="col-sm-6">
@@ -632,13 +632,14 @@
       </div>
     </div>
     <!-- </form> -->
-    <div class="flex justify-between items-center">
-      <div style="text-align: center; margin-top: 40px">
-        <button class="tbd-btn" (click)="goBack()">Cancel</button>
-      </div>
-      <div style="text-align: center; margin-top: 40px">
+    <hr class="bordr">
+    <div class="cen">
+      
+        <button class="cancel" (click)="goBack()">Back</button>
+    
+      
         <button class="tbd-btn" (click)="updateSmeDetails()">Save</button>
-      </div>
+     
     </div>
   </div>
 </div>

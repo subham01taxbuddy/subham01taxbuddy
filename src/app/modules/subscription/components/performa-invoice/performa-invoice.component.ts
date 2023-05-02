@@ -67,6 +67,7 @@ export class PerformaInvoiceComponent implements OnInit {
   minDate = new Date(2023, 3, 1);
   toDateMin: any;
   roles: any;
+  allFilerList:any;
   allFilers: any;
   filerList: any;
   filerNames: User[];
@@ -138,6 +139,8 @@ export class PerformaInvoiceComponent implements OnInit {
   gridApi: GridApi;
 
   ngOnInit() {
+    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    console.log('new Filer List ',this.allFilerList)
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     this.cardTitle = this.roles?.includes('ROLE_ADMIN')
@@ -185,7 +188,7 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(),
+      columnDefs: this.invoicesCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -570,8 +573,8 @@ export class PerformaInvoiceComponent implements OnInit {
         paymentStatus: userInvoices[i].paymentStatus,
         purpose: userInvoices[i].itemList[0].itemDescription,
         //Ashwini: as per discussion with Ajay & Karan this is a quick fix done
-        invoicePreparedBy: userInvoices[i].agentName,
-        invoiceAssignedTo: userInvoices[i].agentName,
+        inovicePreparedBy: userInvoices[i].inovicePreparedBy,
+        invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
         ifaLeadClient: userInvoices[i].ifaLeadClient,
         total: userInvoices[i].total,
       });
@@ -618,7 +621,7 @@ export class PerformaInvoiceComponent implements OnInit {
     }
   }
 
-  invoicesCreateColumnDef() {
+  invoicesCreateColumnDef(List) {
     return [
       {
         headerName: 'User Id',
@@ -752,8 +755,8 @@ export class PerformaInvoiceComponent implements OnInit {
       },
       {
         headerName: 'Prepared By',
-        field: 'invoicePreparedBy',
-        width: 180,
+        field: 'inovicePreparedBy',
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -761,26 +764,21 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter(
-        //       (item: any) =>
-        //         item.userId.toString() === params.data.invoicePreparedBy
-        //     );
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     } else {
-        //       console.log('not found', params.data.invoicePreparedBy);
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.inovicePreparedBy)
+          let filer1=List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer
+        }
       },
       {
         headerName: 'Assigned to',
         field: 'invoiceAssignedTo',
-        width: 180,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -788,18 +786,16 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter(
-        //       (item: any) => item.userId === params.data.invoiceAssignedTo
-        //     );
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+        valueGetter: function(params) {
+          let createdUserId= params.data.invoiceAssignedTo
+          let filer1=List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+           return filer;
+        }
       },
 
       {
@@ -823,7 +819,7 @@ export class PerformaInvoiceComponent implements OnInit {
            </button>`;
           }
         },
-        width: 95,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
@@ -846,7 +842,7 @@ export class PerformaInvoiceComponent implements OnInit {
         },
       },
       {
-        headerName: 'Download invoice',
+        headerName: 'Download Invoice',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -857,7 +853,7 @@ export class PerformaInvoiceComponent implements OnInit {
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
-        width: 95,
+        width: 93,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
@@ -875,11 +871,11 @@ export class PerformaInvoiceComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
             style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer; transform: rotate(90deg); color: #04a4bc; text-align:center;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
            </button>`;
         },
-        width: 55,
+        width: 60,
         pinned: 'right',
       },
       {
@@ -894,7 +890,7 @@ export class PerformaInvoiceComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 85,
+        width: 90,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

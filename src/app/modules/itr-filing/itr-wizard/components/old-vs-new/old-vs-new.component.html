@@ -175,19 +175,21 @@
               "
             >
               <div class="card__col-xs-4">
-                <mat-label class="option-label">Select F.Y.:</mat-label>
+                <mat-label class="option-label">
+                  Select Assessment Year :
+                </mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select
-                    placeholder="Select Financial Year"
+                    placeholder="Select Assesment Year"
                     required
                     name="assessmentYear"
                     formControlName="assessmentYear"
                   >
                     <mat-option
-                      *ngFor="let year of financialYear"
-                      [value]="year.financialYear"
+                      *ngFor="let year of assesssmentYear"
+                      [value]="year.assesssmentYear"
                     >
-                      {{ year.financialYear }}
+                      {{ year.assesssmentYear }}
                     </mat-option>
                   </mat-select>
                   <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
@@ -250,7 +252,7 @@
           <div formGroupName="optionForCurrentAY">
             <div class="card__row">
               <div class="card__col-xs-9 question-label">
-                3. Option for current assessment year
+                3. Option for current Assessment year
               </div>
               <div
                 class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right"
@@ -258,6 +260,7 @@
                 <mat-radio-group
                   name="currentYearRegime"
                   formControlName="currentYearRegime"
+                  (change)="updateRegimeLabels()"
                 >
                   <mat-radio-button
                     [value]="'NEW'"
@@ -279,25 +282,6 @@
                 ].value === 'OLD'
               "
             >
-              <div class="card__col-xs-4">
-                <mat-label class="option-label">Select F.Y.:</mat-label>
-                <mat-form-field appearance="outline">
-                  <mat-select
-                    placeholder="Select Financial Year"
-                    required
-                    name="assessmentYear"
-                    formControlName="assessmentYear"
-                  >
-                    <mat-option
-                      *ngFor="let year of financialYear"
-                      [value]="year.financialYear"
-                    >
-                      {{ year.financialYear }}
-                    </mat-option>
-                  </mat-select>
-                  <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
-                </mat-form-field>
-              </div>
               <div class="card__col-xs-4">
                 <mat-label class="option-label"
                   >Acknowledgement Number</mat-label
@@ -351,6 +335,71 @@
             </div>
           </div>
           <hr />
+        </form>
+
+        <form [formGroup]="summaryToolReliefsForm">
+          <div class="card__row flex flex-col">
+            <div
+              class="card__col-xs-12 question-label"
+              style="margin-bottom: 10px; background: #eaeaea"
+            >
+              <strong> Summary Tool Fields </strong>
+              <mat-label>Only Applicable if you have uploaded a Json</mat-label>
+            </div>
+
+            <!-- Section 89 -->
+            <div class="flex items-center">
+              <div class="card__col-xs-9 question-label">1. Section 89</div>
+              <div class="card__col-xs-3">
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="section89"
+                    formControlName="section89"
+                    placeholder="Relief under section89"
+                    digitsOnly
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <hr />
+
+            <!-- section 90  -->
+            <div class="flex items-center">
+              <div class="card__col-xs-9 question-label">
+                2. Section 90 / 90A
+              </div>
+              <div class="card__col-xs-3">
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="section90"
+                    formControlName="section90"
+                    placeholder="Relief under section90"
+                    digitsOnly
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <hr />
+
+            <!-- section 90  -->
+            <div class="flex items-center">
+              <div class="card__col-xs-9 question-label">3. Section 91</div>
+              <div class="card__col-xs-3">
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="section91"
+                    formControlName="section91"
+                    placeholder="Relief under section91"
+                    digitsOnly
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <hr />
+          </div>
         </form>
       </div>
     </div>

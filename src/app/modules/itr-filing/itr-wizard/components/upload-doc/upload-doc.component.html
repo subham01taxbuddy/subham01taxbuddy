@@ -6,8 +6,11 @@
       <span *ngFor="let docs of documents; let i=index">
         <div style="padding: 5px; display: block; text-decoration:underline;">
           <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
+
           <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
               class="fa fa-trash" aria-hidden="true"></i></button>
+          <button *ngIf="!docs.isDeleted && (docs.fileName.split('.').pop() === 'xls' || docs.fileName.split('.').pop() === 'xlsx')" (click)="editFile(docs)" style="float: right;"><i
+            class="fa fa-pencil" aria-hidden="true"></i></button>
 
           <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
           <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;"

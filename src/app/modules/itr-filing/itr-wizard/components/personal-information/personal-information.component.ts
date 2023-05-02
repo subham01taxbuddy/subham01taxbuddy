@@ -2218,7 +2218,7 @@ export class PersonalInformationComponent implements OnInit {
         ]),
       ],
       // aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
-      assesseeType: ['', Validators.required],
+      // assesseeType: ['', Validators.required],
       // residentialStatus: ['RESIDENT'],
       address: this.fb.group({
         flatNo: ['', Validators.required],
@@ -2356,33 +2356,35 @@ export class PersonalInformationComponent implements OnInit {
       ).controls['name'].setValue(null);
     }
   }
-  findAssesseeType() {
-    this.customerProfileForm.controls['panNumber'].setValue(
-      this.utilsService.isNonEmpty(
-        this.customerProfileForm.controls['panNumber'].value
-      )
-        ? this.customerProfileForm.controls['panNumber'].value.toUpperCase()
-        : this.customerProfileForm.controls['panNumber'].value
-    );
-    if (
-      this.utilsService.isNonEmpty(
-        this.customerProfileForm.controls['panNumber'].value
-      )
-    ) {
-      const pan = this.customerProfileForm.controls['panNumber'].value;
-      if (pan.substring(4, 3) === 'P') {
-        this.customerProfileForm.controls['assesseeType'].setValue(
-          'INDIVIDUAL'
-        );
-      } else if (pan.substring(4, 3) === 'H') {
-        this.customerProfileForm.controls['assesseeType'].setValue('HUF');
-      } else {
-        this.customerProfileForm.controls['assesseeType'].setValue(
-          'INDIVIDUAL'
-        );
-      }
-    }
-  }
+
+  // findAssesseeType() {
+  //   this.customerProfileForm.controls['panNumber'].setValue(
+  //     this.utilsService.isNonEmpty(
+  //       this.customerProfileForm.controls['panNumber'].value
+  //     )
+  //       ? this.customerProfileForm.controls['panNumber'].value.toUpperCase()
+  //       : this.customerProfileForm.controls['panNumber'].value
+  //   );
+
+  //   if (
+  //     this.utilsService.isNonEmpty(
+  //       this.customerProfileForm.controls['panNumber'].value
+  //     )
+  //   ) {
+  //     const pan = this.customerProfileForm.controls['panNumber'].value;
+  //     if (pan.substring(4, 3) === 'P') {
+  //       this.customerProfileForm.controls['assesseeType'].setValue(
+  //         'INDIVIDUAL'
+  //       );
+  //     } else if (pan.substring(4, 3) === 'H') {
+  //       this.customerProfileForm.controls['assesseeType'].setValue('HUF');
+  //     } else {
+  //       this.customerProfileForm.controls['assesseeType'].setValue(
+  //         'INDIVIDUAL'
+  //       );
+  //     }
+  //   }
+  // }
 
   getUserDataByPan(pan) {
     if (this.customerProfileForm.controls['panNumber'].valid) {
@@ -2548,12 +2550,12 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   async saveProfile(ref) {
+    // this.findAssesseeType();
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.findAssesseeType();
 
     //check if at least one account is selected for refund
     var isBankSelected = false;
@@ -2562,17 +2564,23 @@ export class PersonalInformationComponent implements OnInit {
         isBankSelected = true;
       }
     });
+
     if (!isBankSelected) {
       this.utilsService.showSnackBar(
-        'Please select atleast one bank account in which you prefer to get refund.'
+        'Please select atleast one bank account in which you prefer to get refund'
       );
       return;
     }
+
+    this.customerProfileForm.controls['panNumber'].setValue(
+      this.ITR_JSON.panNumber
+    );
 
     Object.keys(this.customerProfileForm.controls).forEach((key) => {
       const controlErrors: ValidationErrors =
         this.customerProfileForm.get(key).errors;
       if (controlErrors != null) {
+        console.log(this.customerProfileForm);
         Object.keys(controlErrors).forEach((keyError) => {
           console.log(
             'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
@@ -2581,6 +2589,7 @@ export class PersonalInformationComponent implements OnInit {
         });
       }
     });
+
     if (this.customerProfileForm.valid) {
       this.loading = true;
       // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
@@ -2621,14 +2630,16 @@ export class PersonalInformationComponent implements OnInit {
         }
       );
       // }
-    } else {
-      $('input.ng-invalid').first().focus();
-      if (this.customerProfileForm.controls['assesseeType'].invalid) {
-        this.utilsService.showSnackBar(
-          'We are not supporting Assessee Type except Individual and HUF.'
-        );
-      }
     }
+    // else {
+    //   $('input.ng-invalid').first().focus();
+    //   if (this.customerProfileForm.controls['assesseeType'].invalid) {
+    //     console.log('this.customerProfileForm', this.customerProfileForm);
+    //     this.utilsService.showSnackBar(
+    //       'We are not supporting Assessee Type except Individual and HUF.'
+    //     );
+    //   }
+    // }
   }
 
   async verifyAllBanks() {

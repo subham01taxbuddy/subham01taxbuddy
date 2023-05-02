@@ -2,7 +2,7 @@ import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -29,6 +29,8 @@ export class LoginComponent implements OnInit {
   public form!: FormGroup;
   public loading: boolean = false;
   public showPassword: boolean;
+  userId:any;
+  serviceType:any;
 
   constructor(
     private fb: FormBuilder,
@@ -39,7 +41,8 @@ export class LoginComponent implements OnInit {
     private userMsService: UserMsService,
     private dialog: MatDialog,
     public utilsService: UtilsService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private activatedRoute: ActivatedRoute,
   ) {
     NavbarService.getInstance().component_link = this.component_link;
   }
@@ -49,6 +52,7 @@ export class LoginComponent implements OnInit {
       user: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
       passphrase: ['']
     });
+    this.utilsService.getFilersList();
     Auth.currentSession().then(res => {
       const userData = this.storageService.getLocalStorage(AppSetting.UMD_KEY);
       console.log('Auth.current session:', res, 'USER DATA', userData);
@@ -57,6 +61,8 @@ export class LoginComponent implements OnInit {
         this.utilsService.getStoredSmeList();
         this.getFyList();
         this.getAgentList();
+        this.utilsService.getFilersList();
+
 
         this.getSmeInfoDetails(userData.userId);
         // if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
@@ -70,10 +76,34 @@ export class LoginComponent implements OnInit {
         //     this._toastMessageService.alert("error", "Access Denied.");
         // }
       }
+      if(userData){
+        this.gotoCloud();
+      }
+
     }).catch(e => {
       console.log('Auth.current session catch error:', e);
     })
+
+
   }
+  gotoCloud(){
+        this.activatedRoute.queryParams.subscribe((params) => {
+          console.log('99999999999999999:', params);
+          this.userId = params['userId'];
+          this.serviceType = params['serviceType'];
+          if (this.userId && this.serviceType) {
+            const url = this.router
+              .createUrlTree(['itr-filing/docs/user-docs/'], {
+                queryParams: {
+                  userId: this.userId,
+                  serviceType: this.serviceType,
+                },
+              })
+              .toString();
+            window.open(url);
+          }
+        });
+      }
 
   public onSubmit() {
     this.form.controls['passphrase'].setValidators([Validators.required, Validators.minLength(6)]);
@@ -82,6 +112,7 @@ export class LoginComponent implements OnInit {
       this.loading = true;
       Auth.signIn(`+91${this.form.controls['user'].value}`, this.form.controls['passphrase'].value).then(res => {
         this.loading = false;
+        this.gotoCloud();
         const temp = {
           role: [],
           userId: 0
@@ -206,6 +237,7 @@ export class LoginComponent implements OnInit {
   async getAgentList() {
     await this.utilsService.getStoredAgentList();
     await this.utilsService.getStoredMyAgentList();
+    await this.utilsService.getFilersList();
   }
   async getFyList() {
     await this.utilsService.getStoredFyList();

@@ -18,10 +18,8 @@ declare let $: any;
   styleUrls: ['./investments-deductions.component.css']
 })
 export class InvestmentsDeductionsComponent extends WizardNavigation implements OnInit {
-
   step = 0;
   isAddDonation: Number;
-
   loading: boolean = false;
   investmentDeductionForm: FormGroup;
   ITR_JSON: ITR_JSON;
