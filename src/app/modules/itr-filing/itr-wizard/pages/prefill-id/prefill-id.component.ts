@@ -1033,6 +1033,10 @@ export class PrefillIdComponent implements OnInit {
         assessmentYear = ItrJSON.Form_ITR1.AssessmentYear;
       } else if (ItrJSON.hasOwnProperty('Form_ITR4')) {
         assessmentYear = ItrJSON.Form_ITR4.AssessmentYear;
+      } else if (ItrJSON.hasOwnProperty('Form_ITR2')) {
+        assessmentYear = ItrJSON.Form_ITR4.AssessmentYear;
+      } else if (ItrJSON.hasOwnProperty('Form_ITR3')) {
+        assessmentYear = ItrJSON.Form_ITR4.AssessmentYear;
       }
 
       if (assessmentYear === '2023') {
@@ -2140,6 +2144,290 @@ export class PrefillIdComponent implements OnInit {
     }
 
     if (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3') {
+      // PERSONAL INFORMATION
+      {
+        // CUSTOMER PROFILE
+        {
+          this.ITR_Obj.panNumber =
+            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.PAN;
+
+          this.ITR_Obj.contactNumber =
+            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address?.MobileNo;
+
+          this.ITR_Obj.email =
+            ItrJSON[
+              this.ITR_Type
+            ].PartA_GEN1?.PersonalInfo.Address.EmailAddress;
+
+          this.ITR_Obj.family[0].fName =
+            ItrJSON[
+              this.ITR_Type
+            ].PartA_GEN1?.PersonalInfo.AssesseeName.FirstName;
+
+          this.ITR_Obj.family[0].mName =
+            ItrJSON[
+              this.ITR_Type
+            ].PartA_GEN1?.PersonalInfo.AssesseeName.MiddleName;
+
+          this.ITR_Obj.family[0].lName =
+            ItrJSON[
+              this.ITR_Type
+            ].PartA_GEN1?.PersonalInfo.AssesseeName.SurNameOrOrgName;
+
+          this.ITR_Obj.family[0].fatherName =
+            ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+
+          if (this.ITR_Type === 'ITR2') {
+            if (
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegime ===
+              'N'
+            ) {
+              this.regime = 'OLD';
+              this.ITR_Obj.regime = this.regime;
+            } else if (
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus.NewTaxRegime ===
+              'Y'
+            ) {
+              this.regime = 'NEW';
+              this.ITR_Obj.regime = this.regime;
+            } else {
+              this.utilsService.showSnackBar(
+                'Type of regime is not present in the uploaded JSON'
+              );
+            }
+          }
+
+          // NEED TO ADD REGIME DETAILS FOR ITR3
+
+          // "description": "RES - Resident; NRI - Non Resident; NOR - Resident but not Ordinarily resident"
+          const residentialStatusJson =
+            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ResidentialStatus;
+
+          if (residentialStatusJson === 'RES') {
+            this.ITR_Obj.residentialStatus = 'RESIDENT';
+          } else if (residentialStatusJson === 'NRI') {
+            this.ITR_Obj.residentialStatus = 'NON_RESIDENT';
+          } else if (residentialStatusJson === 'NOR') {
+            this.ITR_Obj.residentialStatus = 'NON_ORDINARY';
+          } else if (!residentialStatusJson) {
+            this.utilsService.showErrorMsg(
+              'Residential Status is not present in the JSON. Please verify the json before proceeding ahead'
+            );
+          }
+
+          // Updating employer details based on the key that we get from json in our itr obj employer category
+          {
+            let jsonEmployerCategory =
+              ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0].NatureOfEmployment;
+
+            console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
+
+            if (jsonEmployerCategory === 'CGOV') {
+              this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
+            } else if (jsonEmployerCategory === 'SGOV') {
+              this.ITR_Obj.employerCategory = 'GOVERNMENT';
+            } else if (jsonEmployerCategory === 'PSU') {
+              this.ITR_Obj.employerCategory = 'PRIVATE';
+            } else if (jsonEmployerCategory === 'PE') {
+              this.ITR_Obj.employerCategory = 'PE';
+            } else if (jsonEmployerCategory === 'PESG') {
+              this.ITR_Obj.employerCategory = 'PESG';
+            } else if (jsonEmployerCategory === 'PEPS') {
+              this.ITR_Obj.employerCategory = 'PEPS';
+            } else if (jsonEmployerCategory === 'PEO') {
+              this.ITR_Obj.employerCategory = 'PENSIONERS';
+            } else if (jsonEmployerCategory === 'OTH') {
+              this.ITR_Obj.employerCategory = 'OTHER';
+            } else if (jsonEmployerCategory === 'NA') {
+              this.ITR_Obj.employerCategory = 'NA';
+            }
+
+            // This will be go along with salary Mapping
+            // {
+            //   this.ITR_Obj.employers =
+            //     ItrJSON[this.ITR_Type].ScheduleS?.Salaries?.NameOfEmployer;
+
+            //   this.ITR_Obj.employers =
+            //     ItrJSON[this.ITR_Type].ScheduleS?.Salaries?.TANofEmployer;
+            // }
+          }
+
+          this.ITR_Obj.aadharNumber =
+            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.AadhaarCardNo;
+
+          // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
+          this.parseAndFormatDate(
+            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo.DOB
+          );
+          this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
+        }
+
+        // PERSONAL DETAILS
+        {
+          // ADDRESS DETAILS -
+          {
+            this.ITR_Obj.address.pinCode =
+              ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address.PinCode;
+            this.ITR_Obj.address.country =
+              ItrJSON[
+                this.ITR_Type
+              ].PartA_GEN1?.PersonalInfo?.Address?.CountryCode;
+            this.ITR_Obj.address.state =
+              ItrJSON[
+                this.ITR_Type
+              ].PartA_GEN1?.PersonalInfo?.Address?.StateCode;
+            this.ITR_Obj.address.city =
+              ItrJSON[
+                this.ITR_Type
+              ].PartA_GEN1?.PersonalInfo?.Address?.CityOrTownOrDistrict;
+            this.ITR_Obj.address.flatNo =
+              ItrJSON[
+                this.ITR_Type
+              ].PartA_GEN1?.PersonalInfo?.Address?.ResidenceNo;
+            this.ITR_Obj.address.premisesName =
+              ItrJSON[
+                this.ITR_Type
+              ].PartA_GEN1?.PersonalInfo?.Address?.ResidenceName;
+            this.ITR_Obj.address.area =
+              ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address
+                ?.RoadOrStreet +
+              ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address
+                ?.LocalityOrArea;
+          }
+
+          // BANK DETAILS
+          {
+            const UtilityBankDetails =
+              ItrJSON[this.ITR_Type].PartB_TTI?.Refund?.BankAccountDtls
+                ?.AddtnlBankDetails;
+
+            if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
+              this.ITR_Obj.bankDetails = [];
+              this.utilsService.showSnackBar(
+                'There are no bank details in the JSON that you have provided'
+              );
+            } else {
+              this.ITR_Obj.bankDetails = UtilityBankDetails.map(
+                ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
+                  return {
+                    id: null,
+                    bankType: null,
+                    ifsCode: IFSCCode,
+                    name: BankName,
+                    accountNumber: BankAccountNo,
+                    hasRefund: UseForRefund === 'true',
+                    swiftcode: null,
+                    countryName: '91',
+                  };
+                }
+              );
+            }
+          }
+        }
+      }
+
+      // SALARY
+      {
+        if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
+          // Net salary Income
+          this.ITR_Obj.employers[0].taxableIncome =
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].IncomeFromSal;
+
+          // Standard deduction of 50k
+          this.ITR_Obj.employers[0].standardDeduction =
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductionUs16ia;
+
+          //Total of exempt income (Salary allowances total)
+          if (this.regime === 'OLD') {
+            this.ITR_Obj.employers[0].exemptIncome =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+          }
+
+          // Salary 17(1)
+          this.ITR_Obj.employers[0].salary[0].taxableAmount =
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].Salary;
+
+          // Salary 17(2)
+          this.ITR_Obj.employers[0].perquisites[0].taxableAmount =
+            ItrJSON[this.ITR_Type][
+              this.ITR14_IncomeDeductions
+            ].PerquisitesValue;
+
+          // Salary 17(3)
+          this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].ProfitsInSalary;
+
+          // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
+          if (this.regime === 'OLD') {
+            const availableSalaryAllowances = this.uploadedJson[this.ITR_Type][
+              this.ITR14_IncomeDeductions
+            ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+              (value) => value.SalNatureDesc
+            );
+            // console.log(
+            //   'Available salary allowances in JSON => ',
+            //   availableSalaryAllowances
+            // );
+            this.updateSalaryAllowances(
+              availableSalaryAllowances,
+              this.ITR_Type
+            );
+          }
+
+          try {
+            const deductions = this.ITR_Obj.employers[0].deductions;
+            if (deductions && deductions[0]) {
+              deductions[0].exemptAmount =
+                ItrJSON[this.ITR_Type][
+                  this.ITR14_IncomeDeductions
+                ].ProfessionalTaxUs16iii;
+            } else {
+              console.error('Cannot access deductions or its first element');
+            }
+          } catch (error) {
+            console.error('Cannot access ITR_Obj or its properties', error);
+          }
+          // DEDUCTIONS - PROFESSIONAL TAX
+          // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].ProfessionalTaxUs16iii;
+
+          // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
+        } else {
+          console.log(
+            'SALARY INCOME',
+            `ItrJSON[this.ITR_Type]${[
+              this.ITR14_IncomeDeductions,
+            ]}.GrossSalary does not exist`
+          );
+        }
+
+        // {
+        //More optimized code for future
+        // const {
+        //   IncomeFromSal,
+        //   DeductionUs16ia,
+        //   AllwncExemptUs10,
+        //   Salary,
+        //   PerquisitesValue,
+        //   ProfitsInSalary,
+        //   ProfessionalTaxUs16iii,
+        // } = ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
+        // this.ITR_Obj.employers[0].taxableIncome = IncomeFromSal;
+        // this.ITR_Obj.employers[0].standardDeduction = DeductionUs16ia;
+        // this.ITR_Obj.employers[0].exemptIncome =
+        //   AllwncExemptUs10.TotalAllwncExemptUs10;
+        // this.ITR_Obj.employers[0].salary[0].taxableAmount = Salary;
+        // this.ITR_Obj.employers[0].perquisites[0].taxableAmount = PerquisitesValue;
+        // this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
+        //   ProfitsInSalary;
+        // this.ITR_Obj.employers[0].deductions[0].exemptAmount =
+        //   ProfessionalTaxUs16iii;
+        // }
+      }
     }
 
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
