@@ -6,6 +6,7 @@ declare var gapi: any;
 
 const driveClientId = environment.gdrive.GOOGLE_DRIVE_CLIENT_ID;
 const driveApiKey = environment.gdrive.GOOGLE_DRIVE_API_KEY;
+const folderId = environment.gdrive.FOLDER_ID;
 @Injectable({
   providedIn: 'root'
 })
@@ -80,8 +81,6 @@ export class GoogleDriveService{
         parents: folderId ? [folderId] : [],
       };
 
-      //Folder id of Parser Folder on CG Parsing shared drive
-      var folderId = "1DlJN6xgPyrX_ijF7k6q4M_1rwiRFJkGt";
       var file = new Blob(fileData, {type: dataType});
 
       //this is gapi client way.. excel is created with data
