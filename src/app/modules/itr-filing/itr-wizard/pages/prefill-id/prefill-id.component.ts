@@ -2589,6 +2589,127 @@ export class PrefillIdComponent implements OnInit {
         //   );
         // }
       }
+
+      // HOUSE PROPERTIES
+      {
+        if (ItrJSON[this.ITR_Type].ScheduleHP?.PropertyDetails) {
+          {
+            const houseProperties =
+              ItrJSON[this.ITR_Type].ScheduleHP?.PropertyDetails;
+
+            const mapJsonHPToITRObj = ({
+              AddressDetailWithZipCode: {
+                AddrDetail,
+                CityOrTownOrDistrict,
+                StateCode,
+                CountryCode,
+                PinCode,
+              },
+              CoOwners: [
+                {
+                  CoOwnersSNo,
+                  NameCoOwner,
+                  PAN_CoOwner,
+                  Aadhaar_CoOwner,
+                  PercentShareProperty,
+                },
+              ],
+              TenantDetails: [
+                { TenantSNo, NameofTenant, PANofTenant, AadhaarofTenant },
+              ],
+              Rentdetails: {
+                AnnualLetableValue,
+                RentNotRealized,
+                LocalTaxes,
+                TotalUnrealizedAndTax,
+                BalanceALV,
+                AnnualOfPropOwned,
+                ThirtyPercentOfBalance,
+                IntOnBorwCap,
+                TotalDeduct,
+                ArrearsUnrealizedRentRcvd,
+                IncomeOfHP,
+              },
+              HPSNo,
+              PropertyOwner,
+              PropCoOwnedFlg,
+              AsseseeShareProperty,
+              ifLetOut,
+            }) => {
+              return {
+                id: null,
+                propertyType: null,
+                grossAnnualRentReceived: null,
+                propertyTax: null,
+                address: null,
+                ownerOfProperty: null,
+                otherOwnerOfProperty: null,
+                city: null,
+                state: null,
+                country: null,
+                pinCode: null,
+                taxableIncome: null,
+                exemptIncome: null,
+                isEligibleFor80EE: null,
+                isEligibleFor80EEA: null,
+                tenant: [{ id: null, name: null, panNumber: null }],
+                coOwners: [
+                  {
+                    id: null,
+                    name: null,
+                    isSelf: null,
+                    panNumber: null,
+                    percentage: null,
+                  },
+                ],
+                loans: [
+                  {
+                    id: null,
+                    loanType: null,
+                    principalAmount: null,
+                    interestAmount: null,
+                  },
+                ],
+              };
+            };
+
+            this.ITR_Obj.employers = houseProperties.map(mapJsonHPToITRObj);
+
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+            console.log(this.ITR_Obj);
+          }
+
+          // Standard deduction of 50k
+          this.ITR_Obj.employers[0].standardDeduction =
+            ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
+
+          // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
+          if (this.regime === 'OLD') {
+            const availableSalaryAllowances = ItrJSON[
+              this.ITR_Type
+            ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+              (value) => value.SalNatureDesc
+            );
+            // console.log(
+            //   'Available salary allowances in JSON => ',
+            //   availableSalaryAllowances
+            // );
+            this.updateSalaryAllowances(
+              availableSalaryAllowances,
+              this.ITR_Type
+            );
+
+            //Total of exempt income (Salary allowances total)
+            this.ITR_Obj.employers[0].exemptIncome =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+          }
+        }
+      }
     }
 
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
