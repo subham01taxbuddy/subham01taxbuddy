@@ -34,6 +34,7 @@ export class PrefillIdComponent implements OnInit {
   uploadedJson: any;
   ITR14_IncomeDeductions: string;
   regime: string;
+  allowanceDetails23: any;
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
 
@@ -174,12 +175,21 @@ export class PrefillIdComponent implements OnInit {
 
           try {
             // finding and storing the object with the same NatureDesc (type) present in JSON Object
-            const salaryAllowancesDetail = this.uploadedJson[ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
-              (salaryAllowances) => salaryAllowances.SalNatureDesc === type
-            );
-            // console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
+            let salaryAllowancesDetail;
+            if (ITR_Type === 'ITR2') {
+              salaryAllowancesDetail = this.uploadedJson[
+                ITR_Type
+              ].ScheduleS.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+                (salaryAllowances) => salaryAllowances.SalNatureDesc === type
+              );
+            } else {
+              salaryAllowancesDetail = this.uploadedJson[ITR_Type][
+                this.ITR14_IncomeDeductions
+              ].AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+                (salaryAllowances) => salaryAllowances.SalNatureDesc === type
+              );
+              // console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
+            }
 
             if (salaryAllowancesDetail) {
               // TO DO (There are some issues in this) - create an array to store the values of the fields with the existing ANY_OTHER field and then add them and store them in others in itrObject
@@ -237,6 +247,10 @@ export class PrefillIdComponent implements OnInit {
           }
         }
       }
+
+      this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
+      console.log(this.allowanceDetails23, 'allowanceDetails23');
+      return this.allowanceDetails23;
     }
   }
 
@@ -2425,9 +2439,6 @@ export class PrefillIdComponent implements OnInit {
           {
             const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
 
-            const salaryAllowances =
-              ItrJSON[this.ITR_Type].ScheduleS?.AllwncExemptUs10;
-
             const mapJsonSalaryToITRObj = ({
               AddressDetail: {
                 AddrDetail,
@@ -2449,6 +2460,7 @@ export class PrefillIdComponent implements OnInit {
               NameOfEmployer,
               NatureOfEmployment,
               TANofEmployer,
+              AllwncExemptUs10Dtls,
             }) => {
               // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
               if (this.regime === 'OLD') {
@@ -2457,18 +2469,10 @@ export class PrefillIdComponent implements OnInit {
                 ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
                   (value) => value.SalNatureDesc
                 );
-                console.log(
-                  'Available salary allowances in JSON => ',
-                  availableSalaryAllowances
-                );
                 this.updateSalaryAllowances(
                   availableSalaryAllowances,
                   this.ITR_Type
                 );
-
-                //Total of exempt income (Salary allowances total)
-                this.ITR_Obj.employers[0].exemptIncome =
-                  ItrJSON[this.ITR_Type].ScheduleS?.AllwncExtentExemptUs10;
               }
 
               return {
@@ -2495,7 +2499,7 @@ export class PrefillIdComponent implements OnInit {
                     exemptAmount: 0,
                   },
                 ],
-                allowance: [],
+                allowance: this.allowanceDetails23,
                 perquisites: [
                   {
                     perquisiteType: 'SEC17_2',
@@ -2532,31 +2536,25 @@ export class PrefillIdComponent implements OnInit {
             console.log(this.ITR_Obj);
           }
 
+          //Total of exempt income (Salary allowances total) --- There is some error in this, need to recheck
+          let totalExemptIncome = this.ITR_Obj.employers.find(
+            (exemptIncome) => exemptIncome.exemptIncome
+          );
+          totalExemptIncome =
+            ItrJSON[this.ITR_Type].ScheduleS?.AllwncExtentExemptUs10;
+          console.log(totalExemptIncome, 'totalExemptIncome');
+
           // Standard deduction of 50k
           this.ITR_Obj.employers[0].standardDeduction =
             ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
 
-          // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-          if (this.regime === 'OLD') {
-            const availableSalaryAllowances = ItrJSON[
-              this.ITR_Type
-            ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-              (value) => value.SalNatureDesc
-            );
-            // console.log(
-            //   'Available salary allowances in JSON => ',
-            //   availableSalaryAllowances
-            // );
-            this.updateSalaryAllowances(
-              availableSalaryAllowances,
-              this.ITR_Type
-            );
-
-            //Total of exempt income (Salary allowances total)
-            this.ITR_Obj.employers[0].exemptIncome =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+          //setting professional tax
+          const deductions = this.ITR_Obj.employers[0].deductions;
+          if (deductions && deductions[0]) {
+            deductions[0].exemptAmount =
+              ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii;
+          } else {
+            console.error('Cannot access deductions or its first element');
           }
         }
 
@@ -2701,20 +2699,6 @@ export class PrefillIdComponent implements OnInit {
 
           // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
           if (this.regime === 'OLD') {
-            const availableSalaryAllowances = ItrJSON[
-              this.ITR_Type
-            ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-              (value) => value.SalNatureDesc
-            );
-            // console.log(
-            //   'Available salary allowances in JSON => ',
-            //   availableSalaryAllowances
-            // );
-            this.updateSalaryAllowances(
-              availableSalaryAllowances,
-              this.ITR_Type
-            );
-
             //Total of exempt income (Salary allowances total)
             this.ITR_Obj.employers[0].exemptIncome =
               ItrJSON[this.ITR_Type][
