@@ -2707,6 +2707,140 @@ export class PrefillIdComponent implements OnInit {
           }
         }
       }
+
+      // OTHER INCOME
+      {
+        {
+          if (this.ITR_Obj.incomes) {
+            // DIVIDEND INCOMES
+            const itrObjectDividendQuarterList =
+              this.ITR_Obj.dividendIncomes.map((key) => key);
+
+            const jsonDividendObj =
+              this.uploadedJson[this.ITR_Type].ScheduleOS?.DividendIncUs115BBDA
+                ?.DateRange;
+
+            if (jsonDividendObj.Upto15Of6) {
+              const individualDividendIncomes =
+                itrObjectDividendQuarterList.find(
+                  (dividendIncomes) => dividendIncomes.quarter === 1
+                );
+              individualDividendIncomes.income = jsonDividendObj.Upto15Of6;
+            }
+
+            if (jsonDividendObj.Upto15Of9) {
+              const individualDividendIncomes =
+                itrObjectDividendQuarterList.find(
+                  (dividendIncomes) => dividendIncomes.quarter === 2
+                );
+              individualDividendIncomes.income = jsonDividendObj.Upto15Of9;
+            }
+
+            if (jsonDividendObj.Up16Of9To15Of12) {
+              const individualDividendIncomes =
+                itrObjectDividendQuarterList.find(
+                  (dividendIncomes) => dividendIncomes.quarter === 3
+                );
+              individualDividendIncomes.income =
+                jsonDividendObj.Up16Of9To15Of12;
+            }
+            if (jsonDividendObj.Up16Of12To15Of3) {
+              const individualDividendIncomes =
+                itrObjectDividendQuarterList.find(
+                  (dividendIncomes) => dividendIncomes.quarter === 4
+                );
+              individualDividendIncomes.income =
+                jsonDividendObj.Up16Of12To15Of3;
+            }
+            if (jsonDividendObj.Up16Of3To31Of3) {
+              const individualDividendIncomes =
+                itrObjectDividendQuarterList.find(
+                  (dividendIncomes) => dividendIncomes.quarter === 5
+                );
+              individualDividendIncomes.income = jsonDividendObj.Up16Of3To31Of3;
+            }
+
+            // savings income
+            const IntrstFrmSavingBank =
+              this.uploadedJson[this.ITR_Type].ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank;
+
+            if (IntrstFrmSavingBank) {
+              const savingsInterestItrObj = this.ITR_Obj.incomes.find(
+                (savingsInterestItrObj) =>
+                  savingsInterestItrObj.incomeType === 'SAVING_INTEREST'
+              );
+              savingsInterestItrObj.amount = IntrstFrmSavingBank;
+            }
+
+            // interest from deposits
+            const IntrstFrmTermDeposit =
+              this.uploadedJson[this.ITR_Type].ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit;
+
+            if (IntrstFrmTermDeposit) {
+              const InterestFromDepositsItrObj = this.ITR_Obj.incomes.find(
+                (InterestFromDepositsItrObj) =>
+                  InterestFromDepositsItrObj.incomeType === 'FD_RD_INTEREST'
+              );
+              InterestFromDepositsItrObj.amount = IntrstFrmTermDeposit;
+            }
+
+            // interest from income tax refund
+            const IntrstFrmIncmTaxRefund =
+              this.uploadedJson[this.ITR_Type].ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund;
+
+            if (IntrstFrmIncmTaxRefund) {
+              const InterestFromRefundItrObj = this.ITR_Obj.incomes.find(
+                (InterestFromRefundItrObj) =>
+                  InterestFromRefundItrObj.incomeType === 'TAX_REFUND_INTEREST'
+              );
+              InterestFromRefundItrObj.amount = IntrstFrmIncmTaxRefund;
+            }
+
+            // family pension
+            const FamilyPension =
+              this.uploadedJson[this.ITR_Type].ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.FamilyPension;
+
+            const DividendGross =
+              this.uploadedJson[this.ITR_Type].ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.DividendGross;
+
+            if (FamilyPension) {
+              const InterestFromFmlyPnsnItrObj = this.ITR_Obj.incomes.find(
+                (InterestFromFmlyPnsnItrObj) =>
+                  InterestFromFmlyPnsnItrObj.incomeType === 'FAMILY_PENSION'
+              );
+              InterestFromFmlyPnsnItrObj.amount = FamilyPension;
+            }
+
+            // any other
+            const BalanceNoRaceHorse =
+              this.uploadedJson[this.ITR_Type].ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.BalanceNoRaceHorse;
+
+            if (BalanceNoRaceHorse) {
+              const anyOtherIncome = this.ITR_Obj.incomes.find(
+                (anyOtherIncome) => anyOtherIncome.incomeType === 'ANY_OTHER'
+              );
+              anyOtherIncome.amount =
+                BalanceNoRaceHorse -
+                IntrstFrmSavingBank -
+                IntrstFrmTermDeposit -
+                IntrstFrmIncmTaxRefund -
+                FamilyPension -
+                DividendGross;
+            }
+          } else {
+            console.log(
+              'ITROBJECT => OTHERINCOMES',
+              'this.ITR_Obj.incomes is empty'
+            );
+          }
+        }
+      }
     }
 
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
