@@ -95,7 +95,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     console.log('sme obj', this.smeObj);
      this.getSmeRecords();
-
+     this.getCoOwnerHistory();
   }
 
   displayFn(user: User): string {
@@ -583,7 +583,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         finalReq.leader = this.leader.value;
         finalReq.admin = this.admin.value;
         finalReq.filer = this.filer.value;
-        finalReq.coOwnerUserId = this.ownerDetails?.userId;
+        finalReq.coOwnerUserId = this.ownerDetails?.userId || null;
 
         if(!finalReq.roles) {
           finalReq.roles = this.smeRoles.roles;
@@ -666,6 +666,18 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.updateSuccessful = false;
       }
     );
+  }
+
+  getCoOwnerHistory(){
+    // 'https://uat-api.taxbuddy.com/user/coOwner-details/10341'
+    const userId = this.smeObj.userId;
+    const param = `/coOwner-details/${userId}`;
+    this.loading = true;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('get Co-Owner history  -> ', result);
+      this.loading = false;
+
+    })
   }
 
   convertToDDMMYY(date) {

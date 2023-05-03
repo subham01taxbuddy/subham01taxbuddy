@@ -257,7 +257,7 @@
    <!-- <form [formGroup]="otherSmeInfo"> -->
     <div class="container" style="margin-top: 30px;">
       <div class="row">
-        <div class="col-sm-4" *ngIf="checkRoles?.includes('ROLE_OWNER') || loggedInSmeRoles?.includes('ROLE_OWNER') || loggedInSmeRoles?.includes('ROLE_ADMIN') || loggedInSmeRoles?.includes('ROLE_LEADER')">
+        <div class="col-sm-4" *ngIf="checkRoles?.includes('ROLE_OWNER')">
           <mat-label> Add Co-Owner </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
@@ -408,7 +408,7 @@
                 </mat-form-field>
               </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="checkRoles?.includes('ROLE_OWNER')">
         <table class="my-table">
           <thead>
             <tr>

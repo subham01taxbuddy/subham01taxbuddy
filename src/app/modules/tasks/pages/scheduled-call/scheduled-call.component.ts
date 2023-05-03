@@ -13,6 +13,7 @@ import { event } from 'jquery';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -32,6 +33,9 @@ export class ScheduledCallComponent implements OnInit {
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
+  roles:any;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
   searchParam: any = {
@@ -69,6 +73,7 @@ export class ScheduledCallComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
+    this.roles = this.utilsService.getUserRoles() ;
     this.agentId = userId;
     this.getAgentList();
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
@@ -125,6 +130,29 @@ export class ScheduledCallComponent implements OnInit {
     }
     this.search('agent');
   }
+
+  coOwnerId: number;
+  coFilerId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+       this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    //  this.search('agent');
+  }
+
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
@@ -657,7 +685,7 @@ export class ScheduledCallComponent implements OnInit {
     this.search();
   }
 
-  search(form?) {
+  search(form? , isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -682,7 +710,17 @@ export class ScheduledCallComponent implements OnInit {
 
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
+
+    // https://uat-api.taxbuddy.com/user/schedule-call-details/7523?page=0&pageSize=30&searchAsCoOwner=true
+
     var param = `/schedule-call-details/${this.agentId}?${data}`;
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
@@ -705,5 +743,15 @@ export class ScheduledCallComponent implements OnInit {
       }
       this.loading = false;
     });
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.search('',true);
   }
 }
