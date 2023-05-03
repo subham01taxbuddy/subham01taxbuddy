@@ -257,12 +257,12 @@
    <!-- <form [formGroup]="otherSmeInfo"> -->
     <div class="container" style="margin-top: 30px;">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4" *ngIf="checkRoles?.includes('ROLE_OWNER')">
           <mat-label> Add Co-Owner </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)" >
+            <mat-autocomplete #auto="matAutocomplete" >
+              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name" (click)="getownerNameId(option)" >
                    {{option.name}}
               </mat-option>
             </mat-autocomplete>
@@ -407,6 +407,24 @@
                   This field is required</mat-error> -->
                 </mat-form-field>
               </div>
+      </div>
+      <div class="row" *ngIf="checkRoles?.includes('ROLE_OWNER')">
+        <table class="my-table">
+          <thead>
+            <tr>
+              <th>Co-Owner-Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr *ngFor="let person of people">
+              <td>{{ person.name }}</td>
+              <td>{{ person.email }}</td>
+              <td>{{ person.phone }}</td>
+            </tr> -->
+          </tbody>
+        </table>
       </div>
     </div>
   <!-- </form> -->

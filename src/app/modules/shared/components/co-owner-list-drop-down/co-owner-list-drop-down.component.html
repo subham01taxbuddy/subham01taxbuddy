@@ -1,0 +1,29 @@
+<div>
+  <div class="row">
+    <div class="col-sm-6">
+      <mat-label> Search Co-Owner </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto>
+          <mat-option *ngFor="let option of filteredOwners | async" [value]="option.name"
+            (click)="getOwnerNameId(option);">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-label> Search Filer of Co-owner </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto1" />
+        <mat-autocomplete #auto1>
+          <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name"
+            (click)="getFilerNameId(option1)">
+            {{ option1.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+

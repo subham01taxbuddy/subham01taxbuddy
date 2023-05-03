@@ -51,6 +51,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeRecords:any;
   smeServices:any;
   smeRoles:any;
+  checkRoles:any;
+  loggedInSmeRoles:any;
+
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
   'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
   'Santali', 'Sindhi', 'Urdu']
@@ -72,7 +75,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
-    console.log("logged sme",this.loggedInSme)
+    this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
+
+    console.log("logged sme roles",this.loggedInSmeRoles)
     this.getOwner();
     this.filteredOptions = this.coOwner.valueChanges.pipe(
       startWith(''),
@@ -90,7 +95,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     console.log('sme obj', this.smeObj);
      this.getSmeRecords();
-
+     this.getCoOwnerHistory();
   }
 
   displayFn(user: User): string {
@@ -114,6 +119,17 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     // this.itrTypesData = this.itrTypes.value;
     // this.admin.setValue(data.admin);
     // this.callingNumber.setValue(data.callingNumber);
+
+    let coOwnerUserId= data.coOwnerUserId
+          let ownerList = this.ownerNames;
+          let coOwnerName = ownerList?.filter((item) => {
+              return item.userId === coOwnerUserId;
+            }).map((item) => {
+              return item.name;
+            });
+      console.log('coOwnerName',coOwnerName)
+    this.coOwner.setValue(coOwnerName);
+
     if(data.internal === true ){
       this.internal.setValue("internal")
     }else {
@@ -431,6 +447,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeRecords=result.data;
       this.smeRoles=this.smeRecords[0];
       console.log('sme Roles Patch values',this.smeRoles)
+      this.checkRoles=this.smeRoles.roles
       this.smeFormGroup.patchValue(this.smeRoles); // all
       this.otherSmeInfo.patchValue(this.smeRoles);
       this.roles.patchValue(this.smeRoles);
@@ -566,7 +583,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         finalReq.leader = this.leader.value;
         finalReq.admin = this.admin.value;
         finalReq.filer = this.filer.value;
-        finalReq.coOwnerUserId = this.ownerDetails?.userId;
+        finalReq.coOwnerUserId = this.ownerDetails?.userId || null;
 
         if(!finalReq.roles) {
           finalReq.roles = this.smeRoles.roles;
@@ -649,6 +666,18 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.updateSuccessful = false;
       }
     );
+  }
+
+  getCoOwnerHistory(){
+    // 'https://uat-api.taxbuddy.com/user/coOwner-details/10341'
+    const userId = this.smeObj.userId;
+    const param = `/coOwner-details/${userId}`;
+    this.loading = true;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('get Co-Owner history  -> ', result);
+      this.loading = false;
+
+    })
   }
 
   convertToDDMMYY(date) {
