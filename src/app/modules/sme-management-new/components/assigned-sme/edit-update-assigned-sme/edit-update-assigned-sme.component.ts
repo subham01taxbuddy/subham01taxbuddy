@@ -52,6 +52,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeServices:any;
   smeRoles:any;
   checkRoles:any;
+  loggedInSmeRoles:any;
+
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
   'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
   'Santali', 'Sindhi', 'Urdu']
@@ -73,7 +75,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
-    console.log("logged sme",this.loggedInSme)
+    this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
+
+    console.log("logged sme roles",this.loggedInSmeRoles)
     this.getOwner();
     this.filteredOptions = this.coOwner.valueChanges.pipe(
       startWith(''),

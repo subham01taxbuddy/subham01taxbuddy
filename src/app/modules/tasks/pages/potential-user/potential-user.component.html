@@ -1,16 +1,26 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div >
+    <div class="col-sm-8">
       <b style="font-size: 20px">Potential User </b>
+    </div>
+    <div class="col-sm-4" *ngIf="roles?.includes('ROLE_OWNER')">
+      <p>
+        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
+      </p>
     </div>
   </div>
   <div class="content content_full">
     <div class="content__container">
       <div class="card">
-        <div class="card__row">
+        <div class="card__row"  *ngIf="!coOwnerCheck">
           <div class="filter__col card__col-xs-12">
             <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+          </div>
+        </div>
+        <div class="card__row" *ngIf="coOwnerCheck">
+          <div class="filter__col card__col-xs-12">
+            <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
           </div>
         </div>
         <div class="card__row">
