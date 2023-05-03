@@ -80,7 +80,7 @@ export class BulkReAssignDialogComponent implements OnInit {
     if(isOwner){
       this.ownerId2 = event? event.userId : null;
       if(this.ownerId1 != this.ownerId2){
-        this.serviceType.setValue('ALL');
+        // this.serviceType.setValue('ALL');
         this.isServiceType=false;
         this.isReassignmentOutsideTeam=true;
       }else{
@@ -104,9 +104,15 @@ export class BulkReAssignDialogComponent implements OnInit {
     console.log('status',this.status.value)
     console.log('isReassignmentOutsideTeam',this.isReassignmentOutsideTeam);
     console.log('filerUserIdList',this.filerId2)
+      let paramValue = '';
 
+      if(this.ownerId1 == this.ownerId2){
+        paramValue =`&serviceTypes=${this.serviceType.value}`
+       }
       this.loading = true;
-      const param = `/user-reassignment-bulk?fromFilerUserId=${this.filerId1}&serviceTypes=${this.serviceType.value}&statusId=${this.status.value}&isReassignmentOutsideTeam=${this.isReassignmentOutsideTeam}&filerUserIdList=${this.filerId2}`
+      let  param = `/user-reassignment-bulk?fromFilerUserId=${this.filerId1}&statusId=${this.status.value}&isReassignmentOutsideTeam=${this.isReassignmentOutsideTeam}&filerUserIdList=${this.filerId2}`+ paramValue;
+
+
       this.userMsService.getMethod(param).subscribe((res: any) => {
         this.loading = false;
         console.log(res);
