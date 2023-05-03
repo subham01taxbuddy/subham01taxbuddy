@@ -2605,18 +2605,8 @@ export class PrefillIdComponent implements OnInit {
                 CountryCode,
                 PinCode,
               },
-              CoOwners: [
-                {
-                  CoOwnersSNo,
-                  NameCoOwner,
-                  PAN_CoOwner,
-                  Aadhaar_CoOwner,
-                  PercentShareProperty,
-                },
-              ],
-              TenantDetails: [
-                { TenantSNo, NameofTenant, PANofTenant, AadhaarofTenant },
-              ],
+              CoOwners,
+              TenantDetails,
               Rentdetails: {
                 AnnualLetableValue,
                 RentNotRealized,
@@ -2638,42 +2628,65 @@ export class PrefillIdComponent implements OnInit {
             }) => {
               return {
                 id: null,
-                propertyType: null,
-                grossAnnualRentReceived: null,
-                propertyTax: null,
-                address: null,
+                propertyType: ifLetOut === 'Y' ? 'LOP' : 'SOP', // hVAE TO CHECK FOR DLOP
+                grossAnnualRentReceived: AnnualLetableValue,
+                // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
+                propertyTax: LocalTaxes,
+                address: AddrDetail,
                 ownerOfProperty: null,
                 otherOwnerOfProperty: null,
-                city: null,
-                state: null,
-                country: null,
-                pinCode: null,
-                taxableIncome: null,
-                exemptIncome: null,
+                city: CityOrTownOrDistrict,
+                state: StateCode,
+                country: CountryCode,
+                pinCode: PinCode,
+                taxableIncome: IncomeOfHP,
+                exemptIncome: ThirtyPercentOfBalance,
                 isEligibleFor80EE: null,
                 isEligibleFor80EEA: null,
-                tenant: [{ id: null, name: null, panNumber: null }],
-                coOwners: [
-                  {
-                    id: null,
-                    name: null,
-                    isSelf: null,
-                    panNumber: null,
-                    percentage: null,
-                  },
-                ],
+                coOwners: CoOwners
+                  ? CoOwners.map(
+                      ({
+                        CoOwnersSNo,
+                        NameCoOwner,
+                        PAN_CoOwner,
+                        Aadhaar_CoOwner,
+                        PercentShareProperty,
+                      }) => ({
+                        id: null,
+                        name: NameCoOwner,
+                        isSelf: null,
+                        panNumber: PAN_CoOwner,
+                        percentage: PercentShareProperty,
+                      })
+                    )
+                  : [],
+                tenant: TenantDetails
+                  ? TenantDetails.map(
+                      ({
+                        TenantSNo,
+                        NameofTenant,
+                        PANofTenant,
+                        AadhaarofTenant,
+                      }) => ({
+                        id: null,
+                        name: NameofTenant,
+                        panNumber: PANofTenant,
+                      })
+                    )
+                  : [],
                 loans: [
                   {
                     id: null,
-                    loanType: null,
+                    loanType: 'HOUSING',
                     principalAmount: null,
-                    interestAmount: null,
+                    interestAmount: IntOnBorwCap,
                   },
                 ],
               };
             };
 
-            this.ITR_Obj.employers = houseProperties.map(mapJsonHPToITRObj);
+            this.ITR_Obj.houseProperties =
+              houseProperties.map(mapJsonHPToITRObj);
 
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
