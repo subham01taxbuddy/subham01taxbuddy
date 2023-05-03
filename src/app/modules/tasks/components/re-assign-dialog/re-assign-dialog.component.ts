@@ -39,7 +39,11 @@ export class ReAssignDialogComponent implements OnInit {
     if(isOwner){
        this.ownerId = event? event.userId : null;
       if(this.data.ownerName != event.name){
-        this.serviceType='ALL';
+        if(this.data.serviceType == 'GST'){
+          this.serviceType='GST';
+        }else{
+          this.serviceType='ALL';
+        }
       }else{
         this.serviceType=this.data.serviceType;
       }
