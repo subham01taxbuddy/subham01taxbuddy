@@ -21,6 +21,8 @@ import { param } from 'jquery';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { FormControl } from '@angular/forms';
+import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -38,7 +40,6 @@ export class AssignedNewUsersComponent implements OnInit {
   ogStatusList: any = [];
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  roles:any;
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -79,6 +80,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
+    this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
     this.search();
