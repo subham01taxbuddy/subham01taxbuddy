@@ -46,6 +46,8 @@ export class AssignedSubscriptionComponent implements OnInit {
   loggedInSme: any;
   allFilerList:any;
   roles: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -147,7 +149,9 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo) {
+  getAssignedSubscription(pageNo?, isAgent?) {
+    // https://uat-api.taxbuddy.com/itr/subscription-dashboard-new/7522?page=0&pageSize=500&searchAsCoOwner=true
+
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
     console.log('this.queryParam:', this.queryParam);
@@ -156,7 +160,16 @@ export class AssignedSubscriptionComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
+
     var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
+
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
@@ -609,7 +622,12 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.getAssignedSubscription(event - 1);
+    if (this.coOwnerToggle.value == true) {
+      this.getAssignedSubscription(event - 1,true);
+    }else{
+      this.getAssignedSubscription(event - 1);
+    }
+
   }
 
   ownerId: number;
@@ -632,6 +650,39 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
     this.getAssignedSubscription(0);
   }
+
+  coOwnerId: number;
+  coFilerId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+      this.getAssignedSubscription(0);
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    //  this.search('agent');
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.getAssignedSubscription(0,true);
+  }
+
 }
 export interface ConfirmModel {
   userId: number
