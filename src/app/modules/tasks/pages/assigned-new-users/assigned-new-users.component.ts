@@ -35,6 +35,7 @@ export class AssignedNewUsersComponent implements OnInit {
   userInfo: any = [];
   itrStatus: any = [];
   filerUserId:any;
+  roles:any;
   ogStatusList: any = [];
   searchParam: any = {
     serviceType: null,
@@ -76,6 +77,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
+    this.roles=this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
     this.search();

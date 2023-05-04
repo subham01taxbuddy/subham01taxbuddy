@@ -5,7 +5,7 @@
     <div class="col-sm-8">
       <b style="font-size: 20px">My Users</b>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4" *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')">
       <button class="tbd-btn" style="float:right" (click)="openBulkReAssignment()">Bulk Re-Assignment</button>
     </div>
   </div>
