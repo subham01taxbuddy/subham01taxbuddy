@@ -95,8 +95,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     // this.services.patchValue(this.smeObj);
 
     console.log('sme obj', this.smeObj);
-     this.getSmeRecords();
-     this.getCoOwnerHistory();
+    this.getSmeRecords();
   }
 
   displayFn(user: User): string {
@@ -449,6 +448,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.smeRoles=this.smeRecords[0];
       console.log('sme Roles Patch values',this.smeRoles)
       this.checkRoles=this.smeRoles.roles
+
+      if(this.checkRoles?.includes(('ROLE_OWNER'))){
+        this.getCoOwnerHistory();
+      }
+
       this.smeFormGroup.patchValue(this.smeRoles); // all
       this.otherSmeInfo.patchValue(this.smeRoles);
       this.roles.patchValue(this.smeRoles);
