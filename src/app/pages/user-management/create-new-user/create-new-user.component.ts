@@ -25,6 +25,8 @@ export class CreateNewUserComponent implements OnInit {
   disableAssignedToMe = false;
   assessmentYear:string;
   roles:any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   loggedInSme:any;
   countryList: Country[] = this.countryDropdown.map(country => ({
     name: country.countryName,
@@ -124,6 +126,29 @@ export class CreateNewUserComponent implements OnInit {
 
   }
 
+  coOwnerId: number;
+  coFilerId: number;
+  agentId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+      // this.getInvoice();
+    } else {
+      let loggedInId = this.utilSerive.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+
+  }
+
   // fromSme(event) {
   //   console.log('event value',event)
   //   this.signUpForm.controls['agentUserId'].setValue(event);
@@ -207,5 +232,15 @@ export class CreateNewUserComponent implements OnInit {
     } else {
       this.disableAssignedToMe = false;
     }
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    // this.getInvoice(true);
   }
 }

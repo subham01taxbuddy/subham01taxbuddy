@@ -8,7 +8,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import {Location} from "@angular/common";
+import {DatePipe, KeyValue, Location} from "@angular/common";
 
 
 export const MY_FORMATS = {
@@ -53,6 +53,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeRoles:any;
   checkRoles:any;
   loggedInSmeRoles:any;
+  coOwnerData:any;
 
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
   'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
@@ -545,7 +546,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(option)
   }
 
-  updateSmeDetails() {
+  async updateSmeDetails() {
 
    const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
    const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
@@ -611,19 +612,51 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         }
 
       }
-      if(this.serviceRecords.length > 0) {
-        this.serviceRecords.forEach(async service => {
+
+      if (this.serviceRecords.length > 0) {
+        for (let i = 0; i < this.serviceRecords.length; i++) {
+          const service = this.serviceRecords[i];
           finalReq.serviceType = service.serviceType;
           finalReq.assignmentStart = service.assignmentStart;
           finalReq.roles.push(service.role);
           console.log(finalReq);
-          this.serviceApiCall(finalReq);
-        });
+
+          if (i === 0) {
+            await this.serviceApiCall(finalReq, false);
+            // add a delay of 2 seconds
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          } else {
+            await this.serviceApiCall(finalReq);
+          }
+        }
       } else {
-        //update with as is
         console.log(finalReq);
-        this.serviceApiCall(finalReq);
+        await this.serviceApiCall(finalReq);
       }
+
+      // if(this.serviceRecords.length > 0) {
+      //   this.serviceRecords.forEach(async (service,i) => {
+      //     finalReq.serviceType = service.serviceType;
+      //     finalReq.assignmentStart = service.assignmentStart;
+      //     finalReq.roles.push(service.role);
+      //     console.log(finalReq);
+      //     if(i==0){
+      //       setTimeout(() => {
+      //         this.serviceApiCall(finalReq, false);
+      //       }, 2000);
+      //       // this.serviceApiCall(finalReq,false);
+      //     }else{
+      //         this.serviceApiCall(finalReq);
+      //     }
+
+      //   });
+      // } else {
+      //   //update with as is
+      //   console.log(finalReq);
+      //   this.serviceApiCall(finalReq);
+      // }
+
+
       setTimeout(()=>{
         if(this.updateSuccessful) {
           this.location.back();
@@ -634,39 +667,88 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   updateSuccessful = false;
+  initialCall = false;
 
-  serviceApiCall(requestData: any) {
+  async serviceApiCall(requestData: any, initialCall = false): Promise<any> {
     const userId = this.smeObj.userId;
     console.log(userId);
     const param = `/sme-details-new/${userId}`;
 
     this.loading = true;
     this.updateSuccessful = true;
-    this.userMsService.putMethod(param, requestData).subscribe(
-      (res:any) => {
-        console.log('SME assignment updated', res);
-        this.loading = false;
-        if(res.success ===false){
-          this._toastMessageService.alert(
-            'false',
-            res.error
-          );
-          this.updateSuccessful = false;
-        }else{
-          this._toastMessageService.alert(
-            'success',
-            'sme details updated successfully'
-          );
-          this.updateSuccessful = true;
-        }
-      },
-      (error) => {
-        this._toastMessageService.alert('error', 'failed to update.');
-        this.loading = false;
+    this.initialCall = initialCall;
+
+    try {
+      let res:any
+       res = await this.userMsService.putMethod(param, requestData).toPromise();
+      console.log('SME assignment updated', res);
+      this.loading = false;
+      this.initialCall = true;
+
+      if (res.success === false) {
+        this._toastMessageService.alert(
+          'false',
+          res.error
+        );
         this.updateSuccessful = false;
+      } else {
+        this._toastMessageService.alert(
+          'success',
+          'sme details updated successfully'
+        );
+        this.updateSuccessful = true;
       }
-    );
+
+      return res; // return the response
+    } catch (error) {
+      this._toastMessageService.alert('error', 'failed to update.');
+      this.loading = false;
+      this.updateSuccessful = false;
+      throw error; // re-throw the error so that the calling function can handle it
+    }
   }
+
+
+
+  // serviceApiCall(requestData: any, initialCall = false) {
+  //   const userId = this.smeObj.userId;
+  //   console.log(userId);
+  //   const param = `/sme-details-new/${userId}`;
+
+  //   this.loading = true;
+  //   this.updateSuccessful = true;
+  //   this.initialCall = initialCall;
+
+  //   if(this.initialCall == false){
+  //     this.userMsService.putMethod(param, requestData).subscribe(
+  //       (res:any) => {
+  //         console.log('SME assignment updated', res);
+  //         this.loading = false;
+  //         this.initialCall = true
+  //         if(res.success ===false){
+  //           this._toastMessageService.alert(
+  //             'false',
+  //             res.error
+  //           );
+  //           this.updateSuccessful = false;
+  //         }else{
+  //           this._toastMessageService.alert(
+  //             'success',
+  //             'sme details updated successfully'
+  //           );
+  //           this.updateSuccessful = true;
+  //         }
+  //       },
+  //       (error) => {
+  //         this._toastMessageService.alert('error', 'failed to update.');
+  //         this.loading = false;
+  //         this.updateSuccessful = false;
+  //       }
+  //     );
+
+  //   }
+
+  // }
 
   getCoOwnerHistory(){
     // 'https://uat-api.taxbuddy.com/user/coOwner-details/10341'
@@ -676,9 +758,26 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('get Co-Owner history  -> ', result);
       this.loading = false;
+      // this.coOwnerData = (result.data);
+      let datePipe = new DatePipe('en-IN')
 
+      this.coOwnerData={
+        "Co-Owner-Name" : result?.data?.coOwnerName,
+        "Start Date" : datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy'),
+        "End Date" : result?.data?.coOwnershipEndDateTime || 'NA',
+
+      }
+
+      console.log('co-owner data',this.coOwnerData)
     })
+    this.loading=false
   }
+
+
+  originalOrder = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+    return 0;
+  }
+
 
   convertToDDMMYY(date) {
     if (this.utilsService.isNonEmpty(date)) {
