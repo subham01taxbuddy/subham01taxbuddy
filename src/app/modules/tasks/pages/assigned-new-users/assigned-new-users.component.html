@@ -7,8 +7,8 @@
     </div>
     <div class="col-sm-4" *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')">
       <button class="tbd-btn" style="float:right" (click)="openBulkReAssignment()">Bulk Re-Assignment</button>
-
-      <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+    </div>
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
       <p>
         <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
       </p>
