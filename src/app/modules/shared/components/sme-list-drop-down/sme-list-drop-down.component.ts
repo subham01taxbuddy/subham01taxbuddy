@@ -143,6 +143,21 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     }
   }
 
+  getOwners() {
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
+    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      this.ownerList = result.data;
+      console.log('ownerlist', this.ownerList);
+      this.ownerNames = this.ownerList.map((item) => {
+        return { name: item.name, userId: item.userId };
+      });
+      this.options = this.ownerNames;
+      console.log(' ownerName -> ', this.ownerNames);
+    });
+  }
+
   getFilers() {
     // API to get filers under owner-
     // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
@@ -160,27 +175,12 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       console.log('filer list result -> ', result);
       this.filerList = result.data;
       console.log('filerList', this.filerList);
-      this.filerNames = this.ownerList.map((item) => {
+      this.filerNames = this?.ownerList?.map((item) => {
         return { name: item.name, userId: item.userId };
       });
       this.options1 = this.filerList;//this.filerNames;
       this.setFiletedOptions2();
       console.log(' filerNames -> ', this.options1);
-    });
-  }
-
-  getOwners() {
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('owner list result -> ', result);
-      this.ownerList = result.data;
-      console.log('ownerlist', this.ownerList);
-      this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId: item.userId };
-      });
-      this.options = this.ownerNames;
-      console.log(' ownerName -> ', this.ownerNames);
     });
   }
   /////Ashwini Code Ends here

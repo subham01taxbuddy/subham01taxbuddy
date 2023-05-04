@@ -22,7 +22,7 @@ import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
     FormsModule,
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
-    // SharedModule,
+    SharedModule,
     AgGridModule,
     MaterialModule,
     NgxPaginationModule,

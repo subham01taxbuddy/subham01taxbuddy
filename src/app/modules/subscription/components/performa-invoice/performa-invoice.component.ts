@@ -77,6 +77,8 @@ export class PerformaInvoiceComponent implements OnInit {
   filteredFilers: Observable<User[]>;
   filteredOwners: Observable<User[]>;
   ownerList: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   SidebarComponent: SidebarComponent;
   searchParam: any = {
     statusId: null,
@@ -270,6 +272,29 @@ export class PerformaInvoiceComponent implements OnInit {
     );
   }
 
+  coOwnerId: number;
+  coFilerId: number;
+  agentId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+      this.getInvoice();
+    } else {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+
+  }
+
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
     startDate: new FormControl(''),
@@ -386,10 +411,13 @@ export class PerformaInvoiceComponent implements OnInit {
     this.getInvoice();
   }
 
-  getInvoice() {
+  getInvoice(isCoOwner?) {
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
+
+    // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed&searchAsCoOwner=true&ownerUserId=7522
+
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
     let status = this.status.value;
@@ -442,6 +470,14 @@ export class PerformaInvoiceComponent implements OnInit {
         this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
     }
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
+
+    if (this.coOwnerToggle.value == true && isCoOwner) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
+
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -1025,5 +1061,15 @@ export class PerformaInvoiceComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.getInvoice();
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.getInvoice(true);
   }
 }

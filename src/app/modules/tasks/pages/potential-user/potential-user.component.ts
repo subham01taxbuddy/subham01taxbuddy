@@ -8,6 +8,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-potential-user',
@@ -23,6 +24,9 @@ export class PotentialUserComponent implements OnInit {
   ogStatusList: any = [];
   usersGridOptions: GridOptions;
   config: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
+  roles:any;
   statuslist: any = [
     { statusName: 'ITR Filed', statusId: '18' },
     { statusName: 'Interested',statusId: '16' },
@@ -65,6 +69,7 @@ export class PotentialUserComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
+    this.roles = this.utilsService.getUserRoles() ;
     this.agentId = userId;
      this.search();
     this.getAgentList();
@@ -91,6 +96,7 @@ export class PotentialUserComponent implements OnInit {
 
   ownerId: number;
   filerId: number;
+
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if(isOwner){
@@ -108,6 +114,28 @@ export class PotentialUserComponent implements OnInit {
       this.agentId = loggedInId;
     }
      this.search('agent');
+  }
+
+  coOwnerId: number;
+  coFilerId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+       this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    //  this.search('agent');
   }
 
   getAgentList() {
@@ -159,9 +187,14 @@ export class PotentialUserComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
+    // 'https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100&active=false'
     let param = `/${this.agentId}/user-list-new?${data}&active=false`;
-    if (isAgent) {
-      param = param + '&isAgent=true';
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
     }
 
     this.userMsService.getMethod(param).subscribe(
@@ -595,6 +628,16 @@ export class PotentialUserComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1
     this.search();
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.search('',true);
   }
 
 }
