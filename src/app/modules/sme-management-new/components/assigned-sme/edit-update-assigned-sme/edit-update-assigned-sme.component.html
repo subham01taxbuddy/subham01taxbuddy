@@ -411,18 +411,19 @@
       <div class="row" *ngIf="checkRoles?.includes('ROLE_OWNER')">
         <table class="my-table">
           <thead>
-            <tr>
-              <th>Co-Owner-Name</th>
+            <tr >
+              <th *ngFor="let person of coOwnerData | keyvalue : originalOrder ">{{ person.key }}</th>
+              <!-- <th>Co-Owner-Name</th>
               <th>Start Date</th>
-              <th>End Date</th>
+              <th>End Date</th> -->
             </tr>
           </thead>
           <tbody>
-            <!-- <tr *ngFor="let person of people">
-              <td>{{ person.name }}</td>
-              <td>{{ person.email }}</td>
-              <td>{{ person.phone }}</td>
-            </tr> -->
+             <tr >
+              <!-- <td>{{ person.coOwnerName }}</td>
+              <td>{{ person.coOwnershipStartDateTime }}</td> -->
+              <td *ngFor="let person of coOwnerData | keyvalue : originalOrder">{{ person.value }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
