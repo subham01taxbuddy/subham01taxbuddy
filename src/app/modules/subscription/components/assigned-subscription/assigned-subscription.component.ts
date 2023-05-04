@@ -665,12 +665,11 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.agentId = this.coFilerId;
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getAssignedSubscription(0);
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    //  this.search('agent');
+    this.getAssignedSubscription(0);
   }
 
   getToggleValue(){
