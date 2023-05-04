@@ -688,8 +688,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       if (res.success === false) {
         this._toastMessageService.alert(
           'false',
-          res.error
+          res.message
         );
+
         this.updateSuccessful = false;
       } else {
         this._toastMessageService.alert(
@@ -762,13 +763,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       let datePipe = new DatePipe('en-IN')
 
       this.coOwnerData={
-        "Co-Owner-Name" : result?.data?.coOwnerName,
-        "Start Date" : datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy'),
-        "End Date" : result?.data?.coOwnershipEndDateTime || 'NA',
-
+        "Co-Owner-Name" : (result?.data?.coOwnerName) || 'NA',
+        "Start Date" :(datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy')) || 'NA',
+        "End Date" : (datePipe.transform(result?.data?.coOwnershipEndDateTime,'dd/MM/yyyy')) || 'NA',
       }
 
-      console.log('co-owner data',this.coOwnerData)
+      if (result.success === false) {
+          this._toastMessageService.alert('false', result.message
+          );
+      }
+
     })
     this.loading=false
   }

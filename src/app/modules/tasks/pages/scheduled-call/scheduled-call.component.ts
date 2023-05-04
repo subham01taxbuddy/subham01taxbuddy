@@ -40,7 +40,7 @@ export class ScheduledCallComponent implements OnInit {
   showByAdminUserId: boolean = true;
   searchParam: any = {
     page: 0,
-    pageSize: 30,
+    size: 30,
     totalPages: null,
     mobileNumber: null,
     email: null,
@@ -143,6 +143,7 @@ export class ScheduledCallComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.search('agent');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
        this.search('agent');

@@ -143,6 +143,7 @@ export class AssignedNewUsersComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.search('agent');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
        this.search('agent');
