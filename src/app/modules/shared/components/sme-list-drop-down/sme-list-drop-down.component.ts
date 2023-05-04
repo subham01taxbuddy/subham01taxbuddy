@@ -16,7 +16,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Output() sendOwner = new EventEmitter<any>();
   @Output() sendFiler = new EventEmitter<any>();
   @Input() disabled: any;
-
+  @Input() checkboxSelection = false;
+  @Output() sendFilerList = new EventEmitter<any>();
+  @Input() showOwnerList =false;
 
   smeList: any[] = [];
   searchFiler = new FormControl('');
@@ -90,7 +92,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       map((value) => {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
-          this.setOwner(null);
+          this.setOwner({});
           if (this.roles?.includes('ROLE_OWNER')) {
             this.ownerDetails.userId = this.loggedInSme[0].userId;
             this.getFilers();
