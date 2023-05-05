@@ -178,8 +178,9 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.allSubscriptions = response;
         this.loading = false;
         if(response.success == false){
-          let msg = 'There is problem getting records';
-          this.utilsService.showSnackBar(msg);
+          this. _toastMessageService.alert("error",response.message);
+          // let msg = 'There is problem getting records';
+          // this.utilsService.showSnackBar(msg);
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData([])
           );

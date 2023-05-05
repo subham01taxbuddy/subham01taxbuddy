@@ -673,7 +673,12 @@ export class ScheduledCallComponent implements OnInit {
   pageChanged(event) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.showScheduleCallList();
+    if (this.coOwnerToggle.value == true) {
+      this.search(event - 1,true);
+    }else{
+      this.search(event - 1);
+    }
+    // this.showScheduleCallList();
     // this.search();
   }
 
@@ -745,6 +750,7 @@ export class ScheduledCallComponent implements OnInit {
         this.scheduleCallGridOptions.api?.setRowData(
           this.createRowData(result.data.content) );
         this.config.totalItems = result.data.totalElements;
+        this.config.pageCount = result.data.totalPages;
       }else {
         this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));

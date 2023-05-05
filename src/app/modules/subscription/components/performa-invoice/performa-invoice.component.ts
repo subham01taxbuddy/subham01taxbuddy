@@ -519,6 +519,11 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
+      if(response.success == false){
+        this. _toastMessageService.alert("error",response.message);
+        this.gridApi?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+      }
       if (response.success) {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
@@ -526,8 +531,18 @@ export class PerformaInvoiceComponent implements OnInit {
         this.gridApi?.setRowData(this.createRowData(this.invoiceData));
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
+      }else{
+        this. _toastMessageService.alert("error",response.message);
+        this.gridApi?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
       }
-    });
+    },(error) => {
+      this.gridApi?.setRowData(this.createRowData([]));
+      this.totalInvoice=0
+          this.config.totalItems = 0;
+      this.loading = false;
+    }
+    );
 
     /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
