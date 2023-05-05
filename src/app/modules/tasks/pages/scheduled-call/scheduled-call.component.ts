@@ -40,7 +40,7 @@ export class ScheduledCallComponent implements OnInit {
   showByAdminUserId: boolean = true;
   searchParam: any = {
     page: 0,
-    pageSize: 30,
+    size: 30,
     totalPages: null,
     mobileNumber: null,
     email: null,
@@ -56,7 +56,7 @@ export class ScheduledCallComponent implements OnInit {
     private route: Router
   ) {
     this.config = {
-      itemsPerPage: this.searchParam.pageSize,
+      itemsPerPage: this.searchParam.size,
       currentPage: 1,
       totalItems: null,
       pageCount: null,
@@ -78,7 +78,7 @@ export class ScheduledCallComponent implements OnInit {
     this.getAgentList();
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
-      this.loggedUserId = userInfo.USER_UNIQUE_ID;
+      this.loggedUserId = userId ;
     }
     this.showScheduleCallList();
     // this.search();
@@ -143,6 +143,7 @@ export class ScheduledCallComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.search('agent');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
        this.search('agent');
@@ -158,20 +159,24 @@ export class ScheduledCallComponent implements OnInit {
     this.loading = true;
     var param2 = `/schedule-call-details/${id}?&page=${
       this.config.currentPage - 1
-    }&size=${this.searchParam.pageSize}`;
+    }&size=${this.searchParam.size}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
-        if (result.content instanceof Array && result.content.length > 0) {
-          this.scheduleCallsData = result.content;
-          this.config.totalItems = result.totalElements;
-          this.config.pageCount = result.totalPages;
-          this.scheduleCallGridOptions.api?.setRowData(
-            this.createRowData(this.scheduleCallsData)
-          );
+        if(result.success ==false){
+          this.toastMsgService.alert(
+            'error',result.message)
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+        }
+        if (result.data.content instanceof Array && result.data.content.length > 0) {
+          this.scheduleCallsData = result.data.content;
+          this.config.totalItems = result.data.totalElements;
+          this.config.pageCount = result.data.totalPages;
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content) );
         } else {
-          this.scheduleCallsData = [];
+          // this.scheduleCallsData = [];
           this.scheduleCallGridOptions.api?.setRowData(
-            this.createRowData(this.scheduleCallsData)
+            this.createRowData([])
           );
         }
         this.loading = false;
@@ -192,7 +197,7 @@ export class ScheduledCallComponent implements OnInit {
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
-      let scheduleCallsInfo = Object.assign({}, scheduleCallsArray[i], {
+      let scheduleCallsInfo = Object.assign({}, scheduleCalls[i], {
         userId: scheduleCalls[i]['userId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
@@ -674,7 +679,7 @@ export class ScheduledCallComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters(){
     this.searchParam.page = 0;
-    this.searchParam.pageSize = 20;
+    this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.email = null;
     this.searchParam.statusId = null;
@@ -724,17 +729,21 @@ export class ScheduledCallComponent implements OnInit {
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
+      this.loading = false;
+      if(result.success ==false){
+        this.toastMsgService.alert(
+          'error',result.message)
+        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
 
-      if (result.content instanceof Array && result.content.length > 0) {
-        this.scheduleCallsData = result.content;
+      if(result.data.content instanceof Array && result.data.content.length > 0) {
+        this.scheduleCallsData = result.data.content;
         this.scheduleCallGridOptions.api?.setRowData(
-          this.createRowData(this.scheduleCallsData)
-        );
-        // this.scheduleCallGridOptions.api.setColumnDefs(
-        //   this.createColumnDef(this.statuslist)
-        // );
-        this.config.totalItems = result.totalElements;
-      } else {
+          this.createRowData(result.data.content) );
+        this.config.totalItems = result.data.totalElements;
+      }else {
+        this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
         if(result.message) {

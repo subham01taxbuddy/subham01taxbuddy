@@ -22,6 +22,7 @@ import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-r
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
+import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -35,10 +36,10 @@ export class AssignedNewUsersComponent implements OnInit {
   userInfo: any = [];
   itrStatus: any = [];
   filerUserId:any;
+  roles:any;
   ogStatusList: any = [];
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  roles:any;
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -143,6 +144,7 @@ export class AssignedNewUsersComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.search('agent');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
        this.search('agent');
@@ -919,6 +921,13 @@ export class AssignedNewUsersComponent implements OnInit {
          this.search();
        }
     });
+  }
+
+  openBulkReAssignment(){
+    let disposable = this.dialog.open(BulkReAssignDialogComponent,{
+      width:'100%',
+      height: 'auto',
+    })
   }
 
   isNumeric(value) {

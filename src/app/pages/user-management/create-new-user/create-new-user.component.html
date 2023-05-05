@@ -5,6 +5,11 @@
     <div class="col-sm-10">
       <b style="font-size: 20px">Create User</b>
     </div>
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+      <p>
+        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
+      </p>
+    </div>
   </div>
   <div class="card">
     <form [formGroup]="signUpForm">
@@ -97,6 +102,10 @@
             [disabled]="assignedToMe">
          </app-sme-list-drop-down>
        </div>
+       <div class="card__col-lg-8" *ngIf="coOwnerCheck">
+        <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)"
+          (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+        </div>
         <div class="card__col-lg-3" *ngIf="roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')" >
           <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned

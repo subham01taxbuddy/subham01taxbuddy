@@ -26,6 +26,7 @@ import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-r
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-filings',
@@ -41,6 +42,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   config: any;
   selectedPageNo = 0;
   itrStatus: any = [];
+  roles: any;
+  loggedInSme:any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   searchParams = {
     mobileNumber: null,
     email: null,
@@ -83,6 +88,9 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   ngOnInit() {
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    console.log('loggedIn Sme Details', this.loggedInSme)
+    this.roles = this.loggedInSme[0]?.roles
     this.config = {
       itemsPerPage: 10,
       currentPage: 1,
@@ -154,7 +162,22 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
-  myItrsList(pageNo: any, filingTeamMemberId: number) {
+  coOwnerId: number;
+  coFilerId: number;
+  agentId: number;
+
+  fromCoOwner(event){
+  this.coOwnerId = event.userId;
+  this.myItrsList(0, this.selectedFilingTeamMemberId);
+  }
+  fromCoFiler(event){
+  this.coFilerId = event.userId;
+  this.myItrsList(0, this.selectedFilingTeamMemberId);
+  }
+
+  myItrsList(pageNo, filingTeamMemberId) {
+    // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
+    // &searchAsCoOwner=true&page=0
     this.loading = true;
     return new Promise((resolve, reject) => {
       let param = `/itr-list?page=${pageNo}&pageSize=10`;
@@ -164,6 +187,15 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       if (this.utilsService.isNonEmpty(this.searchParams.ownerUserId)) {
         param = param + `&ownerUserId=${this.searchParams.ownerUserId}`;
       }
+
+      if (this.utilsService.isNonEmpty(this.coOwnerId)) {
+        param = param + `&ownerUserId=${this.coOwnerId}`;
+      }
+
+      if (this.utilsService.isNonEmpty(this.coFilerId)) {
+        param = param + `&filerUserId=${this.coFilerId}`;
+      }
+
       if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
         param = param + `&financialYear=${this.searchParams.selectedFyYear}`;
       }
@@ -179,6 +211,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
         param = param + `&panNumber=${this.searchParams.panNumber}`;
       }
+
+      if (this.coOwnerToggle.value == true && filingTeamMemberId) {
+        param = param + '&searchAsCoOwner=true';
+      }
+      else {
+        param;
+      }
+
       console.log('My Params:', param);
       this.itrMsService.getMethod(param).subscribe(
         (res: any) => {
@@ -1011,5 +1051,15 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     disposable.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
     });
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.myItrsList(0, true)
   }
 }
