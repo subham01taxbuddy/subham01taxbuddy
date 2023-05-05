@@ -237,9 +237,10 @@ export class TaxInvoiceComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.getInvoice('','agentId');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getInvoice();
+      this.getInvoice('','agentId');
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -366,7 +367,7 @@ export class TaxInvoiceComponent implements OnInit {
     this.getInvoice();
   }
 
-  getInvoice(isCoOwner?) {
+  getInvoice(isCoOwner?,agentId?) {
 
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
@@ -396,6 +397,17 @@ export class TaxInvoiceComponent implements OnInit {
     if (this.filerDetails?.userId) {
       userFilter += `&filerUserId=${this.filerDetails.userId}`;
     }
+
+    if(agentId){
+      userFilter='';
+     if(this.coOwnerId && !this.coFilerId){
+      userFilter += `&ownerUserId=${this.coOwnerId}`;
+     }
+     if(this.coFilerId){
+      userFilter += `&filerUserId=${this.coFilerId}`;
+     }
+    }
+
     let mobileFilter = '';
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid){
       mobileFilter = '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;

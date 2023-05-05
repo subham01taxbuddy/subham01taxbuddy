@@ -73,7 +73,7 @@
             </div>
 
             <div *ngIf="roles?.includes('ROLE_OWNER')">
-              <div class="row">
+              <div class="row" *ngIf="!coOwnerCheck">
                 <div>
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">

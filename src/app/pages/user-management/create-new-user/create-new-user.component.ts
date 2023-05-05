@@ -137,14 +137,19 @@ export class CreateNewUserComponent implements OnInit {
     } else {
       this.coFilerId = event? event.userId : null;
     }
+
+    if(this.coOwnerId && this.coFilerId){
+      this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
+    }
+
     if(this.coFilerId) {
-      this.agentId = this.coFilerId;
+      this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
     } else if(this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-      // this.getInvoice();
+      this.signUpForm.controls['agentUserId'].setValue(this.coOwnerId);
+
     } else {
-      let loggedInId = this.utilSerive.getLoggedInUserID();
-      this.agentId = loggedInId;
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.signUpForm.controls['agentUserId'].setValue(loggedInId);
     }
 
   }
@@ -188,6 +193,9 @@ export class CreateNewUserComponent implements OnInit {
 
   assignUser(userId, agentUserId, serviceType) {
     // https://uat-api.taxbuddy.com/user/agent-assignment-manually-new?userId=9506&assessmentYear=2023-2024&serviceType=ITR&smeUserId=7002
+
+    console.log('sme user ID under user is going',this.agentId)
+
     const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
     this.userService.getMethod(param).subscribe((res: any) => {
       if(res.success==true){
