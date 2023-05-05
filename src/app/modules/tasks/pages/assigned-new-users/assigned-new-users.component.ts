@@ -23,6 +23,7 @@ import { ServiceDropDownComponent } from '../../../shared/components/service-dro
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
 import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -936,6 +937,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -944,8 +946,10 @@ export class AssignedNewUsersComponent implements OnInit {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
 
-    this.smeDropDown.resetDropdown();
-    this.serviceDropDown.resetService();
+    this?.smeDropDown?.resetDropdown();
+    this?.serviceDropDown?.resetService();
+    this?.coOwnerDropDown?.resetDropdown();
+
     this.search();
   }
 

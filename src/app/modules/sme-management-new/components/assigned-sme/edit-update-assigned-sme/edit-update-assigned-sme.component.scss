@@ -34,7 +34,7 @@ ul {
   color: #7E7E8F;
 }
 .my-table {
-  margin-top: 10px;
+  margin-top: 15px;
   margin-left: 15px;
   border: 1px solid #ccc;
   width: 80%;
@@ -42,10 +42,37 @@ ul {
 
 .my-table th, .my-table td {
   padding: 4px;
-  text-align: left;
+  text-align: center;
 }
 
 .my-table th {
   background-color: #eee;
   font-weight: bold;
+}
+
+table {
+  margin-top: 15px;
+  margin-left: 15px;
+  border-collapse: collapse;
+  width: 80%;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
 }

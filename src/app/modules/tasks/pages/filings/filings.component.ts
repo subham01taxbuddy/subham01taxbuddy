@@ -27,6 +27,7 @@ import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-o
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-filings',
@@ -992,6 +993,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.searchParams.selectedStatusId = null;
     this.config.page = 0;
@@ -999,8 +1001,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
 
-    this.smeDropDown.resetDropdown();
-    this.serviceDropDown.resetService();
+    this?.smeDropDown?.resetDropdown();
+    this?.serviceDropDown?.resetService();
+    this?.coOwnerDropDown?.resetDropdown();
+
     this.search();
   }
 

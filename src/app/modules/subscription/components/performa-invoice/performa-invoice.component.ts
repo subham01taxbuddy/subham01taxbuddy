@@ -22,6 +22,7 @@ import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/side
 import { ToastMessage } from 'src/app/classes/toast';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -311,9 +312,10 @@ export class PerformaInvoiceComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.getInvoice('','agentId');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getInvoice();
+      this.getInvoice('','agentId');
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -417,6 +419,7 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -433,11 +436,12 @@ export class PerformaInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
+    this?.coOwnerDropDown?.resetDropdown();
 
     this.getInvoice();
   }
 
-  getInvoice(isCoOwner?) {
+  getInvoice(isCoOwner?,agentId?) {
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
@@ -465,6 +469,15 @@ export class PerformaInvoiceComponent implements OnInit {
     }
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
+    }
+    if(agentId){
+      userFilter='';
+     if(this.coOwnerId && !this.coFilerId){
+      userFilter += `&ownerUserId=${this.coOwnerId}`;
+     }
+     if(this.coFilerId){
+      userFilter += `&filerUserId=${this.coFilerId}`;
+     }
     }
     let mobileFilter = '';
     if (

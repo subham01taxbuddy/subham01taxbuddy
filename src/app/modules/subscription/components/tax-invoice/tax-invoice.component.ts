@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DatePipe,formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Observable, map, startWith } from 'rxjs';
 import {AppConstants} from "../../../shared/constants";
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -260,9 +261,10 @@ export class TaxInvoiceComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.getInvoice('','agentId');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getInvoice();
+      this.getInvoice('','agentId');
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -367,6 +369,7 @@ export class TaxInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -383,11 +386,12 @@ export class TaxInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
+    this?.coOwnerDropDown?.resetDropdown();
 
     this.getInvoice();
   }
 
-  getInvoice(isCoOwner?) {
+  getInvoice(isCoOwner?,agentId?) {
 
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
@@ -417,6 +421,17 @@ export class TaxInvoiceComponent implements OnInit {
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
+
+    if(agentId){
+      userFilter='';
+     if(this.coOwnerId && !this.coFilerId){
+      userFilter += `&ownerUserId=${this.coOwnerId}`;
+     }
+     if(this.coFilerId){
+      userFilter += `&filerUserId=${this.coFilerId}`;
+     }
+    }
+
     let mobileFilter = '';
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid){
       mobileFilter = '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;

@@ -15,12 +15,12 @@
       <div class="card">
         <div class="card__row"  *ngIf="!coOwnerCheck">
           <div class="filter__col card__col-xs-12">
-            <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
           </div>
         </div>
         <div class="card__row" *ngIf="coOwnerCheck">
           <div class="filter__col card__col-xs-12">
-            <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
           </div>
         </div>
         <div class="card__row">
@@ -51,9 +51,12 @@
               <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
             </mat-form-field>
           </div>
-          <div class="filter__col card__col-sm-2 card__col-xs-12">
+          <div class="filter__col card__col-sm-3 card__col-xs-12">
             <button class="tbd-btn" (click)="this.search('mobile')"><i class="fa fa-search"
                 aria-hidden="true"></i>&nbsp;Search</button>
+
+            <button class="tbd-btn" (click)="this.resetFilters()">
+            <i class="fa fa-filter"></i>&nbsp;Clear</button>
           </div>
         </div>
         <p style="float: right;"> Total Count: <b>{{config.totalItems}}</b></p>
