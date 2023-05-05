@@ -154,6 +154,9 @@ export class PerformaInvoiceComponent implements OnInit {
       : 'NA';
     console.log('roles', this.roles);
 
+    this.setFiletedOptions1();
+    this.setFiletedOptions2();
+
     if (
       this.roles?.includes('ROLE_ADMIN') ||
       this.roles?.includes('ROLE_LEADER')
@@ -206,9 +209,32 @@ export class PerformaInvoiceComponent implements OnInit {
     // this.Status.setValue(this.Status[0].value);
     console.log('filteroptions', this.filteredOwners);
 
-    this.setFiletedOptions1();
-    this.setFiletedOptions2();
 
+
+    this.getInvoice();
+  }
+
+  ownerId: number;
+  filerId: number;
+
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+      // this.filerUserId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.getInvoice();
+    } else {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
     this.getInvoice();
   }
 
@@ -434,11 +460,11 @@ export class PerformaInvoiceComponent implements OnInit {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerDetails?.userId && !this.filerDetails?.userId) {
-      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
+    if (this.ownerId && !this.filerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerDetails?.userId) {
-      userFilter += `&filerUserId=${this.filerDetails.userId}`;
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
     let mobileFilter = '';
     if (

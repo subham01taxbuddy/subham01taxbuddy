@@ -24,7 +24,10 @@
                     (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
                 </div>
               </div>
-            <div *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')" >
+            <div class="row">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div *ngIf="false" >
               <div class="row">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
@@ -52,7 +55,7 @@
               </div>
             </div>
 
-            <div *ngIf="roles?.includes('ROLE_OWNER')" >
+            <div *ngIf="false" >
               <div class="row">
                 <div >
                   <mat-label> Search By Filer </mat-label>

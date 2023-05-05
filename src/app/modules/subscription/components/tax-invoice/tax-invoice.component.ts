@@ -174,6 +174,30 @@ export class TaxInvoiceComponent implements OnInit {
     this.getInvoice();
   }
 
+  ownerId: number;
+  filerId: number;
+
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+      // this.filerUserId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.getInvoice();
+    } else {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    this.getInvoice();
+  }
+
   setFiletedOptions2(){
     this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
       startWith(''),
@@ -387,11 +411,11 @@ export class TaxInvoiceComponent implements OnInit {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerDetails?.userId && !this.filerDetails?.userId) {
-      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
+    if (this.ownerId && !this.filerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerDetails?.userId) {
-      userFilter += `&filerUserId=${this.filerDetails.userId}`;
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
     let mobileFilter = '';
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid){
