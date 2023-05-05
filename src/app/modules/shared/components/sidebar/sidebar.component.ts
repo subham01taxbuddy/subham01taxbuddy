@@ -67,7 +67,7 @@ export class SidebarComponent implements DoCheck {
       name: 'Owner Dashboard',
       // iconClass: 'fa fa-globe',
       active: false,
-      url: '/dashboard/owner',
+      url: '/dashboard/main',
       roles: [],
       submenu: []
     },
