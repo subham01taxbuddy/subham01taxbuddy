@@ -71,6 +71,10 @@ export class ReAssignDialogComponent implements OnInit {
         this.utilsService.showSnackBar('User re assigned successfully.');
         this.loading = false;
         this.dialogRef.close({ event: 'close', data: 'success' });
+        if(res.success== false){
+          this.utilsService.showSnackBar(res.message)
+          console.log(res.message)
+        }
       }, error => {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to re-assign the user, please try again');

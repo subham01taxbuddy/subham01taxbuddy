@@ -2,7 +2,7 @@ import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import { UtilsService } from 'src/app/services/utils.service';
 import {User} from "../../../subscription/components/performa-invoice/performa-invoice.component";
 import {AppConstants} from "../../constants";
@@ -16,7 +16,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Output() sendOwner = new EventEmitter<any>();
   @Output() sendFiler = new EventEmitter<any>();
   @Input() disabled: any;
-
+  @Input() checkboxSelection = false;
+  @Output() sendFilerList = new EventEmitter<any>();
+  @Input() showOwnerList =false;
 
   smeList: any[] = [];
   searchFiler = new FormControl('');
@@ -90,7 +92,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       map((value) => {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
-          this.setOwner(null);
+          this.setOwner({});
           if (this.roles?.includes('ROLE_OWNER')) {
             this.ownerDetails.userId = this.loggedInSme[0].userId;
             this.getFilers();
@@ -214,4 +216,22 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.searchOwner.enable();
     this.searchFiler.enable();
   }
+
+  isSelected(user: User): boolean {
+    return this.options1.indexOf(user) > 1;
+  }
+
+
+  getFilerList(searchFiler){
+    let filerIds = []
+    this.filteredFilers.subscribe(filteredFilers => {
+      filteredFilers.forEach(filer => {
+        if (searchFiler.value.includes(filer.name)) {
+          filerIds.push(filer.userId);
+        }
+      })})
+      console.log("filer ids",filerIds)
+      this.sendFilerList.emit(filerIds);
+  }
+
 }

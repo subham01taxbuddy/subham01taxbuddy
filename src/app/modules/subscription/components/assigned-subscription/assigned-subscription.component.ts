@@ -1,3 +1,4 @@
+import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { filter } from 'rxjs/operators';
 import { data } from 'jquery';
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
@@ -176,6 +177,14 @@ export class AssignedSubscriptionComponent implements OnInit {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
         this.loading = false;
+        if(response.success == false){
+          let msg = 'There is problem getting records';
+          this.utilsService.showSnackBar(msg);
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData([])
+          );
+          this.config.totalItems = 0;
+        }
         if (response.data.content instanceof Array && response.data.content.length > 0) {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data.content)
@@ -297,6 +306,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
 
     this.searchParam.statusId = null;
@@ -307,7 +317,8 @@ export class AssignedSubscriptionComponent implements OnInit {
 
     this.subscriptionFormGroup.controls['searchName'].setValue(null);
     this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
-    this.smeDropDown.resetDropdown();
+    this?.smeDropDown?.resetDropdown();
+    this?.coOwnerDropDown?.resetDropdown();
 
     this.getAssignedSubscription(0);
   }
@@ -642,13 +653,15 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
     if(this.filerId) {
       this.agentId = this.filerId;
+      this.getAssignedSubscription(0);
     }else if(this.ownerId) {
       this.agentId = this.ownerId;
+      this.getAssignedSubscription(0);
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    this.getAssignedSubscription(0);
+    // this.getAssignedSubscription(0);
   }
 
   coOwnerId: number;
@@ -663,6 +676,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.getAssignedSubscription(0);
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
       this.getAssignedSubscription(0);
@@ -670,7 +684,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    //  this.search('agent');
+    // this.getAssignedSubscription(0);
   }
 
   getToggleValue(){
