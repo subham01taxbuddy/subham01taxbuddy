@@ -2910,6 +2910,95 @@ export class PrefillIdComponent implements OnInit {
         // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
       }
 
+      // SCHEDULE CG
+      {
+        // ZERO COUPON BONDS DETAILS
+        {
+          const Proviso112Applicabledtls =
+            this.uploadedJson[this.ITR_Type].ScheduleCGFor23?.LongTermCapGain23
+              ?.Proviso112Applicable;
+
+          const mapEquityMFonSTTSTCG = ({
+            Proviso112Applicabledtls: {
+              DeductSec48: { AquisitCost, ImproveCost, ExpOnTrans, TotalDedn },
+              FullConsideration,
+              BalanceCG,
+              DeductionUs54F,
+              CapgainonAssets,
+            },
+            Proviso112SectionCode,
+          }) => {
+            return {
+              assessmentYear: '',
+              assesseeType: '',
+              residentialStatus: '',
+              assetType: 'ZERO_COUPON_BONDS',
+              deduction: [
+                {
+                  srn: 0,
+                  underSection: 'Deduction 54F',
+                  orgAssestTransferDate: null,
+                  purchaseDate: null,
+                  panOfEligibleCompany: null,
+                  purchaseDatePlantMachine: null,
+                  costOfNewAssets: null,
+                  investmentInCGAccount: null,
+                  totalDeductionClaimed: DeductionUs54F,
+                  costOfPlantMachinary: null,
+                  usedDeduction: null,
+                },
+              ],
+              improvement: [
+                {
+                  srn: 0,
+                  financialYearOfImprovement: null,
+                  dateOfImprovement: null,
+                  costOfImprovement: ImproveCost,
+                  indexCostOfImprovement: null,
+                },
+              ],
+              buyersDetails: [],
+              assetDetails: [
+                {
+                  srn: 0,
+                  description: null,
+                  gainType: 'SHORT',
+                  sellDate: null,
+                  sellValue: null,
+                  stampDutyValue: null,
+                  valueInConsideration: FullConsideration,
+                  sellExpense: ExpOnTrans,
+                  purchaseDate: null,
+                  purchaseCost: AquisitCost,
+                  isinCode: null,
+                  nameOfTheUnits: null,
+                  sellOrBuyQuantity: 1,
+                  sellValuePerUnit: null,
+                  purchaseValuePerUnit: null,
+                  algorithm: 'cgProperty',
+                  fmvAsOn31Jan2018: null,
+                  capitalGain: CapgainonAssets,
+                  indexCostOfAcquisition: null,
+                  totalFairMarketValueOfCapitalAsset: null,
+                  grandFatheredValue: null,
+                  brokerName: null,
+                },
+              ],
+              deductionAmount: null,
+            };
+          };
+
+          this.ITR_Obj.capitalGain =
+            Proviso112Applicabledtls.map(mapEquityMFonSTTSTCG);
+
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+        }
+      }
+
       // SCHEDULE AL
       {
         const mapImmovableDetails = ({
