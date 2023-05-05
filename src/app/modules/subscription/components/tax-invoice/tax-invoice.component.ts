@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DatePipe,formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Observable, map, startWith } from 'rxjs';
 import {AppConstants} from "../../../shared/constants";
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -343,6 +344,7 @@ export class TaxInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -359,6 +361,7 @@ export class TaxInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
+    this?.coOwnerDropDown?.resetDropdown();
 
     this.getInvoice();
   }

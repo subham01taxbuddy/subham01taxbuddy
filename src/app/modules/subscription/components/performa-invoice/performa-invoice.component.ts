@@ -22,6 +22,7 @@ import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/side
 import { ToastMessage } from 'src/app/classes/toast';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -391,6 +392,7 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -407,6 +409,7 @@ export class PerformaInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
+    this?.coOwnerDropDown?.resetDropdown();
 
     this.getInvoice();
   }

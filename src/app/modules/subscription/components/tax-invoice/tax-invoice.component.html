@@ -20,7 +20,7 @@
 <!--            </div>-->
               <div class="row">
                 <div class="filter__col card__col-xs-12" *ngIf="coOwnerCheck">
-                  <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)"
+                  <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
                     (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
                 </div>
               </div>

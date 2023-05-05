@@ -551,6 +551,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   async updateSmeDetails() {
+    if (this?.ownerDetails?.userId == this?.smeObj?.userId){
+      this._toastMessageService.alert('false','You can not add yourself as co-owner ');
+      return;
+    }
 
    const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
    const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
@@ -772,10 +776,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         "End Date" : (datePipe.transform(result?.data?.coOwnershipEndDateTime,'dd/MM/yyyy')) || 'NA',
       }
 
-      if (result.success === false) {
-          this._toastMessageService.alert('false', result.message
-          );
-      }
+      // if (result.success === false) {
+      //     this._toastMessageService.alert('false', result.message
+      //     );
+      // }
 
     })
     this.loading=false

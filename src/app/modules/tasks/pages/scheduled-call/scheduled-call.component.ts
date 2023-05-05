@@ -14,6 +14,7 @@ import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-o
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -677,6 +678,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.page = 0;
     this.searchParam.size = 20;
@@ -685,7 +687,8 @@ export class ScheduledCallComponent implements OnInit {
     this.searchParam.statusId = null;
     this.statusId = null;
 
-    this.smeDropDown.resetDropdown();
+    this?.smeDropDown?.resetDropdown();
+    this?.coOwnerDropDown?.resetDropdown();
 
     this.search();
   }
