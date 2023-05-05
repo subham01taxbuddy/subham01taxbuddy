@@ -767,14 +767,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('get Co-Owner history  -> ', result);
       this.loading = false;
-      // this.coOwnerData = (result.data);
-      let datePipe = new DatePipe('en-IN')
+       this.coOwnerData = (result.data);
+      // let datePipe = new DatePipe('en-IN')
 
-      this.coOwnerData={
-        "Co-Owner-Name" : (result?.data?.coOwnerName) || 'NA',
-        "Start Date" :(datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy')) || 'NA',
-        "End Date" : (datePipe.transform(result?.data?.coOwnershipEndDateTime,'dd/MM/yyyy')) || 'NA',
-      }
+      // this.coOwnerData={
+      //   "Co-Owner-Name" : (result?.data?.coOwnerName) || 'NA',
+      //   "Start Date" :(datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy')) || 'NA',
+      //   "End Date" : (datePipe.transform(result?.data?.coOwnershipEndDateTime,'dd/MM/yyyy')) || 'NA',
+      // }
 
       // if (result.success === false) {
       //     this._toastMessageService.alert('false', result.message
@@ -784,12 +784,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     })
     this.loading=false
   }
-
-
-  originalOrder = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
-    return 0;
-  }
-
 
   convertToDDMMYY(date) {
     if (this.utilsService.isNonEmpty(date)) {

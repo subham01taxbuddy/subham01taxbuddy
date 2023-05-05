@@ -182,6 +182,7 @@ export class CreateNewUserComponent implements OnInit {
           return;
         }
         this.assignUser(res.userId, this.signUpForm.controls['agentUserId'].value, this.signUpForm.controls['serviceType'].value);
+        console.log('sme user ID under user is going',this.signUpForm.controls['agentUserId'].value)
       }, (error) => {
         this.loading = false;
         console.log("Error when creating user: ", error);
@@ -193,8 +194,6 @@ export class CreateNewUserComponent implements OnInit {
 
   assignUser(userId, agentUserId, serviceType) {
     // https://uat-api.taxbuddy.com/user/agent-assignment-manually-new?userId=9506&assessmentYear=2023-2024&serviceType=ITR&smeUserId=7002
-
-    console.log('sme user ID under user is going',this.agentId)
 
     const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
     this.userService.getMethod(param).subscribe((res: any) => {
