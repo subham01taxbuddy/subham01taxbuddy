@@ -1010,6 +1010,11 @@ export class AssignedNewUsersComponent implements OnInit {
         }
       } */
       (result: any) => {
+        if(result.success == false){
+          this._toastMessageService.alert("error",result.message);
+          this.usersGridOptions.api?.setRowData(this.createRowData([]));
+            this.config.totalItems = 0;
+        }
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
             this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
