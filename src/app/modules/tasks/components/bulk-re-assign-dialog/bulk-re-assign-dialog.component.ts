@@ -107,7 +107,7 @@ export class BulkReAssignDialogComponent implements OnInit {
       let paramValue = '';
 
       if(this.ownerId1 == this.ownerId2){
-        paramValue =`&serviceTypes=${this.serviceType.value}`
+        paramValue =`&serviceType=${this.serviceType.value}`
        }
       this.loading = true;
       let  param = `/user-reassignment-bulk?fromFilerUserId=${this.filerId1}&statusId=${this.status.value}&isReassignmentOutsideTeam=${this.isReassignmentOutsideTeam}&filerUserIdList=${this.filerId2}`+ paramValue;
