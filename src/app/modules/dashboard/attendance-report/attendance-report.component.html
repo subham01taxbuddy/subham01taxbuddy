@@ -1,1 +1,248 @@
-<p>attendance-report works!</p>
+<!--<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>-->
+
+<div class="main clearfix">
+    <div class="row">
+      <div class="col-sm-12">
+    <!-- <h4>Owner Dashboard:</h4> -->
+    <h5 class="bdrbl">​Attendance  & Performance Record</h5>
+  </div>
+  <!-- <div class="col-sm-6">
+    <div class="float-right">
+      <span class="TxBg">Documents Uploaded</span>
+        <span class="numTxBg">91</span>
+      </div>
+  </div> -->
+  </div>
+  
+  <!-- Total Partners -->
+  <div class="col-sm-12">
+  <div class="tpMain">
+      <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Partners</span>&nbsp;
+      <span class="numTxBg1">30</span>
+      <!-- Inside Row -->
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">24</span><br>
+              <span  class="TxSm">Active Partners</span>
+            </div>
+            <div class="inBxR">
+              <span  class="numTxSm OrgTx">6</span><br>
+              <span  class="TxSm">Inactive Partners</span>
+            </div>
+          </div>    
+        </div>
+        <div class="col-sm-3">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">21</span><br>
+              <span  class="TxSm">Assignment On</span>
+            </div>
+            <div class="inBxR">
+              <span  class="numTxSm OrgTx">9</span><br>
+              <span  class="TxSm">Assignment Off</span>
+            </div>
+          </div>    
+        </div>
+      
+        </div>
+      <!-- Inside Row Ends -->
+    </div>
+  </div>
+  <!-- Total Partners Ends -->
+  
+    <div class="row rowClr"> 
+  
+      <!-- Partners Search Area -->
+      <div class="col-sm-12">
+        <div class="txtH">Check Filer Record:</div>
+        <div class="radius">         
+        <div class="row">  
+  
+          <div class="col-sm-4"> 
+            <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Select Filer" aria-label="Search">           
+            </form>
+        </div> 
+  
+        <div class="col-sm-4"> 
+          <form action="/action_page.php">
+           <span class="TxSm"> Select Date Range: </span> 
+           <input type="date" id="date" name="Select Date">        
+         </form>
+         </div> 
+  
+         <div class="col-sm-4"> 
+          <button class="proceed1"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+          <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
+         </div> 
+        
+         </div>
+        </div>
+      </div>
+      <!-- Partners Search Area Ends -->
+      <!-- Table Starts-->
+      <div class="col-sm-12">
+        <div class="radiusTab1">
+            <!-- <div class="tx">Document Uploaded but filing not yet started</div> -->
+           
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name of Partners </th>
+                <th scope="col">Attendance on Date<br>(20 March 2023)</th>
+                <th scope="col">Assignment Status</th>
+                <th scope="col">Schedule Call Assigned</th>
+                <th scope="col">ITR Filed</th>
+                <th scope="col">Paid Revenue (₹)</th>
+                <th scope="col">Commission Earned (₹)</th>
+                <th scope="col">Conversion Ratios</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>D and D Tax consultants</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>8</td>
+                <td class="grTx1">65</td>
+                <td>1,06,538.50</td>
+                <td>41,500</td>
+                <td>86.67</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Mekala Sankar Rao</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>4</td>
+                <td class="grTx1">76</td>
+                <td>1,24,430</td>
+                <td>41,500</td>
+                <td>84.44</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Santosh Premraj Soni</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>3</td>
+                <td class="grTx1">72</td>
+                <td>1,31,280</td>
+                <td>41,500</td>
+                <td>82.76</td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Manmitha</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>1</td>
+                <td class="grTx1">53</td>
+                <td>1,20,260</td>
+                <td>41,500</td>
+                <td>79.10</td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Joy prakash mohanty</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>7</td>
+                <td class="grTx1">70</td>
+                <td>1,20,200</td>
+                <td>35,740</td>
+                <td>78.65</td>
+              </tr>
+              <tr>
+                <th scope="row">6</th>
+                <td>Kartik Hemani</td>
+                <td class="redTx1">Inactive</td>
+                <td class="redTx1">Off</td>
+                <td>4</td>
+                <td class="grTx1">94</td>
+                <td>1,90,141</td> 
+                <td>58,431</td>
+                <td>78.33</td>
+              </tr>
+              <tr>
+                <th scope="row">7</th>
+                <td>Subrot Sahu</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>3</td>
+                <td class="grTx1">101</td>
+                <td>1,52,250</td> 
+                <td>63,574</td>
+                <td>77.69</td>
+              </tr>
+              <tr>
+                <th scope="row">8</th>
+                <td>Ajay chinthalapudi</td>
+                <td class="redTx1">Inactive</td>
+                <td class="redTx1">Off</td>
+                <td>5</td>
+                <td class="grTx1">81</td>
+                <td>1,24,110</td> 
+                <td>41,500</td>
+                <td>77.14</td>
+              </tr>
+              <tr>
+                <th scope="row">9</th>
+                <td>Aditya</td>
+                <td class="redTx1">Inactive</td>
+                <td class="redTx1">Off</td>
+                <td>3</td>
+                <td class="grTx1">103</td>
+                <td>1,69,679.50</td> 
+                <td>62,620</td>
+                <td>76.87</td>
+              </tr>
+              <tr>
+                <th scope="row">10</th>
+                <td>Feroz Chand Inamdar</td>
+                <td>Active</td>
+                <td>On</td>
+                <td>2</td>
+                <td class="grTx1">69</td>
+                <td>1,45,886.2</td> 
+                <td>41,500</td>
+                <td>76.67</td>
+              </tr>
+              <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>Grand Total</b></td>
+                <td class="grTx1"><b>1,688</b></td>
+                <td><b>36,23,745.18</b></td> 
+                <td><b>10,82,412</b></td>
+                <td><b>2,088.30</b></td>
+              </tr>
+            </tbody>      
+          </table>
+          <nav aria-label="..." class="float-right">
+            <ul class="pagination">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>        
+              <li class="page-item active">
+                <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+         
+        </div>
+        </div>
+      <!-- Table Ends -->
+  </div>
+  </div>
+  

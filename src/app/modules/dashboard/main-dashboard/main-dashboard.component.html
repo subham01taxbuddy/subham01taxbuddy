@@ -6,12 +6,12 @@
 <!--  </div>-->
   <div class="tab">
     <ul class="tab__container clearfix">
-      <li class="tab__item" routerLinkActive="tab__item_active">
-        <a class="tab__link" (click)="view='owner'">Owner Dashboard</a>
-      </li>
-      <li class="tab__item" routerLinkActive="tab__item_active">
+      <li class="tab__item active" routerLinkActive="tab__item_active">
         <a class="tab__link" (click)="view='attendance'">Attendance Report</a>
       </li>
+      <li class="tab__item active" routerLinkActive="tab__item_active">
+        <a class="tab__link" (click)="view='owner'">Owner Dashboard</a>
+      </li>     
     </ul>
   </div>
   <div *ngIf="view === 'owner'">
