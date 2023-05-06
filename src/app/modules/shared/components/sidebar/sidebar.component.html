@@ -6,7 +6,7 @@
       <i class="fa fa-chevron-down"></i>
     </div>
     <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}"
-       routerLinkActive="sidebar__item_active"
+       routerLinkActive="sidebar__item_active" [routerLinkActiveOptions]="{exact:true}"
        class="sidebar__item">
       <span>{{ menu.name }}</span>
     </a>
