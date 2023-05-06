@@ -55,6 +55,35 @@ export class UtilsService {
     else return false;
   }
 
+  removeNullProperties(obj) {
+    // obj.employers[0]?.salary[0]?.taxableAmount ||
+    // obj.employers[0]?.salary[0]?.taxableAmount === null ||
+    // 0 ||
+    // []
+    //   ? (obj.employers = [])
+    //   : obj.employers;
+
+    for (const key in obj) {
+      if (obj[key] === null) {
+        delete obj[key];
+      } else if (typeof obj[key] === 'object') {
+        if (Array.isArray(obj[key])) {
+          obj[key] = obj[key].filter(
+            (item) => item !== null && item !== 0 && item !== ''
+          );
+        } else {
+          this.removeNullProperties(obj[key]);
+          if (Object.keys(obj[key]).length === 0) {
+            delete obj[key];
+          }
+        }
+      }
+    }
+
+    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(obj));
+    console.log('theObject', obj);
+  }
+
   smoothScrollToTop() {
     window.scrollTo({
       top: 0,
@@ -571,22 +600,7 @@ export class UtilsService {
           details: 'PENSION_SCHEME',
         },
       ],
-      donations: [
-        {
-          donationType: 'POLITICAL',
-          amountInCash: null,
-          amountOtherThanCash: null,
-          identifier: '',
-          schemeCode: '',
-          name: '',
-          address: '',
-          city: '',
-          pinCode: '',
-          state: '',
-          panNumber: '',
-          details: '',
-        },
-      ],
+      donations: [],
       loans: [
         {
           loanType: 'EDUCATION',
@@ -687,20 +701,7 @@ export class UtilsService {
         panNumber: null,
         place: '',
       },
-      disabilities: [
-        {
-          typeOfDisability: null,
-          amount: null,
-        },
-        {
-          typeOfDisability: null,
-          amount: null,
-        },
-        {
-          typeOfDisability: null,
-          amount: null,
-        },
-      ],
+      disabilities: [],
       disability: undefined,
       movableAsset: [],
       immovableAsset: [],

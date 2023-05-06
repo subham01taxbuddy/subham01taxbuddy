@@ -118,37 +118,35 @@
             ><span class="txMuLf">{{ bankArray?.accountNumber }}</span>
           </div>
         </div>
-        <div
-          class="card__col-xs-12 card__col-sm-4 card__col-md-4"
-          *ngIf="taxable && taxable > 0"
-        >
-          <div class="incBx">
-            <span class="inTex">Income Tax Payable:</span><br /><br />
-            <span class="inNo"
-              >{{ utilsService.currencyFormatter(taxable) }}.00</span
-            >
-          </div>
-          <p class="paIncTx">
-            You must pay the balance tax before proceeding to e-filing. To pay
-            your tax
-            <a
-              href="https://onlineservices.tin.egov-nsdl.com/etaxnew/tdsnontds.jsp"
-              target="_new"
-              class="LkTx"
-              >Click here</a
-            >
-            and select<br />
-            CHALLAN NO/ITNS 280 under NON-TDS/TCS Section
-          </p>
 
-          <div
-            class="card__col-xs-8 regime"
-            style="background-color: orange; padding: 10px"
-          >
-            {{
-              ITR_JSON.regime === "NEW" ? "New Tax Regime" : "Old Tax Regime"
-            }}
+        <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
+          <div *ngIf="taxable && taxable > 0">
+            <div class="incBx">
+              <span class="inTex">Income Tax Payable:</span><br /><br />
+              <span class="inNo"
+                >{{ utilsService.currencyFormatter(taxable) }}.00</span
+              >
+            </div>
+            <p class="paIncTx">
+              You must pay the balance tax before proceeding to e-filing. To pay
+              your tax
+              <a
+                href="https://onlineservices.tin.egov-nsdl.com/etaxnew/tdsnontds.jsp"
+                target="_new"
+                class="LkTx"
+                >Click here</a
+              >
+              and select<br />
+              CHALLAN NO/ITNS 280 under NON-TDS/TCS Section
+            </p>
           </div>
+        </div>
+
+        <div
+          class="regime"
+          style="background-color: orange; padding: 10px; margin: bottom"
+        >
+          {{ ITR_JSON.regime === "NEW" ? "New Tax Regime" : "Old Tax Regime" }}
         </div>
 
         <div
@@ -248,10 +246,10 @@
     <div>
       <div class="flex flex-row justify-between items-start">
         <h3>Computation of Income and Tax</h3>
-        <div>
+        <!-- <div>
           <mat-slide-toggle [(ngModel)]="summaryToolChecked"></mat-slide-toggle>
           <span> Use Summary Tool instead </span>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

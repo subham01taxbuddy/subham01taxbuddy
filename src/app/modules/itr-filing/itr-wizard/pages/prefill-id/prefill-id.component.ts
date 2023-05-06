@@ -1177,6 +1177,98 @@ export class PrefillIdComponent implements OnInit {
               );
             }
 
+            // everOptedNewRegime
+            {
+              //Setting 1st question as yes / no
+              if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
+                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
+              } else {
+                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
+              }
+
+              // setting first question details
+              {
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                  ?.AssessmentYear
+                  ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
+                  : null;
+
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                  ?.Form10IEDtls.Form10IEDate
+                  ? (this.ITR_Obj.everOptedNewRegime.date =
+                      this.parseAndFormatDate(
+                        ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                          .Form10IEDtls.Form10IEDate
+                      ))
+                  : null;
+
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                  ?.Form10IEDtls.Form10IEAckNo
+                  ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                  : null;
+              }
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
+
+            //  everOptedOutOfNewRegime
+            {
+              //Setting 1st question as yes / no
+              if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime === 'Y'
+              ) {
+                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                  true;
+              } else {
+                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                  false;
+              }
+
+              // setting second question details
+              {
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                  ?.AssessmentYear
+                  ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
+                  : null;
+
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                  ?.Form10IEDtls?.Form10IEDate
+                  ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
+                      this.parseAndFormatDate(
+                        ItrJSON[this.ITR_Type].FilingStatus
+                          .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
+                      ))
+                  : null;
+
+                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                  ?.Form10IEDtls?.Form10IEAckNo
+                  ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                  : null;
+              }
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
+
             this.ITR_Obj.regime =
               this.ITR_Obj.optionForCurrentAY.currentYearRegime;
 
@@ -1191,98 +1283,6 @@ export class PrefillIdComponent implements OnInit {
               ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
                   ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo)
               : null;
-
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-          }
-
-          // everOptedNewRegime
-          {
-            //Setting 1st question as yes / no
-            if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
-              this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
-            } else {
-              this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
-            }
-
-            // setting first question details
-            {
-              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                ?.AssessmentYear
-                ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                    ItrJSON[
-                      this.ITR_Type
-                    ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
-                : null;
-
-              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls?.Form10IEDtls
-                .Form10IEDate
-                ? (this.ITR_Obj.everOptedNewRegime.date =
-                    this.parseAndFormatDate(
-                      ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                        .Form10IEDtls.Form10IEDate
-                    ))
-                : null;
-
-              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls?.Form10IEDtls
-                .Form10IEAckNo
-                ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                    ItrJSON[
-                      this.ITR_Type
-                    ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
-                : null;
-            }
-
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-          }
-
-          //  everOptedOutOfNewRegime
-          {
-            //Setting 1st question as yes / no
-            if (
-              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime === 'Y'
-            ) {
-              this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                true;
-            } else {
-              this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                false;
-            }
-
-            // setting second question details
-            {
-              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                ?.AssessmentYear
-                ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                    ItrJSON[
-                      this.ITR_Type
-                    ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
-                : null;
-
-              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                ?.Form10IEDtls?.Form10IEDate
-                ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                    this.parseAndFormatDate(
-                      ItrJSON[this.ITR_Type].FilingStatus
-                        .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
-                    ))
-                : null;
-
-              ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                ?.Form10IEDtls?.Form10IEAckNo
-                ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                    ItrJSON[
-                      this.ITR_Type
-                    ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
-                : null;
-            }
 
             // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(

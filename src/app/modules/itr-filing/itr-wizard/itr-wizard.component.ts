@@ -179,6 +179,8 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSummary() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.utilsService.removeNullProperties(this.ITR_JSON);
     this.breadcrumb = null;
     this.showIncomeSources = false;
     this.selectedSchedule = 'Comparison of New v/s Old Regime';
