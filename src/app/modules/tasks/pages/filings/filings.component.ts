@@ -991,11 +991,16 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   pageChanged(event) {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
-    this.myItrsList(
-      // this.selectedFyYear,
-      this.selectedPageNo,
-      this.selectedFilingTeamMemberId
-    );
+    if (this.coOwnerToggle.value == true) {
+      this.myItrsList(event - 1,true);
+    }else{
+      this.myItrsList(event - 1,'');
+    }
+    // this.myItrsList(
+    //   // this.selectedFyYear,
+    //   this.selectedPageNo,
+    //   this.selectedFilingTeamMemberId
+    // );
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
