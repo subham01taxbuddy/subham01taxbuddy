@@ -96,7 +96,11 @@ export class AssignedNewUsersComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.search();
+    if (this.coOwnerToggle.value == true) {
+      this.search(event - 1,true);
+    }else{
+      this.search(event - 1);
+    }
   }
 
   fromServiceType(event){

@@ -1120,7 +1120,12 @@ export class PerformaInvoiceComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.getInvoice();
+    if (this.coOwnerToggle.value == true) {
+      this.getInvoice(event - 1,true);
+    }else{
+      this.getInvoice(event - 1);
+    }
+    // this.getInvoice();
   }
 
   getToggleValue(){
