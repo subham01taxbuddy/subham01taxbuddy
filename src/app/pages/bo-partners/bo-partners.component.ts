@@ -425,6 +425,7 @@ export class BoPartnersComponent implements OnInit {
   }
 
   sendEmail(partnerData){
+    this.loading = true;
     let partnerName = partnerData.name;
     let mobile = partnerData.mobileNumber;
     var data = new FormData();
@@ -438,6 +439,10 @@ export class BoPartnersComponent implements OnInit {
     let param = '/send-mail';
     this.userMsService.postMethod(param, data).subscribe((res:any)=>{
       console.log(res);
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+      this.utileService.showSnackBar(error.error.text);
     });
   }
 
