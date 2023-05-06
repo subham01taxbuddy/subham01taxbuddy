@@ -14,6 +14,7 @@ import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes
 import { Observable, map, startWith } from 'rxjs';
 import {AppConstants} from "../../../shared/constants";
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -369,6 +370,7 @@ export class TaxInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.serviceType = null;
@@ -386,9 +388,13 @@ export class TaxInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
-    this?.coOwnerDropDown?.resetDropdown();
-
-    this.getInvoice();
+    this?.smeDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getInvoice(true);
+    }else{
+      this.getInvoice();
+    }
   }
 
   getInvoice(isCoOwner?,agentId?) {

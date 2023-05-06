@@ -948,9 +948,13 @@ export class AssignedNewUsersComponent implements OnInit {
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-    this?.coOwnerDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.search('',true);
+    }else{
+      this.search();
+    }
 
-    this.search();
   }
 
   search(form?, isAgent?) {

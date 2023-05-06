@@ -319,9 +319,13 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.subscriptionFormGroup.controls['searchName'].setValue(null);
     this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
     this?.smeDropDown?.resetDropdown();
-    this?.coOwnerDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getAssignedSubscription(0,true);
+    }else{
+      this.getAssignedSubscription(0);
+    }
 
-    this.getAssignedSubscription(0);
   }
 
   subscriptionCreateColumnDef(List) {

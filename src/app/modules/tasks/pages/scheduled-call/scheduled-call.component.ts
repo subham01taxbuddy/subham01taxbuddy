@@ -693,9 +693,13 @@ export class ScheduledCallComponent implements OnInit {
     this.statusId = null;
 
     this?.smeDropDown?.resetDropdown();
-    this?.coOwnerDropDown?.resetDropdown();
 
-    this.search();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.search('',true);
+    }else{
+      this.search();
+    }
   }
 
   search(form? , isAgent?) {

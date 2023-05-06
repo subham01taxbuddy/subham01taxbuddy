@@ -1010,9 +1010,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-    this?.coOwnerDropDown?.resetDropdown();
-
-    this.search();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.myItrsList(0, true)
+    }else{
+      this.search();
+    }
   }
 
   eriITRLifeCycleStatus(data) {

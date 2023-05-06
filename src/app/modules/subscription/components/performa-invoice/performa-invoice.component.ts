@@ -419,6 +419,7 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.searchParam.serviceType = null;
@@ -436,9 +437,14 @@ export class PerformaInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
-    this?.coOwnerDropDown?.resetDropdown();
+    this?.smeDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getInvoice(true);
+    }else{
+      this.getInvoice();
+    }
 
-    this.getInvoice();
   }
 
   getInvoice(isCoOwner?,agentId?) {
