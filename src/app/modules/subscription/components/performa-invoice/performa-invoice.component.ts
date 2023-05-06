@@ -22,6 +22,7 @@ import { SidebarComponent } from 'src/app/modules/shared/components/sidebar/side
 import { ToastMessage } from 'src/app/classes/toast';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -77,6 +78,8 @@ export class PerformaInvoiceComponent implements OnInit {
   filteredFilers: Observable<User[]>;
   filteredOwners: Observable<User[]>;
   ownerList: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   SidebarComponent: SidebarComponent;
   searchParam: any = {
     statusId: null,
@@ -152,6 +155,9 @@ export class PerformaInvoiceComponent implements OnInit {
       : 'NA';
     console.log('roles', this.roles);
 
+    this.setFiletedOptions1();
+    this.setFiletedOptions2();
+
     if (
       this.roles?.includes('ROLE_ADMIN') ||
       this.roles?.includes('ROLE_LEADER')
@@ -204,9 +210,32 @@ export class PerformaInvoiceComponent implements OnInit {
     // this.Status.setValue(this.Status[0].value);
     console.log('filteroptions', this.filteredOwners);
 
-    this.setFiletedOptions1();
-    this.setFiletedOptions2();
 
+
+    this.getInvoice();
+  }
+
+  ownerId: number;
+  filerId: number;
+
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+      // this.filerUserId = this.filerId;
+    } else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      this.getInvoice();
+    } else {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
     this.getInvoice();
   }
 
@@ -268,6 +297,30 @@ export class PerformaInvoiceComponent implements OnInit {
     return options.filter((option) =>
       option.name.toLowerCase().includes(filterValue)
     );
+  }
+
+  coOwnerId: number;
+  coFilerId: number;
+  agentId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+      this.getInvoice('','agentId');
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+      this.getInvoice('','agentId');
+    } else {
+      let loggedInId = this.utilService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+
   }
 
   invoiceFormGroup: FormGroup = this.fb.group({
@@ -366,6 +419,8 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log(option);
   }
 
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -382,14 +437,23 @@ export class PerformaInvoiceComponent implements OnInit {
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
+    this?.smeDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getInvoice(true);
+    }else{
+      this.getInvoice();
+    }
 
-    this.getInvoice();
   }
 
-  getInvoice() {
+  getInvoice(isCoOwner?,agentId?) {
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
+
+    // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed&searchAsCoOwner=true&ownerUserId=7522
+
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
     let status = this.status.value;
@@ -406,11 +470,20 @@ export class PerformaInvoiceComponent implements OnInit {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerDetails?.userId && !this.filerDetails?.userId) {
-      userFilter += `&ownerUserId=${this.ownerDetails.userId}`;
+    if (this.ownerId && !this.filerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerDetails?.userId) {
-      userFilter += `&filerUserId=${this.filerDetails.userId}`;
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    if(agentId){
+      userFilter='';
+     if(this.coOwnerId && !this.coFilerId){
+      userFilter += `&ownerUserId=${this.coOwnerId}`;
+     }
+     if(this.coFilerId){
+      userFilter += `&filerUserId=${this.coFilerId}`;
+     }
     }
     let mobileFilter = '';
     if (
@@ -442,8 +515,21 @@ export class PerformaInvoiceComponent implements OnInit {
         this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
     }
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
+
+    if (this.coOwnerToggle.value == true && isCoOwner) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
+
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
+      if(response.success == false){
+        this. _toastMessageService.alert("error",response.message);
+        this.gridApi?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+      }
       if (response.success) {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
@@ -451,8 +537,18 @@ export class PerformaInvoiceComponent implements OnInit {
         this.gridApi?.setRowData(this.createRowData(this.invoiceData));
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
+      }else{
+        this. _toastMessageService.alert("error",response.message);
+        this.gridApi?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
       }
-    });
+    },(error) => {
+      this.gridApi?.setRowData(this.createRowData([]));
+      this.totalInvoice=0
+          this.config.totalItems = 0;
+      this.loading = false;
+    }
+    );
 
     /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
@@ -1025,5 +1121,15 @@ export class PerformaInvoiceComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.getInvoice();
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.getInvoice(true);
   }
 }

@@ -140,6 +140,15 @@
             and select<br />
             CHALLAN NO/ITNS 280 under NON-TDS/TCS Section
           </p>
+
+          <div
+            class="card__col-xs-8 regime"
+            style="background-color: orange; padding: 10px"
+          >
+            {{
+              ITR_JSON.regime === "NEW" ? "New Tax Regime" : "Old Tax Regime"
+            }}
+          </div>
         </div>
 
         <div

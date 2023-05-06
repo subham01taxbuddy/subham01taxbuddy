@@ -50,6 +50,7 @@ import { Schedules } from './interfaces/schedules';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
+import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { ServiceDropDownComponent } from './components/service-drop-down/service
     NumbersOnlyDirective,
     ConfirmDialogComponent,
     ServiceDropDownComponent,
+    CoOwnerListDropDownComponent,
   ],
   imports: [
     CommonModule,
@@ -141,6 +143,7 @@ import { ServiceDropDownComponent } from './components/service-drop-down/service
         NumbersOnlyDirective,
         Schedules,
         ServiceDropDownComponent,
+        CoOwnerListDropDownComponent,
     ],
   providers: [StorageService, Schedules],
   entryComponents: [

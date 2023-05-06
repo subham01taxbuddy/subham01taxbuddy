@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="main clearfix" style="padding-left: 0;" >
+<div class="main clearfix" style="padding-left: 0; margin-left: 0;">
     <div class="card">
       <div  style="float: right;">
         <button class="btn" style="float: right;" (click)="closeComponent()">Close</button>
@@ -72,6 +72,8 @@
                                 <i class="fa fa-trash" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
                                     (click)="deleteFile(folder.fileName)"
                                     style="float: right; font-size: 18px; cursor: pointer;"></i>
+                              <button *ngIf="!folder.isDeleted && (folder.fileName.split('.').pop() === 'xls' || folder.fileName.split('.').pop() === 'xlsx')" (click)="editFile(folder)" style="float: right;"><i
+                                class="fa fa-pencil" aria-hidden="true"></i></button>
                                 <!-- <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
                                     (click)="downloadFile(folder.fileName)"
                                     style="float: right; font-size: 18px; padding: inherit; cursor: pointer;"></i> -->

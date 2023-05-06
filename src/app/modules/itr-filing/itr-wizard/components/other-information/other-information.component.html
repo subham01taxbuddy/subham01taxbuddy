@@ -1,197 +1,442 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <div class="card card-header">
   <div class="card__row pb-2 pt-2">
-    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px;">
-      Whether you were director in a company at any time during the previous year?
+    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px">
+      Whether you were director in a company at any time during the previous
+      year?
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
-      <mat-radio-group name="directorInCompany" (change)="ChangeDirectorStatus()"
-        [(ngModel)]="Copy_ITR_JSON.systemFlags.directorInCompany" [disabled]="!isEditOther">
-        <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
-        </mat-radio-button> &nbsp;&nbsp;&nbsp;
-        <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
+      <mat-radio-group
+        name="directorInCompany"
+        (change)="ChangeDirectorStatus()"
+        [(ngModel)]="Copy_ITR_JSON.systemFlags.directorInCompany"
+        [disabled]="!isEditOther"
+      >
+        <mat-radio-button
+          [value]="true"
+          style="margin-left: 0px"
+          labelPosition="before"
+          >Yes
+        </mat-radio-button>
+        &nbsp;&nbsp;&nbsp;
+        <mat-radio-button [value]="false" labelPosition="before"
+          >No</mat-radio-button
+        >
       </mat-radio-group>
     </div>
   </div>
-  <div style="text-align: right;" *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
-    <button class="tbd-btn-small addOthr" (click)="addDirectorDetails('Add director details','ADD',null)">
+  <div
+    style="text-align: right"
+    *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany"
+  >
+    <button
+      class="tbd-btn-small addOthr"
+      (click)="addDirectorDetails('Add director details', 'ADD', null)"
+    >
       <i class="fa fa-plus" aria-hidden="true"></i> Add New Company
     </button>
   </div>
   <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
     <form [formGroup]="directorForm">
       <div formArrayName="directorsArray">
-
-        <div class="card"
-             *ngFor="let director of getDirectorsArray.controls | paginate:config ;let i=index"
-             [formGroupName]="fieldGlobalIndex(i)">
+        <div
+          class="card"
+          *ngFor="
+            let director of getDirectorsArray.controls | paginate : config;
+            let i = index
+          "
+          [formGroupName]="fieldGlobalIndex(i)"
+        >
           <div class="card__row card__col-xs-12">
             <div class="card__col-sm-11">
-              <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
-                {{ directorForm.controls['directorsArray'].controls[i].controls['companyName'].value}}
+              <mat-checkbox
+                color="primary"
+                name="hasEdit[i]"
+                formControlName="hasEdit"
+                class="ml30"
+              >
+                {{
+                  directorForm.controls["directorsArray"].controls[i].controls[
+                    "companyName"
+                  ].value
+                }}
               </mat-checkbox>
             </div>
             <div class="card__col-sm-1 edit-head">
-              <button type="button" class="edit-donation" (click)="editDirectorForm(i)"><mat-icon>
-                edit_square
-              </mat-icon>Edit </button>
+              <button
+                type="button"
+                class="edit-donation"
+                (click)="editDirectorForm(i)"
+              >
+                <mat-icon> edit_square </mat-icon>Edit
+              </button>
             </div>
           </div>
 
           <div class="card__row">
-              <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field class="input-field-width">
-                  <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
-                         name="companyName" class="input-field" maxlength="125" required>
-                  <mat-error *ngIf="directorForm.controls['directorsArray'].controls[i].controls['companyName'].hasError('required')">Enter the Name of company.
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field class="input-field-width">
-                  <mat-select placeholder="Type of Company" name="typeOfCompany" formControlName="typeOfCompany" required>
-                    <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
-                      {{ type.label}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="directorForm.controls['directorsArray'].controls[i].controls['typeOfCompany'].hasError('required')">Enter the type of company.
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field class="input-field-width">
-                  <input type="text" trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company"
-                         name="companyPAN" class="input-field" maxlength="10"
-                         [required]="directorForm.controls['directorsArray'].controls[i].controls['typeOfCompany'].value === 'D'">
-                  <mat-error *ngIf="directorForm.controls['directorsArray'].controls[i].controls['companyPAN'].hasError('pattern')">Enter valid PAN number.
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field class="input-field-width">
-                  <mat-select placeholder="Select shares type" name="country" formControlName="sharesType" required>
-                    <mat-option *ngFor="let type of sharesTypes" [value]="type.value">
-                      {{ type.label}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="directorForm.controls['directorsArray'].controls[i].controls['sharesType'].hasError('required')">Select the shares type.
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field class="input-field-width">
-                  <input type="text" matInput formControlName="din" placeholder="Director identification number(DIN)"
-                         name="din" class="input-field" maxlength="8" digitsOnly minlength="8"
-                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                         [required]="directorForm.controls['directorsArray'].controls[i].controls['typeOfCompany'].value === 'D'">
-                  <mat-error
-                    *ngIf="directorForm.controls['directorsArray'].controls[i].controls['din'].hasError('pattern') || directorForm.controls['directorsArray'].controls[i].controls['din'].hasError('minLength') || directorForm.controls['directorsArray'].controls[i].controls['din'].hasError('maxLength')">
-                    Enter 8 digit DIN.</mat-error>
-                </mat-form-field>
-              </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+              <mat-form-field class="input-field-width">
+                <input
+                  type="text"
+                  trim
+                  matInput
+                  formControlName="companyName"
+                  placeholder="Name of company"
+                  name="companyName"
+                  class="input-field"
+                  maxlength="125"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['companyName'].hasError('required')
+                  "
+                  >Enter the Name of company.
+                </mat-error>
+              </mat-form-field>
             </div>
-
-
+            <div class="card__col-xs-12 card__col-sm-4">
+              <mat-form-field class="input-field-width">
+                <mat-select
+                  placeholder="Type of Company"
+                  name="typeOfCompany"
+                  formControlName="typeOfCompany"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let type of typeOfCompanies"
+                    [value]="type.value"
+                  >
+                    {{ type.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['typeOfCompany'].hasError('required')
+                  "
+                  >Enter the type of company.
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+              <mat-form-field class="input-field-width">
+                <input
+                  type="text"
+                  trim
+                  upperCase
+                  matInput
+                  formControlName="companyPAN"
+                  placeholder="PAN of company"
+                  name="companyPAN"
+                  class="input-field"
+                  maxlength="10"
+                  [required]="
+                    directorForm.controls['directorsArray'].controls[i]
+                      .controls['typeOfCompany'].value === 'D'
+                  "
+                />
+                <mat-error
+                  *ngIf="
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['companyPAN'].hasError('pattern')
+                  "
+                  >Enter valid PAN number.
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+              <mat-form-field class="input-field-width">
+                <mat-select
+                  placeholder="Select shares type"
+                  name="country"
+                  formControlName="sharesType"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let type of sharesTypes"
+                    [value]="type.value"
+                  >
+                    {{ type.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['sharesType'].hasError('required')
+                  "
+                  >Select the shares type.
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+              <mat-form-field class="input-field-width">
+                <input
+                  type="text"
+                  matInput
+                  formControlName="din"
+                  placeholder="Director identification number(DIN)"
+                  name="din"
+                  class="input-field"
+                  maxlength="8"
+                  digitsOnly
+                  minlength="8"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  [required]="
+                    directorForm.controls['directorsArray'].controls[i]
+                      .controls['typeOfCompany'].value === 'D'
+                  "
+                />
+                <mat-error
+                  *ngIf="
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['din'].hasError('pattern') ||
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['din'].hasError('minLength') ||
+                    directorForm.controls['directorsArray'].controls[
+                      i
+                    ].controls['din'].hasError('maxLength')
+                  "
+                >
+                  Enter 8 digit DIN.</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
         </div>
         <div class="display-flex fotSp">
           <div class="card__col-xs-12">
             <div class="card__col-sm-3">
-              <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteDirectors()"><i
-                class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
+              <button
+                type="submit"
+                class="tbd-btn-secondary btnGry"
+                (click)="deleteDirectors()"
+              >
+                <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+              </button>
             </div>
             <div class="card__col-sm-6 txt-center">
               <table>
-                <tr *ngFor="let item of getDirectorsArray.controls | paginate:config"></tr>
+                <tr
+                  *ngFor="
+                    let item of getDirectorsArray.controls | paginate : config
+                  "
+                ></tr>
               </table>
-              <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+              <pagination-controls
+                (pageChange)="pageChanged($event)"
+              ></pagination-controls>
             </div>
-            <div class="card__col-sm-3" style="text-align: right;">
-              <button type="submit" class="tbd-btn save-btn" [disabled]="directorForm.invalid"
-                      (click)="saveDirectorDetials()">Save</button>
+            <div class="card__col-sm-3" style="text-align: right">
+              <button
+                type="submit"
+                class="tbd-btn save-btn"
+                [disabled]="directorForm.invalid"
+                (click)="saveDirectorDetials()"
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>
       </div>
-
     </form>
   </div>
 </div>
-<br>
+<br />
 <div class="card card-header">
   <div class="card__row pb-2 pt-2">
-    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px;">
-      Have you held unlisted equity shares at any time during the previous year
+    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px">
+      Have you held unlisted equity shares at any time during the previous year?
     </div>
     <div class="card__col-xs-2 card__col-sm-2 text-right">
-      <mat-radio-group name="isUnlistedShares" (change)="ChangeSharesStatus()"
-                       [(ngModel)]="Copy_ITR_JSON.systemFlags.haveUnlistedShares" [disabled]="!isEditOther">
-        <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
-        </mat-radio-button> &nbsp;&nbsp;&nbsp;
-        <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
+      <mat-radio-group
+        name="isUnlistedShares"
+        (change)="ChangeSharesStatus()"
+        [(ngModel)]="Copy_ITR_JSON.systemFlags.haveUnlistedShares"
+        [disabled]="!isEditOther"
+      >
+        <mat-radio-button
+          [value]="true"
+          style="margin-left: 0px"
+          labelPosition="before"
+          >Yes
+        </mat-radio-button>
+        &nbsp;&nbsp;&nbsp;
+        <mat-radio-button [value]="false" labelPosition="before"
+          >No</mat-radio-button
+        >
       </mat-radio-group>
     </div>
   </div>
-  <div style="text-align: right;" *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
-    <button class="tbd-btn-small addOthr" (click)="addSharesDetails('Add unlisted shares details','ADD',null)"> &nbsp;&nbsp;
+  <div
+    style="text-align: right"
+    *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares"
+  >
+    <button
+      class="tbd-btn-small addOthr"
+      (click)="addSharesDetails('Add unlisted shares details', 'ADD', null)"
+    >
+      &nbsp;&nbsp;
       <i class="fa fa-plus" aria-hidden="true"></i>
       Add Unlisted Company
     </button>
   </div>
-  <div style="height: 100%; padding-top: 5px; box-sizing: border-box;" *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
+  <div
+    style="height: 100%; padding-top: 5px; box-sizing: border-box"
+    *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares"
+  >
     <form [formGroup]="sharesForm">
       <div formArrayName="sharesArray">
-        <div class="card"
-             *ngFor="let share of getSharesArray.controls | paginate:config ;let i=index"
-             [formGroupName]="fieldGlobalIndex(i)">
+        <div
+          class="card"
+          *ngFor="
+            let share of getSharesArray.controls | paginate : config;
+            let i = index
+          "
+          [formGroupName]="fieldGlobalIndex(i)"
+        >
           <div class="card__row card__col-xs-12">
             <div class="card__col-sm-11">
-              <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
-                {{ sharesForm.controls['sharesArray'].controls[i].controls['companyName'].value}}
+              <mat-checkbox
+                color="primary"
+                name="hasEdit[i]"
+                formControlName="hasEdit"
+                class="ml30"
+              >
+                {{
+                  sharesForm.controls["sharesArray"].controls[i].controls[
+                    "companyName"
+                  ].value
+                }}
               </mat-checkbox>
             </div>
             <div class="card__col-sm-1 edit-head">
-              <button type="button" class="edit-donation" (click)="editSharesForm(i)"><mat-icon>
-                edit_square
-              </mat-icon>Edit </button>
+              <button
+                type="button"
+                class="edit-donation"
+                (click)="editSharesForm(i)"
+              >
+                <mat-icon> edit_square </mat-icon>Edit
+              </button>
             </div>
           </div>
           <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
-                       name="companyName" class="input-field" maxlength="125" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['companyName'].hasError('required')">Enter the name of company.
+                <input
+                  type="text"
+                  trim
+                  matInput
+                  formControlName="companyName"
+                  placeholder="Name of company"
+                  name="companyName"
+                  class="input-field"
+                  maxlength="125"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'companyName'
+                    ].hasError('required')
+                  "
+                  >Enter the name of company.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <mat-select placeholder="Type of Company" (selectionChange)="addPanValidator()" name="typeOfCompany"
-                            formControlName="typeOfCompany" required>
-                  <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
-                    {{ type.label}}
+                <mat-select
+                  placeholder="Type of Company"
+                  (selectionChange)="addPanValidator()"
+                  name="typeOfCompany"
+                  formControlName="typeOfCompany"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let type of typeOfCompanies"
+                    [value]="type.value"
+                  >
+                    {{ type.label }}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['typeOfCompany'].hasError('required')">Select the type of company.
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'typeOfCompany'
+                    ].hasError('required')
+                  "
+                  >Select the type of company.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company" name="companyPAN"
-                       class="input-field" maxlength="10" [required]="sharesForm.controls['sharesArray'].controls[i].controls['typeOfCompany'].value === 'D'">
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['companyPAN'].hasError('pattern')">Enter valid PAN number.</mat-error>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['companyPAN'].hasError('required')">Enter PAN of the company.
+                <input
+                  trim
+                  upperCase
+                  matInput
+                  formControlName="companyPAN"
+                  placeholder="PAN of company"
+                  name="companyPAN"
+                  class="input-field"
+                  maxlength="10"
+                  [required]="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'typeOfCompany'
+                    ].value === 'D'
+                  "
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'companyPAN'
+                    ].hasError('pattern')
+                  "
+                  >Enter valid PAN number.</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'companyPAN'
+                    ].hasError('required')
+                  "
+                  >Enter PAN of the company.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input matInput formControlName="openingShares" placeholder="Opening No. of shares" name="openingShares"
-                       class="input-field" maxlength="14" digitsOnly
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['openingShares'].hasError('required')">Enter no of opening shares.
+                <input
+                  matInput
+                  formControlName="openingShares"
+                  placeholder="Opening No. of shares"
+                  name="openingShares"
+                  class="input-field"
+                  maxlength="14"
+                  digitsOnly
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'openingShares'
+                    ].hasError('required')
+                  "
+                  >Enter no of opening shares.
                 </mat-error>
               </mat-form-field>
             </div>
@@ -199,11 +444,25 @@
           <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input matInput formControlName="openingCOA" placeholder="Opening Cost of acquisition" name="openingCOA"
-                       class="input-field" maxlength="14" digitsOnly
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['openingCOA'].hasError('required')">Enter cost of acquisition.
+                <input
+                  matInput
+                  formControlName="openingCOA"
+                  placeholder="Opening Cost of acquisition"
+                  name="openingCOA"
+                  class="input-field"
+                  maxlength="14"
+                  digitsOnly
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'openingCOA'
+                    ].hasError('required')
+                  "
+                  >Enter cost of acquisition.
                 </mat-error>
               </mat-form-field>
             </div>
@@ -211,55 +470,121 @@
             <!-- Shares Aquired -->
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
-                       name="acquiredShares" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['acquiredShares'].hasError('required')">Enter No. of shares acquired.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="acquiredShares"
+                  placeholder="No. of shares acquired"
+                  name="acquiredShares"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'acquiredShares'
+                    ].hasError('required')
+                  "
+                  >Enter No. of shares acquired.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field>
-                <input matInput [min]="minPurchaseDate" readonly [max]="maxPurchaseDate" formControlName="purchaseDate"
-                       name="purchaseDate" [matDatepicker]="purchaseDate" placeholder="Date of purchase" required>
-                <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                <input
+                  matInput
+                  [min]="minPurchaseDate"
+                  readonly
+                  [max]="maxPurchaseDate"
+                  formControlName="purchaseDate"
+                  name="purchaseDate"
+                  [matDatepicker]="purchaseDate"
+                  placeholder="Date of purchase"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="purchaseDate"
+                ></mat-datepicker-toggle>
                 <mat-datepicker #purchaseDate></mat-datepicker>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="faceValuePerShare" placeholder="Face value per share"
-                       name="faceValuePerShare" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['faceValuePerShare'].hasError('required')">Enter face value per share.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="faceValuePerShare"
+                  placeholder="Face value per share"
+                  name="faceValuePerShare"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'faceValuePerShare'
+                    ].hasError('required')
+                  "
+                  >Enter face value per share.
                 </mat-error>
               </mat-form-field>
             </div>
           </div>
           <div class="card__row">
-
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="issuePricePerShare" placeholder="Issue price per share"
-                       name="issuePricePerShare" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="event.charCode >= 48 && event.charCode <= 57" required (blur)="setIssueOrPurchase('I')">
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['issuePricePerShare'].hasError('required')">Enter issue price per
-                  share.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="issuePricePerShare"
+                  placeholder="Issue price per share"
+                  name="issuePricePerShare"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                  required
+                  (blur)="setIssueOrPurchase('I')"
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'issuePricePerShare'
+                    ].hasError('required')
+                  "
+                  >Enter issue price per share.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="purchasePricePerShare" placeholder="Purchase price per share"
-                       name="purchasePricePerShare" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required
-                       (blur)="setIssueOrPurchase('P')">
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['purchasePricePerShare'].hasError('required')">Enter Purchase price
-                  per share.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="purchasePricePerShare"
+                  placeholder="Purchase price per share"
+                  name="purchasePricePerShare"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                  required
+                  (blur)="setIssueOrPurchase('P')"
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'purchasePricePerShare'
+                    ].hasError('required')
+                  "
+                  >Enter Purchase price per share.
                 </mat-error>
               </mat-form-field>
             </div>
@@ -267,24 +592,57 @@
             <!-- Shares Transferred -->
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="transferredShares" placeholder="No. of shares transferred"
-                       name="transferredShares" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="event.charCode >= 48 && event.charCode <= 57"
-                       [required]="sharesForm.controls['sharesArray'].controls[i].controls['saleConsideration'].value">
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['transferredShares'].hasError('required')">Enter No. of shares
-                  transferred.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="transferredShares"
+                  placeholder="No. of shares transferred"
+                  name="transferredShares"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                  [required]="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'saleConsideration'
+                    ].value
+                  "
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'transferredShares'
+                    ].hasError('required')
+                  "
+                  >Enter No. of shares transferred.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="saleConsideration" placeholder="Sale consideration"
-                       name="saleConsideration" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                       [required]="sharesForm.controls['sharesArray'].controls[i].controls['transferredShares'].value">
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['saleConsideration'].hasError('required')">Enter sale consideration.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="saleConsideration"
+                  placeholder="Sale consideration"
+                  name="saleConsideration"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                  [required]="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'transferredShares'
+                    ].value
+                  "
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'saleConsideration'
+                    ].hasError('required')
+                  "
+                  >Enter sale consideration.
                 </mat-error>
               </mat-form-field>
             </div>
@@ -294,21 +652,49 @@
           <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="closingShares" placeholder="Closing no of shares"
-                       name="closingShares" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['closingShares'].hasError('required')">Enter closing no. of shares.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="closingShares"
+                  placeholder="Closing no of shares"
+                  name="closingShares"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'closingShares'
+                    ].hasError('required')
+                  "
+                  >Enter closing no. of shares.
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="card__col-xs-12 card__col-sm-3">
               <mat-form-field class="input-field-width">
-                <input digitsOnly matInput formControlName="closingCOA" placeholder="Closing cost of acquisition"
-                       name="closingCOA" class="input-field" maxlength="14"
-                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                       onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
-                <mat-error *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['closingCOA'].hasError('required')">Enter Closing cost of acquisition.
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="closingCOA"
+                  placeholder="Closing cost of acquisition"
+                  name="closingCOA"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    sharesForm.controls['sharesArray'].controls[i].controls[
+                      'closingCOA'
+                    ].hasError('required')
+                  "
+                  >Enter Closing cost of acquisition.
                 </mat-error>
               </mat-form-field>
             </div>
@@ -320,18 +706,35 @@
     <div class="display-flex fotSp">
       <div class="card__col-xs-12">
         <div class="card__col-sm-3">
-          <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteShares()"><i
-            class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
+          <button
+            type="submit"
+            class="tbd-btn-secondary btnGry"
+            (click)="deleteShares()"
+          >
+            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+          </button>
         </div>
         <div class="card__col-sm-6 txt-center">
           <table>
-            <tr *ngFor="let item of getDirectorsArray.controls | paginate:config"></tr>
+            <tr
+              *ngFor="
+                let item of getDirectorsArray.controls | paginate : config
+              "
+            ></tr>
           </table>
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
         </div>
-        <div class="card__col-sm-3" style="text-align: right;">
-          <button type="submit" class="tbd-btn save-btn" [disabled]="directorForm.invalid"
-                  (click)="saveUnlistedShares()">Save</button>
+        <div class="card__col-sm-3" style="text-align: right">
+          <button
+            type="submit"
+            class="tbd-btn save-btn"
+            [disabled]="directorForm.invalid"
+            (click)="saveUnlistedShares()"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -339,6 +742,11 @@
 </div>
 
 <div class="footer__buttons clearfix">
-  <button class="tbd-btn save-btn"  [disabled]="!isEditOther" (click)="saveAndContinue()">Save
+  <button
+    class="tbd-btn save-btn"
+    [disabled]="!isEditOther"
+    (click)="saveAndContinue()"
+  >
+    Save
   </button>
 </div>
