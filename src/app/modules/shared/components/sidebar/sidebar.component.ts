@@ -55,22 +55,22 @@ export class SidebarComponent implements DoCheck {
   dropdownPanelChild: any = {};
 
   menus: Menu[] = [
-    {
-      name: 'Partner Dashboard',
-      // iconClass: 'fa fa-globe',
-      active: false,
-      url: '/dashboard',
-      roles: [],
-      submenu: []
-    },
-    {
-      name: 'Owner Dashboard',
-      // iconClass: 'fa fa-globe',
-      active: false,
-      url: '/dashboard/main',
-      roles: [],
-      submenu: []
-    },
+    // {
+    //   name: 'Partner Dashboard',
+    //   // iconClass: 'fa fa-globe',
+    //   active: false,
+    //   url: '/dashboard',
+    //   roles: [],
+    //   submenu: []
+    // },
+    // {
+    //   name: 'Owner Dashboard',
+    //   // iconClass: 'fa fa-globe',
+    //   active: false,
+    //   url: '/dashboard/main',
+    //   roles: [],
+    //   submenu: []
+    // },
     {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
@@ -81,13 +81,13 @@ export class SidebarComponent implements DoCheck {
         { name: 'My Users', url: '/tasks/assigned-users-new', roles:[] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles:[] },
         { name: 'ITRs', url: '/tasks/filings', roles:[]  },
-        { name: 'Exceptions', url: '/tasks/exceptions', roles:[],
+        // { name: 'Exceptions', url: '/tasks/exceptions', roles:[],
           // submenu: [
           //   { path: 'signup', component: SignUpExceptionsComponent },
           //   { path: 'eri', component: EriExceptionsComponent },
           //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
           // ]
-        },
+        // },
         { name: 'Create User', url: '/pages/user-management/create-user', roles:[] },
         { name: 'Potential Users', url: '/tasks/potential-users', roles:[] },
 
