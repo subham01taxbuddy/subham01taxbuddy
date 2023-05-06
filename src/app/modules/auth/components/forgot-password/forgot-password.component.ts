@@ -5,6 +5,7 @@ import {UserMsService} from "../../../../services/user-ms.service";
 import {environment} from "../../../../../environments/environment";
 import {NavbarService} from "../../../../services/navbar.service";
 import {UtilsService} from "../../../../services/utils.service";
+import {ActivatedRoute} from "@angular/router";
 declare let $: any;
 
 @Component({
@@ -21,9 +22,12 @@ export class ForgotPasswordComponent implements OnInit {
   errorMessage = '';
 
   mode = 'MOBILE';
+
+  isSetPassword = false;
   constructor(private fb: FormBuilder,
               private userService: UserMsService,
-              private utilService: UtilsService) { }
+              private utilService: UtilsService,
+              private activatedRoute: ActivatedRoute,) { }
 
   ngOnInit() {
     this.forgotPasswordForm = this.fb.group({
@@ -31,6 +35,17 @@ export class ForgotPasswordComponent implements OnInit {
       otp: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
       confirmPassword: new FormControl('', Validators.required),
+    });
+
+    //check route params
+    this.activatedRoute.queryParams.subscribe((params) => {
+      console.log(params);
+      if(params['action'] === 'set_password'){
+        //get mobile number
+        this.isSetPassword = true;
+        this.forgotPasswordForm.controls['username'].setValue(params['mobileNo']);
+        this.sendOtp();
+      }
     });
   }
 
