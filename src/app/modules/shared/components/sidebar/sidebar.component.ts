@@ -108,9 +108,12 @@ export class SidebarComponent implements DoCheck {
       name: 'Subscription',
       // iconClass: 'fa fa-globe',
       active: false,
-      url: '/subscription/assigned-subscription',
+      url: null,
       roles: [],
-      submenu: []
+      submenu: [
+        { name: 'Assigned Subscription', url: '/subscription/assigned-subscription', roles: [] },
+        { name: 'Subscription Request', url: '/subscription/cancel-subscription', roles: [] },
+      ]
     },
     {
       name: 'Invoice',

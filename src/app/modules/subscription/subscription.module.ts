@@ -21,6 +21,7 @@ import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.compon
 import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
 import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
+import { CancelSubscriptionComponent } from './components/cancel-subscription/cancel-subscription.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder
     TaxInvoiceComponent,
     AddSubscriptionComponent,
     OldInvoicesComponent,
-    PauseInvoiceReminderComponent
+    PauseInvoiceReminderComponent,
+    CancelSubscriptionComponent
   ],
 })
 export class SubscriptionModule { }
