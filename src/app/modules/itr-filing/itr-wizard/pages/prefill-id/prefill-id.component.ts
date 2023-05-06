@@ -31,7 +31,8 @@ export class PrefillIdComponent implements OnInit {
   ITR_Type: string;
   localDate: Date;
   utcDate: string;
-  uploadedJson: any;
+  uploadedJson;
+  @Output() jsonUploaded: EventEmitter<any> = new EventEmitter();
   ITR14_IncomeDeductions: string;
   regime: string;
   allowanceDetails23: any;
@@ -1042,6 +1043,7 @@ export class PrefillIdComponent implements OnInit {
 
         this.uploadedJson = JSONData.ITR;
         this.mapItrJson(this.uploadedJson);
+        this.jsonUpload();
       };
       reader.readAsText(this.uploadDoc);
     }
@@ -3403,5 +3405,9 @@ export class PrefillIdComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  jsonUpload() {
+    this.jsonUploaded.emit(this.uploadedJson);
   }
 }
