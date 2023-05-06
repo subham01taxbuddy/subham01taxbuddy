@@ -305,6 +305,34 @@ export class BoPartnersComponent implements OnInit {
           };
         },
       },
+      {
+        headerName: 'Action',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 100,
+        pinned: 'right',
+        cellRenderer: function (params: any) {
+          //console.log(params);
+          if(params.data.currentstatus === 'APPROVE') {
+            return `<button type="button" class="action_icon add_button" title="Send Email"
+        style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
+         </button>`;
+          } else {
+            return '-'
+          }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
     ];
   }
 
@@ -388,9 +416,36 @@ export class BoPartnersComponent implements OnInit {
           this.updateStatus(params.data);
           break;
         }
+        case 'sendEmail': {
+          this.sendEmail(params.data);
+          break;
+        }
       }
     }
   }
+
+  sendEmail(partnerData){
+    this.loading = true;
+    let partnerName = partnerData.name;
+    let mobile = partnerData.mobileNumber;
+    var data = new FormData();
+    data.append('from', 'support@taxbuddy.com');
+    data.append('subject', 'Partner Onboarding in Taxbuddy BO');
+    data.append('body', `<!DOCTYPE html>\n<html>\n<head>\n  <title></title>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta http-equiv="X-UA-Compatible" content="IE=edge" />\n</head>\n<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">\n  <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">\n    <tr>\n      <td align="center">\n        <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">\n          <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n            <td>\n              <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">\n                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n                  <td style="background: #fff;padding-left: 15px;">\n                    <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;">\n                      <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0">\n                    </a>\n                  </td>\n                  <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%">\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="padding: 0px 15px 0px 15px">\n              <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">\n                <tr>\n                  <td style="font-size: 14px;color: #333;">\n                    <br>\n                    <br>                 \n                    <span style="font-weight: bold">Dear Partner ${partnerName},</span><br />\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                      Welcome onboard!\n                    </p>\n                    <br>                   \n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is to intimate you to start your registration process for onboarding you as a partner into Taxbuddy Back Office.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Please click on the link below to complete the process.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     <a href="https://uat-itr.taxbuddy.com/log/userlogin?mobile=${mobile}&serviceType=ITR&partner=true" title="LINK" style="text-decoration: none;">Registration Link</a>\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Thanks,\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Taxbuddy Partner Onboarding Team\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is system generated email do not reply.\n                    </p>\n                    <br>                    \n                    <br>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="background-color: #1c3550;padding: 20px 15px;">\n              <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;">\n              </table>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`);
+    data.append('cc', 'support@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
+    data.append('isHtml', 'true');
+    data.append('to', partnerData.emailAddress);
+
+    let param = '/send-mail';
+    this.userMsService.postMethod(param, data).subscribe((res:any)=>{
+      console.log(res);
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+      this.utileService.showSnackBar(error.error.text);
+    });
+  }
+
   viewDocuments(partner) {
     this.loading = false;
     let disposable = this.dialog.open(ViewDocumentsComponent, {

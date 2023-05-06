@@ -1,3 +1,4 @@
+import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { filter } from 'rxjs/operators';
 import { data } from 'jquery';
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
@@ -46,6 +47,8 @@ export class AssignedSubscriptionComponent implements OnInit {
   loggedInSme: any;
   allFilerList:any;
   roles: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -147,7 +150,9 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo) {
+  getAssignedSubscription(pageNo?, isAgent?) {
+    // https://uat-api.taxbuddy.com/itr/subscription-dashboard-new/7522?page=0&pageSize=500&searchAsCoOwner=true
+
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
     console.log('this.queryParam:', this.queryParam);
@@ -156,13 +161,31 @@ export class AssignedSubscriptionComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
+
     var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
+
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
         this.loading = false;
+        if(response.success == false){
+          this. _toastMessageService.alert("error",response.message);
+          // let msg = 'There is problem getting records';
+          // this.utilsService.showSnackBar(msg);
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData([])
+          );
+          this.config.totalItems = 0;
+        }
         if (response.data.content instanceof Array && response.data.content.length > 0) {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data.content)
@@ -284,6 +307,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
 
     this.searchParam.statusId = null;
@@ -294,9 +318,14 @@ export class AssignedSubscriptionComponent implements OnInit {
 
     this.subscriptionFormGroup.controls['searchName'].setValue(null);
     this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
-    this.smeDropDown.resetDropdown();
+    this?.smeDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getAssignedSubscription(0,true);
+    }else{
+      this.getAssignedSubscription(0);
+    }
 
-    this.getAssignedSubscription(0);
   }
 
   subscriptionCreateColumnDef(List) {
@@ -609,7 +638,12 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.getAssignedSubscription(event - 1);
+    if (this.coOwnerToggle.value == true) {
+      this.getAssignedSubscription(event - 1,true);
+    }else{
+      this.getAssignedSubscription(event - 1);
+    }
+
   }
 
   ownerId: number;
@@ -624,14 +658,50 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
     if(this.filerId) {
       this.agentId = this.filerId;
+      this.getAssignedSubscription(0);
     }else if(this.ownerId) {
       this.agentId = this.ownerId;
+      this.getAssignedSubscription(0);
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    this.getAssignedSubscription(0);
+    // this.getAssignedSubscription(0);
   }
+
+  coOwnerId: number;
+  coFilerId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+      this.getAssignedSubscription(0);
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+      this.getAssignedSubscription(0);
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    // this.getAssignedSubscription(0);
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.getAssignedSubscription(0,true);
+  }
+
 }
 export interface ConfirmModel {
   userId: number

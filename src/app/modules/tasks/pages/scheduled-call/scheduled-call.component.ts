@@ -13,6 +13,8 @@ import { event } from 'jquery';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { FormControl } from '@angular/forms';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -32,11 +34,14 @@ export class ScheduledCallComponent implements OnInit {
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
+  roles:any;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
   searchParam: any = {
     page: 0,
-    pageSize: 30,
+    size: 30,
     totalPages: null,
     mobileNumber: null,
     email: null,
@@ -52,7 +57,7 @@ export class ScheduledCallComponent implements OnInit {
     private route: Router
   ) {
     this.config = {
-      itemsPerPage: this.searchParam.pageSize,
+      itemsPerPage: this.searchParam.size,
       currentPage: 1,
       totalItems: null,
       pageCount: null,
@@ -69,11 +74,12 @@ export class ScheduledCallComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
+    this.roles = this.utilsService.getUserRoles() ;
     this.agentId = userId;
     this.getAgentList();
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
-      this.loggedUserId = userInfo.USER_UNIQUE_ID;
+      this.loggedUserId = userId ;
     }
     this.showScheduleCallList();
     // this.search();
@@ -126,24 +132,52 @@ export class ScheduledCallComponent implements OnInit {
     this.search('agent');
   }
 
+  coOwnerId: number;
+  coFilerId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+      this.search('agent');
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+       this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    //  this.search('agent');
+  }
+
+
   getScheduledCallsInfo(id, page) {
     this.loading = true;
     var param2 = `/schedule-call-details/${id}?&page=${
       this.config.currentPage - 1
-    }&size=${this.searchParam.pageSize}`;
+    }&size=${this.searchParam.size}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
-        if (result.content instanceof Array && result.content.length > 0) {
-          this.scheduleCallsData = result.content;
-          this.config.totalItems = result.totalElements;
-          this.config.pageCount = result.totalPages;
-          this.scheduleCallGridOptions.api?.setRowData(
-            this.createRowData(this.scheduleCallsData)
-          );
+        if(result.success ==false){
+          this.toastMsgService.alert(
+            'error',result.message)
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+        }
+        if (result.data.content instanceof Array && result.data.content.length > 0) {
+          this.scheduleCallsData = result.data.content;
+          this.config.totalItems = result.data.totalElements;
+          this.config.pageCount = result.data.totalPages;
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content) );
         } else {
-          this.scheduleCallsData = [];
+          // this.scheduleCallsData = [];
           this.scheduleCallGridOptions.api?.setRowData(
-            this.createRowData(this.scheduleCallsData)
+            this.createRowData([])
           );
         }
         this.loading = false;
@@ -164,7 +198,7 @@ export class ScheduledCallComponent implements OnInit {
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
-      let scheduleCallsInfo = Object.assign({}, scheduleCallsArray[i], {
+      let scheduleCallsInfo = Object.assign({}, scheduleCalls[i], {
         userId: scheduleCalls[i]['userId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
@@ -639,25 +673,36 @@ export class ScheduledCallComponent implements OnInit {
   pageChanged(event) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.showScheduleCallList();
+    if (this.coOwnerToggle.value == true) {
+      this.search(event - 1,true);
+    }else{
+      this.search(event - 1);
+    }
+    // this.showScheduleCallList();
     // this.search();
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.page = 0;
-    this.searchParam.pageSize = 20;
+    this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.email = null;
     this.searchParam.statusId = null;
     this.statusId = null;
 
-    this.smeDropDown.resetDropdown();
+    this?.smeDropDown?.resetDropdown();
 
-    this.search();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.search('',true);
+    }else{
+      this.search();
+    }
   }
 
-  search(form?) {
+  search(form? , isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -682,21 +727,36 @@ export class ScheduledCallComponent implements OnInit {
 
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
+
+    // https://uat-api.taxbuddy.com/user/schedule-call-details/7523?page=0&pageSize=30&searchAsCoOwner=true
+
     var param = `/schedule-call-details/${this.agentId}?${data}`;
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
+      this.loading = false;
+      if(result.success ==false){
+        this.toastMsgService.alert(
+          'error',result.message)
+        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
 
-      if (result.content instanceof Array && result.content.length > 0) {
-        this.scheduleCallsData = result.content;
+      if(result.data.content instanceof Array && result.data.content.length > 0) {
+        this.scheduleCallsData = result.data.content;
         this.scheduleCallGridOptions.api?.setRowData(
-          this.createRowData(this.scheduleCallsData)
-        );
-        // this.scheduleCallGridOptions.api.setColumnDefs(
-        //   this.createColumnDef(this.statuslist)
-        // );
-        this.config.totalItems = result.totalElements;
-      } else {
+          this.createRowData(result.data.content) );
+        this.config.totalItems = result.data.totalElements;
+        this.config.pageCount = result.data.totalPages;
+      }else {
+        this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
         if(result.message) {
@@ -705,5 +765,15 @@ export class ScheduledCallComponent implements OnInit {
       }
       this.loading = false;
     });
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.search('',true);
   }
 }

@@ -7,6 +7,11 @@
     <div class="col-sm-10">
       <b style="font-size: 25px">Proforma Invoices </b>
     </div>
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+      <p>
+        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
+      </p>
+    </div>
   </div>
   <div class="content-wrapper">
     <div class="container">
@@ -16,8 +21,16 @@
             <!-- <div>
               <b style="font-size: 20px">{{ cardTitle }} View </b>
             </div> -->
+            <div class="row">
+              <div class="filter__col card__col-xs-12" *ngIf="coOwnerCheck">
+                <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+              </div>
+            </div>
+            <div class="row" *ngIf="!coOwnerCheck">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
             <div>
-              <div class="row" *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')">
+              <div class="row" *ngIf="false">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
@@ -62,8 +75,8 @@
               </div>
             </div>
 
-            <div *ngIf="roles?.includes('ROLE_OWNER')">
-              <div class="row">
+            <div *ngIf="false">
+              <div class="row" *ngIf="!coOwnerCheck">
                 <div>
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
@@ -100,7 +113,7 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
-               
+
                 <mat-form-field appearance="outline">
                   <mat-label>From Date</mat-label>
                   <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate" autocomplete="off"
@@ -175,14 +188,14 @@
               <div>
                 <button
                   *ngIf="roles?.includes('ROLE_ADMIN')"
-                  class="btn btnClr"                
+                  class="btn btnClr"
                   (click)="downloadInvoicesSummary()"
                 >
                   <i class="fa fa-download" aria-hidden="true"></i> Download
                   File
                 </button>
                 <button
-                  class="btn btnClr"            
+                  class="btn btnClr"
                   (click)="getInvoice()"
                 >
                   <i class="fas fa-file-invoice" aria-hidden="true"></i> Show

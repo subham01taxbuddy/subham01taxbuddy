@@ -1,0 +1,55 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div>
+<label style="font-size: 22px;
+font-weight: bold;"> Bulk Re-Assign </label><button style="float: right;" mat-dialog-close tabindex="-1"
+  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+  <div class="row" style="margin-top: 10px ;">
+     <!-- <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label> -->
+    <div class="col-sm-6">
+      <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label>
+      <app-sme-list-drop-down (sendOwner)="fromSme1($event, true)" (sendFiler)="fromSme1($event, false)" listType="ALL">
+      </app-sme-list-drop-down>
+    </div>
+    <div class="col-sm-6">
+      <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </label>
+      <app-sme-list-drop-down (sendOwner)="fromSme2($event, true)" (sendFilerList)="fromSme2($event, false)" listType="ALL" [checkboxSelection]='true' [showOwnerList]=true>
+      </app-sme-list-drop-down>
+    </div>
+
+    <div class="col-sm-3" *ngIf="isServiceType">
+      <mat-label>Service Type: </mat-label>
+      <mat-form-field class="service-input" appearance="outline">
+        <mat-select placeholder="Service type" [formControl]="serviceType">
+          <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.value">
+            {{ serviceType.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error class="error-msg" *ngIf="serviceType.hasError('required')">Please select service type
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-3">
+      <mat-label>Select Status</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Select Status" [formControl]="status">
+          <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+            {{ status.statusName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <!-- <div class="row" style="margin-top:5px ;">
+    <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </label>
+    <div class="col-sm-6">
+      <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL">
+      </app-sme-list-drop-down>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="card__col-xs-12 card__col-sm-4 text-center">
+      <button class="tbd-btn" (click)="reAssign()"
+        [disabled]="loading">Bulk Re-Assign</button>
+    </div>
+  </div>
+</div>

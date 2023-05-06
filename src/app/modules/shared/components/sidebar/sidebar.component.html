@@ -3,10 +3,11 @@
   <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
     <div class="menu sidebar__item" (click)="toggle(i)" *ngIf="!menu.url && isApplicable(menu.roles)">
       {{ menu.name }}
-      <i class="fa fa-chevron-down"></i>
+      <i *ngIf="!menu.active" class="fa fa-chevron-right"></i>
+      <i *ngIf="menu.active" class="fa fa-chevron-up"></i>
     </div>
     <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}"
-       routerLinkActive="sidebar__item_active"
+       routerLinkActive="sidebar__item_active" [routerLinkActiveOptions]="{exact:true}"
        class="sidebar__item">
       <span>{{ menu.name }}</span>
     </a>
