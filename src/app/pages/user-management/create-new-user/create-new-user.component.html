@@ -97,16 +97,16 @@
               Service type </mat-error>
           </mat-form-field>
         </div>
-       <div class="card__col-lg-8">
+       <div class="card__col-lg-8" *ngIf="!coOwnerCheck">
          <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
             [disabled]="assignedToMe">
          </app-sme-list-drop-down>
        </div>
        <div class="card__col-lg-8" *ngIf="coOwnerCheck">
-        <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)"
+        <app-co-owner-list-drop-down  (sendCoOwner)="fromSme1($event, true)"
           (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
-        <div class="card__col-lg-3" *ngIf="roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')" >
+        <div class="card__col-lg-3" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
           <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
             to me!</mat-checkbox>

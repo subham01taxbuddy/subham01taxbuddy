@@ -20,11 +20,14 @@
 <!--            </div>-->
               <div class="row">
                 <div class="filter__col card__col-xs-12" *ngIf="coOwnerCheck">
-                  <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)"
+                  <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
                     (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
                 </div>
               </div>
-            <div *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')" >
+            <div class="row" *ngIf="!coOwnerCheck">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div *ngIf="false" >
               <div class="row">
                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
@@ -52,8 +55,8 @@
               </div>
             </div>
 
-            <div *ngIf="roles?.includes('ROLE_OWNER')" >
-              <div class="row">
+            <div *ngIf="false" >
+              <div class="row" *ngIf="!coOwnerCheck">
                 <div >
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">

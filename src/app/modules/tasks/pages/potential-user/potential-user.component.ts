@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -9,6 +9,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { FormControl } from '@angular/forms';
+import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-potential-user',
@@ -200,6 +202,11 @@ export class PotentialUserComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
+        if(result.success == false){
+          this. _toastMessageService.alert("error",result.message);
+          this.usersGridOptions.api?.setRowData(this.createRowData([]));
+            this.config.totalItems = 0;
+        }
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
             this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -627,7 +634,11 @@ export class PotentialUserComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1
-    this.search();
+    if (this.coOwnerToggle.value == true) {
+      this.search(event - 1,true);
+    }else{
+      this.search(event - 1);
+    }
   }
 
   getToggleValue(){
@@ -638,6 +649,26 @@ export class PotentialUserComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.search('',true);
+  }
+
+
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
+  resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.size = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.email = null;
+    this.searchParam.statusId = null;
+
+    this?.smeDropDown?.resetDropdown();
+
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.search('',true);
+    }else{
+      this.search();
+    }
   }
 
 }

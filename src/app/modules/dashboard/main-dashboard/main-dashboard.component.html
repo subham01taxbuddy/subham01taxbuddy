@@ -1,0 +1,24 @@
+<div class="main clearfix">
+<!--  <div class="align-items-center row">-->
+<!--    <div class="col-sm-10">-->
+<!--      <b style="font-size: 20px">Exceptions</b>-->
+<!--    </div>-->
+<!--  </div>-->
+  <div class="tab">
+    <ul class="tab__container clearfix">
+      <li class="tab__item active" routerLinkActive="tab__item_active">
+        <a class="tab__link" (click)="view='attendance'">Attendance Report</a>
+      </li>
+      <li class="tab__item active" routerLinkActive="tab__item_active">
+        <a class="tab__link" (click)="view='owner'">Owner Dashboard</a>
+      </li>     
+    </ul>
+  </div>
+  <div *ngIf="view === 'owner'">
+    <app-owner-dashboard></app-owner-dashboard>
+  </div>
+  <div *ngIf="view === 'attendance'">
+    <app-attendance-report></app-attendance-report>
+  </div>
+
+</div>

@@ -84,6 +84,15 @@ export class LoginComponent implements OnInit {
       console.log('Auth.current session catch error:', e);
     })
 
+    //check route params
+    this.activatedRoute.queryParams.subscribe((params) => {
+      console.log(params);
+      if(params['action'] === 'set_password'){
+        //go to password page
+        this.changeMode('FORGOT_PASSWORD', params['mobile']);
+      }
+    });
+
 
   }
   gotoCloud(){
@@ -368,7 +377,7 @@ export class LoginComponent implements OnInit {
 
   mode: string = 'SIGN_IN';
   username: string = '';
-  changeMode(view: any) {
+  changeMode(view: any, mobile?:string) {
     this.mode = view;
   }
 

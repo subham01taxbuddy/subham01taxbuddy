@@ -12,7 +12,7 @@ font-weight: bold;"> Bulk Re-Assign </label><button style="float: right;" mat-di
     </div>
     <div class="col-sm-6">
       <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </label>
-      <app-sme-list-drop-down (sendOwner)="fromSme2($event, true)" (sendFilerList)="fromSme2($event, false)" listType="ALL" [checkboxSelection]='true'>
+      <app-sme-list-drop-down (sendOwner)="fromSme2($event, true)" (sendFilerList)="fromSme2($event, false)" listType="ALL" [checkboxSelection]='true' [showOwnerList]=true>
       </app-sme-list-drop-down>
     </div>
 

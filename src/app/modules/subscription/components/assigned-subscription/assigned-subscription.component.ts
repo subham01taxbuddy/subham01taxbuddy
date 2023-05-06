@@ -178,8 +178,9 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.allSubscriptions = response;
         this.loading = false;
         if(response.success == false){
-          let msg = 'There is problem getting records';
-          this.utilsService.showSnackBar(msg);
+          this. _toastMessageService.alert("error",response.message);
+          // let msg = 'There is problem getting records';
+          // this.utilsService.showSnackBar(msg);
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData([])
           );
@@ -318,9 +319,13 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.subscriptionFormGroup.controls['searchName'].setValue(null);
     this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
     this?.smeDropDown?.resetDropdown();
-    this?.coOwnerDropDown?.resetDropdown();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getAssignedSubscription(0,true);
+    }else{
+      this.getAssignedSubscription(0);
+    }
 
-    this.getAssignedSubscription(0);
   }
 
   subscriptionCreateColumnDef(List) {

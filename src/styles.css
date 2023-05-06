@@ -312,6 +312,15 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+
+.clrLnk {
+  margin-top: 15px;
+  color: #f18203;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+
 .ngx-pagination {
   margin-left: -35px!important;
 }

@@ -27,6 +27,7 @@ import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-o
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-filings',
@@ -222,6 +223,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       console.log('My Params:', param);
       this.itrMsService.getMethod(param).subscribe(
         (res: any) => {
+          if(res.success == false){
+            this.toastMsgService.alert("error",res.message);
+            this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+              this.config.totalItems = 0;
+          }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
           if (res.data?.content instanceof Array) {
@@ -241,6 +247,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           return resolve(true);
         },
         (error) => {
+          this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+              this.config.totalItems = 0;
           this.loading = false;
           return resolve(false);
         }
@@ -983,15 +991,21 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   pageChanged(event) {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
-    this.myItrsList(
-      // this.selectedFyYear,
-      this.selectedPageNo,
-      this.selectedFilingTeamMemberId
-    );
+    if (this.coOwnerToggle.value == true) {
+      this.myItrsList(event - 1,true);
+    }else{
+      this.myItrsList(event - 1,'');
+    }
+    // this.myItrsList(
+    //   // this.selectedFyYear,
+    //   this.selectedPageNo,
+    //   this.selectedFilingTeamMemberId
+    // );
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.searchParams.selectedStatusId = null;
     this.config.page = 0;
@@ -999,9 +1013,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
 
-    this.smeDropDown.resetDropdown();
-    this.serviceDropDown.resetService();
-    this.search();
+    this?.smeDropDown?.resetDropdown();
+    this?.serviceDropDown?.resetService();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.myItrsList(0, true)
+    }else{
+      this.search();
+    }
   }
 
   eriITRLifeCycleStatus(data) {

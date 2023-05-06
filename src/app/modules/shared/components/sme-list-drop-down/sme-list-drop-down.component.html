@@ -87,47 +87,43 @@
 
 <div *ngIf="roles?.includes('ROLE_OWNER')">
 
-  <div class="row" *ngIf="showOwnerList">
-    <mat-label> Search By Owner </mat-label>
-    <mat-form-field appearance="outline" class="customBg">
-      <input
-        type="text"
-        matInput
-        [formControl]="searchOwner"
-        [matAutocomplete]="auto"
-        (blur)="setList()"
-      />
-      <mat-autocomplete #auto>
-        <mat-option
-          *ngFor="let option of filteredOwners | async"
-          [value]="option.name"
-          (click)="getOwnerNameId(option);"
-        >
-          {{ option.name }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-  </div>
+  <div class="row" >
+    <div class="col-sm-6" *ngIf="showOwnerList">
+      <mat-label> Search By Owner </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" (blur)="setList()" />
+        <mat-autocomplete #auto>
+          <mat-option *ngFor="let option of filteredOwners | async" [value]="option.name" (click)="getOwnerNameId(option);">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
 
-  <div class="row">
-    <div>
+    <div class="col-sm-6" *ngIf="!checkboxSelection">
       <mat-label> Search By Filer </mat-label>
       <mat-form-field appearance="outline" class="customBg">
-        <input
-          type="text"
-          matInput
-          [formControl]="searchFiler"
-          [matAutocomplete]="auto"
-        />
+        <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto" />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            *ngFor="let option1 of filteredFilers | async"
-            [value]="option1.name"
-            (click)="getFilerNameId(option1)"
-          >
+          <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name"
+            (click)="getFilerNameId(option1)">
             {{ option1.name }}
           </mat-option>
         </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6" *ngIf="checkboxSelection">
+      <mat-label> Search By Filter </mat-label>
+      <mat-form-field appearance="outline">
+        <mat-select [formControl]="searchFiler" multiple>
+          <mat-select-trigger>
+            {{searchFiler.value?.[0] || ''}}
+            <span *ngIf="(searchFiler.value?.length || 0) > 1" class="example-additional-selection">
+              (+{{(searchFiler.value?.length || 0) - 1}} {{searchFiler.value?.length === 2 ? 'other' : 'others'}})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name" (click)="getFilerList(searchFiler)"> {{ option1.name }}</mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
   </div>
