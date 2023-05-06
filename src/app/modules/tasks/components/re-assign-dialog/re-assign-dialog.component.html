@@ -5,7 +5,7 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</label><button style="float: 
 <div class="card__row">
   <!-- <label style="font-size: 14px;font-weight:normal; color:red;"> * Please select Both Owner And filer Name </label> -->
   <div class="card__col-xs-12 card__col-sm-8" style="margin-top: 5px;">
-    <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL" [showOwnerList]=true >
+    <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL" [showOwnerList]='true'>
     </app-sme-list-drop-down>
   </div>
   <div class="card__col-xs-12 card__col-sm-4">
