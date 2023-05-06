@@ -330,7 +330,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.loading = true;
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
       (ITR_RESULT: ITR_JSON) => {
-        this.ITR_JSON = ITR_RESULT;
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_JSON)

@@ -56,21 +56,12 @@ export class UtilsService {
   }
 
   removeNullProperties(obj) {
-    // obj.employers[0]?.salary[0]?.taxableAmount ||
-    // obj.employers[0]?.salary[0]?.taxableAmount === null ||
-    // 0 ||
-    // []
-    //   ? (obj.employers = [])
-    //   : obj.employers;
-
     for (const key in obj) {
       if (obj[key] === null) {
         delete obj[key];
       } else if (typeof obj[key] === 'object') {
         if (Array.isArray(obj[key])) {
-          obj[key] = obj[key].filter(
-            (item) => item !== null && item !== 0 && item !== ''
-          );
+          obj[key] = obj[key].filter((item) => item !== null);
         } else {
           this.removeNullProperties(obj[key]);
           if (Object.keys(obj[key]).length === 0) {
@@ -80,8 +71,7 @@ export class UtilsService {
       }
     }
 
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(obj));
-    console.log('theObject', obj);
+    return obj;
   }
 
   smoothScrollToTop() {
@@ -709,22 +699,22 @@ export class UtilsService {
       prefillData: null,
       prefillDataSource: null,
       everOptedNewRegime: {
-        acknowledgementNumber: null,
-        assessmentYear: null,
-        date: null,
-        everOptedNewRegime: null,
+        acknowledgementNumber: '',
+        assessmentYear: '',
+        date: '',
+        everOptedNewRegime: false,
       },
       everOptedOutOfNewRegime: {
-        acknowledgementNumber: null,
-        assessmentYear: null,
-        date: null,
-        everOptedOutOfNewRegime: null,
+        acknowledgementNumber: '',
+        assessmentYear: '',
+        date: '',
+        everOptedOutOfNewRegime: false,
       },
       optionForCurrentAY: {
-        acknowledgementNumber: null,
-        assessmentYear: null,
-        date: null,
-        currentYearRegime: null,
+        acknowledgementNumber: '',
+        assessmentYear: '',
+        date: '',
+        currentYearRegime: '',
       },
       section89: null,
       section90: null,

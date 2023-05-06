@@ -1136,11 +1136,13 @@ export class PrefillIdComponent implements OnInit {
             if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
               this.regime = 'OLD';
               this.ITR_Obj.regime = this.regime;
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
             } else if (
               ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y'
             ) {
               this.regime = 'NEW';
               this.ITR_Obj.regime = this.regime;
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
             } else {
               this.utilsService.showSnackBar(
                 'Type of regime is not present in the uploaded JSON'
