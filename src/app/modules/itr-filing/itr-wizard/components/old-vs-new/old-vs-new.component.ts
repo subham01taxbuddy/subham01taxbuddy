@@ -11,7 +11,14 @@ import { AppConstants } from '../../../../shared/constants';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ValidationErrors,
+  AbstractControl,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-old-vs-new',
@@ -52,6 +59,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   oldRegimeLabel = 'Not Opting';
   summaryToolReliefsForm: FormGroup;
   regimeSelectionForm: FormGroup;
+  submitted: boolean = false;
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -60,25 +68,24 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.initForm();
   }
 
   initForm() {
     this.regimeSelectionForm = this.fb.group({
       everOptedNewRegime: this.fb.group({
-        everOptedNewRegime: [],
+        everOptedNewRegime: ['', Validators.required],
         assessmentYear: [],
         date: [],
         acknowledgementNumber: [],
       }),
       everOptedOutOfNewRegime: this.fb.group({
-        everOptedOutOfNewRegime: [],
+        everOptedOutOfNewRegime: ['', Validators.required],
         assessmentYear: [],
         date: [],
         acknowledgementNumber: [],
       }),
       optionForCurrentAY: this.fb.group({
-        currentYearRegime: [],
+        currentYearRegime: ['', Validators.required],
         date: [],
         acknowledgementNumber: [],
       }),
@@ -89,6 +96,128 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       section90: null,
       section91: null,
     });
+  }
+
+  onChanges() {
+    const everOptedNewRegime =
+      this.regimeSelectionForm.get('everOptedNewRegime');
+
+    const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
+      'everOptedOutOfNewRegime'
+    );
+
+    const optionForCurrentAY =
+      this.regimeSelectionForm.get('optionForCurrentAY');
+
+    everOptedNewRegime
+      .get('everOptedNewRegime')
+      .valueChanges.subscribe((val) => {
+        if (val) {
+          // assesmentYear
+          everOptedNewRegime
+            .get('assessmentYear')
+            .setValidators(Validators.required);
+          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+          // acknowledgementNumber
+          everOptedNewRegime
+            .get('acknowledgementNumber')
+            .setValidators(Validators.required);
+          everOptedNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
+
+          // date
+          everOptedNewRegime.get('date').setValidators(Validators.required);
+          everOptedNewRegime.get('date').updateValueAndValidity();
+        } else {
+          // assesmentYear
+          everOptedNewRegime.get('assessmentYear').setValidators(null);
+          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+          // acknowledgementNumber
+          everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
+          everOptedNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
+
+          // date
+          everOptedNewRegime.get('date').setValidators(null);
+          everOptedNewRegime.get('date').updateValueAndValidity();
+        }
+      });
+
+    everOptedOutOfNewRegime
+      .get('everOptedOutOfNewRegime')
+      .valueChanges.subscribe((val) => {
+        if (val) {
+          // assesmentYear
+          everOptedOutOfNewRegime
+            .get('assessmentYear')
+            .setValidators(Validators.required);
+          everOptedOutOfNewRegime
+            .get('assessmentYear')
+            .updateValueAndValidity();
+
+          // acknowledgementNumber
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .setValidators(Validators.required);
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
+
+          // date
+          everOptedOutOfNewRegime
+            .get('date')
+            .setValidators(Validators.required);
+          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+        } else {
+          // assesmentYear
+          everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
+          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+          // acknowledgementNumber
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .setValidators(null);
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
+
+          // date
+          everOptedOutOfNewRegime.get('date').setValidators(null);
+          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+        }
+      });
+
+    optionForCurrentAY
+      .get('currentYearRegime')
+      .valueChanges.subscribe((val) => {
+        if (val === 'OLD') {
+          // acknowledgementNumber
+          optionForCurrentAY
+            .get('acknowledgementNumber')
+            .setValidators(Validators.required);
+          optionForCurrentAY
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
+
+          // date
+          optionForCurrentAY.get('date').setValidators(Validators.required);
+          optionForCurrentAY.get('date').updateValueAndValidity();
+        } else {
+          // acknowledgementNumber
+          optionForCurrentAY.get('acknowledgementNumber').setValidators(null);
+          optionForCurrentAY
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
+
+          // date
+          optionForCurrentAY.get('date').setValidators(null);
+          optionForCurrentAY.get('date').updateValueAndValidity();
+        }
+      });
   }
 
   updateRegimeLabels() {
@@ -193,7 +322,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm();
     this.getITRType();
+    this.onChanges();
 
     this.utilsService.smoothScrollToTop();
     this.assesssmentYear = [
@@ -493,25 +624,78 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON.section90 = this.summaryToolReliefsForm.value.section90;
     this.ITR_JSON.section91 = this.summaryToolReliefsForm.value.section91;
 
-    //save ITR object
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
-      (result) => {
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
-        );
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Regime selection updated successfully.'
-        );
-        this.nextBreadcrumb.emit('Summary');
-        this.router.navigate(['/itr-filing/itr/summary']);
-      },
-      (error) => {
-        this.utilsService.showSnackBar('Failed to update regime selection.');
-        this.loading = false;
-      }
-    );
+    if (this.regimeSelectionForm.valid) {
+      this.submitted = false;
+      //save ITR object
+      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+        (result) => {
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Regime selection updated successfully.'
+          );
+          this.nextBreadcrumb.emit('Summary');
+          this.router.navigate(['/itr-filing/itr/summary']);
+        },
+        (error) => {
+          this.utilsService.showSnackBar('Failed to update regime selection.');
+          this.loading = false;
+        }
+      );
+    } else {
+      this.submitted = true;
+      this.utilsService.showSnackBar(
+        'Please fill all required Tax Regime details to continue'
+      );
+      Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
+        const control = this.regimeSelectionForm.get(key);
+
+        if (control instanceof FormGroup) {
+          Object.keys(control.controls).forEach((nestedKey) => {
+            const nestedControl = control.get(nestedKey);
+            const controlErrors: ValidationErrors = nestedControl.errors;
+
+            if (controlErrors != null) {
+              console.log('Key control: ' + key + '.' + nestedKey);
+
+              Object.keys(controlErrors).forEach((keyError) => {
+                console.log(
+                  'Key control: ' +
+                    key +
+                    '.' +
+                    nestedKey +
+                    ', keyError: ' +
+                    keyError +
+                    ', err value: ',
+                  controlErrors[keyError]
+                );
+              });
+            }
+          });
+        }
+
+        // const controlErrors: ValidationErrors = this.regimeSelectionForm.get([
+        //   key,
+        // ]).errors;
+        // if (controlErrors != null) {
+        //   console.log(this.regimeSelectionForm);
+        //   Object.keys(controlErrors).forEach((keyError) => {
+        //     console.log(
+        //       'Key control: ' +
+        //         key +
+        //         ', keyError: ' +
+        //         keyError +
+        //         ', err value: ',
+        //       controlErrors[keyError]
+        //     );
+        //   });
+        // }
+      });
+      this.loading = false;
+    }
   }
 
   setFilingDate() {
