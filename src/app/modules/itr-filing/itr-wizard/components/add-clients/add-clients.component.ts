@@ -73,7 +73,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     let headerObj = {
       panNumber: this.addClientForm.controls['panNumber'].value,
       assessmentYear: this.ITR_JSON.assessmentYear,
-      userId: this.ITR_JSON.userId,
+      userId: this.ITR_JSON.userId.toString(),
     };
     sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
   }
