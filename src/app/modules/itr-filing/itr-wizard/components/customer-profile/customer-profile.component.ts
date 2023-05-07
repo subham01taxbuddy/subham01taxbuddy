@@ -197,6 +197,17 @@ export class CustomerProfileComponent implements OnInit {
   incrementZoom(amount: number) {
     this.zoom += amount;
   }
+
+  resetPan() {
+    console.log(this.customerProfileForm.controls['panNumber'].value);
+    if(this.customerProfileForm.controls['panNumber'].value.length < 10) {
+      this.customerProfileForm.controls['firstName'].setValue(null);
+      this.customerProfileForm.controls['middleName'].setValue(null);
+      this.customerProfileForm.controls['lastName'].setValue(null);
+      this.customerProfileForm.controls['dateOfBirth'].setValue(null);
+    }
+  }
+
   createCustomerProfileForm() {
     return this.fb.group({
       firstName: [
