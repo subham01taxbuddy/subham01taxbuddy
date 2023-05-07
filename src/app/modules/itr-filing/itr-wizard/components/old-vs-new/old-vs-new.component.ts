@@ -446,7 +446,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
         ).controls['currentYearRegime'].setValue(
-          this.ITR_JSON.optionForCurrentAY.currentYearRegime
+          this.ITR_JSON.optionForCurrentAY?.currentYearRegime
         );
       }
     }
