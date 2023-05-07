@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   BankDetails,
   ITR_JSON,
   OptedInNewRegime,
   OptedOutNewRegime,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { UtilsService } from '../../../../../services/utils.service';
-import { ItrMsService } from '../../../../../services/itr-ms.service';
-import { AppConstants } from '../../../../shared/constants';
-import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
-import { Router } from '@angular/router';
+import {UtilsService} from '../../../../../services/utils.service';
+import {ItrMsService} from '../../../../../services/itr-ms.service';
+import {AppConstants} from '../../../../shared/constants';
+import {WizardNavigation} from '../../../../itr-shared/WizardNavigation';
+import {Router} from '@angular/router';
 import * as moment from 'moment';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-old-vs-new',
@@ -21,23 +21,23 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 export class OldVsNewComponent extends WizardNavigation implements OnInit {
   fillingMaxDate: any = new Date();
   particularsArray = [
-    { label: 'Income from Salary', old: 0, new: 0 },
-    { label: 'Income from House Property', old: 0, new: 0 },
-    { label: 'Income from Business and Profession', old: 0, new: 0 },
-    { label: 'Income from Capital Gains', old: 0, new: 0 },
-    { label: 'Income from Other Sources', old: 0, new: 0 },
-    { label: 'Total Headwise Income', old: 0, new: 0 },
-    { label: 'CYLA', old: 0, new: 0 },
-    { label: 'BFLA', old: 0, new: 0 },
-    { label: 'Gross Total Income', old: 0, new: 0 },
-    { label: 'Deduction', old: 0, new: 0 },
-    { label: 'Total Income', old: 0, new: 0 },
-    { label: 'CFL', old: 0, new: 0 },
-    { label: 'Gross Tax Liability', old: 0, new: 0 },
-    { label: 'Interest and Fees - 234 A/B/C/F', old: 0, new: 0 },
-    { label: 'Aggregate Liability', old: 0, new: 0 },
-    { label: 'Tax Paid', old: 0, new: 0 },
-    { label: 'Tax Payable / (Refund)', old: 0, new: 0 },
+    {label: 'Income from Salary', old: 0, new: 0},
+    {label: 'Income from House Property', old: 0, new: 0},
+    {label: 'Income from Business and Profession', old: 0, new: 0},
+    {label: 'Income from Capital Gains', old: 0, new: 0},
+    {label: 'Income from Other Sources', old: 0, new: 0},
+    {label: 'Total Headwise Income', old: 0, new: 0},
+    {label: 'CYLA', old: 0, new: 0},
+    {label: 'BFLA', old: 0, new: 0},
+    {label: 'Gross Total Income', old: 0, new: 0},
+    {label: 'Deduction', old: 0, new: 0},
+    {label: 'Total Income', old: 0, new: 0},
+    {label: 'CFL', old: 0, new: 0},
+    {label: 'Gross Tax Liability', old: 0, new: 0},
+    {label: 'Interest and Fees - 234 A/B/C/F', old: 0, new: 0},
+    {label: 'Aggregate Liability', old: 0, new: 0},
+    {label: 'Tax Paid', old: 0, new: 0},
+    {label: 'Tax Payable / (Refund)', old: 0, new: 0},
   ];
 
   loading: boolean = false;
@@ -52,6 +52,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   oldRegimeLabel = 'Not Opting';
   summaryToolReliefsForm: FormGroup;
   regimeSelectionForm: FormGroup;
+
+  showCurrentAYOptions = false;
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -139,21 +141,21 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (
         this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-        ] as FormGroup
+          ] as FormGroup
       ).controls['everOptedOutOfNewRegime'].enable();
     } else {
-      this.oldRegimeLabel = 'Opting in Now';
-      this.newRegimeLabel = 'Not Opting';
+      this.newRegimeLabel = 'Opting in Now';
+      this.oldRegimeLabel = 'Not Opting';
       (
         this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-        ] as FormGroup
+          ] as FormGroup
       ).controls['everOptedOutOfNewRegime'].setValue(false);
 
       (
         this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-        ] as FormGroup
+          ] as FormGroup
       ).controls['everOptedOutOfNewRegime'].disable();
     }
 
@@ -192,13 +194,27 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     // }
   }
 
+  updateCurrentAYOptions(){
+    console.log('here');
+    let currAssmntYr = (
+      this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+    ).controls['currentYearRegime'];
+    if(this.newRegimeLabel === 'Opting in Now' && currAssmntYr.value === 'NEW'){
+      this.showCurrentAYOptions = true;
+    } else if(this.oldRegimeLabel === 'Opt Out' && currAssmntYr.value === 'OLD'){
+      this.showCurrentAYOptions = true;
+    } else {
+      this.showCurrentAYOptions = false;
+    }
+  }
+
   ngOnInit(): void {
     this.getITRType();
 
     this.utilsService.smoothScrollToTop();
     this.assesssmentYear = [
-      { assesssmentYear: '2022-23' },
-      { assesssmentYear: '2021-22' },
+      {assesssmentYear: '2022-23'},
+      {assesssmentYear: '2021-22'},
     ];
     this.settingValues();
     this.updateRegimeLabels();
@@ -386,7 +402,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
             'everOptedOutOfNewRegime'
-          ] as FormGroup
+            ] as FormGroup
         ).controls['assessmentYear']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.assessmentYear
         );
@@ -394,7 +410,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
             'everOptedOutOfNewRegime'
-          ] as FormGroup
+            ] as FormGroup
         ).controls['everOptedOutOfNewRegime']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.everOptedOutOfNewRegime
         );
@@ -402,7 +418,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
             'everOptedOutOfNewRegime'
-          ] as FormGroup
+            ] as FormGroup
         ).controls['date']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.date
         );
@@ -410,7 +426,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
             'everOptedOutOfNewRegime'
-          ] as FormGroup
+            ] as FormGroup
         ).controls['acknowledgementNumber']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.acknowledgementNumber
         );
@@ -466,6 +482,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       );
     }
   }
+
   goBack() {
     this.saveAndNext.emit(false);
   }
