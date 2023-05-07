@@ -181,13 +181,13 @@ export class ItrWizardComponent implements OnInit {
 
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    if (this.jsonUploaded) {
-      this.ITR_JSON = this.utilsService.removeNullProperties(this.ITR_JSON);
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
-      );
-    }
+    // if (this.jsonUploaded) {
+    this.ITR_JSON = this.utilsService.removeNullProperties(this.ITR_JSON);
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    // }
 
     this.breadcrumb = null;
     this.showIncomeSources = false;

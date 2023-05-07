@@ -57,6 +57,55 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      if (key === 'loans' && Array.isArray(obj[key]) && obj[key].length > 0) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (
+            (obj[key][i].interestPaidPerAnum === 0 ||
+              obj[key][i].interestPaidPerAnum === null) &&
+            (obj[key][i].principalPaidPerAnum === 0 ||
+              obj[key][i].principalPaidPerAnum === null) &&
+            (obj[key][i].loanAmount === 0 || obj[key][i].loanAmount === null)
+          ) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      if (
+        key === 'expenses' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      if (
+        key === 'houseProperties' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          const HPloans = obj[key][i].loans;
+          if (HPloans && Array.isArray(HPloans) && HPloans.length > 0) {
+            for (let j = HPloans.length - 1; j >= 0; j--) {
+              if (
+                HPloans[j] &&
+                (HPloans[j].interestAmount === 0 ||
+                  HPloans[j].interestAmount === null) &&
+                (HPloans[j].principalAmount === 0 ||
+                  HPloans[j].principalAmount === null)
+              ) {
+                HPloans.splice(j, 1);
+              }
+            }
+          }
+        }
+      }
+
       if (obj[key] === null) {
         delete obj[key];
       } else if (typeof obj[key] === 'object') {
