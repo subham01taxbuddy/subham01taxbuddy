@@ -75,19 +75,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   initForm() {
     this.regimeSelectionForm = this.fb.group({
       everOptedNewRegime: this.fb.group({
-        everOptedNewRegime: ['', Validators.required],
+        everOptedNewRegime: [],
         assessmentYear: [],
         date: [],
         acknowledgementNumber: [],
       }),
       everOptedOutOfNewRegime: this.fb.group({
-        everOptedOutOfNewRegime: ['', Validators.required],
+        everOptedOutOfNewRegime: [],
         assessmentYear: [],
         date: [],
         acknowledgementNumber: [],
       }),
       optionForCurrentAY: this.fb.group({
-        currentYearRegime: ['', Validators.required],
+        currentYearRegime: [],
         date: [],
         acknowledgementNumber: [],
       }),
@@ -100,128 +100,128 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  onChanges() {
-    this.updateCurrentAYOptions();
-    const everOptedNewRegime =
-      this.regimeSelectionForm.get('everOptedNewRegime');
+  // onChanges() {
+  //   this.updateCurrentAYOptions();
+  //   const everOptedNewRegime =
+  //     this.regimeSelectionForm.get('everOptedNewRegime');
 
-    const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
-      'everOptedOutOfNewRegime'
-    );
+  //   const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
+  //     'everOptedOutOfNewRegime'
+  //   );
 
-    const optionForCurrentAY =
-      this.regimeSelectionForm.get('optionForCurrentAY');
+  //   const optionForCurrentAY =
+  //     this.regimeSelectionForm.get('optionForCurrentAY');
 
-    everOptedNewRegime
-      .get('everOptedNewRegime')
-      .valueChanges.subscribe((val) => {
-        if (val) {
-          // assesmentYear
-          everOptedNewRegime
-            .get('assessmentYear')
-            .setValidators(Validators.required);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+  //   everOptedNewRegime
+  //     .get('everOptedNewRegime')
+  //     .valueChanges.subscribe((val) => {
+  //       if (val) {
+  //         // assesmentYear
+  //         everOptedNewRegime
+  //           .get('assessmentYear')
+  //           .setValidators(Validators.required);
+  //         everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
 
-          // acknowledgementNumber
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+  //         // acknowledgementNumber
+  //         everOptedNewRegime
+  //           .get('acknowledgementNumber')
+  //           .setValidators(Validators.required);
+  //         everOptedNewRegime
+  //           .get('acknowledgementNumber')
+  //           .updateValueAndValidity();
 
-          // date
-          everOptedNewRegime.get('date').setValidators(Validators.required);
-          everOptedNewRegime.get('date').updateValueAndValidity();
-        } else {
-          // assesmentYear
-          everOptedNewRegime.get('assessmentYear').setValidators(null);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+  //         // date
+  //         everOptedNewRegime.get('date').setValidators(Validators.required);
+  //         everOptedNewRegime.get('date').updateValueAndValidity();
+  //       } else {
+  //         // assesmentYear
+  //         everOptedNewRegime.get('assessmentYear').setValidators(null);
+  //         everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
 
-          // acknowledgementNumber
-          everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+  //         // acknowledgementNumber
+  //         everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
+  //         everOptedNewRegime
+  //           .get('acknowledgementNumber')
+  //           .updateValueAndValidity();
 
-          // date
-          everOptedNewRegime.get('date').setValidators(null);
-          everOptedNewRegime.get('date').updateValueAndValidity();
-        }
-      });
+  //         // date
+  //         everOptedNewRegime.get('date').setValidators(null);
+  //         everOptedNewRegime.get('date').updateValueAndValidity();
+  //       }
+  //     });
 
-    everOptedOutOfNewRegime
-      .get('everOptedOutOfNewRegime')
-      .valueChanges.subscribe((val) => {
-        if (val) {
-          // assesmentYear
-          everOptedOutOfNewRegime
-            .get('assessmentYear')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime
-            .get('assessmentYear')
-            .updateValueAndValidity();
+  //   everOptedOutOfNewRegime
+  //     .get('everOptedOutOfNewRegime')
+  //     .valueChanges.subscribe((val) => {
+  //       if (val) {
+  //         // assesmentYear
+  //         everOptedOutOfNewRegime
+  //           .get('assessmentYear')
+  //           .setValidators(Validators.required);
+  //         everOptedOutOfNewRegime
+  //           .get('assessmentYear')
+  //           .updateValueAndValidity();
 
-          // acknowledgementNumber
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+  //         // acknowledgementNumber
+  //         everOptedOutOfNewRegime
+  //           .get('acknowledgementNumber')
+  //           .setValidators(Validators.required);
+  //         everOptedOutOfNewRegime
+  //           .get('acknowledgementNumber')
+  //           .updateValueAndValidity();
 
-          // date
-          everOptedOutOfNewRegime
-            .get('date')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
-        } else {
-          // assesmentYear
-          everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+  //         // date
+  //         everOptedOutOfNewRegime
+  //           .get('date')
+  //           .setValidators(Validators.required);
+  //         everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+  //       } else {
+  //         // assesmentYear
+  //         everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
+  //         everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
 
-          // acknowledgementNumber
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(null);
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+  //         // acknowledgementNumber
+  //         everOptedOutOfNewRegime
+  //           .get('acknowledgementNumber')
+  //           .setValidators(null);
+  //         everOptedOutOfNewRegime
+  //           .get('acknowledgementNumber')
+  //           .updateValueAndValidity();
 
-          // date
-          everOptedOutOfNewRegime.get('date').setValidators(null);
-          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
-        }
-      });
+  //         // date
+  //         everOptedOutOfNewRegime.get('date').setValidators(null);
+  //         everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+  //       }
+  //     });
 
-    optionForCurrentAY
-      .get('currentYearRegime')
-      .valueChanges.subscribe((val) => {
-        if (this.showCurrentAYOptions) {
-          // acknowledgementNumber
-          optionForCurrentAY
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          optionForCurrentAY
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+  //   optionForCurrentAY
+  //     .get('currentYearRegime')
+  //     .valueChanges.subscribe((val) => {
+  //       if (this.showCurrentAYOptions) {
+  //         // acknowledgementNumber
+  //         optionForCurrentAY
+  //           .get('acknowledgementNumber')
+  //           .setValidators(Validators.required);
+  //         optionForCurrentAY
+  //           .get('acknowledgementNumber')
+  //           .updateValueAndValidity();
 
-          // date
-          optionForCurrentAY.get('date').setValidators(Validators.required);
-          optionForCurrentAY.get('date').updateValueAndValidity();
-        } else {
-          // acknowledgementNumber
-          optionForCurrentAY.get('acknowledgementNumber').setValidators(null);
-          optionForCurrentAY
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+  //         // date
+  //         optionForCurrentAY.get('date').setValidators(Validators.required);
+  //         optionForCurrentAY.get('date').updateValueAndValidity();
+  //       } else {
+  //         // acknowledgementNumber
+  //         optionForCurrentAY.get('acknowledgementNumber').setValidators(null);
+  //         optionForCurrentAY
+  //           .get('acknowledgementNumber')
+  //           .updateValueAndValidity();
 
-          // date
-          optionForCurrentAY.get('date').setValidators(null);
-          optionForCurrentAY.get('date').updateValueAndValidity();
-        }
-      });
-  }
+  //         // date
+  //         optionForCurrentAY.get('date').setValidators(null);
+  //         optionForCurrentAY.get('date').updateValueAndValidity();
+  //       }
+  //     });
+  // }
 
   updateRegimeLabels() {
     let optIn = (
@@ -347,7 +347,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.getITRType();
-    this.onChanges();
+    // this.onChanges();
 
     this.utilsService.smoothScrollToTop();
     this.assesssmentYear = [

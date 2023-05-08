@@ -72,7 +72,7 @@
                     </mat-radio-button>
                   </mat-radio-group>
 
-                  <mat-error
+                  <!-- <mat-error
                     *ngIf="
                       regimeSelectionForm.controls[
                         'optionForCurrentAY'
@@ -81,7 +81,7 @@
                     "
                   >
                     Please select an option to continue
-                  </mat-error>
+                  </mat-error> -->
                 </div>
               </div>
               <hr />
@@ -580,7 +580,7 @@
 <div class="flex justify-between p-[30px] back-foot">
   <button (click)="goBack()" class="lgtBtn">Back to Sources</button>
 
-  <button (click)="gotoSummary()" class="darkBtn" type="submit">
+  <button (click)="gotoSummary()" class="darkBtn">
     <span class="adjust">Save & Next</span>
     <i class="material-icons icoAd">arrow_right_alt </i>
   </button>
