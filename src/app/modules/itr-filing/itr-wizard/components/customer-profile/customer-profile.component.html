@@ -8,7 +8,7 @@
                 <mat-label>PAN Number</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matInput placeholder="PAN" name="panNumber" formControlName="panNumber"
-                        class="input-field" maxlength="10" minlength="10"
+                        class="input-field" maxlength="10" minlength="10" (ngModelChange)="resetPan()"
                         (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)" required upperCase>
                     <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">
                         Enter valid PAN (e.g XXXXX1234X)</mat-error>

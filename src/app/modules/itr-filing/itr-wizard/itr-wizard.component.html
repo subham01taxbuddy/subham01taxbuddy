@@ -113,6 +113,7 @@
       <app-prefill-id
         [data]="navigationData"
         (skipPrefill)="skipPrefill($event)"
+        (jsonUploaded)="onUploadedJson($event)"
       ></app-prefill-id>
     </div>
     <div *ngIf="showIncomeSources">
