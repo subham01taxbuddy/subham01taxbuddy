@@ -24,6 +24,7 @@ export class UtilsService {
   ITR_JSON!: ITR_JSON;
   loading: boolean = false;
   private subject = new Subject<any>();
+  uploadedJson: any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -857,11 +858,19 @@ export class UtilsService {
       section89: null,
       section90: null,
       section91: null,
-      itrSummaryJson: null,
-      isItrSummaryJsonEdited: false
+      itrSummaryJson: false,
+      isItrSummaryJsonEdited: false,
     };
 
     return ITR_JSON;
+  }
+
+  setUploadedJson(data: any) {
+    this.uploadedJson = data;
+  }
+
+  getUploadedJson() {
+    return this.uploadedJson;
   }
 
   sendMessage(message: any) {

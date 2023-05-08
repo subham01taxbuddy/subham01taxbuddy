@@ -299,11 +299,27 @@
                               </mat-icon>
                             </div>
 
-                            <label class="rtNumb1">
-                              <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{
+                            <label
+                              class="rtNumb1"
+                              *ngIf="!ITR_JSON.itrSummaryJson"
+                            >
+                              <i class="material-icons icRup">&#8377;</i>&nbsp;
+                              {{
                                 utilsService.currencyFormatter(
                                   summaryDetail.salary
+                                )
+                              }}
+                            </label>
+
+                            <label
+                              class="rtNumb1"
+                              *ngIf="ITR_JSON.itrSummaryJson"
+                            >
+                              <i class="material-icons icRup">&#8377;</i>&nbsp;
+                              {{
+                                utilsService.currencyFormatter(
+                                  this.uploadedJson?.ITR1?.ITR1_TaxComputation
+                                    ?.TotalTaxPayable
                                 )
                               }}
                             </label>
