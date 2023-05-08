@@ -16,8 +16,8 @@
 
     <div class="col-sm-6">
       <div class="radius">
-        <div class="row">
-          <div class="col-sm-5">
+        <div class="row align-items-end">
+          <div class="col-sm-4">
             <!-- <form class="form-inline"> -->
             <!-- <span class="TxSm"> Select Date: </span>
             <input type="date" id="date" name="Select Date">         -->
@@ -27,14 +27,14 @@
               [min]="minDate" [max]="maxDate" >
             </div>
           </div>
-          <div class="col-sm-5">
+          <div class="col-sm-4">
             <div>
               <label for="end-date">End Date:</label>
               <input matInput type="date" id="date" name="end-date" class="form-control" [formControl]="endDate"
                [min]="minDate" [max]="maxDate">
             </div>
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-4 text-center">
             <button class="proceed" (click)="search()"><i class="fa fa-search" aria-hidden="true" ></i> Search </button>
           </div>
           <!-- </form> -->
@@ -66,11 +66,11 @@
       </div>
     </div>
 
-    <div class="col-sm-6 mvup">
+    <div class="col-sm-6 mvup-custom ">
       <div class="radius">
       <!-- Internal Row Starts -->
       <div class="row" >
-        <div class="col-sm-12" style="margin-top: 20px;">
+        <div class="col-sm-12">
           <div class="radius2 spTp RedBk">
           <div class="inBxL">
           <span class="numTxSm redTx"><i class="fa fa-bullhorn"></i> 30</span><br>
