@@ -93,9 +93,9 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 20,
       currentPage: 1,
-      totalItems: 0,
+      totalItems: null,
     };
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
@@ -181,7 +181,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     // &searchAsCoOwner=true&page=0
     this.loading = true;
     return new Promise((resolve, reject) => {
-      let param = `/itr-list?page=${pageNo}&pageSize=10`;
+      let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
       }
@@ -991,11 +991,16 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   pageChanged(event) {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
-    this.myItrsList(
-      // this.selectedFyYear,
-      this.selectedPageNo,
-      this.selectedFilingTeamMemberId
-    );
+    if (this.coOwnerToggle.value == true) {
+      this.myItrsList(event - 1,true);
+    }else{
+      this.myItrsList(event - 1,'');
+    }
+    // this.myItrsList(
+    //   // this.selectedFyYear,
+    //   this.selectedPageNo,
+    //   this.selectedFilingTeamMemberId
+    // );
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;

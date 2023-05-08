@@ -66,7 +66,7 @@ export class CancelSubscriptionComponent implements OnInit {
     const lineBreak = false;
     return { temp, lineBreak };
   }
-  
+
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
@@ -86,7 +86,7 @@ export class CancelSubscriptionComponent implements OnInit {
     }
   }
 
- 
+
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
@@ -213,7 +213,7 @@ export class CancelSubscriptionComponent implements OnInit {
         field: 'userSelected',
         width: 320,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],

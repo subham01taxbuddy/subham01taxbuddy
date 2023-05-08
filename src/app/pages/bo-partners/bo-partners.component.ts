@@ -15,7 +15,8 @@ import {
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-bo-partners',
@@ -53,6 +54,8 @@ export class BoPartnersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog
   ) {
+    // this.boPartnerDateForm.value.fromDate.setValue('2023-04-01');
+    // this.boPartnerDateForm.value.toDate.setValue(new Date());
     this.partnersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.boPartnersColumnDef(),
@@ -82,8 +85,9 @@ export class BoPartnersComponent implements OnInit {
       totalItems: null,
     };
     this.boPartnerDateForm = this.fb.group({
-      fromDate: [new Date(), Validators.required],
+      fromDate: ['2023-04-01', Validators.required],
       toDate: [new Date(), Validators.required],
+      mobileNumber:new FormControl('')
     });
     this.getBoPartners();
   }
@@ -336,7 +340,8 @@ export class BoPartnersComponent implements OnInit {
     ];
   }
 
-  getBoPartners() {
+  getBoPartners(mobile?) {
+    // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(
@@ -348,10 +353,25 @@ export class BoPartnersComponent implements OnInit {
         'yyyy-MM-dd'
       );
       this.loading = true;
+      let param
+      let mobileFilter = '';
+    if (
+      this.utileService.isNonEmpty(this.boPartnerDateForm.controls['mobileNumber'].value) &&
+      this.boPartnerDateForm.controls['mobileNumber'].valid
+    ) {
+      mobileFilter =
+        '&mobileNumber=' + this.boPartnerDateForm.controls['mobileNumber'].value;
+    }
+      // let mobileFilter=''
+      // if(mobile){
+      //   mobileFilter =`?mobileNumber=${}`
+      // }
 
-      let param = `/partner-details?page=${
+       param = `/partner-details?page=${
         this.config.currentPage - 1
-      }&size=10&from=${fromDate}&to=${toDate}`;
+      }&size=10&from=${fromDate}&to=${toDate}${mobileFilter}`;
+
+
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
           console.log('bo-partners list: ', response);
@@ -431,7 +451,7 @@ export class BoPartnersComponent implements OnInit {
     var data = new FormData();
     data.append('from', 'support@taxbuddy.com');
     data.append('subject', 'Partner Onboarding in Taxbuddy BO');
-    data.append('body', `<!DOCTYPE html>\n<html>\n<head>\n  <title></title>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta http-equiv="X-UA-Compatible" content="IE=edge" />\n</head>\n<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">\n  <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">\n    <tr>\n      <td align="center">\n        <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">\n          <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n            <td>\n              <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">\n                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n                  <td style="background: #fff;padding-left: 15px;">\n                    <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;">\n                      <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0">\n                    </a>\n                  </td>\n                  <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%">\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="padding: 0px 15px 0px 15px">\n              <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">\n                <tr>\n                  <td style="font-size: 14px;color: #333;">\n                    <br>\n                    <br>                 \n                    <span style="font-weight: bold">Dear Partner ${partnerName},</span><br />\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                      Welcome onboard!\n                    </p>\n                    <br>                   \n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is to intimate you to start your registration process for onboarding you as a partner into Taxbuddy Back Office.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Please click on the link below to complete the process.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     <a href="https://uat-itr.taxbuddy.com/log/userlogin?mobile=${mobile}&serviceType=ITR&partner=true" title="LINK" style="text-decoration: none;">Registration Link</a>\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Thanks,\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Taxbuddy Partner Onboarding Team\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is system generated email do not reply.\n                    </p>\n                    <br>                    \n                    <br>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="background-color: #1c3550;padding: 20px 15px;">\n              <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;">\n              </table>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`);
+    data.append('body', `<!DOCTYPE html>\n<html>\n<head>\n  <title></title>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta http-equiv="X-UA-Compatible" content="IE=edge" />\n</head>\n<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">\n  <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">\n    <tr>\n      <td align="center">\n        <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">\n          <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n            <td>\n              <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">\n                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n                  <td style="background: #fff;padding-left: 15px;">\n                    <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;">\n                      <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0">\n                    </a>\n                  </td>\n                  <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%">\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="padding: 0px 15px 0px 15px">\n              <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">\n                <tr>\n                  <td style="font-size: 14px;color: #333;">\n                    <br>\n                    <br>                 \n                    <span style="font-weight: bold">Dear Partner ${partnerName},</span><br />\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                      Welcome onboard!\n                    </p>\n                    <br>                   \n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is to intimate you to start your registration process for onboarding you as a partner into Taxbuddy Back Office.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Please click on the link below to complete the process.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     <a href="${environment.webportal_url}/log/userlogin?mobile=${mobile}&serviceType=ITR&partner=true" title="LINK" style="text-decoration: none;">Registration Link</a>\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Thanks,\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Taxbuddy Partner Onboarding Team\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is system generated email do not reply.\n                    </p>\n                    <br>                    \n                    <br>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="background-color: #1c3550;padding: 20px 15px;">\n              <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;">\n              </table>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`);
     data.append('cc', 'support@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
     data.append('isHtml', 'true');
     data.append('to', partnerData.emailAddress);
@@ -490,5 +510,10 @@ export class BoPartnersComponent implements OnInit {
         }
       }
     });
+  }
+
+  resetFilters(){
+    this.boPartnerDateForm.controls['mobileNumber'].setValue(null);
+    this.getBoPartners();
   }
 }

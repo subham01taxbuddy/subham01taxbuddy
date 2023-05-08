@@ -74,21 +74,23 @@ export class SidebarComponent implements DoCheck {
     {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
-      active: true,
+      active: false,
       url: null,
       roles: [],
       submenu: [
         { name: 'My Users', url: '/tasks/assigned-users-new', roles:[] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles:[] },
         { name: 'ITRs', url: '/tasks/filings', roles:[]  },
-        // { name: 'Exceptions', url: '/tasks/exceptions', roles:[] },
-        { name: 'Create User', url: '/pages/user-management/create-user', roles:[] },
-        { name: 'Potential Users', url: '/tasks/potential-users', roles:[] },
-          // children: [
+        { name: 'Exceptions', url: '/tasks/exceptions', roles:[],
+          // submenu: [
           //   { path: 'signup', component: SignUpExceptionsComponent },
           //   { path: 'eri', component: EriExceptionsComponent },
           //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
           // ]
+        },
+        { name: 'Create User', url: '/pages/user-management/create-user', roles:[] },
+        { name: 'Potential Users', url: '/tasks/potential-users', roles:[] },
+
 
       ]
     },

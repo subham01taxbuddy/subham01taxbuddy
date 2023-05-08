@@ -1,24 +1,26 @@
 <div *ngIf="true" class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
-  <ul id="accordion" class="accordion">
-    <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
-      <div class="menu sidebar__item" (click)="toggle(i)" *ngIf="!menu.url && isApplicable(menu.roles)">
-        {{ menu.name }}
-        <i class="fa fa-chevron-down"></i>
-      </div>
-      <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}" routerLinkActive="sidebar__item_active"
-        [routerLinkActiveOptions]="{exact:true}" class="sidebar__item">
-        <span>{{ menu.name }}</span>
-      </a>
-      <ul class="submenu" #submenu *ngIf="menu.active">
-        <li *ngFor="let submenu of menu.submenu">
-          <a *ngIf="isApplicable(submenu.roles)" routerLink="{{submenu.url}}" class="sidebar__name norTx"
-            class="sidebar__item" routerLinkActive="sidebar__item_active">
-            <span>{{ submenu.name }}</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-  </ul>
+<ul id="accordion" class="accordion">
+  <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
+    <div class="menu sidebar__item" (click)="toggle(i)" *ngIf="!menu.url && isApplicable(menu.roles)">
+      {{ menu.name }}
+      <i *ngIf="!menu.active" class="fa fa-chevron-right"></i>
+      <i *ngIf="menu.active" class="fa fa-chevron-up"></i>
+    </div>
+    <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}"
+       routerLinkActive="sidebar__item_active" [routerLinkActiveOptions]="{exact:true}"
+       class="sidebar__item">
+      <span>{{ menu.name }}</span>
+    </a>
+    <ul class="submenu" #submenu *ngIf="menu.active">
+      <li *ngFor="let submenu of menu.submenu">
+        <a *ngIf="isApplicable(submenu.roles)" routerLink="{{submenu.url}}" class="sidebar__name norTx" class="sidebar__item"
+           routerLinkActive="sidebar__item_active">
+          <span>{{ submenu.name }}</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
 </div>
 <div *ngIf="false" class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar"
   [class.hideSideMenu]="hideSideBar">
