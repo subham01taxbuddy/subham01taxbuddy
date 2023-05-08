@@ -90,6 +90,9 @@ export interface ITR_JSON {
   section89: any;
   section90: any;
   section91: any;
+
+  itrSummaryJson: any;
+  isItrSummaryJsonEdited: boolean;
 }
 
 export interface CurrentNewRegime {

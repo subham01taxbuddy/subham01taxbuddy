@@ -323,9 +323,13 @@ export class PrefillIdComponent implements OnInit {
               );
 
               // have to set other here for 1 & 4 as well. Can do it by storing this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc this in some const based on itr type later
-              itrObjAllowanceOth.amount =
-                this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc -
-                totalExemptIncomesExceptOTH;
+              if(this.uploadedJson[ITR_Type].ScheduleEI) {
+                itrObjAllowanceOth.amount =
+                  this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc -
+                  totalExemptIncomesExceptOTH;
+              } else {
+                console.log('no ScheduleEI found in uploaded JSON');
+              }
             }
           } else {
             console.log(`Exempt Income - ${type} not found`);
@@ -424,7 +428,7 @@ export class PrefillIdComponent implements OnInit {
 
           if (JsonDetail) {
             // finding and storing the object with the same NatureDesc (type) present in ITR Object
-            const itrObjOtherIncome = this.ITR_Obj.incomes.find(
+            let itrObjOtherIncome = this.ITR_Obj.incomes.find(
               (itrObjOtherIncome) => itrObjOtherIncome.incomeType === newName
             );
             // console.log('ITROBJOTHERINCOME====>>>>', itrObjOtherIncome);
@@ -434,6 +438,9 @@ export class PrefillIdComponent implements OnInit {
               console.log(
                 `Exempt Income - ${type} Income was not found in the ITR Object`
               );
+              itrObjOtherIncome = {
+                amount: 0, details: "", expenses: 0, incomeType: newName
+              };
             }
 
             itrObjOtherIncome.amount = JsonDetail.OthSrcOthAmount;
@@ -768,6 +775,7 @@ export class PrefillIdComponent implements OnInit {
         };
         // console.log('updateInvestmentsMapping==>>', mapping);
 
+        let expenseIndex = 0;
         for (let i = 0; i < investments.length; i++) {
           // console.log('i ==>>>>', i);
           const type = investmentNames[i];
@@ -775,20 +783,40 @@ export class PrefillIdComponent implements OnInit {
             // use the mapping object to get the new name for the current type
             const newName = mapping[type];
             if (newName === 'EDUCATION') {
+              if(!this.ITR_Obj.loans) {
+                this.ITR_Obj.loans = [];
+              }
+              this.ITR_Obj.loans.push({
+                details: "",
+                interestPaidPerAnum: 0,
+                loanAmount: 0,
+                loanType: "",
+                name: "",
+                principalPaidPerAnum: 0
+              });
               const educationLoanDeduction =
                 (this.ITR_Obj.loans[0].interestPaidPerAnum = investments[i][1]);
               // console.log('educationLoanDeduction', educationLoanDeduction);
             }
 
             if (newName === 'HOUSE_RENT_PAID') {
-              const HouseRentDeduction80gg = (this.ITR_Obj.expenses[0].amount =
+              if(!this.ITR_Obj.expenses) {
+                this.ITR_Obj.expenses = [];
+              }
+              this.ITR_Obj.expenses.push({
+                amount: 0, details: "", expenseFor: 0, expenseType: newName, noOfMonths: 0}
+              );
+              const HouseRentDeduction80gg = (this.ITR_Obj.expenses[expenseIndex++].amount =
                 investments[i][1]);
               // console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
             }
 
             if (newName === 'ELECTRIC_VEHICLE') {
+              this.ITR_Obj.expenses.push({
+                amount: 0, details: "", expenseFor: 0, expenseType: newName, noOfMonths: 0}
+              );
               const electricVehicleDeduction =
-                (this.ITR_Obj.expenses[1].amount = investments[i][1]);
+                (this.ITR_Obj.expenses[expenseIndex++].amount = investments[i][1]);
               // console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
             }
 
@@ -977,7 +1005,7 @@ export class PrefillIdComponent implements OnInit {
               if (jsonInvestmentDetails) {
                 {
                   // finding and storing the object with the same NatureDesc (type) present in ITR Object
-                  const jsonItrObjInvestments = this.ITR_Obj.investments.find(
+                  let jsonItrObjInvestments = this.ITR_Obj.investments.find(
                     (jsonItrObjInvestment) =>
                       jsonItrObjInvestment.investmentType === newName
                   );
@@ -991,6 +1019,9 @@ export class PrefillIdComponent implements OnInit {
                     console.log(
                       `Exempt Income - ${newName} Income was not found in the ITR Object`
                     );
+                    jsonItrObjInvestments = {
+                      amount: 0, details: "", investmentType: newName
+                    };
                   }
 
                   jsonItrObjInvestments.amount = investments[i][1];
@@ -1057,6 +1088,8 @@ export class PrefillIdComponent implements OnInit {
 
     // ITR JSON IS THE UPLOADED UTILITY JSON
     console.log('Uploaded Utility: ', ItrJSON);
+
+    this.ITR_Obj.itrSummaryJson = ItrJSON;
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
     {
@@ -1523,6 +1556,13 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type][
               this.ITR14_IncomeDeductions
             ].AnnualValue30Percent;
+
+          if(!this.ITR_Obj.houseProperties[0].loans) {
+            this.ITR_Obj.houseProperties[0].loans = [];
+          }
+          this.ITR_Obj.houseProperties[0].loans.push(
+            {loanType: "", principalAmount: 0, interestAmount: 0}
+          );
 
           // Interest on HP loan
           this.ITR_Obj.houseProperties[0].loans[0].interestAmount =

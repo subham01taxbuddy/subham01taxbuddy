@@ -768,6 +768,8 @@ export class UtilsService {
       section89: null,
       section90: null,
       section91: null,
+      itrSummaryJson: null,
+      isItrSummaryJsonEdited: false
     };
 
     return ITR_JSON;
@@ -1282,7 +1284,21 @@ export class UtilsService {
     return this.itrMsService.putMethod(param, itrObject);
   }
 
+  /**
+   * This method shall be used throughout ITR utility for saving the ITR json data to backend.
+   * The exception cases are for saving the initial data after prefill or summary json upload.
+   * @param itrObject The ITR object to be saved to backend
+   */
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+    itrObject.isItrSummaryJsonEdited = true;
+    const param = `/itr/itr-type`;
+    return this.itrMsService
+      .postMethod(param, itrObject)
+      .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+  }
+
+  uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     const param = `/itr/itr-type`;
     return this.itrMsService
