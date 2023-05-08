@@ -22,6 +22,7 @@ import { AddSubscriptionComponent } from './components/assigned-subscription/add
 import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
 import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
 import { CancelSubscriptionComponent } from './components/cancel-subscription/cancel-subscription.component';
+import { ApproveRejectComponent } from './components/approve-reject/approve-reject.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { CancelSubscriptionComponent } from './components/cancel-subscription/ca
     AddSubscriptionComponent,
     OldInvoicesComponent,
     PauseInvoiceReminderComponent,
-    CancelSubscriptionComponent
+    CancelSubscriptionComponent,
+    ApproveRejectComponent
   ],
 })
 export class SubscriptionModule { }

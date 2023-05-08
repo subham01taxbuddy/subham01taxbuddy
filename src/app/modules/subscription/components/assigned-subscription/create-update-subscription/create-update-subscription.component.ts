@@ -997,9 +997,23 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   cancelSubscription() {
-    this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
-    this.location.back();
-
+    this.loading = true;
+    let param = `/itr/subscription`;
+    let reqBody = {
+      "subscriptionId": this.userSubscription.subscriptionId,
+      "cancellationStatus": "PENDING"
+    };
+    this.userService.spamPutMethod(param, reqBody).subscribe(
+      (res: any) => {
+        this.loading = false;
+        this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
+        this.location.back();
+      },
+      (error) => {
+        this.loading = false;
+        this.toastMessage.alert('error', 'failed to update.');
+      }
+    );
   }
 }
 
