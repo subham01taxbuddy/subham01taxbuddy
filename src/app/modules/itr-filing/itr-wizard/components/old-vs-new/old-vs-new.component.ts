@@ -101,6 +101,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   }
 
   onChanges() {
+    this.updateCurrentAYOptions();
     const everOptedNewRegime =
       this.regimeSelectionForm.get('everOptedNewRegime');
 
@@ -196,7 +197,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     optionForCurrentAY
       .get('currentYearRegime')
       .valueChanges.subscribe((val) => {
-        if (val === 'OLD') {
+        if (this.showCurrentAYOptions) {
           // acknowledgementNumber
           optionForCurrentAY
             .get('acknowledgementNumber')

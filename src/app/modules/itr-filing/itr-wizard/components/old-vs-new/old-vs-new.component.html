@@ -429,9 +429,7 @@
                   </mat-error>
                 </div>
               </div>
-              <div
-                class="card__row"
-                *ngIf="showCurrentAYOptions">
+              <div class="card__row" *ngIf="showCurrentAYOptions">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label"
                     >Acknowledgement Number</mat-label
@@ -453,11 +451,11 @@
 
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'optionForCurrentAY'
-                        ].controls['acknowledgementNumber'].hasError(
-                          'required'
-                        ) || submitted
+                        (this.itrType === '3' || this.itrType === '4') &&
+                        this.regimeSelectionForm
+                          .get('optionForCurrentAY')
+                          .get('acknowledgementNumber')
+                          .hasError('required')
                       "
                     >
                       This field is required
@@ -489,9 +487,11 @@
                     <mat-datepicker #picker1></mat-datepicker>
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'optionForCurrentAY'
-                        ].controls['date'].hasError('required') || submitted
+                        (this.itrType === '3' || this.itrType === '4') &&
+                        this.regimeSelectionForm
+                          .get('optionForCurrentAY')
+                          .get('date')
+                          .hasError('required')
                       "
                     >
                       This field is required

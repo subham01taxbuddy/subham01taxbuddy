@@ -57,6 +57,7 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      //LOANS
       if (key === 'loans' && Array.isArray(obj[key]) && obj[key].length > 0) {
         for (let i = 0; i < obj[key].length; i++) {
           if (
@@ -71,6 +72,7 @@ export class UtilsService {
         }
       }
 
+      //EXPENSES
       if (
         key === 'expenses' &&
         Array.isArray(obj[key]) &&
@@ -83,6 +85,93 @@ export class UtilsService {
         }
       }
 
+      //INSURANCES
+      if (
+        key === 'insurances' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (
+            (obj[key][i].medicalExpenditure === 0 ||
+              obj[key][i].medicalExpenditure === null) &&
+            (obj[key][i].premium === 0 || obj[key][i].premium === null) &&
+            (obj[key][i].preventiveCheckUp === 0 ||
+              obj[key][i].preventiveCheckUp === null)
+          ) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //INCOMES
+      if (key === 'incomes' && Array.isArray(obj[key]) && obj[key].length > 0) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //DONATIONS
+      if (
+        key === 'donations' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (
+            (obj[key][i].schemeCode === 0 || obj[key][i].schemeCode === null) &&
+            (obj[key][i].amountOtherThanCash === 0 ||
+              obj[key][i].amountOtherThanCash === null) &&
+            (obj[key][i].amountInCash === 0 ||
+              obj[key][i].preventiveCheckUp === null)
+          ) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //DIVIDENDINCOMES
+      if (
+        key === 'dividendIncomes' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].income === 0 || obj[key][i].income === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //INVESTMENTS
+      if (
+        key === 'investments' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //DISABILITIES
+      if (
+        key === 'disabilities' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //HOUSEPROPERTIESLOAN
       if (
         key === 'houseProperties' &&
         Array.isArray(obj[key]) &&
