@@ -405,7 +405,7 @@
                   <mat-radio-group
                     name="currentYearRegime"
                     formControlName="currentYearRegime"
-                    (change)="updateRegimeLabels()"
+                    (change)="updateCurrentAYOptions()"
                   >
                     <mat-radio-button
                       [value]="'NEW'"
@@ -431,12 +431,7 @@
               </div>
               <div
                 class="card__row"
-                *ngIf="
-                  regimeSelectionForm.controls['optionForCurrentAY'].controls[
-                    'currentYearRegime'
-                  ].value === 'OLD'
-                "
-              >
+                *ngIf="showCurrentAYOptions">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label"
                     >Acknowledgement Number</mat-label

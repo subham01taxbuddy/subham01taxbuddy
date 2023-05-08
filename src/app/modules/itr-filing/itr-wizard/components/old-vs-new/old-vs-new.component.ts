@@ -59,6 +59,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   oldRegimeLabel = 'Not Opting';
   summaryToolReliefsForm: FormGroup;
   regimeSelectionForm: FormGroup;
+
+  showCurrentAYOptions = false;
   submitted: boolean = false;
   constructor(
     public utilsService: UtilsService,
@@ -271,8 +273,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         ] as FormGroup
       ).controls['everOptedOutOfNewRegime'].enable();
     } else {
-      this.oldRegimeLabel = 'Opting in Now';
-      this.newRegimeLabel = 'Not Opting';
+      this.newRegimeLabel = 'Opting in Now';
+      this.oldRegimeLabel = 'Not Opting';
       (
         this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
@@ -319,6 +321,26 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     //     ] as FormGroup
     //   ).controls['everOptedOutOfNewRegime'].disable();
     // }
+  }
+
+  updateCurrentAYOptions() {
+    console.log('here');
+    let currAssmntYr = (
+      this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+    ).controls['currentYearRegime'];
+    if (
+      this.newRegimeLabel === 'Opting in Now' &&
+      currAssmntYr.value === 'NEW'
+    ) {
+      this.showCurrentAYOptions = true;
+    } else if (
+      this.oldRegimeLabel === 'Opt Out' &&
+      currAssmntYr.value === 'OLD'
+    ) {
+      this.showCurrentAYOptions = true;
+    } else {
+      this.showCurrentAYOptions = false;
+    }
   }
 
   ngOnInit(): void {
@@ -597,6 +619,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       );
     }
   }
+
   goBack() {
     this.saveAndNext.emit(false);
   }
