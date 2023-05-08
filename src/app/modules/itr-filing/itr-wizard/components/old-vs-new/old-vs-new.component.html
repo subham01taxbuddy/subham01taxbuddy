@@ -35,7 +35,7 @@
 
         <hr />
 
-        <form [formGroup]="regimeSelectionForm">
+        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()">
           <div class="card__row flex flex-col">
             <div
               class="card__col-xs-12 question-label"
@@ -71,6 +71,17 @@
                       No
                     </mat-radio-button>
                   </mat-radio-group>
+
+                  <!-- <mat-error
+                    *ngIf="
+                      regimeSelectionForm.controls[
+                        'optionForCurrentAY'
+                      ].controls['currentYearRegime'].hasError('required') &&
+                      submitted
+                    "
+                  >
+                    Please select an option to continue
+                  </mat-error> -->
                 </div>
               </div>
               <hr />
@@ -91,6 +102,7 @@
                     name="everOptedNewRegime"
                     formControlName="everOptedNewRegime"
                     (change)="updateRegimeLabels()"
+                    required
                   >
                     <mat-radio-button
                       [value]="true"
@@ -102,6 +114,16 @@
                       >No</mat-radio-button
                     >
                   </mat-radio-group>
+                  <mat-error
+                    *ngIf="
+                      regimeSelectionForm.controls[
+                        'everOptedNewRegime'
+                      ].controls['everOptedNewRegime'].hasError('required') &&
+                      submitted
+                    "
+                  >
+                    Please select an option to continue
+                  </mat-error>
                 </div>
               </div>
               <div
@@ -118,7 +140,7 @@
                   >
                   <mat-form-field appearance="outline">
                     <mat-select
-                      placeholder="Select Financial Year"
+                      placeholder="Select Assesment Year"
                       required
                       name="assessmentYear"
                       formControlName="assessmentYear"
@@ -130,6 +152,16 @@
                         {{ year.assesssmentYear }}
                       </mat-option>
                     </mat-select>
+                    <mat-error
+                      *ngIf="
+                        regimeSelectionForm.controls[
+                          'everOptedNewRegime'
+                        ].controls['assessmentYear'].hasError('required') ||
+                        submitted
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
                   </mat-form-field>
                 </div>
@@ -151,6 +183,17 @@
                       onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                       autocomplete="off"
                     />
+                    <mat-error
+                      *ngIf="
+                        regimeSelectionForm.controls[
+                          'everOptedNewRegime'
+                        ].controls['acknowledgementNumber'].hasError(
+                          'required'
+                        ) || submitted
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
                     <!--                    Enter-->
                     <!--                    acknowledgement number</mat-error>-->
@@ -176,6 +219,15 @@
                       [for]="picker1"
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error
+                      *ngIf="
+                        regimeSelectionForm.controls[
+                          'everOptedNewRegime'
+                        ].controls['date'].hasError('required') || submitted
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
                     <!--                    Select-->
                     <!--                    Date of-->
@@ -201,6 +253,7 @@
                     name="everOptedOutOfNewRegime"
                     formControlName="everOptedOutOfNewRegime"
                     (change)="updateRegimeLabels()"
+                    required
                   >
                     <mat-radio-button
                       [value]="true"
@@ -212,6 +265,18 @@
                       >No</mat-radio-button
                     >
                   </mat-radio-group>
+
+                  <mat-error
+                    *ngIf="
+                      regimeSelectionForm.controls[
+                        'everOptedOutOfNewRegime'
+                      ].controls['everOptedOutOfNewRegime'].hasError(
+                        'required'
+                      ) && submitted
+                    "
+                  >
+                    Please select an option to continue
+                  </mat-error>
                 </div>
               </div>
               <div
@@ -239,6 +304,17 @@
                         {{ year.assesssmentYear }}
                       </mat-option>
                     </mat-select>
+
+                    <mat-error
+                      *ngIf="
+                        regimeSelectionForm.controls[
+                          'everOptedOutOfNewRegime'
+                        ].controls['assessmentYear'].hasError('required') ||
+                        submitted
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
                   </mat-form-field>
                 </div>
@@ -260,6 +336,16 @@
                       onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                       autocomplete="off"
                     />
+
+                    <mat-error
+                      *ngIf="
+                        regimeSelectionForm.controls[
+                          'everOptedOutOfNewRegime'
+                        ].controls['acknowledgementNumber'].hasError('required')
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
                     <!--                    Enter-->
                     <!--                    acknowledgement number</mat-error>-->
@@ -285,6 +371,16 @@
                       [for]="picker1"
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
+
+                    <mat-error
+                      *ngIf="
+                        regimeSelectionForm.controls[
+                          'everOptedOutOfNewRegime'
+                        ].controls['date'].hasError('required')
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
                     <!--                    Select-->
                     <!--                    Date of-->
@@ -321,11 +417,19 @@
                       oldRegimeLabel
                     }}</mat-radio-button>
                   </mat-radio-group>
+                  <mat-error
+                    *ngIf="
+                      regimeSelectionForm.controls[
+                        'optionForCurrentAY'
+                      ].controls['currentYearRegime'].hasError('required') &&
+                      submitted
+                    "
+                  >
+                    Please select an option to continue
+                  </mat-error>
                 </div>
               </div>
-              <div
-                class="card__row"
-                *ngIf="showCurrentAYOptions">
+              <div class="card__row" *ngIf="showCurrentAYOptions">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label"
                     >Acknowledgement Number</mat-label
@@ -344,6 +448,18 @@
                       onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                       autocomplete="off"
                     />
+
+                    <mat-error
+                      *ngIf="
+                        (this.itrType === '3' || this.itrType === '4') &&
+                        this.regimeSelectionForm
+                          .get('optionForCurrentAY')
+                          .get('acknowledgementNumber')
+                          .hasError('required')
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
                     <!--                    Enter-->
                     <!--                    acknowledgement number</mat-error>-->
@@ -369,6 +485,17 @@
                       [for]="picker1"
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error
+                      *ngIf="
+                        (this.itrType === '3' || this.itrType === '4') &&
+                        this.regimeSelectionForm
+                          .get('optionForCurrentAY')
+                          .get('date')
+                          .hasError('required')
+                      "
+                    >
+                      This field is required
+                    </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
                     <!--                    Select-->
                     <!--                    Date of-->
