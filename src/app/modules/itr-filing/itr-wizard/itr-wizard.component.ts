@@ -458,6 +458,14 @@ export class ItrWizardComponent implements OnInit {
     } else {
       this.jsonUploaded = false;
     }
+
+    //json upload is complete, save it to backend
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.loading = true;
+    this.utilsService.uploadInitialItrObject(this.ITR_JSON).subscribe((res:any) => {
+      this.loading = false;
+      console.log(res);
+    });
   }
 
   ngOnDestroy() {
