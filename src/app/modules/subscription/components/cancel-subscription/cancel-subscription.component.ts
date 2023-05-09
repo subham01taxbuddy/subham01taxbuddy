@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -12,6 +12,8 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ApproveRejectComponent } from '../approve-reject/approve-reject.component';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
+import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-cancel-subscription',
@@ -21,7 +23,11 @@ import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip
 export class CancelSubscriptionComponent implements OnInit {
   loading: boolean;
   cancelSubscriptionData: any;
-  config: any;
+  config = {
+    itemsPerPage: 10,
+    currentPage: 1,
+    totalItems: null,
+  };
   subscriptionListGridOptions: GridOptions;
   coOwnerId: number;
   coFilerId: number;
@@ -67,61 +73,48 @@ export class CancelSubscriptionComponent implements OnInit {
     return { temp, lineBreak };
   }
 
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
-    } else {
-      this.filerId = event ? event.userId : null;
-    }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-      this.getCancelSubscriptionList(0);
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-      this.getCancelSubscriptionList(0);
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-  }
-
-
-  fromSme1(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
-    }
-    if (this.coFilerId) {
-      this.agentId = this.coFilerId;
-      this.getCancelSubscriptionList(0);
-    } else if (this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-      this.getCancelSubscriptionList(0);
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
+  fromOwner(event, isOwner) {
+    if (event) {
+      if (isOwner) {
+        this.ownerId = event ? event.userId : null;
+        this.getCancelSubscriptionList(0, 'ownerUserId', this.ownerId);
+      } else {
+        this.filerId = event ? event.userId : null;
+        this.getCancelSubscriptionList(0, 'filerUserId', this.filerId);
+      }
     }
   }
 
   ngOnInit(): void {
-    this.config = {
-      itemsPerPage: 10,
-      currentPage: 1,
-      totalItems: null,
-    };
-    this.getCancelSubscriptionList(0);
+    
+    // this.getCancelSubscriptionList(0);
+  }
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
+
+  resetFilters() {
+    this.smeDropDown?.resetDropdown();
+    if (this.coOwnerDropDown) {
+      this.getCancelSubscriptionList(0);
+    } else {
+      this.getCancelSubscriptionList(0);
+    }
+
   }
 
-  getCancelSubscriptionList(pageNo) {
-    let pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}`;
-    var param = '/subscription/cancel/requests' + pagination;
+  getCancelSubscriptionList(pageNo, isUserId?, id?) {
+    let pagination;
+    let param;
+    if (id) {
+      pagination = `&page=${pageNo}&size=${this.config.itemsPerPage}`;
+      param = '/subscription/cancel/requests?' + isUserId + '=' + id + pagination;
+    } else {
+      pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}`;
+      param = '/subscription/cancel/requests' + pagination;
+    }
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
-        console.log('SUBSCRIPTION RESPONSE:', response);
         this.cancelSubscriptionData = response;
         this.loading = false;
         if (response.success) {
@@ -135,7 +128,6 @@ export class CancelSubscriptionComponent implements OnInit {
         } else {
           this._toastMessageService.alert("error", response.message);
         }
-        // this.sendTotalCount.emit(this.config.totalItems);
       },
       (error) => {
         this.loading = false;
@@ -424,7 +416,6 @@ export class CancelSubscriptionComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result) {
-        debugger
         this.getCancelSubscriptionList(0);
       }
     });
