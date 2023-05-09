@@ -21,7 +21,7 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-customer-profile
+      <app-customer-profile (saveAndNext)="checkSuccess(0)"
         [navigationData]="navigationData"
         [isEditCustomer]="isEditCustomer"
       ></app-customer-profile>
@@ -47,7 +47,7 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-personal-information
+      <app-personal-information (saveAndNext)="checkSuccess(1)"
         [isEditPersonal]="isEditPersonal"
       ></app-personal-information>
     </mat-expansion-panel>
@@ -72,7 +72,7 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-other-information
+      <app-other-information (saveAndNext)="checkSuccess(2)"
         [isEditOther]="isEditOther"
       ></app-other-information>
     </mat-expansion-panel>
