@@ -38,6 +38,7 @@ import { AddClientDialogComponent } from '../../../add-client-dialog/add-client-
 import { PrefillDataComponent } from '../../pages/prefill-id/components/prefill-data/prefill-data.component';
 import * as moment from 'moment';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
+import {RequestManager} from "../../../../shared/services/request-manager";
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -80,7 +81,7 @@ export const MY_FORMATS = {
 })
 export class CustomerProfileComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  @Input() isEditCustomer = false;
+  @Input() isEditCustomer = true;
   @Input() navigationData: any;
   loading: boolean = false;
   imageLoader: boolean = false;
@@ -149,6 +150,7 @@ export class CustomerProfileComponent implements OnInit {
 
   filePath = 'ITR/';
   loggedInUserRoles: any;
+  requestManagerSubscription = null;
 
   constructor(
     public fb: FormBuilder,
@@ -161,10 +163,16 @@ export class CustomerProfileComponent implements OnInit {
     private matDialog: MatDialog,
     public location: Location,
     private datePipe: DatePipe,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private requestManager: RequestManager
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserRoles = this.utilsService.getUserRoles();
+    console.log('subscribing');
+    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
+      this.requestManager.init();
+      this.requestCompleted(value);
+    });
   }
 
   ngOnInit() {
@@ -183,6 +191,11 @@ export class CustomerProfileComponent implements OnInit {
     setTimeout(() => {
       this.isEditable();
     }, 1000);
+  }
+
+  ngOnDestroy() {
+    console.log('unsubscribe');
+    this.requestManagerSubscription.unsubscribe();
   }
 
   isEditable() {
@@ -347,49 +360,12 @@ export class CustomerProfileComponent implements OnInit {
           this.customerProfileForm.controls['panNumber']
         )
       ) {
+        this.requestManager.addRequest(this.PAN_INFO,
         this.httpClient
           .get(
             `${environment.url}/itr/api/getPanDetail?panNumber=${pan}`,
             httpOptions
-          )
-          .subscribe((result: any) => {
-            console.log('user data by PAN = ', result);
-            this.customerProfileForm.controls['firstName'].setValue(
-              this.titlecasePipe.transform(
-                this.utilsService.isNonEmpty(result.firstName)
-                  ? result.firstName
-                  : ''
-              )
-            );
-            this.customerProfileForm.controls['lastName'].setValue(
-              this.titlecasePipe.transform(
-                this.utilsService.isNonEmpty(result.lastName)
-                  ? result.lastName
-                  : ''
-              )
-            );
-            this.customerProfileForm.controls['middleName'].setValue(
-              this.titlecasePipe.transform(
-                this.utilsService.isNonEmpty(result.middleName)
-                  ? result.middleName
-                  : ''
-              )
-            );
-            //1988-11-28 to DD/MM/YYYY
-            //this.datePipe.transform(dob,"dd/MM/yyyy")
-            let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-            this.customerProfileForm.controls['dateOfBirth'].setValue(
-              moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
-            );
-            this.customerProfileForm.controls['assesseeType'].setValue(
-              this.utilsService.findAssesseeType(pan)
-            );
-            if (result.isValid !== 'EXISTING AND VALID') {
-              this.utilsService.showSnackBar(
-                'Record (PAN) Not Found in ITD Database/Invalid PAN'
-              );
-            }
-          });
+          ));
       }
     }
   }
@@ -499,6 +475,57 @@ export class CustomerProfileComponent implements OnInit {
     return timeDiff > 60 ? Math.ceil(timeDiff) : Math.floor(timeDiff);
   }
 
+  requestCompleted(res: any){
+    console.log(res);
+    this.loading = false;
+    switch (res.api){
+      case this.GET_DOCUMENTS: {
+        this.documents = res.result;
+        break;
+      }
+      case this.PAN_INFO:{
+        let result = res.result;
+        console.log('user data by PAN = ', result);
+        this.customerProfileForm.controls['firstName'].setValue(
+          this.titlecasePipe.transform(
+            this.utilsService.isNonEmpty(result.firstName)
+              ? result.firstName
+              : ''
+          )
+        );
+        this.customerProfileForm.controls['lastName'].setValue(
+          this.titlecasePipe.transform(
+            this.utilsService.isNonEmpty(result.lastName)
+              ? result.lastName
+              : ''
+          )
+        );
+        this.customerProfileForm.controls['middleName'].setValue(
+          this.titlecasePipe.transform(
+            this.utilsService.isNonEmpty(result.middleName)
+              ? result.middleName
+              : ''
+          )
+        );
+        //1988-11-28 to DD/MM/YYYY
+        //this.datePipe.transform(dob,"dd/MM/yyyy")
+        let pan = this.customerProfileForm.controls['panNumber'].value;
+        let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+        this.customerProfileForm.controls['dateOfBirth'].setValue(
+          moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+        );
+        this.customerProfileForm.controls['assesseeType'].setValue(
+          this.utilsService.findAssesseeType(pan)
+        );
+        if (result.isValid !== 'EXISTING AND VALID') {
+          this.utilsService.showSnackBar(
+            'Record (PAN) Not Found in ITD Database/Invalid PAN'
+          );
+        }
+      }
+    }
+  }
+
   changeReviseForm() {
     if (this.customerProfileForm.controls['isRevised'].value === 'N') {
       this.customerProfileForm.controls['orgITRAckNum'].setValue(null);
@@ -528,45 +555,17 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  // updateStatus() {
-  //   const param = '/itr-status'
-  //   const request = {
-  //     "statusId": Number(this.fillingStatus.value),
-  //     "userId": this.ITR_JSON.userId,
-  //     "assessmentYear": AppConstants.ayYear,
-  //     "completed": true
-  //   }
-
-  //   this.loading = true;
-  //   this.userMsService.postMethod(param, request).subscribe(result => {
-  //     console.log(result);
-  //     this.utilsService.showSnackBar('Filing status updated successfully.')
-  //     this.loading = false;
-  //   }, err => {
-  //     this.loading = false;
-  //     this.utilsService.showSnackBar('Failed to update Filing status.')
-  //   })
-  // }
-
-  // getFilingStatus() {
-  //   const param = `/itr-status?userId=${this.ITR_JSON.userId}&source=USER&assessmentYear=${AppConstants.ayYear}`;
-  //   this.userMsService.getMethod(param).subscribe(result => {
-  //     if (result instanceof Array) {
-  //       const completedStatus = result.filter((item:any) => item.completed === 'true' || item.completed === true)
-  //       const ids = completedStatus.map(status => status.statusId);
-  //       const sorted = ids.sort((a, b) => a - b);
-  //       this.fillingStatus'].setValue(sorted[sorted.length - 1])
-  //     }
-
-  //   })
-  // }
-
   documents = [];
+  GET_DOCUMENTS = 'GET_DOCUMENTS';
+  PAN_INFO = 'PAN_INFO';
   getDocuments() {
+    this.loading = true;
     const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/Common`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      this.documents = result;
-    });
+    // this.itrMsService.getMethod(param).subscribe((result: any) => {
+    //   this.documents = result;
+    // });
+
+    this.requestManager.addRequest(this.GET_DOCUMENTS, this.itrMsService.getMethod(param));
   }
 
   getSignedUrl(document) {

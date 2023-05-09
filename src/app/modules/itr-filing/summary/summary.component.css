@@ -6,6 +6,19 @@
   color: black;
 }
 
+.mat-expansion-panel-header {
+  width: 100%!important;
+}
+
+.mat-content {
+  display:none!important;
+}
+
+.table :where(th, td) {
+   white-space: normal!important;
+}
+
+
 .top_padding_heading {
   padding-top: 11px;
 }
@@ -113,12 +126,12 @@ table {
 
 .AdjAr1 {
   float: right;
-  margin-right: -15px !important;
+  /* margin-right: -15px !important; */
 }
 
 .AdjAr {
   float: right;
-  margin-right: -7px !important;
+  /* margin-right: -7px !important; */
 }
 
 .AdjAr2 {
@@ -134,11 +147,16 @@ table {
   font-size: 17px !important;
   color: #2f2b31 !important;
   float: right;
-  margin-right: 25px;
+  margin-right: 45px;
   min-width: 107px;
   text-align: right;
   /*  background-color: #cccccc; */
 }
+
+.mat-icon {
+  margin-right: 13px!important;
+}
+
 
 .rtNumb1 {
   font-size: 17px !important;

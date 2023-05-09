@@ -231,7 +231,7 @@ export class ItrWizardComponent implements OnInit {
       errors.residentialStatus = 'residentialStatus is required';
     }
 
-    if (!userItrObj.family[0].dateOfBirth) {
+    if (!userItrObj.family || userItrObj.family.length == 0 || !userItrObj.family[0].dateOfBirth) {
       errors.dateOfBirth = 'dateOfBirth is required';
     }
 

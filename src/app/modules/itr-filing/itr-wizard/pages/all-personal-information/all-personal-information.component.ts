@@ -29,6 +29,9 @@ export class AllPersonalInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isEditCustomer = true;
+    this.isEditPersonal = true;
+    this.isEditOther = true;
   }
   setStep(index: number) {
     this.step = index;
@@ -36,11 +39,11 @@ export class AllPersonalInformationComponent implements OnInit {
 
   closed(type) {
     if (type === 'customer') {
-      this.isEditCustomer = false;
+      this.isEditCustomer = true;
     } else if (type === 'personal') {
-      this.isEditPersonal = false;
+      this.isEditPersonal = true;
     } else if (type === 'other') {
-      this.isEditOther = false;
+      this.isEditOther = true;
     }
   }
 
