@@ -1,24 +1,25 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="">
-    <div class="card__col-lg-12">
-        <div class="card__title card__col-lg-10 tds-title">TDS On Salary
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 tds-title">TDS On Salary
         </div>
-        <div class="edit clearfix notes card__col-lg-2">
+        <div class="edit clearfix notes col-lg-2">
             <button type="button" class="edit_btn" [disabled]="salaryForm.invalid" (click)="addMore()">
                 <i class="fa fa-plus"></i>Add
             </button>
         </div>
-        <div class="head-title mb-5">This is TDS on salary deducted by your employer. Enter the amount form 16 or
+        <hr>
+        <div class="head-title mb-3">This is TDS on salary deducted by your employer. Enter the amount form 16 or
             26AS</div>
     </div>
     <form [formGroup]="salaryForm">
         <div formArrayName="salaryArray">
-            <div class="tds-on" *ngFor="let salary of getSalaryArray.controls | paginate:config ;let i=index"
+            <div class="tds-on boxClr" *ngFor="let salary of getSalaryArray.controls | paginate:config ;let i=index"
                 [formGroupName]="fieldGlobalIndex(i)">
-                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml-5">
+                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="chkSp">
                 </mat-checkbox>
-                <div class="">
-                    <div class="card__col-xs-12 card__col-sm-6">
+                <div class="row">
+                    <div class="col-sm-6">
                         <mat-label>TAN of Employer*</mat-label>
                         <mat-form-field appearance="outline">
                             <input
@@ -33,7 +34,7 @@
                                 valid TAN (e.g XXXXX1234X)</mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="col-sm-6">
                         <mat-label>Name of Employer*</mat-label>
                         <mat-form-field appearance="outline">
                             <input formControlName="deductorName" matInput placeholder="Name of donee"
@@ -44,10 +45,10 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="col-sm-6">
                         <mat-label>Total Amount credited*</mat-label>
                         <mat-form-field appearance="outline">
-                            <input formControlName="totalAmountCredited" matInput placeholder="Amount Other Than Cash"
+                            <input formControlName="totalAmountCredited" matInput placeholder="Amt other than cash"
                                 name="totalAmountCredited[i]" required class="input-field" maxlength="14" digitsOnly>
                             <mat-error
                                 *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalAmountCredited'].hasError('pattern')">
@@ -56,10 +57,10 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="col-sm-6">
                         <mat-label>Total Tax Deducted*</mat-label>
                         <mat-form-field appearance="outline">
-                            <input formControlName="totalTdsDeposited" matInput placeholder="Amount Other Than Cash"
+                            <input formControlName="totalTdsDeposited" matInput placeholder="Amt other than cash"
                                 name="totalTdsDeposited[i]" required class="input-field" maxlength="14" digitsOnly>
                             <mat-error
                                 *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalTdsDeposited'].hasError('pattern')">
@@ -71,30 +72,32 @@
                 </div>
 
                 <div class="edit-head">
-                    <button type="button" class="edit-donation" (click)="editDonationForm(i)"><mat-icon>
+                    <button type="button" class="edit-donation spEd" (click)="editDonationForm(i)"><mat-icon>
                             edit_square
                         </mat-icon>Edit </button>
                 </div>
             </div>
-            <div class="display-flex">
-                <div class="card__col-xs-12">
-                    <div class="card__col-sm-3">
-                        <button type="submit" class="tbd-btn-secondary" (click)="deleteSalaryArray()"><i
+            <hr>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <button type="submit" class="tbd-btn-secondary delBtn" (click)="deleteSalaryArray()"><i
                                 class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
                     </div>
-                    <div class="card__col-sm-6 txt-center">
-                        <table>
+                    <div class="col-sm-6" style="text-align:center;">
+                        <table class="numSp">
                             <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
                         </table>
                         <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                     </div>
+                    <div class="col-sm-3" style="text-align: right;">
+                        <button class="tbd-btn save-btn" (click)="save()">Save</button>
+                      </div>
 
                 </div>
             </div>
         </div>
 
     </form>
-    <div class="card__col-sm-3" style="text-align: right;">
-      <button class="tbd-btn save-btn" (click)="save()">Save</button>
-    </div>
+    
 </div>
