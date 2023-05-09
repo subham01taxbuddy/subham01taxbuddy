@@ -17,6 +17,7 @@ export class UpdateStatusComponent implements OnInit {
     { key: 'Follow up', value: 'FOLLOWUP' },
     { key: 'Drop Off', value: 'DROP_OFF' },
     { key: 'Document Pending', value: 'DOCUMENT_PENDING' },
+    { key: 'Paid', value: 'PAID' },
   ];
 
   constructor(
