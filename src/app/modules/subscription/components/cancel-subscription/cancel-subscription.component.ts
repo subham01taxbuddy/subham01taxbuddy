@@ -285,7 +285,7 @@ export class CancelSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+            <i class="fas fa-edit" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
         width: 80,

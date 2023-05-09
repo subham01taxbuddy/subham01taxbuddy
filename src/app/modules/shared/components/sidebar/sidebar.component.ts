@@ -7,13 +7,13 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Input } from '@angular/core';
 import { PerformaInvoiceComponent } from 'src/app/modules/subscription/components/performa-invoice/performa-invoice.component';
-import {AssignedUsersComponent} from "../../../tasks/pages/assigned-users/assigned-users.component";
-import {AssignedNewUsersComponent} from "../../../tasks/pages/assigned-new-users/assigned-new-users.component";
-import {ScheduledCallComponent} from "../../../tasks/pages/scheduled-call/scheduled-call.component";
-import {FilingsComponent} from "../../../tasks/pages/filings/filings.component";
-import {ExceptionsComponent} from "../../../tasks/pages/exceptions/exceptions.component";
-import {SignUpExceptionsComponent} from "../../../tasks/pages/sign-up-exceptions/sign-up-exceptions.component";
-import {EriExceptionsComponent} from "../../../tasks/pages/exceptions/eri-exceptions/eri-exceptions.component";
+import { AssignedUsersComponent } from "../../../tasks/pages/assigned-users/assigned-users.component";
+import { AssignedNewUsersComponent } from "../../../tasks/pages/assigned-new-users/assigned-new-users.component";
+import { ScheduledCallComponent } from "../../../tasks/pages/scheduled-call/scheduled-call.component";
+import { FilingsComponent } from "../../../tasks/pages/filings/filings.component";
+import { ExceptionsComponent } from "../../../tasks/pages/exceptions/exceptions.component";
+import { SignUpExceptionsComponent } from "../../../tasks/pages/sign-up-exceptions/sign-up-exceptions.component";
+import { EriExceptionsComponent } from "../../../tasks/pages/exceptions/eri-exceptions/eri-exceptions.component";
 
 @Component({
   selector: 'app-sidebar',
@@ -78,18 +78,19 @@ export class SidebarComponent implements DoCheck {
       url: null,
       roles: [],
       submenu: [
-        { name: 'My Users', url: '/tasks/assigned-users-new', roles:[] },
-        { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles:[] },
-        { name: 'ITRs', url: '/tasks/filings', roles:[]  },
-        { name: 'Exceptions', url: '/tasks/exceptions', roles:[],
+        { name: 'My Users', url: '/tasks/assigned-users-new', roles: [] },
+        { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: [] },
+        { name: 'ITRs', url: '/tasks/filings', roles: [] },
+        {
+          name: 'Exceptions', url: '/tasks/exceptions', roles: [],
           // submenu: [
           //   { path: 'signup', component: SignUpExceptionsComponent },
           //   { path: 'eri', component: EriExceptionsComponent },
           //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
           // ]
         },
-        { name: 'Create User', url: '/pages/user-management/create-user', roles:[] },
-        { name: 'Potential Users', url: '/tasks/potential-users', roles:[] },
+        { name: 'Create User', url: '/pages/user-management/create-user', roles: [] },
+        { name: 'Potential Users', url: '/tasks/potential-users', roles: [] },
 
 
       ]
@@ -101,7 +102,7 @@ export class SidebarComponent implements DoCheck {
       url: null,
       roles: ['ROLE_ADMIN', 'ROLE_OWNER', 'ROLE_LEADER'],
       submenu: [
-        { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
+        { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
         { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
       ]
@@ -114,7 +115,7 @@ export class SidebarComponent implements DoCheck {
       roles: [],
       submenu: [
         { name: 'Assigned Subscription', url: '/subscription/assigned-subscription', roles: [] },
-        { name: 'Subscription Request', url: '/subscription/cancel-subscription', roles: [] },
+        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: [] },
       ]
     },
     {
@@ -126,8 +127,8 @@ export class SidebarComponent implements DoCheck {
       submenu: [
         { name: 'Proforma Invoice', url: '/subscription/proforma-invoice', roles: [] },
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
-        { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
-        { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER']},
+        { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
@@ -168,7 +169,7 @@ export class SidebarComponent implements DoCheck {
   }
 
   isApplicable(permissionRoles: any) {
-    if(permissionRoles.length === 0){
+    if (permissionRoles.length === 0) {
       return true;
     } else {
       return this.roleBaseAuthGuardService.checkHasPermission(
