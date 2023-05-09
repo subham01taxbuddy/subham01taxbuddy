@@ -273,7 +273,15 @@
                   <!-- *************** Income from Salary ********************-->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[summaryDetail.salary === 0 ? true : false]"
+                    [disabled]="[
+                      keys.GrossSalary
+                        ? keys.GrossSalary === 0
+                          ? true
+                          : false
+                        : summaryDetail.salary === 0
+                        ? true
+                        : false
+                    ]"
                     #salary
                   >
                     <mat-expansion-panel-header>
@@ -303,7 +311,9 @@
                               <i class="material-icons icRup">&#8377;</i>&nbsp;
                               {{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.salary
+                                  keys.IncomeFromSal
+                                    ? keys.IncomeFromSal
+                                    : summaryDetail.salary
                                 )
                               }}
                             </label>
@@ -444,7 +454,13 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.housePropertyIncome === 0 ? true : false
+                      keys.TotalIncomeOfHP
+                        ? keys.TotalIncomeOfHP === 0
+                          ? true
+                          : false
+                        : summaryDetail.housePropertyIncome === 0
+                        ? true
+                        : false
                     ]"
                     #HP
                   >
@@ -472,7 +488,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.housePropertyIncome
+                                  keys.TotalIncomeOfHP
+                                    ? keys.TotalIncomeOfHP
+                                    : summaryDetail.housePropertyIncome
                                 )
                               }}</label
                             >
@@ -717,7 +735,7 @@
                             <label class="rtNumb1">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
-                                utilsService.currencyFormatter(
+                                utilsService.currencyFormatter( keys.TotPersumptiveInc44ADA ? keys.TotPersumptiveInc44ADA :
                                   summaryDetail.presumptiveIncome
                                 )
                               }}</label
@@ -1175,7 +1193,13 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.otherIncome === 0 ? true : false
+                      keys.IncomeOthSrc
+                        ? keys.IncomeOthSrc === 0
+                          ? true
+                          : false
+                        : summaryDetail.otherIncome === 0
+                        ? true
+                        : false
                     ]"
                     #otherIncome
                   >
@@ -1203,7 +1227,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.otherIncome
+                                  keys.IncomeOthSrc
+                                    ? keys.IncomeOthSrc
+                                    : summaryDetail.otherIncome
                                 )
                               }}</label
                             >
@@ -1387,7 +1413,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.totalIncome
+                                  keys.GrossTotIncome
+                                    ? keys.GrossTotIncome
+                                    : summaryDetail.totalIncome
                                 )
                               }}</label
                             >
@@ -1493,7 +1521,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.balanceAfterSetOffCurrentYearLosses
+                                  keys.GrossTotIncome
+                                    ? keys.GrossTotIncome
+                                    : summaryDetail.balanceAfterSetOffCurrentYearLosses
                                 )
                               }}</label
                             >
@@ -1613,7 +1643,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.grossTotalIncome
+                                  keys.GrossTotIncome
+                                    ? keys.GrossTotIncome
+                                    : summaryDetail.grossTotalIncome
                                 )
                               }}</label
                             >
@@ -1689,7 +1721,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.totalDeduction
+                                  keys.TotalChapVIADeductions
+                                    ? keys.TotalChapVIADeductions
+                                    : summaryDetail.totalDeduction
                                 )
                               }}</label
                             >
@@ -1791,7 +1825,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.totalIncomeAfterDeductionIncludeSR
+                                  keys.TotalIncome
+                                    ? keys.TotalIncome
+                                    : summaryDetail.totalIncomeAfterDeductionIncludeSR
                                 )
                               }}</label
                             >
@@ -1927,7 +1963,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.aggregateIncomeXml
+                                  keys.TotalIncome
+                                    ? keys.TotalIncome
+                                    : summaryDetail.aggregateIncomeXml
                                 )
                               }}</label
                             >
@@ -2072,7 +2110,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.totalTax
+                                  keys.TotalTaxPayable
+                                    ? keys.TotalTaxPayable
+                                    : summaryDetail.totalTax
                                 )
                               }}
                             </label>
@@ -2151,7 +2191,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.rebateUnderSection87A
+                                  keys.Rebate87A
+                                    ? keys.Rebate87A
+                                    : summaryDetail.rebateUnderSection87A
                                 )
                               }}</label
                             >
@@ -2182,7 +2224,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.taxAfterRebate
+                                  keys.TaxPayableOnRebate
+                                    ? keys.TaxPayableOnRebate
+                                    : summaryDetail.taxAfterRebate
                                 )
                               }}
                             </label>
@@ -2244,7 +2288,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.cessAmount
+                                  keys.EducationCess
+                                    ? keys.EducationCess
+                                    : summaryDetail.cessAmount
                                 )
                               }}
                             </label>
@@ -2275,7 +2321,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.grossTaxLiability
+                                  keys.GrossTaxLiability
+                                    ? keys.GrossTaxLiability
+                                    : summaryDetail.grossTaxLiability
                                 )
                               }}
                             </label>
@@ -2322,9 +2370,11 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.taxReliefUnder89 +
-                                    summaryDetail.taxReliefUnder90_90A +
-                                    summaryDetail.taxReliefUnder91
+                                  keys.Section89
+                                    ? keys.Section89
+                                    : summaryDetail.taxReliefUnder89 +
+                                        summaryDetail.taxReliefUnder90_90A +
+                                        summaryDetail.taxReliefUnder91
                                 )
                               }}</label
                             >
@@ -2345,7 +2395,9 @@
                           <td class="">
                             <i class="material-icons icRup">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.taxReliefUnder89
+                                keys.Section89
+                                  ? keys.Section89
+                                  : summaryDetail.taxReliefUnder89
                               )
                             }}
                           </td>
@@ -2395,7 +2447,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.netTaxLiability
+                                  keys.NetTaxLiability
+                                    ? keys.NetTaxLiability
+                                    : summaryDetail.netTaxLiability
                                 )
                               }}
                             </label>
@@ -2437,7 +2491,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.interestAndFeesPayable
+                                  keys.TotalIntrstPay
+                                    ? keys.TotalIntrstPay
+                                    : summaryDetail.interestAndFeesPayable
                                 )
                               }}</label
                             >
@@ -2460,7 +2516,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.s234A
+                                keys.IntrstPayUs234A
+                                  ? keys.IntrstPayUs234A
+                                  : summaryDetail.s234A
                               )
                             }}
                           </td>
@@ -2474,7 +2532,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.s234B
+                                keys.IntrstPayUs234B
+                                  ? keys.IntrstPayUs234B
+                                  : summaryDetail.s234B
                               )
                             }}
                           </td>
@@ -2489,7 +2549,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.s234C
+                                keys.IntrstPayUs234C
+                                  ? keys.IntrstPayUs234C
+                                  : summaryDetail.s234C
                               )
                             }}
                           </td>
@@ -2501,7 +2563,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.s234F
+                                keys.LateFilingFee234F
+                                  ? keys.LateFilingFee234F
+                                  : summaryDetail.s234F
                               )
                             }}
                           </td>
@@ -2531,7 +2595,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.agrigateLiability
+                                  keys.TotTaxPlusIntrstPay
+                                    ? keys.TotTaxPlusIntrstPay
+                                    : summaryDetail.agrigateLiability
                                 )
                               }}
                             </label>
@@ -2579,10 +2645,12 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.taxPaidAdvancedTax +
-                                    summaryDetail.taxPaidTDS +
-                                    summaryDetail.taxPaidTCS +
-                                    summaryDetail.selfassessmentTax
+                                  keys.TotalTaxesPaid
+                                    ? keys.TotalTaxesPaid
+                                    : summaryDetail.taxPaidAdvancedTax +
+                                        summaryDetail.taxPaidTDS +
+                                        summaryDetail.taxPaidTCS +
+                                        summaryDetail.selfassessmentTax
                                 )
                               }}</label
                             >
@@ -3021,7 +3089,11 @@
                           <div class="col-lg-4 col-md-4 col-sm-4">
                             <label class="rtNumb">
                               <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{ getAmount() }}</label
+                              >&nbsp;{{
+                                keys.BalTaxPayable
+                                  ? keys.BalTaxPayable
+                                  : getAmount()
+                              }}</label
                             >
                           </div>
                         </div>
@@ -3059,7 +3131,11 @@
                             </div>
                             <label class="rtNumb1">
                               <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{ getExemptIncomeTotal() }}</label
+                              >&nbsp;{{
+                                keys.ExemptIncAgriOthUs10Total
+                                  ? keys.ExemptIncAgriOthUs10Total
+                                  : getExemptIncomeTotal()
+                              }}</label
                             >
                           </div>
                         </div>

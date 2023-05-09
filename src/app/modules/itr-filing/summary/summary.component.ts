@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
-
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -161,7 +160,10 @@ export class SummaryComponent implements OnInit {
   itrJsonForFileItr: any;
   isValidItr: boolean;
   summaryIncome: any;
-  uploadedJson;
+  itrType: any;
+  ITR14IncomeDeductions: any;
+  taxComputation: any;
+  keys: any = {};
 
   constructor(
     private itrMsService: ItrMsService,
@@ -191,6 +193,10 @@ export class SummaryComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
     const param = '/tax';
+
+    if (this.ITR_JSON.itrSummaryJson) {
+      this.summaryToolMapping();
+    }
 
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
       (result: any) => {
@@ -252,6 +258,154 @@ export class SummaryComponent implements OnInit {
         console.log('In error method===', error);
       }
     );
+  }
+
+  summaryToolMapping() {
+    // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
+    {
+      if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR1')) {
+        this.itrType = 'ITR1';
+        this.ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
+        this.taxComputation = 'ITR1_TaxComputation';
+      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR2')) {
+        this.itrType = 'ITR2';
+      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR3')) {
+        this.itrType = 'ITR3';
+      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR4')) {
+        this.itrType = 'ITR4';
+        this.ITR14IncomeDeductions = 'IncomeDeductions';
+        this.taxComputation = 'TaxComputation';
+      }
+    }
+
+    if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
+      this.keys = {
+        IncomeFromSal:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .IncomeFromSal,
+        TotalIncomeOfHP:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .TotalIncomeOfHP,
+        IncomeOthSrc:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .IncomeOthSrc,
+
+        GrossTotIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .GrossTotIncome,
+
+        TotalChapVIADeductions:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .DeductUndChapVIA?.TotalChapVIADeductions,
+
+        TotalIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .TotalIncome,
+
+        TotalTaxPayable:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .TotalTaxPayable,
+
+        Rebate87A:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .Rebate87A,
+
+        TaxPayableOnRebate:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .TaxPayableOnRebate,
+
+        EducationCess:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .EducationCess,
+
+        GrossTaxLiability:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .GrossTaxLiability,
+
+        Section89:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .Section89,
+
+        NetTaxLiability:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .NetTaxLiability,
+
+        IntrstPayUs234A:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .IntrstPay.IntrstPayUs234A,
+
+        IntrstPayUs234B:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .IntrstPay.IntrstPayUs234B,
+
+        IntrstPayUs234C:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .IntrstPay.IntrstPayUs234C,
+
+        LateFilingFee234F:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .IntrstPay.LateFilingFee234F,
+
+        TotalIntrstPay:
+          this.itrType === 'ITR1'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                .TotalIntrstPay
+            : this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                .IntrstPay.LateFilingFee234F +
+              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                .IntrstPay.IntrstPayUs234C +
+              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                .IntrstPay.IntrstPayUs234B +
+              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                .IntrstPay.IntrstPayUs234A,
+
+        TotTaxPlusIntrstPay:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .TotTaxPlusIntrstPay,
+
+        TotalTaxesPaid:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.TaxesPaid
+            .TotalTaxesPaid,
+
+        BalTaxPayable:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.BalTaxPayable,
+
+        ExemptIncAgriOthUs10Total:
+          this.itrType === 'ITR1'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType][
+                this.ITR14IncomeDeductions
+              ].ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Total
+            : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
+                .OthersInc.OthersTotalTaxExe,
+
+        TotPersumptiveInc44ADA:
+          this.itrType === 'ITR4'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+                .PersumptiveInc44AD.TotPersumptiveInc44AD +
+              this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+                .PersumptiveInc44ADA.TotPersumptiveInc44ADA +
+              this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+                .PersumptiveInc44AE.IncChargeableUnderBus
+            : 0,
+      };
+    }
+
+    return this.keys;
+
+    // let GrossSalary;
+    // if (this.itrType === 'ITR1') {
+    //   GrossSalary =
+    //     this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+    //       .GrossSalary;
+    // }
+
+    // console.log(
+    //   'perquisities',
+    //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+    //     .PerquisitesValue
+    // );
+
+    // return GrossSalary;
   }
 
   getUserName(type) {

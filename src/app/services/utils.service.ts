@@ -858,7 +858,7 @@ export class UtilsService {
       section89: null,
       section90: null,
       section91: null,
-      itrSummaryJson: false,
+      itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
     };
 
