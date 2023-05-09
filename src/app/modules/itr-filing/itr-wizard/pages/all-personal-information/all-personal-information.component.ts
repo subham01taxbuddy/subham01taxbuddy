@@ -84,6 +84,18 @@ export class AllPersonalInformationComponent implements OnInit {
 
   saveCount = 0;
   saveAll() {
+    //check validations
+    if(!this.customerProfileComponent.customerProfileForm.valid){
+      this.utilService.showSnackBar('Please fill all required fields in Customer Profile');
+      return;
+    }else if(!this.personalInfoComponent.isFormValid()){
+      this.utilService.showSnackBar('Please fill all required fields in Personal Details');
+      return;
+    } else if(!this.otherInfoComponent.sharesForm.valid || !this.otherInfoComponent.directorForm.valid){
+      this.utilService.showSnackBar('Please fill all required fields in Other Information');
+      return;
+    }
+
     this.saveCount = 0;
     if (this.isEditCustomer) {
       this.customerProfileComponent.saveProfile();
