@@ -105,7 +105,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   fromServiceType(event){
     this.searchParam.serviceType = event;
-    this.search('serviceType');
+    this.search('serviceType','isAgent');
 
     if(this.searchParam.serviceType) {
       setTimeout(() => {
@@ -987,7 +987,7 @@ export class AssignedNewUsersComponent implements OnInit {
         this.searchParam.mobileNumber = null;
       }
 
-      this.searchParam.statusId = null;
+      // this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
       // this.searchParam.serviceType = null;
@@ -1032,6 +1032,7 @@ export class AssignedNewUsersComponent implements OnInit {
       (result: any) => {
         if(result.success == false){
           this._toastMessageService.alert("error",result.message);
+          // this.utilsService.showSnackBar(result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
         }
