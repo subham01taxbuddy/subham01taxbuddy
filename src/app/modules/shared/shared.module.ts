@@ -51,6 +51,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
 import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import {RequestManager} from "./services/request-manager";
 
 @NgModule({
   declarations: [
@@ -145,7 +146,7 @@ import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-do
         ServiceDropDownComponent,
         CoOwnerListDropDownComponent,
     ],
-  providers: [StorageService, Schedules],
+  providers: [StorageService, Schedules, RequestManager],
   entryComponents: [
     WhatsAppDialogComponent,
     UserNotesComponent,
