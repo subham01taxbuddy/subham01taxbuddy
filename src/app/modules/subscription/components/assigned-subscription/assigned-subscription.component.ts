@@ -1,7 +1,7 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { filter } from 'rxjs/operators';
 import { data } from 'jquery';
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -13,8 +13,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { map, Observable, startWith } from 'rxjs';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
-import {ServiceDropDownComponent} from "../../../shared/components/service-drop-down/service-drop-down.component";
-import {SmeListDropDownComponent} from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
+import { SmeListDropDownComponent } from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 export interface User {
   name: string;
@@ -45,7 +44,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   loading!: boolean;
   financialYear = AppConstants.gstFyList;
   loggedInSme: any;
-  allFilerList:any;
+  allFilerList: any;
   roles: any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
@@ -66,12 +65,11 @@ export class AssignedSubscriptionComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
-    private userService: UserMsService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
-    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
-    console.log('new Filer List ',this.allFilerList)
+    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    console.log('new Filer List ', this.allFilerList)
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.subscriptionCreateColumnDef(this.allFilerList),
@@ -177,8 +175,8 @@ export class AssignedSubscriptionComponent implements OnInit {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
         this.loading = false;
-        if(response.success == false){
-          this. _toastMessageService.alert("error",response.message);
+        if (response.success == false) {
+          this._toastMessageService.alert("error", response.message);
           // let msg = 'There is problem getting records';
           // this.utilsService.showSnackBar(msg);
           this.subscriptionListGridOptions.api?.setRowData(
@@ -255,13 +253,13 @@ export class AssignedSubscriptionComponent implements OnInit {
     if (this.utilsService.isNonEmpty(number)) {
       const loggedInSmeUserId = this?.loggedInSme[0]?.userId
       // if (!this.userId) {
-        //https://uat-api.taxbuddy.com/user/search/userprofile/query?mobileNumber=3210000078
-        this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, number).subscribe((res: any) => {
-          console.log(res);
-          if (res.records) {
-            this.userId = res.records[0].userId;
-          }
-        });
+      //https://uat-api.taxbuddy.com/user/search/userprofile/query?mobileNumber=3210000078
+      this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, number).subscribe((res: any) => {
+        console.log(res);
+        if (res.records) {
+          this.userId = res.records[0].userId;
+        }
+      });
       // }
 
       this.loading = true;
@@ -308,7 +306,7 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
-  resetFilters(){
+  resetFilters() {
 
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
@@ -319,10 +317,10 @@ export class AssignedSubscriptionComponent implements OnInit {
     this.subscriptionFormGroup.controls['searchName'].setValue(null);
     this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
     this?.smeDropDown?.resetDropdown();
-    if(this.coOwnerDropDown){
+    if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
-      this.getAssignedSubscription(0,true);
-    }else{
+      this.getAssignedSubscription(0, true);
+    } else {
       this.getAssignedSubscription(0);
     }
 
@@ -461,9 +459,9 @@ export class AssignedSubscriptionComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-         valueGetter: function(params) {
-          let createdUserId= params.data.subscriptionCreatedBy
-          let filer1=List;
+        valueGetter: function (params) {
+          let createdUserId = params.data.subscriptionCreatedBy
+          let filer1 = List;
           // console.log('filer1',filer1)
           //  let filer= filer1.filter(item=> item.userId {
           //   if(item.userId==createdUserId){
@@ -471,12 +469,12 @@ export class AssignedSubscriptionComponent implements OnInit {
           //    }else 'NA'
           //  })
           let filer = filer1?.filter((item) => {
-              return item.userId === createdUserId;
-            }).map((item) => {
-              return item.name;
-            });
-             return filer;
-          }
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer;
+        }
       },
       {
         headerName: 'Update',
@@ -488,10 +486,17 @@ export class AssignedSubscriptionComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to edit sme"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="edit">Edit</i>
+          if (params.data.cancellationStatus === 'PENDING') {
+            return `<button type="button" disabled class="action_icon add_button"
+          style="border: none; background: transparent; font-size: 16px; cursor:no-drop;">
+            <i class="fas fa-edit" aria-hidden="true">Edit</i>
            </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Click to edit sme"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+              <i class="fas fa-edit" aria-hidden="true" data-action-type="edit">Edit</i>
+             </button>`;
+          }
         },
       },
     ];
@@ -500,6 +505,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   rowMultiSelectWithClick: true;
 
   createRowData(subscriptionData) {
+
     console.log('SUBSCRIPTIONDATA:', subscriptionData);
     // var invoiceDetail = [];
     // invoiceDetail.push('invoiceNo');
@@ -553,7 +559,8 @@ export class AssignedSubscriptionComponent implements OnInit {
           ? subscriptionData[i].promoCode
           : '-',
         invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
-        subscriptionCreatedBy:subscriptionData[i].subscriptionCreatedBy
+        subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
+        cancellationStatus: subscriptionData[i].cancellationStatus
         // invoiceDetails: invoiceDetails,
       });
     }
@@ -612,7 +619,6 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   getFilerList() {
-
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`
@@ -639,8 +645,8 @@ export class AssignedSubscriptionComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     if (this.coOwnerToggle.value == true) {
-      this.getAssignedSubscription(event - 1,true);
-    }else{
+      this.getAssignedSubscription(event - 1, true);
+    } else {
       this.getAssignedSubscription(event - 1);
     }
 
@@ -651,15 +657,15 @@ export class AssignedSubscriptionComponent implements OnInit {
   agentId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.ownerId = event? event.userId : null;
+    if (isOwner) {
+      this.ownerId = event ? event.userId : null;
     } else {
-      this.filerId = event? event.userId : null;
+      this.filerId = event ? event.userId : null;
     }
-    if(this.filerId) {
+    if (this.filerId) {
       this.agentId = this.filerId;
       this.getAssignedSubscription(0);
-    }else if(this.ownerId) {
+    } else if (this.ownerId) {
       this.agentId = this.ownerId;
       this.getAssignedSubscription(0);
     } else {
@@ -674,15 +680,15 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
-    if(this.coFilerId) {
+    if (this.coFilerId) {
       this.agentId = this.coFilerId;
       this.getAssignedSubscription(0);
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
       this.getAssignedSubscription(0);
     } else {
@@ -692,14 +698,15 @@ export class AssignedSubscriptionComponent implements OnInit {
     // this.getAssignedSubscription(0);
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }
-    this.getAssignedSubscription(0,true);
+    this.getAssignedSubscription(0, true);
   }
 
 }

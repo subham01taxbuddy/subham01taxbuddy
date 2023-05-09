@@ -15,7 +15,7 @@ import {
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {environment} from "../../../environments/environment";
 
 @Component({
@@ -54,6 +54,8 @@ export class BoPartnersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog
   ) {
+    // this.boPartnerDateForm.value.fromDate.setValue('2023-04-01');
+    // this.boPartnerDateForm.value.toDate.setValue(new Date());
     this.partnersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.boPartnersColumnDef(),
@@ -83,8 +85,9 @@ export class BoPartnersComponent implements OnInit {
       totalItems: null,
     };
     this.boPartnerDateForm = this.fb.group({
-      fromDate: [new Date(), Validators.required],
+      fromDate: ['2023-04-01', Validators.required],
       toDate: [new Date(), Validators.required],
+      mobileNumber:new FormControl('')
     });
     this.getBoPartners();
   }
@@ -337,7 +340,8 @@ export class BoPartnersComponent implements OnInit {
     ];
   }
 
-  getBoPartners() {
+  getBoPartners(mobile?) {
+    // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(
@@ -349,10 +353,25 @@ export class BoPartnersComponent implements OnInit {
         'yyyy-MM-dd'
       );
       this.loading = true;
+      let param
+      let mobileFilter = '';
+    if (
+      this.utileService.isNonEmpty(this.boPartnerDateForm.controls['mobileNumber'].value) &&
+      this.boPartnerDateForm.controls['mobileNumber'].valid
+    ) {
+      mobileFilter =
+        '&mobileNumber=' + this.boPartnerDateForm.controls['mobileNumber'].value;
+    }
+      // let mobileFilter=''
+      // if(mobile){
+      //   mobileFilter =`?mobileNumber=${}`
+      // }
 
-      let param = `/partner-details?page=${
+       param = `/partner-details?page=${
         this.config.currentPage - 1
-      }&size=10&from=${fromDate}&to=${toDate}`;
+      }&size=10&from=${fromDate}&to=${toDate}${mobileFilter}`;
+
+
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
           console.log('bo-partners list: ', response);
@@ -491,5 +510,10 @@ export class BoPartnersComponent implements OnInit {
         }
       }
     });
+  }
+
+  resetFilters(){
+    this.boPartnerDateForm.controls['mobileNumber'].setValue(null);
+    this.getBoPartners();
   }
 }

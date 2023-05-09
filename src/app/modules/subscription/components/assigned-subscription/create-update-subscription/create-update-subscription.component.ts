@@ -100,7 +100,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     private toastMessage: ToastMessageService,
     private schedules: Schedules,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getAllPromoCode();
@@ -424,7 +424,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   removePromoCode() {
-    if(this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0 ) {
+    if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
       const param = `/subscription/remove-promocode?subscriptionId=${this.userSubscription.subscriptionId}`;
       this.itrService.deleteMethod(param).subscribe((res: any) => {
         this.utilsService.showSnackBar(
@@ -501,8 +501,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         ) {
           myDate.setDate(
             new Date().getDate() +
-              this.userSubscription.smeSelectedPlan.validForDays -
-              1
+            this.userSubscription.smeSelectedPlan.validForDays -
+            1
           );
           this.maxEndDate = new Date(myDate);
           this.serviceType = this.userSubscription.smeSelectedPlan.servicesType;
@@ -518,8 +518,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         ) {
           myDate.setDate(
             new Date().getDate() +
-              this?.userSubscription?.userSelectedPlan.validForDays -
-              1
+            this?.userSubscription?.userSelectedPlan.validForDays -
+            1
           );
           this.maxEndDate = new Date(myDate);
           this.serviceType =
@@ -740,8 +740,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         ) {
           this.maxEndDate.setDate(
             this.maxEndDate.getDate() +
-              this.userSubscription.smeSelectedPlan.validForDays -
-              1
+            this.userSubscription.smeSelectedPlan.validForDays -
+            1
           );
         }
         this.setServiceDetails();
@@ -830,7 +830,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
-      if(this.subType === 'edit') {
+      if (this.subType === 'edit') {
         this.isButtonDisable = false;
       }
       this.serviceDetails = this.allPlans.map((item) => {
@@ -841,7 +841,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         (item: any) => item.service === this.service
       );
       let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === this.userSubscription.userSelectedPlan.name.toLowerCase());
-      if(filtered.length === 1){
+      if (filtered.length === 1) {
         this.serviceDetail = filtered[0].details;
       }
     }
@@ -994,6 +994,26 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     sessionStorage.removeItem('subscriptionObject');
     sessionStorage.removeItem('createSubscriptionObject');
+  }
+
+  cancelSubscription() {
+    this.loading = true;
+    let param = `/itr/subscription`;
+    let reqBody = {
+      "subscriptionId": this.userSubscription.subscriptionId,
+      "cancellationStatus": "PENDING"
+    };
+    this.userService.spamPutMethod(param, reqBody).subscribe(
+      (res: any) => {
+        this.loading = false;
+        this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
+        this.location.back();
+      },
+      (error) => {
+        this.loading = false;
+        this.toastMessage.alert('error', 'failed to update.');
+      }
+    );
   }
 }
 
