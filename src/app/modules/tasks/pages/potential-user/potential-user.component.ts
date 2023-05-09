@@ -658,12 +658,13 @@ export class PotentialUserComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
-    this.searchParam.email = null;
+    this.searchParam.emailId=null;
     this.searchParam.statusId = null;
 
     this?.smeDropDown?.resetDropdown();
 
     if(this.coOwnerDropDown){
+
       this.coOwnerDropDown.resetDropdown();
       this.search('',true);
     }else{

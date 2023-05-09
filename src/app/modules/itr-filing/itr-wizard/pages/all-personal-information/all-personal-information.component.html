@@ -13,7 +13,7 @@
           Customer Profile
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button
+          <button *ngIf="false"
             class="edit_btn"
             (click)="$event.stopPropagation(); editForm('customer')"
           >
@@ -21,7 +21,7 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-customer-profile
+      <app-customer-profile (saveAndNext)="checkSuccess(0)"
         [navigationData]="navigationData"
         [isEditCustomer]="isEditCustomer"
       ></app-customer-profile>
@@ -39,7 +39,7 @@
           Personal Details
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button
+          <button *ngIf="false"
             class="edit_btn"
             (click)="$event.stopPropagation(); editForm('personal')"
           >
@@ -47,7 +47,7 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-personal-information
+      <app-personal-information (saveAndNext)="checkSuccess(1)"
         [isEditPersonal]="isEditPersonal"
       ></app-personal-information>
     </mat-expansion-panel>
@@ -64,7 +64,7 @@
           Other Information
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button
+          <button *ngIf="false"
             class="edit_btn"
             (click)="$event.stopPropagation(); editForm('other')"
           >
@@ -72,7 +72,7 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-other-information
+      <app-other-information (saveAndNext)="checkSuccess(2)"
         [isEditOther]="isEditOther"
       ></app-other-information>
     </mat-expansion-panel>

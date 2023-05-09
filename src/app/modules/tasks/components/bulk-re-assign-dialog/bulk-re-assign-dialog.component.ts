@@ -104,8 +104,9 @@ export class BulkReAssignDialogComponent implements OnInit {
     console.log('status',this.status.value)
     console.log('isReassignmentOutsideTeam',this.isReassignmentOutsideTeam);
     console.log('filerUserIdList',this.filerId2)
-      let paramValue = '';
 
+    if(this.filerId1 && this.filerId2 ){
+      let paramValue = '';
       if(this.ownerId1 == this.ownerId2){
         paramValue =`&serviceType=${this.serviceType.value}`
        }
@@ -121,13 +122,18 @@ export class BulkReAssignDialogComponent implements OnInit {
           this.dialogRef.close({ event: 'close', data: 'success' });
         }
         else{
-          this.utilsService.showSnackBar('Failed to re-assign the users, please try again');
+          this.utilsService.showSnackBar('Failed to reassign as no data found for current selection');
         }
       }, error => {
         this.loading = false;
-        this.utilsService.showSnackBar('Failed to re-assign the users, please try again');
+        this.utilsService.showSnackBar('Please select Both Owner And Filer Name');
         console.log(error);
       })
+
+    }else {
+      this.utilsService.showSnackBar('Please select Owner And Filer Names');
+    }
+
 
 
   }

@@ -43,7 +43,7 @@ export class ForgotPasswordComponent implements OnInit {
       if(params['action'] === 'set_password'){
         //get mobile number
         this.isSetPassword = true;
-        this.forgotPasswordForm.controls['username'].setValue(params['mobileNo']);
+        this.forgotPasswordForm.controls['username'].setValue(params['mobile']);
         this.sendOtp();
       }
     });

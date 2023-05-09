@@ -35,7 +35,7 @@ export class TokenInterceptor implements HttpInterceptor {
             localStorage.setItem('UMD', JSON.stringify(this.userData));
         }).catch(err => console.log('Auth.currentSession err:', err));
         const TOKEN = (this.userData) ? this.userData.id_token : null;
-        if (request.url.startsWith(environment.url) && TOKEN) {
+        if ((request.url.startsWith(environment.url) || request.url.startsWith(environment.eri_url)) && TOKEN) {
             let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'))
             if (request.headers.has(InterceptorSkipHeader)) {
                 const headers = request.headers.delete(InterceptorSkipHeader);
@@ -49,8 +49,7 @@ export class TokenInterceptor implements HttpInterceptor {
                         'userId': eriHeader.userId
                     }
                 });
-            }
-            if(request.url.startsWith(environment.url)) {
+            } else if(request.url.startsWith(environment.url)) {
               request = request.clone({
                 setHeaders: {
                   Authorization: `Bearer ` + TOKEN

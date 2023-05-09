@@ -242,7 +242,7 @@
                 type="submit"
                 class="tbd-btn save-btn"
                 [disabled]="directorForm.invalid"
-                (click)="saveDirectorDetials()"
+                (click)="saveDirectorDetials($event)"
               >
                 Save
               </button>
@@ -731,7 +731,7 @@
             type="submit"
             class="tbd-btn save-btn"
             [disabled]="directorForm.invalid"
-            (click)="saveUnlistedShares()"
+            (click)="saveUnlistedShares($event)"
           >
             Save
           </button>
@@ -745,7 +745,7 @@
   <button
     class="tbd-btn save-btn"
     [disabled]="!isEditOther"
-    (click)="saveAndContinue()"
+    (click)="saveAndContinue($event)"
   >
     Save
   </button>
