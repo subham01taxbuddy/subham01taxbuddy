@@ -9,6 +9,7 @@ import {
 import { catchError, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilsService } from './utils.service';
+import {environment} from "../../environments/environment";
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
 @Injectable()
@@ -34,7 +35,7 @@ export class TokenInterceptor implements HttpInterceptor {
             localStorage.setItem('UMD', JSON.stringify(this.userData));
         }).catch(err => console.log('Auth.currentSession err:', err));
         const TOKEN = (this.userData) ? this.userData.id_token : null;
-        if (TOKEN) {
+        if (request.url.startsWith(environment.url) && TOKEN) {
             let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'))
             if (request.headers.has(InterceptorSkipHeader)) {
                 const headers = request.headers.delete(InterceptorSkipHeader);
@@ -49,11 +50,13 @@ export class TokenInterceptor implements HttpInterceptor {
                     }
                 });
             }
-            request = request.clone({
+            if(request.url.startsWith(environment.url)) {
+              request = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer ` + TOKEN
+                  Authorization: `Bearer ` + TOKEN
                 }
-            });
+              });
+            }
 
         }
 

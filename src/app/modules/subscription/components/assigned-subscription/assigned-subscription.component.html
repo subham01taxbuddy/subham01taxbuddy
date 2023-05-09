@@ -4,6 +4,11 @@
     <div class="col-sm-10">
       <b style="font-size: 20px">Assigned Subscription </b>
     </div>
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+      <p>
+        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
+      </p>
+    </div>
   </div>
   <div class="content-wrapper">
     <div class="container">
@@ -11,7 +16,7 @@
         <div class="col-sm-12" style="margin-top: 10px;">
           <div class="card" style="margin-top: 10px;">
             <div class="card__row">
-              <div class="filter__col card__col-xs-12">
+              <div class="filter__col card__col-xs-12" *ngIf="!coOwnerCheck">
                 <!--  <mat-form-field appearance="outline">
                   <mat-label>Select Agent</mat-label>
                   <mat-select placeholder="Select Agent" [(ngModel)]="agentId" (selectionChange)="this.search('agent')">
@@ -21,6 +26,11 @@
                   </mat-select>
                 </mat-form-field> -->
                 <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              </div>
+              <div class="card__row" *ngIf="coOwnerCheck">
+                <div class="filter__col card__col-xs-12">
+                  <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+                </div>
               </div>
             <div class="row" style="margin-top: 15px;">
               <div class="col-sm-3">
@@ -51,7 +61,7 @@
               <div class="col-sm-3">
                 <mat-label> Search Mobile Number</mat-label>
                 <mat-form-field appearance="outline" class="customBg">
-                  <input type="text" matInput [formControl]="mobileNumber" [matAutocomplete]="auto" maxlength="10" digitsOnly>
+                  <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
                   <button (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
                     <mat-icon style="color: #00AECA">search</mat-icon>
                   </button>

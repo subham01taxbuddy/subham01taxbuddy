@@ -13,6 +13,16 @@ export const environment = {
 	environment:'UAT',
   admin_id:3000,
 
+  gdrive: {
+    GOOGLE_DRIVE_CLIENT_ID: '994281120398-930gtuaop72na800aqf6f38uqjc77mvq.apps.googleusercontent.com',
+    GOOGLE_DRIVE_CLIENT_SECRET : 'GOCSPX - zn5Minf3MdzYRk_PchAdair9MWSn',
+    GOOGLE_DRIVE_REDIRECT_URI : 'https://developers.google.com/oauthplayground',
+    // GOOGLE_DRIVE_API_KEY : 'AIzaSyDbc9tRF_zEqgITEen8BAIpbFeWF5i-w90',
+    GOOGLE_DRIVE_API_KEY : 'AIzaSyDbc9tRF_zEqgITEen8BAIpbFeWF5i-w90',
+    // GOOGLE_DRIVE_REFRESH_TOKEN : '1//04pkPTYbdma87CgYIARAAGAQSNwF-L9IrPQ3eZitgESUDwy99aGnxQxLEXLjZy0hJ2oVY0U6jyzt-G1-QwfmgQhP2-5B07tGiWGA'
+    FOLDER_ID: '1DlJN6xgPyrX_ijF7k6q4M_1rwiRFJkGt'
+  },
+
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
 		// password: "testPwd8761$",

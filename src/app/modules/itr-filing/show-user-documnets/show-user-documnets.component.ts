@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
+import {GoogleDriveService} from "../../../services/google-drive.service";
 
 @Component({
   selector: 'app-show-user-documnets',
@@ -24,7 +25,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
   serviceType:any;
 
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
-    private datePipe: DatePipe, private toastMessageService: ToastMessageService) { }
+    private datePipe: DatePipe, private toastMessageService: ToastMessageService,
+              private gdriveService: GoogleDriveService) { }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -34,16 +36,16 @@ export class ShowUserDocumnetsComponent implements OnInit {
       this.serviceType=params['serviceType']
       // For directly navigating to ITR folder docs
       if(this.serviceType=='ITR'){
-        this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
+        this.breadcrumbsPart = ["Home", "ITR", "2022-23", "Original", "ITR Filing Docs"];
       }
       else if(this.serviceType=='TPA'){
-        this.breadcrumbsPart = ["Home", "TPA", "2023-24"];
+        this.breadcrumbsPart = ["Home", "TPA", "2022-23"];
       }
       else if(this.serviceType=='GST'){
-        this.breadcrumbsPart = ["Home", "GST", "2023-24",];
+        this.breadcrumbsPart = ["Home", "GST", "2022-23",];
       }
       else if(this.serviceType=='NOTICE'){
-        this.breadcrumbsPart = ["Home", "NOTICE", "2021-22", "Original", "NOTICE Filing Docs"];
+        this.breadcrumbsPart = ["Home", "NOTICE", "2022-23", "Original", "NOTICE Filing Docs"];
       }
       else{
         this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
@@ -54,6 +56,22 @@ export class ShowUserDocumnetsComponent implements OnInit {
     });
   }
 
+  editFile(document) {
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      console.log(this.docUrl);
+      this.loading = false;
+
+      //open file in gdrive
+      this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
+      // this.gdriveService.getUserConsent();
+    }, error => {
+      this.loading = false;
+    })
+  }
   // getCommonDocuments(userId) {
   //   const param = `/cloud/signed-s3-urls?currentPath=${userId}`;
   //   this.itrMsService.getMethod(param).subscribe((result: any) => {
@@ -218,9 +236,14 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
     const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
-      console.log(res);
-      this.docUrl = res['signedUrl'];
       this.loading = false;
+      console.log(res);
+      if(res['signedUrl']){
+        this.docUrl = res['signedUrl'];
+      }else{
+        this.utilsService.showSnackBar(res.response);
+      }
+
       // window.open(this.docUrl);
       // this.utilsService.showSnackBar(res.response);
     }, error => {

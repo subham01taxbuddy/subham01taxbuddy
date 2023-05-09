@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -20,6 +21,9 @@ export class AssignedSmeComponent implements OnInit {
   smeInfo: any;
   config: any;
   loggedInSme:any;
+  roles: any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -69,6 +73,9 @@ export class AssignedSmeComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.agentId = this.utilsService.getLoggedInUserID()
+    this.roles = this.loggedInSme[0]?.roles
+    console.log('roles', this.roles)
     this.getSmeList();
   }
   clearValue() {
@@ -109,11 +116,48 @@ export class AssignedSmeComponent implements OnInit {
 
   }
 
-  getSmeList() {
-    // ${this.config.currentPage - 1}
+  coOwnerId: number;
+  coFilerId: number;
+  agentId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+      this.getSmeList();
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+
+  }
+
+  getSmeList(isAgent?) {
+    // for co-owner-
+    //https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&assigned=true&searchAsCoOwner=true
+
     const loggedInSmeUserId=this.loggedInSme[0].userId
+
+    if (this.coOwnerToggle.value == false) {
+      this.agentId = loggedInSmeUserId;
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
+    let param = `/sme-details-new/${this.agentId}?${data}`;
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
@@ -131,6 +175,7 @@ export class AssignedSmeComponent implements OnInit {
             this.createRowData(this.smeInfo)
           );
         } else {
+          this.config.totalItems =0
           this.loading = false;
           console.log('in else');
           this.smeListGridOptions.api?.setRowData(
@@ -230,10 +275,10 @@ export class AssignedSmeComponent implements OnInit {
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
-        cellStyle: {          
+        cellStyle: {
           textAlign: 'left',
-          display: 'block',  
-          margin: '0px 0px 0px 5px'  
+          display: 'block',
+          margin: '0px 0px 0px 5px'
         },
         cellRenderer: (params: any) => {
           // console.log('param',params)
@@ -367,7 +412,7 @@ export class AssignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="background-color: #00AECA; color: #ffffff; padding: 3px 8px; border-radius:5px; font-size: 14px; cursor:pointer;margin-top:2px;">
-          <i class="material-icons" style="font-size: 15px; padding-top: 5px; padding-right: 5px;">&#xe3c9;</i>Edit
+          <i class="material-icons" style="font-size: 15px; padding-top: 5px; padding-right: 5px;" data-action-type="edit">&#xe3c9;</i>Edit
           </button>`;
         },
       },
@@ -405,7 +450,22 @@ export class AssignedSmeComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.getSmeList();
+    if (this.coOwnerToggle.value == true) {
+      this.getSmeList(true);
+    }else{
+      this.getSmeList();
+    }
+    ;
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.getSmeList(true);
   }
 
 }

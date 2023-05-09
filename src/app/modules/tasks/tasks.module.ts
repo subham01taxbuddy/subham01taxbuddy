@@ -20,6 +20,7 @@ import { EVerificationDialogComponent } from './components/e-verification-dialog
 import { ItrLifecycleDialogComponent } from './components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new-users.component";
 import { PotentialUserComponent } from './pages/potential-user/potential-user.component';
+import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 
 @NgModule({
     imports: [
@@ -47,12 +48,14 @@ import { PotentialUserComponent } from './pages/potential-user/potential-user.co
         EVerificationDialogComponent,
         ItrLifecycleDialogComponent,
         PotentialUserComponent,
+        BulkReAssignDialogComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,
         MoreOptionsDialogComponent,
         EVerificationDialogComponent,
-        ItrLifecycleDialogComponent
+        ItrLifecycleDialogComponent,
+        BulkReAssignDialogComponent
     ]
 
 })

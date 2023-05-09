@@ -51,6 +51,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   ngOnInit() {
     // this.getStatus();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
+    console.log('data from assigned users',this.data)
 
   }
 
@@ -253,9 +254,17 @@ export class MoreOptionsDialogComponent implements OnInit {
       data: {
         userId: this.data.userId,
         clientName: this.data.name,
-        serviceType: this.data.serviceType
+        serviceType: this.data.serviceType,
+        ownerName: this.data.ownerName,
+        filerName: this.data.filerName,
       }
     });
+    disposable.afterClosed().subscribe(result => {
+      console.log('result of reassign user ',result);
+      if (result.data === 'success') {
+        return this.dialogRef.close({ event: 'close', data: 'success' });
+      }
+   });
   }
 
   createRowData(data) {

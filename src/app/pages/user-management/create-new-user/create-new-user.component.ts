@@ -25,6 +25,8 @@ export class CreateNewUserComponent implements OnInit {
   disableAssignedToMe = false;
   assessmentYear:string;
   roles:any;
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   loggedInSme:any;
   countryList: Country[] = this.countryDropdown.map(country => ({
     name: country.countryName,
@@ -124,6 +126,34 @@ export class CreateNewUserComponent implements OnInit {
 
   }
 
+  coOwnerId: number;
+  coFilerId: number;
+  agentId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+
+    if(this.coOwnerId && this.coFilerId){
+      this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
+    }
+
+    if(this.coFilerId) {
+      this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
+    } else if(this.coOwnerId) {
+      this.signUpForm.controls['agentUserId'].setValue(this.coOwnerId);
+
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+    }
+
+  }
+
   // fromSme(event) {
   //   console.log('event value',event)
   //   this.signUpForm.controls['agentUserId'].setValue(event);
@@ -152,6 +182,7 @@ export class CreateNewUserComponent implements OnInit {
           return;
         }
         this.assignUser(res.userId, this.signUpForm.controls['agentUserId'].value, this.signUpForm.controls['serviceType'].value);
+        console.log('sme user ID under user is going',this.signUpForm.controls['agentUserId'].value)
       }, (error) => {
         this.loading = false;
         console.log("Error when creating user: ", error);
@@ -163,6 +194,7 @@ export class CreateNewUserComponent implements OnInit {
 
   assignUser(userId, agentUserId, serviceType) {
     // https://uat-api.taxbuddy.com/user/agent-assignment-manually-new?userId=9506&assessmentYear=2023-2024&serviceType=ITR&smeUserId=7002
+
     const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
     this.userService.getMethod(param).subscribe((res: any) => {
       if(res.success==true){
@@ -207,5 +239,15 @@ export class CreateNewUserComponent implements OnInit {
     } else {
       this.disableAssignedToMe = false;
     }
+  }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    // this.getInvoice(true);
   }
 }

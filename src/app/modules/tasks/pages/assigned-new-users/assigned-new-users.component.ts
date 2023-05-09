@@ -21,6 +21,9 @@ import { param } from 'jquery';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { FormControl } from '@angular/forms';
+import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -34,7 +37,10 @@ export class AssignedNewUsersComponent implements OnInit {
   userInfo: any = [];
   itrStatus: any = [];
   filerUserId:any;
+  roles:any;
   ogStatusList: any = [];
+  coOwnerToggle = new FormControl('');
+  coOwnerCheck = false;
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -75,6 +81,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
+    this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
     this.search();
@@ -124,6 +131,29 @@ export class AssignedNewUsersComponent implements OnInit {
       this.agentId = loggedInId;
     }
     this.search('agent');
+  }
+
+  coOwnerId: number;
+  coFilerId: number;
+
+  fromSme1(event, isOwner) {
+    console.log('co-owner-drop-down', event, isOwner);
+    if(isOwner){
+      this.coOwnerId = event? event.userId : null;
+    } else {
+      this.coFilerId = event? event.userId : null;
+    }
+    if(this.coFilerId) {
+      this.agentId = this.coFilerId;
+      this.search('agent');
+    } else if(this.coOwnerId) {
+      this.agentId = this.coOwnerId;
+       this.search('agent');
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    //  this.search('agent');
   }
 
   getAgentList() {
@@ -880,24 +910,34 @@ export class AssignedNewUsersComponent implements OnInit {
 
 
   moreOptions(client) {
+    console.log('client',client)
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',
       data: client
     })
-
-    // disposable.afterClosed().subscribe(result => {
-    //   if (result.data === 'success') {
-    //     this.search();
-    //   }
-    // });
+      disposable.afterClosed().subscribe(result => {
+        console.log('result after more option closed',result)
+       if (result.data === 'success') {
+         this.search();
+       }
+    });
   }
+
+  openBulkReAssignment(){
+    let disposable = this.dialog.open(BulkReAssignDialogComponent,{
+      width:'100%',
+      height: 'auto',
+    })
+  }
+
   isNumeric(value) {
     return /^\d+$/.test(value);
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters(){
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -906,9 +946,15 @@ export class AssignedNewUsersComponent implements OnInit {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
 
-    this.smeDropDown.resetDropdown();
-    this.serviceDropDown.resetService();
-    this.search();
+    this?.smeDropDown?.resetDropdown();
+    this?.serviceDropDown?.resetService();
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.search('',true);
+    }else{
+      this.search();
+    }
+
   }
 
   search(form?, isAgent?) {
@@ -942,12 +988,20 @@ export class AssignedNewUsersComponent implements OnInit {
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     //https://dev-api.taxbuddy.com/user/%7BloggedInSmeUserId%7D/user-list-new?page=0&pageSize=20
+    //https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100
+
     let param = `/${this.agentId}/user-list-new?${data}`;
-    if (isAgent) {
-      param = param + '&isAgent=true';
-    }
+    // if (isAgent) {
+    //   param = param + '&isAgent=true';
+    // }
     if(this.filerUserId){
       param= param + `&filerUserId=${this.filerUserId}`
+    }
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }else {
+      param;
     }
 
     this.userMsService.getMethod(param).subscribe(
@@ -960,6 +1014,11 @@ export class AssignedNewUsersComponent implements OnInit {
         }
       } */
       (result: any) => {
+        if(result.success == false){
+          this._toastMessageService.alert("error",result.message);
+          this.usersGridOptions.api?.setRowData(this.createRowData([]));
+            this.config.totalItems = 0;
+        }
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
             this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -980,4 +1039,16 @@ export class AssignedNewUsersComponent implements OnInit {
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
       })
   }
+
+  getToggleValue(){
+    console.log('co-owner toggle',this.coOwnerToggle.value)
+    if (this.coOwnerToggle.value == true) {
+    this.coOwnerCheck = true;}
+    else {
+      this.coOwnerCheck = false;
+    }
+    this.search('',true);
+  }
+
+
 }
