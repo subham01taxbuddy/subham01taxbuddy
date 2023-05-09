@@ -87,7 +87,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         acknowledgementNumber: [],
       }),
       optionForCurrentAY: this.fb.group({
-        currentYearRegime: [],
+        currentYearRegime: ['', Validators.required],
         date: [],
         acknowledgementNumber: [],
       }),
@@ -100,130 +100,160 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  // onChanges() {
-  //   this.updateCurrentAYOptions();
-  //   const everOptedNewRegime =
-  //     this.regimeSelectionForm.get('everOptedNewRegime');
+  onChanges() {
+    const everOptedNewRegime =
+      this.regimeSelectionForm.get('everOptedNewRegime');
 
-  //   const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
-  //     'everOptedOutOfNewRegime'
-  //   );
+    const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
+      'everOptedOutOfNewRegime'
+    );
 
-  //   const optionForCurrentAY =
-  //     this.regimeSelectionForm.get('optionForCurrentAY');
+    if (this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4') {
+      everOptedNewRegime.setValidators(Validators.required);
+      everOptedNewRegime.updateValueAndValidity();
 
-  //   everOptedNewRegime
-  //     .get('everOptedNewRegime')
-  //     .valueChanges.subscribe((val) => {
-  //       if (val) {
-  //         // assesmentYear
-  //         everOptedNewRegime
-  //           .get('assessmentYear')
-  //           .setValidators(Validators.required);
-  //         everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+      everOptedOutOfNewRegime.setValidators(Validators.required);
+      everOptedOutOfNewRegime.updateValueAndValidity();
+    } else {
+      everOptedNewRegime.setValidators(null);
+      everOptedNewRegime.updateValueAndValidity();
 
-  //         // acknowledgementNumber
-  //         everOptedNewRegime
-  //           .get('acknowledgementNumber')
-  //           .setValidators(Validators.required);
-  //         everOptedNewRegime
-  //           .get('acknowledgementNumber')
-  //           .updateValueAndValidity();
+      everOptedOutOfNewRegime.setValidators(null);
+      everOptedOutOfNewRegime.updateValueAndValidity();
+    }
 
-  //         // date
-  //         everOptedNewRegime.get('date').setValidators(Validators.required);
-  //         everOptedNewRegime.get('date').updateValueAndValidity();
-  //       } else {
-  //         // assesmentYear
-  //         everOptedNewRegime.get('assessmentYear').setValidators(null);
-  //         everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+    everOptedNewRegime
+      .get('everOptedNewRegime')
+      .valueChanges.subscribe((val) => {
+        if (val) {
+          this.updateCurrentAYOptions();
+          // assesmentYear
+          everOptedNewRegime
+            .get('assessmentYear')
+            .setValidators(Validators.required);
+          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
 
-  //         // acknowledgementNumber
-  //         everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
-  //         everOptedNewRegime
-  //           .get('acknowledgementNumber')
-  //           .updateValueAndValidity();
+          // acknowledgementNumber
+          everOptedNewRegime
+            .get('acknowledgementNumber')
+            .setValidators(Validators.required);
+          everOptedNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
 
-  //         // date
-  //         everOptedNewRegime.get('date').setValidators(null);
-  //         everOptedNewRegime.get('date').updateValueAndValidity();
-  //       }
-  //     });
+          // date
+          everOptedNewRegime.get('date').setValidators(Validators.required);
+          everOptedNewRegime.get('date').updateValueAndValidity();
+        } else {
+          this.updateCurrentAYOptions();
+          // assesmentYear
+          everOptedNewRegime.get('assessmentYear').setValidators(null);
+          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
 
-  //   everOptedOutOfNewRegime
-  //     .get('everOptedOutOfNewRegime')
-  //     .valueChanges.subscribe((val) => {
-  //       if (val) {
-  //         // assesmentYear
-  //         everOptedOutOfNewRegime
-  //           .get('assessmentYear')
-  //           .setValidators(Validators.required);
-  //         everOptedOutOfNewRegime
-  //           .get('assessmentYear')
-  //           .updateValueAndValidity();
+          // acknowledgementNumber
+          everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
+          everOptedNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
 
-  //         // acknowledgementNumber
-  //         everOptedOutOfNewRegime
-  //           .get('acknowledgementNumber')
-  //           .setValidators(Validators.required);
-  //         everOptedOutOfNewRegime
-  //           .get('acknowledgementNumber')
-  //           .updateValueAndValidity();
+          // date
+          everOptedNewRegime.get('date').setValidators(null);
+          everOptedNewRegime.get('date').updateValueAndValidity();
+        }
+      });
 
-  //         // date
-  //         everOptedOutOfNewRegime
-  //           .get('date')
-  //           .setValidators(Validators.required);
-  //         everOptedOutOfNewRegime.get('date').updateValueAndValidity();
-  //       } else {
-  //         // assesmentYear
-  //         everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
-  //         everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+    everOptedOutOfNewRegime
+      .get('everOptedOutOfNewRegime')
+      .valueChanges.subscribe((val) => {
+        if (val) {
+          this.updateCurrentAYOptions();
+          // assesmentYear
+          everOptedOutOfNewRegime
+            .get('assessmentYear')
+            .setValidators(Validators.required);
+          everOptedOutOfNewRegime
+            .get('assessmentYear')
+            .updateValueAndValidity();
 
-  //         // acknowledgementNumber
-  //         everOptedOutOfNewRegime
-  //           .get('acknowledgementNumber')
-  //           .setValidators(null);
-  //         everOptedOutOfNewRegime
-  //           .get('acknowledgementNumber')
-  //           .updateValueAndValidity();
+          // acknowledgementNumber
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .setValidators(Validators.required);
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
 
-  //         // date
-  //         everOptedOutOfNewRegime.get('date').setValidators(null);
-  //         everOptedOutOfNewRegime.get('date').updateValueAndValidity();
-  //       }
-  //     });
+          // date
+          everOptedOutOfNewRegime
+            .get('date')
+            .setValidators(Validators.required);
+          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+        } else {
+          this.updateCurrentAYOptions();
+          // assesmentYear
+          everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
+          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
 
-  //   optionForCurrentAY
-  //     .get('currentYearRegime')
-  //     .valueChanges.subscribe((val) => {
-  //       if (this.showCurrentAYOptions) {
-  //         // acknowledgementNumber
-  //         optionForCurrentAY
-  //           .get('acknowledgementNumber')
-  //           .setValidators(Validators.required);
-  //         optionForCurrentAY
-  //           .get('acknowledgementNumber')
-  //           .updateValueAndValidity();
+          // acknowledgementNumber
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .setValidators(null);
+          everOptedOutOfNewRegime
+            .get('acknowledgementNumber')
+            .updateValueAndValidity();
 
-  //         // date
-  //         optionForCurrentAY.get('date').setValidators(Validators.required);
-  //         optionForCurrentAY.get('date').updateValueAndValidity();
-  //       } else {
-  //         // acknowledgementNumber
-  //         optionForCurrentAY.get('acknowledgementNumber').setValidators(null);
-  //         optionForCurrentAY
-  //           .get('acknowledgementNumber')
-  //           .updateValueAndValidity();
+          // date
+          everOptedOutOfNewRegime.get('date').setValidators(null);
+          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+        }
+      });
+  }
 
-  //         // date
-  //         optionForCurrentAY.get('date').setValidators(null);
-  //         optionForCurrentAY.get('date').updateValueAndValidity();
-  //       }
-  //     });
-  // }
+  updateCurrentAYOptions() {
+    console.log('here');
+    let currAssmntYr = (
+      this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+    ).controls['currentYearRegime'];
+    if (
+      this.newRegimeLabel === 'Opting in Now' &&
+      currAssmntYr.value === 'NEW'
+    ) {
+      this.showCurrentAYOptions = true;
+    } else if (
+      this.oldRegimeLabel === 'Opt Out' &&
+      currAssmntYr.value === 'OLD'
+    ) {
+      this.showCurrentAYOptions = true;
+    } else {
+      this.showCurrentAYOptions = false;
+    }
+
+    const optionForCurrentAY =
+      this.regimeSelectionForm.get('optionForCurrentAY');
+
+    if (this.showCurrentAYOptions) {
+      // acknowledgementNumber
+      optionForCurrentAY
+        .get('acknowledgementNumber')
+        ?.setValidators(Validators.required);
+      optionForCurrentAY.get('acknowledgementNumber')?.updateValueAndValidity();
+
+      // date
+      optionForCurrentAY.get('date')?.setValidators(Validators.required);
+      optionForCurrentAY.get('date')?.updateValueAndValidity();
+    } else {
+      // acknowledgementNumber
+      optionForCurrentAY.get('acknowledgementNumber')?.setValidators(null);
+      optionForCurrentAY.get('acknowledgementNumber')?.updateValueAndValidity();
+
+      // date
+      optionForCurrentAY.get('date')?.setValidators(null);
+      optionForCurrentAY.get('date')?.updateValueAndValidity();
+    }
+  }
 
   updateRegimeLabels() {
+    this.updateCurrentAYOptions();
     let optIn = (
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
     ).controls['everOptedNewRegime'].value;
@@ -324,39 +354,22 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     // }
   }
 
-  updateCurrentAYOptions() {
-    console.log('here');
-    let currAssmntYr = (
-      this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
-    ).controls['currentYearRegime'];
-    if (
-      this.newRegimeLabel === 'Opting in Now' &&
-      currAssmntYr.value === 'NEW'
-    ) {
-      this.showCurrentAYOptions = true;
-    } else if (
-      this.oldRegimeLabel === 'Opt Out' &&
-      currAssmntYr.value === 'OLD'
-    ) {
-      this.showCurrentAYOptions = true;
-    } else {
-      this.showCurrentAYOptions = false;
-    }
-  }
-
   ngOnInit(): void {
+    this.loading = true;
+    this.utilsService.smoothScrollToTop();
     this.initForm();
     this.getITRType();
-    // this.onChanges();
+    this.onChanges();
 
-    this.utilsService.smoothScrollToTop();
     this.assesssmentYear = [
       { assesssmentYear: '2022-23' },
       { assesssmentYear: '2021-22' },
     ];
+
     this.settingValues();
     this.updateRegimeLabels();
-    this.loading = true;
+    this.updateCurrentAYOptions();
+
     //https://dev-api.taxbuddy.com/itr/tax/old-vs-new'
     const param = '/tax/old-vs-new';
 

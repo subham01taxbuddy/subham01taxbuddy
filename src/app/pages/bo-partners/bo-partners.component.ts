@@ -15,7 +15,7 @@ import {
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {environment} from "../../../environments/environment";
 
 @Component({
@@ -54,6 +54,7 @@ export class BoPartnersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog
   ) {
+
     this.partnersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.boPartnersColumnDef(),
@@ -83,8 +84,9 @@ export class BoPartnersComponent implements OnInit {
       totalItems: null,
     };
     this.boPartnerDateForm = this.fb.group({
-      fromDate: [new Date(), Validators.required],
+      fromDate: ['2023-04-01', Validators.required],
       toDate: [new Date(), Validators.required],
+      mobileNumber:new FormControl('')
     });
     this.getBoPartners();
   }
@@ -316,7 +318,7 @@ export class BoPartnersComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params: any) {
           //console.log(params);
-          if(params.data.currentstatus === 'APPROVE') {
+          if(params.data.currentstatus == 'APPROVE' || params.data.currentstatus ==  'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
           <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
@@ -337,7 +339,8 @@ export class BoPartnersComponent implements OnInit {
     ];
   }
 
-  getBoPartners() {
+  getBoPartners(mobile?) {
+    // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(
@@ -349,12 +352,17 @@ export class BoPartnersComponent implements OnInit {
         'yyyy-MM-dd'
       );
       this.loading = true;
+      let param
 
-      let param = `/partner-details?page=${
-        this.config.currentPage - 1
-      }&size=10&from=${fromDate}&to=${toDate}`;
+      if(mobile){
+        param = `/partner-detail?page=0&size=1&mobileNumber=${this.boPartnerDateForm.controls['mobileNumber'].value}`
+      }else {
+        param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
+      }
+
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
+          this.loading = false;
           console.log('bo-partners list: ', response);
           if (Array.isArray(response.content)) {
             this.loading = false;
@@ -491,5 +499,10 @@ export class BoPartnersComponent implements OnInit {
         }
       }
     });
+  }
+
+  resetFilters(){
+    this.boPartnerDateForm.controls['mobileNumber'].setValue(null);
+    this.getBoPartners();
   }
 }

@@ -77,7 +77,7 @@ export class ReAssignDialogComponent implements OnInit {
         }
       }, error => {
         this.loading = false;
-        this.utilsService.showSnackBar('Failed to re-assign the user, please try again');
+        this.utilsService.showSnackBar('Filer not found active, please try another.');
         console.log(error);
       })
     }else {

@@ -47,7 +47,9 @@
 
             <div
               formGroupName="optionForCurrentAY"
-              *ngIf="this.itrType === '1' || this.itrType === '2'"
+              *ngIf="
+                this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '2'
+              "
             >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
@@ -72,7 +74,7 @@
                     </mat-radio-button>
                   </mat-radio-group>
 
-                  <!-- <mat-error
+                  <mat-error
                     *ngIf="
                       regimeSelectionForm.controls[
                         'optionForCurrentAY'
@@ -81,7 +83,7 @@
                     "
                   >
                     Please select an option to continue
-                  </mat-error> -->
+                  </mat-error>
                 </div>
               </div>
               <hr />
@@ -89,7 +91,9 @@
 
             <div
               formGroupName="everOptedNewRegime"
-              *ngIf="this.itrType === '3' || this.itrType === '4'"
+              *ngIf="
+                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
+              "
             >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
@@ -119,6 +123,8 @@
                       regimeSelectionForm.controls[
                         'everOptedNewRegime'
                       ].controls['everOptedNewRegime'].hasError('required') &&
+                      (this.ITR_JSON.itrType === '3' ||
+                        this.ITR_JSON.itrType === '4') &&
                       submitted
                     "
                   >
@@ -240,7 +246,9 @@
 
             <div
               formGroupName="everOptedOutOfNewRegime"
-              *ngIf="this.itrType === '3' || this.itrType === '4'"
+              *ngIf="
+                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
+              "
             >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
@@ -341,7 +349,9 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedOutOfNewRegime'
-                        ].controls['acknowledgementNumber'].hasError('required')
+                        ].controls['acknowledgementNumber'].hasError(
+                          'required'
+                        ) || submitted
                       "
                     >
                       This field is required
@@ -376,7 +386,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedOutOfNewRegime'
-                        ].controls['date'].hasError('required')
+                        ].controls['date'].hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -393,7 +403,9 @@
 
             <div
               formGroupName="optionForCurrentAY"
-              *ngIf="this.itrType === '3' || this.itrType === '4'"
+              *ngIf="
+                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
+              "
             >
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
@@ -451,11 +463,9 @@
 
                     <mat-error
                       *ngIf="
-                        (this.itrType === '3' || this.itrType === '4') &&
-                        this.regimeSelectionForm
-                          .get('optionForCurrentAY')
-                          .get('acknowledgementNumber')
-                          .hasError('required')
+                        this.ITR_JSON.itrType === '3' ||
+                        this.ITR_JSON.itrType === '4' ||
+                        showCurrentAYOptions
                       "
                     >
                       This field is required
@@ -487,11 +497,9 @@
                     <mat-datepicker #picker1></mat-datepicker>
                     <mat-error
                       *ngIf="
-                        (this.itrType === '3' || this.itrType === '4') &&
-                        this.regimeSelectionForm
-                          .get('optionForCurrentAY')
-                          .get('date')
-                          .hasError('required')
+                        this.itrType === '3' ||
+                        this.itrType === '4' ||
+                        showCurrentAYOptions
                       "
                     >
                       This field is required
