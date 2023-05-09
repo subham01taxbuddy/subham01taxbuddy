@@ -81,7 +81,7 @@ export const MY_FORMATS = {
 })
 export class CustomerProfileComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  @Input() isEditCustomer = false;
+  @Input() isEditCustomer = true;
   @Input() navigationData: any;
   loading: boolean = false;
   imageLoader: boolean = false;
