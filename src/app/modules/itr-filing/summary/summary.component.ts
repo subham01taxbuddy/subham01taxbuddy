@@ -192,85 +192,66 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     const param = '/tax';
 
-    this.uploadedJson = this.utilsService.getUploadedJson();
-
-    if (this.uploadedJson) {
-      this.ITR_JSON.itrSummaryJson = true;
-      // console.log(
-      // 'this.uploadedJson',
-      // this.uploadedJson.ITR1.ITR1_TaxComputation.TotalTaxPayable
-      // );
-    } else {
-      this.ITR_JSON.itrSummaryJson = false;
-      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-        (result: any) => {
-          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-          console.log('result is=====', result);
-          this.summaryIncome = result.summaryIncome;
-          const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
-          this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
-            console.log('SUMMARY Result=> ', summary);
-            if (summary) {
-              this.losses = summary.assessment;
-              for (
-                let i = 0;
-                i < this.losses?.carryForwordLosses?.length;
-                i++
-              ) {
-                this.totalCarryForword =
-                  this.totalCarryForword +
-                  this.losses.carryForwordLosses[i].totalLoss;
-              }
-              this.summaryDetail = summary.assessment.taxSummary;
-              this.taxable = this.summaryDetail.taxpayable;
-
-              this.refund = this.summaryDetail.taxRefund;
-              this.deductionDetail =
-                summary.assessment.summaryDeductions?.filter(
-                  (item: any) =>
-                    item.sectionType !== '80C' &&
-                    item.sectionType !== '80CCC' &&
-                    item.sectionType !== '80CCD1' &&
-                    item.sectionType !== '80GAGTI'
-                );
-              this.capitalGain =
-                summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
-              this.totalLoss = summary.assessment.currentYearLosses;
-              this.show = true;
-              sessionStorage.setItem(
-                'ITR_SUMMARY_JSON',
-                JSON.stringify(this.summaryDetail)
-              );
-
-              this.losses?.pastYearLosses?.forEach((item: any) => {
-                this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-                this.stLoss =
-                  this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-                this.ltLoss =
-                  this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-              });
-              this.loading = false;
-            } else {
-              this.loading = false;
-              this.errorMessage =
-                'We are unable to display your summary,Please try again later.';
-              this.utilsService.showErrorMsg(this.errorMessage);
+    this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+      (result: any) => {
+        // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+        console.log('result is=====', result);
+        this.summaryIncome = result.summaryIncome;
+        const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
+        this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
+          console.log('SUMMARY Result=> ', summary);
+          if (summary) {
+            this.losses = summary.assessment;
+            for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
+              this.totalCarryForword =
+                this.totalCarryForword +
+                this.losses.carryForwordLosses[i].totalLoss;
             }
-          });
-        },
-        (error) => {
-          this.loading = false;
-          this.show = false;
-          this.errorMessage =
-            'We are processing your request, Please wait......';
-          if (error) {
+            this.summaryDetail = summary.assessment.taxSummary;
+            this.taxable = this.summaryDetail.taxpayable;
+
+            this.refund = this.summaryDetail.taxRefund;
+            this.deductionDetail = summary.assessment.summaryDeductions?.filter(
+              (item: any) =>
+                item.sectionType !== '80C' &&
+                item.sectionType !== '80CCC' &&
+                item.sectionType !== '80CCD1' &&
+                item.sectionType !== '80GAGTI'
+            );
+            this.capitalGain =
+              summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
+            this.totalLoss = summary.assessment.currentYearLosses;
+            this.show = true;
+            sessionStorage.setItem(
+              'ITR_SUMMARY_JSON',
+              JSON.stringify(this.summaryDetail)
+            );
+
+            this.losses?.pastYearLosses?.forEach((item: any) => {
+              this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
+              this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
+              this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
+            });
+            this.loading = false;
+          } else {
+            this.loading = false;
             this.errorMessage =
               'We are unable to display your summary,Please try again later.';
+            this.utilsService.showErrorMsg(this.errorMessage);
           }
-          console.log('In error method===', error);
+        });
+      },
+      (error) => {
+        this.loading = false;
+        this.show = false;
+        this.errorMessage = 'We are processing your request, Please wait......';
+        if (error) {
+          this.errorMessage =
+            'We are unable to display your summary,Please try again later.';
         }
-      );
-    }
+        console.log('In error method===', error);
+      }
+    );
   }
 
   getUserName(type) {
