@@ -54,8 +54,7 @@ export class BoPartnersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog
   ) {
-    // this.boPartnerDateForm.value.fromDate.setValue('2023-04-01');
-    // this.boPartnerDateForm.value.toDate.setValue(new Date());
+
     this.partnersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.boPartnersColumnDef(),
@@ -319,7 +318,7 @@ export class BoPartnersComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params: any) {
           //console.log(params);
-          if(params.data.currentstatus === 'APPROVE') {
+          if(params.data.currentstatus == 'APPROVE' || params.data.currentstatus ==  'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
           <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
@@ -354,26 +353,16 @@ export class BoPartnersComponent implements OnInit {
       );
       this.loading = true;
       let param
-      let mobileFilter = '';
-    if (
-      this.utileService.isNonEmpty(this.boPartnerDateForm.controls['mobileNumber'].value) &&
-      this.boPartnerDateForm.controls['mobileNumber'].valid
-    ) {
-      mobileFilter =
-        '&mobileNumber=' + this.boPartnerDateForm.controls['mobileNumber'].value;
-    }
-      // let mobileFilter=''
-      // if(mobile){
-      //   mobileFilter =`?mobileNumber=${}`
-      // }
 
-       param = `/partner-details?page=${
-        this.config.currentPage - 1
-      }&size=10&from=${fromDate}&to=${toDate}${mobileFilter}`;
-
+      if(mobile){
+        param = `/partner-detail?page=0&size=1&mobileNumber=${this.boPartnerDateForm.controls['mobileNumber'].value}`
+      }else {
+        param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
+      }
 
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
+          this.loading = false;
           console.log('bo-partners list: ', response);
           if (Array.isArray(response.content)) {
             this.loading = false;
