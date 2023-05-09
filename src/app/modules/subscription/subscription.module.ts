@@ -9,18 +9,17 @@ import { AgGridModule } from 'ag-grid-angular';
 import { NgxLoadingModule } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MaterialModule } from '../shared/material.module';
-import { SmeManagementNewRoutingModule } from '../sme-management-new/sme-management-new.routing';
 import { SubscriptionRoutingModule } from './subscription-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
-import { SourceOfIncomesComponent } from '../itr-filing/itr-wizard/pages/source-of-incomes/source-of-incomes.component';
-import { ItrFilingModule } from '../itr-filing/itr-filing.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
 import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.component';
 import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
 import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
+import { CancelSubscriptionComponent } from './components/cancel-subscription/cancel-subscription.component';
+import { ApproveRejectComponent } from './components/approve-reject/approve-reject.component';
 
 
 @NgModule({
@@ -48,7 +47,9 @@ import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder
     TaxInvoiceComponent,
     AddSubscriptionComponent,
     OldInvoicesComponent,
-    PauseInvoiceReminderComponent
+    PauseInvoiceReminderComponent,
+    CancelSubscriptionComponent,
+    ApproveRejectComponent
   ],
 })
 export class SubscriptionModule { }

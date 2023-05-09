@@ -32,6 +32,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 export class ItrWizardComponent implements OnInit {
   tabIndex = 0;
   ITR_JSON: ITR_JSON;
+  jsonUploaded: boolean;
 
   loading = false;
   personalInfoSubTab = 0;
@@ -179,6 +180,15 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSummary() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // if (this.jsonUploaded) {
+    this.ITR_JSON = this.utilsService.removeNullProperties(this.ITR_JSON);
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    // }
+
     this.breadcrumb = null;
     this.showIncomeSources = false;
     this.selectedSchedule = 'Comparison of New v/s Old Regime';
@@ -439,6 +449,23 @@ export class ItrWizardComponent implements OnInit {
     });
 
     disposable.afterClosed().subscribe((result) => {});
+  }
+
+  onUploadedJson(uploadedJson: any) {
+    console.log('uploadedJson', uploadedJson);
+    if (uploadedJson) {
+      this.jsonUploaded = true;
+    } else {
+      this.jsonUploaded = false;
+    }
+
+    //json upload is complete, save it to backend
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.loading = true;
+    this.utilsService.uploadInitialItrObject(this.ITR_JSON).subscribe((res:any) => {
+      this.loading = false;
+      console.log(res);
+    });
   }
 
   ngOnDestroy() {

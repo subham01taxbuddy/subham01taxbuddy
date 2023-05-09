@@ -1,4 +1,3 @@
-
 /* HTML5 display-role reset for older browsers */
 
 article,
@@ -17,13 +16,14 @@ section {
 
 /* Css updates 02 Apr 2023 */
 .card {
-  padding:30px;
+  padding: 30px;
   /* margin-top:50px; */
 }
 
 .spBlw {
-  margin-bottom:150px!important;
- }
+  margin-bottom: 150px !important;
+}
+
 /* Css updates 02 Apr 2023 */
 
 
@@ -96,8 +96,8 @@ a {
 /* --[HEADER]-- */
 
 .card {
-  border:none!important;
-  box-shadow:none!important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .header {
@@ -176,22 +176,23 @@ a {
 /* --[ SIDEBAR ]--*/
 
 .left-sidebar {
-  width: 205px!important;
-  float: left!important;
+  width: 205px !important;
+  float: left !important;
 }
 
 .left-sidebar.fixed {
   overflow: auto;
   position: fixed;
-  padding-top: 80px!important;
+  padding-top: 80px !important;
   top: 0;
   bottom: 0;
   z-index: 40;
-  padding-bottom:100px!important;
-  overflow-x: hidden!important;
+  padding-bottom: 100px !important;
+  overflow-x: hidden !important;
 }
 
-ol, ul {
+ol,
+ul {
   padding-left: 0rem !important;
 }
 
@@ -203,11 +204,11 @@ ol, ul {
   display: block;
   position: relative;
   z-index: 1;
-  text-align:left!important;
+  text-align: left !important;
 }
 
 .submenu ng-star-inserted ul {
-  margin-left:20px;
+  margin-left: 20px;
 }
 
 
@@ -259,9 +260,9 @@ ol, ul {
 
 .main {
   min-width: 1000px;
-  margin-top:20px;
-  margin-left:220px;
-  overflow-x:hidden;
+  margin-top: 20px;
+  margin-left: 220px;
+  overflow-x: hidden;
 }
 
 .tab {
@@ -282,17 +283,17 @@ ol, ul {
   padding-bottom: 0px;
   padding-top: 0px;
   list-style: none;
- }
+}
 
 .tab__item_active {
   font-weight: 400;
   border-bottom-width: 3px;
-  border-bottom: 2px solid #04a4bc!important;
+  border-bottom: 2px solid #04a4bc !important;
 }
 
 .tab__link {
   text-decoration: none;
-  color:#000000!important;
+  color: #000000 !important;
 }
 
 /* Basic information */
@@ -305,7 +306,7 @@ ol, ul {
 .content_full {
   width: 100%;
   float: none;
-  margin-top:50px;
+  margin-top: 50px;
 }
 
 .content_half {
@@ -1419,4 +1420,12 @@ ol, ul {
 .categories__add-link {
   padding: 7px 30px;
   margin: 0;
+}
+
+.cancel-btn {
+  background: #ff0000 !important;
+  border-radius: 5px;
+  border: 1px solid #ff0000 !important;
+  margin-top: 17px;
+  padding: 15px 12px;
 }

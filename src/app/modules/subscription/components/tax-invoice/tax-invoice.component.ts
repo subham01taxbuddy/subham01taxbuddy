@@ -959,7 +959,12 @@ export class TaxInvoiceComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.getInvoice();
+    if (this.coOwnerToggle.value == true) {
+      this.getInvoice(true);
+    }else{
+      this.getInvoice();
+    }
+    // this.getInvoice();
   }
 
   getToggleValue(){

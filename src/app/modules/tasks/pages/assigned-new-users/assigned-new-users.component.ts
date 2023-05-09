@@ -96,7 +96,11 @@ export class AssignedNewUsersComponent implements OnInit {
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.search();
+    if (this.coOwnerToggle.value == true) {
+      this.search(event - 1,true);
+    }else{
+      this.search(event - 1);
+    }
   }
 
   fromServiceType(event){
@@ -835,13 +839,25 @@ export class AssignedNewUsersComponent implements OnInit {
     })
   }
 
-  call(data) {
+  async call(data) {
     // let callInfo = data.customerNumber;
+    let agent_number
     this.loading = true;
     const param = `/prod/call-support/call`;
     // TODO check the caller agent number;
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    console.log('agent number', agentNumber);
+    if (!agentNumber) {
+      this._toastMessageService.alert('error', "You don't have calling role.");
+      return;
+    }
+    if (this.coOwnerToggle.value == true){
+       agent_number = agentNumber;
+    }else {
+      agent_number = data.callerAgentNumber;
+    }
     const reqBody = {
-      "agent_number": data.callerAgentNumber,
+      "agent_number": agent_number,
       "customer_number": data.mobileNumber
     }
     this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
