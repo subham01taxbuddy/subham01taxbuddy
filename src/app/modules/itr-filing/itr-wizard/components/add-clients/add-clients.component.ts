@@ -70,11 +70,22 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       otp: [],
     });
 
+    this.utilsService.getUserProfile(this.ITR_JSON.userId).then((result:any)=>{
+      console.log(result);
+      if(this.ITR_JSON.panNumber){
+        this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
+      }else {
+        this.addClientForm.controls['panNumber'].setValue(result.panNumber);
+        this.getUserDataByPan(result.panNumber);
+      }
+
+    });
+
     this.personalInfo = this.ITR_JSON.family[0];
     this.addClientForm.controls['dateOfBirth'].setValue(
       this.personalInfo.dateOfBirth
     );
-    this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
+
     console.log('ITR_JSON: ', this.ITR_JSON);
     console.log('addClientForm value: ', this.addClientForm.value);
 
