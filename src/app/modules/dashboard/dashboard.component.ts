@@ -76,7 +76,6 @@ export class DashboardComponent implements OnInit {
     this.getSummaryConfirmationList();
     this.getItrFilledEVerificationPendingList();
     this.getScheduleCallDetails();
-    this.eVerificationPendingData();
     this.getPartnerCommission();
   }
 
