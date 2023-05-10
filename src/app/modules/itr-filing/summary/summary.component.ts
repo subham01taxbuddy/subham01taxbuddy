@@ -280,31 +280,130 @@ export class SummaryComponent implements OnInit {
 
     if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
       this.keys = {
+        //SALARY INCOME
         IncomeFromSal:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             .IncomeFromSal,
+
+        GrossSalary:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .GrossSalary,
+
+        TotalAllwncExemptUs10:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .AllwncExemptUs10.TotalAllwncExemptUs10,
+
+        ProfessionalTaxUs16iii:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .ProfessionalTaxUs16iii,
+
+        EntertainmentAlw16ii:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .EntertainmentAlw16ii,
+
+        DeductionUs16ia:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .DeductionUs16ia,
+
+        //HOUSE PROPERTY
+
         TotalIncomeOfHP:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             .TotalIncomeOfHP,
+        TypeOfHP:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .TypeOfHP,
+        GrossRentReceived:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .GrossRentReceived,
+        TaxPaidlocalAuth:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .TaxPaidlocalAuth,
+        AnnualValue:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .AnnualValue,
+        StandardDeduction:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .StandardDeduction,
+        InterestPayable:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .InterestPayable,
+
+        //OTHER SOURCES
         IncomeOthSrc:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             .IncomeOthSrc,
+
+        SAV: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'SAV'
+        )?.OthSrcOthAmount,
+
+        IFD: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'IFD'
+        )?.OthSrcOthAmount,
+
+        TAX: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'TAX'
+        )?.OthSrcOthAmount,
+
+        FAP: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'FAP'
+        )?.OthSrcOthAmount,
+
+        OTH: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'OTH'
+        )?.OthSrcOthAmount,
+
+        DIV: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'DIV'
+        )?.OthSrcOthAmount,
 
         GrossTotIncome:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             .GrossTotIncome,
 
+        //DEDUCTIONS
         TotalChapVIADeductions:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             .DeductUndChapVIA?.TotalChapVIADeductions,
+
+        Deductions: Object.entries(
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .DeductUndChapVIA
+        )
+          .filter(
+            ([key, item]) =>
+              key !== '80C' &&
+              key !== '80CCC' &&
+              key !== 'Section80CCDEmployeeOrSE'
+          )
+          .map(([key, item]) => ({ name: key, amount: item })),
 
         TotalIncome:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             .TotalIncome,
 
+        //TAXES PAID
         TotalTaxPayable:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
             .TotalTaxPayable,
+
+        TDSonSalary:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TDSonSalary,
+
+          TotalTDSonSalaries:this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TotalTDSonSalaries,
 
         Rebate87A:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
@@ -390,6 +489,7 @@ export class SummaryComponent implements OnInit {
       };
     }
 
+    console.log(this.keys.TDSonSalary, 'this.keys.Deductions');
     return this.keys;
 
     // let GrossSalary;

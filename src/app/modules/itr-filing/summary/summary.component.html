@@ -254,7 +254,7 @@
     </div>
   </div>
 
-<div class="container" *ngIf="show">
+  <div class="container" *ngIf="show">
     <div class="row">
       <div class="col-sm-12">
         <table>
@@ -266,8 +266,8 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      keys.GrossSalary
-                        ? keys.GrossSalary === 0
+                      keys.IncomeFromSal
+                        ? keys.IncomeFromSal === 0
                           ? true
                           : false
                         : summaryDetail.salary === 0
@@ -314,132 +314,235 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      style="margin-top: 20px"
-                    >
-                      <tbody>
-                        <tr>
-                          <th>Particulars</th>
-                          <th
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Employer {{ i + 1 }}
-                          </th>
-                          <!-- <th>Employer2</th>
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeFromSal">
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Particulars</th>
+                            <th>Employer 1</th>
+                            <!-- <th>Employer2</th>
                             <th>Employer3</th> -->
-                        </tr>
-                        <tr>
-                          <td>1. Employer's Name</td>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            {{
-                              utilsService.isNonEmpty(salary.employerName)
-                                ? salary.employerName
-                                : "Employer " + (i + 1)
-                            }}
-                          </td>
-                          <!-- <td>ABC Company</td>
+                          </tr>
+                          <tr>
+                            <td>1. Employer's Name</td>
+                            <td>Employer 1</td>
+                            <!-- <td>ABC Company</td>
                             <td>XYZ Company</td> -->
-                        </tr>
-                        <tr>
-                          <td>2. Gross Salary</td>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Rs {{ totalGross(salary) }}
-                          </td>
-                          <!-- <td>Rs 10,30,000</td>
+                          </tr>
+                          <tr>
+                            <td>2. Gross Salary</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(keys.GrossSalary)
+                              }}
+                            </td>
+                            <!-- <td>Rs 10,30,000</td>
                             <td>Rs 9,15,000</td> -->
-                        </tr>
-                        <tr>
-                          <td>3. Less: Exempt Allowance</td>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Rs {{ totalExpAllow(salary.allowance) }}
-                          </td>
-                          <!--  <td>Rs 1,350</td>
+                          </tr>
+                          <tr>
+                            <td>3. Less: Exempt Allowance</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.TotalAllwncExemptUs10
+                                )
+                              }}
+                            </td>
+                            <!--  <td>Rs 1,350</td>
                             <td>Rs 1,050</td> -->
-                        </tr>
-                        <tr>
-                          <td>4. Less: Professional Tax</td>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Rs {{ totalPT(salary.deductions) }}
-                          </td>
-                          <!-- <td>(Rs 1,050)</td>
+                          </tr>
+                          <tr>
+                            <td>4. Less: Professional Tax</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.ProfessionalTaxUs16iii
+                                )
+                              }}
+                            </td>
+                            <!-- <td>(Rs 1,050)</td>
                             <td>(Rs 2,050)</td> -->
-                        </tr>
-                        <tr>
-                          <td>5. Less: Entertainment Allowance</td>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Rs {{ totalEA(salary.deductions) }}
-                          </td>
-                          <!-- <td>(Rs 4,000)</td>
+                          </tr>
+                          <tr>
+                            <td>5. Less: Entertainment Allowance</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.EntertainmentAlw16ii
+                                )
+                              }}
+                            </td>
+                            <!-- <td>(Rs 4,000)</td>
                             <td>(Rs 3,000)</td> -->
-                        </tr>
-                        <tr>
-                          <td>6. Less: Standard Deduction</td>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                salary.standardDeduction
-                              )
-                            }}
-                          </td>
-                          <!-- <td>(Rs 30,000)</td>
+                          </tr>
+                          <tr>
+                            <td>6. Less: Standard Deduction</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.DeductionUs16ia
+                                )
+                              }}
+                            </td>
+                            <!-- <td>(Rs 30,000)</td>
                             <td>(Rs 20,000)</td> -->
-                        </tr>
+                          </tr>
 
-                        <tr>
-                          <th>7. Taxable Salary</th>
-                          <td
-                            *ngFor="
-                              let salary of ITR_JSON.employers;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                salary.taxableIncome
-                              )
-                            }}
-                          </td>
-                          <!-- <th>Rs 10,23,600</th>
+                          <tr>
+                            <th>7. Taxable Salary</th>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.IncomeFromSal
+                                )
+                              }}
+                            </td>
+                            <!-- <th>Rs 10,23,600</th>
                             <th>Rs 9,08,900</th> -->
-                        </tr>
-                      </tbody>
-                    </table>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.IncomeFromSal"
+                    >
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Particulars</th>
+                            <th
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Employer {{ i + 1 }}
+                            </th>
+                            <!-- <th>Employer2</th>
+                              <th>Employer3</th> -->
+                          </tr>
+                          <tr>
+                            <td>1. Employer's Name</td>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              {{
+                                utilsService.isNonEmpty(salary.employerName)
+                                  ? salary.employerName
+                                  : "Employer " + (i + 1)
+                              }}
+                            </td>
+                            <!-- <td>ABC Company</td>
+                              <td>XYZ Company</td> -->
+                          </tr>
+                          <tr>
+                            <td>2. Gross Salary</td>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Rs {{ totalGross(salary) }}
+                            </td>
+                            <!-- <td>Rs 10,30,000</td>
+                              <td>Rs 9,15,000</td> -->
+                          </tr>
+                          <tr>
+                            <td>3. Less: Exempt Allowance</td>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Rs {{ totalExpAllow(salary.allowance) }}
+                            </td>
+                            <!--  <td>Rs 1,350</td>
+                              <td>Rs 1,050</td> -->
+                          </tr>
+                          <tr>
+                            <td>4. Less: Professional Tax</td>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Rs {{ totalPT(salary.deductions) }}
+                            </td>
+                            <!-- <td>(Rs 1,050)</td>
+                              <td>(Rs 2,050)</td> -->
+                          </tr>
+                          <tr>
+                            <td>5. Less: Entertainment Allowance</td>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Rs {{ totalEA(salary.deductions) }}
+                            </td>
+                            <!-- <td>(Rs 4,000)</td>
+                              <td>(Rs 3,000)</td> -->
+                          </tr>
+                          <tr>
+                            <td>6. Less: Standard Deduction</td>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.standardDeduction
+                                )
+                              }}
+                            </td>
+                            <!-- <td>(Rs 30,000)</td>
+                              <td>(Rs 20,000)</td> -->
+                          </tr>
+
+                          <tr>
+                            <th>7. Taxable Salary</th>
+                            <td
+                              *ngFor="
+                                let salary of ITR_JSON.employers;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.taxableIncome
+                                )
+                              }}
+                            </td>
+                            <!-- <th>Rs 10,23,600</th>
+                              <th>Rs 9,08,900</th> -->
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </mat-expansion-panel>
 
                   <!-- *******************Income from House Property ************************** -->
@@ -491,24 +594,29 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      style="margin-top: 20px"
+                    <div
+                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalIncomeOfHP"
                     >
-                      <tbody>
-                        <tr>
-                          <th>Particulars</th>
-                          <th
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            {{ hp.propertyType }}
-                          </th>
-                        </tr>
-                        <!-- <tr>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Particulars</th>
+                            <th>
+                              {{
+                                keys.TypeOfHP === "L"
+                                  ? "LOP"
+                                  : "SOP" || keys.TypeOfHP === "S"
+                                  ? "SOP"
+                                  : "LOP" || keys.TypeOfHP === "D"
+                                  ? "DLOP"
+                                  : "SOP"
+                              }}
+                            </th>
+                          </tr>
+                          <!-- <tr>
                                                     <td>1. Property Address</td>
                                                     <th
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
@@ -521,93 +629,199 @@
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         {{hp.ownerOfProperty}}</td>
                                                 </tr> -->
-                        <tr>
-                          <td>1. Gross Rent Received</td>
-                          <td
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                hp.grossAnnualRentReceived
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2. Taxes Paid</td>
-                          <td
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{ utilsService.currencyFormatter(hp.propertyTax) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3. Annual Value (1-2)</td>
-                          <td
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{ utilsService.currencyFormatter(hp.annualValue) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4. Standard Deduction @30%</td>
-                          <td
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(hp.exemptIncome)
-                            }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5. Interest On Home Loan</td>
-                          <td
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            Rs {{ getHomeLoan(hp.loans) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>6. Net Income (3-4-5)</th>
-                          <td
-                            *ngFor="
-                              let hp of losses?.summaryIncome?.summaryHpIncome
-                                ?.houseProperties;
-                              let i = index
-                            "
-                          >
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(hp.taxableIncome)
-                            }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                          <tr>
+                            <td>1. Gross Rent Received</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.GrossRentReceived
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>2. Taxes Paid</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.TaxPaidlocalAuth
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>3. Annual Value (1-2)</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(keys.AnnualValue)
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>4. Standard Deduction @30%</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.StandardDeduction
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>5. Interest On Home Loan</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.InterestPayable
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>6. Net Income (3-4-5)</th>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.TotalIncomeOfHP
+                                )
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.TotalIncomeOfHP"
+                    >
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Particulars</th>
+                            <th
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              {{ hp.propertyType }}
+                            </th>
+                          </tr>
+                          <!-- <tr>
+                                                      <td>1. Property Address</td>
+                                                      <th
+                                                          *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                          {{hp.flatNo}}, {{hp.building}},
+                                                          {{hp.city}}</th>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>2. Ownership</td>
+                                                      <td
+                                                          *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                          {{hp.ownerOfProperty}}</td>
+                                                  </tr> -->
+                          <tr>
+                            <td>1. Gross Rent Received</td>
+                            <td
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  hp.grossAnnualRentReceived
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>2. Taxes Paid</td>
+                            <td
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(hp.propertyTax)
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>3. Annual Value (1-2)</td>
+                            <td
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(hp.annualValue)
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>4. Standard Deduction @30%</td>
+                            <td
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(hp.exemptIncome)
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>5. Interest On Home Loan</td>
+                            <td
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              Rs {{ getHomeLoan(hp.loans) }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>6. Net Income (3-4-5)</th>
+                            <td
+                              *ngFor="
+                                let hp of losses?.summaryIncome?.summaryHpIncome
+                                  ?.houseProperties;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(hp.taxableIncome)
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
                     <!--  <div class="bxHed">SOP</div>
                       <table class="table table-bordered table-striped table-hover">
@@ -727,8 +941,10 @@
                             <label class="rtNumb1">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
-                                utilsService.currencyFormatter( keys.TotPersumptiveInc44ADA ? keys.TotPersumptiveInc44ADA :
-                                  summaryDetail.presumptiveIncome
+                                utilsService.currencyFormatter(
+                                  keys.TotPersumptiveInc44ADA
+                                    ? keys.TotPersumptiveInc44ADA
+                                    : summaryDetail.presumptiveIncome
                                 )
                               }}</label
                             >
@@ -1229,159 +1445,238 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      style="margin-top: 20px"
+
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeOthSrc">
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Particulars</th>
+                            <th>Amount</th>
+                          </tr>
+                          <tr
+                            *ngIf="keys.SAV || keys.IFD || keys.TAX || keys.OTH"
+                          >
+                            <th colspan="2">Interest Income</th>
+                          </tr>
+
+                          <tr *ngIf="keys.SAV">
+                            <td>Saving Bank Accounts</td>
+                            <td>
+                              Rs {{ utilsService.currencyFormatter(keys.SAV) }}
+                            </td>
+                          </tr>
+
+                          <tr *ngIf="keys.IFD">
+                            <td>Fixed/Recurring Deposits</td>
+                            <td>
+                              Rs {{ utilsService.currencyFormatter(keys.IFD) }}
+                            </td>
+                          </tr>
+
+                          <tr *ngIf="keys.TAX">
+                            <td>Income Tax Refund</td>
+                            <td>
+                              Rs {{ utilsService.currencyFormatter(keys.TAX) }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="keys.OTH">
+                            <td>Any Other Interest Income</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.IncomeOthSrc -
+                                    keys.SAV -
+                                    keys.IFD -
+                                    keys.TAX -
+                                    keys.DIV -
+                                    keys.FAP
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr *ngIf="keys.DIV || keys.FAP">
+                            <!--  *ngIf="isOtherIncome()" -->
+                            <th colspan="2">Other Income</th>
+                          </tr>
+                          <tr *ngIf="keys.DIV">
+                            <td>Dividend Income</td>
+                            <td>
+                              Rs {{ utilsService.currencyFormatter(keys.DIV) }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="keys.FAP">
+                            <td>Family Pension</td>
+
+                            <td>
+                              Rs {{ utilsService.currencyFormatter(keys.FAP) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.IncomeFromSal"
                     >
-                      <tbody>
-                        <tr>
-                          <th>Particulars</th>
-                          <th>Amount</th>
-                        </tr>
-                        <tr
-                          *ngIf="
-                            getOtherIncome('SAVING_INTEREST') ||
-                            getOtherIncome('FD_RD_INTEREST') ||
-                            getOtherIncome('TAX_REFUND_INTEREST') ||
-                            getOtherIncome('OTHER_INTEREST')
-                          "
-                        >
-                          <!--  *ngIf="isInterestIncome()" -->
-                          <th colspan="2">Interest Income</th>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                          <td>Saving Bank Accounts</td>
-                          <td>Rs {{ getOtherIncome("SAVING_INTEREST") }}</td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('FD_RD_INTEREST')">
-                          <td>Fixed/Recurring Deposits</td>
-                          <td>Rs {{ getOtherIncome("FD_RD_INTEREST") }}</td>
-                        </tr>
-                        <!--  <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                            <td>Recurring Deposit
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Particulars</th>
+                            <th>Amount</th>
+                          </tr>
+                          <tr
+                            *ngIf="
+                              getOtherIncome('SAVING_INTEREST') ||
+                              getOtherIncome('FD_RD_INTEREST') ||
+                              getOtherIncome('TAX_REFUND_INTEREST') ||
+                              getOtherIncome('OTHER_INTEREST')
+                            "
+                          >
+                            <!--  *ngIf="isInterestIncome()" -->
+                            <th colspan="2">Interest Income</th>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
+                            <td>Saving Bank Accounts</td>
+                            <td>Rs {{ getOtherIncome("SAVING_INTEREST") }}</td>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('FD_RD_INTEREST')">
+                            <td>Fixed/Recurring Deposits</td>
+                            <td>Rs {{ getOtherIncome("FD_RD_INTEREST") }}</td>
+                          </tr>
+                          <!--  <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
+                              <td>Recurring Deposit
+                              </td>
+                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
+                            </tr> -->
+                          <tr *ngIf="getOtherIncome('TAX_REFUND_INTEREST')">
+                            <td>Income Tax Refund</td>
+                            <td>
+                              Rs {{ getOtherIncome("TAX_REFUND_INTEREST") }}
                             </td>
-                            <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                          </tr> -->
-                        <tr *ngIf="getOtherIncome('TAX_REFUND_INTEREST')">
-                          <td>Income Tax Refund</td>
-                          <td>
-                            Rs {{ getOtherIncome("TAX_REFUND_INTEREST") }}
-                          </td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('OTHER_INTEREST')">
-                          <td>Any Other Interest Income</td>
-                          <td>Rs {{ getOtherIncome("OTHER_INTEREST") }}</td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('GIFT_TAXABLE')">
-                          <th colspan="2">Gifts</th>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('GIFT_TAXABLE')">
-                          <td>Taxable</td>
-                          <td>Rs {{ getOtherIncome("GIFT_TAXABLE") }}</td>
-                        </tr>
-                        <!-- <tr *ngIf="getOtherIncome('GIFT_NONTAXABLE')">
-                            <td>Exempt
-                            </td>
-                            <td>Rs {{getOtherIncome('GIFT_NONTAXABLE')}}</td>
-                          </tr> -->
-                        <tr
-                          *ngIf="
-                            getOtherIncome('DIVIDEND') ||
-                            getOtherIncome('MINORCHILD') ||
-                            getOtherIncome('COMMISION') ||
-                            getOtherIncome('KEYMAN_INSURANCE_POLICY') ||
-                            getOtherIncome(
-                              'REMUNARATION_NON_EMPLOYER_ORGANISATION'
-                            ) ||
-                            getOtherIncome('GAS') ||
-                            getOtherIncome('ANY_OTHER')
-                          "
-                        >
-                          <!--  *ngIf="isOtherIncome()" -->
-                          <th colspan="2">Other Income</th>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('DIVIDEND')">
-                          <!-- <td>Dividend on share & mutual fund/UTI
-                                                    </td> -->
-                          <td>Dividend Income</td>
-
-                          <td>Rs {{ getOtherIncome("DIVIDEND") }}</td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('FAMILY_PENSION')">
-                          <td>Family Pension</td>
-
-                          <td>Rs {{ getOtherIncome("FAMILY_PENSION") }}</td>
-                        </tr>
-                        <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                            <td>UTI Divided : 890
-                            </td>
-                            <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                          </tr> -->
-                        <tr *ngIf="getOtherIncome('MINORCHILD')">
-                          <td>Income from minor child</td>
-                          <td>Rs {{ getOtherIncome("MINORCHILD") }}</td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('COMMISION')">
-                          <td>Commission/Brokerage</td>
-                          <td>Rs {{ getOtherIncome("COMMISION") }}</td>
-                        </tr>
-                        <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                            <td>Exempt
-                            </td>
-                            <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                          </tr> -->
-                        <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                            <td>Brokerage
-                            </td>
-                            <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                          </tr> -->
-                        <tr *ngIf="getOtherIncome('KEYMAN_INSURANCE_POLICY')">
-                          <td>Amount from keyman insurance policy</td>
-                          <td>
-                            Rs {{ getOtherIncome("KEYMAN_INSURANCE_POLICY") }}
-                          </td>
-                        </tr>
-                        <tr
-                          *ngIf="
-                            getOtherIncome(
-                              'REMUNARATION_NON_EMPLOYER_ORGANISATION'
-                            )
-                          "
-                        >
-                          <td>
-                            Fees received as professor/ teacher from
-                            non-employer organisation
-                          </td>
-                          <td>
-                            Rs
-                            {{
+                          </tr>
+                          <tr *ngIf="getOtherIncome('OTHER_INTEREST')">
+                            <td>Any Other Interest Income</td>
+                            <td>Rs {{ getOtherIncome("OTHER_INTEREST") }}</td>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('GIFT_TAXABLE')">
+                            <th colspan="2">Gifts</th>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('GIFT_TAXABLE')">
+                            <td>Taxable</td>
+                            <td>Rs {{ getOtherIncome("GIFT_TAXABLE") }}</td>
+                          </tr>
+                          <!-- <tr *ngIf="getOtherIncome('GIFT_NONTAXABLE')">
+                              <td>Exempt
+                              </td>
+                              <td>Rs {{getOtherIncome('GIFT_NONTAXABLE')}}</td>
+                            </tr> -->
+                          <tr
+                            *ngIf="
+                              getOtherIncome('DIVIDEND') ||
+                              getOtherIncome('MINORCHILD') ||
+                              getOtherIncome('COMMISION') ||
+                              getOtherIncome('KEYMAN_INSURANCE_POLICY') ||
                               getOtherIncome(
-                                "REMUNARATION_NON_EMPLOYER_ORGANISATION"
+                                'REMUNARATION_NON_EMPLOYER_ORGANISATION'
+                              ) ||
+                              getOtherIncome('GAS') ||
+                              getOtherIncome('ANY_OTHER')
+                            "
+                          >
+                            <!--  *ngIf="isOtherIncome()" -->
+                            <th colspan="2">Other Income</th>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('DIVIDEND')">
+                            <!-- <td>Dividend on share & mutual fund/UTI
+                                                      </td> -->
+                            <td>Dividend Income</td>
+
+                            <td>Rs {{ getOtherIncome("DIVIDEND") }}</td>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('FAMILY_PENSION')">
+                            <td>Family Pension</td>
+
+                            <td>Rs {{ getOtherIncome("FAMILY_PENSION") }}</td>
+                          </tr>
+                          <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
+                              <td>UTI Divided : 890
+                              </td>
+                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
+                            </tr> -->
+                          <tr *ngIf="getOtherIncome('MINORCHILD')">
+                            <td>Income from minor child</td>
+                            <td>Rs {{ getOtherIncome("MINORCHILD") }}</td>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('COMMISION')">
+                            <td>Commission/Brokerage</td>
+                            <td>Rs {{ getOtherIncome("COMMISION") }}</td>
+                          </tr>
+                          <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
+                              <td>Exempt
+                              </td>
+                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
+                            </tr> -->
+                          <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
+                              <td>Brokerage
+                              </td>
+                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
+                            </tr> -->
+                          <tr *ngIf="getOtherIncome('KEYMAN_INSURANCE_POLICY')">
+                            <td>Amount from keyman insurance policy</td>
+                            <td>
+                              Rs {{ getOtherIncome("KEYMAN_INSURANCE_POLICY") }}
+                            </td>
+                          </tr>
+                          <tr
+                            *ngIf="
+                              getOtherIncome(
+                                'REMUNARATION_NON_EMPLOYER_ORGANISATION'
                               )
-                            }}
-                          </td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('GAS')">
-                          <td>Gas subsidy</td>
-                          <td>Rs {{ getOtherIncome("GAS") }}</td>
-                        </tr>
-                        <tr *ngIf="getOtherIncome('ANY_OTHER')">
-                          <td>Other Income</td>
-                          <td>Rs {{ getOtherIncome("ANY_OTHER") }}</td>
-                        </tr>
-                        <tr>
-                          <th>Total</th>
-                          <th>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                summaryDetail.otherIncome
-                              )
-                            }}
-                          </th>
-                        </tr>
-                      </tbody>
-                    </table>
+                            "
+                          >
+                            <td>
+                              Fees received as professor/ teacher from
+                              non-employer organisation
+                            </td>
+                            <td>
+                              Rs
+                              {{
+                                getOtherIncome(
+                                  "REMUNARATION_NON_EMPLOYER_ORGANISATION"
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('GAS')">
+                            <td>Gas subsidy</td>
+                            <td>Rs {{ getOtherIncome("GAS") }}</td>
+                          </tr>
+                          <tr *ngIf="getOtherIncome('ANY_OTHER')">
+                            <td>Other Income</td>
+                            <td>Rs {{ getOtherIncome("ANY_OTHER") }}</td>
+                          </tr>
+                          <tr>
+                            <th>Total</th>
+                            <th>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  summaryDetail.otherIncome
+                                )
+                              }}
+                            </th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </mat-expansion-panel>
 
                   <!-- ********************** Total Income ********************** -->
@@ -1724,76 +2019,156 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      style="margin-top: 20px"
+                    <div
+                      *ngIf="
+                        ITR_JSON.itrSummaryJson && keys.TotalChapVIADeductions
+                      "
                     >
-                      <tbody>
-                        <tr>
-                          <td><b>Particular</b></td>
-                          <td><b>Amount</b></td>
-                        </tr>
-                        <tr
-                          *ngFor="
-                            let deduction of deductionDetail;
-                            let i = index
-                          "
-                        >
-                          <td *ngIf="deduction.eligibleAmount > 0">
-                            {{ deduction.notes }}
-                          </td>
-                          <td *ngIf="deduction.eligibleAmount > 0">
-                            <!-- <i class="material-icons"
-                                  style="font-size:15px;">&#8377;</i>&nbsp; -->Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                deduction.eligibleAmount
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <!--  <tr>
-                            <td>Section 80C/80CCD/80CC : LIC/EPF/NPS etc..
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <td><b>Particular</b></td>
+                            <td><b>Amount</b></td>
+                          </tr>
+                          <tr
+                            *ngFor="
+                              let deduction of keys.Deductions;
+                              let i = index
+                            "
+                          >
+                            <td *ngIf="deduction.amount > 0">
+                              {{ deduction.name }}
                             </td>
-                            <td>Rs 1500</td>
-                          </tr>
-                          <tr>
-                            <td>Section 80CCD(1B) : Contribution to pension scheme of CG
+                            <td *ngIf="deduction.amount > 0">
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(deduction.amount)
+                              }}
                             </td>
-                            <td>Rs 1000</td>
                           </tr>
+                          <!--  <tr>
+                              <td>Section 80C/80CCD/80CC : LIC/EPF/NPS etc..
+                              </td>
+                              <td>Rs 1500</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80CCD(1B) : Contribution to pension scheme of CG
+                              </td>
+                              <td>Rs 1000</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80CCD(2) : Contribution to pension scheme of CG by employer
+                              </td>
+                              <td>Rs 1200</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80D : Mediclaim</td>
+                              <td>Rs 800</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80E : Repayment of Education loan
+                              </td>
+                              <td>Rs 900</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80U : Suffering from disability</td>
+                              <td>Rs 1600</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80G : Donation</td>
+                              <td>Rs 1900</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80GG : Rent paid</td>
+                              <td>Rs 1300</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80GGA : Donation for scientific/ Rural development</td>
+                              <td>Rs 1100</td>
+                            </tr> -->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                      *ngIf="
+                        !ITR_JSON.itrSummaryJson && !keys.TotalChapVIADeductions
+                      "
+                    >
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
                           <tr>
-                            <td>Section 80CCD(2) : Contribution to pension scheme of CG by employer
+                            <td><b>Particular</b></td>
+                            <td><b>Amount</b></td>
+                          </tr>
+                          <tr
+                            *ngFor="
+                              let deduction of deductionDetail;
+                              let i = index
+                            "
+                          >
+                            <td *ngIf="deduction.eligibleAmount > 0">
+                              {{ deduction.notes }}
                             </td>
-                            <td>Rs 1200</td>
-                          </tr>
-                          <tr>
-                            <td>Section 80D : Mediclaim</td>
-                            <td>Rs 800</td>
-                          </tr>
-                          <tr>
-                            <td>Section 80E : Repayment of Education loan
+                            <td *ngIf="deduction.eligibleAmount > 0">
+                              <!-- <i class="material-icons"
+                                    style="font-size:15px;">&#8377;</i>&nbsp; -->Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  deduction.eligibleAmount
+                                )
+                              }}
                             </td>
-                            <td>Rs 900</td>
                           </tr>
-                          <tr>
-                            <td>Section 80U : Suffering from disability</td>
-                            <td>Rs 1600</td>
-                          </tr>
-                          <tr>
-                            <td>Section 80G : Donation</td>
-                            <td>Rs 1900</td>
-                          </tr>
-                          <tr>
-                            <td>Section 80GG : Rent paid</td>
-                            <td>Rs 1300</td>
-                          </tr>
-                          <tr>
-                            <td>Section 80GGA : Donation for scientific/ Rural development</td>
-                            <td>Rs 1100</td>
-                          </tr> -->
-                      </tbody>
-                    </table>
+                          <!--  <tr>
+                              <td>Section 80C/80CCD/80CC : LIC/EPF/NPS etc..
+                              </td>
+                              <td>Rs 1500</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80CCD(1B) : Contribution to pension scheme of CG
+                              </td>
+                              <td>Rs 1000</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80CCD(2) : Contribution to pension scheme of CG by employer
+                              </td>
+                              <td>Rs 1200</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80D : Mediclaim</td>
+                              <td>Rs 800</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80E : Repayment of Education loan
+                              </td>
+                              <td>Rs 900</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80U : Suffering from disability</td>
+                              <td>Rs 1600</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80G : Donation</td>
+                              <td>Rs 1900</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80GG : Rent paid</td>
+                              <td>Rs 1300</td>
+                            </tr>
+                            <tr>
+                              <td>Section 80GGA : Donation for scientific/ Rural development</td>
+                              <td>Rs 1100</td>
+                            </tr> -->
+                        </tbody>
+                      </table>
+                    </div>
                   </mat-expansion-panel>
 
                   <!-- ********************** Total Income (10-12) ********************** -->
@@ -2113,53 +2488,101 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      style="margin-top: 20px"
+                    <div
+                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalTaxPayable"
                     >
-                      <tbody>
-                        <tr>
-                          <td><b>Particular</b></td>
-                          <td><b>Amount</b></td>
-                        </tr>
-                        <tr>
-                          <td>Tax at normal rate - A</td>
-                          <td>
-                            <i class="material-icons" style="font-size: 15px"
-                              >₹</i
-                            >&nbsp;{{
-                              utilsService.currencyFormatter(
-                                summaryDetail.taxAtNormalRate
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Tax at special rate - B</td>
-                          <td>
-                            <i class="material-icons" style="font-size: 15px"
-                              >₹</i
-                            >&nbsp;{{
-                              utilsService.currencyFormatter(
-                                summaryDetail.taxAtSpecialRate
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Rebate on agriculture income - C</td>
-                          <td>
-                            <i class="material-icons" style="font-size: 15px"
-                              >₹</i
-                            >&nbsp;-{{
-                              utilsService.currencyFormatter(
-                                summaryDetail.rebateOnAgricultureIncome
-                              )
-                            }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <td><b>Particular</b></td>
+                            <td><b>Amount</b></td>
+                          </tr>
+                          <tr>
+                            <td>Tax at normal rate - A</td>
+                            <td>
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  keys.TotalTaxPayable
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Tax at special rate - B</td>
+                            <td>
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{ utilsService.currencyFormatter(0) }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Rebate on agriculture income - C</td>
+                            <td>
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;-{{ utilsService.currencyFormatter(0) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.TotalTaxPayable"
+                    >
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <td><b>Particular</b></td>
+                            <td><b>Amount</b></td>
+                          </tr>
+                          <tr>
+                            <td>Tax at normal rate - A</td>
+                            <td>
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  summaryDetail.taxAtNormalRate
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Tax at special rate - B</td>
+                            <td>
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  summaryDetail.taxAtSpecialRate
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Rebate on agriculture income - C</td>
+                            <td>
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;-{{
+                                utilsService.currencyFormatter(
+                                  summaryDetail.rebateOnAgricultureIncome
+                                )
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </mat-expansion-panel>
 
                   <!-- *********************** Rebate Under Section 87A ************************ -->
@@ -2650,84 +3073,168 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-                    <div
-                      class="bxHed"
-                      *ngIf="
-                        ITR_JSON?.taxPaid?.onSalary &&
-                        ITR_JSON?.taxPaid?.onSalary?.length > 0
-                      "
-                    >
-                      TDS (On Salary)
-                    </div>
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      *ngIf="
-                        ITR_JSON?.taxPaid?.onSalary &&
-                        ITR_JSON?.taxPaid?.onSalary?.length > 0
-                      "
-                    >
-                      <thead>
-                        <tr>
-                          <th style="font-weight: bold; width: 20%">
-                            Name Of Deductor
-                          </th>
-                          <th style="font-weight: bold; width: 25%">
-                            TAN Of Deductor
-                          </th>
-                          <th style="font-weight: bold; width: 35%">
-                            Amount Of Which TDS Deducted
-                          </th>
-                          <th style="font-weight: bold; width: 20%">
-                            Total Tax Amount
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr
-                          *ngFor="let onSalary of ITR_JSON?.taxPaid?.onSalary"
-                        >
-                          <td>{{ onSalary.deductorName }}</td>
-                          <td>{{ onSalary.deductorTAN }}</td>
-                          <td>
-                            Rs.
-                            {{
-                              utilsService.currencyFormatter(
-                                onSalary.totalAmountCredited
-                              )
-                            }}
-                          </td>
-                          <td>
-                            Rs.
-                            {{
-                              utilsService.currencyFormatter(
-                                onSalary.totalTdsDeposited
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <!--  <tr>
+                    <!-- SALARY TDS -->
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.TDSonSalary">
+                      <div
+                        class="bxHed"
+                        *ngIf="keys.TDSonSalary && keys.TDSonSalary?.length > 0"
+                      >
+                        TDS (On Salary)
+                      </div>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        *ngIf="keys.TDSonSalary && keys.TDSonSalary?.length > 0"
+                      >
+                        <thead>
+                          <tr>
+                            <th style="font-weight: bold; width: 20%">
+                              Name Of Deductor
+                            </th>
+                            <th style="font-weight: bold; width: 25%">
+                              TAN Of Deductor
+                            </th>
+                            <th style="font-weight: bold; width: 35%">
+                              Amount Of Which TDS Deducted
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              Total Tax Amount
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="
+                              let onSalary of keys.TDSonSalary;
+                              let i = index
+                            "
+                          >
+                            <td>
+                              {{
+                                onSalary.EmployerOrDeductorOrCollectDetl
+                                  .EmployerOrDeductorOrCollecterName
+                              }}
+                            </td>
+                            <td>
+                              {{ onSalary.EmployerOrDeductorOrCollectDetl.TAN }}
+                            </td>
+                            <td>
+                              Rs.
+                              {{
+                                utilsService.currencyFormatter(
+                                  onSalary.IncChrgSal
+                                )
+                              }}
+                            </td>
+                            <td>
+                              Rs.
+                              {{
+                                utilsService.currencyFormatter(
+                                  onSalary.TotalTDSSal
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <!--  <tr>
                             <td>Barkha</td>
                             <td>AECEFG1590D</td>
                             <td>Rs.8,00,000</td>
                             <td>Rs.2,00,000</td>
                           </tr> -->
-                        <tr>
-                          <th>Total Amount</th>
-                          <th></th>
-                          <th></th>
-                          <th>
-                            Rs.
-                            {{
-                              getTaxPaidTotal(
-                                ITR_JSON.taxPaid.onSalary,
-                                "totalTdsDeposited"
-                              )
-                            }}
-                          </th>
-                        </tr>
-                      </tbody>
-                    </table>
+                          <tr>
+                            <th>Total Amount</th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                              Rs.
+                              {{ keys.TotalTDSonSalaries }}
+                            </th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div
+                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.TotalTaxPayable"
+                    >
+                      <div
+                        class="bxHed"
+                        *ngIf="
+                          ITR_JSON?.taxPaid?.onSalary &&
+                          ITR_JSON?.taxPaid?.onSalary?.length > 0
+                        "
+                      >
+                        TDS (On Salary)
+                      </div>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        *ngIf="
+                          ITR_JSON?.taxPaid?.onSalary &&
+                          ITR_JSON?.taxPaid?.onSalary?.length > 0
+                        "
+                      >
+                        <thead>
+                          <tr>
+                            <th style="font-weight: bold; width: 20%">
+                              Name Of Deductor
+                            </th>
+                            <th style="font-weight: bold; width: 25%">
+                              TAN Of Deductor
+                            </th>
+                            <th style="font-weight: bold; width: 35%">
+                              Amount Of Which TDS Deducted
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              Total Tax Amount
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="let onSalary of ITR_JSON?.taxPaid?.onSalary"
+                          >
+                            <td>{{ onSalary.deductorName }}</td>
+                            <td>{{ onSalary.deductorTAN }}</td>
+                            <td>
+                              Rs.
+                              {{
+                                utilsService.currencyFormatter(
+                                  onSalary.totalAmountCredited
+                                )
+                              }}
+                            </td>
+                            <td>
+                              Rs.
+                              {{
+                                utilsService.currencyFormatter(
+                                  onSalary.totalTdsDeposited
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <!--  <tr>
+                            <td>Barkha</td>
+                            <td>AECEFG1590D</td>
+                            <td>Rs.8,00,000</td>
+                            <td>Rs.2,00,000</td>
+                          </tr> -->
+                          <tr>
+                            <th>Total Amount</th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                              Rs.
+                              {{
+                                getTaxPaidTotal(
+                                  ITR_JSON.taxPaid.onSalary,
+                                  "totalTdsDeposited"
+                                )
+                              }}
+                            </th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
+                    <!-- OTHER THAN SALARY -->
                     <div
                       class="bxHed"
                       *ngIf="
@@ -3133,7 +3640,9 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-                    <table class="table table-bordered table-striped table-hover">
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                    >
                       <tbody>
                         <tr>
                           <td><b>Particular</b></td>
@@ -3157,15 +3666,15 @@
             </tr>
           </tbody>
         </table>
-      <!-- </div>
+        <!-- </div>
     </div> -->
-    <!-- **************************** Accordion End -->
+        <!-- **************************** Accordion End -->
 
-    <!-- --------------------- ITR 4 --------------------------------- -->
+        <!-- --------------------- ITR 4 --------------------------------- -->
 
-    <br />
-  <!-- </div> -->
-  <!-- <div class="container">
+        <br />
+        <!-- </div> -->
+        <!-- <div class="container">
   <div class="row">
     <div class="col-lg-12">
       <b>Note:</b> * Negative value has been considered as zero for the purpose
@@ -3226,26 +3735,29 @@
     </div>
   </div>
   <!-- </div> -->
-  <div class="sub_btn lwBtDn" *ngIf="show">
-    <button
-      type="button"
-      *ngIf="isValidItr"
-      (click)="confirmSubmitITR()"
-      class="btn grBut pull-right"
-      [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'"
-      style="background-color: red"
-      [disabled]="!isValidateJson"
-    >
-      File ITR
-    </button>
-    <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
+        <div class="sub_btn lwBtDn" *ngIf="show">
+          <button
+            type="button"
+            *ngIf="isValidItr"
+            (click)="confirmSubmitITR()"
+            class="btn grBut pull-right"
+            [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'"
+            style="background-color: red"
+            [disabled]="!isValidateJson"
+          >
+            File ITR
+          </button>
+          <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
             Download XML
         </button> -->
-    <button type="button" (click)="downloadPDF()" class="btn grBut">
-      Download PDF
-    </button>
-  </div>
-  <div *ngIf="!show" class="text-center-align">
-    <label>{{ errorMessage }}</label>
+          <button type="button" (click)="downloadPDF()" class="btn grBut">
+            Download PDF
+          </button>
+        </div>
+        <div *ngIf="!show" class="text-center-align">
+          <label>{{ errorMessage }}</label>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
