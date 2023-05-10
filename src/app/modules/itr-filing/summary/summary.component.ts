@@ -283,56 +283,56 @@ export class SummaryComponent implements OnInit {
         //SALARY INCOME
         IncomeFromSal:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .IncomeFromSal,
+            ?.IncomeFromSal,
 
         GrossSalary:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .GrossSalary,
+            ?.GrossSalary,
 
         TotalAllwncExemptUs10:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .AllwncExemptUs10.TotalAllwncExemptUs10,
+            .AllwncExemptUs10?.TotalAllwncExemptUs10,
 
         ProfessionalTaxUs16iii:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .ProfessionalTaxUs16iii,
+            ?.ProfessionalTaxUs16iii,
 
         EntertainmentAlw16ii:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .EntertainmentAlw16ii,
+            ?.EntertainmentAlw16ii,
 
         DeductionUs16ia:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .DeductionUs16ia,
+            ?.DeductionUs16ia,
 
         //HOUSE PROPERTY
 
         TotalIncomeOfHP:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .TotalIncomeOfHP,
+            ?.TotalIncomeOfHP,
         TypeOfHP:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .TypeOfHP,
+            ?.TypeOfHP,
         GrossRentReceived:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .GrossRentReceived,
+            ?.GrossRentReceived,
         TaxPaidlocalAuth:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .TaxPaidlocalAuth,
+            ?.TaxPaidlocalAuth,
         AnnualValue:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .AnnualValue,
+            ?.AnnualValue,
         StandardDeduction:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .StandardDeduction,
+            ?.StandardDeduction,
         InterestPayable:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .InterestPayable,
+            ?.InterestPayable,
 
         //OTHER SOURCES
         IncomeOthSrc:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .IncomeOthSrc,
+            ?.IncomeOthSrc,
 
         SAV: this.ITR_JSON.itrSummaryJson[this.itrType][
           this.ITR14IncomeDeductions
@@ -372,7 +372,7 @@ export class SummaryComponent implements OnInit {
 
         GrossTotIncome:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .GrossTotIncome,
+            ?.GrossTotIncome,
 
         //DEDUCTIONS
         TotalChapVIADeductions:
@@ -381,7 +381,7 @@ export class SummaryComponent implements OnInit {
 
         Deductions: Object.entries(
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .DeductUndChapVIA
+            ?.DeductUndChapVIA
         )
           .filter(
             ([key, item]) =>
@@ -393,12 +393,12 @@ export class SummaryComponent implements OnInit {
 
         TotalIncome:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .TotalIncome,
+            ?.TotalIncome,
 
         //TAXES PAID
         TotalTaxPayable:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .TotalTaxPayable,
+            ?.TotalTaxPayable,
 
         TDSonSalary:
           this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TDSonSalary,
@@ -425,7 +425,7 @@ export class SummaryComponent implements OnInit {
 
         TCS: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TCS,
 
-        TotalSchTCS: this.ITR_JSON.itrSummaryJson[this.itrType].TotalSchTCS,
+        TotalSchTCS: this.ITR_JSON.itrSummaryJson[this.itrType]?.TotalSchTCS,
 
         TaxPayment:
           this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments?.TaxPayment,
@@ -436,56 +436,56 @@ export class SummaryComponent implements OnInit {
 
         Rebate87A:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .Rebate87A,
+            ?.Rebate87A,
 
         TaxPayableOnRebate:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .TaxPayableOnRebate,
+            ?.TaxPayableOnRebate,
 
         EducationCess:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .EducationCess,
+            ?.EducationCess,
 
         GrossTaxLiability:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .GrossTaxLiability,
+            ?.GrossTaxLiability,
 
         Section89:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .Section89,
+            ?.Section89,
 
         NetTaxLiability:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .NetTaxLiability,
+            ?.NetTaxLiability,
 
         IntrstPayUs234A:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .IntrstPay.IntrstPayUs234A,
+            ?.IntrstPay.IntrstPayUs234A,
 
         IntrstPayUs234B:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .IntrstPay.IntrstPayUs234B,
+            ?.IntrstPay.IntrstPayUs234B,
 
         IntrstPayUs234C:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .IntrstPay.IntrstPayUs234C,
+            ?.IntrstPay.IntrstPayUs234C,
 
         LateFilingFee234F:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-            .IntrstPay.LateFilingFee234F,
+            ?.IntrstPay.LateFilingFee234F,
 
         TotalIntrstPay:
           this.itrType === 'ITR1'
             ? this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                .TotalIntrstPay
+                ?.TotalIntrstPay
             : this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                .IntrstPay.LateFilingFee234F +
+                ?.IntrstPay.LateFilingFee234F +
               this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                .IntrstPay.IntrstPayUs234C +
+                ?.IntrstPay.IntrstPayUs234C +
               this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                .IntrstPay.IntrstPayUs234B +
+                ?.IntrstPay.IntrstPayUs234B +
               this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                .IntrstPay.IntrstPayUs234A,
+                ?.IntrstPay.IntrstPayUs234A,
 
         TotTaxPlusIntrstPay:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
@@ -493,19 +493,19 @@ export class SummaryComponent implements OnInit {
 
         TotalTaxesPaid:
           this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.TaxesPaid
-            .TotalTaxesPaid,
+            ?.TotalTaxesPaid,
 
         BalTaxPayable:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.BalTaxPayable,
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid?.BalTaxPayable,
 
         // EXEMPT INCOME
         ExemptIncAgriOthUs10Total:
           this.itrType === 'ITR1'
             ? this.ITR_JSON.itrSummaryJson[this.itrType][
                 this.ITR14IncomeDeductions
-              ].ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Total
+              ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Total
             : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
-                .OthersInc.OthersTotalTaxExe,
+                .OthersInc?.OthersTotalTaxExe,
 
         ExemptIncomeDetails:
           this.itrType === 'ITR1'
@@ -513,16 +513,16 @@ export class SummaryComponent implements OnInit {
                 this.ITR14IncomeDeductions
               ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
             : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
-                .OthersInc.OthersIncDtls,
+                .OthersInc?.OthersIncDtls,
 
         TotPersumptiveInc44ADA:
           this.itrType === 'ITR4'
             ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
-                .PersumptiveInc44AD.TotPersumptiveInc44AD +
+                .PersumptiveInc44AD?.TotPersumptiveInc44AD +
               this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
-                .PersumptiveInc44ADA.TotPersumptiveInc44ADA +
+                .PersumptiveInc44ADA?.TotPersumptiveInc44ADA +
               this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
-                .PersumptiveInc44AE.IncChargeableUnderBus
+                .PersumptiveInc44AE?.IncChargeableUnderBus
             : 0,
       };
     }
