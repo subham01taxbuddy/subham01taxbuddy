@@ -10,6 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
+import * as moment from "moment/moment";
 
 
 @Component({
@@ -61,7 +62,10 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.addClientForm = this.fb.group({
-      panNumber: ['', [Validators.required]],
+      panNumber: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppConstants.panNumberRegex),
+      ])],
       dateOfBirth: ['', [Validators.required]],
       otp: [],
     });
@@ -87,7 +91,19 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       this.otpSend = false;
       this.addClientForm.controls['otp'].setValidators(null);
       this.addClientForm.controls['otp'].updateValueAndValidity();
+    } else {
+      this.getUserDataByPan(this.addClientForm.controls['panNumber'].value);
     }
+  }
+
+  getUserDataByPan(pan) {
+    let param = `/api/getPanDetail?panNumber=${pan}`;
+    this.itrService.getMethod(param).subscribe((result:any)=>{
+      let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+      this.addClientForm.controls['dateOfBirth'].setValue(
+        moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+      );
+    });
   }
 
   setUpperCase() {
