@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import {Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -9,6 +9,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import { MatStepper } from '@angular/material/stepper';
+
 
 @Component({
   selector: 'app-add-clients',
@@ -42,6 +44,8 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   @Output() skipAddClient: EventEmitter<any> = new EventEmitter();
   @Output() completeAddClient: EventEmitter<any> = new EventEmitter();
+  @ViewChild('stepper') private myStepper: MatStepper;
+
 
   constructor(
     private fb: FormBuilder,
@@ -115,6 +119,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       this.itrService.postMethodForEri(param, request).subscribe(
         (res: any) => {
           this.loading = false;
+
           if (res && res.successFlag) {
             if (res.hasOwnProperty('messages')) {
               if (res.messages instanceof Array && res.messages.length > 0)
@@ -123,6 +128,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
               this.addClientForm.controls['otp'].setValidators([
                 Validators.required,
               ]);
+              this.myStepper.selectedIndex = 1;
             }
           } else {
             if (res.hasOwnProperty('errors')) {
@@ -168,6 +174,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
                 this.utiService.showSnackBar(res.messages[0].desc);
               this.addedClient = true;
               this.changePage();
+              this.myStepper.selectedIndex = 2;
             }
           } else {
             if (res.errors instanceof Array && res.errors.length > 0) {

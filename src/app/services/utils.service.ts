@@ -121,11 +121,12 @@ export class UtilsService {
       ) {
         for (let i = 0; i < obj[key].length; i++) {
           if (
-            (obj[key][i].schemeCode === 0 || obj[key][i].schemeCode === null) &&
+            (obj[key][i].schemeCode === '' ||
+              obj[key][i].schemeCode === null) &&
             (obj[key][i].amountOtherThanCash === 0 ||
               obj[key][i].amountOtherThanCash === null) &&
             (obj[key][i].amountInCash === 0 ||
-              obj[key][i].preventiveCheckUp === null)
+              obj[key][i].amountInCash === null)
           ) {
             delete obj[key][i];
           }
