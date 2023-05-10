@@ -113,6 +113,31 @@ export class UtilsService {
         }
       }
 
+      if (
+        key === 'employers' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          const salaryAllowance = obj[key][i].allowance;
+          if (
+            salaryAllowance &&
+            Array.isArray(salaryAllowance) &&
+            salaryAllowance.length > 0
+          ) {
+            for (let j = salaryAllowance.length - 1; j >= 0; j--) {
+              if (
+                salaryAllowance[j] &&
+                (salaryAllowance[j].exemptAmount === 0 ||
+                  salaryAllowance[j].exemptAmount === null)
+              ) {
+                salaryAllowance.splice(j, 1);
+              }
+            }
+          }
+        }
+      }
+
       //DONATIONS
       if (
         key === 'donations' &&
@@ -858,7 +883,7 @@ export class UtilsService {
       section90: null,
       section91: null,
       itrSummaryJson: null,
-      isItrSummaryJsonEdited: false
+      isItrSummaryJsonEdited: false,
     };
 
     return ITR_JSON;
