@@ -43,6 +43,8 @@ export class RequestManager {
             api:req.api,
             result:res
           });
+        }, error =>{
+          this.processing = false;
         });
       }
     }

@@ -81,7 +81,7 @@ export const MY_FORMATS = {
 })
 export class CustomerProfileComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  @Input() isEditCustomer = false;
+  @Input() isEditCustomer = true;
   @Input() navigationData: any;
   loading: boolean = false;
   imageLoader: boolean = false;
@@ -447,9 +447,11 @@ export class CustomerProfileComponent implements OnInit {
             JSON.stringify(this.ITR_JSON)
           );
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Customer profile updated successfully.'
-          );
+          if(ref) {
+            this.utilsService.showSnackBar(
+              'Customer profile updated successfully.'
+            );
+          }
           // if (ref === "CONTINUE") {
           // if (this.customerProfileForm.controls['itrType'].value === '1'
           // || this.customerProfileForm.controls['itrType'].value === '4')

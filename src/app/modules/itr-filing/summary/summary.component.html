@@ -254,18 +254,10 @@
     </div>
   </div>
 
-  <div
-    class="container-fluid main-body content-center-align section"
-    *ngIf="show"
-  >
-    <!-- ITR 1 or 2  -->
-    <!-- <div class="row" *ngIf="ITR_JSON && (ITR_JSON.itrType === '1' || ITR_JSON.itrType === '2')"> -->
+<div class="container" *ngIf="show">
     <div class="row">
-      <div
-        class="col-lg-12 col-xs-12"
-        style="padding-left: 0; padding-right: 0"
-      >
-        <table style="width: 100%">
+      <div class="col-sm-12">
+        <table>
           <tbody>
             <tr>
               <td colspan="4" class="padding-panel">
@@ -3141,9 +3133,7 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-                    <table
-                      class="table table-bordered table-striped table-hover accoTab"
-                    >
+                    <table class="table table-bordered table-striped table-hover">
                       <tbody>
                         <tr>
                           <td><b>Particular</b></td>
@@ -3167,15 +3157,15 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
+      <!-- </div>
+    </div> -->
     <!-- **************************** Accordion End -->
 
     <!-- --------------------- ITR 4 --------------------------------- -->
 
     <br />
-  </div>
-  <!-- <div class="container"> -->
+  <!-- </div> -->
+  <!-- <div class="container">
   <div class="row">
     <div class="col-lg-12">
       <b>Note:</b> * Negative value has been considered as zero for the purpose

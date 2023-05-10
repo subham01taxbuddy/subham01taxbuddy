@@ -92,11 +92,34 @@ export class PrefillIdComponent implements OnInit {
     this.downloadPrefill = true;
   }
 
+  getCustomerName() {
+    if (
+      this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
+      this.ITR_JSON.family instanceof Array
+    ) {
+      this.ITR_JSON.family.filter((item: any) => {
+        if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
+          let mName = item.mName ? item.mName : '';
+          return item.fName + ' ' + mName + ' ' + item.lName;
+        }
+      });
+    }
+  }
+
   // PREFILL PAN VALIDATION
   uploadJsonFile(file: FileList) {
     console.log('File in prefill', file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.data = {
+        userId: this.ITR_JSON.userId,
+        panNumber: this.ITR_JSON.panNumber,
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        name: this.getCustomerName(),
+        itrId: this.ITR_JSON.itrId
+      }
 
       //read the file to get details upload and validate
       const reader = new FileReader();

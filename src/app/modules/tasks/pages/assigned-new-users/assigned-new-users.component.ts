@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -24,6 +24,8 @@ import { SmeListDropDownComponent } from '../../../shared/components/sme-list-dr
 import { FormControl } from '@angular/forms';
 import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import {RequestManager} from "../../../shared/services/request-manager";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -60,6 +62,7 @@ export class AssignedNewUsersComponent implements OnInit {
     private dialog: MatDialog,
     private itrMsService: ItrMsService,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private requestManager: RequestManager,
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
@@ -77,8 +80,14 @@ export class AssignedNewUsersComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     };
+
+    this.requestManager.init();
+    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
+      this.requestCompleted(value);
+    });
   }
 
+  requestManagerSubscription: Subscription;
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
@@ -86,6 +95,106 @@ export class AssignedNewUsersComponent implements OnInit {
     this.getMasterStatusList();
     this.search();
     this.getAgentList();
+  }
+
+  ngOnDestroy() {
+    console.log('unsubscribe');
+    this.requestManagerSubscription.unsubscribe();
+  }
+
+  LIFECYCLE = 'LIFECYCLE';
+  async requestCompleted(res: any) {
+    console.log(res);
+    this.loading = false;
+    switch (res.api) {
+      case this.LIFECYCLE:  {
+        const loggedInId = this.utilsService.getLoggedInUserID();
+        const fyList = await this.utilsService.getStoredFyList();
+        const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+
+        if(this.rowData.itrObjectStatus === 'CREATE') {
+          //no ITR object found, create a new ITR object
+          this.loading = true;
+          let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
+            this.loading = false;
+            console.log(error);
+            this.utilsService.showSnackBar(error.error.detail);
+            return;
+          });
+          let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+          //Object.assign(obj, this.ITR_JSON)
+          objITR.filingTeamMemberId = loggedInId;
+          //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+          console.log('obj:', objITR);
+
+          //update status to WIP
+          //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
+
+          const param = '/itr';
+          this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
+            console.log('My iTR Json successfully created-==', result);
+            this.loading = false;
+            objITR = result;
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
+            this.router.navigate(['/itr-filing/itr'],{
+              state: {
+                userId: this.rowData.userId,
+                panNumber: this.rowData.panNumber,
+                eriClientValidUpto: this.rowData.eriClientValidUpto,
+                name: this.rowData.name }
+            });
+          }, error => {
+            this.loading = false;
+          });
+          this.loading = false;
+          console.log('end');
+        } else {
+          //one more ITR objects in place, use existing ITR object
+          let itrFilter = this.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${this.rowData.openItrId}` : '';
+          const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
+          this.itrMsService.getMethod(param).subscribe(async (result: any) => {
+            console.log(`My ITR by ${param}`, result);
+            if(result == null || result.length == 0) {
+              //no ITR found, error case
+              this.utilsService.showErrorMsg('Something went wrong. Please try again');
+            } else if(result.length == 1) {
+              //update status to WIP
+              //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
+              let workingItr = result[0];
+              // Object.entries(workingItr).forEach((key, value) => {
+              //   console.log(key, value)
+              //   if (key[1] === null) {
+              //     delete workingItr[key[0]];
+              //   }
+              // });
+              let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+              Object.assign(obj, workingItr);
+              workingItr.filingTeamMemberId = loggedInId;
+              console.log('obj:', obj);
+              workingItr = JSON.parse(JSON.stringify(obj));
+              sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              this.router.navigate(['/itr-filing/itr'],{
+                state: {
+                  userId: this.rowData.userId,
+                  panNumber: this.rowData.panNumber,
+                  eriClientValidUpto: this.rowData.eriClientValidUpto,
+                  name: this.rowData.name
+                }
+              });
+            } else {
+              //multiple ITRs found, navigate to ITR tab with the results
+              this.router.navigateByUrl('/tasks/filings',
+                {state: {'mobileNumber': this.rowData.mobileNumber}});
+            }
+          }, async (error:any) => {
+            console.log('Error:', error);
+            this.utilsService.showErrorMsg('Something went wrong. Please try again');
+          });
+
+        }
+        break;
+      }
+    }
   }
 
   async getMasterStatusList() {
@@ -105,7 +214,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   fromServiceType(event){
     this.searchParam.serviceType = event;
-    this.search('serviceType');
+    this.search('serviceType','isAgent');
 
     if(this.searchParam.serviceType) {
       setTimeout(() => {
@@ -634,93 +743,28 @@ export class AssignedNewUsersComponent implements OnInit {
     }
   }
 
+  rowData: any;
   async startFiling(data) {
     console.log(data);
 
-    const loggedInId = this.utilsService.getLoggedInUserID();
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-    if(data.itrObjectStatus === 'CREATE') {
-      //no ITR object found, create a new ITR object
-      this.loading = true;
-      let profile = await this.getUserProfile(data.userId).catch(error => {
-        this.loading = false;
-        console.log(error);
-        this.utilsService.showSnackBar(error.error.detail);
-        return;
-      });
-      let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-      //Object.assign(obj, this.ITR_JSON)
-      objITR.filingTeamMemberId = loggedInId;
-      //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
-      console.log('obj:', objITR);
+    //update ITR lifecycle api for filing started state
+    let reqData = {
+      userId: data.userId,
+      assessmentYear: currentFyDetails[0].assessmentYear,
+      taskKeyName: 'itrFilingComences',
+      taskStatus: 'Completed'
+    };
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('environment', environment.lifecycleEnv);
 
-      //update status to WIP
-      //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
+    this.rowData = data;
+    this.requestManager.addRequest(this.LIFECYCLE,
+      this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
 
-      const param = '/itr';
-      this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
-          console.log('My iTR Json successfully created-==', result);
-          this.loading = false;
-          objITR = result;
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-          this.router.navigate(['/itr-filing/itr'],{
-            state: {
-              userId: data.userId,
-              panNumber: data.panNumber,
-              eriClientValidUpto: data.eriClientValidUpto,
-              name: data.name }
-            });
-      }, error => {
-          this.loading = false;
-      });
-      this.loading = false;
-      console.log('end');
-    } else {
-      //one more ITR objects in place, use existing ITR object
-      let itrFilter = data.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${data.openItrId}` : '';
-      const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
-      this.itrMsService.getMethod(param).subscribe(async (result: any) => {
-        console.log(`My ITR by ${param}`, result);
-        if(result == null || result.length == 0) {
-          //no ITR found, error case
-          this.utilsService.showErrorMsg('Something went wrong. Please try again');
-        } else if(result.length == 1) {
-          //update status to WIP
-          //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
-          let workingItr = result[0];
-          // Object.entries(workingItr).forEach((key, value) => {
-          //   console.log(key, value)
-          //   if (key[1] === null) {
-          //     delete workingItr[key[0]];
-          //   }
-          // });
-          let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-          Object.assign(obj, workingItr);
-          workingItr.filingTeamMemberId = loggedInId;
-          console.log('obj:', obj);
-          workingItr = JSON.parse(JSON.stringify(obj));
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-          this.router.navigate(['/itr-filing/itr'],{
-            state: {
-              userId: data.userId,
-              panNumber: data.panNumber,
-              eriClientValidUpto: data.eriClientValidUpto,
-              name: data.name
-            }
-          });
-        } else {
-          //multiple ITRs found, navigate to ITR tab with the results
-          this.router.navigateByUrl('/tasks/filings',
-            {state: {'mobileNumber': data.mobileNumber}});
-        }
-      }, async (error:any) => {
-        console.log('Error:', error);
-        this.utilsService.showErrorMsg('Something went wrong. Please try again');
-      });
-
-    }
   }
 
   async getUserProfile(userId) {
@@ -987,7 +1031,7 @@ export class AssignedNewUsersComponent implements OnInit {
         this.searchParam.mobileNumber = null;
       }
 
-      this.searchParam.statusId = null;
+      // this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
       // this.searchParam.serviceType = null;
@@ -1032,6 +1076,7 @@ export class AssignedNewUsersComponent implements OnInit {
       (result: any) => {
         if(result.success == false){
           this._toastMessageService.alert("error",result.message);
+          // this.utilsService.showSnackBar(result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
         }

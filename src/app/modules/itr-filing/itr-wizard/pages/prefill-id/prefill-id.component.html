@@ -170,7 +170,7 @@
                         hidden
                         file-model="MeterFile"
                         class="inputfile"
-                        (change)="uploadJsonFile()"
+                        (change)="uploadJsonFile($event.target.files)"
                       />
 
                       <button
