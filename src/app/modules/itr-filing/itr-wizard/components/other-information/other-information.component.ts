@@ -147,10 +147,10 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
-  saveDirectorDetials() {
+  saveDirectorDetials(event?) {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.directorForm.valid) {
       console.log('Save form here', this.directorForm.getRawValue());
@@ -167,7 +167,9 @@ export class OtherInformationComponent implements OnInit {
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
         this.loading = false;
-        this.utilsService.showSnackBar('Director in company details added successfully');
+        if(event) {
+          this.utilsService.showSnackBar('Director in company details added successfully');
+        }
         // this.saveAndNext.emit(true);
         // this.directorForm.reset();
       }, error => {
@@ -358,10 +360,10 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
-  saveUnlistedShares() {
+  saveUnlistedShares(event?) {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.sharesForm.valid) {
 
@@ -373,7 +375,9 @@ export class OtherInformationComponent implements OnInit {
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(result => {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
         this.loading = false;
-        this.utilsService.showSnackBar('Other information updated successfully.');
+        if(event) {
+          this.utilsService.showSnackBar('Other information updated successfully.');
+        }
 
       }, error => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -383,7 +387,7 @@ export class OtherInformationComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
-  saveAndContinue() {
+  saveAndContinue(event?) {
     this.saveDirectorDetials();
     this.saveUnlistedShares();
     this.saveAndNext.emit(true);

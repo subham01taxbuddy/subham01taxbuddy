@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -41,6 +40,7 @@ export class BoPartnersComponent implements OnInit {
   boPartnerDateForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
+  searchMobileNumber = new FormControl('')
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -84,9 +84,9 @@ export class BoPartnersComponent implements OnInit {
       totalItems: null,
     };
     this.boPartnerDateForm = this.fb.group({
-      fromDate: ['2023-04-01', Validators.required],
+      fromDate: ['2022-09-01', Validators.required],
       toDate: [new Date(), Validators.required],
-      mobileNumber:new FormControl('')
+
     });
     this.getBoPartners();
   }
@@ -174,6 +174,48 @@ export class BoPartnersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'PAN',
+        field: 'pan',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'GSTN',
+        field: 'gstin',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'Bank Details',
+        field: 'bankDetails',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        valueGetter: (params) => {
+          if(params?.data?.bankDetails == null){
+            return 'No'
+          }else{
+            return 'Yes'
+          }
+        }
       },
       {
         headerName: 'Status',
@@ -354,8 +396,8 @@ export class BoPartnersComponent implements OnInit {
       this.loading = true;
       let param
 
-      if(mobile){
-        param = `/partner-detail?page=0&size=1&mobileNumber=${this.boPartnerDateForm.controls['mobileNumber'].value}`
+      if(mobile && this.searchMobileNumber.value ){
+        param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
       }else {
         param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
       }
@@ -407,6 +449,9 @@ export class BoPartnersComponent implements OnInit {
         certificateOfPracticeUrl: data[i].certificateOfPracticeUrl,
         passbookOrCancelledChequeUrl: data[i].passbookOrCancelledChequeUrl,
         cvUrl: data[i].cvUrl,
+        bankDetails:data[i].bankDetails,
+        gstin:data[i].gstin,
+        pan:data[i].pan,
       });
       partnersArray.push(boPartnersInfo);
     }
@@ -502,7 +547,7 @@ export class BoPartnersComponent implements OnInit {
   }
 
   resetFilters(){
-    this.boPartnerDateForm.controls['mobileNumber'].setValue(null);
+    this.searchMobileNumber.setValue(null);
     this.getBoPartners();
   }
 }

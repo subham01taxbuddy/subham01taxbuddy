@@ -3,6 +3,7 @@ import {CustomerProfileComponent} from "../../components/customer-profile/custom
 import {PersonalInformationComponent} from "../../components/personal-information/personal-information.component";
 import {OtherInformationComponent} from "../../components/other-information/other-information.component";
 import {waitUntil} from "ag-grid-community/dist/lib/utils/function";
+import {UtilsService} from "../../../../../services/utils.service";
 
 @Component({
   selector: 'app-all-personal-information',
@@ -24,7 +25,7 @@ export class AllPersonalInformationComponent implements OnInit {
   isEditPersonal: boolean;
   navigationData: any;
 
-  constructor() {
+  constructor(private utilService: UtilsService) {
     this.navigationData = history.state;
   }
 
@@ -61,26 +62,44 @@ export class AllPersonalInformationComponent implements OnInit {
     this.saveAndNext.emit(true);
   }
 
-  saveAll() {
-    if (this.isEditCustomer) {
-      this.customerProfileComponent.saveProfile();
-    }
-
-    if(this.customerProfileComponent.loading) {
-      window.setTimeout(this.customerProfileComponent.loading, 100); /* this checks the flag every 100 milliseconds*/
-    } else {
+  checkSuccess(count){
+    this.saveCount = count;
+    if(this.saveCount == 0) {
+      console.log('checking customer');
+      this.saveCount += 1;
       if (this.isEditPersonal) {
         this.personalInfoComponent.saveProfile();
       }
-      if(this.personalInfoComponent.loading) {
-        window.setTimeout(this.personalInfoComponent.loading, 100); /* this checks the flag every 100 milliseconds*/
-      } else {
-        if (this.isEditOther) {
-          this.otherInfoComponent.saveAndContinue();
-        }
+    } else if(this.saveCount == 1) {
+      console.log('checking personal');
+      this.saveCount += 1;
+      if (this.isEditOther) {
+        this.otherInfoComponent.saveAndContinue();
       }
+    } else if(this.saveCount == 2) {
+      console.log('checking other');
+      this.utilService.showSnackBar('Personal information updated successfully.');
+    }
+  }
+
+  saveCount = 0;
+  saveAll() {
+    //check validations
+    if(!this.customerProfileComponent.customerProfileForm.valid){
+      this.utilService.showSnackBar('Please fill all required fields in Customer Profile');
+      return;
+    }else if(!this.personalInfoComponent.isFormValid()){
+      this.utilService.showSnackBar('Please fill all required fields in Personal Details');
+      return;
+    } else if(!this.otherInfoComponent.sharesForm.valid || !this.otherInfoComponent.directorForm.valid){
+      this.utilService.showSnackBar('Please fill all required fields in Other Information');
+      return;
     }
 
+    this.saveCount = 0;
+    if (this.isEditCustomer) {
+      this.customerProfileComponent.saveProfile();
+    }
   }
 
 }
