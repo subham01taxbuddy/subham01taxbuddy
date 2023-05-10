@@ -113,7 +113,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
           this.addClientForm.controls['dateOfBirth'].value,
           'yyyy-MM-dd'
         ),
-        otpSourceFlag: 'E',
+        otpSourceFlag: this.selectedOtpOption,
       };
 
       this.itrService.postMethodForEri(param, request).subscribe(
