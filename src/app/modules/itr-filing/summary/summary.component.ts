@@ -403,7 +403,36 @@ export class SummaryComponent implements OnInit {
         TDSonSalary:
           this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TDSonSalary,
 
-          TotalTDSonSalaries:this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TotalTDSonSalaries,
+        TotalTDSonSalaries:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries
+            ?.TotalTDSonSalaries,
+
+        TDSonOthThanSal:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+            ?.TDSonOthThanSal,
+
+        TotalTDSonOthThanSals:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+            ?.TotalTDSonOthThanSals,
+
+        TDS3Details:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+            ?.TDS3Details,
+
+        TotalTDS3Details:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+            ?.TotalTDS3Details,
+
+        TCS: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TCS,
+
+        TotalSchTCS: this.ITR_JSON.itrSummaryJson[this.itrType].TotalSchTCS,
+
+        TaxPayment:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments?.TaxPayment,
+
+        TotalTaxPayments:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments
+            ?.TotalTaxPayments,
 
         Rebate87A:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
@@ -469,6 +498,7 @@ export class SummaryComponent implements OnInit {
         BalTaxPayable:
           this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.BalTaxPayable,
 
+        // EXEMPT INCOME
         ExemptIncAgriOthUs10Total:
           this.itrType === 'ITR1'
             ? this.ITR_JSON.itrSummaryJson[this.itrType][
@@ -476,6 +506,14 @@ export class SummaryComponent implements OnInit {
               ].ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Total
             : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
                 .OthersInc.OthersTotalTaxExe,
+
+        ExemptIncomeDetails:
+          this.itrType === 'ITR1'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType][
+                this.ITR14IncomeDeductions
+              ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
+            : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
+                .OthersInc.OthersIncDtls,
 
         TotPersumptiveInc44ADA:
           this.itrType === 'ITR4'
@@ -489,7 +527,7 @@ export class SummaryComponent implements OnInit {
       };
     }
 
-    console.log(this.keys.TDSonSalary, 'this.keys.Deductions');
+    console.log(this.keys.ExemptIncomeDetails, 'this.keys.Deductions');
     return this.keys;
 
     // let GrossSalary;
