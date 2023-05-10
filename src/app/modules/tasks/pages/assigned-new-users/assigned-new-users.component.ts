@@ -1018,6 +1018,7 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   search(form?, isAgent?) {
+    let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (this.searchParam.mobileNumber == null || this.searchParam.mobileNumber == '') {
@@ -1037,6 +1038,7 @@ export class AssignedNewUsersComponent implements OnInit {
       // this.searchParam.serviceType = null;
       this.searchParam.mobileNumber = null
       this.searchParam.emailId = null
+
     } else if (form == 'serviceType') {
       this.searchParam.page = 0;
       this.searchParam.status = null;
@@ -1060,8 +1062,9 @@ export class AssignedNewUsersComponent implements OnInit {
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
-    }else {
-      param;
+    }
+    if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
+      param = `/${this.agentId}/user-list-new?${data}`;
     }
 
     this.userMsService.getMethod(param).subscribe(
