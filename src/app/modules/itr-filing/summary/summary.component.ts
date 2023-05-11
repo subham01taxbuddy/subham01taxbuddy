@@ -540,7 +540,9 @@ export class SummaryComponent implements OnInit {
       'userId': this.ITR_JSON.userId.toString()
     }
     sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+    this.loading = true;
     this.itrMsService.postMethod(param, this.itrJsonForFileItr).subscribe((res: any) => {
+      this.loading = false;
       if (res.successFlag) {
         let disposable = this.dialog.open(AckSuccessComponent, {
           height: '80%',
