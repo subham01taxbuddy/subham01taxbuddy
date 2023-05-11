@@ -18,7 +18,7 @@ export class ResignedSmeComponent implements OnInit {
   smeList: any = [];
   smeInfo: any;
   config: any;
-  loggedInSme:any;
+  loggedInSme: any;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -35,7 +35,7 @@ export class ResignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
-    private matDialog: MatDialog,
+    private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -43,7 +43,7 @@ export class ResignedSmeComponent implements OnInit {
       columnDefs: this.smeCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -55,7 +55,7 @@ export class ResignedSmeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getSmeList();
   }
 
@@ -105,7 +105,7 @@ export class ResignedSmeComponent implements OnInit {
         pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
-        cellRenderer: (params) => {},
+        cellRenderer: (params) => { },
       },
       {
         headerName: 'Mobile No',
@@ -243,6 +243,21 @@ export class ResignedSmeComponent implements OnInit {
            </button>`;
         },
       },
+      {
+        headerName: 'Convert To Lead Partner',
+        field: '',
+        width: 120,
+        suppressMovable: true,
+        pinned: 'right',
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Click to Lead Partner"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:orange;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="ConvertToLeadPartner"></i>
+           </button>`;
+        },
+      },
     ];
   }
   public rowSelection: 'single' | 'multiple' = 'multiple';
@@ -261,6 +276,10 @@ export class ResignedSmeComponent implements OnInit {
           this.editAddSme(params.data);
           break;
         }
+        case 'ConvertToLeadPartner': {
+          this.ConvertToLeadPartner(params.data);
+          break;
+        }
       }
     }
   }
@@ -275,7 +294,7 @@ export class ResignedSmeComponent implements OnInit {
   }
 
   ConvertToLeadPartner(data) {
-    let dialogRef = this.matDialog.open(ConfirmDialogComponent, {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmation Dialog',
         message: 'Are you sure want to convert this SME to lead partner?',
