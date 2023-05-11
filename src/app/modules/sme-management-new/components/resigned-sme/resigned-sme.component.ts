@@ -31,6 +31,7 @@ export class ResignedSmeComponent implements OnInit {
   };
 
   constructor(
+    private userService: UserMsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -306,7 +307,22 @@ export class ResignedSmeComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'YES') {
-        
+        this.loading = true;
+        let param = '/resignedSme-to-partner?userId=' + data.userId;
+
+        this.userService.postMethod(param, '').subscribe((res: any) => {
+          this.loading = false;
+          if (res.success) {
+            this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
+          } else {
+            this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
+          }
+        },
+          (error) => {
+            this.loading = false;
+            this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
+          }
+        );
       }
     });
   }
