@@ -67,16 +67,72 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    //  this.getInvoiceReports();
+    this.getInvoiceReports();
+    this.getDocUploadedList('docUpload');
+    this.getSummaryConfirmationList('summaryConfirmation');
+    this.getItrFilledEVerificationPendingList('eVerificationPending');
+    this.getScheduleCallDetails('scheduleCall');
+    this.getPartnerCommission();
   }
 
-  search(){
-    this.getInvoiceReports();
-    this.getDocUploadedList();
-    this.getSummaryConfirmationList();
-    this.getItrFilledEVerificationPendingList();
-    this.getScheduleCallDetails();
-    this.getPartnerCommission();
+  config = {
+    docUpload:{
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    },
+    summaryConfirmation:{
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    },
+    eVerificationPending:{
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    },
+      scheduleCall:{
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    }
+  };
+  searchParam: any = {
+    docUpload:{
+      page: 0,
+      size: 5,
+    },
+    summaryConfirmation:{
+      page: 0,
+      size: 5,
+    },
+    eVerificationPending:{
+      page: 0,
+      size: 5,
+    },
+      scheduleCall:{
+        page: 0,
+        size: 5
+    }
+
+  };
+
+  search(searchType: any,){
+    if (searchType == 'docUpload') {
+      this.getDocUploadedList(searchType);
+    } else if (searchType == 'summaryConfirmation') {
+      this.getSummaryConfirmationList(searchType);
+    } else if (searchType == 'eVerificationPending') {
+      this.getItrFilledEVerificationPendingList(searchType);
+    } else if (searchType == 'scheduleCall') {
+      this.getScheduleCallDetails(searchType);
+    }else{
+      this.getDocUploadedList('docUpload');
+      this.getSummaryConfirmationList('summaryConfirmation');
+      this.getItrFilledEVerificationPendingList('eVerificationPending');
+      this.getScheduleCallDetails('scheduleCall');
+    }
+
   }
 
   getInvoiceReports(){
@@ -105,15 +161,21 @@ export class DashboardComponent implements OnInit {
   })
 }
 
-getDocUploadedList(){
+getDocUploadedList(configType){
+  // 'https://uat-api.taxbuddy.com/itr/dashboard/doc-uploaded-filing-not-started?filerUserId=9618&fromDate=2020-04-08&toDate=2023-05-09&page=0&size=30'
   // https://uat-api.taxbuddy.com/itr/dashboard/doc-uploaded-filing-not-started?filerUserId=234&page=0&size=30
   this.loading = true;
+  let data = this.utilsService.createUrlParams(this.searchParam[configType]);
+  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
   let filerUserId = this.loggedInSmeUserId;
-  let param =`/dashboard/doc-uploaded-filing-not-started?filerUserId=${filerUserId}&page=0&size=30`
+  let param =`/dashboard/doc-uploaded-filing-not-started?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`
 
   this.itrService.getMethod(param).subscribe((response: any) => {
     if (response.success) {
-      this.docUploadedData = response.data.content;
+      // this.docUploadedData=null;
+      this.docUploadedData = response.data;
+      this.config.docUpload.totalItems = response.data.totalElements;
 
    }else{
      this.loading = false;
@@ -125,16 +187,17 @@ getDocUploadedList(){
   })
 }
 
-getSummaryConfirmationList(){
+getSummaryConfirmationList(configType){
 // https://uat-api.taxbuddy.com/itr/dashboard/waiting-for-confirmation?filerUserId=234&page=0&size=30
 this.loading = true;
+let data = this.utilsService.createUrlParams(this.searchParam[configType]);
 let filerUserId = this.loggedInSmeUserId;
-let param =`/dashboard/waiting-for-confirmation?filerUserId=${filerUserId}&page=0&size=30`
+let param =`/dashboard/waiting-for-confirmation?filerUserId=${filerUserId}&${data}`
 
 this.itrService.getMethod(param).subscribe((response: any) => {
   if (response.success) {
-    this.summaryConfirmationData = response.data.content;
-
+    this.summaryConfirmationData = response.data;
+    this.config.summaryConfirmation.totalItems = response.data.totalElements;
  }else{
    this.loading = false;
    this. _toastMessageService.alert("error",response.message);
@@ -146,20 +209,22 @@ this.itrService.getMethod(param).subscribe((response: any) => {
 
 }
 
-getItrFilledEVerificationPendingList(){
+getItrFilledEVerificationPendingList(configType){
   // https://uat-api.taxbuddy.com/itr/dashboard/itr-filed-everification-pending?filerUserId=234
   // &fromDate=2023-05-05&toDate=2023-05-05&page=0&size=30
   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
   this.loading = true;
+  let data = this.utilsService.createUrlParams(this.searchParam[configType]);
   let filerUserId = this.loggedInSmeUserId;
 
-  let param = `/dashboard/itr-filed-everification-pending?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&page=0&size=30`;
+  let param = `/dashboard/itr-filed-everification-pending?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`;
 
   this.itrService.getMethod(param).subscribe(
     (response: any) => {
       if (response.success) {
-        this.eVerificationPendingData = response.data.content;
+        this.eVerificationPendingData = response.data;
+        this.config.eVerificationPending.totalItems = response.data.totalElements;
       } else {
         this.loading = false;
         this._toastMessageService.alert('error', response.message);
@@ -173,19 +238,22 @@ getItrFilledEVerificationPendingList(){
 
 }
 
-getScheduleCallDetails(){
+getScheduleCallDetails(configType){
+  // https://uat-api.taxbuddy.com/user/schedule-call-details/{filerUserId}?fromDate=2023-05-05&toDate=2023-05-05&statusId=17&page=0&size=20
 // https://uat-api.taxbuddy.com/user/schedule-call-details/{filerUserId}?fromDate=2023-05-05&toDate=2023-05-05&statusId=17,19&page=0&size=20
   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
   this.loading = true;
+  let data = this.utilsService.createUrlParams(this.searchParam[configType]);
   let filerUserId = this.loggedInSmeUserId;
 
-  let param =`/schedule-call-details/${filerUserId}?fromDate=${fromDate}&toDate=${toDate}&statusId=17,19&page=0&size=20`
+  let param =`/schedule-call-details/${filerUserId}?fromDate=${fromDate}&toDate=${toDate}&statusId=17&${data}`
 
   this.userMsService.getMethod(param).subscribe((response: any) => {
     this.loading = false;
     if (response.success) {
        this.scheduleCallData = response.data;
+       this.config.scheduleCall.totalItems = response.data.totalElements;
 
     }else{
       this.loading = false;
@@ -198,18 +266,19 @@ getScheduleCallDetails(){
 }
 
 getPartnerCommission(){
+  // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?filerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
   // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission/{filerUserId}?fromDate=2023-05-06&toDate=2023-05-06
   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
   this.loading = true;
   let filerUserId = this.loggedInSmeUserId;
 
-  let param = `/dashboard/partner-commission/${filerUserId}&fromDate=${fromDate}&toDate=${toDate}`;
+  let param = `/dashboard/partner-commission?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}`;
 
   this.itrService.getMethod(param).subscribe(
     (response: any) => {
       if (response.success) {
-        this.commissionData = response.data.content;
+        this.commissionData = response?.data;
       } else {
         this.loading = false;
         this._toastMessageService.alert('error', response.message);
@@ -222,8 +291,24 @@ getPartnerCommission(){
   );
 }
 
+goTo(form?){
+  if (form == 'myUsers') {
+    this.router.navigate(['/tasks/assigned-users-new']);
+  }
+  if(form == 'myItr'){
+    this.router.navigate(['/tasks/filings']);
+  }
+  if(form == 'scheduleCall'){
+    this.router.navigate(['/tasks/schedule-call']);
+  }
+}
 
+pageChanged(event: any,configType?) {
+  this.config[configType].currentPage = event;
+  this.searchParam[configType].page = event - 1;
+  this.search(configType);
 
+}
 
 setToDateValidation(FromDate) {
   console.log('FromDate: ', FromDate);

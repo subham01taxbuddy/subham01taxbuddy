@@ -60,7 +60,7 @@ export class SidebarComponent implements DoCheck {
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard',
-      roles: [],
+      roles: ['ROLE_FILER'],
       submenu: []
     },
     {
@@ -68,7 +68,7 @@ export class SidebarComponent implements DoCheck {
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard/main',
-      roles: [],
+      roles: ['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER'],
       submenu: []
     },
     {
