@@ -2,6 +2,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -17,7 +18,7 @@ export class ResignedSmeComponent implements OnInit {
   smeList: any = [];
   smeInfo: any;
   config: any;
-  loggedInSme:any;
+  loggedInSme: any;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -34,7 +35,7 @@ export class ResignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
-    private matDialog: MatDialog,
+    private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -42,7 +43,7 @@ export class ResignedSmeComponent implements OnInit {
       columnDefs: this.smeCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -54,13 +55,13 @@ export class ResignedSmeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getSmeList();
   }
 
   getSmeList() {
     // ${this.config.currentPage - 1}
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId = this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
 
@@ -108,7 +109,7 @@ export class ResignedSmeComponent implements OnInit {
         pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
-        cellRenderer: (params) => {},
+        cellRenderer: (params) => { },
       },
       {
         headerName: 'Mobile No',
@@ -246,6 +247,21 @@ export class ResignedSmeComponent implements OnInit {
            </button>`;
         },
       },
+      {
+        headerName: 'Convert To Lead Partner',
+        field: '',
+        width: 120,
+        suppressMovable: true,
+        pinned: 'right',
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Click to Lead Partner"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:orange;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="ConvertToLeadPartner"></i>
+           </button>`;
+        },
+      },
     ];
   }
   public rowSelection: 'single' | 'multiple' = 'multiple';
@@ -264,6 +280,10 @@ export class ResignedSmeComponent implements OnInit {
           this.editAddSme(params.data);
           break;
         }
+        case 'ConvertToLeadPartner': {
+          this.ConvertToLeadPartner(params.data);
+          break;
+        }
       }
     }
   }
@@ -275,6 +295,20 @@ export class ResignedSmeComponent implements OnInit {
     };
     sessionStorage.setItem('smeObject', JSON.stringify(smeData));
     this.router.navigate(['/sme-management-new/edit-resignedsme']);
+  }
+
+  ConvertToLeadPartner(data) {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmation Dialog',
+        message: 'Are you sure want to convert this SME to lead partner?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'YES') {
+        
+      }
+    });
   }
 
   pageChanged(event: any) {
