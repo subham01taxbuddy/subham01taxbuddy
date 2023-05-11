@@ -31,6 +31,7 @@ export class ResignedSmeComponent implements OnInit {
   };
 
   constructor(
+    private userService: UserMsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
