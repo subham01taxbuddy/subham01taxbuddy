@@ -45,7 +45,7 @@
             <div class="card__col-md-3">
               <mat-label>Mobile Number: </mat-label>
               <mat-form-field appearance="outline">
-                <input matInput placeholder="Enter Mobile Number" formControlName="mobileNumber" type="text" digitsOnly
+                <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text" digitsOnly
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
               </mat-form-field>

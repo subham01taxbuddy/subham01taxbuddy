@@ -471,6 +471,7 @@ export class ItrWizardComponent implements OnInit {
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
     sessionStorage.removeItem('incomeSources');
+    sessionStorage.removeItem('ERI-Request-Header');
     this.subscription.unsubscribe();
   }
 }

@@ -35,6 +35,8 @@ export class CancelSubscriptionComponent implements OnInit {
   filerId: number;
   agentId: number;
   userInfo: any = [];
+  loggedInUserRoles: any;
+  isOwner: boolean;
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -86,16 +88,18 @@ export class CancelSubscriptionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-    // this.getCancelSubscriptionList(0);
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
   }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
 
   resetFilters() {
     this.smeDropDown?.resetDropdown();
-    if (this.coOwnerDropDown) {
-      this.getCancelSubscriptionList(0);
+    const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    const loginSMEInfo = data[0];
+    if (this.isOwner) {
+      this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
       this.getCancelSubscriptionList(0);
     }
