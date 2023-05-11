@@ -1223,7 +1223,7 @@ export class PrefillIdComponent implements OnInit {
       if (
         this.ITR_Obj.panNumber === ItrJSON[this.ITR_Type].PersonalInfo.PAN &&
         this.ITR_Obj.contactNumber ===
-          ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo
+          String(ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo)
       ) {
         // PERSONAL INFORMATION
         {
@@ -1742,72 +1742,122 @@ export class PrefillIdComponent implements OnInit {
 
         // HOUSE PROPERTY
         {
-          if (
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP
-          ) {
-            // House Property Type
-            this.ITR_Obj.houseProperties[0].propertyType =
-              ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
-              'S'
-                ? 'SOP'
-                : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
-                    .TypeOfHP === 'L'
-                ? 'LOP'
-                : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
-                    .TypeOfHP === 'D'
-                ? 'DLOP'
-                : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP;
+          {
+            const housePropertyDetails =
+              ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
+            console.log(housePropertyDetails, 'housePropertyDetails');
 
-            // There is no principal amount for itr1&4 in json. Hence, did not map it
-            this.ITR_Obj.houseProperties[0].grossAnnualRentReceived =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ].GrossRentReceived;
+            if (
+              housePropertyDetails?.TotalIncomeOfHP === 0 ||
+              housePropertyDetails?.TotalIncomeOfHP === null
+            ) {
+              this.ITR_Obj.houseProperties = [];
+            } else {
+              let hpKeys = {
+                propertyType:
+                  housePropertyDetails?.TypeOfHP === 'S'
+                    ? 'SOP'
+                    : housePropertyDetails?.TypeOfHP === 'L'
+                    ? 'LOP'
+                    : housePropertyDetails?.TypeOfHP === 'D'
+                    ? 'DLOP'
+                    : housePropertyDetails?.TypeOfHP,
+                grossAnnualRentReceived:
+                  housePropertyDetails?.GrossRentReceived,
+                propertyTax: housePropertyDetails?.propertyTax,
+                ownerPercentage: null,
+                address: '',
+                city: '',
+                state: '',
+                country: '',
+                pinCode: '',
+                taxableIncome: housePropertyDetails?.TotalIncomeOfHP,
+                exemptIncome: housePropertyDetails?.AnnualValue30Percent,
+                isEligibleFor80EE:
+                  housePropertyDetails.DeductUndChapVIA?.Section80EE > 0
+                    ? true
+                    : false,
+                isEligibleFor80EEA:
+                  housePropertyDetails.DeductUndChapVIA?.Section80EEA > 0
+                    ? true
+                    : false,
+                tenant: [],
+                coOwners: [],
+                loans:
+                  housePropertyDetails?.InterestPayable === 0 ||
+                  housePropertyDetails?.InterestPayable === null
+                    ? []
+                    : [
+                        {
+                          loanType: 'HOUSING',
+                          principalAmount: null,
+                          interestAmount: housePropertyDetails?.InterestPayable,
+                        },
+                      ],
+              };
 
-            // Property Tax
-            this.ITR_Obj.houseProperties[0].propertyTax =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ].TaxPaidlocalAuth;
-
-            // Not able to map annualValue as we are not storing it in the ITRobject. Anyways, the annual value is being displayed properly on UI after parsing
-
-            // Annual Value 30% / Exempt Income (in itr4 object)
-            this.ITR_Obj.houseProperties[0].exemptIncome =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ].AnnualValue30Percent;
-
-            if (!this.ITR_Obj.houseProperties[0].loans) {
-              this.ITR_Obj.houseProperties[0].loans = [];
+              this.ITR_Obj.houseProperties.push(hpKeys);
             }
-            this.ITR_Obj.houseProperties[0].loans.push({
-              loanType: '',
-              principalAmount: 0,
-              interestAmount: 0,
-            });
-
-            // Interest on HP loan
-            this.ITR_Obj.houseProperties[0].loans[0].interestAmount =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ].InterestPayable;
-
-            // Total Hp income
-            this.ITR_Obj.houseProperties[0].taxableIncome =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ].TotalIncomeOfHP;
-
-            //80EE AND 80EEA values need to be set as true if interest is above 2l. However, this has to be done from the sme's end. PENDING
-          } else {
-            console.log(
-              'ITRJSON => ITR4 => HOUSE PROPERTY',
-              `ItrJSON[this.ITR_Type]${[
-                this.ITR14_IncomeDeductions,
-              ]}.TotalIncomeOfHP`
-            );
           }
+
+          // if (
+          //   ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP
+          // ) {
+          // House Property Type
+          // this.ITR_Obj.houseProperties[0].propertyType =
+          //   ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
+          //   'S'
+          //     ? 'SOP'
+          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
+          //         .TypeOfHP === 'L'
+          //     ? 'LOP'
+          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
+          //         .TypeOfHP === 'D'
+          //     ? 'DLOP'
+          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP;
+          // // There is no principal amount for itr1&4 in json. Hence, did not map it
+          // this.ITR_Obj.houseProperties[0].grossAnnualRentReceived =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].GrossRentReceived;
+          // Property Tax
+          // this.ITR_Obj.houseProperties[0].propertyTax =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].TaxPaidlocalAuth;
+          // Not able to map annualValue as we are not storing it in the ITRobject. Anyways, the annual value is being displayed properly on UI after parsing
+          // Annual Value 30% / Exempt Income (in itr4 object)
+          // this.ITR_Obj.houseProperties[0].exemptIncome =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].AnnualValue30Percent;
+          // if (!this.ITR_Obj.houseProperties[0].loans) {
+          //   this.ITR_Obj.houseProperties[0].loans = [];
+          // }
+          // this.ITR_Obj.houseProperties[0].loans.push({
+          //   loanType: '',
+          //   principalAmount: 0,
+          //   interestAmount: 0,
+          // });
+          // Interest on HP loan
+          // this.ITR_Obj.houseProperties[0].loans[0].interestAmount =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].InterestPayable;
+          // Total Hp income
+          // this.ITR_Obj.houseProperties[0].taxableIncome =
+          //   ItrJSON[this.ITR_Type][
+          //     this.ITR14_IncomeDeductions
+          //   ].TotalIncomeOfHP;
+          //80EE AND 80EEA values need to be set as true if interest is above 2l. However, this has to be done from the sme's end. PENDING
+          // } else {
+          //   console.log(
+          //     'ITRJSON => ITR4 => HOUSE PROPERTY',
+          //     `ItrJSON[this.ITR_Type]${[
+          //       this.ITR14_IncomeDeductions,
+          //     ]}.TotalIncomeOfHP`
+          //   );
+          // }
         }
 
         // OTHER INCOMES
