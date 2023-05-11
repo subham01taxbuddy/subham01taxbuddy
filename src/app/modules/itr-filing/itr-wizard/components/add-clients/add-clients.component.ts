@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import {Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -9,6 +9,9 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import { MatStepper } from '@angular/material/stepper';
+import * as moment from "moment/moment";
+
 
 @Component({
   selector: 'app-add-clients',
@@ -42,6 +45,8 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   @Output() skipAddClient: EventEmitter<any> = new EventEmitter();
   @Output() completeAddClient: EventEmitter<any> = new EventEmitter();
+  @ViewChild('stepper') private myStepper: MatStepper;
+
 
   constructor(
     private fb: FormBuilder,
@@ -57,16 +62,30 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.addClientForm = this.fb.group({
-      panNumber: ['', [Validators.required]],
+      panNumber: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppConstants.panNumberRegex),
+      ])],
       dateOfBirth: ['', [Validators.required]],
       otp: [],
+    });
+
+    this.utilsService.getUserProfile(this.ITR_JSON.userId).then((result:any)=>{
+      console.log(result);
+      if(this.ITR_JSON.panNumber){
+        this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
+      }else {
+        this.addClientForm.controls['panNumber'].setValue(result.panNumber);
+        this.getUserDataByPan(result.panNumber);
+      }
+
     });
 
     this.personalInfo = this.ITR_JSON.family[0];
     this.addClientForm.controls['dateOfBirth'].setValue(
       this.personalInfo.dateOfBirth
     );
-    this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
+
     console.log('ITR_JSON: ', this.ITR_JSON);
     console.log('addClientForm value: ', this.addClientForm.value);
 
@@ -83,7 +102,19 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       this.otpSend = false;
       this.addClientForm.controls['otp'].setValidators(null);
       this.addClientForm.controls['otp'].updateValueAndValidity();
+    } else {
+      this.getUserDataByPan(this.addClientForm.controls['panNumber'].value);
     }
+  }
+
+  getUserDataByPan(pan) {
+    let param = `/api/getPanDetail?panNumber=${pan}`;
+    this.itrService.getMethod(param).subscribe((result:any)=>{
+      let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+      this.addClientForm.controls['dateOfBirth'].setValue(
+        moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+      );
+    });
   }
 
   setUpperCase() {
@@ -109,12 +140,13 @@ export class AddClientsComponent implements OnInit, OnDestroy {
           this.addClientForm.controls['dateOfBirth'].value,
           'yyyy-MM-dd'
         ),
-        otpSourceFlag: 'E',
+        otpSourceFlag: this.selectedOtpOption,
       };
 
       this.itrService.postMethodForEri(param, request).subscribe(
         (res: any) => {
           this.loading = false;
+
           if (res && res.successFlag) {
             if (res.hasOwnProperty('messages')) {
               if (res.messages instanceof Array && res.messages.length > 0)
@@ -123,6 +155,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
               this.addClientForm.controls['otp'].setValidators([
                 Validators.required,
               ]);
+              this.myStepper.selectedIndex = 1;
             }
           } else {
             if (res.hasOwnProperty('errors')) {
@@ -168,6 +201,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
                 this.utiService.showSnackBar(res.messages[0].desc);
               this.addedClient = true;
               this.changePage();
+              this.myStepper.selectedIndex = 2;
             }
           } else {
             if (res.errors instanceof Array && res.errors.length > 0) {

@@ -390,7 +390,9 @@ export class OtherInformationComponent implements OnInit {
   saveAndContinue(event?) {
     this.saveDirectorDetials();
     this.saveUnlistedShares();
-    this.saveAndNext.emit(true);
+    if(!event) {
+      this.saveAndNext.emit(true);
+    }
   }
 
 }
