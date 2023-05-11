@@ -430,6 +430,7 @@ export class BoPartnersComponent implements OnInit {
     for (let i = 0; i < data.length; i++) {
       let boPartnersInfo: any = Object.assign({}, partnersArray[i], {
         partnerType: data[i].partnerType,
+        leadType: data[i].leadType ? data[i].leadType : '-',
         id: data[i].id,
         name: data[i].name,
         emailAddress: data[i].emailAddress,

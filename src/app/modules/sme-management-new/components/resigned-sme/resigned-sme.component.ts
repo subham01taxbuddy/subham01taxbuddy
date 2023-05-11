@@ -2,6 +2,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -59,14 +60,12 @@ export class ResignedSmeComponent implements OnInit {
   }
 
   getSmeList() {
-    // ${this.config.currentPage - 1}
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId = this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
-        console.log('sme list result -> ', result);
         if (
           Array.isArray(result.data.content) &&
           result.data.content.length > 0
@@ -74,13 +73,11 @@ export class ResignedSmeComponent implements OnInit {
           this.loading = false;
           this.smeInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
-          console.log('smelist', this.smeList);
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(this.smeInfo)
           );
         } else {
           this.loading = false;
-          console.log('in else');
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(result.data.content)
           );
@@ -275,6 +272,36 @@ export class ResignedSmeComponent implements OnInit {
     };
     sessionStorage.setItem('smeObject', JSON.stringify(smeData));
     this.router.navigate(['/sme-management-new/edit-resignedsme']);
+  }
+
+  ConvertToLeadPartner(data) {
+    let dialogRef = this.matDialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmation Dialog',
+        message: 'Are you sure want to convert this SME to lead partner?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'YES') {
+        this.loading = true;
+        let param = '/resignedSme-to-partner?userId=' + data.userId;
+
+        this.userMsService.postMethod(param, '').subscribe((res: any) => {
+          this.loading = false;
+          if (res.success) {
+            this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
+            this.getSmeList();
+          } else {
+            this._toastMessageService.alert('error', res.message);
+          }
+        },
+          (error) => {
+            this.loading = false;
+            this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
+          }
+        );
+      }
+    });
   }
 
   pageChanged(event: any) {
