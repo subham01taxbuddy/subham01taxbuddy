@@ -10,6 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
+import * as moment from "moment/moment";
 
 
 @Component({
@@ -61,16 +62,30 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.addClientForm = this.fb.group({
-      panNumber: ['', [Validators.required]],
+      panNumber: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppConstants.panNumberRegex),
+      ])],
       dateOfBirth: ['', [Validators.required]],
       otp: [],
+    });
+
+    this.utilsService.getUserProfile(this.ITR_JSON.userId).then((result:any)=>{
+      console.log(result);
+      if(this.ITR_JSON.panNumber){
+        this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
+      }else {
+        this.addClientForm.controls['panNumber'].setValue(result.panNumber);
+        this.getUserDataByPan(result.panNumber);
+      }
+
     });
 
     this.personalInfo = this.ITR_JSON.family[0];
     this.addClientForm.controls['dateOfBirth'].setValue(
       this.personalInfo.dateOfBirth
     );
-    this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
+
     console.log('ITR_JSON: ', this.ITR_JSON);
     console.log('addClientForm value: ', this.addClientForm.value);
 
@@ -87,7 +102,19 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       this.otpSend = false;
       this.addClientForm.controls['otp'].setValidators(null);
       this.addClientForm.controls['otp'].updateValueAndValidity();
+    } else {
+      this.getUserDataByPan(this.addClientForm.controls['panNumber'].value);
     }
+  }
+
+  getUserDataByPan(pan) {
+    let param = `/api/getPanDetail?panNumber=${pan}`;
+    this.itrService.getMethod(param).subscribe((result:any)=>{
+      let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+      this.addClientForm.controls['dateOfBirth'].setValue(
+        moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+      );
+    });
   }
 
   setUpperCase() {
@@ -113,7 +140,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
           this.addClientForm.controls['dateOfBirth'].value,
           'yyyy-MM-dd'
         ),
-        otpSourceFlag: 'E',
+        otpSourceFlag: this.selectedOtpOption,
       };
 
       this.itrService.postMethodForEri(param, request).subscribe(
