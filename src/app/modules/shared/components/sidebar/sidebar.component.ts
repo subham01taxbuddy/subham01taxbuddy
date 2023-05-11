@@ -55,22 +55,22 @@ export class SidebarComponent implements DoCheck {
   dropdownPanelChild: any = {};
 
   menus: Menu[] = [
-    // {
-    //   name: 'Partner Dashboard',
-    //   // iconClass: 'fa fa-globe',
-    //   active: false,
-    //   url: '/dashboard',
-    //   roles: [],
-    //   submenu: []
-    // },
-    // {
-    //   name: 'Owner Dashboard',
-    //   // iconClass: 'fa fa-globe',
-    //   active: false,
-    //   url: '/dashboard/main',
-    //   roles: [],
-    //   submenu: []
-    // },
+    {
+      name: 'Partner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard',
+      roles: [],
+      submenu: []
+    },
+    {
+      name: 'Owner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard/main',
+      roles: [],
+      submenu: []
+    },
     {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
@@ -115,7 +115,7 @@ export class SidebarComponent implements DoCheck {
       roles: [],
       submenu: [
         { name: 'Assigned Subscription', url: '/subscription/assigned-subscription', roles: [] },
-        // { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: [] },
+        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
       ]
     },
     {

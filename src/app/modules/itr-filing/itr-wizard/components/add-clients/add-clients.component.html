@@ -20,9 +20,9 @@
 
   <!-- steps-to-add-client  -->
   <form [formGroup]="addClientForm">
-    <mat-stepper linear #stepper labelPosition="bottom">
+    <mat-stepper #stepper labelPosition="bottom">
       <mat-step [stepControl]="firstFormGroup">
-        <form [formGroup]="firstFormGroup">
+<!--        <form [formGroup]="firstFormGroup">-->
           <ng-template matStepLabel>Verify PAN</ng-template>
           <div class="card flex RequestOtp">
             <div
@@ -112,15 +112,15 @@
               </button>
             </div>
           </div>
-        </form>
+<!--        </form>-->
       </mat-step>
       <mat-step [stepControl]="secondFormGroup">
-        <form [formGroup]="secondFormGroup">
+<!--        <form [formGroup]="secondFormGroup">-->
           <ng-template matStepLabel>Enter OTP</ng-template>
 
           <div class="card flex">
             <div class="card__col-xs-12 card__col-sm-4">
-              <!-- *ngIf="addClientForm.controls.panNumber.valid && otpSend" -->
+              <!--  -->
               <mat-form-field appearance="outline">
                 <mat-label>Verify OTP</mat-label>
                 <input
@@ -154,7 +154,7 @@
               </button>
             </div>
           </div>
-        </form>
+<!--        </form>-->
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Success</ng-template>

@@ -40,6 +40,7 @@ export class BoPartnersComponent implements OnInit {
   boPartnerDateForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
+  searchMobileNumber = new FormControl('')
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -83,9 +84,9 @@ export class BoPartnersComponent implements OnInit {
       totalItems: null,
     };
     this.boPartnerDateForm = this.fb.group({
-      fromDate: ['2023-04-01', Validators.required],
+      fromDate: ['2022-09-01', Validators.required],
       toDate: [new Date(), Validators.required],
-      mobileNumber:new FormControl('')
+
     });
     this.getBoPartners();
   }
@@ -395,8 +396,8 @@ export class BoPartnersComponent implements OnInit {
       this.loading = true;
       let param
 
-      if(mobile){
-        param = `/partner-detail?page=0&size=1&mobileNumber=${this.boPartnerDateForm.controls['mobileNumber'].value}`
+      if(mobile && this.searchMobileNumber.value ){
+        param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
       }else {
         param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
       }
@@ -546,7 +547,7 @@ export class BoPartnersComponent implements OnInit {
   }
 
   resetFilters(){
-    this.boPartnerDateForm.controls['mobileNumber'].setValue(null);
+    this.searchMobileNumber.setValue(null);
     this.getBoPartners();
   }
 }

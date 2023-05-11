@@ -2630,7 +2630,9 @@ export class PersonalInformationComponent implements OnInit {
           this.utilsService.showSnackBar(
             'Customer profile updated successfully.'
           );
-          this.saveAndNext.emit({ subTab: true, tabName: 'OTHER' });
+          if(!ref) {
+            this.saveAndNext.emit({subTab: true, tabName: 'OTHER'});
+          }
         },
         (error) => {
           this.utilsService.showSnackBar('Failed to update customer profile.');
