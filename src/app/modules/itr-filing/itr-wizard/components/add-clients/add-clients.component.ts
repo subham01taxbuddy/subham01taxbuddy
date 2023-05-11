@@ -1,6 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import {Component, EventEmitter, Inject, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -10,8 +18,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
-import * as moment from "moment/moment";
-
+import * as moment from 'moment/moment';
 
 @Component({
   selector: 'app-add-clients',
@@ -47,7 +54,6 @@ export class AddClientsComponent implements OnInit, OnDestroy {
   @Output() completeAddClient: EventEmitter<any> = new EventEmitter();
   @ViewChild('stepper') private myStepper: MatStepper;
 
-
   constructor(
     private fb: FormBuilder,
     private utilsService: UtilsService,
@@ -62,24 +68,30 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.addClientForm = this.fb.group({
-      panNumber: ['', Validators.compose([
-        Validators.required,
-        Validators.pattern(AppConstants.panNumberRegex),
-      ])],
+      panNumber: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(AppConstants.panNumberRegex),
+        ]),
+      ],
       dateOfBirth: ['', [Validators.required]],
       otp: [],
     });
 
-    this.utilsService.getUserProfile(this.ITR_JSON.userId).then((result:any)=>{
-      console.log(result);
-      if(this.ITR_JSON.panNumber){
-        this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
-      }else {
-        this.addClientForm.controls['panNumber'].setValue(result.panNumber);
-        this.getUserDataByPan(result.panNumber);
-      }
-
-    });
+    this.utilsService
+      .getUserProfile(this.ITR_JSON.userId)
+      .then((result: any) => {
+        console.log(result);
+        if (this.ITR_JSON.panNumber) {
+          this.addClientForm.controls['panNumber'].setValue(
+            this.ITR_JSON.panNumber
+          );
+        } else {
+          this.addClientForm.controls['panNumber'].setValue(result.panNumber);
+          this.getUserDataByPan(result.panNumber);
+        }
+      });
 
     this.personalInfo = this.ITR_JSON.family[0];
     this.addClientForm.controls['dateOfBirth'].setValue(
@@ -109,7 +121,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   getUserDataByPan(pan) {
     let param = `/api/getPanDetail?panNumber=${pan}`;
-    this.itrService.getMethod(param).subscribe((result:any)=>{
+    this.itrService.getMethod(param).subscribe((result: any) => {
       let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
       this.addClientForm.controls['dateOfBirth'].setValue(
         moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
@@ -184,12 +196,14 @@ export class AddClientsComponent implements OnInit, OnDestroy {
   verifyOtp() {
     if (this.addClientForm.valid) {
       this.loading = true;
+      this.headers = new HttpHeaders();
+
       const param = '/eri/v1/api';
       const request = {
         serviceName: 'EriValidateClientService',
         pan: this.addClientForm.controls['panNumber'].value,
         otp: this.addClientForm.controls['otp'].value,
-        otpSourceFlag: 'E',
+        otpSourceFlag: this.selectedOtpOption,
       };
 
       this.itrService.postMethodForEri(param, request).subscribe(
