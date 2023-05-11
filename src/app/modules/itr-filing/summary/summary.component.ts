@@ -2,18 +2,21 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { environment } from './../../../../environments/environment';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
-import { BankDetails, ITR_JSON, Family } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  BankDetails,
+  ITR_JSON,
+  Family,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
-
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.css']
+  styleUrls: ['./summary.component.css'],
 })
 export class SummaryComponent implements OnInit {
   loading: boolean = false;
@@ -43,111 +46,143 @@ export class SummaryComponent implements OnInit {
   isValidateJson = false;
   natureOfBusinessDropdown = [];
   assetsTypesDropdown = [];
-  exemptIncomesDropdown = [{
-    id: null,
-    seqNum: 1,
-    value: "AGRI",
-    label: "Agriculture Income (less than or equal to RS. 5000)",
-    detailed: false
-  }, {
-    id: null,
-    seqNum: 2,
-    value: "10(10D)",
-    label: "Sec 10 (10D) - Any sum received under a life insurance policy, including the sum allocated by way of bonus on such policy except sum as mentioned in sub-clause (a) to (d) of Sec.10 (10D)",
-    detailed: false
-  }, {
-    "id": null,
-    "seqNum": 3,
-    "value": "10(11)",
-    "label": "Sec 10(11) - Statutory Provident Fund received ",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 4,
-    "value": "10(12)",
-    "label": "Sec 10(12) - Recognized Provident Fund received",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 5,
-    "value": "10(13)",
-    "label": "Sec 10(13) - Approved superannuation fund received",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 6,
-    "value": "10(16)",
-    "label": "Sec 10(16) - Scholarships granted to meet the cost of education",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 7,
-    "value": "DMDP",
-    "label": "Defense Medical disability pension",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 8,
-    "value": "10(17)",
-    "label": "Sec 10(17) - Allowance MP/MLA/MLC ",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 9,
-    "value": "10(17A)",
-    "label": "Sec 10(17A) - Award instituted by government",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 10,
-    "value": "10(18)",
-    "label": "Sec 10(18) - Pension received by winner of Param Vir Chakra or Maha-Vir Chakra or such other gallantry award",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 11,
-    "value": "10(10BC)",
-    "label": "Sec 10(10BC) - Any amount from the Central/State Govt/Local authority by way of compensation on account of any disaster ",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 12,
-    "value": "10(19)",
-    "label": "Sec 10(19) - Armed Forces Family Pension in case of death during operational duty ",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 13,
-    "value": "10(26)",
-    "label": "Sec 10 (26) - Any Income as referred to in section 10(26)",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 14,
-    "value": "10(26AAA)",
-    "label": "Sec 10(26AAA) - Any income as referred to in section 10(26",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 10,
-    "value": "OTH",
-    "label": "Any other ",
-    "detailed": false
-  }]
+  exemptIncomesDropdown = [
+    {
+      id: null,
+      seqNum: 1,
+      value: 'AGRI',
+      label: 'Agriculture Income (less than or equal to RS. 5000)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 2,
+      value: '10(10D)',
+      label:
+        'Sec 10 (10D) - Any sum received under a life insurance policy, including the sum allocated by way of bonus on such policy except sum as mentioned in sub-clause (a) to (d) of Sec.10 (10D)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 3,
+      value: '10(11)',
+      label: 'Sec 10(11) - Statutory Provident Fund received ',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 4,
+      value: '10(12)',
+      label: 'Sec 10(12) - Recognized Provident Fund received',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 5,
+      value: '10(13)',
+      label: 'Sec 10(13) - Approved superannuation fund received',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 6,
+      value: '10(16)',
+      label: 'Sec 10(16) - Scholarships granted to meet the cost of education',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 7,
+      value: 'DMDP',
+      label: 'Defense Medical disability pension',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 8,
+      value: '10(17)',
+      label: 'Sec 10(17) - Allowance MP/MLA/MLC ',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 9,
+      value: '10(17A)',
+      label: 'Sec 10(17A) - Award instituted by government',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 10,
+      value: '10(18)',
+      label:
+        'Sec 10(18) - Pension received by winner of Param Vir Chakra or Maha-Vir Chakra or such other gallantry award',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 11,
+      value: '10(10BC)',
+      label:
+        'Sec 10(10BC) - Any amount from the Central/State Govt/Local authority by way of compensation on account of any disaster ',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 12,
+      value: '10(19)',
+      label:
+        'Sec 10(19) - Armed Forces Family Pension in case of death during operational duty ',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 13,
+      value: '10(26)',
+      label: 'Sec 10 (26) - Any Income as referred to in section 10(26)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 14,
+      value: '10(26AAA)',
+      label: 'Sec 10(26AAA) - Any income as referred to in section 10(26',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 10,
+      value: 'OTH',
+      label: 'Any other ',
+      detailed: false,
+    },
+  ];
   itrJsonForFileItr: any;
   isValidItr: boolean;
   summaryIncome: any;
+  itrType: any;
+  ITR14IncomeDeductions: any;
+  taxComputation: any;
+  keys: any = {};
 
-  constructor(private itrMsService: ItrMsService, private userMsService: UserMsService,
-    public utilsService: UtilsService, private router: Router, private http: HttpClient,
-    private dialog: MatDialog,
+  constructor(
+    private itrMsService: ItrMsService,
+    private userMsService: UserMsService,
+    public utilsService: UtilsService,
+    private router: Router,
+    private http: HttpClient,
+    private dialog: MatDialog
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    const bank = this.ITR_JSON.bankDetails?.filter((item: any) => item.hasRefund === true);
+    const bank = this.ITR_JSON.bankDetails?.filter(
+      (item: any) => item.hasRefund === true
+    );
     if (bank instanceof Array && bank?.length > 0) {
       this.bankArray = bank[0];
     }
-    const self = this.ITR_JSON.family?.filter((item: any) => item.relationShipCode === 'SELF');
+    const self = this.ITR_JSON.family?.filter(
+      (item: any) => item.relationShipCode === 'SELF'
+    );
     if (self instanceof Array && self?.length > 0) {
       this.selfObj = self[0];
     }
@@ -159,83 +194,403 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     const param = '/tax';
 
-    this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
-      // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-      console.log('result is=====', result);
-      this.summaryIncome = result.summaryIncome;
-      const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
-      this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
-        console.log('SUMMARY Result=> ', summary);
-        if (summary) {
-          this.losses = summary.assessment;
-          for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
-            this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
+    if (this.ITR_JSON.itrSummaryJson) {
+      this.summaryToolMapping();
+    }
+
+    this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+      (result: any) => {
+        // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+        console.log('result is=====', result);
+        this.summaryIncome = result.summaryIncome;
+        const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
+        this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
+          console.log('SUMMARY Result=> ', summary);
+          if (summary) {
+            this.losses = summary.assessment;
+            for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
+              this.totalCarryForword =
+                this.totalCarryForword +
+                this.losses.carryForwordLosses[i].totalLoss;
+            }
+            this.summaryDetail = summary.assessment.taxSummary;
+            this.taxable = this.summaryDetail.taxpayable;
+
+            this.refund = this.summaryDetail.taxRefund;
+            this.deductionDetail = summary.assessment.summaryDeductions?.filter(
+              (item: any) =>
+                item.sectionType !== '80C' &&
+                item.sectionType !== '80CCC' &&
+                item.sectionType !== '80CCD1' &&
+                item.sectionType !== '80GAGTI'
+            );
+            this.capitalGain =
+              summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
+            this.totalLoss = summary.assessment.currentYearLosses;
+            this.show = true;
+            sessionStorage.setItem(
+              'ITR_SUMMARY_JSON',
+              JSON.stringify(this.summaryDetail)
+            );
+
+            this.losses?.pastYearLosses?.forEach((item: any) => {
+              this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
+              this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
+              this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
+            });
+            this.loading = false;
+          } else {
+            this.loading = false;
+            this.errorMessage =
+              'We are unable to display your summary,Please try again later.';
+            this.utilsService.showErrorMsg(this.errorMessage);
           }
-          this.summaryDetail = summary.assessment.taxSummary;
-          this.taxable = this.summaryDetail.taxpayable;
-
-          this.refund = this.summaryDetail.taxRefund;
-          this.deductionDetail = summary.assessment.summaryDeductions?.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
-          this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
-          this.totalLoss = summary.assessment.currentYearLosses;
-          this.show = true;
-          sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
-
-          this.losses?.pastYearLosses?.forEach((item: any) => {
-            this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-            this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-            this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-          });
-          this.loading = false;
-        } else {
-          this.loading = false;
-          this.errorMessage = 'We are unable to display your summary,Please try again later.';
-          this.utilsService.showErrorMsg(this.errorMessage);
+        });
+      },
+      (error) => {
+        this.loading = false;
+        this.show = false;
+        this.errorMessage = 'We are processing your request, Please wait......';
+        if (error) {
+          this.errorMessage =
+            'We are unable to display your summary,Please try again later.';
         }
-      })
-
-    }, error => {
-      this.loading = false;
-      this.show = false;
-      this.errorMessage = 'We are processing your request, Please wait......';
-      if (error) {
-        this.errorMessage = 'We are unable to display your summary,Please try again later.';
+        console.log('In error method===', error);
       }
-      console.log('In error method===', error);
-    });
+    );
+  }
+
+  summaryToolMapping() {
+    // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
+    {
+      if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR1')) {
+        this.itrType = 'ITR1';
+        this.ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
+        this.taxComputation = 'ITR1_TaxComputation';
+      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR2')) {
+        this.itrType = 'ITR2';
+      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR3')) {
+        this.itrType = 'ITR3';
+      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR4')) {
+        this.itrType = 'ITR4';
+        this.ITR14IncomeDeductions = 'IncomeDeductions';
+        this.taxComputation = 'TaxComputation';
+      }
+    }
+
+    if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
+      this.keys = {
+        //SALARY INCOME
+        IncomeFromSal:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.IncomeFromSal,
+
+        GrossSalary:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.GrossSalary,
+
+        TotalAllwncExemptUs10:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .AllwncExemptUs10?.TotalAllwncExemptUs10,
+
+        ProfessionalTaxUs16iii:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.ProfessionalTaxUs16iii,
+
+        EntertainmentAlw16ii:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.EntertainmentAlw16ii,
+
+        DeductionUs16ia:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.DeductionUs16ia,
+
+        //HOUSE PROPERTY
+
+        TotalIncomeOfHP:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.TotalIncomeOfHP,
+        TypeOfHP:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.TypeOfHP,
+        GrossRentReceived:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.GrossRentReceived,
+        TaxPaidlocalAuth:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.TaxPaidlocalAuth,
+        AnnualValue:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.AnnualValue,
+        StandardDeduction:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.StandardDeduction,
+        InterestPayable:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.InterestPayable,
+
+        //OTHER SOURCES
+        IncomeOthSrc:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.IncomeOthSrc,
+
+        SAV: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'SAV'
+        )?.OthSrcOthAmount,
+
+        IFD: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'IFD'
+        )?.OthSrcOthAmount,
+
+        TAX: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'TAX'
+        )?.OthSrcOthAmount,
+
+        FAP: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'FAP'
+        )?.OthSrcOthAmount,
+
+        OTH: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'OTH'
+        )?.OthSrcOthAmount,
+
+        DIV: this.ITR_JSON.itrSummaryJson[this.itrType][
+          this.ITR14IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (val) => val.OthSrcNatureDesc === 'DIV'
+        )?.OthSrcOthAmount,
+
+        GrossTotIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.GrossTotIncome,
+
+        //DEDUCTIONS
+        TotalChapVIADeductions:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            .DeductUndChapVIA?.TotalChapVIADeductions,
+
+        Deductions: Object.entries(
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.DeductUndChapVIA
+        )
+          .filter(
+            ([key, item]) =>
+              key !== '80C' &&
+              key !== '80CCC' &&
+              key !== 'Section80CCDEmployeeOrSE'
+          )
+          .map(([key, item]) => ({ name: key, amount: item })),
+
+        TotalIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+            ?.TotalIncome,
+
+        //TAXES PAID
+        TotalTaxPayable:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.TotalTaxPayable,
+
+        TDSonSalary:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TDSonSalary,
+
+        TotalTDSonSalaries:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries
+            ?.TotalTDSonSalaries,
+
+        TDSonOthThanSal:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+            ?.TDSonOthThanSal,
+
+        TotalTDSonOthThanSals:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+            ?.TotalTDSonOthThanSals,
+
+        TDS3Details:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+            ?.TDS3Details,
+
+        TotalTDS3Details:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+            ?.TotalTDS3Details,
+
+        TCS: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TCS,
+
+        TotalSchTCS: this.ITR_JSON.itrSummaryJson[this.itrType]?.TotalSchTCS,
+
+        TaxPayment:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments?.TaxPayment,
+
+        TotalTaxPayments:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments
+            ?.TotalTaxPayments,
+
+        Rebate87A:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.Rebate87A,
+
+        TaxPayableOnRebate:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.TaxPayableOnRebate,
+
+        EducationCess:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.EducationCess,
+
+        GrossTaxLiability:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.GrossTaxLiability,
+
+        Section89:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.Section89,
+
+        NetTaxLiability:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.NetTaxLiability,
+
+        IntrstPayUs234A:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.IntrstPay.IntrstPayUs234A,
+
+        IntrstPayUs234B:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.IntrstPay.IntrstPayUs234B,
+
+        IntrstPayUs234C:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.IntrstPay.IntrstPayUs234C,
+
+        LateFilingFee234F:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            ?.IntrstPay.LateFilingFee234F,
+
+        TotalIntrstPay:
+          this.itrType === 'ITR1'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                ?.TotalIntrstPay
+            : this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                ?.IntrstPay.LateFilingFee234F +
+              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                ?.IntrstPay.IntrstPayUs234C +
+              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                ?.IntrstPay.IntrstPayUs234B +
+              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+                ?.IntrstPay.IntrstPayUs234A,
+
+        TotTaxPlusIntrstPay:
+          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+            .TotTaxPlusIntrstPay,
+
+        TotalTaxesPaid:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.TaxesPaid
+            ?.TotalTaxesPaid,
+
+        BalTaxPayable:
+          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid?.BalTaxPayable,
+
+        // EXEMPT INCOME
+        ExemptIncAgriOthUs10Total:
+          this.itrType === 'ITR1'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType][
+                this.ITR14IncomeDeductions
+              ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Total
+            : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
+                .OthersInc?.OthersTotalTaxExe,
+
+        ExemptIncomeDetails:
+          this.itrType === 'ITR1'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType][
+                this.ITR14IncomeDeductions
+              ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
+            : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
+                .OthersInc?.OthersIncDtls,
+
+        TotPersumptiveInc44ADA:
+          this.itrType === 'ITR4'
+            ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+                .PersumptiveInc44AD?.TotPersumptiveInc44AD +
+              this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+                .PersumptiveInc44ADA?.TotPersumptiveInc44ADA +
+              this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+                .PersumptiveInc44AE?.IncChargeableUnderBus
+            : 0,
+      };
+    }
+
+    console.log(this.keys.ExemptIncomeDetails, 'this.keys.Deductions');
+    return this.keys;
+
+    // let GrossSalary;
+    // if (this.itrType === 'ITR1') {
+    //   GrossSalary =
+    //     this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+    //       .GrossSalary;
+    // }
+
+    // console.log(
+    //   'perquisities',
+    //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+    //     .PerquisitesValue
+    // );
+
+    // return GrossSalary;
   }
 
   getUserName(type) {
-    const self = this.ITR_JSON.family?.filter((item: any) => item.relationShipCode === 'SELF');
+    const self = this.ITR_JSON.family?.filter(
+      (item: any) => item.relationShipCode === 'SELF'
+    );
     if (self instanceof Array && self?.length > 0) {
       if (type === 'personal') {
-        return self[0].fName + ' ' + (this.utilsService.isNonEmpty(self[0].mName) ? self[0].mName : '') + ' ' + self[0].lName;
-      }
-      else if (type === 'download') {
+        return (
+          self[0].fName +
+          ' ' +
+          (this.utilsService.isNonEmpty(self[0].mName) ? self[0].mName : '') +
+          ' ' +
+          self[0].lName
+        );
+      } else if (type === 'download') {
         return self[0].fName + '' + self[0].lName;
       }
-
     }
     return '';
   }
   totalGross(emp) {
     let grossTotal = 0;
-    const sal17_1 = emp.salary?.filter((item: any) => item.salaryType === 'SEC17_1');
+    const sal17_1 = emp.salary?.filter(
+      (item: any) => item.salaryType === 'SEC17_1'
+    );
     if (sal17_1?.length > 0) {
       grossTotal = grossTotal + sal17_1[0].taxableAmount;
     }
-    const sal17_2 = emp.perquisites?.filter((item: any) => item.perquisiteType === 'SEC17_2');
+    const sal17_2 = emp.perquisites?.filter(
+      (item: any) => item.perquisiteType === 'SEC17_2'
+    );
     if (sal17_2?.length > 0) {
       grossTotal = grossTotal + sal17_2[0].taxableAmount;
     }
-    const sal17_3 = emp.profitsInLieuOfSalaryType?.filter((item: any) => item.salaryType === 'SEC17_3');
+    const sal17_3 = emp.profitsInLieuOfSalaryType?.filter(
+      (item: any) => item.salaryType === 'SEC17_3'
+    );
     if (sal17_3?.length > 0) {
       grossTotal = grossTotal + sal17_3[0].taxableAmount;
     }
     return this.utilsService.currencyFormatter(grossTotal);
   }
   totalExpAllow(allowance) {
-    const total = allowance?.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES');
+    const total = allowance?.filter(
+      (item: any) => item.allowanceType === 'ALL_ALLOWANCES'
+    );
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -243,7 +598,9 @@ export class SummaryComponent implements OnInit {
     }
   }
   totalPT(deductions) {
-    const total = deductions?.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX');
+    const total = deductions?.filter(
+      (item: any) => item.deductionType === 'PROFESSIONAL_TAX'
+    );
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -252,7 +609,9 @@ export class SummaryComponent implements OnInit {
   }
 
   totalEA(deductions) {
-    const total = deductions?.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW');
+    const total = deductions?.filter(
+      (item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW'
+    );
     if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
@@ -269,7 +628,9 @@ export class SummaryComponent implements OnInit {
   }
   natureOfBusinessFromCode(natureOfBusiness) {
     if (this.natureOfBusinessDropdown?.length !== 0) {
-      const nameArray = this.natureOfBusinessDropdown?.filter((item: any) => item.code === natureOfBusiness);
+      const nameArray = this.natureOfBusinessDropdown?.filter(
+        (item: any) => item.code === natureOfBusiness
+      );
       console.log('nameArray = ', nameArray);
       return natureOfBusiness + '- ' + nameArray[0].label;
     } else {
@@ -290,8 +651,20 @@ export class SummaryComponent implements OnInit {
     }
     return this.utilsService.currencyFormatter(presumptiveIncome);
   }
-  totalCg(cgIncome, belAdjustmentAmount, setOffAmount, hpSetOff, pastYearSetOffAmount) {
-    return cgIncome + (Math.abs(belAdjustmentAmount)) + (Math.abs(setOffAmount)) + (Math.abs(hpSetOff)) + (Math.abs(pastYearSetOffAmount));
+  totalCg(
+    cgIncome,
+    belAdjustmentAmount,
+    setOffAmount,
+    hpSetOff,
+    pastYearSetOffAmount
+  ) {
+    return (
+      cgIncome +
+      Math.abs(belAdjustmentAmount) +
+      Math.abs(setOffAmount) +
+      Math.abs(hpSetOff) +
+      Math.abs(pastYearSetOffAmount)
+    );
   }
 
   convertToPositive(value) {
@@ -317,14 +690,21 @@ export class SummaryComponent implements OnInit {
   slab(rate, input) {
     let slabs = [];
     if (input === 'INPUT') {
-      let inputSlabs = this.summaryIncome.cgIncomeN.capitalGain?.filter((item: any) => item.cgIncome && item.taxRate === rate);
+      let inputSlabs = this.summaryIncome.cgIncomeN.capitalGain?.filter(
+        (item: any) => item.cgIncome && item.taxRate === rate
+      );
       if (inputSlabs) {
         slabs = inputSlabs;
       }
     } else {
-      if (this.utilsService.isNonEmpty(this.losses.summaryIncome) && this.utilsService.isNonEmpty(this.losses.summaryIncome.cgIncomeN)
-        && this.losses.summaryIncome.cgIncomeN.capitalGain instanceof Array) {
-        let lossSlabs = this.losses.summaryIncome.cgIncomeN.capitalGain.filter((item: any) => item.taxRate === rate);
+      if (
+        this.utilsService.isNonEmpty(this.losses.summaryIncome) &&
+        this.utilsService.isNonEmpty(this.losses.summaryIncome.cgIncomeN) &&
+        this.losses.summaryIncome.cgIncomeN.capitalGain instanceof Array
+      ) {
+        let lossSlabs = this.losses.summaryIncome.cgIncomeN.capitalGain.filter(
+          (item: any) => item.taxRate === rate
+        );
         if (lossSlabs) {
           slabs = lossSlabs;
         }
@@ -338,7 +718,7 @@ export class SummaryComponent implements OnInit {
     const deductionTotal = 0;
     const slabs = this.slab(rate, 'OP');
     if (slabs?.length > 0) {
-      slabs.forEach(income => {
+      slabs.forEach((income) => {
         /* incomeTotal = incomeTotal + income.cgOutput[0].cgIncome;
         income.investments.forEach(deduction=>{
           deductionTotal = deductionTotal + deduction.totalDeductionClaimed
@@ -353,12 +733,15 @@ export class SummaryComponent implements OnInit {
       }
     }) */
 
-    return incomeTotal > 0 ? this.utilsService.currencyFormatter(incomeTotal) : '0 *';
-
+    return incomeTotal > 0
+      ? this.utilsService.currencyFormatter(incomeTotal)
+      : '0 *';
   }
   getNameFromCode(assetType) {
     if (this.assetsTypesDropdown?.length !== 0) {
-      const nameArray = this.assetsTypesDropdown.filter((item: any) => item.assetCode === assetType);
+      const nameArray = this.assetsTypesDropdown.filter(
+        (item: any) => item.assetCode === assetType
+      );
       return nameArray[0].assetName;
     } else {
       return assetType;
@@ -376,12 +759,20 @@ export class SummaryComponent implements OnInit {
     }
   }
   getOtherIncome(incomeType) {
-    const income = this.ITR_JSON.incomes?.filter((item: any) => item.incomeType === incomeType);
+    const income = this.ITR_JSON.incomes?.filter(
+      (item: any) => item.incomeType === incomeType
+    );
     if (income?.length > 0) {
       if (incomeType === 'DIVIDEND') {
-        return this.utilsService.currencyFormatter(this.losses?.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
+        return this.utilsService.currencyFormatter(
+          this.losses?.summaryIncome.summaryOtherIncome.bucketDividend
+            .taxableAmount
+        );
       } else if (incomeType === 'FAMILY_PENSION') {
-        let income = this.losses?.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        let income =
+          this.losses?.summaryIncome.summaryOtherIncome.incomes.filter(
+            (item: any) => item.incomeType === incomeType
+          );
         if (income?.length > 0) {
           return this.utilsService.currencyFormatter(income[0].taxableAmount);
         }
@@ -391,7 +782,10 @@ export class SummaryComponent implements OnInit {
       }
     } else {
       if (incomeType === 'DIVIDEND') {
-        let income = this.losses?.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        let income =
+          this.losses?.summaryIncome.summaryOtherIncome.incomes.filter(
+            (item: any) => item.incomeType === incomeType
+          );
         if (income?.length > 0) {
           return this.utilsService.currencyFormatter(income[0].taxableAmount);
         }
@@ -417,7 +811,10 @@ export class SummaryComponent implements OnInit {
   isPreviousAvailable() {
     if (this.ITR_JSON.eFillingCompleted) {
       return true;
-    } else if (this.utilsService.isNonEmpty(this.ITR_JSON.ackStatus) && this.ITR_JSON.ackStatus !== 'FAIL') {
+    } else if (
+      this.utilsService.isNonEmpty(this.ITR_JSON.ackStatus) &&
+      this.ITR_JSON.ackStatus !== 'FAIL'
+    ) {
       return true;
     } else {
       return false;
@@ -428,34 +825,41 @@ export class SummaryComponent implements OnInit {
       // this.router.navigate(['warning']);
       // TODO
     } else {
-      this.utilsService.showSnackBar('Your ITR return is E-filed successfully, you can not edit it.');
+      this.utilsService.showSnackBar(
+        'Your ITR return is E-filed successfully, you can not edit it.'
+      );
     }
   }
   downloadXML() {
     //if (this.taxable === 0) {
     this.loading = true;
     const param = `/api/downloadXml?itrId=${this.ITR_JSON.itrId}`;
-    this.itrMsService.downloadXML(param).subscribe(result => {
-      console.log('XML Result', result);
-      var FileSaver = require('file-saver');
-      //const fileURL = URL.createObjectURL(result);
-      const fileURL = webkitURL.createObjectURL(result);
-      window.open(fileURL);
-      let fileName = this.getUserName('download') + '' + '.xml';
-      console.log('fileName: ', fileName)
-      FileSaver.saveAs(fileURL, fileName);
-      this.loading = false;
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to download XML file, please try again.');
-      if (error.status === 403) {
-        // this.dialogForalert();
-        alert(403)
-      } else {
-        // this.router.navigate(['itr-result/failure']);
-        // this.router.navigate(['ack/failure']);
+    this.itrMsService.downloadXML(param).subscribe(
+      (result) => {
+        console.log('XML Result', result);
+        var FileSaver = require('file-saver');
+        //const fileURL = URL.createObjectURL(result);
+        const fileURL = webkitURL.createObjectURL(result);
+        window.open(fileURL);
+        let fileName = this.getUserName('download') + '' + '.xml';
+        console.log('fileName: ', fileName);
+        FileSaver.saveAs(fileURL, fileName);
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to download XML file, please try again.'
+        );
+        if (error.status === 403) {
+          // this.dialogForalert();
+          alert(403);
+        } else {
+          // this.router.navigate(['itr-result/failure']);
+          // this.router.navigate(['ack/failure']);
+        }
       }
-    });
+    );
     //}
   }
 
@@ -464,62 +868,78 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     let itrId = this.ITR_JSON.itrId;
     let param = '/summary/send?itrId=' + itrId + '&channel=' + channel;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      console.log('Response of send PDF:', res)
-      if (!res.success) {
-        this.utilsService.showSnackBar(res.message);
-      } else {
-        this.utilsService.showSnackBar(res.message);
-        //also update user status
-        let statusParam = '/itr-status';
-        let sType = 'ITR';
+    this.itrMsService.getMethod(param).subscribe(
+      (res: any) => {
+        this.loading = false;
+        console.log('Response of send PDF:', res);
+        if (!res.success) {
+          this.utilsService.showSnackBar(res.message);
+        } else {
+          this.utilsService.showSnackBar(res.message);
+          //also update user status
+          let statusParam = '/itr-status';
+          let sType = 'ITR';
 
-        let param2 = {
-          "statusId": 7,//waiting for confirmation
-          "userId": this.ITR_JSON.userId,
-          "assessmentYear": this.ITR_JSON.assessmentYear,
-          "completed": false,
-          "serviceType": sType
+          let param2 = {
+            statusId: 7, //waiting for confirmation
+            userId: this.ITR_JSON.userId,
+            assessmentYear: this.ITR_JSON.assessmentYear,
+            completed: false,
+            serviceType: sType,
+          };
+          console.log('param2: ', param2);
+          this.userMsService.postMethod(statusParam, param2).subscribe(
+            (res) => {
+              console.log('Status update response: ', res);
+              this.loading = false;
+              //this._toastMessageService.alert("success", "Status update successfully.");
+            },
+            (error) => {
+              this.loading = false;
+              //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+            }
+          );
         }
-        console.log("param2: ", param2);
-        this.userMsService.postMethod(statusParam, param2).subscribe(res => {
-          console.log("Status update response: ", res)
-          this.loading = false;
-          //this._toastMessageService.alert("success", "Status update successfully.");
-        }, error => {
-          this.loading = false;
-          //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
-        });
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(error);
       }
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar(error);
-    });
+    );
   }
-
 
   downloadPDF() {
     // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
     this.loading = true;
-    const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.downloadFile(param, 'application/pdf').subscribe(result => {
-      console.log('PDF Result', result);
-      const fileURL = webkitURL.createObjectURL(result);
-      window.open(fileURL);
+    const param =
+      '/api/txbdyReport?userId=' +
+      this.ITR_JSON.userId +
+      '&itrId=' +
+      this.ITR_JSON.itrId +
+      '&assessmentYear=' +
+      this.ITR_JSON.assessmentYear;
+    this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+      (result) => {
+        console.log('PDF Result', result);
+        const fileURL = webkitURL.createObjectURL(result);
+        window.open(fileURL);
 
-      this.loading = false;
-      // Commented both routes as its currently option is for download xml file
-      // this.router.navigate(['itr-result/success']);
-    }, error => {
-      this.loading = false;
-      if (error.status === 403) {
-        alert('403 Download PDF')
-      } else {
-        // this.router.navigate(['itr-result/failure']);
-        this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
+        this.loading = false;
+        // Commented both routes as its currently option is for download xml file
+        // this.router.navigate(['itr-result/success']);
+      },
+      (error) => {
+        this.loading = false;
+        if (error.status === 403) {
+          alert('403 Download PDF');
+        } else {
+          // this.router.navigate(['itr-result/failure']);
+          this.utilsService.showSnackBar(
+            'Failed to download PDF report, please try again.'
+          );
+        }
       }
-    });
+    );
   }
 
   confirmSubmitITR() {
@@ -535,113 +955,133 @@ export class SummaryComponent implements OnInit {
     const param = `/eri/itr-json/submit?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}&userId=${this.ITR_JSON.userId}&filingTeamMemberId=${this.ITR_JSON.filingTeamMemberId}`;
 
     let headerObj = {
-      'panNumber': this.ITR_JSON.panNumber,
-      'assessmentYear': this.ITR_JSON.assessmentYear,
-      'userId': this.ITR_JSON.userId.toString()
-    }
+      panNumber: this.ITR_JSON.panNumber,
+      assessmentYear: this.ITR_JSON.assessmentYear,
+      userId: this.ITR_JSON.userId.toString(),
+    };
     sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
     this.loading = true;
-    this.itrMsService.postMethod(param, this.itrJsonForFileItr).subscribe((res: any) => {
-      this.loading = false;
-      if (res.successFlag) {
-        let disposable = this.dialog.open(AckSuccessComponent, {
-          height: '80%',
-          data: {
-            acknowledgementNo: res.arnNumber
-          }
-        });
-        disposable.backdropClick().subscribe(() => {
-          disposable.close();
-          this.router.navigate(['/tasks/filings']);
-        });
-      } else {
-        if (res.errors instanceof Array && res.errors.length > 0) {
-          this.utilsService.showSnackBar(res.errors[0].errFld);
+    this.itrMsService
+      .postMethod(param, this.itrJsonForFileItr)
+      .subscribe((res: any) => {
+        this.loading = false;
+        if (res.successFlag) {
+          let disposable = this.dialog.open(AckSuccessComponent, {
+            height: '80%',
+            data: {
+              acknowledgementNo: res.arnNumber,
+            },
+          });
+          disposable.backdropClick().subscribe(() => {
+            disposable.close();
+            this.router.navigate(['/tasks/filings']);
+          });
         } else {
-          this.utilsService.showSnackBar('Failed to file ITR.');
+          if (res.errors instanceof Array && res.errors.length > 0) {
+            this.utilsService.showSnackBar(res.errors[0].errFld);
+          } else {
+            this.utilsService.showSnackBar('Failed to file ITR.');
+          }
         }
-      }
-    });
+      });
   }
 
   validateITR() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
     console.log(url);
-    this.http.get(url, { responseType: "json" }).subscribe((data: any) => {
-      console.log(data);
-      this.itrJsonForFileItr = data;
-      // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
-      this.loading = true;
-      let formCode = this.ITR_JSON.itrType;
-      let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
-      let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
-      const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
+    this.http.get(url, { responseType: 'json' }).subscribe(
+      (data: any) => {
+        console.log(data);
+        this.itrJsonForFileItr = data;
+        // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
+        this.loading = true;
+        let formCode = this.ITR_JSON.itrType;
+        let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+        let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+        const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
 
-      let headerObj = {
-        'panNumber': this.ITR_JSON.panNumber,
-        'assessmentYear': this.ITR_JSON.assessmentYear,
-        'userId': this.ITR_JSON.userId.toString()
-      }
-      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+        let headerObj = {
+          panNumber: this.ITR_JSON.panNumber,
+          assessmentYear: this.ITR_JSON.assessmentYear,
+          userId: this.ITR_JSON.userId.toString(),
+        };
+        sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
 
-      this.itrMsService.postMethodForEri(param, data).subscribe((res: any) => {
-        this.loading = false;
-        console.log('validate ITR response =>', res);
-        if (this.utilsService.isNonEmpty(res)) {
-          if (res && res.successFlag) {
-            if (data.messages instanceof Array && data.messages.length > 0) {
-              this.utilsService.showSnackBar(data.messages[0].desc);
+        this.itrMsService.postMethodForEri(param, data).subscribe(
+          (res: any) => {
+            this.loading = false;
+            console.log('validate ITR response =>', res);
+            if (this.utilsService.isNonEmpty(res)) {
+              if (res && res.successFlag) {
+                if (
+                  data.messages instanceof Array &&
+                  data.messages.length > 0
+                ) {
+                  this.utilsService.showSnackBar(data.messages[0].desc);
+                } else {
+                  this.isValidateJson = true;
+                  this.utilsService.showSnackBar(
+                    'ITR JSON validated successfully.'
+                  );
+                }
+              } else {
+                if (res.errors instanceof Array && res.errors.length > 0) {
+                  this.utilsService.showSnackBar(res.errors[0].desc);
+                } else if (
+                  res.messages instanceof Array &&
+                  res.messages.length > 0
+                ) {
+                  this.utilsService.showSnackBar(res.messages[0].desc);
+                }
+              }
             } else {
-              this.isValidateJson = true;
-              this.utilsService.showSnackBar('ITR JSON validated successfully.');
+              this.utilsService.showSnackBar(
+                'Response is null, try after some time.'
+              );
             }
+          },
+          (error) => {
+            this.loading = false;
+            this.isValidateJson = false;
+            this.utilsService.showSnackBar(
+              'Something went wrong, try after some time.'
+            );
           }
-          else {
-            if (res.errors instanceof Array && res.errors.length > 0) {
-              this.utilsService.showSnackBar(res.errors[0].desc);
-            }
-            else if (res.messages instanceof Array && res.messages.length > 0) {
-              this.utilsService.showSnackBar(res.messages[0].desc);
-            }
-          }
-        }
-        else {
-          this.utilsService.showSnackBar('Response is null, try after some time.');
-        }
-
-      }, error => {
+        );
+      },
+      (error) => {
+        console.log(error.error.message);
         this.loading = false;
         this.isValidateJson = false;
-        this.utilsService.showSnackBar('Something went wrong, try after some time.');
-      });
-    }, error => {
-      console.log(error.error.message);
-      this.loading = false;
-      this.isValidateJson = false;
-      if (error.error.message) {
-        this.utilsService.showSnackBar(error.error.message);
-      } else {
-        this.utilsService.showSnackBar('Something went wrong, try after some time.');
+        if (error.error.message) {
+          this.utilsService.showSnackBar(error.error.message);
+        } else {
+          this.utilsService.showSnackBar(
+            'Something went wrong, try after some time.'
+          );
+        }
       }
-    });
+    );
   }
 
   downloadJson() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
-    window.open(url)
+    window.open(url);
   }
 
   getExemptIncomeTotal() {
     let total = 0;
     if (this.ITR_JSON.exemptIncomes?.length > 0) {
       for (let i = 0; i < this.ITR_JSON.exemptIncomes?.length; i++) {
-        total = total + this.ITR_JSON.exemptIncomes[i].amount
+        total = total + this.ITR_JSON.exemptIncomes[i].amount;
       }
     }
     return total;
   }
 
   getExemptDescription(exempt) {
-    return this.exemptIncomesDropdown.filter(item => item.value === exempt.natureDesc)[0].label
+    return this.exemptIncomesDropdown.filter(
+      (item) => item.value === exempt.natureDesc
+    )[0].label;
   }
 }

@@ -232,15 +232,29 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.get('optionForCurrentAY');
 
     if (this.showCurrentAYOptions) {
-      // acknowledgementNumber
-      optionForCurrentAY
-        .get('acknowledgementNumber')
-        ?.setValidators(Validators.required);
-      optionForCurrentAY.get('acknowledgementNumber')?.updateValueAndValidity();
+      if (this.itrType === '3' || this.itrType === '4') {
+        // acknowledgementNumber
+        optionForCurrentAY
+          .get('acknowledgementNumber')
+          ?.setValidators(Validators.required);
+        optionForCurrentAY
+          .get('acknowledgementNumber')
+          ?.updateValueAndValidity();
 
-      // date
-      optionForCurrentAY.get('date')?.setValidators(Validators.required);
-      optionForCurrentAY.get('date')?.updateValueAndValidity();
+        // date
+        optionForCurrentAY.get('date')?.setValidators(Validators.required);
+        optionForCurrentAY.get('date')?.updateValueAndValidity();
+      } else {
+        // acknowledgementNumber
+        optionForCurrentAY.get('acknowledgementNumber')?.setValidators(null);
+        optionForCurrentAY
+          .get('acknowledgementNumber')
+          ?.updateValueAndValidity();
+
+        // date
+        optionForCurrentAY.get('date')?.setValidators(null);
+        optionForCurrentAY.get('date')?.updateValueAndValidity();
+      }
     } else {
       // acknowledgementNumber
       optionForCurrentAY.get('acknowledgementNumber')?.setValidators(null);
