@@ -61,14 +61,12 @@ export class ResignedSmeComponent implements OnInit {
   }
 
   getSmeList() {
-    // ${this.config.currentPage - 1}
     const loggedInSmeUserId = this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
 
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
-        console.log('sme list result -> ', result);
         if (
           Array.isArray(result.data.content) &&
           result.data.content.length > 0
@@ -76,13 +74,11 @@ export class ResignedSmeComponent implements OnInit {
           this.loading = false;
           this.smeInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
-          console.log('smelist', this.smeList);
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(this.smeInfo)
           );
         } else {
           this.loading = false;
-          console.log('in else');
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(result.data.content)
           );
@@ -314,8 +310,9 @@ export class ResignedSmeComponent implements OnInit {
           this.loading = false;
           if (res.success) {
             this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
+            this.getSmeList();
           } else {
-            this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
+            this._toastMessageService.alert('error', res.message);
           }
         },
           (error) => {
