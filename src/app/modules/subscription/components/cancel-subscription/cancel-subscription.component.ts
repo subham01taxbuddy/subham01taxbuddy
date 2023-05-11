@@ -130,10 +130,12 @@ export class CancelSubscriptionComponent implements OnInit {
             this.config.totalItems = 0;
           }
         } else {
+          this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
           this._toastMessageService.alert("error", response.message);
         }
       },
       (error) => {
+        this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
       }
     );
@@ -420,7 +422,13 @@ export class CancelSubscriptionComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result) {
-        this.getCancelSubscriptionList(0);
+        const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+        const loginSMEInfo = data[0];
+        if (this.isOwner) {
+          this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
+        } else {
+          this.getCancelSubscriptionList(0);
+        }
       }
     });
   }
