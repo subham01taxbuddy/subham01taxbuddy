@@ -102,7 +102,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     console.log('addClientForm value: ', this.addClientForm.value);
 
     let headerObj = {
-      panNumber: this.addClientForm.controls['panNumber'].value,
+      panNumber: this.ITR_JSON.panNumber,
       assessmentYear: this.ITR_JSON.assessmentYear,
       userId: this.ITR_JSON.userId.toString(),
     };
@@ -216,15 +216,20 @@ export class AddClientsComponent implements OnInit, OnDestroy {
               this.addedClient = true;
               this.changePage();
               this.myStepper.selectedIndex = 2;
+              this.utilsService.showSnackBar(
+                'Client has been added successfully'
+              );
             }
           } else {
             if (res.errors instanceof Array && res.errors.length > 0) {
               this.utiService.showSnackBar(res.errors[0].desc);
+              this.myStepper.selectedIndex = 1;
             } else if (
               res.messages instanceof Array &&
               res.messages.length > 0
             ) {
               this.utiService.showSnackBar(res.messages[0].desc);
+              this.myStepper.selectedIndex = 1;
             }
           }
         },
