@@ -23,6 +23,7 @@ export class CreateNewUserComponent implements OnInit {
   services = ['ITR', 'GST', 'TPA', 'NOTICE'];
   assignedToMe = false;
   disableAssignedToMe = false;
+  disableUserSignUp =false;
   assessmentYear:string;
   roles:any;
   coOwnerToggle = new FormControl('');
@@ -110,16 +111,26 @@ export class CreateNewUserComponent implements OnInit {
       this.filerId = event? event.userId : null;
     }
 
-    if(this.ownerId && this.filerId){
-      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
-    }
+    // if(this.ownerId && this.filerId){
+    //   this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+    // }
 
     if(this.filerId) {
+      this.disableUserSignUp=false;
       this.signUpForm.controls['agentUserId'].setValue(this.filerId);
     } else if(this.ownerId) {
+      this.disableUserSignUp=true;
+      if(this.roles.includes('ROLE_OWNER')){
+        this.disableUserSignUp=false;
+      }
       this.signUpForm.controls['agentUserId'].setValue(this.ownerId);
 
     } else {
+        if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
+        this.disableUserSignUp=true;
+        }else{
+          this.disableUserSignUp=false;
+        }
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.signUpForm.controls['agentUserId'].setValue(loggedInId);
     }
@@ -138,16 +149,26 @@ export class CreateNewUserComponent implements OnInit {
       this.coFilerId = event? event.userId : null;
     }
 
-    if(this.coOwnerId && this.coFilerId){
-      this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
-    }
+    // if(this.coOwnerId && this.coFilerId){
+    //   this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
+    // }
 
     if(this.coFilerId) {
+      this.disableUserSignUp=false;
       this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
     } else if(this.coOwnerId) {
+      this.disableUserSignUp=true;
+      if(this.roles.includes('ROLE_OWNER')){
+        this.disableUserSignUp=false;
+      }
       this.signUpForm.controls['agentUserId'].setValue(this.coOwnerId);
 
     } else {
+      if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
+        this.disableUserSignUp=true;
+      }else{
+        this.disableUserSignUp=false;
+      }
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.signUpForm.controls['agentUserId'].setValue(loggedInId);
     }
@@ -159,13 +180,16 @@ export class CreateNewUserComponent implements OnInit {
   //   this.signUpForm.controls['agentUserId'].setValue(event);
   // }
   isAssignedToMe() {
+    this.disableUserSignUp=false;
     if (!this.assignedToMe) {
       this.signUpForm.controls['agentUserId'].setValue(null);
       return;
     }
     const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+
   }
+
   userSignUp() {
     if (this.signUpForm.valid ) {
       let reqBody=this.signUpForm.getRawValue();
