@@ -15,7 +15,7 @@ import {
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {environment} from "../../../environments/environment";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: 'app-bo-partners',
@@ -60,7 +60,7 @@ export class BoPartnersComponent implements OnInit {
       columnDefs: this.boPartnersColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
       defaultColDef: {
@@ -106,6 +106,19 @@ export class BoPartnersComponent implements OnInit {
         headerName: 'Type - Individual/ Consultant',
         field: 'partnerType',
         width: 170,
+        pinned: 'left',
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Lead Type',
+        field: 'leadType',
+        width: 150,
         pinned: 'left',
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
@@ -210,9 +223,9 @@ export class BoPartnersComponent implements OnInit {
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
         valueGetter: (params) => {
-          if(params?.data?.bankDetails == null){
+          if (params?.data?.bankDetails == null) {
             return 'No'
-          }else{
+          } else {
             return 'Yes'
           }
         }
@@ -360,7 +373,7 @@ export class BoPartnersComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params: any) {
           //console.log(params);
-          if(params.data.currentstatus == 'APPROVE' || params.data.currentstatus ==  'PAID') {
+          if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
           <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
@@ -396,9 +409,9 @@ export class BoPartnersComponent implements OnInit {
       this.loading = true;
       let param
 
-      if(mobile && this.searchMobileNumber.value ){
+      if (mobile && this.searchMobileNumber.value) {
         param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
-      }else {
+      } else {
         param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
       }
 
@@ -430,6 +443,7 @@ export class BoPartnersComponent implements OnInit {
     for (let i = 0; i < data.length; i++) {
       let boPartnersInfo: any = Object.assign({}, partnersArray[i], {
         partnerType: data[i].partnerType,
+        leadType: data[i].leadType ? data[i].leadType : '-',
         id: data[i].id,
         name: data[i].name,
         emailAddress: data[i].emailAddress,
@@ -449,9 +463,9 @@ export class BoPartnersComponent implements OnInit {
         certificateOfPracticeUrl: data[i].certificateOfPracticeUrl,
         passbookOrCancelledChequeUrl: data[i].passbookOrCancelledChequeUrl,
         cvUrl: data[i].cvUrl,
-        bankDetails:data[i].bankDetails,
-        gstin:data[i].gstin,
-        pan:data[i].pan,
+        bankDetails: data[i].bankDetails,
+        gstin: data[i].gstin,
+        pan: data[i].pan,
       });
       partnersArray.push(boPartnersInfo);
     }
@@ -478,7 +492,7 @@ export class BoPartnersComponent implements OnInit {
     }
   }
 
-  sendEmail(partnerData){
+  sendEmail(partnerData) {
     this.loading = true;
     let partnerName = partnerData.name;
     let mobile = partnerData.mobileNumber;
@@ -491,7 +505,7 @@ export class BoPartnersComponent implements OnInit {
     data.append('to', partnerData.emailAddress);
 
     let param = '/send-mail';
-    this.userMsService.postMethod(param, data).subscribe((res:any)=>{
+    this.userMsService.postMethod(param, data).subscribe((res: any) => {
       console.log(res);
       this.loading = false;
     }, error => {
@@ -518,7 +532,7 @@ export class BoPartnersComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
   updateStatus(partner) {
     let disposable = this.dialog.open(UpdateStatusComponent, {
@@ -546,7 +560,7 @@ export class BoPartnersComponent implements OnInit {
     });
   }
 
-  resetFilters(){
+  resetFilters() {
     this.searchMobileNumber.setValue(null);
     this.getBoPartners();
   }

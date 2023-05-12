@@ -31,7 +31,7 @@
               <mat-select
                 placeholder="Select Status"
                 [(ngModel)]="searchParam.statusId"
-                (selectionChange)="this.search('status')"
+                (selectionChange)="this.search('status','isAgent')"
               >
                 <mat-option
                   *ngFor="let status of statuslist"
