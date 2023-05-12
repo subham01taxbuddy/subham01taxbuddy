@@ -81,14 +81,14 @@ export class SidebarComponent implements DoCheck {
         { name: 'My Users', url: '/tasks/assigned-users-new', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: [] },
         { name: 'ITRs', url: '/tasks/filings', roles: [] },
-        {
-          name: 'Exceptions', url: '/tasks/exceptions', roles: [],
-          // submenu: [
-          //   { path: 'signup', component: SignUpExceptionsComponent },
-          //   { path: 'eri', component: EriExceptionsComponent },
-          //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
-          // ]
-        },
+        // {
+        //   name: 'Exceptions', url: '/tasks/exceptions', roles: [],
+        //   // submenu: [
+        //   //   { path: 'signup', component: SignUpExceptionsComponent },
+        //   //   { path: 'eri', component: EriExceptionsComponent },
+        //   //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
+        //   // ]
+        // },
         { name: 'Create User', url: '/pages/user-management/create-user', roles: [] },
         { name: 'Potential Users', url: '/tasks/potential-users', roles: [] },
 
@@ -115,7 +115,7 @@ export class SidebarComponent implements DoCheck {
       roles: [],
       submenu: [
         { name: 'Assigned Subscription', url: '/subscription/assigned-subscription', roles: [] },
-        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: [] },
+        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
       ]
     },
     {

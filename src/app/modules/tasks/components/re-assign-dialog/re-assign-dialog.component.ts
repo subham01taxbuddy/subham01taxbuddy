@@ -72,7 +72,7 @@ export class ReAssignDialogComponent implements OnInit {
         this.loading = false;
         this.dialogRef.close({ event: 'close', data: 'success' });
         if(res.success== false){
-          this.utilsService.showSnackBar(res.message)
+          this.utilsService.showSnackBar('Filer not found active, please try another')
           console.log(res.message)
         }
       }, error => {

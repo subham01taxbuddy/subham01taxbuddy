@@ -113,6 +113,31 @@ export class UtilsService {
         }
       }
 
+      if (
+        key === 'employers' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          const salaryAllowance = obj[key][i].allowance;
+          if (
+            salaryAllowance &&
+            Array.isArray(salaryAllowance) &&
+            salaryAllowance.length > 0
+          ) {
+            for (let j = salaryAllowance.length - 1; j >= 0; j--) {
+              if (
+                salaryAllowance[j] &&
+                (salaryAllowance[j].exemptAmount === 0 ||
+                  salaryAllowance[j].exemptAmount === null)
+              ) {
+                salaryAllowance.splice(j, 1);
+              }
+            }
+          }
+        }
+      }
+
       //DONATIONS
       if (
         key === 'donations' &&
@@ -121,11 +146,12 @@ export class UtilsService {
       ) {
         for (let i = 0; i < obj[key].length; i++) {
           if (
-            (obj[key][i].schemeCode === 0 || obj[key][i].schemeCode === null) &&
+            (obj[key][i].schemeCode === '' ||
+              obj[key][i].schemeCode === null) &&
             (obj[key][i].amountOtherThanCash === 0 ||
               obj[key][i].amountOtherThanCash === null) &&
             (obj[key][i].amountInCash === 0 ||
-              obj[key][i].preventiveCheckUp === null)
+              obj[key][i].amountInCash === null)
           ) {
             delete obj[key][i];
           }
@@ -512,111 +538,111 @@ export class UtilsService {
       // this.isNonEmpty(profile) && this.isNonEmpty(profile.address) ? profile.address[0] : null,
       upload: [],
       employers: [
-        {
-          id: '',
-          employerName: '',
-          address: '',
-          city: '',
-          pinCode: '',
-          state: '',
-          employerPAN: '',
-          employerTAN: '',
-          periodFrom: '',
-          periodTo: '',
-          taxableIncome: null,
-          standardDeduction: null,
-          employerCategory: '',
-          exemptIncome: null,
-          taxRelief: null,
-          taxDeducted: null,
-          salary: [
-            { salaryType: 'SEC17_1', taxableAmount: null, exemptAmount: 0 },
-          ],
-          allowance: [
-            {
-              allowanceType: 'HOUSE_RENT',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            { allowanceType: 'LTA', taxableAmount: 0, exemptAmount: null },
-            {
-              allowanceType: 'CHILDREN_EDUCATION',
-              taxableAmount: 0,
-              exemptAmount: 0,
-            },
-            {
-              allowanceType: 'GRATUITY',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'COMMUTED_PENSION',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'LEAVE_ENCASHMENT',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'ANY_OTHER',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'ALL_ALLOWANCES',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-          ],
-          perquisites: [
-            {
-              perquisiteType: 'SEC17_2',
-              taxableAmount: null,
-              exemptAmount: 0,
-            },
-          ],
-          profitsInLieuOfSalaryType: [
-            { salaryType: 'SEC17_3', taxableAmount: null, exemptAmount: 0 },
-          ],
-          deductions: [
-            {
-              deductionType: 'PROFESSIONAL_TAX',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
-          ],
-          upload: [],
-          calculators: null,
-        },
+        // {
+        //   id: '',
+        //   employerName: '',
+        //   address: '',
+        //   city: '',
+        //   pinCode: '',
+        //   state: '',
+        //   employerPAN: '',
+        //   employerTAN: '',
+        //   periodFrom: '',
+        //   periodTo: '',
+        //   taxableIncome: null,
+        //   standardDeduction: null,
+        //   employerCategory: '',
+        //   exemptIncome: null,
+        //   taxRelief: null,
+        //   taxDeducted: null,
+        //   salary: [
+        //     { salaryType: 'SEC17_1', taxableAmount: null, exemptAmount: 0 },
+        //   ],
+        //   allowance: [
+        //     {
+        //       allowanceType: 'HOUSE_RENT',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //     { allowanceType: 'LTA', taxableAmount: 0, exemptAmount: null },
+        //     {
+        //       allowanceType: 'CHILDREN_EDUCATION',
+        //       taxableAmount: 0,
+        //       exemptAmount: 0,
+        //     },
+        //     {
+        //       allowanceType: 'GRATUITY',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //     {
+        //       allowanceType: 'COMMUTED_PENSION',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //     {
+        //       allowanceType: 'LEAVE_ENCASHMENT',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //     {
+        //       allowanceType: 'ANY_OTHER',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //     {
+        //       allowanceType: 'ALL_ALLOWANCES',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //   ],
+        //   perquisites: [
+        //     {
+        //       perquisiteType: 'SEC17_2',
+        //       taxableAmount: null,
+        //       exemptAmount: 0,
+        //     },
+        //   ],
+        //   profitsInLieuOfSalaryType: [
+        //     { salaryType: 'SEC17_3', taxableAmount: null, exemptAmount: 0 },
+        //   ],
+        //   deductions: [
+        //     {
+        //       deductionType: 'PROFESSIONAL_TAX',
+        //       taxableAmount: 0,
+        //       exemptAmount: null,
+        //     },
+        //     // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
+        //   ],
+        //   upload: [],
+        //   calculators: null,
+        // },
       ],
       houseProperties: [
-        {
-          propertyType: 'LOP',
-          grossAnnualRentReceived: null,
-          propertyTax: null,
-          ownerPercentage: null,
-          address: '',
-          city: '',
-          state: '',
-          country: '',
-          pinCode: '',
-          taxableIncome: null,
-          exemptIncome: null,
-          isEligibleFor80EE: false,
-          isEligibleFor80EEA: false,
-          tenant: [],
-          coOwners: [],
-          loans: [
-            {
-              loanType: 'HOUSING',
-              principalAmount: null,
-              interestAmount: null,
-            },
-          ],
-        },
+        // {
+        //   propertyType: 'LOP',
+        //   grossAnnualRentReceived: null,
+        //   propertyTax: null,
+        //   ownerPercentage: null,
+        //   address: '',
+        //   city: '',
+        //   state: '',
+        //   country: '',
+        //   pinCode: '',
+        //   taxableIncome: null,
+        //   exemptIncome: null,
+        //   isEligibleFor80EE: false,
+        //   isEligibleFor80EEA: false,
+        //   tenant: [],
+        //   coOwners: [],
+        //   loans: [
+        //     {
+        //       loanType: 'HOUSING',
+        //       principalAmount: null,
+        //       interestAmount: null,
+        //     },
+        //   ],
+        // },
       ],
       capitalGain: [],
       business: {
@@ -858,7 +884,7 @@ export class UtilsService {
       section90: null,
       section91: null,
       itrSummaryJson: null,
-      isItrSummaryJsonEdited: false
+      isItrSummaryJsonEdited: false,
     };
 
     return ITR_JSON;

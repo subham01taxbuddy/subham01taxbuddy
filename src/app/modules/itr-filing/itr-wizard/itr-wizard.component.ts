@@ -231,7 +231,7 @@ export class ItrWizardComponent implements OnInit {
       errors.residentialStatus = 'residentialStatus is required';
     }
 
-    if (!userItrObj.family[0].dateOfBirth) {
+    if (!userItrObj.family || userItrObj.family.length == 0 || !userItrObj.family[0].dateOfBirth) {
       errors.dateOfBirth = 'dateOfBirth is required';
     }
 
@@ -471,6 +471,7 @@ export class ItrWizardComponent implements OnInit {
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
     sessionStorage.removeItem('incomeSources');
+    sessionStorage.removeItem('ERI-Request-Header');
     this.subscription.unsubscribe();
   }
 }
