@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -39,6 +39,7 @@ export class ScheduledCallComponent implements OnInit {
   roles:any;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
+  searchVal:any;
   searchParam: any = {
     page: 0,
     size: 30,
@@ -54,7 +55,8 @@ export class ScheduledCallComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
-    private route: Router
+    private route: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.config = {
       itemsPerPage: this.searchParam.size,
@@ -82,7 +84,12 @@ export class ScheduledCallComponent implements OnInit {
       this.loggedUserId = userId ;
     }
     this.showScheduleCallList();
-    // this.search();
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchVal = params['mobileNumber'];
+      console.log('q param',this.searchVal)
+      this.searchParam.mobileNumber = this.searchVal;
+      this.search('mobile');
+    })
   }
 
   // async getMasterStatusList() {
