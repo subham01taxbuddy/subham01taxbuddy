@@ -688,7 +688,7 @@ export class PrefillIdComponent implements OnInit {
           {
             const Don100PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G
-                ?.Don100PercentApprReqd.DoneeWithPan;
+                ?.Don100PercentApprReqd?.DoneeWithPan;
             // console.log('donation100AGTI', Don100PercentApprReqd);
 
             const mapJsonToITRObjDon100PercentAGTI = ({
@@ -738,7 +738,7 @@ export class PrefillIdComponent implements OnInit {
           {
             const Don50PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don50PercentApprReqd
-                .DoneeWithPan;
+                ?.DoneeWithPan;
             // console.log('donation50AGTI', Don50PercentApprReqd);
 
             const mapJsonToITRObjDon50PercentAGTI = ({
