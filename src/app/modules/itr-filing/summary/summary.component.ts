@@ -515,15 +515,40 @@ export class SummaryComponent implements OnInit {
             : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
                 .OthersInc?.OthersIncDtls,
 
-        TotPersumptiveInc44ADA:
+        IncChargeableUnderBus:
           this.itrType === 'ITR4'
             ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
                 .PersumptiveInc44AE?.IncChargeableUnderBus
             : 0,
+
+        NatOfBus44AD:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP.NatOfBus44AD,
+
+        PersumptiveInc44ADGrossIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+            .PersumptiveInc44AD.GrsTrnOverBank +
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+            .PersumptiveInc44AD.GrsTrnOverAnyOthMode,
+
+        TotPersumptiveInc44AD:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+            .PersumptiveInc44AD.TotPersumptiveInc44AD,
+
+        NatOfBus44ADA:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP.NatOfBus44ADA,
+
+        GrsReceipt44ADA:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+            .PersumptiveInc44ADA.GrsReceipt,
+
+        TotPersumptiveInc44ADA:
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+            .PersumptiveInc44ADA.TotPersumptiveInc44ADA,
       };
     }
 
     console.log(this.keys.ExemptIncomeDetails, 'this.keys.Deductions');
+
     return this.keys;
 
     // let GrossSalary;
