@@ -144,6 +144,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.smeSelectedPlanId =
         this?.createSubscriptionObj?.smeSelectedPlan?.planId;
       this.gstUserInfoByUserId(this.subscriptionObj.userId);
+      this.setFinalPricing();
     }
 
     if (this.subscriptionObj != null) {

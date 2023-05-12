@@ -265,6 +265,7 @@
                   <!-- *************** Income from Salary ********************-->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
+                    [disabled]="summaryDetail.salary === 0 ? true : false"
                     #salary
                   >
                     <mat-expansion-panel-header>
@@ -404,9 +405,7 @@
                       </table>
                     </div>
 
-                    <div
-                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.IncomeFromSal"
-                    >
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -540,13 +539,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      keys.TotalIncomeOfHP
-                        ? keys.TotalIncomeOfHP === 0
-                          ? true
-                          : false
-                        : summaryDetail.housePropertyIncome === 0
-                        ? true
-                        : false
+                      summaryDetail.housePropertyIncome === 0 ? true : false
                     ]"
                     #HP
                   >
@@ -688,9 +681,7 @@
                       </table>
                     </div>
 
-                    <div
-                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.TotalIncomeOfHP"
-                    >
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -933,8 +924,8 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotPersumptiveInc44ADA
-                                    ? keys.TotPersumptiveInc44ADA
+                                  keys.IncChargeableUnderBus
+                                    ? keys.IncChargeableUnderBus
                                     : summaryDetail.presumptiveIncome
                                 )
                               }}</label
@@ -944,91 +935,164 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <table
-                      class="table table-bordered table-striped table-hover"
-                      style="margin-top: 20px"
+                    <div
+                      *ngIf="
+                        ITR_JSON.itrSummaryJson && keys.IncChargeableUnderBus
+                      "
                     >
-                      <tbody>
-                        <tr>
-                          <th>Section No.</th>
-                          <th>Nature Of Business Code</th>
-                          <th>Trade Name</th>
-                          <th>Gross Turnover/Receipt</th>
-                          <th>Taxable Income</th>
-                        </tr>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Section No.</th>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Gross Turnover/Receipt</th>
+                            <th>Taxable Income</th>
+                          </tr>
 
-                        <tr
-                          *ngFor="
-                            let business of ITR_JSON.business
-                              ?.presumptiveIncomes
-                          "
-                        >
-                          <td>
-                            {{
-                              business.businessType === "TRANSPORT"
-                                ? "Section 44AE"
-                                : business.businessType === "BUSINESS"
-                                ? "Section 44AD"
-                                : business.businessType === "PROFESSIONAL"
-                                ? "Section 44ADA"
-                                : ""
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              natureOfBusinessFromCode(
-                                business.natureOfBusiness
-                              )
-                            }}
-                          </td>
-                          <td>{{ business.tradeName }}</td>
-                          <td>Rs {{ calReceipts(business.incomes) }}</td>
-                          <td>
-                            Rs {{ calPresumptiveIncome(business.incomes) }}
-                          </td>
-                        </tr>
-                        <tr
-                          *ngFor="
-                            let business of ITR_JSON.business
-                              ?.profitLossACIncomes
-                          "
-                        >
-                          <td>
-                            {{
-                              business.businessType === "SPECULATIVEINCOME"
-                                ? "Income from Speculative"
-                                : business.businessType ===
-                                  "NONSPECULATIVEINCOME"
-                                ? "Income from Non speculative"
-                                : ""
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              natureOfBusinessFromCode(
-                                business?.natureOfBusiness
-                              )
-                            }}
-                          </td>
-                          <td>{{ business?.tradeName }}</td>
-                          <td>Rs {{ business?.incomes[0]?.turnOver }}</td>
-                          <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                business?.businessType === "SPECULATIVEINCOME"
-                                  ? business?.incomes[0]
-                                      ?.netIncomeFromSpeculativeIncome
-                                  : business?.businessType ===
-                                    "NONSPECULATIVEINCOME"
-                                  ? business?.netProfitfromNonSpeculativeIncome
+                          <tr *ngFor="let business of keys.NatOfBus44AD">
+                            <td>
+                              {{ "Section 44AD" }}
+                            </td>
+                            <td>
+                              {{ business.CodeAD }}
+                            </td>
+                            <td>{{ business.NameOfBusiness }}</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.PersumptiveInc44ADGrossIncome /
+                                    keys.NatOfBus44AD.length
+                                )
+                              }}
+                            </td>
+                            <td>
+                              Rs
+                              {{
+                                keys.TotPersumptiveInc44AD /
+                                  keys.NatOfBus44AD.length
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr *ngFor="let business of keys.NatOfBus44ADA">
+                            <td>
+                              {{ "Section 44ADA" }}
+                            </td>
+                            <td>
+                              {{ business.CodeADA }}
+                            </td>
+                            <td>{{ business.NameOfBusiness }}</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  keys.GrsReceipt44ADA /
+                                    keys.NatOfBus44ADA.length
+                                )
+                              }}
+                            </td>
+                            <td>
+                              Rs
+                              {{
+                                keys.TotPersumptiveInc44ADA /
+                                  keys.NatOfBus44ADA.length
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Section No.</th>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Gross Turnover/Receipt</th>
+                            <th>Taxable Income</th>
+                          </tr>
+
+                          <tr
+                            *ngFor="
+                              let business of ITR_JSON.business
+                                ?.presumptiveIncomes
+                            "
+                          >
+                            <td>
+                              {{
+                                business.businessType === "TRANSPORT"
+                                  ? "Section 44AE"
+                                  : business.businessType === "BUSINESS"
+                                  ? "Section 44AD"
+                                  : business.businessType === "PROFESSIONAL"
+                                  ? "Section 44ADA"
                                   : ""
-                              )
-                            }}
-                          </td>
-                        </tr>
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                natureOfBusinessFromCode(
+                                  business.natureOfBusiness
+                                )
+                              }}
+                            </td>
+                            <td>{{ business.tradeName }}</td>
+                            <td>Rs {{ calReceipts(business.incomes) }}</td>
+                            <td>
+                              Rs {{ calPresumptiveIncome(business.incomes) }}
+                            </td>
+                          </tr>
+                          <tr
+                            *ngFor="
+                              let business of ITR_JSON.business
+                                ?.profitLossACIncomes
+                            "
+                          >
+                            <td>
+                              {{
+                                business.businessType === "SPECULATIVEINCOME"
+                                  ? "Income from Speculative"
+                                  : business.businessType ===
+                                    "NONSPECULATIVEINCOME"
+                                  ? "Income from Non speculative"
+                                  : ""
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                natureOfBusinessFromCode(
+                                  business?.natureOfBusiness
+                                )
+                              }}
+                            </td>
+                            <td>{{ business?.tradeName }}</td>
+                            <td>Rs {{ business?.incomes[0]?.turnOver }}</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  business?.businessType === "SPECULATIVEINCOME"
+                                    ? business?.incomes[0]
+                                        ?.netIncomeFromSpeculativeIncome
+                                    : business?.businessType ===
+                                      "NONSPECULATIVEINCOME"
+                                    ? business?.netProfitfromNonSpeculativeIncome
+                                    : ""
+                                )
+                              }}
+                            </td>
+                          </tr>
 
-                        <!--  <tr>
+                          <!--  <tr>
                             <td>Section 44ADA</td>
                             <td>14006-BPO Services</td>
                             <td>M/s. ABC</td>
@@ -1044,8 +1108,9 @@
                             <td>Rs 780000</td>
                             <td>Rs 780000</td>
                           </tr> -->
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
+                    </div>
                   </mat-expansion-panel>
 
                   <!-- ************************** Income from Capital Gain ****************************** -->
@@ -1392,13 +1457,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      keys.IncomeOthSrc
-                        ? keys.IncomeOthSrc === 0
-                          ? true
-                          : false
-                        : summaryDetail.otherIncome === 0
-                        ? true
-                        : false
+                      summaryDetail.otherIncome === 0 ? true : false
                     ]"
                     #otherIncome
                   >
@@ -1511,9 +1570,7 @@
                       </table>
                     </div>
 
-                    <div
-                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.IncomeFromSal"
-                    >
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -2081,11 +2138,7 @@
                       </table>
                     </div>
 
-                    <div
-                      *ngIf="
-                        !ITR_JSON.itrSummaryJson && !keys.TotalChapVIADeductions
-                      "
-                    >
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -2520,9 +2573,7 @@
                       </table>
                     </div>
 
-                    <div
-                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.TotalTaxPayable"
-                    >
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -3140,7 +3191,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="!ITR_JSON.itrSummaryJson && !keys.TDSonSalary">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <div
                         class="bxHed"
                         *ngIf="
@@ -3308,9 +3359,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <div
-                      *ngIf="!ITR_JSON.itrSummaryJson && !keys.TDSonOthThanSal"
-                    >
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <div
                         class="bxHed"
                         *ngIf="
@@ -3450,7 +3499,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="!ITR_JSON.itrSummaryJson && !keys.TDS3Details">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <div
                         class="bxHed"
                         *ngIf="
@@ -3595,7 +3644,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="!ITR_JSON.itrSummaryJson && !keys.TCS">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <div
                         class="bxHed"
                         *ngIf="
@@ -3755,7 +3804,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="!ITR_JSON.itrSummaryJson && !keys.TaxPayment">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <div
                         class="bxHed"
                         *ngIf="
@@ -3904,7 +3953,11 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.TaxPayment">
+                    <div
+                      *ngIf="
+                        ITR_JSON.itrSummaryJson && keys.ExemptIncomeDetails
+                      "
+                    >
                       <table
                         class="table table-bordered table-striped table-hover"
                       >
@@ -3926,7 +3979,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="!ITR_JSON.itrSummaryJson && !keys.TaxPayment">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson">
                       <table
                         class="table table-bordered table-striped table-hover"
                       >

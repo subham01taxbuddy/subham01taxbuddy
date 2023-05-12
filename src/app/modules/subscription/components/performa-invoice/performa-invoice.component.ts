@@ -476,11 +476,12 @@ export class PerformaInvoiceComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
     if (agentId) {
-      userFilter = '';
       if (this.coOwnerId && !this.coFilerId) {
+        userFilter = '';
         userFilter += `&ownerUserId=${this.coOwnerId}`;
       }
       if (this.coFilerId) {
+        userFilter = '';
         userFilter += `&filerUserId=${this.coFilerId}`;
       }
     }
