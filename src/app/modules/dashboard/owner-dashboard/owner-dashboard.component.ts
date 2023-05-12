@@ -34,37 +34,26 @@ export class OwnerDashboardComponent implements OnInit {
   }
 
 
-  getFilers() {
-    // API to get filers under owner-
-    // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
-
-    let param = `/sme-details-new/${this.loggedInSmeUserId}?filer=true`;
-
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      this.options1 = [];
-      console.log('filer list result -> ', result);
-      this.filerList = result.data;
-      this.options1 = this.filerList;//this.filerNames;
-      this.setFiletedOptions2();
-    });
-  }
-
-  setFiletedOptions2(){
-    this.filteredFilers = this.searchFiler.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : value?.name;
-        return name
-          ? this._filter(name as string, this.options1)
-          : this.options1.slice();
-      })
-    );
-  }
-  private _filter(name: string, options): User[] {
-    const filterValue = name.toLowerCase();
-
-    return options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
+  ownerId: number;
+  filerId: number;
+  agentId: number;
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if(isOwner){
+      this.ownerId = event? event.userId : null;
+    } else {
+      this.filerId = event? event.userId : null;
+    }
+    if(this.filerId) {
+      this.agentId = this.filerId;
+      // this.getAssignedSubscription(0);
+    }else if(this.ownerId) {
+      this.agentId = this.ownerId;
+      // this.getAssignedSubscription(0);
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    // this.getAssignedSubscription(0);
   }
 }

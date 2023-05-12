@@ -14,6 +14,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { NgxLoadingModule } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MaterialModule } from '../shared/material.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { MaterialModule } from '../shared/material.module';
     FormsModule,
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
-    // SharedModule,
+    SharedModule,
     HttpClientModule,
     AgGridModule,
     MaterialModule,

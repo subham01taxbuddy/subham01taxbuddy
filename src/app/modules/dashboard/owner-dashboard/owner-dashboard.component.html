@@ -16,11 +16,12 @@
 
     <div class="col-sm-6">
       <div class="radius">
-        <div class="row align-items-end">
+        <div class="row">
           <div class="col-sm-4">
             <!-- <form class="form-inline"> -->
-              <label for="start-date">Select Filer:</label>
-              <input type="search" placeholder="Search Filer" aria-label="Search" class="form-control mr-sm-2">
+              <!-- <div>
+                <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              </div> -->
             <!-- </form> -->
           </div>
           <div class="col-sm-3">
@@ -37,7 +38,7 @@
                 [min]="minDate" [max]="maxDate">
             </div>
           </div>
-          <div class="col-sm-2 text-center">
+          <div class="col-sm-2 ">
             <button class="proceed2"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
         </div>
