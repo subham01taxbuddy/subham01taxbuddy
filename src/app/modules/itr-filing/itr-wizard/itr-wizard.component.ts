@@ -231,7 +231,7 @@ export class ItrWizardComponent implements OnInit {
       errors.residentialStatus = 'residentialStatus is required';
     }
 
-    if (!userItrObj.family[0].dateOfBirth) {
+    if (!userItrObj.family || userItrObj.family.length == 0 || !userItrObj.family[0].dateOfBirth) {
       errors.dateOfBirth = 'dateOfBirth is required';
     }
 
@@ -458,11 +458,20 @@ export class ItrWizardComponent implements OnInit {
     } else {
       this.jsonUploaded = false;
     }
+
+    //json upload is complete, save it to backend
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.loading = true;
+    this.utilsService.uploadInitialItrObject(this.ITR_JSON).subscribe((res:any) => {
+      this.loading = false;
+      console.log(res);
+    });
   }
 
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
     sessionStorage.removeItem('incomeSources');
+    sessionStorage.removeItem('ERI-Request-Header');
     this.subscription.unsubscribe();
   }
 }

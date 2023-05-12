@@ -313,6 +313,55 @@ button {
 
 /* Rizwan CSS 06 March 2023 */
 
+.spEd {
+  padding-top: 5px!important;
+  display: block!important;
+}
+
+.mat-form-field-wrapper {
+  padding-bottom: 0em!important;
+  /* margin-top: 20px!important; */
+}
+
+
+.chkSp {
+  margin-right: 20px;
+  margin-left: 0px;
+  float: left;
+}
+
+.numSp{
+    margin-top: 10px;
+    text-align: center!important;
+}
+
+.delBtn{
+  border: 1px solid #cccccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f7f7f7!important;
+}
+
+.boxClr{
+  background-color: #faffff;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.add_btn{
+  background-color:#EEFFE4!important;
+  color:#797979!important;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 20.5882px;
+  gap: 6.86px;
+  width: 69.83px;
+  height: 32.21px;
+  margin-right: 10px;  border-radius: 6.86273px;}
+
 .clrLnk {
   margin-top: 15px;
   color: #f18203;

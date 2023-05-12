@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="main clearfix">
   <div class="align-items-center row">
@@ -17,60 +14,40 @@
             <div class="card__col-md-3">
               <mat-label>From Date</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
-                <input
-                  matInput
-                  placeholder="DD/MM/YYYY"
-                  formControlName="fromDate"
-                  [matDatepicker]="picker1"
-                  [max]="maxDate"
-                  autocomplete="off"
-                  (dateChange)="
+                <input matInput placeholder="DD/MM/YYYY" formControlName="fromDate" [matDatepicker]="picker1"
+                  [max]="maxDate" autocomplete="off" (dateChange)="
                     setToDateValidation(
                       boPartnerDateForm.controls['fromDate'].value
                     )
-                  "
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker1"
-                ></mat-datepicker-toggle>
+                  " />
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     boPartnerDateForm.controls['fromDate'].hasError('required')
-                  "
-                  >Select From date</mat-error
-                >
+                  ">Select From date</mat-error>
               </mat-form-field>
             </div>
 
             <div class="card__col-md-3">
               <mat-label>To Date</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  placeholder="DD/MM/YYYY"
-                  formControlName="toDate"
-                  [matDatepicker]="picker2"
-                  [max]="maxDate"
-                  [min]="minToDate"
-                  autocomplete="off"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker2"
-                ></mat-datepicker-toggle>
+                <input matInput placeholder="DD/MM/YYYY" formControlName="toDate" [matDatepicker]="picker2"
+                  [max]="maxDate" [min]="minToDate" autocomplete="off" />
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     boPartnerDateForm.controls['toDate'].hasError('required')
-                  "
-                  >Select To date</mat-error
-                >
-                <mat-error
-                  *ngIf="boPartnerDateForm.controls['toDate'].hasError('min')"
-                  >To date always greater than from date</mat-error
-                >
+                  ">Select To date</mat-error>
+                <mat-error *ngIf="boPartnerDateForm.controls['toDate'].hasError('min')">To date always greater than from
+                  date</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card__col-md-3">
+              <mat-label>Mobile Number: </mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text" digitsOnly
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
               </mat-form-field>
             </div>
 
@@ -83,12 +60,11 @@
               >
                 Search
               </button> -->
-              <button
-                class="tbd-btn"
-                style=" cursor: pointer"
-                (click)="getBoPartners()"
-              >
+              <button class="tbd-btn" style=" cursor: pointer" (click)="getBoPartners('mobile')">
                 Search
+              </button>
+              <button class="clrLnk" (click)="resetFilters()">
+                Clear
               </button>
             </div>
           </form>
@@ -103,16 +79,11 @@
             <tr *ngFor="let item of boPartnersInfo | paginate : config"></tr>
           </table>
 
-          <ag-grid-angular
-            class="ag-theme-balham"
-            [gridOptions]="partnersGridOptions"
-            (rowClicked)="onUsersRowClicked($event)"
-          >
+          <ag-grid-angular class="ag-theme-balham" [gridOptions]="partnersGridOptions"
+            (rowClicked)="onUsersRowClicked($event)">
           </ag-grid-angular>
 
-          <pagination-controls
-            (pageChange)="pageChanged($event)"
-          ></pagination-controls>
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
         </div>
         <!-- <div class="card__row">
           <ag-grid-angular

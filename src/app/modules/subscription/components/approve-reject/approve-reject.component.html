@@ -1,0 +1,18 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="row">
+    <h5>{{data.mode}}
+        <button style="float: right" mat-dialog-close (click)="closeDialog()"><i class="fa fa-close"></i></button>
+    </h5>
+</div>
+<hr class="hrAdj">
+
+<div class="card__row">
+    <div class="card__col-xs-4 card__col-sm-4">&nbsp; </div>
+    <div class="card__col-xs-2 card__col-sm-2">
+        <button mat-raised-button color="primary" (click)="updateSubscription('APPROVED')">{{data.approve}}</button>
+    </div>
+    <div class="card__col-xs-2 card__col-sm-2">
+        <button class="mt-1" mat-raised-button color="warn"
+            (click)="updateSubscription('REJECTED')">{{data.reject}}</button>
+    </div>
+</div>

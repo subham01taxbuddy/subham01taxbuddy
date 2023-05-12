@@ -47,7 +47,24 @@ export class PrefillIdComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log();
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    let name = this.getCustomerName();
+    this.utilsService
+      .getUserProfile(this.ITR_JSON.userId)
+      .then((result: any) => {
+        console.log(result);
+        this.data = {
+          userId: this.ITR_JSON.userId,
+          panNumber: this.ITR_JSON.panNumber
+            ? this.ITR_JSON.panNumber
+            : result.panNumber,
+          assessmentYear: this.ITR_JSON.assessmentYear,
+          name: this.utilsService.isNonEmpty(name)
+            ? name
+            : result.fName + ' ' + result.lName,
+          itrId: this.ITR_JSON.itrId,
+        };
+      });
   }
 
   subscription: Subscription;
@@ -92,11 +109,27 @@ export class PrefillIdComponent implements OnInit {
     this.downloadPrefill = true;
   }
 
+  getCustomerName() {
+    if (
+      this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
+      this.ITR_JSON.family instanceof Array
+    ) {
+      this.ITR_JSON.family.filter((item: any) => {
+        if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
+          let mName = item.mName ? item.mName : '';
+          return item.fName + ' ' + mName + ' ' + item.lName;
+        }
+      });
+    }
+  }
+
   // PREFILL PAN VALIDATION
   uploadJsonFile(file: FileList) {
     console.log('File in prefill', file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
       //read the file to get details upload and validate
       const reader = new FileReader();
@@ -249,9 +282,9 @@ export class PrefillIdComponent implements OnInit {
         }
       }
 
-      this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
-      console.log(this.allowanceDetails23, 'allowanceDetails23');
-      return this.allowanceDetails23;
+      // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
+      // console.log(this.allowanceDetails23, 'allowanceDetails23');
+      // return this.allowanceDetails23;
     }
   }
 
@@ -323,9 +356,13 @@ export class PrefillIdComponent implements OnInit {
               );
 
               // have to set other here for 1 & 4 as well. Can do it by storing this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc this in some const based on itr type later
-              itrObjAllowanceOth.amount =
-                this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc -
-                totalExemptIncomesExceptOTH;
+              if (this.uploadedJson[ITR_Type].ScheduleEI) {
+                itrObjAllowanceOth.amount =
+                  this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc -
+                  totalExemptIncomesExceptOTH;
+              } else {
+                console.log('no ScheduleEI found in uploaded JSON');
+              }
             }
           } else {
             console.log(`Exempt Income - ${type} not found`);
@@ -424,7 +461,7 @@ export class PrefillIdComponent implements OnInit {
 
           if (JsonDetail) {
             // finding and storing the object with the same NatureDesc (type) present in ITR Object
-            const itrObjOtherIncome = this.ITR_Obj.incomes.find(
+            let itrObjOtherIncome = this.ITR_Obj.incomes.find(
               (itrObjOtherIncome) => itrObjOtherIncome.incomeType === newName
             );
             // console.log('ITROBJOTHERINCOME====>>>>', itrObjOtherIncome);
@@ -434,6 +471,12 @@ export class PrefillIdComponent implements OnInit {
               console.log(
                 `Exempt Income - ${type} Income was not found in the ITR Object`
               );
+              itrObjOtherIncome = {
+                amount: 0,
+                details: '',
+                expenses: 0,
+                incomeType: newName,
+              };
             }
 
             itrObjOtherIncome.amount = JsonDetail.OthSrcOthAmount;
@@ -768,6 +811,7 @@ export class PrefillIdComponent implements OnInit {
         };
         // console.log('updateInvestmentsMapping==>>', mapping);
 
+        let expenseIndex = 0;
         for (let i = 0; i < investments.length; i++) {
           // console.log('i ==>>>>', i);
           const type = investmentNames[i];
@@ -775,20 +819,50 @@ export class PrefillIdComponent implements OnInit {
             // use the mapping object to get the new name for the current type
             const newName = mapping[type];
             if (newName === 'EDUCATION') {
+              if (!this.ITR_Obj.loans) {
+                this.ITR_Obj.loans = [];
+              }
+              this.ITR_Obj.loans.push({
+                details: '',
+                interestPaidPerAnum: 0,
+                loanAmount: 0,
+                loanType: '',
+                name: '',
+                principalPaidPerAnum: 0,
+              });
               const educationLoanDeduction =
                 (this.ITR_Obj.loans[0].interestPaidPerAnum = investments[i][1]);
               // console.log('educationLoanDeduction', educationLoanDeduction);
             }
 
             if (newName === 'HOUSE_RENT_PAID') {
-              const HouseRentDeduction80gg = (this.ITR_Obj.expenses[0].amount =
-                investments[i][1]);
+              if (!this.ITR_Obj.expenses) {
+                this.ITR_Obj.expenses = [];
+              }
+              this.ITR_Obj.expenses.push({
+                amount: 0,
+                details: '',
+                expenseFor: 0,
+                expenseType: newName,
+                noOfMonths: 0,
+              });
+              const HouseRentDeduction80gg = (this.ITR_Obj.expenses[
+                expenseIndex++
+              ].amount = investments[i][1]);
               // console.log('HOUSE_RENT_PAID', HouseRentDeduction80gg);
             }
 
             if (newName === 'ELECTRIC_VEHICLE') {
-              const electricVehicleDeduction =
-                (this.ITR_Obj.expenses[1].amount = investments[i][1]);
+              this.ITR_Obj.expenses.push({
+                amount: 0,
+                details: '',
+                expenseFor: 0,
+                expenseType: newName,
+                noOfMonths: 0,
+              });
+              const electricVehicleDeduction = (this.ITR_Obj.expenses[
+                expenseIndex++
+              ].amount = investments[i][1]);
               // console.log('ELECTRIC_VEHICLE', electricVehicleDeduction);
             }
 
@@ -977,7 +1051,7 @@ export class PrefillIdComponent implements OnInit {
               if (jsonInvestmentDetails) {
                 {
                   // finding and storing the object with the same NatureDesc (type) present in ITR Object
-                  const jsonItrObjInvestments = this.ITR_Obj.investments.find(
+                  let jsonItrObjInvestments = this.ITR_Obj.investments.find(
                     (jsonItrObjInvestment) =>
                       jsonItrObjInvestment.investmentType === newName
                   );
@@ -991,6 +1065,11 @@ export class PrefillIdComponent implements OnInit {
                     console.log(
                       `Exempt Income - ${newName} Income was not found in the ITR Object`
                     );
+                    jsonItrObjInvestments = {
+                      amount: 0,
+                      details: '',
+                      investmentType: newName,
+                    };
                   }
 
                   jsonItrObjInvestments.amount = investments[i][1];
@@ -1042,8 +1121,16 @@ export class PrefillIdComponent implements OnInit {
         // console.log('JSONData: ', JSONData);
 
         this.uploadedJson = JSONData.ITR;
-        this.mapItrJson(this.uploadedJson);
-        this.jsonUpload();
+        if (this.uploadedJson) {
+          this.utilsService.showSnackBar('JSON has been sucessfully uploaded');
+          this.utilsService.setUploadedJson(this.uploadedJson);
+          this.mapItrJson(this.uploadedJson);
+          this.jsonUpload();
+        } else {
+          this.utilsService.showSnackBar(
+            'There was some error while uploading the JSON'
+          );
+        }
       };
       reader.readAsText(this.uploadDoc);
     }
@@ -1057,6 +1144,8 @@ export class PrefillIdComponent implements OnInit {
 
     // ITR JSON IS THE UPLOADED UTILITY JSON
     console.log('Uploaded Utility: ', ItrJSON);
+
+    this.ITR_Obj.itrSummaryJson = ItrJSON;
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
     {
@@ -1116,616 +1205,639 @@ export class PrefillIdComponent implements OnInit {
 
     // SOME DEDUCTION FIELDS, HP CODE UPDATE
     if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
-      // PERSONAL INFORMATION
-      {
-        // CUSTOMER PROFILE
-        {
-          this.ITR_Obj.panNumber = ItrJSON[this.ITR_Type].PersonalInfo.PAN;
-          this.ITR_Obj.contactNumber =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo;
-          this.ITR_Obj.email =
-            ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
-          this.ITR_Obj.family[0].fName =
-            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
-          this.ITR_Obj.family[0].mName =
-            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.MiddleName;
-          this.ITR_Obj.family[0].lName =
-            ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
-          this.ITR_Obj.family[0].fatherName =
-            ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
-
-          if (this.ITR_Type === 'ITR1') {
-            if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
-              this.regime = 'OLD';
-              this.ITR_Obj.regime = this.regime;
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-            } else if (
-              ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y'
-            ) {
-              this.regime = 'NEW';
-              this.ITR_Obj.regime = this.regime;
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-            } else {
-              this.utilsService.showSnackBar(
-                'Type of regime is not present in the uploaded JSON'
-              );
-            }
-          }
-
-          if (this.ITR_Type === 'ITR4') {
-            // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
-            // optionForCurrentAY
-            if (ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 1) {
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-            } else if (
-              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 2
-            ) {
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-            } else if (
-              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 3
-            ) {
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-            } else if (
-              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 4
-            ) {
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-            } else if (
-              ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 5
-            ) {
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-            } else if (
-              !ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime
-            ) {
-              this.utilsService.showSnackBar(
-                'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
-              );
-            }
-
-            // everOptedNewRegime
-            {
-              //Setting 1st question as yes / no
-              if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
-                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
-              } else {
-                this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
-              }
-
-              // setting first question details
-              {
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                  ?.AssessmentYear
-                  ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                  ?.Form10IEDtls.Form10IEDate
-                  ? (this.ITR_Obj.everOptedNewRegime.date =
-                      this.parseAndFormatDate(
-                        ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                          .Form10IEDtls.Form10IEDate
-                      ))
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                  ?.Form10IEDtls.Form10IEAckNo
-                  ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
-                  : null;
-              }
-
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
-            }
-
-            //  everOptedOutOfNewRegime
-            {
-              //Setting 1st question as yes / no
-              if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime === 'Y'
-              ) {
-                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                  true;
-              } else {
-                this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                  false;
-              }
-
-              // setting second question details
-              {
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                  ?.AssessmentYear
-                  ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                  ?.Form10IEDtls?.Form10IEDate
-                  ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                      this.parseAndFormatDate(
-                        ItrJSON[this.ITR_Type].FilingStatus
-                          .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
-                      ))
-                  : null;
-
-                ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                  ?.Form10IEDtls?.Form10IEAckNo
-                  ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
-                  : null;
-              }
-
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
-            }
-
-            this.ITR_Obj.regime =
-              this.ITR_Obj.optionForCurrentAY.currentYearRegime;
-
-            this.regime = this.ITR_Obj.optionForCurrentAY.currentYearRegime;
-
-            ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
-              ? (this.ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(
-                  ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
-                ))
-              : null;
-            ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo
-              ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                  ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo)
-              : null;
-
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-          }
-
-          // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
-          this.ITR_Obj.residentialStatus = 'RESIDENT';
-
-          // Updating employer categaory based on the key that we get from json in our itr obj employer category
-          {
-            let jsonEmployerCategory =
-              ItrJSON[this.ITR_Type].PersonalInfo?.EmployerCategory;
-
-            // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
-
-            if (jsonEmployerCategory === 'CGOV') {
-              this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
-            } else if (jsonEmployerCategory === 'SGOV') {
-              this.ITR_Obj.employerCategory = 'GOVERNMENT';
-            } else if (jsonEmployerCategory === 'PSU') {
-              this.ITR_Obj.employerCategory = 'PRIVATE';
-            } else if (jsonEmployerCategory === 'PE') {
-              this.ITR_Obj.employerCategory = 'PE';
-            } else if (jsonEmployerCategory === 'PESG') {
-              this.ITR_Obj.employerCategory = 'PESG';
-            } else if (jsonEmployerCategory === 'PEPS') {
-              this.ITR_Obj.employerCategory = 'PEPS';
-            } else if (jsonEmployerCategory === 'PEO') {
-              this.ITR_Obj.employerCategory = 'PENSIONERS';
-            } else if (jsonEmployerCategory === 'OTH') {
-              this.ITR_Obj.employerCategory = 'OTHER';
-            } else if (jsonEmployerCategory === 'NA') {
-              this.ITR_Obj.employerCategory = 'NA';
-            }
-          }
-
-          this.ITR_Obj.aadharNumber =
-            ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
-
-          // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
-          this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo.DOB);
-          this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
-        }
-
-        // PERSONAL DETAILS
-        {
-          // ADDRESS DETAILS -
-          {
-            this.ITR_Obj.address.pinCode =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
-            this.ITR_Obj.address.country =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.CountryCode;
-            this.ITR_Obj.address.state =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.StateCode;
-            this.ITR_Obj.address.city =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.CityOrTownOrDistrict;
-            this.ITR_Obj.address.flatNo =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceNo;
-            this.ITR_Obj.address.premisesName =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceName;
-            this.ITR_Obj.address.area =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.RoadOrStreet +
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.LocalityOrArea;
-          }
-          //BANK DETAILS
-          {
-            const UtilityBankDetails =
-              ItrJSON[this.ITR_Type].Refund.BankAccountDtls.AddtnlBankDetails;
-
-            if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
-              this.ITR_Obj.bankDetails = [];
-              this.utilsService.showSnackBar(
-                'There are no bank details in the JSON that you have provided'
-              );
-            } else {
-              this.ITR_Obj.bankDetails = UtilityBankDetails.map(
-                ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
-                  return {
-                    id: null,
-                    bankType: null,
-                    ifsCode: IFSCCode,
-                    name: BankName,
-                    accountNumber: BankAccountNo,
-                    hasRefund: UseForRefund === 'true',
-                    swiftcode: null,
-                    countryName: '91',
-                  };
-                }
-              );
-            }
-          }
-        }
+      if (this.ITR_Obj.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo.PAN) {
+        this.utilsService.showSnackBar(
+          'PAN from the uploaded JSON and the PAN from Users Profile / Customer Profile are different'
+        );
       }
 
-      // SALARY
-      {
-        if (ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].GrossSalary) {
-          // Net salary Income
-          this.ITR_Obj.employers[0].taxableIncome =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].IncomeFromSal;
+      if (
+        this.ITR_Obj.contactNumber !==
+        String(ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo)
+      ) {
+        this.utilsService.showSnackBar(
+          'Contact Number from the uploaded JSON and Mobile No. from Users Profile / Customer Profile are different'
+        );
+      }
 
-          // Standard deduction of 50k
-          this.ITR_Obj.employers[0].standardDeduction =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductionUs16ia;
+      if (
+        this.ITR_Obj.panNumber === ItrJSON[this.ITR_Type].PersonalInfo.PAN &&
+        this.ITR_Obj.contactNumber ===
+          ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo
+      ) {
+        // PERSONAL INFORMATION
+        {
+          // CUSTOMER PROFILE
+          {
+            this.ITR_Obj.email =
+              ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
+            this.ITR_Obj.family[0].fName =
+              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
+            this.ITR_Obj.family[0].mName =
+              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.MiddleName;
+            this.ITR_Obj.family[0].lName =
+              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
+            this.ITR_Obj.family[0].fatherName =
+              ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
 
-          //Total of exempt income (Salary allowances total)
-          if (this.regime === 'OLD') {
-            this.ITR_Obj.employers[0].exemptIncome =
+            if (this.ITR_Type === 'ITR1') {
+              if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
+                this.regime = 'OLD';
+                this.ITR_Obj.regime = this.regime;
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+              } else if (
+                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y'
+              ) {
+                this.regime = 'NEW';
+                this.ITR_Obj.regime = this.regime;
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+              } else {
+                this.utilsService.showSnackBar(
+                  'Type of regime is not present in the uploaded JSON'
+                );
+              }
+            }
+
+            if (this.ITR_Type === 'ITR4') {
+              // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
+              // optionForCurrentAY
+              if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 1
+              ) {
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+              } else if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 2
+              ) {
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+              } else if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 3
+              ) {
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+              } else if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 4
+              ) {
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+              } else if (
+                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 5
+              ) {
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+              } else if (
+                !ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime
+              ) {
+                this.utilsService.showSnackBar(
+                  'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
+                );
+              }
+
+              // everOptedNewRegime
+              {
+                //Setting 1st question as yes / no
+                if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
+                  this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
+                } else {
+                  this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
+                }
+
+                // setting first question details
+                {
+                  ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                    ?.AssessmentYear
+                    ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
+                    : null;
+
+                  ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                    ?.Form10IEDtls.Form10IEDate
+                    ? (this.ITR_Obj.everOptedNewRegime.date =
+                        this.parseAndFormatDate(
+                          ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                            .Form10IEDtls.Form10IEDate
+                        ))
+                    : null;
+
+                  ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                    ?.Form10IEDtls.Form10IEAckNo
+                    ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                    : null;
+                }
+
+                // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_Obj)
+                );
+              }
+
+              //  everOptedOutOfNewRegime
+              {
+                //Setting 1st question as yes / no
+                if (
+                  ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime ===
+                  'Y'
+                ) {
+                  this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                    true;
+                } else {
+                  this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                    false;
+                }
+
+                // setting second question details
+                {
+                  ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                    ?.AssessmentYear
+                    ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
+                    : null;
+
+                  ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                    ?.Form10IEDtls?.Form10IEDate
+                    ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
+                        this.parseAndFormatDate(
+                          ItrJSON[this.ITR_Type].FilingStatus
+                            .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
+                        ))
+                    : null;
+
+                  ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
+                    ?.Form10IEDtls?.Form10IEAckNo
+                    ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                    : null;
+                }
+
+                // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_Obj)
+                );
+              }
+
+              this.ITR_Obj.regime =
+                this.ITR_Obj.optionForCurrentAY.currentYearRegime;
+
+              this.regime = this.ITR_Obj.optionForCurrentAY.currentYearRegime;
+
+              ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
+                ? (this.ITR_Obj.optionForCurrentAY.date =
+                    this.parseAndFormatDate(
+                      ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
+                    ))
+                : null;
+              ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo
+                ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
+                    ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo)
+                : null;
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
+
+            // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
+            this.ITR_Obj.residentialStatus = 'RESIDENT';
+
+            // Updating employer categaory based on the key that we get from json in our itr obj employer category
+            {
+              let jsonEmployerCategory =
+                ItrJSON[this.ITR_Type].PersonalInfo?.EmployerCategory;
+
+              // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
+
+              if (jsonEmployerCategory === 'CGOV') {
+                this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
+              } else if (jsonEmployerCategory === 'SGOV') {
+                this.ITR_Obj.employerCategory = 'GOVERNMENT';
+              } else if (jsonEmployerCategory === 'PSU') {
+                this.ITR_Obj.employerCategory = 'PRIVATE';
+              } else if (jsonEmployerCategory === 'PE') {
+                this.ITR_Obj.employerCategory = 'PE';
+              } else if (jsonEmployerCategory === 'PESG') {
+                this.ITR_Obj.employerCategory = 'PESG';
+              } else if (jsonEmployerCategory === 'PEPS') {
+                this.ITR_Obj.employerCategory = 'PEPS';
+              } else if (jsonEmployerCategory === 'PEO') {
+                this.ITR_Obj.employerCategory = 'PENSIONERS';
+              } else if (jsonEmployerCategory === 'OTH') {
+                this.ITR_Obj.employerCategory = 'OTHER';
+              } else if (jsonEmployerCategory === 'NA') {
+                this.ITR_Obj.employerCategory = 'NA';
+              }
+            }
+
+            this.ITR_Obj.aadharNumber =
+              ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
+
+            // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
+            this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo.DOB);
+            this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
+          }
+
+          // PERSONAL DETAILS
+          {
+            // ADDRESS DETAILS -
+            {
+              this.ITR_Obj.address.pinCode =
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
+              this.ITR_Obj.address.country =
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.CountryCode;
+              this.ITR_Obj.address.state =
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.StateCode;
+              this.ITR_Obj.address.city =
+                ItrJSON[
+                  this.ITR_Type
+                ].PersonalInfo.Address.CityOrTownOrDistrict;
+              this.ITR_Obj.address.flatNo =
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceNo;
+              this.ITR_Obj.address.premisesName =
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceName;
+              this.ITR_Obj.address.area =
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.RoadOrStreet +
+                ItrJSON[this.ITR_Type].PersonalInfo.Address.LocalityOrArea;
+            }
+            //BANK DETAILS
+            {
+              const UtilityBankDetails =
+                ItrJSON[this.ITR_Type].Refund.BankAccountDtls.AddtnlBankDetails;
+
+              if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
+                this.ITR_Obj.bankDetails = [];
+                this.utilsService.showSnackBar(
+                  'There are no bank details in the JSON that you have provided'
+                );
+              } else {
+                this.ITR_Obj.bankDetails = UtilityBankDetails.map(
+                  ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
+                    return {
+                      id: null,
+                      bankType: null,
+                      ifsCode: IFSCCode,
+                      name: BankName,
+                      accountNumber: BankAccountNo,
+                      hasRefund: UseForRefund === 'true',
+                      swiftcode: null,
+                      countryName: '91',
+                    };
+                  }
+                );
+              }
+            }
+          }
+        }
+
+        // SALARY
+        {
+          {
+            const salaryDetails =
+              ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
+            console.log(salaryDetails, 'salaryDetails');
+
+            if (
+              salaryDetails?.IncomeFromSal === 0 ||
+              salaryDetails?.IncomeFromSal === null
+            ) {
+              this.ITR_Obj.employers = [];
+            } else {
+              let keys = {
+                id: '',
+                employerName: 'Employer',
+                address: '',
+                city: '',
+                pinCode: '',
+                state: '',
+                employerPAN: '',
+                employerTAN: '',
+                periodFrom: '',
+                periodTo: '',
+                taxableIncome:
+                  salaryDetails?.IncomeFromSal === 0 ||
+                  salaryDetails?.IncomeFromSal === null
+                    ? 0
+                    : salaryDetails?.IncomeFromSal,
+                standardDeduction:
+                  salaryDetails?.DeductionUs16ia === 0 ||
+                  salaryDetails?.DeductionUs16ia === null ||
+                  this.regime === 'NEW'
+                    ? 0
+                    : salaryDetails?.DeductionUs16ia,
+                employerCategory: '',
+                exemptIncome:
+                  salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 === 0 ||
+                  salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                    null ||
+                  this.regime === 'NEW'
+                    ? 0
+                    : salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10,
+                taxRelief: null,
+                taxDeducted: null,
+                salary:
+                  salaryDetails?.Salary === 0 || salaryDetails?.Salary === null
+                    ? []
+                    : [
+                        {
+                          salaryType: 'SEC17_1',
+                          taxableAmount: salaryDetails?.Salary,
+                          exemptAmount: 0,
+                        },
+                      ],
+                allowance:
+                  salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 === 0 ||
+                  salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                    null ||
+                  this.regime === 'NEW'
+                    ? []
+                    : [
+                        {
+                          allowanceType: 'HOUSE_RENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LTA',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'CHILDREN_EDUCATION',
+                          taxableAmount: 0,
+                          exemptAmount: 0,
+                        },
+                        {
+                          allowanceType: 'GRATUITY',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMMUTED_PENSION',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LEAVE_ENCASHMENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ANY_OTHER',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ALL_ALLOWANCES',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                      ],
+                perquisites:
+                  salaryDetails?.PerquisitesValue === 0 ||
+                  salaryDetails?.PerquisitesValue === null
+                    ? []
+                    : [
+                        {
+                          perquisiteType: 'SEC17_2',
+                          taxableAmount: salaryDetails?.PerquisitesValue,
+                          exemptAmount: 0,
+                        },
+                      ],
+                profitsInLieuOfSalaryType:
+                  salaryDetails?.ProfitsInSalary === 0 ||
+                  salaryDetails?.ProfitsInSalary === null
+                    ? []
+                    : [
+                        {
+                          salaryType: 'SEC17_3',
+                          taxableAmount: salaryDetails?.ProfitsInSalary,
+                          exemptAmount: 0,
+                        },
+                      ],
+                deductions:
+                  this.regime === 'NEW'
+                    ? []
+                    : [
+                        {
+                          deductionType: 'PROFESSIONAL_TAX',
+                          taxableAmount: null,
+                          exemptAmount: salaryDetails?.ProfessionalTaxUs16iii,
+                        },
+
+                        {
+                          deductionType: 'ENTERTAINMENT_ALLOW',
+                          taxableAmount: null,
+                          exemptAmount:
+                            this.ITR_Type === 'ITR1'
+                              ? salaryDetails?.EntertainmentAlw16ii
+                              : salaryDetails?.EntertainmntalwncUs16ii,
+                        },
+                      ],
+                upload: [],
+                calculators: null,
+              };
+
+              this.ITR_Obj.employers.push(keys);
+
+              this.updateSalaryAllowances(
+                salaryDetails.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+                  (value) => value.SalNatureDesc
+                ),
+                this.ITR_Type
+              );
+            }
+
+            // OLD CODE
+            // if (ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].GrossSalary) {
+            //   // Net salary Income
+            //   this.ITR_Obj.employers[0].taxableIncome =
+            //     ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].IncomeFromSal;
+
+            //   // Standard deduction of 50k
+            //   this.ITR_Obj.employers[0].standardDeduction =
+            //     ItrJSON[this.ITR_Type][
+            //       this.ITR14_IncomeDeductions
+            //     ].DeductionUs16ia;
+
+            //   //Total of exempt income (Salary allowances total)
+            //   if (this.regime === 'OLD') {
+            //     this.ITR_Obj.employers[0].exemptIncome =
+            //       ItrJSON[this.ITR_Type][
+            //         this.ITR14_IncomeDeductions
+            //       ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+            //   }
+
+            //   // Salary 17(1)
+            //   this.ITR_Obj.employers[0].salary[0].taxableAmount =
+            //     ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].Salary;
+
+            //   // Salary 17(2)
+            //   this.ITR_Obj.employers[0].perquisites[0].taxableAmount =
+            //     ItrJSON[this.ITR_Type][
+            //       this.ITR14_IncomeDeductions
+            //     ].PerquisitesValue;
+
+            //   // Salary 17(3)
+            //   this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
+            //     ItrJSON[this.ITR_Type][
+            //       this.ITR14_IncomeDeductions
+            //     ].ProfitsInSalary;
+
+            //   // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
+            //   if (this.regime === 'OLD') {
+            //     const availableSalaryAllowances = this.uploadedJson[
+            //       this.ITR_Type
+            //     ][
+            //       this.ITR14_IncomeDeductions
+            //     ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+            //       (value) => value.SalNatureDesc
+            //     );
+            //     // console.log(
+            //     //   'Available salary allowances in JSON => ',
+            //     //   availableSalaryAllowances
+            //     // );
+            //     this.updateSalaryAllowances(
+            //       availableSalaryAllowances,
+            //       this.ITR_Type
+            //     );
+            //   }
+
+            //   try {
+            //     const deductions = this.ITR_Obj.employers[0].deductions;
+            //     if (deductions && deductions[0]) {
+            //       deductions[0].exemptAmount =
+            //         ItrJSON[this.ITR_Type][
+            //           this.ITR14_IncomeDeductions
+            //         ].ProfessionalTaxUs16iii;
+            //     } else {
+            //       console.error('Cannot access deductions or its first element');
+            //     }
+            //   } catch (error) {
+            //     console.error('Cannot access ITR_Obj or its properties', error);
+            //   }
+            //   // DEDUCTIONS - PROFESSIONAL TAX
+            //   // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
+            //   //   ItrJSON[this.ITR_Type][
+            //   //     this.ITR14_IncomeDeductions
+            //   //   ].ProfessionalTaxUs16iii;
+
+            //   // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
+            // } else {
+            //   console.log(
+            //     'SALARY INCOME',
+            //     `ItrJSON[this.ITR_Type]${[
+            //       this.ITR14_IncomeDeductions,
+            //     ]}.GrossSalary does not exist`
+            //   );
+            // }
+          }
+        }
+
+        // HOUSE PROPERTY
+        {
+          if (
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP
+          ) {
+            // House Property Type
+            this.ITR_Obj.houseProperties[0].propertyType =
+              ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
+              'S'
+                ? 'SOP'
+                : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
+                    .TypeOfHP === 'L'
+                ? 'LOP'
+                : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
+                    .TypeOfHP === 'D'
+                ? 'DLOP'
+                : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP;
+
+            // There is no principal amount for itr1&4 in json. Hence, did not map it
+            this.ITR_Obj.houseProperties[0].grossAnnualRentReceived =
               ItrJSON[this.ITR_Type][
                 this.ITR14_IncomeDeductions
-              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
-          }
+              ].GrossRentReceived;
 
-          // Salary 17(1)
-          this.ITR_Obj.employers[0].salary[0].taxableAmount =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].Salary;
+            // Property Tax
+            this.ITR_Obj.houseProperties[0].propertyTax =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ].TaxPaidlocalAuth;
 
-          // Salary 17(2)
-          this.ITR_Obj.employers[0].perquisites[0].taxableAmount =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].PerquisitesValue;
+            // Not able to map annualValue as we are not storing it in the ITRobject. Anyways, the annual value is being displayed properly on UI after parsing
 
-          // Salary 17(3)
-          this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].ProfitsInSalary;
+            // Annual Value 30% / Exempt Income (in itr4 object)
+            this.ITR_Obj.houseProperties[0].exemptIncome =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ].AnnualValue30Percent;
 
-          // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-          if (this.regime === 'OLD') {
-            const availableSalaryAllowances = this.uploadedJson[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-              (value) => value.SalNatureDesc
-            );
-            // console.log(
-            //   'Available salary allowances in JSON => ',
-            //   availableSalaryAllowances
-            // );
-            this.updateSalaryAllowances(
-              availableSalaryAllowances,
-              this.ITR_Type
-            );
-          }
-
-          try {
-            const deductions = this.ITR_Obj.employers[0].deductions;
-            if (deductions && deductions[0]) {
-              deductions[0].exemptAmount =
-                ItrJSON[this.ITR_Type][
-                  this.ITR14_IncomeDeductions
-                ].ProfessionalTaxUs16iii;
-            } else {
-              console.error('Cannot access deductions or its first element');
+            if (!this.ITR_Obj.houseProperties[0].loans) {
+              this.ITR_Obj.houseProperties[0].loans = [];
             }
-          } catch (error) {
-            console.error('Cannot access ITR_Obj or its properties', error);
-          }
-          // DEDUCTIONS - PROFESSIONAL TAX
-          // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].ProfessionalTaxUs16iii;
+            this.ITR_Obj.houseProperties[0].loans.push({
+              loanType: '',
+              principalAmount: 0,
+              interestAmount: 0,
+            });
 
-          // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
-        } else {
-          console.log(
-            'SALARY INCOME',
-            `ItrJSON[this.ITR_Type]${[
-              this.ITR14_IncomeDeductions,
-            ]}.GrossSalary does not exist`
-          );
-        }
+            // Interest on HP loan
+            this.ITR_Obj.houseProperties[0].loans[0].interestAmount =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ].InterestPayable;
 
-        // {
-        //More optimized code for future
-        // const {
-        //   IncomeFromSal,
-        //   DeductionUs16ia,
-        //   AllwncExemptUs10,
-        //   Salary,
-        //   PerquisitesValue,
-        //   ProfitsInSalary,
-        //   ProfessionalTaxUs16iii,
-        // } = ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
-        // this.ITR_Obj.employers[0].taxableIncome = IncomeFromSal;
-        // this.ITR_Obj.employers[0].standardDeduction = DeductionUs16ia;
-        // this.ITR_Obj.employers[0].exemptIncome =
-        //   AllwncExemptUs10.TotalAllwncExemptUs10;
-        // this.ITR_Obj.employers[0].salary[0].taxableAmount = Salary;
-        // this.ITR_Obj.employers[0].perquisites[0].taxableAmount = PerquisitesValue;
-        // this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
-        //   ProfitsInSalary;
-        // this.ITR_Obj.employers[0].deductions[0].exemptAmount =
-        //   ProfessionalTaxUs16iii;
-        // }
-      }
+            // Total Hp income
+            this.ITR_Obj.houseProperties[0].taxableIncome =
+              ItrJSON[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ].TotalIncomeOfHP;
 
-      // HOUSE PROPERTY
-      {
-        if (
-          ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP
-        ) {
-          // House Property Type
-          this.ITR_Obj.houseProperties[0].propertyType =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP === 'S'
-              ? 'SOP'
-              : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
-                'L'
-              ? 'LOP'
-              : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
-                'D'
-              ? 'DLOP'
-              : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP;
-
-          // There is no principal amount for itr1&4 in json. Hence, did not map it
-          this.ITR_Obj.houseProperties[0].grossAnnualRentReceived =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].GrossRentReceived;
-
-          // Property Tax
-          this.ITR_Obj.houseProperties[0].propertyTax =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].TaxPaidlocalAuth;
-
-          // Not able to map annualValue as we are not storing it in the ITRobject. Anyways, the annual value is being displayed properly on UI after parsing
-
-          // Annual Value 30% / Exempt Income (in itr4 object)
-          this.ITR_Obj.houseProperties[0].exemptIncome =
-            ItrJSON[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].AnnualValue30Percent;
-
-          // Interest on HP loan
-          this.ITR_Obj.houseProperties[0].loans[0].interestAmount =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].InterestPayable;
-
-          // Total Hp income
-          this.ITR_Obj.houseProperties[0].taxableIncome =
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP;
-
-          //80EE AND 80EEA values need to be set as true if interest is above 2l. However, this has to be done from the sme's end. PENDING
-        } else {
-          console.log(
-            'ITRJSON => ITR4 => HOUSE PROPERTY',
-            `ItrJSON[this.ITR_Type]${[
-              this.ITR14_IncomeDeductions,
-            ]}.TotalIncomeOfHP`
-          );
-        }
-      }
-
-      // OTHER INCOMES
-      {
-        if (
-          ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].OthersInc
-            .OthersIncDtlsOthSrc
-        ) {
-          // All other incomes
-          if (this.ITR_Obj.incomes) {
-            //getting all the exempt income keys from the JSON and passing it to the updateOtherIncomes function
-            const availableOtherIncomes = this.uploadedJson[this.ITR_Type][
-              this.ITR14_IncomeDeductions
-            ].OthersInc.OthersIncDtlsOthSrc.map(
-              (value) => value.OthSrcNatureDesc
-            );
-            // console.log('OtherIncomes => ', availableOtherIncomes);
-            this.updateOtherIncomes(availableOtherIncomes, this.ITR_Type);
+            //80EE AND 80EEA values need to be set as true if interest is above 2l. However, this has to be done from the sme's end. PENDING
           } else {
             console.log(
-              'ITROBJECT => OTHERINCOMES',
-              'this.ITR_Obj.incomes is empty'
-            );
-          }
-        } else {
-          console.log(
-            'ITRJSON => OTHERINCOMES',
-            `ItrJSON[this.ITR_Type]${[
-              this.ITR14_IncomeDeductions,
-            ]}.OthersInc.OthersIncDtlsOthSrc does not exist`
-          );
-        }
-
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log(this.ITR_Obj);
-      }
-
-      // EXEMPT INCOME
-      {
-        // console.log(
-        //   'ExemptIncomeDebugging',
-        //   this.ITR_Type,
-        //   this.ITR14_IncomeDeductions
-        // );
-        if (this.ITR_Type === 'ITR1') {
-          if (
-            this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
-              .ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls
-          ) {
-            if (this.ITR_Obj.exemptIncomes) {
-              //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
-              const availableExemptIncomes = this.uploadedJson[
-                this.ITR_Type
-              ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
-                (value) => value.NatureDesc
-              );
-              // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
-              this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
-            } else {
-              console.log(
-                'ITROBJECT => Exempt Incomes => ITR1 => Exempt Incomes There are no details under exemptIncomes in the ITR Obj'
-              );
-            }
-          } else {
-            console.log(
-              'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
+              'ITRJSON => ITR4 => HOUSE PROPERTY',
               `ItrJSON[this.ITR_Type]${[
                 this.ITR14_IncomeDeductions,
-              ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+              ]}.TotalIncomeOfHP`
             );
           }
         }
 
-        if (this.ITR_Type === 'ITR4') {
-          if (
-            this.uploadedJson[this.ITR_Type].TaxExmpIntIncDtls.OthersInc
-              .OthersIncDtls
-          ) {
-            if (this.ITR_Obj.exemptIncomes) {
-              //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
-              const availableExemptIncomes = this.uploadedJson[
-                this.ITR_Type
-              ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.map(
-                (value) => value.NatureDesc
-              );
-              // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
-              this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
-            } else {
-              console.log(
-                'ITROBJECT => Exempt Incomes => ITR4 => There are no details under exemptIncomes in the ITR Obj'
-              );
-            }
-          } else {
-            console.log(
-              'ITRJSON => Exempt Incomes => ITR4 =>',
-              `ItrJSON[this.ITR_Type]${[
-                this.ITR14_IncomeDeductions,
-              ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
-            );
-          }
-        }
-
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
-      }
-
-      // INVESTMENT AND DEDUCTIONS - 80GG, 80EE, 80EEA PENDING
-      {
-        if (
-          ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductUndChapVIA
-        ) {
-          if (this.ITR_Obj.investments) {
-            //getting all the exempt income keys from the JSON and passing it to the updateInvestments function
-            const availableInvestments = Object.entries(
-              this.uploadedJson[this.ITR_Type][this.ITR14_IncomeDeductions]
-                .DeductUndChapVIA
-            ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
-
-            // console.log('availableInvestments==>>', availableInvestments);
-
-            this.updateInvestments(availableInvestments, this.ITR_Type);
-          } else {
-            console.log(
-              'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
-            );
-          }
-        } else {
-          console.log(
-            'ITRJSON => INVESTMENTS =>',
-            `ItrJSON ${[this.ITR_Type]}${[
-              this.ITR14_IncomeDeductions,
-            ]}.DeductUndChapVIA does not exist in JSON`
-          );
-        }
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
-      }
-
-      // TAXES PAID
-      {
-        //SALARY TDS
+        // OTHER INCOMES
         {
-          const jsonSalaryTDS =
-            ItrJSON[this.ITR_Type].TDSonSalaries.TDSonSalary;
-          // console.log('jsonSalaryTDS', jsonSalaryTDS);
-
-          if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
-            this.ITR_Obj.taxPaid.onSalary = [];
-            console.log(
-              'There are no tax paid salary details in the JSON that you have provided'
-            );
+          if (
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].OthersInc
+              .OthersIncDtlsOthSrc
+          ) {
+            // All other incomes
+            if (this.ITR_Obj.incomes) {
+              //getting all the exempt income keys from the JSON and passing it to the updateOtherIncomes function
+              const availableOtherIncomes = this.uploadedJson[this.ITR_Type][
+                this.ITR14_IncomeDeductions
+              ].OthersInc.OthersIncDtlsOthSrc.map(
+                (value) => value.OthSrcNatureDesc
+              );
+              // console.log('OtherIncomes => ', availableOtherIncomes);
+              this.updateOtherIncomes(availableOtherIncomes, this.ITR_Type);
+            } else {
+              console.log(
+                'ITROBJECT => OTHERINCOMES',
+                'this.ITR_Obj.incomes is empty'
+              );
+            }
           } else {
-            this.ITR_Obj.taxPaid.onSalary = jsonSalaryTDS.map(
-              ({
-                EmployerOrDeductorOrCollectDetl: {
-                  TAN,
-                  EmployerOrDeductorOrCollecterName,
-                },
-                IncChrgSal,
-                TotalTDSSal,
-              }) => {
-                return {
-                  id: null,
-                  srNo: null,
-                  deductorName: EmployerOrDeductorOrCollecterName,
-                  deductorTAN: TAN,
-                  totalAmountCredited: IncChrgSal,
-                  totalTdsDeposited: TotalTDSSal,
-                  taxDeduction: null,
-                };
-              }
+            console.log(
+              'ITRJSON => OTHERINCOMES',
+              `ItrJSON[this.ITR_Type]${[
+                this.ITR14_IncomeDeductions,
+              ]}.OthersInc.OthersIncDtlsOthSrc does not exist`
             );
           }
 
@@ -1737,447 +1849,611 @@ export class PrefillIdComponent implements OnInit {
           // console.log(this.ITR_Obj);
         }
 
-        // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option - not working for new itr4 json
+        // EXEMPT INCOME
         {
-          const otherThanSalary16A =
-            this.ITR_Type === 'ITR1'
-              ? 'TDSonOthThanSal'
-              : 'TDSonOthThanSalDtls';
-          // console.log('otherThanSalary16A', otherThanSalary16A);
+          // console.log(
+          //   'ExemptIncomeDebugging',
+          //   this.ITR_Type,
+          //   this.ITR14_IncomeDeductions
+          // );
+          if (this.ITR_Type === 'ITR1') {
+            if (
+              this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
+                .ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls
+            ) {
+              if (this.ITR_Obj.exemptIncomes) {
+                //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+                const availableExemptIncomes = this.uploadedJson[
+                  this.ITR_Type
+                ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+                  (value) => value.NatureDesc
+                );
+                // console.log(`availableExemptIncomes`, availableExemptIncomes);
 
-          const jsonOtherThanSalaryTDS: Array<object> =
-            ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
-          // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
-
-          const mapJsonToITRObj16A = ({
-            EmployerOrDeductorOrCollectDetl,
-            AmtForTaxDeduct,
-            ClaimOutOfTotTDSOnAmtPaid,
-            TANOfDeductor,
-            TDSClaimed,
-            GrossAmount,
-            HeadOfIncome,
-            TDSDeducted,
-            BroughtFwdTDSAmt,
-            TDSCreditCarriedFwd,
-          }) => {
-            const TAN =
-              this.ITR_Type === 'ITR1'
-                ? EmployerOrDeductorOrCollectDetl.TAN
-                : TANOfDeductor;
-            const deductorName =
-              this.ITR_Type === 'ITR1'
-                ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
-                : null;
-
-            return {
-              id: null,
-              srNo: null,
-              deductorName,
-              deductorTAN: TAN,
-              totalTdsDeposited:
-                this.ITR_Type === 'ITR1'
-                  ? ClaimOutOfTotTDSOnAmtPaid
-                  : TDSClaimed,
-              uniqueTDSCerNo: null,
-              taxDeduction: null,
-              totalAmountCredited:
-                this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
-              headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
-            };
-          };
-
-          this.ITR_Obj.taxPaid.otherThanSalary16A =
-            jsonOtherThanSalaryTDS.map(mapJsonToITRObj16A);
-
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
-          // console.log(this.ITR_Obj);
-        }
-
-        // TDS3Details / otherThanSalary26QB
-        {
-          const jsonOtherThanSalary26QBTDS3 =
-            ItrJSON[this.ITR_Type]?.ScheduleTDS3Dtls?.TDS3Details ?? [];
-
-          const mapJsonToITRObj = ({
-            PANofTenant,
-            NameOfTenant,
-            GrsRcptToTaxDeduct,
-            TDSClaimed,
-            GrossAmount,
-            HeadOfIncome,
-            TDSDeducted,
-            TDSCreditCarriedFwd,
-            BroughtFwdTDSAmt,
-          }) => {
-            return {
-              id: null,
-              srNo: null,
-              deductorName: this.ITR_Type === 'ITR1' ? NameOfTenant : null,
-              deductorPAN: PANofTenant,
-              totalTdsDeposited: TDSClaimed,
-              uniqueTDSCerNo: null,
-              taxDeduction: null,
-              totalAmountCredited:
-                this.ITR_Type === 'ITR1' ? GrsRcptToTaxDeduct : GrossAmount,
-              headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
-            };
-          };
-
-          this.ITR_Obj.taxPaid.otherThanSalary26QB =
-            jsonOtherThanSalary26QBTDS3.map(mapJsonToITRObj);
-
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
-          // console.log(this.ITR_Obj);
-        }
-
-        // TCS - TAX COLLECTED AT SOURCE
-        {
-          const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS.TCS;
-
-          if (!jsonTCS || jsonTCS.length === 0) {
-            this.ITR_Obj.taxPaid.tcs = [];
-            console.log(
-              'There are no TCS tax paid other than salary details in the JSON that you have provided'
-            );
-          } else {
-            this.ITR_Obj.taxPaid.tcs = jsonTCS.map(
-              ({
-                EmployerOrDeductorOrCollectDetl: {
-                  TAN,
-                  EmployerOrDeductorOrCollecterName,
-                },
-                AmtTaxCollected,
-                AmtTCSClaimedThisYear,
-                Amtfrom26AS,
-              }) => {
-                return {
-                  id: null,
-                  srNo: null,
-                  collectorName: EmployerOrDeductorOrCollecterName,
-                  collectorTAN: TAN,
-                  totalAmountPaid:
-                    this.ITR_Type === 'ITR1' ? AmtTaxCollected : Amtfrom26AS,
-                  totalTaxCollected: 0,
-                  totalTcsDeposited: AmtTCSClaimedThisYear,
-                  taxDeduction: null,
-                };
+                this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+              } else {
+                console.log(
+                  'ITROBJECT => Exempt Incomes => ITR1 => Exempt Incomes There are no details under exemptIncomes in the ITR Obj'
+                );
               }
-            );
-          }
-
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
-          // console.log(this.ITR_Obj);
-        }
-
-        // Advance and self assessment tax
-        {
-          const taxPayment =
-            this.ITR_Type === 'ITR1' ? 'TaxPayments' : 'ScheduleIT';
-          // console.log('taxPayment', taxPayment);
-          const jsonAdvSAT = ItrJSON[this.ITR_Type][taxPayment].TaxPayment;
-          // console.log('jsonAdvSAT', jsonAdvSAT);
-
-          if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
-            this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
-            console.log(
-              'There are no advance taxes or self assessment taxes paid details in the JSON that you have provided'
-            );
-          } else {
-            this.ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT.map(
-              ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
-                return {
-                  id: null,
-                  srNo: null,
-                  totalTax: Amt,
-                  bsrCode: BSRCode,
-                  dateOfDeposit: this.parseAndFormatDate(DateDep),
-                  challanNumber: SrlNoOfChaln,
-                  majorHead: null,
-                  minorHead: null,
-                  tax: null,
-                  surcharge: null,
-                  educationCess: null,
-                  other: null,
-                };
-              }
-            );
-          }
-        }
-
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log(this.ITR_Obj);
-      }
-
-      // BUSINESS AND PROFESSION - PRESUMPTIVE INCOME
-      {
-        if (this.ITR_Type === 'ITR4') {
-          // Business44AD - If json is uploaded more than once than this will keep on pushing the new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
-          {
-            const NatOfBus44AD = ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44AD;
-            const NatOfBus44ADLength = NatOfBus44AD.length;
-            // console.log('NatOfBus44AD', NatOfBus44AD);
-
-            const PersumptiveInc44AD =
-              ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44AD;
-            // console.log('PersumptiveInc44AD', PersumptiveInc44AD);
-
-            NatOfBus44AD.forEach((obj) => {
-              let newObject = {
-                receipts: null,
-                presumptiveIncome: null,
-                minimumPresumptiveIncome: null,
-                periodOfHolding: null,
-                id: null,
-                businessType: 'BUSINESS',
-                natureOfBusiness: obj.CodeAD,
-                label: null,
-                tradeName: obj.NameOfBusiness,
-                salaryInterestAmount: null,
-                taxableIncome: null,
-                exemptIncome: null,
-                incomes: [
-                  {
-                    id: null,
-                    incomeType: 'CASH',
-                    receipts:
-                      PersumptiveInc44AD.GrsTrnOverAnyOthMode /
-                      NatOfBus44ADLength,
-                    presumptiveIncome:
-                      PersumptiveInc44AD.PersumptiveInc44AD8Per /
-                      NatOfBus44ADLength,
-                    periodOfHolding: 0,
-                    minimumPresumptiveIncome: 0,
-                    registrationNo: null,
-                    ownership: null,
-                    tonnageCapacity: null,
-                  },
-                  {
-                    id: null,
-                    incomeType: 'BANK',
-                    receipts:
-                      PersumptiveInc44AD.GrsTrnOverBank / NatOfBus44ADLength,
-                    presumptiveIncome:
-                      PersumptiveInc44AD.PersumptiveInc44AD6Per /
-                      NatOfBus44ADLength,
-                    periodOfHolding: 0,
-                    minimumPresumptiveIncome: 0,
-                    registrationNo: null,
-                    ownership: null,
-                    tonnageCapacity: null,
-                  },
-                ],
-              };
-
-              // Updating business Description
-              let businessDescriptionObject = {
-                id: null,
-                natureOfBusiness: obj.CodeAD,
-                tradeName: obj.NameOfBusiness,
-                businessDescription: obj.Description,
-              };
-
-              console.log('newObject', newObject);
-              this.ITR_Obj.business.presumptiveIncomes.push(newObject);
-
+            } else {
               console.log(
-                'businessDescriptionObject',
-                businessDescriptionObject
+                'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
+                `ItrJSON[this.ITR_Type]${[
+                  this.ITR14_IncomeDeductions,
+                ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
               );
-              this.ITR_Obj.business.businessDescription.push(
-                businessDescriptionObject
-              );
-            });
-
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
+            }
           }
 
-          // Profession44ADA - If json is uploaded more than once than this will keep on pushing new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
-          {
-            const NatOfBus44ADA =
-              ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44ADA;
-            const NatOfBus44ADALength = NatOfBus44ADA.length;
-            // console.log('NatOfBus44ADA', NatOfBus44ADA);
+          if (this.ITR_Type === 'ITR4') {
+            if (
+              this.uploadedJson[this.ITR_Type].TaxExmpIntIncDtls.OthersInc
+                .OthersIncDtls
+            ) {
+              if (this.ITR_Obj.exemptIncomes) {
+                //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+                const availableExemptIncomes = this.uploadedJson[
+                  this.ITR_Type
+                ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.map(
+                  (value) => value.NatureDesc
+                );
+                // console.log(`availableExemptIncomes`, availableExemptIncomes);
 
-            const PersumptiveInc44ADA =
-              ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
-            // console.log('PersumptiveInc44ADA', PersumptiveInc44ADA);
-
-            NatOfBus44ADA.forEach((obj) => {
-              let newObject = {
-                receipts: null,
-                presumptiveIncome: null,
-                minimumPresumptiveIncome: null,
-                periodOfHolding: null,
-                id: null,
-                businessType: 'PROFESSIONAL',
-                natureOfBusiness: obj.CodeADA,
-                label: null,
-                tradeName: obj.NameOfBusiness,
-                salaryInterestAmount: null,
-                taxableIncome: null,
-                exemptIncome: null,
-                incomes: [
-                  {
-                    id: null,
-                    incomeType: 'PROFESSIONAL',
-                    receipts:
-                      PersumptiveInc44ADA.GrsReceipt / NatOfBus44ADALength,
-                    presumptiveIncome:
-                      PersumptiveInc44ADA.TotPersumptiveInc44ADA /
-                      NatOfBus44ADALength,
-                    periodOfHolding: 0,
-                    minimumPresumptiveIncome: 0,
-                    registrationNo: null,
-                    ownership: null,
-                    tonnageCapacity: null,
-                  },
-                ],
-              };
-
-              // updating professinalBusiness Decription
-              let professionDescriptionObject = {
-                id: null,
-                natureOfBusiness: obj.CodeADA,
-                tradeName: obj.NameOfBusiness,
-                businessDescription: obj.Description,
-              };
-
-              this.ITR_Obj.business.presumptiveIncomes.push(newObject);
-              this.ITR_Obj.business.businessDescription.push(
-                professionDescriptionObject
+                this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+              } else {
+                console.log(
+                  'ITROBJECT => Exempt Incomes => ITR4 => There are no details under exemptIncomes in the ITR Obj'
+                );
+              }
+            } else {
+              console.log(
+                'ITRJSON => Exempt Incomes => ITR4 =>',
+                `ItrJSON[this.ITR_Type]${[
+                  this.ITR14_IncomeDeductions,
+                ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
               );
-
-              // console.log('newObjectProfession', newObject);
-              // console.log(
-              //   'businessDescriptionObject',
-              //   professionDescriptionObject
-              // );
-            });
-
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
+            }
           }
 
-          // Financial Particulars - Balance Sheet
-          {
-            this.ITR_Obj.business.financialParticulars.id = null;
-            this.ITR_Obj.business.financialParticulars.grossTurnOverAmount =
-              null;
-            this.ITR_Obj.business.financialParticulars.membersOwnCapital =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.PartnerMemberOwnCapital;
-            this.ITR_Obj.business.financialParticulars.securedLoans =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.SecuredLoans;
-            this.ITR_Obj.business.financialParticulars.unSecuredLoans =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.UnSecuredLoans;
-            this.ITR_Obj.business.financialParticulars.advances =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.Advances;
-            this.ITR_Obj.business.financialParticulars.sundryCreditorsAmount =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.SundryCreditors;
-            this.ITR_Obj.business.financialParticulars.otherLiabilities =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.OthrCurrLiab;
-            this.ITR_Obj.business.financialParticulars.totalCapitalLiabilities =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.TotCapLiabilities;
-            this.ITR_Obj.business.financialParticulars.fixedAssets =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.FixedAssets;
-            this.ITR_Obj.business.financialParticulars.inventories =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.Inventories;
-            this.ITR_Obj.business.financialParticulars.sundryDebtorsAmount =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.SundryDebtors;
-            this.ITR_Obj.business.financialParticulars.balanceWithBank =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.BalWithBanks;
-            this.ITR_Obj.business.financialParticulars.cashInHand =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.CashInHand;
-            this.ITR_Obj.business.financialParticulars.loanAndAdvances =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.LoansAndAdvances;
-            this.ITR_Obj.business.financialParticulars.otherAssets =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.OtherAssets;
-            this.ITR_Obj.business.financialParticulars.totalAssets =
-              ItrJSON[
-                this.ITR_Type
-              ].ScheduleBP.FinanclPartclrOfBusiness.TotalAssets;
-            this.ITR_Obj.business.financialParticulars.investment = null;
-            this.ITR_Obj.business.financialParticulars.GSTRNumber = null;
-            this.ITR_Obj.business.financialParticulars.difference = null;
-
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-          }
-        }
-      }
-
-      // DECLARATION
-      {
-        let capacity = '';
-        if (ItrJSON[this.ITR_Type].Verification.Capacity === 'S') {
-          capacity = 'Self';
-        } else {
-          this.utilsService.showErrorMsg(
-            'Declaration => Verification => Capacity other than self is not allowed'
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
           );
+          // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
         }
+
+        // INVESTMENT AND DEDUCTIONS - 80GG, 80EE, 80EEA PENDING
         {
-          this.ITR_Obj.declaration.name =
-            ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerName;
-          this.ITR_Obj.declaration.panNumber =
-            ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerPAN;
-          this.ITR_Obj.declaration.place = '';
-          this.ITR_Obj.declaration.capacity = capacity;
-          this.ITR_Obj.declaration.childOf =
-            ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
-          this.ITR_Obj.declaration.place =
-            ItrJSON[this.ITR_Type].Verification.Place;
+          if (
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductUndChapVIA
+          ) {
+            if (this.ITR_Obj.investments) {
+              //getting all the exempt income keys from the JSON and passing it to the updateInvestments function
+              const availableInvestments = Object.entries(
+                this.uploadedJson[this.ITR_Type][this.ITR14_IncomeDeductions]
+                  .DeductUndChapVIA
+              ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
+
+              // console.log('availableInvestments==>>', availableInvestments);
+
+              this.updateInvestments(availableInvestments, this.ITR_Type);
+            } else {
+              console.log(
+                'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
+              );
+            }
+          } else {
+            console.log(
+              'ITRJSON => INVESTMENTS =>',
+              `ItrJSON ${[this.ITR_Type]}${[
+                this.ITR14_IncomeDeductions,
+              ]}.DeductUndChapVIA does not exist in JSON`
+            );
+          }
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
+        }
+
+        // TAXES PAID
+        {
+          //SALARY TDS
+          {
+            const jsonSalaryTDS =
+              ItrJSON[this.ITR_Type].TDSonSalaries.TDSonSalary;
+            // console.log('jsonSalaryTDS', jsonSalaryTDS);
+
+            if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
+              this.ITR_Obj.taxPaid.onSalary = [];
+              console.log(
+                'There are no tax paid salary details in the JSON that you have provided'
+              );
+            } else {
+              this.ITR_Obj.taxPaid.onSalary = jsonSalaryTDS.map(
+                ({
+                  EmployerOrDeductorOrCollectDetl: {
+                    TAN,
+                    EmployerOrDeductorOrCollecterName,
+                  },
+                  IncChrgSal,
+                  TotalTDSSal,
+                }) => {
+                  return {
+                    id: null,
+                    srNo: null,
+                    deductorName: EmployerOrDeductorOrCollecterName,
+                    deductorTAN: TAN,
+                    totalAmountCredited: IncChrgSal,
+                    totalTdsDeposited: TotalTDSSal,
+                    taxDeduction: null,
+                  };
+                }
+              );
+            }
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+            // console.log(this.ITR_Obj);
+          }
+
+          // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option - not working for new itr4 json
+          {
+            const otherThanSalary16A =
+              this.ITR_Type === 'ITR1'
+                ? 'TDSonOthThanSal'
+                : 'TDSonOthThanSalDtls';
+            // console.log('otherThanSalary16A', otherThanSalary16A);
+
+            const jsonOtherThanSalaryTDS: Array<object> =
+              ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
+            // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
+
+            const mapJsonToITRObj16A = ({
+              EmployerOrDeductorOrCollectDetl,
+              AmtForTaxDeduct,
+              ClaimOutOfTotTDSOnAmtPaid,
+              TANOfDeductor,
+              TDSClaimed,
+              GrossAmount,
+              HeadOfIncome,
+              TDSDeducted,
+              BroughtFwdTDSAmt,
+              TDSCreditCarriedFwd,
+            }) => {
+              const TAN =
+                this.ITR_Type === 'ITR1'
+                  ? EmployerOrDeductorOrCollectDetl.TAN
+                  : TANOfDeductor;
+              const deductorName =
+                this.ITR_Type === 'ITR1'
+                  ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
+                  : null;
+
+              return {
+                id: null,
+                srNo: null,
+                deductorName,
+                deductorTAN: TAN,
+                totalTdsDeposited:
+                  this.ITR_Type === 'ITR1'
+                    ? ClaimOutOfTotTDSOnAmtPaid
+                    : TDSClaimed,
+                uniqueTDSCerNo: null,
+                taxDeduction: null,
+                totalAmountCredited:
+                  this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
+                headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+              };
+            };
+
+            this.ITR_Obj.taxPaid.otherThanSalary16A =
+              jsonOtherThanSalaryTDS.map(mapJsonToITRObj16A);
+
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+            // console.log(this.ITR_Obj);
+          }
+
+          // TDS3Details / otherThanSalary26QB
+          {
+            const jsonOtherThanSalary26QBTDS3 =
+              ItrJSON[this.ITR_Type]?.ScheduleTDS3Dtls?.TDS3Details ?? [];
+
+            const mapJsonToITRObj = ({
+              PANofTenant,
+              NameOfTenant,
+              GrsRcptToTaxDeduct,
+              TDSClaimed,
+              GrossAmount,
+              HeadOfIncome,
+              TDSDeducted,
+              TDSCreditCarriedFwd,
+              BroughtFwdTDSAmt,
+            }) => {
+              return {
+                id: null,
+                srNo: null,
+                deductorName: this.ITR_Type === 'ITR1' ? NameOfTenant : null,
+                deductorPAN: PANofTenant,
+                totalTdsDeposited: TDSClaimed,
+                uniqueTDSCerNo: null,
+                taxDeduction: null,
+                totalAmountCredited:
+                  this.ITR_Type === 'ITR1' ? GrsRcptToTaxDeduct : GrossAmount,
+                headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+              };
+            };
+
+            this.ITR_Obj.taxPaid.otherThanSalary26QB =
+              jsonOtherThanSalary26QBTDS3.map(mapJsonToITRObj);
+
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+            // console.log(this.ITR_Obj);
+          }
+
+          // TCS - TAX COLLECTED AT SOURCE
+          {
+            const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS.TCS;
+
+            if (!jsonTCS || jsonTCS.length === 0) {
+              this.ITR_Obj.taxPaid.tcs = [];
+              console.log(
+                'There are no TCS tax paid other than salary details in the JSON that you have provided'
+              );
+            } else {
+              this.ITR_Obj.taxPaid.tcs = jsonTCS.map(
+                ({
+                  EmployerOrDeductorOrCollectDetl: {
+                    TAN,
+                    EmployerOrDeductorOrCollecterName,
+                  },
+                  AmtTaxCollected,
+                  AmtTCSClaimedThisYear,
+                  Amtfrom26AS,
+                }) => {
+                  return {
+                    id: null,
+                    srNo: null,
+                    collectorName: EmployerOrDeductorOrCollecterName,
+                    collectorTAN: TAN,
+                    totalAmountPaid:
+                      this.ITR_Type === 'ITR1' ? AmtTaxCollected : Amtfrom26AS,
+                    totalTaxCollected: 0,
+                    totalTcsDeposited: AmtTCSClaimedThisYear,
+                    taxDeduction: null,
+                  };
+                }
+              );
+            }
+
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+            // console.log(this.ITR_Obj);
+          }
+
+          // Advance and self assessment tax
+          {
+            const taxPayment =
+              this.ITR_Type === 'ITR1' ? 'TaxPayments' : 'ScheduleIT';
+            // console.log('taxPayment', taxPayment);
+            const jsonAdvSAT = ItrJSON[this.ITR_Type][taxPayment].TaxPayment;
+            // console.log('jsonAdvSAT', jsonAdvSAT);
+
+            if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
+              this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
+              console.log(
+                'There are no advance taxes or self assessment taxes paid details in the JSON that you have provided'
+              );
+            } else {
+              this.ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT.map(
+                ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
+                  return {
+                    id: null,
+                    srNo: null,
+                    totalTax: Amt,
+                    bsrCode: BSRCode,
+                    dateOfDeposit: this.parseAndFormatDate(DateDep),
+                    challanNumber: SrlNoOfChaln,
+                    majorHead: null,
+                    minorHead: null,
+                    tax: null,
+                    surcharge: null,
+                    educationCess: null,
+                    other: null,
+                  };
+                }
+              );
+            }
+          }
+
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          // console.log(this.ITR_Obj);
+        }
+
+        // BUSINESS AND PROFESSION - PRESUMPTIVE INCOME
+        {
+          if (this.ITR_Type === 'ITR4') {
+            // Business44AD - If json is uploaded more than once than this will keep on pushing the new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
+            {
+              const NatOfBus44AD =
+                ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44AD;
+              const NatOfBus44ADLength = NatOfBus44AD.length;
+              // console.log('NatOfBus44AD', NatOfBus44AD);
+
+              const PersumptiveInc44AD =
+                ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44AD;
+              // console.log('PersumptiveInc44AD', PersumptiveInc44AD);
+
+              NatOfBus44AD.forEach((obj) => {
+                let newObject = {
+                  receipts: null,
+                  presumptiveIncome: null,
+                  minimumPresumptiveIncome: null,
+                  periodOfHolding: null,
+                  id: null,
+                  businessType: 'BUSINESS',
+                  natureOfBusiness: obj.CodeAD,
+                  label: null,
+                  tradeName: obj.NameOfBusiness,
+                  salaryInterestAmount: null,
+                  taxableIncome: null,
+                  exemptIncome: null,
+                  incomes: [
+                    {
+                      id: null,
+                      incomeType: 'CASH',
+                      receipts:
+                        PersumptiveInc44AD.GrsTrnOverAnyOthMode /
+                        NatOfBus44ADLength,
+                      presumptiveIncome:
+                        PersumptiveInc44AD.PersumptiveInc44AD8Per /
+                        NatOfBus44ADLength,
+                      periodOfHolding: 0,
+                      minimumPresumptiveIncome: 0,
+                      registrationNo: null,
+                      ownership: null,
+                      tonnageCapacity: null,
+                    },
+                    {
+                      id: null,
+                      incomeType: 'BANK',
+                      receipts:
+                        PersumptiveInc44AD.GrsTrnOverBank / NatOfBus44ADLength,
+                      presumptiveIncome:
+                        PersumptiveInc44AD.PersumptiveInc44AD6Per /
+                        NatOfBus44ADLength,
+                      periodOfHolding: 0,
+                      minimumPresumptiveIncome: 0,
+                      registrationNo: null,
+                      ownership: null,
+                      tonnageCapacity: null,
+                    },
+                  ],
+                };
+
+                // Updating business Description
+                let businessDescriptionObject = {
+                  id: null,
+                  natureOfBusiness: obj.CodeAD,
+                  tradeName: obj.NameOfBusiness,
+                  businessDescription: obj.Description,
+                };
+
+                console.log('newObject', newObject);
+                this.ITR_Obj.business.presumptiveIncomes.push(newObject);
+
+                console.log(
+                  'businessDescriptionObject',
+                  businessDescriptionObject
+                );
+                this.ITR_Obj.business.businessDescription.push(
+                  businessDescriptionObject
+                );
+              });
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
+
+            // Profession44ADA - If json is uploaded more than once than this will keep on pushing new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
+            {
+              const NatOfBus44ADA =
+                ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44ADA;
+              const NatOfBus44ADALength = NatOfBus44ADA.length;
+              // console.log('NatOfBus44ADA', NatOfBus44ADA);
+
+              const PersumptiveInc44ADA =
+                ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
+              // console.log('PersumptiveInc44ADA', PersumptiveInc44ADA);
+
+              NatOfBus44ADA.forEach((obj) => {
+                let newObject = {
+                  receipts: null,
+                  presumptiveIncome: null,
+                  minimumPresumptiveIncome: null,
+                  periodOfHolding: null,
+                  id: null,
+                  businessType: 'PROFESSIONAL',
+                  natureOfBusiness: obj.CodeADA,
+                  label: null,
+                  tradeName: obj.NameOfBusiness,
+                  salaryInterestAmount: null,
+                  taxableIncome: null,
+                  exemptIncome: null,
+                  incomes: [
+                    {
+                      id: null,
+                      incomeType: 'PROFESSIONAL',
+                      receipts:
+                        PersumptiveInc44ADA.GrsReceipt / NatOfBus44ADALength,
+                      presumptiveIncome:
+                        PersumptiveInc44ADA.TotPersumptiveInc44ADA /
+                        NatOfBus44ADALength,
+                      periodOfHolding: 0,
+                      minimumPresumptiveIncome: 0,
+                      registrationNo: null,
+                      ownership: null,
+                      tonnageCapacity: null,
+                    },
+                  ],
+                };
+
+                // updating professinalBusiness Decription
+                let professionDescriptionObject = {
+                  id: null,
+                  natureOfBusiness: obj.CodeADA,
+                  tradeName: obj.NameOfBusiness,
+                  businessDescription: obj.Description,
+                };
+
+                this.ITR_Obj.business.presumptiveIncomes.push(newObject);
+                this.ITR_Obj.business.businessDescription.push(
+                  professionDescriptionObject
+                );
+
+                // console.log('newObjectProfession', newObject);
+                // console.log(
+                //   'businessDescriptionObject',
+                //   professionDescriptionObject
+                // );
+              });
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
+
+            // Financial Particulars - Balance Sheet
+            {
+              this.ITR_Obj.business.financialParticulars.id = null;
+              this.ITR_Obj.business.financialParticulars.grossTurnOverAmount =
+                null;
+              this.ITR_Obj.business.financialParticulars.membersOwnCapital =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.PartnerMemberOwnCapital;
+              this.ITR_Obj.business.financialParticulars.securedLoans =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.SecuredLoans;
+              this.ITR_Obj.business.financialParticulars.unSecuredLoans =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.UnSecuredLoans;
+              this.ITR_Obj.business.financialParticulars.advances =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.Advances;
+              this.ITR_Obj.business.financialParticulars.sundryCreditorsAmount =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.SundryCreditors;
+              this.ITR_Obj.business.financialParticulars.otherLiabilities =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.OthrCurrLiab;
+              this.ITR_Obj.business.financialParticulars.totalCapitalLiabilities =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.TotCapLiabilities;
+              this.ITR_Obj.business.financialParticulars.fixedAssets =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.FixedAssets;
+              this.ITR_Obj.business.financialParticulars.inventories =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.Inventories;
+              this.ITR_Obj.business.financialParticulars.sundryDebtorsAmount =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.SundryDebtors;
+              this.ITR_Obj.business.financialParticulars.balanceWithBank =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.BalWithBanks;
+              this.ITR_Obj.business.financialParticulars.cashInHand =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.CashInHand;
+              this.ITR_Obj.business.financialParticulars.loanAndAdvances =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.LoansAndAdvances;
+              this.ITR_Obj.business.financialParticulars.otherAssets =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.OtherAssets;
+              this.ITR_Obj.business.financialParticulars.totalAssets =
+                ItrJSON[
+                  this.ITR_Type
+                ].ScheduleBP.FinanclPartclrOfBusiness.TotalAssets;
+              this.ITR_Obj.business.financialParticulars.investment = null;
+              this.ITR_Obj.business.financialParticulars.GSTRNumber = null;
+              this.ITR_Obj.business.financialParticulars.difference = null;
+
+              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
+          }
+        }
+
+        // DECLARATION
+        {
+          let capacity = '';
+          if (ItrJSON[this.ITR_Type].Verification.Capacity === 'S') {
+            capacity = 'Self';
+          } else {
+            this.utilsService.showErrorMsg(
+              'Declaration => Verification => Capacity other than self is not allowed'
+            );
+          }
+          {
+            this.ITR_Obj.declaration.name =
+              ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerName;
+            this.ITR_Obj.declaration.panNumber =
+              ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerPAN;
+            this.ITR_Obj.declaration.place = '';
+            this.ITR_Obj.declaration.capacity = capacity;
+            this.ITR_Obj.declaration.childOf =
+              ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+            this.ITR_Obj.declaration.place =
+              ItrJSON[this.ITR_Type].Verification.Place;
+          }
+
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+          // console.log(this.ITR_Obj);
         }
 
         // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -2185,15 +2461,8 @@ export class PrefillIdComponent implements OnInit {
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log(this.ITR_Obj);
+        console.log(this.ITR_Obj);
       }
-
-      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_Obj)
-      );
-      console.log(this.ITR_Obj);
     }
 
     if (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3') {

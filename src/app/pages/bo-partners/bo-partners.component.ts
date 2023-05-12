@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -15,8 +14,8 @@ import {
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {environment} from "../../../environments/environment";
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: 'app-bo-partners',
@@ -41,6 +40,7 @@ export class BoPartnersComponent implements OnInit {
   boPartnerDateForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
+  searchMobileNumber = new FormControl('')
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -54,12 +54,13 @@ export class BoPartnersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog
   ) {
+
     this.partnersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.boPartnersColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
       defaultColDef: {
@@ -83,8 +84,9 @@ export class BoPartnersComponent implements OnInit {
       totalItems: null,
     };
     this.boPartnerDateForm = this.fb.group({
-      fromDate: [new Date(), Validators.required],
+      fromDate: ['2022-09-01', Validators.required],
       toDate: [new Date(), Validators.required],
+
     });
     this.getBoPartners();
   }
@@ -104,6 +106,19 @@ export class BoPartnersComponent implements OnInit {
         headerName: 'Type - Individual/ Consultant',
         field: 'partnerType',
         width: 170,
+        pinned: 'left',
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Lead Type',
+        field: 'leadType',
+        width: 150,
         pinned: 'left',
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
@@ -172,6 +187,48 @@ export class BoPartnersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'PAN',
+        field: 'pan',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'GSTN',
+        field: 'gstin',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return data.value;
+          } else {
+            return '-';
+          }
+        },
+      },
+      {
+        headerName: 'Bank Details',
+        field: 'bankDetails',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        suppressMovable: true,
+        valueGetter: (params) => {
+          if (params?.data?.bankDetails == null) {
+            return 'No'
+          } else {
+            return 'Yes'
+          }
+        }
       },
       {
         headerName: 'Status',
@@ -316,7 +373,7 @@ export class BoPartnersComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params: any) {
           //console.log(params);
-          if(params.data.currentstatus === 'APPROVE') {
+          if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
           <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
@@ -337,7 +394,8 @@ export class BoPartnersComponent implements OnInit {
     ];
   }
 
-  getBoPartners() {
+  getBoPartners(mobile?) {
+    // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(
@@ -349,12 +407,17 @@ export class BoPartnersComponent implements OnInit {
         'yyyy-MM-dd'
       );
       this.loading = true;
+      let param
 
-      let param = `/partner-details?page=${
-        this.config.currentPage - 1
-      }&size=10&from=${fromDate}&to=${toDate}`;
+      if (mobile && this.searchMobileNumber.value) {
+        param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
+      } else {
+        param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
+      }
+
       this.userMsService.getMethod(param).subscribe(
         (response: any) => {
+          this.loading = false;
           console.log('bo-partners list: ', response);
           if (Array.isArray(response.content)) {
             this.loading = false;
@@ -380,6 +443,7 @@ export class BoPartnersComponent implements OnInit {
     for (let i = 0; i < data.length; i++) {
       let boPartnersInfo: any = Object.assign({}, partnersArray[i], {
         partnerType: data[i].partnerType,
+        leadType: data[i].leadType,
         id: data[i].id,
         name: data[i].name,
         emailAddress: data[i].emailAddress,
@@ -399,6 +463,9 @@ export class BoPartnersComponent implements OnInit {
         certificateOfPracticeUrl: data[i].certificateOfPracticeUrl,
         passbookOrCancelledChequeUrl: data[i].passbookOrCancelledChequeUrl,
         cvUrl: data[i].cvUrl,
+        bankDetails: data[i].bankDetails,
+        gstin: data[i].gstin,
+        pan: data[i].pan,
       });
       partnersArray.push(boPartnersInfo);
     }
@@ -425,7 +492,7 @@ export class BoPartnersComponent implements OnInit {
     }
   }
 
-  sendEmail(partnerData){
+  sendEmail(partnerData) {
     this.loading = true;
     let partnerName = partnerData.name;
     let mobile = partnerData.mobileNumber;
@@ -438,7 +505,7 @@ export class BoPartnersComponent implements OnInit {
     data.append('to', partnerData.emailAddress);
 
     let param = '/send-mail';
-    this.userMsService.postMethod(param, data).subscribe((res:any)=>{
+    this.userMsService.postMethod(param, data).subscribe((res: any) => {
       console.log(res);
       this.loading = false;
     }, error => {
@@ -465,7 +532,7 @@ export class BoPartnersComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
   updateStatus(partner) {
     let disposable = this.dialog.open(UpdateStatusComponent, {
@@ -491,5 +558,10 @@ export class BoPartnersComponent implements OnInit {
         }
       }
     });
+  }
+
+  resetFilters() {
+    this.searchMobileNumber.setValue(null);
+    this.getBoPartners();
   }
 }

@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div>
   <div class="align-items-center row">
     <div class="col-sm-10">
@@ -9,44 +6,23 @@
     </div>
   </div>
   <div class="content-wrapper">
-    <div
-      class="container"
-      *ngIf="
+    <div class="container" *ngIf="
         userSubscription?.userSelectedPlan !== null &&
         userSubscription?.userSelectedPlan?.servicesType === 'ITR'
-      "
-    >
+      ">
       <div class="row">
         <div class="col-sm-12" style="margin-top: 10px">
           <div class="card" style="margin-top: 10px">
             <div class="txHd alTxH">Select at least 1 sources of income:</div>
-            <div
-              class="flex items-center justify-between align-center p-[25px] mt-[25px]"
-            >
+            <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
               <div class="sources-back">
                 <!-- sources-of-income options  -->
-                <mat-chip-list
-                  class="sources-chip"
-                  multiple
-                  (change)="sourcesUpdated($event)"
-                >
-                  <mat-chip
-                    disableRipple
-                    *ngFor="let source of sourcesList"
-                    (click)="sourcesUpdated(source)"
-                    [selected]="source.selected"
-                  >
+                <mat-chip-list class="sources-chip" multiple (change)="sourcesUpdated($event)">
+                  <mat-chip disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"
+                    [selected]="source.selected">
                     {{ source.name }}
-                    <i
-                      class="fa fa-user-circle-o"
-                      aria-hidden="true"
-                      data-action-type="updateStatus"
-                    ></i>
-                    <i
-                      class="fa fa-pencil-square-o"
-                      aria-hidden="true"
-                      data-action-type="updateStatus"
-                    ></i>
+                    <i class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
                   </mat-chip>
                 </mat-chip-list>
               </div>
@@ -65,13 +41,7 @@
         <div class="col-sm-4">
           <mat-label> Name </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Name"
-              [formControl]="userName"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="Name" [formControl]="userName" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -80,14 +50,8 @@
         <div class="col-sm-4">
           <mat-label> Mobile Number </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Mobile Number"
-              [formControl]="mobileNumber"
-              class="input-field"
-              readonly
-            />
+            <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field"
+              readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -96,14 +60,8 @@
         <div class="col-sm-4">
           <mat-label> Email ID </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="email id"
-              [formControl]="emailAddress"
-              class="input-field"
-              readonly
-            />
+            <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field"
+              readonly />
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -114,14 +72,8 @@
         <div class="col-sm-4">
           <mat-label> GSTN No </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="GSTN No"
-              [formControl]="gstNo"
-              class="input-field"
-              (blur)="updateIgstFlag()"
-            />
+            <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field"
+              (blur)="updateIgstFlag()" />
             <!-- <mat-error
                     *ngIf="email?.hasError('required') ">
                     This field is required</mat-error> -->
@@ -130,13 +82,8 @@
         <div class="col-sm-4">
           <mat-label> Secondary Mobile Number </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Secondary Mobile Number"
-              [formControl]="reminderMobileNumber"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber"
+              class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -145,13 +92,8 @@
         <div class="col-sm-4">
           <mat-label> Secondary Email </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Secondary Email Address"
-              [formControl]="reminderEmail"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="Secondary Email Address" [formControl]="reminderEmail"
+              class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -162,16 +104,8 @@
         <div class="col-sm-4">
           <mat-label> PIN No </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              trim
-              matInput
-              placeholder="Pin Code"
-              class="input-field"
-              [formControl]="pin"
-              (blur)="updateDataByPincode()"
-              style="line-height: 21px"
-            />
+            <input type="text" trim matInput placeholder="Pin Code" class="input-field" [formControl]="pin"
+              (blur)="updateDataByPincode()" style="line-height: 21px" />
             <!-- <input type="text" matInput placeholder="PIN No." [formControl]="pin" class="input-field" /> -->
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
@@ -181,15 +115,8 @@
         <div class="col-sm-4">
           <mat-label> State </mat-label>
           <mat-form-field appearance="outline">
-            <mat-select
-              placeholder="Select state"
-              [formControl]="state"
-              style="line-height: 21px"
-            >
-              <mat-option
-                *ngFor="let state of stateDropdown"
-                [value]="state.stateCode"
-              >
+            <mat-select placeholder="Select state" [formControl]="state" style="line-height: 21px">
+              <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                 {{ state.stateName | titlecase }}
               </mat-option>
             </mat-select>
@@ -204,13 +131,7 @@
         <div class="col-sm-4">
           <mat-label> City </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="City"
-              [formControl]="city"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="City" [formControl]="city" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -221,13 +142,7 @@
         <div class="col-sm-4">
           <mat-label> Zip Code </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Zip Code"
-              [formControl]="zipcode"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="Zip Code" [formControl]="zipcode" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -236,13 +151,7 @@
         <div class="col-sm-4">
           <mat-label> Owner Name </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Owner Name"
-              [formControl]="ownerName"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="Owner Name" [formControl]="ownerName" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -251,13 +160,7 @@
         <div class="col-sm-4">
           <mat-label> Filer Name </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="Filer Name"
-              [formControl]="filerName"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="Filer Name" [formControl]="filerName" class="input-field" />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -287,42 +190,32 @@
               <span class="head">Total Tax:</span><br />
               <span class="head">Total Amount:</span>
             </div>
-            <div
-              class="col-sm-6"
-              *ngIf="userSubscription && userSubscription?.userSelectedPlan"
-            >
+            <div class="col-sm-6" *ngIf="userSubscription && userSubscription?.userSelectedPlan">
               <span class="head">{{
                 userSubscription?.userSelectedPlan?.name
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head">{{
                 userSubscription?.userSelectedPlan?.validForDays
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head">{{
                 userSubscription?.userSelectedPlan?.basePrice | currency : "INR"
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head" *ngIf="!showIgst">{{
                 userSubscription?.userSelectedPlan?.cgst | currency : "INR"
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head" *ngIf="!showIgst">{{
                 userSubscription?.userSelectedPlan?.sgst | currency : "INR"
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head" *ngIf="showIgst">{{
                 userSubscription?.userSelectedPlan?.igst | currency : "INR"
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head">{{
                 userSubscription?.userSelectedPlan?.totalTax | currency : "INR"
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head">{{
                 userSubscription?.userSelectedPlan?.totalAmount
-                  | currency : "INR"
-              }}</span>
+                | currency : "INR"
+                }}</span>
             </div>
           </div>
         </div>
@@ -334,16 +227,8 @@
             <div class="col-sm-8">
               <mat-label>Select Plan</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select
-                  matInput
-                  placeholder="Select Plan"
-                  [(ngModel)]="smeSelectedPlanId"
-                  autocomplete="off"
-                >
-                  <mat-option
-                    *ngFor="let plan of allPlans"
-                    [value]="plan?.planId"
-                  >
+                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" autocomplete="off">
+                  <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId">
                     {{ plan.name }}
                   </mat-option>
                 </mat-select>
@@ -351,11 +236,8 @@
               </mat-form-field>
             </div>
             <div class="col-sm-4" *ngIf="smeSelectedPlanId">
-              <button
-                class="btn"
-                style="background: #00aeca; border-radius: 5px"
-                (click)="applySmeSelectedPlan(smeSelectedPlanId)"
-              >
+              <button class="btn" style="background: #00aeca; border-radius: 5px"
+                (click)="applySmeSelectedPlan(smeSelectedPlanId)">
                 Apply
               </button>
               &nbsp;
@@ -369,16 +251,14 @@
             </div>
             <div class="col-sm-6">
               <span class="head">
-                {{ userSubscription?.smeSelectedPlan?.name }}</span
-              ><br />
+                {{ userSubscription?.smeSelectedPlan?.name }}</span><br />
               <span class="head">{{
                 userSubscription?.smeSelectedPlan?.validForDays
-              }}</span
-              ><br />
+                }}</span><br />
               <span class="head">{{
                 userSubscription?.smeSelectedPlan?.totalAmount
-                  | currency : "INR"
-              }}</span>
+                | currency : "INR"
+                }}</span>
             </div>
           </div>
         </div>
@@ -408,20 +288,20 @@
           <tr>
             <td>
               {{
-                userSubscription?.smeSelectedPlan === null ||
-                userSubscription?.userSelectedPlan?.planId ===
-                  userSubscription?.smeSelectedPlan?.planId
-                  ? "Actual Plan Amount"
-                  : "Change in Plan"
+              userSubscription?.smeSelectedPlan === null ||
+              userSubscription?.userSelectedPlan?.planId ===
+              userSubscription?.smeSelectedPlan?.planId
+              ? "Actual Plan Amount"
+              : "Change in Plan"
               }}
             </td>
             <td></td>
             <td>
               {{
-                (userSubscription?.smeSelectedPlan !== null
-                  ? userSubscription?.smeSelectedPlan?.totalAmount
-                  : userSubscription?.userSelectedPlan?.totalAmount
-                ) | currency : "INR"
+              (userSubscription?.smeSelectedPlan !== null
+              ? userSubscription?.smeSelectedPlan?.totalAmount
+              : userSubscription?.userSelectedPlan?.totalAmount
+              ) | currency : "INR"
               }}
             </td>
           </tr>
@@ -444,48 +324,27 @@
                 <div class="col-sm-5">
                   <mat-label>Search & Select Promo Code</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      type="text"
-                      placeholder="Start typing..."
-                      matInput
-                      [disabled]="!smeSelectedPlanId"
-                      [formControl]="searchedPromoCode"
-                      [matAutocomplete]="auto"
-                      (blur)="getCodeFromLabelOnBlur()"
-                      required
-                    />
+                    <input type="text" placeholder="Start typing..." matInput [disabled]="!smeSelectedPlanId"
+                      [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()"
+                      required />
                     <mat-error *ngIf="searchedPromoCode.invalid">
                       Please select value from dropdown only.
                     </mat-error>
-                    <mat-autocomplete
-                      #auto="matAutocomplete"
-                      [displayWith]="displayFn"
-                    >
-                      <mat-option
-                        *ngFor="let option of filteredOptions | async"
-                        [value]="option.title"
-                      >
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
                         {{ option.title }}
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
                 </div>
                 <div class="col-sm-5">
-                  <button
-                    class="btn"
-                    style="background: #00aeca; border-radius: 2px"
-                    (click)="applyPromo(smeSelectedPlanId)"
-                    [disabled]="!smeSelectedPlanId"
-                  >
+                  <button class="btn" style="background: #00aeca; border-radius: 2px"
+                    (click)="applyPromo(smeSelectedPlanId)" [disabled]="!smeSelectedPlanId">
                     Apply
                   </button>
                   &nbsp;
-                  <button [disabled]="!selectedPromoCode"
-                    class="btn"
-                    style="background: #00aeca; border-radius: 2px"
-                    (click)="removePromoCode()"
-                    type="reset"
-                  >
+                  <button [disabled]="!selectedPromoCode" class="btn" style="background: #00aeca; border-radius: 2px"
+                    (click)="removePromoCode()" type="reset">
                     Remove
                   </button>
                 </div>
@@ -493,14 +352,9 @@
             </td>
             <td></td>
             <td>
-              <span
-                class="head"
-                *ngIf="
+              <span class="head" *ngIf="
                   this?.userSubscription && this?.userSubscription?.promoCode
-                "
-                ><b> {{ getExactPromoDiscount() | currency : "INR" }} </b
-                ><br /></span
-              ><br />
+                "><b> {{ getExactPromoDiscount() | currency : "INR" }} </b><br /></span><br />
             </td>
           </tr>
           <tr>
@@ -508,8 +362,8 @@
             <td></td>
             <th>
               {{
-                this?.userSubscription?.payableSubscriptionAmount
-                  | currency : "INR"
+              this?.userSubscription?.payableSubscriptionAmount
+              | currency : "INR"
               }}
             </th>
           </tr>
@@ -542,12 +396,10 @@
             <td></td>
             <td>Total Amount</td>
             <td>
-              <span class="head"
-                ><b>{{
+              <span class="head"><b>{{
                   this?.userSubscription?.payableSubscriptionAmount
-                    | currency : "INR"
-                }}</b></span
-              >
+                  | currency : "INR"
+                  }}</b></span>
             </td>
           </tr>
         </tbody>
@@ -566,21 +418,18 @@
             <div class="col-sm-6">
               <mat-label>Select Service</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select
-                  [(ngModel)]="service"
-                  [ngModelOptions]="{ standalone: true }"
-                  matInput
-                  placeholder="Select Service"
-                  autocomplete="off"
-                  (selectionChange)="changeService()"
-                  [disabled]="isButtonDisable"
-                >
+                <mat-select [(ngModel)]="service" [ngModelOptions]="{ standalone: true }" matInput
+                  placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()"
+                  [disabled]="isButtonDisable">
                   <mat-option value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
-                  <mat-option value="GST" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> GST </mat-option>
-                  <mat-option value="NOTICE" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> Notice response </mat-option>
+                  <mat-option value="GST" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> GST
+                  </mat-option>
+                  <mat-option value="NOTICE" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> Notice
+                    response </mat-option>
                   <!--                    <mat-option value="TDS filing"> TDS filing </mat-option>-->
-                  <mat-option value="TPA" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> TPA </mat-option>
+                  <mat-option value="TPA" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> TPA
+                  </mat-option>
                   <mat-option value="OTHER" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')">
                     Other Services
                   </mat-option>
@@ -590,18 +439,10 @@
             <div class="col-sm-6">
               <mat-label>Service Detail</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select
-                  [(ngModel)]="serviceDetail"
-                  [ngModelOptions]="{ standalone: true }"
-                  (selectionChange)="onUpdateGstNoValidation()"
-                  placeholder="Select Service Detail"
-                  autocomplete="off"
-                  required
-                >
-                  <mat-option
-                    *ngFor="let details of serviceDetails"
-                    [value]="details.details"
-                  >
+                <mat-select [(ngModel)]="serviceDetail" [ngModelOptions]="{ standalone: true }"
+                  (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail" autocomplete="off"
+                  required>
+                  <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
                     {{ details.details }}
                   </mat-option>
                 </mat-select>
@@ -612,28 +453,14 @@
             <div class="col-sm-6">
               <mat-label> SAC Number</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  matInput
-                  placeholder="SAC Number"
-                  [formControl]="sacNumber"
-                  class="input-field"
-                />
+                <input type="text" matInput placeholder="SAC Number" [formControl]="sacNumber" class="input-field" />
               </mat-form-field>
             </div>
             <div class="col-sm-6">
               <mat-label> Financial Year</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select
-                  matInput
-                  placeholder="Financial Year"
-                  [formControl]="assessmentYear"
-                  autocomplete="off"
-                >
-                  <mat-option
-                    *ngFor="let year of financialYear"
-                    [value]="year.financialYear"
-                  >
+                <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
+                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
                     {{ year.financialYear }}
                   </mat-option>
                 </mat-select>
@@ -644,43 +471,34 @@
         <div class="col-sm-4">
           <mat-label> Description</mat-label>
           <mat-form-field appearance="outline">
-<!--            <mat-label>Description</mat-label>-->
-            <input
-              [formControl]="description"
-              matInput
-              placeholder="Description"
-              autocomplete="off"
-            />
+            <!--            <mat-label>Description</mat-label>-->
+            <input [formControl]="description" matInput placeholder="Description" autocomplete="off" />
           </mat-form-field>
         </div>
       </div>
       <hr />
       <div style="float: right">
-        <button
-          class="btn"
-          style="background: #4f9a20; border-radius: 5px"
-          (click)="updateSubscription()"
-          *ngIf="this?.userSubscription?.payableSubscriptionAmount >= 0"
-        >
-          <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate Invoice' : 'Save'}}
+        <button class="btn" style="background: #4f9a20; border-radius: 5px" (click)="updateSubscription()"
+          *ngIf="this?.userSubscription?.payableSubscriptionAmount >= 0">
+          <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate Invoice' :
+          'Save'}}
         </button>
       </div>
       <div style="float: right">
-        <button
-          class="btn"
-          style="background: #4f9a20; border-radius: 5px"
-          *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0"
-        >
+        <button class="btn" style="background: #4f9a20; border-radius: 5px"
+          *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0">
           <i class="fas fa-wallet"></i> Save & Issue Refund Request
         </button>
       </div>
       <div style="float: right">
-        <button
-          class="btn"
-          style="background: #4f9a20; border-radius: 5px"
-          (click)="location.back()"
-        >
+        <button class="btn" style="background: #4f9a20; border-radius: 5px" (click)="location.back()">
           Cancel
+        </button>
+      </div>
+      <div style="float: right">
+        <button class="tbd-btn cancel-btn" (click)="cancelSubscription()"><i
+          class="fa fa-close"></i>
+          Cancel Subscription
         </button>
       </div>
     </div>
@@ -699,36 +517,20 @@
         <div class="col-sm-4">
           <mat-label> Start Date </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              matInput
-              [matDatepicker]="picker1"
-              placeholder="Start Date"
-              [formControl]="startDate"
-              autocomplete="off"
-            />
+            <input matInput [matDatepicker]="picker1" placeholder="Start Date" [formControl]="startDate"
+              autocomplete="off" />
             <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> End Date </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              matInput
-              [matDatepicker]="picker2"
-              placeholder="Start Date"
-              [formControl]="endDate"
-              autocomplete="off"
-            />
+            <input matInput [matDatepicker]="picker2" placeholder="Start Date" [formControl]="endDate"
+              autocomplete="off" />
             <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
         </div>
@@ -747,35 +549,19 @@
         <div class="col-sm-4">
           <mat-label> Select Gst Type </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="gst type"
-              [formControl]="gstType"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="gst type" [formControl]="gstType" class="input-field" />
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> Filing Frequency </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="filing Frequency"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="filing Frequency" class="input-field" />
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> Start Year </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="start year"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="start year" class="input-field" />
           </mat-form-field>
         </div>
       </div>
@@ -783,23 +569,13 @@
         <div class="col-sm-4">
           <mat-label> Start Month </mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="start year"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="start year" class="input-field" />
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> Approximate Months</mat-label>
           <mat-form-field appearance="outline">
-            <input
-              type="text"
-              matInput
-              placeholder="months"
-              class="input-field"
-            />
+            <input type="text" matInput placeholder="months" class="input-field" />
           </mat-form-field>
         </div>
         <div class="col-sm-4">

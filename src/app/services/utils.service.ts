@@ -24,6 +24,7 @@ export class UtilsService {
   ITR_JSON!: ITR_JSON;
   loading: boolean = false;
   private subject = new Subject<any>();
+  uploadedJson: any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -57,6 +58,54 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      //Employers - allowances & deductions
+      if (
+        key === 'employers' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        //allowances
+        for (let i = 0; i < obj[key].length; i++) {
+          const salaryAllowance = obj[key][i].allowance;
+          if (
+            salaryAllowance &&
+            Array.isArray(salaryAllowance) &&
+            salaryAllowance.length > 0
+          ) {
+            for (let j = salaryAllowance.length - 1; j >= 0; j--) {
+              if (
+                salaryAllowance[j] &&
+                (salaryAllowance[j].exemptAmount === 0 ||
+                  salaryAllowance[j].exemptAmount === null)
+              ) {
+                salaryAllowance.splice(j, 1);
+              }
+            }
+          }
+        }
+
+        //deductions
+        for (let i = 0; i < obj[key].length; i++) {
+          const salaryDeductions = obj[key][i].deductions;
+          if (
+            salaryDeductions &&
+            Array.isArray(salaryDeductions) &&
+            salaryDeductions.length > 0
+          ) {
+            for (let j = salaryDeductions.length - 1; j >= 0; j--) {
+              if (
+                salaryDeductions[j] &&
+                (salaryDeductions[j].exemptAmount === 0 ||
+                  salaryDeductions[j].exemptAmount === null)
+              ) {
+                salaryDeductions.splice(j, 1);
+              }
+            }
+          }
+        }
+      }
+
+      //LOANS
       if (key === 'loans' && Array.isArray(obj[key]) && obj[key].length > 0) {
         for (let i = 0; i < obj[key].length; i++) {
           if (
@@ -71,6 +120,7 @@ export class UtilsService {
         }
       }
 
+      //EXPENSES
       if (
         key === 'expenses' &&
         Array.isArray(obj[key]) &&
@@ -83,6 +133,94 @@ export class UtilsService {
         }
       }
 
+      //INSURANCES
+      if (
+        key === 'insurances' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (
+            (obj[key][i].medicalExpenditure === 0 ||
+              obj[key][i].medicalExpenditure === null) &&
+            (obj[key][i].premium === 0 || obj[key][i].premium === null) &&
+            (obj[key][i].preventiveCheckUp === 0 ||
+              obj[key][i].preventiveCheckUp === null)
+          ) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //INCOMES
+      if (key === 'incomes' && Array.isArray(obj[key]) && obj[key].length > 0) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //DONATIONS
+      if (
+        key === 'donations' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (
+            (obj[key][i].schemeCode === '' ||
+              obj[key][i].schemeCode === null) &&
+            (obj[key][i].amountOtherThanCash === 0 ||
+              obj[key][i].amountOtherThanCash === null) &&
+            (obj[key][i].amountInCash === 0 ||
+              obj[key][i].amountInCash === null)
+          ) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //DIVIDENDINCOMES
+      if (
+        key === 'dividendIncomes' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].income === 0 || obj[key][i].income === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //INVESTMENTS
+      if (
+        key === 'investments' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //DISABILITIES
+      if (
+        key === 'disabilities' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+            delete obj[key][i];
+          }
+        }
+      }
+
+      //HOUSEPROPERTIESLOAN
       if (
         key === 'houseProperties' &&
         Array.isArray(obj[key]) &&
@@ -106,6 +244,7 @@ export class UtilsService {
         }
       }
 
+      //for All Others
       if (obj[key] === null) {
         delete obj[key];
       } else if (typeof obj[key] === 'object') {
@@ -422,112 +561,32 @@ export class UtilsService {
       },
       // this.isNonEmpty(profile) && this.isNonEmpty(profile.address) ? profile.address[0] : null,
       upload: [],
-      employers: [
-        {
-          id: '',
-          employerName: '',
-          address: '',
-          city: '',
-          pinCode: '',
-          state: '',
-          employerPAN: '',
-          employerTAN: '',
-          periodFrom: '',
-          periodTo: '',
-          taxableIncome: null,
-          standardDeduction: null,
-          employerCategory: '',
-          exemptIncome: null,
-          taxRelief: null,
-          taxDeducted: null,
-          salary: [
-            { salaryType: 'SEC17_1', taxableAmount: null, exemptAmount: 0 },
-          ],
-          allowance: [
-            {
-              allowanceType: 'HOUSE_RENT',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            { allowanceType: 'LTA', taxableAmount: 0, exemptAmount: null },
-            {
-              allowanceType: 'CHILDREN_EDUCATION',
-              taxableAmount: 0,
-              exemptAmount: 0,
-            },
-            {
-              allowanceType: 'GRATUITY',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'COMMUTED_PENSION',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'LEAVE_ENCASHMENT',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'ANY_OTHER',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            {
-              allowanceType: 'ALL_ALLOWANCES',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-          ],
-          perquisites: [
-            {
-              perquisiteType: 'SEC17_2',
-              taxableAmount: null,
-              exemptAmount: 0,
-            },
-          ],
-          profitsInLieuOfSalaryType: [
-            { salaryType: 'SEC17_3', taxableAmount: null, exemptAmount: 0 },
-          ],
-          deductions: [
-            {
-              deductionType: 'PROFESSIONAL_TAX',
-              taxableAmount: 0,
-              exemptAmount: null,
-            },
-            // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
-          ],
-          upload: [],
-          calculators: null,
-        },
-      ],
+      employers: [],
       houseProperties: [
-        {
-          propertyType: 'LOP',
-          grossAnnualRentReceived: null,
-          propertyTax: null,
-          ownerPercentage: null,
-          address: '',
-          city: '',
-          state: '',
-          country: '',
-          pinCode: '',
-          taxableIncome: null,
-          exemptIncome: null,
-          isEligibleFor80EE: false,
-          isEligibleFor80EEA: false,
-          tenant: [],
-          coOwners: [],
-          loans: [
-            {
-              loanType: 'HOUSING',
-              principalAmount: null,
-              interestAmount: null,
-            },
-          ],
-        },
+        // {
+        //   propertyType: 'LOP',
+        //   grossAnnualRentReceived: null,
+        //   propertyTax: null,
+        //   ownerPercentage: null,
+        //   address: '',
+        //   city: '',
+        //   state: '',
+        //   country: '',
+        //   pinCode: '',
+        //   taxableIncome: null,
+        //   exemptIncome: null,
+        //   isEligibleFor80EE: false,
+        //   isEligibleFor80EEA: false,
+        //   tenant: [],
+        //   coOwners: [],
+        //   loans: [
+        //     {
+        //       loanType: 'HOUSING',
+        //       principalAmount: null,
+        //       interestAmount: null,
+        //     },
+        //   ],
+        // },
       ],
       capitalGain: [],
       business: {
@@ -768,9 +827,19 @@ export class UtilsService {
       section89: null,
       section90: null,
       section91: null,
+      itrSummaryJson: null,
+      isItrSummaryJsonEdited: false,
     };
 
     return ITR_JSON;
+  }
+
+  setUploadedJson(data: any) {
+    this.uploadedJson = data;
+  }
+
+  getUploadedJson() {
+    return this.uploadedJson;
   }
 
   sendMessage(message: any) {
@@ -1282,7 +1351,21 @@ export class UtilsService {
     return this.itrMsService.putMethod(param, itrObject);
   }
 
+  /**
+   * This method shall be used throughout ITR utility for saving the ITR json data to backend.
+   * The exception cases are for saving the initial data after prefill or summary json upload.
+   * @param itrObject The ITR object to be saved to backend
+   */
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+    itrObject.isItrSummaryJsonEdited = true;
+    const param = `/itr/itr-type`;
+    return this.itrMsService
+      .postMethod(param, itrObject)
+      .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+  }
+
+  uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     const param = `/itr/itr-type`;
     return this.itrMsService

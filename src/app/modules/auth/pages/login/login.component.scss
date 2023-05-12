@@ -15,6 +15,25 @@
   width: 60%;
 }
 
+.mat-form-field {
+  display: inline!important;
+  position: relative;
+  text-align: left;
+}
+
+.spTp{
+  margin-top:20px;
+}
+
+.btn {
+  margin:20px 0px 0px 0px!important;
+}
+
+.link-style {
+  margin: 10px -10px 0px 0px !important;
+  display: block;
+}
+
 // .login_content_container {
 //   margin: 0 10px;
 // }
@@ -27,12 +46,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px;
+  padding: 25px;
   gap: 30px;
 
   position: absolute;
   width: 440px;
-  height: 548px;
+  height:auto;
   // left: 516px;
   top: 140px;
 
@@ -119,10 +138,12 @@ p {
   align-items: center;
   padding: 14px 49px;
   gap: 10px;
-  width: 360px;
+  width:100%;
   height: 52px;
   background: #00aeca;
   border-radius: 8px;
+  color: #ffffff!important;
+  font-weight: bold!important;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-flex {

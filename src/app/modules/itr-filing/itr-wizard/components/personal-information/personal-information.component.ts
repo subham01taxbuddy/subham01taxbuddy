@@ -2549,14 +2549,7 @@ export class PersonalInformationComponent implements OnInit {
     });
   }
 
-  async saveProfile(ref) {
-    // this.findAssesseeType();
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
+  isFormValid(){
     //check if at least one account is selected for refund
     var isBankSelected = false;
     this.customerProfileForm.controls['bankDetails'].value.forEach((bank) => {
@@ -2569,12 +2562,27 @@ export class PersonalInformationComponent implements OnInit {
       this.utilsService.showSnackBar(
         'Please select atleast one bank account in which you prefer to get refund'
       );
-      return;
+      return false;
     }
+
+    return this.customerProfileForm.valid;
+  }
+
+  async saveProfile(ref) {
+    // this.findAssesseeType();
+    //re-intialise the ITR objects
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
     this.customerProfileForm.controls['panNumber'].setValue(
       this.ITR_JSON.panNumber
     );
+
+    if(!this.isFormValid()){
+      return;
+    }
 
     Object.keys(this.customerProfileForm.controls).forEach((key) => {
       const controlErrors: ValidationErrors =
@@ -2622,7 +2630,9 @@ export class PersonalInformationComponent implements OnInit {
           this.utilsService.showSnackBar(
             'Customer profile updated successfully.'
           );
-          this.saveAndNext.emit({ subTab: true, tabName: 'OTHER' });
+          if(!ref) {
+            this.saveAndNext.emit({subTab: true, tabName: 'OTHER'});
+          }
         },
         (error) => {
           this.utilsService.showSnackBar('Failed to update customer profile.');

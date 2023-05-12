@@ -673,6 +673,7 @@ export class PerformaInvoiceComponent implements OnInit {
         invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
         ifaLeadClient: userInvoices[i].ifaLeadClient,
         total: userInvoices[i].total,
+        paymentLink: userInvoices[i].paymentLink,
       });
       invoices.push(updateInvoice);
     }
@@ -846,6 +847,13 @@ export class PerformaInvoiceComponent implements OnInit {
         headerName: 'Amount Payable',
         field: 'total',
         width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
+        headerName: 'Razor-Pay Link',
+        field: 'paymentLink',
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
