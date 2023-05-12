@@ -263,7 +263,7 @@ export class PrefillIdComponent implements OnInit {
         const anyOtherFields = [
           ...Object.values(this.ITR_Obj.employers[0].allowance)
             .filter((allowance) => allowance.allowanceType !== 'ANY_OTHER')
-            .map((allowance) => allowance.exemptAmount),
+            .map((allowance) => allowance?.exemptAmount),
         ];
         console.log('anyOtherFields ==>>', anyOtherFields);
 
@@ -688,7 +688,7 @@ export class PrefillIdComponent implements OnInit {
           {
             const Don100PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G
-                ?.Don100PercentApprReqd.DoneeWithPan;
+                ?.Don100PercentApprReqd?.DoneeWithPan;
             // console.log('donation100AGTI', Don100PercentApprReqd);
 
             const mapJsonToITRObjDon100PercentAGTI = ({
@@ -738,7 +738,7 @@ export class PrefillIdComponent implements OnInit {
           {
             const Don50PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don50PercentApprReqd
-                .DoneeWithPan;
+                ?.DoneeWithPan;
             // console.log('donation50AGTI', Don50PercentApprReqd);
 
             const mapJsonToITRObjDon50PercentAGTI = ({
