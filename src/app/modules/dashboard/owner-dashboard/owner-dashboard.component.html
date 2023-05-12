@@ -19,6 +19,22 @@
         <div class="row">
           <div class="col-sm-4">
             <!-- <form class="form-inline"> -->
+              <div>
+                <mat-label> Search By Filer </mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text"  [formControl]="searchFiler" [matAutocomplete]="auto" />
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name"
+                      (click)="getFilerNameId(option1)">
+                      {{ option1.name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <!-- <div>
+                <label for="start-date">Select Filer:</label>
+                <input type="search" placeholder="Search Filer" aria-label="Search" class="form-control mr-sm-2">
+              </div> -->
               <!-- <div>
                 <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
               </div> -->
@@ -39,7 +55,7 @@
             </div>
           </div>
           <div class="col-sm-2 ">
-            <button class="proceed2"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="proceed2" (click)="search()" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
         </div>
       </div>
