@@ -5,11 +5,7 @@
     <div class="col-sm-6">
       <b style="font-size: 20px">My Users</b>
     </div>
-<<<<<<< HEAD
-    <div class="col-sm-6" *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER')">
-=======
     <div class="col-sm-4" *ngIf="false && (roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER'))">
->>>>>>> c69aeb92aab8cbeaebd458f185dea2f01f64c9de
       <button class="tbd-btn" style="float:right" (click)="openBulkReAssignment()">Bulk Re-Assignment</button>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -64,7 +60,7 @@
           </div>
           <div class="col-sm-2 spsTp">
             <button class="clrLnk" (click)="this.resetFilters()">
-              Clear
+              Clear form
             </button>
           </div>
        

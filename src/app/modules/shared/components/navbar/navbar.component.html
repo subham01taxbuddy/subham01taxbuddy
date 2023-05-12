@@ -3,35 +3,46 @@
 <header class="header clearfix fixed">
 
     <!-- <mat-slide-toggle >Slide me!</mat-slide-toggle>&nbsp; -->
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <a class="header__logo" (click)="sideBar(); navigateToHome();">
+                <span class="header__logo-img1"></span>
+                <span class="header__logo-button" [class.header__logo-button-open]="sidebar_open"
+                    [class.header__logo-button-rotate]="menu_btn_rotate">
+                    <span></span>
+                    <span [class.header__logo-button-hide]="menu_hide_component"></span>
+                    <span></span>
+                </span>
+            </a>
+            <div class="titl-tx">Back Office</div>
+            <!-- <button class="back" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+               Back
+            </button> -->
+            <button class="btn-call" (click)="openCallDialog()">
+                 <i class="fa fa-phone fa-flip-horizontal" aria-hidden="true"></i>&nbsp;&nbsp;Dial Any Number
+            </button>
+         </div>   
 
-    <a class="header__logo" (click)="sideBar(); navigateToHome();">
-        <span class="header__logo-img1"></span>
-        <span class="header__logo-button" [class.header__logo-button-open]="sidebar_open"
-            [class.header__logo-button-rotate]="menu_btn_rotate">
-            <span></span>
-            <span [class.header__logo-button-hide]="menu_hide_component"></span>
-            <span></span>
-        </span>
-    </a>
-    <h6>Back Office</h6>
-    <button class="tbd-btn" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
-        &nbsp;&nbsp;Back
-    </button>
-    <button class="btn-call" (click)="openCallDialog()">
-         <i class="fa fa-phone fa-flip-horizontal" aria-hidden="true"></i>&nbsp;&nbsp;Dial Any Number
-    </button>
-    <div class="header__buttons logout-btn-wrapper" style="float:right">
-        <!-- <span><a class="btn" (click)="openDialog()">Need Help?</a></span> -->
-        <button class="btn-help" (click)="openDialog()">Need Help <i class="fa fa-question-circle"
-                aria-hidden="true"></i></button>
-        <!-- <a class="btn btn-logout logout-btn" (click)="logout()" style="float:right">Logout</a> -->
-        <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></button>
+         <div class="col-sm-6">
+            <div class="header__buttons logout-btn-wrapper" style="float:right">
+                <!-- <span><a class="btn" (click)="openDialog()">Need Help?</a></span> -->
+                <button class="btn-help" (click)="openDialog()">Need Help <i class="fa fa-question-circle"
+                        aria-hidden="true"></i></button>
+                <!-- <a class="btn btn-logout logout-btn" (click)="logout()" style="float:right">Logout</a> -->
+                <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></button>
+            </div>
+            <div class="header__breadcrumbs" style="float:right">
+                <div class="breadcrumbs user">
+                    <a lass="breadcrumbs-link"><i class='far fa-user-circle'></i> {{getLoggedInUserName()}}</a>
+                </div>
+            </div>
+         </div>
     </div>
-    <div class="header__breadcrumbs" style="float:right">
-        <div class="breadcrumbs">
-            <a lass="breadcrumbs-link"><i class='far fa-user-circle'></i> {{getLoggedInUserName()}}</a>
-        </div>
     </div>
+
+    
+   
     <!-- <div class="header__container">
         <div class="header__buttons" *ngIf="showBtns === 'business-profile'">
             <a class="btn" (click)="saveBusinessProfile()">Save Profile</a>

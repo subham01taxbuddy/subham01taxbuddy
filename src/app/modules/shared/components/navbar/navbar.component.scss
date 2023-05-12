@@ -12,13 +12,31 @@
     color: white;
     padding: 10px 15px;
     border: solid 2px;
-    background-color: red;
+    background-color: #000000;
 }
 
 .btn-logout:hover {
-    background-color: white;
-    color: red;
-    border: solid 2px red;
+    background-color:#7e7e7e;
+}
+
+.user{
+    color: #04a4bc;
+    font-weight:600;
+    margin-top: -4px;
+}
+
+.titl-tx {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.back{
+    color: #2199e8;
+}
+.back:hover {
+    color: #0d65a0;
 }
 
 .btn-help {
@@ -56,6 +74,7 @@
     border: solid 2px #63b12d;
     // border: solid 2px;
     // background-color: #63b12d;
+    margin-top: 10px;
 }
 
 .btn-call:hover {
