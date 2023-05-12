@@ -710,6 +710,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   search(form? , isAgent?) {
+    let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -741,6 +742,9 @@ export class ScheduledCallComponent implements OnInit {
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
+    }
+    if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
+      param = `/schedule-call-details/${this.agentId}?${data}`;
     }
     else {
       param;

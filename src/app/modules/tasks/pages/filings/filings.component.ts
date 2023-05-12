@@ -189,6 +189,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     // &searchAsCoOwner=true&page=0
     this.loading = true;
     return new Promise((resolve, reject) => {
+      let loggedInId = this.utilsService.getLoggedInUserID();
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
@@ -198,10 +199,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
 
       if (this.utilsService.isNonEmpty(this.coOwnerId)) {
+        param = `/itr-list?page=${pageNo}&pageSize=20`;
         param = param + `&ownerUserId=${this.coOwnerId}`;
       }
 
       if (this.utilsService.isNonEmpty(this.coFilerId)) {
+        // param = `/itr-list?page=${pageNo}&pageSize=20`;
         param = param + `&filerUserId=${this.coFilerId}`;
       }
 
@@ -222,7 +225,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
 
       if (this.coOwnerToggle.value == true && filingTeamMemberId) {
+       if(this.coOwnerId || this.coFilerId){
+        param
+       }else{
         param = param + '&searchAsCoOwner=true';
+       }
       }
       else {
         param;
@@ -1024,7 +1031,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
     if(this.coOwnerDropDown){
+      let loggedInId = this.utilsService.getLoggedInUserID();
       this.coOwnerDropDown.resetDropdown();
+      this.coFilerId=null;
+      this.coOwnerId=null;
+      this.searchParams.ownerUserId=loggedInId;
+      this.searchParams.filerUserId=null;
       this.myItrsList(0, true)
     }else{
       this.search();

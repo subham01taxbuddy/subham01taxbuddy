@@ -130,6 +130,7 @@ export class PotentialUserComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.search('agent');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
        this.search('agent');
@@ -155,6 +156,7 @@ export class PotentialUserComponent implements OnInit {
   }
 
   search(form?, isAgent?) {
+    let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -194,6 +196,9 @@ export class PotentialUserComponent implements OnInit {
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
+    }
+    if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
+       param = `/${this.agentId}/user-list-new?${data}&active=false`;
     }
     else {
       param;
