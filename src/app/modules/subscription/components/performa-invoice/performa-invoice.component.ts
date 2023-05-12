@@ -440,7 +440,7 @@ export class PerformaInvoiceComponent implements OnInit {
     this?.smeDropDown?.resetDropdown();
     if(this.coOwnerDropDown){
       this.coOwnerDropDown.resetDropdown();
-      this.getInvoice(true);
+      this.getInvoice('true');
     }else{
       this.getInvoice();
     }
@@ -454,7 +454,6 @@ export class PerformaInvoiceComponent implements OnInit {
 
     // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed&searchAsCoOwner=true&ownerUserId=7522
 
-    const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
     let status = this.status.value;
     console.log('selected status', this.status);
@@ -476,14 +475,14 @@ export class PerformaInvoiceComponent implements OnInit {
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    if(agentId){
-      userFilter='';
-     if(this.coOwnerId && !this.coFilerId){
-      userFilter += `&ownerUserId=${this.coOwnerId}`;
-     }
-     if(this.coFilerId){
-      userFilter += `&filerUserId=${this.coFilerId}`;
-     }
+    if (agentId) {
+      userFilter = '';
+      if (this.coOwnerId && !this.coFilerId) {
+        userFilter += `&ownerUserId=${this.coOwnerId}`;
+      }
+      if (this.coFilerId) {
+        userFilter += `&filerUserId=${this.coFilerId}`;
+      }
     }
     let mobileFilter = '';
     if (
@@ -517,7 +516,11 @@ export class PerformaInvoiceComponent implements OnInit {
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
 
     if (this.coOwnerToggle.value == true && isCoOwner) {
-      param = param + '&searchAsCoOwner=true';
+      if(this.coOwnerId || this.coFilerId){
+        param
+      }else{
+        param = param + '&searchAsCoOwner=true';
+      }
     }
     else {
       param;
@@ -1143,6 +1146,6 @@ export class PerformaInvoiceComponent implements OnInit {
     else {
       this.coOwnerCheck = false;
     }
-    this.getInvoice(true);
+    this.getInvoice('true');
   }
 }
