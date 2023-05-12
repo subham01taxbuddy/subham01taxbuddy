@@ -93,12 +93,11 @@ export class UtilsService {
       ) {
         for (let i = 0; i < obj[key].length; i++) {
           if (
-            (obj[key][i].schemeCode === '' ||
-              obj[key][i].schemeCode === null) &&
-            (obj[key][i].amountOtherThanCash === 0 ||
-              obj[key][i].amountOtherThanCash === null) &&
-            (obj[key][i].amountInCash === 0 ||
-              obj[key][i].amountInCash === null)
+            (obj[key][i].medicalExpenditure === 0 ||
+              obj[key][i].medicalExpenditure === null) &&
+            (obj[key][i].premium === 0 || obj[key][i].premium === null) &&
+            (obj[key][i].preventiveCheckUp === 0 ||
+              obj[key][i].preventiveCheckUp === null)
           ) {
             delete obj[key][i];
           }
