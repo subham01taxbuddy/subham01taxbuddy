@@ -13,10 +13,11 @@
             <span></span>
         </span>
     </a>
+    <h6>Back Office</h6>
     <button class="tbd-btn" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
         &nbsp;&nbsp;Back
     </button>
-    <button class="btn-help" (click)="openCallDialog()">
+    <button class="btn-call" (click)="openCallDialog()">
          <i class="fa fa-phone fa-flip-horizontal" aria-hidden="true"></i>&nbsp;&nbsp;Dial Any Number
     </button>
     <div class="header__buttons logout-btn-wrapper" style="float:right">
@@ -28,7 +29,7 @@
     </div>
     <div class="header__breadcrumbs" style="float:right">
         <div class="breadcrumbs">
-            <a lass="breadcrumbs-link"> {{getLoggedInUserName()}}</a>
+            <a lass="breadcrumbs-link"><i class='far fa-user-circle'></i> {{getLoggedInUserName()}}</a>
         </div>
     </div>
     <!-- <div class="header__container">
