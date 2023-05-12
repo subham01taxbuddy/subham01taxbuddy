@@ -88,6 +88,7 @@ export class PrefillIdComponent implements OnInit {
       this.subscription.unsubscribe();
     }
   }
+
   skipToSources() {
     this.skipPrefill.emit(null);
   }
@@ -168,14 +169,12 @@ export class PrefillIdComponent implements OnInit {
       'en-US',
       '+0000'
     );
-
     return this.utcDate;
   }
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
   updateSalaryAllowances(salaryAllowances, ITR_Type) {
     // console.log('salaryAllowances List =>', salaryAllowances, ITR_Type);
-
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       '10(5)': 'LTA',
@@ -198,18 +197,17 @@ export class PrefillIdComponent implements OnInit {
     };
 
     if (salaryAllowances) {
-      for (let i = 0; i < salaryAllowances.length; i++) {
-        // console.log('i ==>>>>', i);
-        const type = salaryAllowances[i];
+      let salaryAllowancesDetail;
 
+      // finding and storing the object with the same NatureDesc (type) present in JSON Object
+      for (let i = 0; i < salaryAllowances.length; i++) {
+        const type = salaryAllowances[i];
+        // use the mapping object to get the new name for the current type
+        const newName = mapping[type];
         // For all the salaryAllowances mapping
         {
-          // use the mapping object to get the new name for the current type
-          const newName = mapping[type];
-
           try {
-            // finding and storing the object with the same NatureDesc (type) present in JSON Object
-            let salaryAllowancesDetail;
+            //FOR ITR2
             if (ITR_Type === 'ITR2') {
               salaryAllowancesDetail = this.uploadedJson[
                 ITR_Type
@@ -222,39 +220,10 @@ export class PrefillIdComponent implements OnInit {
               ].AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
                 (salaryAllowances) => salaryAllowances.SalNatureDesc === type
               );
-              // console.log('salaryAllowancesDetail====>>>>', salaryAllowancesDetail);
             }
 
-            if (salaryAllowancesDetail) {
-              // TO DO (There are some issues in this) - create an array to store the values of the fields with the existing ANY_OTHER field and then add them and store them in others in itrObject
-              if (newName === 'ANY_OTHER') {
-                const anyOtherFields = [
-                  salaryAllowancesDetail.SalOthAmount,
-                  ...Object.values(this.ITR_Obj.employers[0].allowance)
-                    .filter(
-                      (allowance) => allowance.allowanceType === 'ANY_OTHER'
-                    )
-                    .map((allowance) => allowance.exemptAmount),
-                ];
-                // console.log('anyOtherFields ==>>', anyOtherFields);
-
-                // sum the values in the anyOtherFields array
-                const totalAnyOtherAmount = anyOtherFields.reduce(
-                  (acc, val) => acc + val,
-                  0
-                );
-                // console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
-
-                // update the existing ANY_OTHER field in the ITR object with the total amount
-                const itrObjSalaryAllowancesDetail =
-                  this.ITR_Obj.employers[0].allowance.find(
-                    (itrObjSalaryAllowances) =>
-                      itrObjSalaryAllowances.allowanceType === 'ANY_OTHER'
-                  );
-                itrObjSalaryAllowancesDetail.exemptAmount = totalAnyOtherAmount;
-              }
-
-              // finding and storing the object with the same NatureDesc (type) present in ITR Object
+            // finding and storing the object with the same NatureDesc (type) present in ITR Object
+            if (newName !== 'ANY_OTHER') {
               const itrObjSalaryAllowancesDetail =
                 this.ITR_Obj.employers[0].allowance.find(
                   (itrObjSalaryAllowances) =>
@@ -267,7 +236,7 @@ export class PrefillIdComponent implements OnInit {
 
               // If same type is not found in the ITR Object then show an error message
               if (!itrObjSalaryAllowancesDetail) {
-                this.utilsService.showSnackBar(
+                console.log(
                   `Salary Allowance - ${newName} Income was not found in the ITR Object`
                 );
               }
@@ -282,6 +251,36 @@ export class PrefillIdComponent implements OnInit {
         }
       }
 
+      //FOR ANY OTHER
+      {
+        const itrObjSalaryAnyOthAllowance =
+          this.ITR_Obj.employers[0].allowance.find(
+            (itrObjSalaryOtherAllowances) =>
+              itrObjSalaryOtherAllowances.allowanceType === 'ANY_OTHER'
+          );
+        console.log(itrObjSalaryAnyOthAllowance, 'itrObjSalaryAnyOthAllowance');
+
+        const anyOtherFields = [
+          ...Object.values(this.ITR_Obj.employers[0].allowance)
+            .filter((allowance) => allowance.allowanceType !== 'ANY_OTHER')
+            .map((allowance) => allowance.exemptAmount),
+        ];
+        console.log('anyOtherFields ==>>', anyOtherFields);
+
+        // sum the values in the anyOtherFields array
+        const totalAnyOtherAmount = anyOtherFields.reduce(
+          (acc, val) => acc + val,
+          0
+        );
+        console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
+
+        if (this.regime === 'OLD') {
+          itrObjSalaryAnyOthAllowance.exemptAmount =
+            this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
+              .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalAnyOtherAmount;
+        }
+      }
+
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
@@ -291,12 +290,10 @@ export class PrefillIdComponent implements OnInit {
   // Looping over exemptIncome and checking all types at once
   updateExemptIncomes(exemptIncomeTypes, ITR_Type) {
     for (let i = 0; i < exemptIncomeTypes.length; i++) {
-      // console.log('exemptIncome i ==>>>>', i);
       const type = exemptIncomeTypes[i];
 
       try {
         // finding and storing the object with the same NatureDesc (type) present in JSON Object
-
         let JsonDetail = null;
         if (this.ITR_Type === 'ITR1') {
           JsonDetail = this.uploadedJson[
@@ -304,14 +301,12 @@ export class PrefillIdComponent implements OnInit {
           ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
-          // console.log('JSONALLOWANCEDETAILS====>>>>', JsonDetail);
         } else if (this.ITR_Type === 'ITR4') {
           JsonDetail = this.uploadedJson[
             ITR_Type
           ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
-          // console.log('JSONALLOWANCEDETAILS====>>>>', JsonDetail);
         } else if (this.ITR_Type === 'ITR2') {
           JsonDetail = this.uploadedJson[
             ITR_Type
@@ -320,12 +315,11 @@ export class PrefillIdComponent implements OnInit {
           );
         }
 
-        if (JsonDetail) {
+        if (JsonDetail && JsonDetail.NatureDesc !== 'OTH') {
           // finding and storing the object with the same NatureDesc (type) present in ITR Object
           const itrObjAllowance = this.ITR_Obj.exemptIncomes.find(
             (itrObjAllowance) => itrObjAllowance.natureDesc === type
           );
-          // console.log('ITROBJALLOWANCEDETAILS====>>>>', itrObjAllowance);
 
           // If same type is not found in the ITR Object then show an error message
           if (!itrObjAllowance) {
@@ -340,30 +334,6 @@ export class PrefillIdComponent implements OnInit {
             JsonDetail.NatureDesc === itrObjAllowance.natureDesc
           ) {
             itrObjAllowance.amount = JsonDetail.OthAmount;
-
-            if (JsonDetail.NatureDesc === 'OTH') {
-              const totalExemptIncomesExceptOTH = this.ITR_Obj.exemptIncomes
-                .filter(
-                  (itrObjAllowance) => itrObjAllowance.natureDesc !== 'OTH'
-                )
-                .reduce(
-                  (total, itrObjAllowance) => total + itrObjAllowance.amount,
-                  0
-                );
-
-              const itrObjAllowanceOth = this.ITR_Obj.exemptIncomes.find(
-                (itrObjAllowance) => itrObjAllowance.natureDesc === 'OTH'
-              );
-
-              // have to set other here for 1 & 4 as well. Can do it by storing this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc this in some const based on itr type later
-              if (this.uploadedJson[ITR_Type].ScheduleEI) {
-                itrObjAllowanceOth.amount =
-                  this.uploadedJson[ITR_Type].ScheduleEI.TotalExemptInc -
-                  totalExemptIncomesExceptOTH;
-              } else {
-                console.log('no ScheduleEI found in uploaded JSON');
-              }
-            }
           } else {
             console.log(`Exempt Income - ${type} not found`);
           }
@@ -371,6 +341,40 @@ export class PrefillIdComponent implements OnInit {
       } catch (error) {
         console.log(`Error occurred for type ${type}: `, error);
         this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+      }
+    }
+
+    //FOR EXEMPT INCOME - OTHERS
+    {
+      const ExemptIncomesOTH = this.ITR_Obj.exemptIncomes.find(
+        (ExemptIncomesOTH) => ExemptIncomesOTH.natureDesc === 'OTH'
+      );
+      console.log(ExemptIncomesOTH, 'totalExemptIncomesExceptOTH');
+
+      const totalExemptIncomesExceptOTH = [
+        ...Object.values(this.ITR_Obj.exemptIncomes)
+          .filter((other) => other.natureDesc !== 'OTH')
+          .map((other) => other.amount),
+      ];
+      console.log(
+        'totalExemptIncomesExceptOTH ==>>',
+        totalExemptIncomesExceptOTH
+      );
+
+      // sum the values in the anyOtherFields array
+      const totalOtherExemptAmount = totalExemptIncomesExceptOTH.reduce(
+        (acc, val) => acc + val,
+        0
+      );
+      console.log('totalAnyOtherAmount ==>>', totalOtherExemptAmount);
+
+      if (this.ITR_Type === 'ITR1') {
+        this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
+          .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalOtherExemptAmount;
+      } else if (this.ITR_Type === 'ITR4') {
+        ExemptIncomesOTH.amount =
+          this.uploadedJson[ITR_Type].TaxExmpIntIncDtls?.OthersInc
+            ?.OthersTotalTaxExe - totalOtherExemptAmount;
       }
     }
   }
@@ -1896,16 +1900,10 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // EXEMPT INCOME
         {
-          // console.log(
-          //   'ExemptIncomeDebugging',
-          //   this.ITR_Type,
-          //   this.ITR14_IncomeDeductions
-          // );
           if (this.ITR_Type === 'ITR1') {
             if (
               this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
@@ -1971,7 +1969,6 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
         }
 
         // INVESTMENT AND DEDUCTIONS - 80GG, 80EE, 80EEA PENDING
@@ -2007,7 +2004,6 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
         }
 
         // TAXES PAID
@@ -2051,10 +2047,9 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
-          // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option - not working for new itr4 json
+          // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
           {
             const otherThanSalary16A =
               this.ITR_Type === 'ITR1'
@@ -2308,13 +2303,13 @@ export class PrefillIdComponent implements OnInit {
                   businessDescription: obj.Description,
                 };
 
-                console.log('newObject', newObject);
+                // console.log('newObject', newObject);
                 this.ITR_Obj.business.presumptiveIncomes.push(newObject);
 
-                console.log(
-                  'businessDescriptionObject',
-                  businessDescriptionObject
-                );
+                // console.log(
+                //   'businessDescriptionObject',
+                //   businessDescriptionObject
+                // );
                 this.ITR_Obj.business.businessDescription.push(
                   businessDescriptionObject
                 );

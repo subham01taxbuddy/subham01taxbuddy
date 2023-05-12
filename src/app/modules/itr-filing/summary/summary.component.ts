@@ -518,10 +518,6 @@ export class SummaryComponent implements OnInit {
         TotPersumptiveInc44ADA:
           this.itrType === 'ITR4'
             ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
-                .PersumptiveInc44AD?.TotPersumptiveInc44AD +
-              this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
-                .PersumptiveInc44ADA?.TotPersumptiveInc44ADA +
-              this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
                 .PersumptiveInc44AE?.IncChargeableUnderBus
             : 0,
       };
