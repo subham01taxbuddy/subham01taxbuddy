@@ -252,6 +252,18 @@ export class LoginComponent implements OnInit {
     await this.utilsService.getStoredFyList();
   }
 
+  registerLogin(userId){
+    //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
+    const param = `/sme-login?smeUserId=${userId}`;
+    this.userMsService.postMethod(param).subscribe((res:any)=>{
+      if(res.success){
+        console.log('sme login registered successfully');
+      }else {
+        console.log('login', res);
+      }
+    });
+  }
+
   getSmeInfoDetails(userId) {
     if(!userId) {
       return;
@@ -266,6 +278,9 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.InitChat();
         }, 2000);
+
+        //register sme login
+        this.registerLogin(userId);
 
         this.utilsService.getStoredSmeList();
         this.getAgentList();
