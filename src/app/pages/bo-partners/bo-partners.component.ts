@@ -529,7 +529,7 @@ export class BoPartnersComponent implements OnInit {
         partnerName: partner.name,
         emailAddress: partner.emailAddress,
         status: partner.status,
-        currentstatus: partner.currentstatus,
+        currentStatus: partner.currentstatus,
         mode: 'Update Status',
         mobileNumber: partner.mobileNumber,
       },
