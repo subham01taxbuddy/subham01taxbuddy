@@ -1074,6 +1074,9 @@ export class AssignedNewUsersComponent implements OnInit {
     if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
       param = `/${this.agentId}/user-list-new?${data}`;
     }
+    else {
+      param;
+    }
 
     this.userMsService.getMethod(param).subscribe(
       /* {

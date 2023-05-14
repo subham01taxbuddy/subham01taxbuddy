@@ -30,16 +30,17 @@ export class ScheduledCallComponent implements OnInit {
   statuslist: any = [
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
+    { statusName: 'Follow-Up', statusId: '19' },
   ];
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  roles:any;
+  roles: any;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
-  searchVal:any;
+  searchVal: any;
   searchParam: any = {
     page: 0,
     size: 30,
@@ -69,24 +70,24 @@ export class ScheduledCallComponent implements OnInit {
       columnDefs: this.createColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
       sortable: true,
     };
   }
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
-    this.roles = this.utilsService.getUserRoles() ;
+    this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getAgentList();
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
-      this.loggedUserId = userId ;
+      this.loggedUserId = userId;
     }
     this.showScheduleCallList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
-      console.log('q param',this.searchVal)
+      console.log('q param', this.searchVal)
       this.searchParam.mobileNumber = this.searchVal;
       this.search('mobile');
     })
@@ -122,14 +123,14 @@ export class ScheduledCallComponent implements OnInit {
   agentId = null;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.ownerId = event? event.userId : null;
+    if (isOwner) {
+      this.ownerId = event ? event.userId : null;
     } else {
-      this.filerId = event? event.userId : null;
+      this.filerId = event ? event.userId : null;
     }
-    if(this.filerId) {
+    if (this.filerId) {
       this.agentId = this.filerId;
-    } else if(this.ownerId) {
+    } else if (this.ownerId) {
       this.agentId = this.ownerId;
       this.search('agent');
     } else {
@@ -144,17 +145,17 @@ export class ScheduledCallComponent implements OnInit {
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
-    if(this.coFilerId) {
+    if (this.coFilerId) {
       this.agentId = this.coFilerId;
       this.search('agent');
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
-       this.search('agent');
+      this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -165,14 +166,13 @@ export class ScheduledCallComponent implements OnInit {
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
-    var param2 = `/schedule-call-details/${id}?&page=${
-      this.config.currentPage - 1
-    }&size=${this.searchParam.size}`;
+    var param2 = `/schedule-call-details/${id}?&page=${this.config.currentPage - 1
+      }&size=${this.searchParam.size}`;
     this.userMsService.getMethod(param2).subscribe(
       (result: any) => {
-        if(result.success ==false){
+        if (result.success == false) {
           this.toastMsgService.alert(
-            'error',result.message)
+            'error', result.message)
           this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
         }
@@ -180,7 +180,7 @@ export class ScheduledCallComponent implements OnInit {
           this.scheduleCallsData = result.data.content;
           this.config.totalItems = result.data.totalElements;
           this.config.pageCount = result.data.totalPages;
-          this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content) );
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content));
         } else {
           // this.scheduleCallsData = [];
           this.scheduleCallGridOptions.api?.setRowData(
@@ -334,17 +334,13 @@ export class ScheduledCallComponent implements OnInit {
         valueGetter: function nameFromCode(params) {
           if (params.data.statusId == 18) {
             return 'Done';
-          } else {
+          } else if (params.data.statusId == 19) {
+            return 'Follow-Up';
+          }
+          else {
             return 'Open';
           }
         },
-        // cellRenderer: (data: any) => {
-        //   if (data.value) {
-        //     return data.statusName;
-        //   } else {
-        //     return '-';
-        //   }
-        // },
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
@@ -464,17 +460,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params: any) {
-          if (params.data.statusId == 18) {
-            return `<button type="button" class="done"
-            style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;"  'disabled'  >Done</button>`;
-          } else {
-            return `<button type="button" class="action_icon add_button" title="Update Call Status"
-            style="font-size: 12px; width:50px; background-color:#008000;color: #fff; cursor:pointer;" data-action-type="call-done">Done</button>`;
-          }
-        },
-
-        width: 80,
+        width: 150,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -483,6 +469,21 @@ export class ScheduledCallComponent implements OnInit {
             'align-items': 'center',
             'justify-content': 'center',
           };
+        },
+        cellRenderer: function (params: any) {
+          if (params.data.statusId == 18) {
+            return `<button type="button" class="done"
+            style="font-size: 12px; width:50px; background-color:#b6adb4;color: #fff; cursor:none;"  'disabled'>Done</button>
+            <button type="button" class="done"
+            style="font-size: 12px; width:70px; background-color:#b6adb4;color: #fff; cursor:none;"  'disabled'>Follow-Up</button>`;
+          }
+          else {
+            return `<button type="button" class="action_icon add_button" title="Update Call Status"
+            style="font-size: 12px; width:70px; background-color:orange;color: #fff; cursor:pointer;" data-action-type="call-follow-up">Follow-Up</button>
+            <button type="button" class="action_icon add_button" title="Update Call Status"
+            style="font-size: 12px; width:50px; background-color:#008000;color: #fff; cursor:pointer;" data-action-type="call-done">Done</button>`;
+
+          }
         },
       },
     ];
@@ -509,8 +510,12 @@ export class ScheduledCallComponent implements OnInit {
           this.startCalling(params.data);
           break;
         }
+        case 'call-follow-up': {
+          this.callStatusChange(params.data, 19, 'FOLLOW_UP');
+          break;
+        }
         case 'call-done': {
-          this.callStatusChange(params.data);
+          this.callStatusChange(params.data, 18, 'Done');
           break;
         }
         case 'whatsapp-chat': {
@@ -632,7 +637,7 @@ export class ScheduledCallComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
   showUserInformation(user) {
     if (this.utilsService.isNonEmpty(user.userMobile)) {
@@ -644,14 +649,14 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
-  callStatusChange(callInfo) {
+  callStatusChange(callInfo, statusId, statusName) {
     console.log('callInfo: ', callInfo);
     this.loading = true;
     let reqBody = {
       scheduleCallTime: callInfo.scheduleCallTime,
       userId: callInfo.userId,
-      statusId: 18,
-      statusName: 'Done',
+      statusId: statusId,
+      statusName: statusName,
     };
     let param = `/schedule-call-details`;
 
@@ -681,8 +686,8 @@ export class ScheduledCallComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
-      this.search(event - 1,true);
-    }else{
+      this.search(event - 1, true);
+    } else {
       this.search(event - 1);
     }
     // this.showScheduleCallList();
@@ -691,7 +696,7 @@ export class ScheduledCallComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
-  resetFilters(){
+  resetFilters() {
     this.searchParam.page = 0;
     this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
@@ -701,15 +706,16 @@ export class ScheduledCallComponent implements OnInit {
 
     this?.smeDropDown?.resetDropdown();
 
-    if(this.coOwnerDropDown){
+    if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
-      this.search('',true);
-    }else{
+      this.search('', true);
+    } else {
       this.search();
     }
   }
 
-  search(form? , isAgent?) {
+  search(form?, isAgent?) {
+    let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -742,6 +748,9 @@ export class ScheduledCallComponent implements OnInit {
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
+    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
+      param = `/schedule-call-details/${this.agentId}?${data}`;
+    }
     else {
       param;
     }
@@ -749,24 +758,24 @@ export class ScheduledCallComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
-      if(result.success ==false){
+      if (result.success == false) {
         this.toastMsgService.alert(
-          'error',result.message)
+          'error', result.message)
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
 
-      if(result.data.content instanceof Array && result.data.content.length > 0) {
+      if (result.data.content instanceof Array && result.data.content.length > 0) {
         this.scheduleCallsData = result.data.content;
         this.scheduleCallGridOptions.api?.setRowData(
-          this.createRowData(result.data.content) );
+          this.createRowData(result.data.content));
         this.config.totalItems = result.data.totalElements;
         this.config.pageCount = result.data.totalPages;
-      }else {
+      } else {
         this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        if(result.message) {
+        if (result.message) {
           this.toastMsgService.alert('error', result.message);
         }
       }
@@ -774,13 +783,14 @@ export class ScheduledCallComponent implements OnInit {
     });
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }
-    this.search('',true);
+    this.search('', true);
   }
 }
