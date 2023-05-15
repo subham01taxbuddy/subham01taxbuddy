@@ -127,6 +127,8 @@ export class DashboardComponent implements OnInit {
     } else if (searchType == 'scheduleCall') {
       this.getScheduleCallDetails(searchType);
     }else{
+      this.getInvoiceReports();
+      this.getPartnerCommission();
       this.getDocUploadedList('docUpload');
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
