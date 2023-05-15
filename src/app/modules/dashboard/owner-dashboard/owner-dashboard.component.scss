@@ -206,7 +206,7 @@
   }
 
   .proceed {
-    width:20%;
+    // width:20%;
     float:right;
     background-color: #04a4bc !important;
     color:#ffffff!important;
@@ -259,3 +259,6 @@
   border-bottom: 1px solid #dadada;
   padding-bottom: 15px;
 }
+.form-control{
+  flex-direction:row;
+ }
