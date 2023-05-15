@@ -39,19 +39,19 @@
 
       <div class="card__col-xs-12 card__col-sm-6">
         <div class="card__col-xs-12 card__col-sm-6">
-          <mat-label>Trade of Business</mat-label>
+          <mat-label>Name of Business</mat-label>
         </div>
         <mat-form-field class="input-field-width">
           <input
             matInput
             class="input-field"
-            placeholder="Trade of Business"
+            placeholder="Name of Business"
             formControlName="tradeName"
             maxlength="30"
           />
           <mat-error
             *ngIf="businessForm?.controls['tradeName'].hasError('required')"
-            >Please enter trade of business</mat-error
+            >Please enter name of business</mat-error
           >
         </mat-form-field>
       </div>
