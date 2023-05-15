@@ -2790,134 +2790,6 @@ export class PrefillIdComponent implements OnInit {
         }
       }
 
-      // SALARY
-      // {
-      //   if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
-      //     {
-      //       const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
-
-      //       const mapJsonSalaryToITRObj = ({
-      //         AddressDetail: {
-      //           AddrDetail,
-      //           CityOrTownOrDistrict,
-      //           StateCode,
-      //           PinCode,
-      //         },
-      //         Salarys: {
-      //           NatureOfSalary: {
-      //             OthersIncDtls: [{ NatureDes, OthNatOfInc, OthAmount }],
-      //           },
-      //           GrossSalary,
-      //           Salary,
-      //           ValueOfPerquisites,
-      //           ProfitsinLieuOfSalary,
-      //           IncomeNotified89A,
-      //           IncomeNotifiedOther89A,
-      //         },
-      //         NameOfEmployer,
-      //         NatureOfEmployment,
-      //         TANofEmployer,
-      //         AllwncExemptUs10Dtls,
-      //       }) => {
-      //         // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-      //         if (this.regime === 'OLD') {
-      //           const availableSalaryAllowances = ItrJSON[
-      //             this.ITR_Type
-      //           ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-      //             (value) => value.SalNatureDesc
-      //           );
-      //           this.updateSalaryAllowances(
-      //             availableSalaryAllowances,
-      //             this.ITR_Type
-      //           );
-      //         }
-
-      //         return {
-      //           id: '',
-      //           employerName: NameOfEmployer,
-      //           address: AddrDetail,
-      //           city: CityOrTownOrDistrict,
-      //           pinCode: PinCode,
-      //           state: StateCode,
-      //           employerPAN: '',
-      //           employerTAN: TANofEmployer,
-      //           periodFrom: '',
-      //           periodTo: '',
-      //           taxableIncome: null,
-      //           standardDeduction: null,
-      //           employerCategory: NatureOfEmployment,
-      //           exemptIncome: null,
-      //           taxRelief: null,
-      //           taxDeducted: null,
-      //           salary: [
-      //             {
-      //               salaryType: 'SEC17_1',
-      //               taxableAmount: Salary,
-      //               exemptAmount: 0,
-      //             },
-      //           ],
-      //           allowance: this.allowanceDetails23,
-      //           perquisites: [
-      //             {
-      //               perquisiteType: 'SEC17_2',
-      //               taxableAmount: ValueOfPerquisites,
-      //               exemptAmount: 0,
-      //             },
-      //           ],
-      //           profitsInLieuOfSalaryType: [
-      //             {
-      //               salaryType: 'SEC17_3',
-      //               taxableAmount: ProfitsinLieuOfSalary,
-      //               exemptAmount: 0,
-      //             },
-      //           ],
-      //           deductions: [
-      //             {
-      //               deductionType: 'PROFESSIONAL_TAX',
-      //               taxableAmount: 0,
-      //               exemptAmount: null,
-      //             },
-      //             // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
-      //           ],
-      //           upload: [],
-      //           calculators: null,
-      //         };
-      //       };
-
-      //       const employers = salaries.map(mapJsonSalaryToITRObj);
-      //       this.ITR_Obj.employers.push(employers);
-
-      //       sessionStorage.setItem(
-      //         AppConstants.ITR_JSON,
-      //         JSON.stringify(this.ITR_Obj)
-      //       );
-      //     }
-
-      //     //Total of exempt income (Salary allowances total) --- There is some error in this, need to recheck
-      //     let totalExemptIncome = this.ITR_Obj.employers.find(
-      //       (exemptIncome) => exemptIncome.exemptIncome
-      //     );
-      //     totalExemptIncome =
-      //       ItrJSON[this.ITR_Type].ScheduleS?.AllwncExtentExemptUs10;
-      //     console.log(totalExemptIncome, 'totalExemptIncome');
-
-      //     // Standard deduction of 50k
-      //     this.ITR_Obj.employers[0].standardDeduction =
-      //       ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
-
-      //     //setting professional tax
-      //     const deductions = this.ITR_Obj.employers[0].deductions;
-      //     if (deductions && deductions[0]) {
-      //       deductions[0].exemptAmount =
-      //         ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii;
-      //     } else {
-      //       console.error('Cannot access deductions or its first element');
-      //     }
-
-      //     // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
-      //   }
-      // }
-
       //SALARY - FOR ITR 2 SALARY ALLOWANCES ARE BEING SET AGAINST 1ST EMPLOYER ONLY
       {
         const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
@@ -3062,121 +2934,67 @@ export class PrefillIdComponent implements OnInit {
 
       // HOUSE PROPERTIES
       {
-        if (ItrJSON[this.ITR_Type].ScheduleHP?.PropertyDetails) {
-          {
-            const houseProperties =
-              ItrJSON[this.ITR_Type].ScheduleHP?.PropertyDetails;
+        const houseProperties =
+          ItrJSON[this.ITR_Type].ScheduleHP?.PropertyDetails;
 
-            const mapJsonHPToITRObj = ({
-              AddressDetailWithZipCode: {
-                AddrDetail,
-                CityOrTownOrDistrict,
-                StateCode,
-                CountryCode,
-                PinCode,
-              },
-              CoOwners,
-              TenantDetails,
-              Rentdetails: {
-                AnnualLetableValue,
-                RentNotRealized,
-                LocalTaxes,
-                TotalUnrealizedAndTax,
-                BalanceALV,
-                AnnualOfPropOwned,
-                ThirtyPercentOfBalance,
-                IntOnBorwCap,
-                TotalDeduct,
-                ArrearsUnrealizedRentRcvd,
-                IncomeOfHP,
-              },
-              HPSNo,
-              PropertyOwner,
-              PropCoOwnedFlg,
-              AsseseeShareProperty,
-              ifLetOut,
-            }) => {
-              return {
+        houseProperties.forEach((houseProperty) => {
+          const housePropertyDetails = {
+            id: null,
+            propertyType:
+              houseProperty.ifLetOut === 'Y'
+                ? 'LOP'
+                : houseProperty.ifLetOut === 'N'
+                ? 'SOP'
+                : houseProperty.ifLetOut === 'D'
+                ? 'DLOP'
+                : 'LOP',
+            grossAnnualRentReceived:
+              houseProperty.Rentdetails.AnnualLetableValue,
+            // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
+            propertyTax: houseProperty.Rentdetails.LocalTaxes,
+            address: houseProperty.AddressDetailWithZipCode.AddrDetail,
+            ownerOfProperty: null,
+            otherOwnerOfProperty: null,
+            city: houseProperty.AddressDetailWithZipCode.CityOrTownOrDistrict,
+            state: houseProperty.AddressDetailWithZipCode.StateCode,
+            country: houseProperty.AddressDetailWithZipCode.CountryCode,
+            pinCode: houseProperty.AddressDetailWithZipCode.PinCode,
+            taxableIncome: houseProperty.Rentdetails.IncomeOfHP,
+            exemptIncome: houseProperty.Rentdetails.ThirtyPercentOfBalance,
+            isEligibleFor80EE: null,
+            isEligibleFor80EEA: null,
+            coOwners: houseProperty.CoOwners.map(
+              ({
+                CoOwnersSNo,
+                NameCoOwner,
+                PAN_CoOwner,
+                Aadhaar_CoOwner,
+                PercentShareProperty,
+              }) => ({
                 id: null,
-                propertyType: ifLetOut === 'Y' ? 'LOP' : 'SOP', // hVAE TO CHECK FOR DLOP
-                grossAnnualRentReceived: AnnualLetableValue,
-                // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
-                propertyTax: LocalTaxes,
-                address: AddrDetail,
-                ownerOfProperty: null,
-                otherOwnerOfProperty: null,
-                city: CityOrTownOrDistrict,
-                state: StateCode,
-                country: CountryCode,
-                pinCode: PinCode,
-                taxableIncome: IncomeOfHP,
-                exemptIncome: ThirtyPercentOfBalance,
-                isEligibleFor80EE: null,
-                isEligibleFor80EEA: null,
-                coOwners: CoOwners
-                  ? CoOwners.map(
-                      ({
-                        CoOwnersSNo,
-                        NameCoOwner,
-                        PAN_CoOwner,
-                        Aadhaar_CoOwner,
-                        PercentShareProperty,
-                      }) => ({
-                        id: null,
-                        name: NameCoOwner,
-                        isSelf: null,
-                        panNumber: PAN_CoOwner,
-                        percentage: PercentShareProperty,
-                      })
-                    )
-                  : [],
-                tenant: TenantDetails
-                  ? TenantDetails.map(
-                      ({
-                        TenantSNo,
-                        NameofTenant,
-                        PANofTenant,
-                        AadhaarofTenant,
-                      }) => ({
-                        id: null,
-                        name: NameofTenant,
-                        panNumber: PANofTenant,
-                      })
-                    )
-                  : [],
-                loans: [
-                  {
-                    id: null,
-                    loanType: 'HOUSING',
-                    principalAmount: null,
-                    interestAmount: IntOnBorwCap,
-                  },
-                ],
-              };
-            };
-
-            this.ITR_Obj.houseProperties =
-              houseProperties.map(mapJsonHPToITRObj);
-
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-          }
-
-          // Standard deduction of 50k
-          this.ITR_Obj.employers[0].standardDeduction =
-            ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
-
-          // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-          if (this.regime === 'OLD') {
-            //Total of exempt income (Salary allowances total)
-            this.ITR_Obj.employers[0].exemptIncome =
-              ItrJSON[this.ITR_Type][
-                this.ITR14_IncomeDeductions
-              ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
-          }
-        }
+                name: NameCoOwner,
+                isSelf: null,
+                panNumber: PAN_CoOwner,
+                percentage: PercentShareProperty,
+              })
+            ),
+            tenant: houseProperty.TenantDetails?.map(
+              ({ TenantSNo, NameofTenant, PANofTenant, AadhaarofTenant }) => ({
+                id: null,
+                name: NameofTenant,
+                panNumber: PANofTenant,
+              })
+            ),
+            loans: [
+              {
+                id: null,
+                loanType: 'HOUSING',
+                principalAmount: null,
+                interestAmount: houseProperty.Rentdetails.IntOnBorwCap,
+              },
+            ],
+          };
+        });
       }
 
       // OTHER INCOME
