@@ -198,7 +198,7 @@
           <td>{{ item.userName }}</td>
           <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
           <td>{{ item.docUploadDate | date:'short' }}</td>
-          <td>{{ item.paymentStatus }}</td>
+          <td [ngClass]="{'text-danger': item.paymentStatus === 'Unpaid'}">{{ item.paymentStatus }}</td>
         </tr>
         <!-- <tr>
           <th scope="row">1</th>
