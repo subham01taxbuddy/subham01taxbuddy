@@ -2941,29 +2941,29 @@ export class PrefillIdComponent implements OnInit {
           const housePropertyDetails = {
             id: null,
             propertyType:
-              houseProperty.ifLetOut === 'Y'
+              houseProperty?.ifLetOut === 'Y'
                 ? 'LOP'
-                : houseProperty.ifLetOut === 'N'
+                : houseProperty?.ifLetOut === 'N'
                 ? 'SOP'
-                : houseProperty.ifLetOut === 'D'
+                : houseProperty?.ifLetOut === 'D'
                 ? 'DLOP'
                 : 'LOP',
             grossAnnualRentReceived:
-              houseProperty.Rentdetails.AnnualLetableValue,
+              houseProperty.Rentdetails?.AnnualLetableValue,
             // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
-            propertyTax: houseProperty.Rentdetails.LocalTaxes,
-            address: houseProperty.AddressDetailWithZipCode.AddrDetail,
+            propertyTax: houseProperty.Rentdetails?.LocalTaxes,
+            address: houseProperty.AddressDetailWithZipCode?.AddrDetail,
             ownerOfProperty: null,
             otherOwnerOfProperty: null,
-            city: houseProperty.AddressDetailWithZipCode.CityOrTownOrDistrict,
-            state: houseProperty.AddressDetailWithZipCode.StateCode,
-            country: houseProperty.AddressDetailWithZipCode.CountryCode,
-            pinCode: houseProperty.AddressDetailWithZipCode.PinCode,
-            taxableIncome: houseProperty.Rentdetails.IncomeOfHP,
-            exemptIncome: houseProperty.Rentdetails.ThirtyPercentOfBalance,
+            city: houseProperty.AddressDetailWithZipCode?.CityOrTownOrDistrict,
+            state: houseProperty.AddressDetailWithZipCode?.StateCode,
+            country: houseProperty.AddressDetailWithZipCode?.CountryCode,
+            pinCode: houseProperty.AddressDetailWithZipCode?.PinCode,
+            taxableIncome: houseProperty.Rentdetails?.IncomeOfHP,
+            exemptIncome: houseProperty.Rentdetails?.ThirtyPercentOfBalance,
             isEligibleFor80EE: null,
             isEligibleFor80EEA: null,
-            coOwners: houseProperty.CoOwners.map(
+            coOwners: houseProperty.CoOwners?.map(
               ({
                 CoOwnersSNo,
                 NameCoOwner,
@@ -3131,6 +3131,38 @@ export class PrefillIdComponent implements OnInit {
         }
       }
 
+      // SCHEDULE AL
+      {
+        const ImmovableDetails =
+          ItrJSON[this.ITR_Type].ScheduleAL?.ImmovableDetails;
+
+        ImmovableDetails.forEach((element) => {
+          const immovableDetail = {
+            amount: element.Amount,
+            area: element.AddressAL.LocalityOrArea,
+            city: element.AddressAL.CityOrTownOrDistrict,
+            country: element.AddressAL.CountryCode,
+            description: element.Description,
+            flatNo: element.AddressAL.ResidenceNo,
+            hasEdit: false,
+            pinCode: element.AddressAL.PinCode,
+            premisesName: element.AddressAL.ResidenceName,
+            road: element.AddressAL.RoadOrStreet,
+            srn: 0,
+            state: element.AddressAL.StateCode,
+          };
+
+          this.ITR_Obj.immovableAsset.push(immovableDetail);
+        });
+
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_Obj)
+        );
+      }
+
+      //MOVABLE ASSET PENDING - ERROR WHILE SAVING NOT ABLE TO MAP
+
       // INVESTMENTS / DEDUCTIONS
       {
         if (ItrJSON[this.ITR_Type]?.ScheduleVIA?.DeductUndChapVIA) {
@@ -3288,48 +3320,6 @@ export class PrefillIdComponent implements OnInit {
             JSON.stringify(this.ITR_Obj)
           );
         }
-      }
-
-      // SCHEDULE AL
-      {
-        const mapImmovableDetails = ({
-          AddressAL: {
-            ResidenceNo,
-            ResidenceName,
-            RoadOrStreet,
-            LocalityOrArea,
-            CityOrTownOrDistrict,
-            StateCode,
-            CountryCode,
-            PinCode,
-          },
-          Description,
-          Amount,
-        }) => {
-          return {
-            amount: Amount,
-            area: LocalityOrArea,
-            city: CityOrTownOrDistrict,
-            country: CountryCode,
-            description: Description,
-            flatNo: ResidenceNo,
-            id: null,
-            pinCode: PinCode,
-            premisesName: ResidenceName,
-            road: RoadOrStreet,
-            state: StateCode,
-          };
-        };
-
-        const ImmovableDetails =
-          ItrJSON[this.ITR_Type].ScheduleAL?.ImmovableDetails;
-
-        this.ITR_Obj.immovableAsset = ImmovableDetails.map(mapImmovableDetails);
-
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
       }
 
       // TAXES PAID
