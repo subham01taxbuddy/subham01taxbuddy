@@ -274,10 +274,22 @@ export class PrefillIdComponent implements OnInit {
         );
         console.log('totalAnyOtherAmount ==>>', totalAnyOtherAmount);
 
-        if (this.regime === 'OLD') {
+        if (
+          this.regime === 'OLD' &&
+          (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4')
+        ) {
           itrObjSalaryAnyOthAllowance.exemptAmount =
             this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
               .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalAnyOtherAmount;
+        }
+
+        if (
+          this.regime === 'OLD' &&
+          (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3')
+        ) {
+          itrObjSalaryAnyOthAllowance.exemptAmount =
+            this.uploadedJson[ITR_Type].ScheduleS?.AllwncExtentExemptUs10 -
+            totalAnyOtherAmount;
         }
       }
 
@@ -2779,129 +2791,272 @@ export class PrefillIdComponent implements OnInit {
       }
 
       // SALARY
+      // {
+      //   if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
+      //     {
+      //       const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
+
+      //       const mapJsonSalaryToITRObj = ({
+      //         AddressDetail: {
+      //           AddrDetail,
+      //           CityOrTownOrDistrict,
+      //           StateCode,
+      //           PinCode,
+      //         },
+      //         Salarys: {
+      //           NatureOfSalary: {
+      //             OthersIncDtls: [{ NatureDes, OthNatOfInc, OthAmount }],
+      //           },
+      //           GrossSalary,
+      //           Salary,
+      //           ValueOfPerquisites,
+      //           ProfitsinLieuOfSalary,
+      //           IncomeNotified89A,
+      //           IncomeNotifiedOther89A,
+      //         },
+      //         NameOfEmployer,
+      //         NatureOfEmployment,
+      //         TANofEmployer,
+      //         AllwncExemptUs10Dtls,
+      //       }) => {
+      //         // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
+      //         if (this.regime === 'OLD') {
+      //           const availableSalaryAllowances = ItrJSON[
+      //             this.ITR_Type
+      //           ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+      //             (value) => value.SalNatureDesc
+      //           );
+      //           this.updateSalaryAllowances(
+      //             availableSalaryAllowances,
+      //             this.ITR_Type
+      //           );
+      //         }
+
+      //         return {
+      //           id: '',
+      //           employerName: NameOfEmployer,
+      //           address: AddrDetail,
+      //           city: CityOrTownOrDistrict,
+      //           pinCode: PinCode,
+      //           state: StateCode,
+      //           employerPAN: '',
+      //           employerTAN: TANofEmployer,
+      //           periodFrom: '',
+      //           periodTo: '',
+      //           taxableIncome: null,
+      //           standardDeduction: null,
+      //           employerCategory: NatureOfEmployment,
+      //           exemptIncome: null,
+      //           taxRelief: null,
+      //           taxDeducted: null,
+      //           salary: [
+      //             {
+      //               salaryType: 'SEC17_1',
+      //               taxableAmount: Salary,
+      //               exemptAmount: 0,
+      //             },
+      //           ],
+      //           allowance: this.allowanceDetails23,
+      //           perquisites: [
+      //             {
+      //               perquisiteType: 'SEC17_2',
+      //               taxableAmount: ValueOfPerquisites,
+      //               exemptAmount: 0,
+      //             },
+      //           ],
+      //           profitsInLieuOfSalaryType: [
+      //             {
+      //               salaryType: 'SEC17_3',
+      //               taxableAmount: ProfitsinLieuOfSalary,
+      //               exemptAmount: 0,
+      //             },
+      //           ],
+      //           deductions: [
+      //             {
+      //               deductionType: 'PROFESSIONAL_TAX',
+      //               taxableAmount: 0,
+      //               exemptAmount: null,
+      //             },
+      //             // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
+      //           ],
+      //           upload: [],
+      //           calculators: null,
+      //         };
+      //       };
+
+      //       const employers = salaries.map(mapJsonSalaryToITRObj);
+      //       this.ITR_Obj.employers.push(employers);
+
+      //       sessionStorage.setItem(
+      //         AppConstants.ITR_JSON,
+      //         JSON.stringify(this.ITR_Obj)
+      //       );
+      //     }
+
+      //     //Total of exempt income (Salary allowances total) --- There is some error in this, need to recheck
+      //     let totalExemptIncome = this.ITR_Obj.employers.find(
+      //       (exemptIncome) => exemptIncome.exemptIncome
+      //     );
+      //     totalExemptIncome =
+      //       ItrJSON[this.ITR_Type].ScheduleS?.AllwncExtentExemptUs10;
+      //     console.log(totalExemptIncome, 'totalExemptIncome');
+
+      //     // Standard deduction of 50k
+      //     this.ITR_Obj.employers[0].standardDeduction =
+      //       ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
+
+      //     //setting professional tax
+      //     const deductions = this.ITR_Obj.employers[0].deductions;
+      //     if (deductions && deductions[0]) {
+      //       deductions[0].exemptAmount =
+      //         ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii;
+      //     } else {
+      //       console.error('Cannot access deductions or its first element');
+      //     }
+
+      //     // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
+      //   }
+      // }
+
+      //SALARY - FOR ITR 2 SALARY ALLOWANCES ARE BEING SET AGAINST 1ST EMPLOYER ONLY
       {
-        if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
-          {
-            const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
+        const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
 
-            const mapJsonSalaryToITRObj = ({
-              AddressDetail: {
-                AddrDetail,
-                CityOrTownOrDistrict,
-                StateCode,
-                PinCode,
+        salaries.forEach((salary: any) => {
+          const employerDetails = {
+            id: '',
+            employerName: salary.NameOfEmployer,
+            address: salary.AddressDetail.AddrDetail,
+            city: salary.AddressDetail.CityOrTownOrDistrict,
+            pinCode: salary.AddressDetail.PinCode,
+            state: salary.AddressDetail.StateCode,
+            employerPAN: '',
+            employerTAN: salary.TANofEmployer,
+            periodFrom: '',
+            periodTo: '',
+            taxableIncome: null,
+            standardDeduction: null,
+            employerCategory: salary.NatureOfEmployment,
+            exemptIncome: null,
+            taxRelief: null,
+            taxDeducted: null,
+            salary: [
+              {
+                salaryType: 'SEC17_1',
+                taxableAmount: salary.Salarys.Salary,
+                exemptAmount: 0,
               },
-              Salarys: {
-                NatureOfSalary: {
-                  OthersIncDtls: [{ NatureDes, OthNatOfInc, OthAmount }],
-                },
-                GrossSalary,
-                Salary,
-                ValueOfPerquisites,
-                ProfitsinLieuOfSalary,
-                IncomeNotified89A,
-                IncomeNotifiedOther89A,
+            ],
+
+            allowance:
+              this.regime === 'NEW'
+                ? []
+                : [
+                    {
+                      allowanceType: 'HOUSE_RENT',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                    {
+                      allowanceType: 'LTA',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                    {
+                      allowanceType: 'CHILDREN_EDUCATION',
+                      taxableAmount: 0,
+                      exemptAmount: 0,
+                    },
+                    {
+                      allowanceType: 'GRATUITY',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                    {
+                      allowanceType: 'COMMUTED_PENSION',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                    {
+                      allowanceType: 'LEAVE_ENCASHMENT',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                    {
+                      allowanceType: 'ANY_OTHER',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                    {
+                      allowanceType: 'ALL_ALLOWANCES',
+                      taxableAmount: 0,
+                      exemptAmount: null,
+                    },
+                  ],
+            perquisites: [
+              {
+                perquisiteType: 'SEC17_2',
+                taxableAmount: salary.Salarys.ValueOfPerquisites,
+                exemptAmount: 0,
               },
-              NameOfEmployer,
-              NatureOfEmployment,
-              TANofEmployer,
-              AllwncExemptUs10Dtls,
-            }) => {
-              // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-              if (this.regime === 'OLD') {
-                const availableSalaryAllowances = ItrJSON[
-                  this.ITR_Type
-                ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-                  (value) => value.SalNatureDesc
-                );
-                this.updateSalaryAllowances(
-                  availableSalaryAllowances,
-                  this.ITR_Type
-                );
-              }
+            ],
+            profitsInLieuOfSalaryType: [
+              {
+                salaryType: 'SEC17_3',
+                taxableAmount: salary.Salarys.ProfitsinLieuOfSalary,
+                exemptAmount: 0,
+              },
+            ],
+            deductions:
+              this.regime === 'NEW'
+                ? []
+                : [
+                    {
+                      deductionType: 'PROFESSIONAL_TAX',
+                      taxableAmount: null,
+                      exemptAmount: 0,
+                    },
 
-              return {
-                id: '',
-                employerName: NameOfEmployer,
-                address: AddrDetail,
-                city: CityOrTownOrDistrict,
-                pinCode: PinCode,
-                state: StateCode,
-                employerPAN: '',
-                employerTAN: TANofEmployer,
-                periodFrom: '',
-                periodTo: '',
-                taxableIncome: null,
-                standardDeduction: null,
-                employerCategory: NatureOfEmployment,
-                exemptIncome: null,
-                taxRelief: null,
-                taxDeducted: null,
-                salary: [
-                  {
-                    salaryType: 'SEC17_1',
-                    taxableAmount: Salary,
-                    exemptAmount: 0,
-                  },
-                ],
-                allowance: this.allowanceDetails23,
-                perquisites: [
-                  {
-                    perquisiteType: 'SEC17_2',
-                    taxableAmount: ValueOfPerquisites,
-                    exemptAmount: 0,
-                  },
-                ],
-                profitsInLieuOfSalaryType: [
-                  {
-                    salaryType: 'SEC17_3',
-                    taxableAmount: ProfitsinLieuOfSalary,
-                    exemptAmount: 0,
-                  },
-                ],
-                deductions: [
-                  {
-                    deductionType: 'PROFESSIONAL_TAX',
-                    taxableAmount: 0,
-                    exemptAmount: null,
-                  },
-                  // NEED TO ADD ENTERTAINMENT ALLOWANCE HERE
-                ],
-                upload: [],
-                calculators: null,
-              };
-            };
+                    {
+                      deductionType: 'ENTERTAINMENT_ALLOW',
+                      taxableAmount: null,
+                      exemptAmount: 0,
+                    },
+                  ],
+            upload: [],
+            calculators: null,
+          };
+          this.ITR_Obj.employers.push(employerDetails);
+        });
 
-            this.ITR_Obj.employers = salaries.map(mapJsonSalaryToITRObj);
-
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-          }
-
-          //Total of exempt income (Salary allowances total) --- There is some error in this, need to recheck
-          let totalExemptIncome = this.ITR_Obj.employers.find(
-            (exemptIncome) => exemptIncome.exemptIncome
+        if (this.regime === 'OLD') {
+          const availableSalaryAllowances = ItrJSON[
+            this.ITR_Type
+          ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+            (value) => value.SalNatureDesc
           );
-          totalExemptIncome =
-            ItrJSON[this.ITR_Type].ScheduleS?.AllwncExtentExemptUs10;
-          console.log(totalExemptIncome, 'totalExemptIncome');
+          this.updateSalaryAllowances(availableSalaryAllowances, this.ITR_Type);
 
-          // Standard deduction of 50k
-          this.ITR_Obj.employers[0].standardDeduction =
-            ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia;
-
-          //setting professional tax
-          const deductions = this.ITR_Obj.employers[0].deductions;
-          if (deductions && deductions[0]) {
-            deductions[0].exemptAmount =
-              ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii;
-          } else {
-            console.error('Cannot access deductions or its first element');
-          }
-
-          // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
+          //Setting professional tax
+          this.ITR_Obj.employers.forEach(
+            (employer) =>
+              (employer.deductions.find(
+                (deductionType) =>
+                  deductionType.deductionType === 'PROFESSIONAL_TAX'
+              ).exemptAmount =
+                ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii /
+                salaries.length)
+          );
+          //Setting entertainment allowance
+          this.ITR_Obj.employers.forEach(
+            (employer) =>
+              (employer.deductions.find(
+                (deductionType) =>
+                  deductionType.deductionType === 'ENTERTAINMENT_ALLOW'
+              ).exemptAmount =
+                ItrJSON[this.ITR_Type].ScheduleS?.EntertainmntalwncUs16ii /
+                salaries.length)
+          );
         }
       }
 
