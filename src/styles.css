@@ -337,13 +337,21 @@ width:60px;
     font-weight: bold;
 }
 
+.radiuSrch {
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-top: 15px;
+  border: 2px solid #2199e8;
+}
+
 .TxHd{
   font-size:18px;
   color:#21415b;
   font-weight:600;
 }
 .TxSm{
-  font-size:15px;
+  font-size:16px;
   color:#000000;
   font-weight:500;
 }

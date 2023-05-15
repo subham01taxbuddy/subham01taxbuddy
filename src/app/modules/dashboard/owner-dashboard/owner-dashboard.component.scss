@@ -70,7 +70,7 @@
 
   input {
     border: 1px solid #cccccc!important;
-    padding: 5px!important;
+    padding: 6px!important;
   }
 
   .mvup {
@@ -80,6 +80,14 @@
   .mvup-custom {
     margin-top: -102px;
   }
+
+  .spRtTp {
+    margin-top: -210px;
+}
+
+.tpSp1{
+  margin-top:15px;
+}
 
 
   .spTp {
@@ -237,8 +245,9 @@
     padding:6px 10px 6px 10px;
     box-shadow: 2px 4px #e4e4ff;
     font-size:13px;
-    margin-top: 10px;
+    margin: 0px 0px 20px 0px;
     // margin-left: -75px;
+    float:right;
   }
   .proceed2:hover {
     background-color: #006c7d !important;
