@@ -41,7 +41,7 @@ export class RefundRequestComponent implements OnInit {
 
     mobile: new FormControl(''),
     email: new FormControl(''),
-    txbdyInvoiceId: new FormControl(''),
+    invoiceNo: new FormControl(''),
   });
 
   get mobile() {
@@ -52,8 +52,8 @@ export class RefundRequestComponent implements OnInit {
     return this.invoiceFormGroup.controls['email'] as FormControl;
   }
 
-  get txbdyInvoiceId() {
-    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as FormControl;
+  get invoiceNo() {
+    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
   constructor(
@@ -166,12 +166,12 @@ export class RefundRequestComponent implements OnInit {
     let invoiceFilter = '';
     if (
       this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['txbdyInvoiceId'].value
+        this.invoiceFormGroup.controls['invoiceNo'].value
       )
     ) {
       invoiceFilter =
-        '&txbdyInvoiceId=' +
-        this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
+        '&invoiceNo=' +
+        this.invoiceFormGroup.controls['invoiceNo'].value;
     }
 
     if (id) {
