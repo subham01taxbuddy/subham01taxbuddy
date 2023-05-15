@@ -2,13 +2,13 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-6">
+    <div class="col-sm-9">
       <b style="font-size: 20px">My Users</b>
     </div>
-    <div class="col-sm-4" *ngIf="(roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER'))">
-      <button class="tbd-btn" style="float:right" (click)="openBulkReAssignment()">Bulk Re-Assignment</button>
+    <div class="col-sm-3" *ngIf="(roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER'))">
+      <button class="tbd-btn spRt" style="float:right" (click)="openBulkReAssignment()">Bulk Re-Assignment</button>
     </div>
-    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+    <div class="col-sm-3" *ngIf="roles?.includes('ROLE_OWNER')">
       <p>
         <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
       </p>

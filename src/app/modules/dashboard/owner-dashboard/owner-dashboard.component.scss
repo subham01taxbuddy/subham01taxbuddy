@@ -4,7 +4,6 @@
   }
 
 
-
   .rowClr {
     background-color: #e4e4ff;
     padding:0px 20px 10px 20px;
@@ -38,8 +37,8 @@
     margin-bottom:0px;
     display:block;
     box-shadow: 1px 2px #e4e4ff;
-  }
-
+  } 
+  
   .grTx {
     color: #63b12d !important;
   }
@@ -108,11 +107,7 @@
     padding-left: 0px;
     padding-right:10px;
   }
-  .TxSm{
-    font-size:16px;
-    color:#000000;
-    font-weight:normal;
-  }
+ 
   .numTxSm{
     font-size: 18px;
     color: #04a4bc;
@@ -256,6 +251,7 @@
 
 
 .bdrbl {
-  border-bottom: 1px solid #dadada;
+  // border-bottom: 1px solid #dadada;
   padding-bottom: 15px;
 }
+

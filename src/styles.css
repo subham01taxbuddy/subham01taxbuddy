@@ -312,6 +312,60 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.icoBt {
+border: 1px solid #04a4bc;
+padding: 3px;
+border-radius: 5px;
+color: #04a4bc;
+font-size: 18px;
+background-color:#fafafa;
+margin-left:10px;
+width:60px;
+}
+
+.bdrbl1 {
+  padding-bottom: 5px;
+  color: #21415b;
+  font-size:22px;
+  font-weight:600;
+}
+
+
+  .bluTx {
+    font-size: 25px;
+    color: #21415b;
+    font-weight: bold;
+}
+
+.TxHd{
+  font-size:18px;
+  color:#21415b;
+  font-weight:600;
+}
+.TxSm{
+  font-size:15px;
+  color:#000000;
+  font-weight:500;
+}
+.rowSp{
+  margin:20px 0px 10px 0px!important;
+  background-color:#ebebff;
+  border-radius:10px;
+  padding:20px;
+}
+
+.radius3 {
+  border-radius:8px;
+  background-color:#f4f4ff!important;
+  padding: 5px 10px 20px 10px;
+  margin-top:0px;
+  box-shadow: 2px 5px #fafafa;
+  border:1px solid #bbcfff;
+  height:100px;
+  margin-bottom:0px;
+  display:block;
+  box-shadow: 1px 2px #e4e4ff;
+}
 
 .rowClr{
   background-color: #e4e4ff;
@@ -344,6 +398,7 @@ button {
 
 .srch-btn:hover {
   background-color:#0165a7; 
+  color:#ffffff;
 }
 
 .mat-form-field {
