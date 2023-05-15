@@ -45,8 +45,8 @@
       </div>
     </div>
   </div>
-  
-    
+
+
 
     <div *ngIf="serviceTypeSelected">
       <label *ngIf="filteredPlans.length === 0">Selected service plan detail not available.</label>
@@ -70,11 +70,11 @@
   <hr>
 
   <mat-dialog-actions align="center">
-    
+
 
     <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
 
-    <button mat-raised-button color="primary" style="margin-top: 0px;" (click)="createSubscription()" tabindex="1">
+    <button mat-raised-button color="primary" style="margin-top: 0px;" [disabled]="loading" (click)="createSubscription()" tabindex="1">
       Create
     </button>
   </mat-dialog-actions>
