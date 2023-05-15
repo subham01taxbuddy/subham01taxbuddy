@@ -462,6 +462,7 @@ export class SharesAndEquityComponent
               res.assetDetails[0].capitalGain
             );
           } else {
+            this.loading = false;
             securities.controls['capitalGain'].setValue(0);
           }
 
@@ -667,10 +668,12 @@ export class SharesAndEquityComponent
         }
       );
     } else if (!this.securitiesForm.valid) {
+      this.loading = false;
       this.utilsService.showSnackBar(
         'Please verify securities data and try again.'
       );
     } else {
+      this.loading = false;
       this.utilsService.showSnackBar(
         'Please verify deduction form and try again'
       );
