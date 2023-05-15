@@ -429,11 +429,12 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     if(agentId){
-      userFilter='';
      if(this.coOwnerId && !this.coFilerId){
+      userFilter='';
       userFilter += `&ownerUserId=${this.coOwnerId}`;
      }
      if(this.coFilerId){
+      userFilter='';
       userFilter += `&filerUserId=${this.coFilerId}`;
      }
     }
