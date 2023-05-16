@@ -3542,7 +3542,7 @@ export class PrefillIdComponent implements OnInit {
                     isUploaded: null,
                     srn: null,
                     description: null,
-                    gainType: 'SHORT',
+                    gainType: 'LONG',
                     sellDate: null,
                     sellValue: null,
                     stampDutyValue: null,
@@ -3574,24 +3574,83 @@ export class PrefillIdComponent implements OnInit {
             }
           });
 
-          // const mapEquityMFonSTTSTCG = ({
-          //   DeductSec48: { AquisitCost, ImproveCost, ExpOnTrans, TotalDedn },
-          //   FullConsideration,
-          //   BalanceCG,
-          //   DeductionUs54F,
-          //   CapgainonAssets,
-          // }) => {
-          //   return
-          // };
-
-          // this.ITR_Obj.capitalGain =
-          //   Proviso112Applicabledtls.map(mapEquityMFonSTTSTCG);
-
           // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
+        }
+
+        // SALE OF BONDS DEBENTURE
+        {
+          const SaleofBondsDebntr =
+            this.uploadedJson[this.ITR_Type].ScheduleCGFor23?.LongTermCapGain23
+              ?.SaleofBondsDebntr;
+
+          const SaleofBondsDebntrDetails = {
+            assessmentYear: '',
+            assesseeType: '',
+            residentialStatus: '',
+            assetType: 'BONDS',
+            deduction: [
+              {
+                srn: null,
+                underSection: 'Deduction 54F',
+                orgAssestTransferDate: null,
+                purchaseDate: null,
+                panOfEligibleCompany: null,
+                purchaseDatePlantMachine: null,
+                costOfNewAssets: null,
+                investmentInCGAccount: null,
+                totalDeductionClaimed: SaleofBondsDebntr?.DeductionUs54F,
+                costOfPlantMachinary: null,
+                usedDeduction: null,
+              },
+            ],
+            improvement: [
+              {
+                id: null,
+                srn: null,
+                financialYearOfImprovement: null,
+                dateOfImprovement: null,
+                costOfImprovement: SaleofBondsDebntr.DeductSec48?.ImproveCost,
+                indexCostOfImprovement: null,
+              },
+            ],
+            buyersDetails: [],
+            assetDetails: [
+              {
+                id: null,
+                hasIndexation: null,
+                isUploaded: null,
+                srn: null,
+                description: null,
+                gainType: 'LONG',
+                sellDate: null,
+                sellValue: null,
+                stampDutyValue: null,
+                valueInConsideration: SaleofBondsDebntr?.FullConsideration,
+                sellExpense: SaleofBondsDebntr.DeductSec48?.ExpOnTrans,
+                purchaseDate: null,
+                purchaseCost: SaleofBondsDebntr.DeductSec48?.AquisitCost,
+                isinCode: null,
+                nameOfTheUnits: null,
+                sellOrBuyQuantity: 1,
+                sellValuePerUnit: null,
+                purchaseValuePerUnit: null,
+                algorithm: 'cgProperty',
+                fmvAsOn31Jan2018: null,
+                capitalGain: SaleofBondsDebntr?.CapgainonAssets,
+                indexCostOfAcquisition: null,
+                totalFairMarketValueOfCapitalAsset: null,
+                grandFatheredValue: null,
+                brokerName: null,
+              },
+            ],
+            deductionAmount: null,
+          };
+
+          this.ITR_Obj.capitalGain.push(SaleofBondsDebntrDetails);
         }
       }
     }
