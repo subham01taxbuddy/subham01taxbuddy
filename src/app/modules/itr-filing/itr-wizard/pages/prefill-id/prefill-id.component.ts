@@ -3178,41 +3178,88 @@ export class PrefillIdComponent implements OnInit {
 
       // TAXES PAID
       {
-        //SALARY TDS
         {
-          const jsonSalaryTDS =
-            ItrJSON[this.ITR_Type].ScheduleTDS1?.TDSonSalary;
-          // console.log('jsonSalaryTDS', jsonSalaryTDS);
+          //SALARY TDS
+          {
+            const jsonSalaryTDS =
+              ItrJSON[this.ITR_Type].ScheduleTDS1?.TDSonSalary;
+            // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
-          if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
-            this.ITR_Obj.taxPaid.onSalary = [];
-            console.log(
-              'There are no tax paid salary details in the JSON that you have provided'
+            if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
+              this.ITR_Obj.taxPaid.onSalary = [];
+              console.log(
+                'There are no tax paid salary details in the JSON that you have provided'
+              );
+            } else {
+              this.ITR_Obj.taxPaid.onSalary = jsonSalaryTDS.map(
+                ({
+                  EmployerOrDeductorOrCollectDetl: {
+                    TAN,
+                    EmployerOrDeductorOrCollecterName,
+                  },
+                  IncChrgSal,
+                  TotalTDSSal,
+                }) => {
+                  return {
+                    id: null,
+                    srNo: null,
+                    deductorName: EmployerOrDeductorOrCollecterName,
+                    deductorTAN: TAN,
+                    totalAmountCredited: IncChrgSal,
+                    totalTdsDeposited: TotalTDSSal,
+                    taxDeduction: null,
+                  };
+                }
+              );
+            }
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
             );
-          } else {
-            this.ITR_Obj.taxPaid.onSalary = jsonSalaryTDS.map(
-              ({
-                EmployerOrDeductorOrCollectDetl: {
-                  TAN,
-                  EmployerOrDeductorOrCollecterName,
-                },
-                IncChrgSal,
-                TotalTDSSal,
-              }) => {
-                return {
-                  id: null,
-                  srNo: null,
-                  deductorName: EmployerOrDeductorOrCollecterName,
-                  deductorTAN: TAN,
-                  totalAmountCredited: IncChrgSal,
-                  totalTdsDeposited: TotalTDSSal,
-                  taxDeduction: null,
-                };
-              }
-            );
+            // console.log(this.ITR_Obj);
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
+          // {
+          // const otherThanSalary16A =
+          //   this.ITR_Type === 'ITR2'
+          //     ? 'TDSonOthThanSal'
+          //     : 'TDSonOthThanSalDtls';
+          // console.log('otherThanSalary16A', otherThanSalary16A);
+
+          const jsonOtherThanSalaryTDS: Array<object> =
+            ItrJSON[this.ITR_Type].ScheduleTDS2?.TDSOthThanSalaryDtls;
+          // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
+
+          const mapJsonToITRObj16A = ({
+            TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
+            TDSCreditName,
+            TANOfDeductor,
+            GrossAmount,
+            HeadOfIncome,
+            AmtCarriedFwd,
+          }) => {
+            return {
+              id: null,
+              srNo: null,
+              deductorName: null,
+              deductorTAN: TANOfDeductor,
+              totalTdsDeposited: TaxClaimedOwnHands,
+              uniqueTDSCerNo: null,
+              taxDeduction: null,
+              totalAmountCredited: GrossAmount,
+              headOfIncome:
+                HeadOfIncome === 'CG'
+                  ? (HeadOfIncome = 'OS')
+                  : (HeadOfIncome = 'OS'),
+            };
+          };
+
+          this.ITR_Obj.taxPaid.otherThanSalary16A =
+            jsonOtherThanSalaryTDS.map(mapJsonToITRObj16A);
+
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -3220,363 +3267,332 @@ export class PrefillIdComponent implements OnInit {
           // console.log(this.ITR_Obj);
         }
 
-        // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
-        // {
-        // const otherThanSalary16A =
-        //   this.ITR_Type === 'ITR2'
-        //     ? 'TDSonOthThanSal'
-        //     : 'TDSonOthThanSalDtls';
-        // console.log('otherThanSalary16A', otherThanSalary16A);
+        // TDS3Details / otherThanSalary26QB
+        {
+          const jsonOtherThanSalary26QBTDS3 =
+            ItrJSON[this.ITR_Type]?.ScheduleTDS3?.TDS3onOthThanSalDtls ?? [];
 
-        const jsonOtherThanSalaryTDS: Array<object> =
-          ItrJSON[this.ITR_Type].ScheduleTDS2?.TDSOthThanSalaryDtls;
-        // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
-
-        const mapJsonToITRObj16A = ({
-          TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
-          TDSCreditName,
-          TANOfDeductor,
-          GrossAmount,
-          HeadOfIncome,
-          AmtCarriedFwd,
-        }) => {
-          return {
-            id: null,
-            srNo: null,
-            deductorName: null,
-            deductorTAN: TANOfDeductor,
-            totalTdsDeposited: TaxClaimedOwnHands,
-            uniqueTDSCerNo: null,
-            taxDeduction: null,
-            totalAmountCredited: GrossAmount,
-            headOfIncome:
-              HeadOfIncome === 'CG'
-                ? (HeadOfIncome = 'OS')
-                : (HeadOfIncome = 'OS'),
+          const mapJsonToITRObj = ({
+            TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
+            TDSCreditName,
+            PANOfBuyerTenant,
+            AadhaarOfBuyerTenant,
+            GrossAmount,
+            HeadOfIncome,
+            AmtCarriedFwd,
+          }) => {
+            return {
+              id: null,
+              srNo: null,
+              deductorName: null,
+              deductorPAN: PANOfBuyerTenant,
+              totalTdsDeposited: TaxClaimedOwnHands,
+              uniqueTDSCerNo: null,
+              taxDeduction: null,
+              totalAmountCredited: GrossAmount,
+              headOfIncome:
+                HeadOfIncome === 'CG'
+                  ? (HeadOfIncome = 'OS')
+                  : (HeadOfIncome = 'OS'),
+            };
           };
-        };
 
-        this.ITR_Obj.taxPaid.otherThanSalary16A =
-          jsonOtherThanSalaryTDS.map(mapJsonToITRObj16A);
+          this.ITR_Obj.taxPaid.otherThanSalary26QB =
+            jsonOtherThanSalary26QBTDS3.map(mapJsonToITRObj);
 
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log(this.ITR_Obj);
-      }
-
-      // TDS3Details / otherThanSalary26QB
-      {
-        const jsonOtherThanSalary26QBTDS3 =
-          ItrJSON[this.ITR_Type]?.ScheduleTDS3?.TDS3onOthThanSalDtls ?? [];
-
-        const mapJsonToITRObj = ({
-          TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
-          TDSCreditName,
-          PANOfBuyerTenant,
-          AadhaarOfBuyerTenant,
-          GrossAmount,
-          HeadOfIncome,
-          AmtCarriedFwd,
-        }) => {
-          return {
-            id: null,
-            srNo: null,
-            deductorName: null,
-            deductorPAN: PANOfBuyerTenant,
-            totalTdsDeposited: TaxClaimedOwnHands,
-            uniqueTDSCerNo: null,
-            taxDeduction: null,
-            totalAmountCredited: GrossAmount,
-            headOfIncome:
-              HeadOfIncome === 'CG'
-                ? (HeadOfIncome = 'OS')
-                : (HeadOfIncome = 'OS'),
-          };
-        };
-
-        this.ITR_Obj.taxPaid.otherThanSalary26QB =
-          jsonOtherThanSalary26QBTDS3.map(mapJsonToITRObj);
-
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log(this.ITR_Obj);
-      }
-
-      // TCS - TAX COLLECTED AT SOURCE
-      {
-        const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS?.TCS;
-
-        if (!jsonTCS || jsonTCS.length === 0) {
-          this.ITR_Obj.taxPaid.tcs = [];
-          console.log(
-            'There are no TCS tax paid other than salary details in the JSON that you have provided'
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
           );
-        } else {
-          this.ITR_Obj.taxPaid.tcs = jsonTCS.map(
-            ({
-              EmployerOrDeductorOrCollectDetl: {
-                TAN,
-                EmployerOrDeductorOrCollecterName,
-              },
-              TotalTCS,
-              AmtTCSClaimedThisYear,
-            }) => {
-              return {
-                id: null,
-                srNo: null,
-                collectorName: EmployerOrDeductorOrCollecterName,
-                collectorTAN: TAN,
-                totalAmountPaid: TotalTCS,
-                totalTaxCollected: 0,
-                totalTcsDeposited: AmtTCSClaimedThisYear,
-                taxDeduction: null,
-              };
-            }
-          );
+          // console.log(this.ITR_Obj);
         }
 
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_Obj)
-        );
-        // console.log(this.ITR_Obj);
-      }
+        // TCS - TAX COLLECTED AT SOURCE
+        {
+          const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS?.TCS;
 
-      // Advance and self assessment tax
-      {
-        const jsonAdvSAT = ItrJSON[this.ITR_Type].ScheduleIT?.TaxPayment;
+          if (!jsonTCS || jsonTCS.length === 0) {
+            this.ITR_Obj.taxPaid.tcs = [];
+            console.log(
+              'There are no TCS tax paid other than salary details in the JSON that you have provided'
+            );
+          } else {
+            this.ITR_Obj.taxPaid.tcs = jsonTCS.map(
+              ({
+                EmployerOrDeductorOrCollectDetl: {
+                  TAN,
+                  EmployerOrDeductorOrCollecterName,
+                },
+                TotalTCS,
+                AmtTCSClaimedThisYear,
+              }) => {
+                return {
+                  id: null,
+                  srNo: null,
+                  collectorName: EmployerOrDeductorOrCollecterName,
+                  collectorTAN: TAN,
+                  totalAmountPaid: TotalTCS,
+                  totalTaxCollected: 0,
+                  totalTcsDeposited: AmtTCSClaimedThisYear,
+                  taxDeduction: null,
+                };
+              }
+            );
+          }
 
-        if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
-          this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
-          console.log(
-            'There are no advance taxes or self assessment taxes paid details in the JSON that you have provided'
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
           );
-        } else {
-          this.ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT.map(
-            ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
-              return {
-                id: null,
-                srNo: null,
-                totalTax: Amt,
-                bsrCode: BSRCode,
-                dateOfDeposit: this.parseAndFormatDate(DateDep),
-                challanNumber: SrlNoOfChaln,
-                majorHead: null,
-                minorHead: null,
-                tax: null,
-                surcharge: null,
-                educationCess: null,
-                other: null,
-              };
-            }
-          );
+          // console.log(this.ITR_Obj);
         }
-      }
 
-      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_Obj)
-      );
-      // console.log(this.ITR_Obj);
-    }
+        // Advance and self assessment tax
+        {
+          const jsonAdvSAT = ItrJSON[this.ITR_Type].ScheduleIT?.TaxPayment;
 
-    // DECLARATION
-    {
-      let capacity = '';
-      if (ItrJSON[this.ITR_Type].Verification.Capacity === 'S') {
-        capacity = 'Self';
-      } else {
-        this.utilsService.showErrorMsg(
-          'Declaration => Verification => Capacity other than self is not allowed'
-        );
-      }
-      {
-        this.ITR_Obj.declaration.name =
-          ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerName;
-
-        this.ITR_Obj.declaration.panNumber =
-          ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerPAN;
-
-        this.ITR_Obj.declaration.place = '';
-
-        this.ITR_Obj.declaration.capacity = capacity;
-
-        this.ITR_Obj.declaration.childOf =
-          ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
-
-        this.ITR_Obj.declaration.place =
-          ItrJSON[this.ITR_Type].Verification.Place;
-      }
-
-      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_Obj)
-      );
-      // console.log(this.ITR_Obj);
-    }
-
-    // INVESTMENTS / DEDUCTIONS
-    {
-      if (ItrJSON[this.ITR_Type]?.ScheduleVIA?.DeductUndChapVIA) {
-        if (this.ITR_Obj.investments) {
-          //getting all the investments keys from the JSON and passing it to the updateInvestments function
-          const availableInvestments = Object.entries(
-            this.uploadedJson[this.ITR_Type].ScheduleVIA?.DeductUndChapVIA
-          ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
-
-          console.log('availableInvestments==>>', availableInvestments);
-
-          this.updateInvestments(availableInvestments, this.ITR_Type);
-        } else {
-          console.log(
-            'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
-          );
+          if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
+            this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
+            console.log(
+              'There are no advance taxes or self assessment taxes paid details in the JSON that you have provided'
+            );
+          } else {
+            this.ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT.map(
+              ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
+                return {
+                  id: null,
+                  srNo: null,
+                  totalTax: Amt,
+                  bsrCode: BSRCode,
+                  dateOfDeposit: this.parseAndFormatDate(DateDep),
+                  challanNumber: SrlNoOfChaln,
+                  majorHead: null,
+                  minorHead: null,
+                  tax: null,
+                  surcharge: null,
+                  educationCess: null,
+                  other: null,
+                };
+              }
+            );
+          }
         }
-      } else {
-        console.log(
-          'ITRJSON => INVESTMENTS =>',
-          `ItrJSON ${[
-            this.ITR_Type,
-          ]}.ScheduleVIA?.DeductUndChapVIA does not exist in JSON`
-        );
-      }
-
-      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_Obj)
-      );
-    }
-
-    // EXEMPT INCOME
-    {
-      if (
-        this.uploadedJson[this.ITR_Type].ScheduleEI?.OthersInc?.OthersIncDtls
-      ) {
-        if (this.ITR_Obj.exemptIncomes) {
-          //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
-          const availableExemptIncomes = this.uploadedJson[
-            this.ITR_Type
-          ].ScheduleEI?.OthersInc?.OthersIncDtls.map(
-            (value) => value.NatureDesc
-          );
-          // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
-          this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
-        } else {
-          console.log(
-            'ITROBJECT => Exempt Incomes => ITR1 => Exempt Incomes There are no details under exemptIncomes in the ITR Obj'
-          );
-        }
-      } else {
-        console.log(
-          'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
-          `ItrJSON[this.ITR_Type]${[
-            this.ITR14_IncomeDeductions,
-          ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
-        );
-      }
-
-      // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_Obj)
-      );
-      // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
-    }
-
-    // SCHEDULE CG
-    {
-      // ZERO COUPON BONDS DETAILS
-      {
-        const Proviso112Applicabledtls =
-          this.uploadedJson[this.ITR_Type].ScheduleCGFor23?.LongTermCapGain23
-            ?.Proviso112Applicable;
-
-        const mapEquityMFonSTTSTCG = ({
-          Proviso112Applicabledtls: {
-            DeductSec48: { AquisitCost, ImproveCost, ExpOnTrans, TotalDedn },
-            FullConsideration,
-            BalanceCG,
-            DeductionUs54F,
-            CapgainonAssets,
-          },
-          Proviso112SectionCode,
-        }) => {
-          return {
-            assessmentYear: '',
-            assesseeType: '',
-            residentialStatus: '',
-            assetType: 'ZERO_COUPON_BONDS',
-            deduction: [
-              {
-                srn: 0,
-                underSection: 'Deduction 54F',
-                orgAssestTransferDate: null,
-                purchaseDate: null,
-                panOfEligibleCompany: null,
-                purchaseDatePlantMachine: null,
-                costOfNewAssets: null,
-                investmentInCGAccount: null,
-                totalDeductionClaimed: DeductionUs54F,
-                costOfPlantMachinary: null,
-                usedDeduction: null,
-              },
-            ],
-            improvement: [
-              {
-                srn: 0,
-                financialYearOfImprovement: null,
-                dateOfImprovement: null,
-                costOfImprovement: ImproveCost,
-                indexCostOfImprovement: null,
-              },
-            ],
-            buyersDetails: [],
-            assetDetails: [
-              {
-                srn: 0,
-                description: null,
-                gainType: 'SHORT',
-                sellDate: null,
-                sellValue: null,
-                stampDutyValue: null,
-                valueInConsideration: FullConsideration,
-                sellExpense: ExpOnTrans,
-                purchaseDate: null,
-                purchaseCost: AquisitCost,
-                isinCode: null,
-                nameOfTheUnits: null,
-                sellOrBuyQuantity: 1,
-                sellValuePerUnit: null,
-                purchaseValuePerUnit: null,
-                algorithm: 'cgProperty',
-                fmvAsOn31Jan2018: null,
-                capitalGain: CapgainonAssets,
-                indexCostOfAcquisition: null,
-                totalFairMarketValueOfCapitalAsset: null,
-                grandFatheredValue: null,
-                brokerName: null,
-              },
-            ],
-            deductionAmount: null,
-          };
-        };
-
-        this.ITR_Obj.capitalGain =
-          Proviso112Applicabledtls.map(mapEquityMFonSTTSTCG);
 
         // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
+        // console.log(this.ITR_Obj);
+      }
+
+      // INVESTMENTS / DEDUCTIONS
+      {
+        if (ItrJSON[this.ITR_Type]?.ScheduleVIA?.DeductUndChapVIA) {
+          if (this.ITR_Obj.investments) {
+            //getting all the investments keys from the JSON and passing it to the updateInvestments function
+            const availableInvestments = Object.entries(
+              this.uploadedJson[this.ITR_Type].ScheduleVIA?.DeductUndChapVIA
+            ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
+
+            console.log('availableInvestments==>>', availableInvestments);
+
+            this.updateInvestments(availableInvestments, this.ITR_Type);
+          } else {
+            console.log(
+              'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
+            );
+          }
+        } else {
+          console.log(
+            'ITRJSON => INVESTMENTS =>',
+            `ItrJSON ${[
+              this.ITR_Type,
+            ]}.ScheduleVIA?.DeductUndChapVIA does not exist in JSON`
+          );
+        }
+
+        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_Obj)
+        );
+      }
+
+      // EXEMPT INCOME
+      {
+        if (
+          this.uploadedJson[this.ITR_Type].ScheduleEI?.OthersInc?.OthersIncDtls
+        ) {
+          if (this.ITR_Obj.exemptIncomes) {
+            //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+            const availableExemptIncomes = this.uploadedJson[
+              this.ITR_Type
+            ].ScheduleEI?.OthersInc?.OthersIncDtls.map(
+              (value) => value.NatureDesc
+            );
+            // console.log(`availableExemptIncomes`, availableExemptIncomes);
+
+            this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+          } else {
+            console.log(
+              'ITROBJECT => Exempt Incomes => ITR1 => Exempt Incomes There are no details under exemptIncomes in the ITR Obj'
+            );
+          }
+        } else {
+          console.log(
+            'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
+            `ItrJSON[this.ITR_Type]${[
+              this.ITR14_IncomeDeductions,
+            ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+          );
+        }
+
+        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_Obj)
+        );
+        // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
+      }
+
+      // DECLARATION
+      {
+        let capacity = '';
+        if (ItrJSON[this.ITR_Type].Verification.Capacity === 'S') {
+          capacity = 'Self';
+        } else {
+          this.utilsService.showErrorMsg(
+            'Declaration => Verification => Capacity other than self is not allowed'
+          );
+        }
+        {
+          this.ITR_Obj.declaration.name =
+            ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerName;
+
+          this.ITR_Obj.declaration.panNumber =
+            ItrJSON[this.ITR_Type].Verification.Declaration.AssesseeVerPAN;
+
+          this.ITR_Obj.declaration.place = '';
+
+          this.ITR_Obj.declaration.capacity = capacity;
+
+          this.ITR_Obj.declaration.childOf =
+            ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+
+          this.ITR_Obj.declaration.place =
+            ItrJSON[this.ITR_Type].Verification.Place;
+        }
+
+        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_Obj)
+        );
+        // console.log(this.ITR_Obj);
+      }
+
+      // SCHEDULE CG
+      {
+        // ZERO COUPON BONDS DETAILS
+        {
+          const Proviso112Applicabledtls =
+            this.uploadedJson[this.ITR_Type].ScheduleCGFor23?.LongTermCapGain23
+              ?.Proviso112Applicable;
+
+          Proviso112Applicabledtls.forEach((zcb) => {
+            if (zcb === Proviso112Applicabledtls[0]) {
+              const zcbDetail = {
+                assessmentYear: '',
+                assesseeType: '',
+                residentialStatus: '',
+                assetType: 'ZERO_COUPON_BONDS',
+                deduction: [
+                  {
+                    srn: null,
+                    underSection: 'Deduction 54F',
+                    orgAssestTransferDate: null,
+                    purchaseDate: null,
+                    panOfEligibleCompany: null,
+                    purchaseDatePlantMachine: null,
+                    costOfNewAssets: null,
+                    investmentInCGAccount: null,
+                    totalDeductionClaimed:
+                      zcb.Proviso112Applicabledtls?.DeductionUs54F,
+                    costOfPlantMachinary: null,
+                    usedDeduction: null,
+                  },
+                ],
+                improvement: [
+                  {
+                    id: null,
+                    srn: null,
+                    financialYearOfImprovement: null,
+                    dateOfImprovement: null,
+                    costOfImprovement:
+                      zcb.Proviso112Applicabledtls.DeductSec48?.ImproveCost,
+                    indexCostOfImprovement: null,
+                  },
+                ],
+                buyersDetails: [],
+                assetDetails: [
+                  {
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'SHORT',
+                    sellDate: null,
+                    sellValue: null,
+                    stampDutyValue: null,
+                    valueInConsideration:
+                      zcb.Proviso112Applicabledtls?.FullConsideration,
+                    sellExpense:
+                      zcb.Proviso112Applicabledtls.DeductSec48?.ExpOnTrans,
+                    purchaseDate: null,
+                    purchaseCost:
+                      zcb.Proviso112Applicabledtls.DeductSec48?.AquisitCost,
+                    isinCode: null,
+                    nameOfTheUnits: null,
+                    sellOrBuyQuantity: 1,
+                    sellValuePerUnit: null,
+                    purchaseValuePerUnit: null,
+                    algorithm: 'cgProperty',
+                    fmvAsOn31Jan2018: null,
+                    capitalGain: zcb.Proviso112Applicabledtls?.CapgainonAssets,
+                    indexCostOfAcquisition: null,
+                    totalFairMarketValueOfCapitalAsset: null,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  },
+                ],
+                deductionAmount: null,
+              };
+
+              this.ITR_Obj.capitalGain.push(zcbDetail);
+            }
+          });
+
+          // const mapEquityMFonSTTSTCG = ({
+          //   DeductSec48: { AquisitCost, ImproveCost, ExpOnTrans, TotalDedn },
+          //   FullConsideration,
+          //   BalanceCG,
+          //   DeductionUs54F,
+          //   CapgainonAssets,
+          // }) => {
+          //   return
+          // };
+
+          // this.ITR_Obj.capitalGain =
+          //   Proviso112Applicabledtls.map(mapEquityMFonSTTSTCG);
+
+          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
+        }
       }
     }
 
