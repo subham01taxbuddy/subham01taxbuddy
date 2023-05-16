@@ -313,6 +313,163 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.icoBt {
+border: 1px solid #04a4bc;
+padding: 3px;
+border-radius: 5px;
+color: #04a4bc;
+font-size: 18px;
+background-color:#fafafa;
+margin-left:10px;
+width:60px;
+}
+
+.bdrbl1 {
+  padding-bottom: 5px;
+  color: #21415b;
+  font-size:22px;
+  font-weight:600;
+}
+
+
+  .bluTx {
+    font-size: 25px;
+    color: #21415b;
+    font-weight: bold;
+}
+
+.radiuSrch {
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-top: 15px;
+  border: 2px solid #2199e8;
+}
+
+.TxHd{
+  font-size:18px;
+  color:#21415b;
+  font-weight:600;
+}
+.TxSm{
+  font-size:16px;
+  color:#000000;
+  font-weight:500;
+}
+.rowSp{
+  margin:20px 0px 10px 0px!important;
+  background-color:#ebebff;
+  border-radius:10px;
+  padding:20px;
+}
+
+.radius3 {
+  border-radius:8px;
+  background-color:#f4f4ff!important;
+  padding: 5px 10px 20px 10px;
+  margin-top:0px;
+  box-shadow: 2px 5px #fafafa;
+  border:1px solid #bbcfff;
+  height:100px;
+  margin-bottom:0px;
+  display:block;
+  box-shadow: 1px 2px #e4e4ff;
+}
+
+.rowClr{
+  background-color: #e4e4ff;
+  padding: 0px 20px 10px 20px;
+  border: 1px solid #e4e4ff;
+  box-shadow: 2px 4px #e4e4ff;
+}
+
+.surround{
+  border-radius:10px;
+  padding:20px;
+  background-color:#ffffff;
+  margin-top:15px;
+  border:2px solid #cccccc;
+}
+
+.srch-btn {
+  margin: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1em;
+  text-decoration: none;
+  border-radius: 5px;
+  background-color: #2199e8; 
+  /* border: 1px solid #000000; */
+  color:#ffffff;
+  font-weight:600;
+}
+
+.srch-btn:hover {
+  background-color:#0165a7; 
+  color:#ffffff;
+}
+
+.mat-form-field {
+  width: 100%!important;
+}
+
+.rt-btn {
+  margin: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1em;
+  text-decoration: none;
+  border-radius: 5px;
+  background-color: #2199e8; 
+  /* border: 1px solid #000000; */
+  color:#ffffff;
+  font-weight:600;
+  float:right;
+}
+
+.rt-btn:hover {
+  background-color:#0165a7; 
+}
+
+pagination-controls {
+  float:right!important;
+}
+
+.spsTp {
+  margin-top:15px!important;
+}
+
+.topSps {
+  margin-top:20px!important;
+}
+
+.tableSpc{
+  padding:20px 40px 40px 30px!important;
+  background-color:#ffffff;  
+}
+
+.txTit{
+  color: #21415B;
+  text-align: left;
+  font-size: 18px;
+  font-weight:600;  
+}
+
+.count{
+  color: #21415b;
+  text-align: right;
+  font-size: 18px;
+  margin-right: 25px;
+}
+
+.radius{
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-top: 15px;
+}
 
 .spEd {
   padding-top: 5px !important;
