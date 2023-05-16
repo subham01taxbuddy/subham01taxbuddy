@@ -499,8 +499,63 @@ export class BoPartnersComponent implements OnInit {
     var data = new FormData();
     data.append('from', 'support@taxbuddy.com');
     data.append('subject', 'Partner Onboarding in Taxbuddy BO');
-    data.append('body', `<!DOCTYPE html>\n<html>\n<head>\n  <title></title>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta http-equiv="X-UA-Compatible" content="IE=edge" />\n</head>\n<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">\n  <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">\n    <tr>\n      <td align="center">\n        <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">\n          <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n            <td>\n              <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">\n                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">\n                  <td style="background: #fff;padding-left: 15px;">\n                    <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;">\n                      <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0">\n                    </a>\n                  </td>\n                  <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%">\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="padding: 0px 15px 0px 15px">\n              <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">\n                <tr>\n                  <td style="font-size: 14px;color: #333;">\n                    <br>\n                    <br>                 \n                    <span style="font-weight: bold">Dear Partner ${partnerName},</span><br />\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                      Welcome onboard!\n                    </p>\n                    <br>                   \n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is to intimate you to start your registration process for onboarding you as a partner into Taxbuddy Back Office.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Please click on the link below to complete the process.\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     <a href="${environment.webportal_url}/log/userlogin?mobile=${mobile}&serviceType=ITR&partner=true" title="LINK" style="text-decoration: none;">Registration Link</a>\n                    </p>\n                    <br>\n            <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Thanks,\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     Taxbuddy Partner Onboarding Team\n                    </p>\n                    <br>\n                    <p style="margin: 0;line-height: 24px;font-size: 14px;">\n                     This is system generated email do not reply.\n                    </p>\n                    <br>                    \n                    <br>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style="background-color: #1c3550;padding: 20px 15px;">\n              <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;">\n              </table>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`);
-    data.append('cc', 'support@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
+    data.append('body', `<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+
+<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
+    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
+        <tr>
+            <td align="center">
+                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
+                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
+                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
+                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 15px 0px 15px">
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
+                                <tr>
+                                    <td style="font-size: 14px;color: #333;"> <br> <br> <span style="font-weight: bold">Dear ${partnerName},</span><br /> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Welcome to Taxbuddy! We are excited to invite you to begin the onboarding process as a partner in Taxbuddy's back office. This will give you access to Taxbuddy's platform and enable you to serve our clients more efficiently. </p> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please click on the link below to start the onboarding process: </p> <br>
+
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> <a href="${environment.webportal_url}/log/userlogin?mobile=${mobile}&serviceType=ITR&partner=true" title="LINK" style="text-decoration: none;">Onboarding Link</a> </p> <br>
+
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Thank you for choosing Taxbuddy as your partner. We look forward to a successful and mutually beneficial partnership. </p> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Regards, </p>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Taxbuddy Partner Onboarding Team </p> <br>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1c3550;padding: 20px 15px;">
+                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>`);
+    data.append('cc', 'partnersleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
     data.append('isHtml', 'true');
     data.append('to', partnerData.emailAddress);
 
