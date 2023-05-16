@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -37,14 +37,27 @@ export class CancelSubscriptionComponent implements OnInit {
   userInfo: any = [];
   loggedInUserRoles: any;
   isOwner: boolean;
+  invoiceFormGroup: FormGroup = this.fb.group({
+
+    mobile: new FormControl(''),
+    email: new FormControl(''),
+  });
+
+  get mobile() {
+    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+  }
+
+  get email() {
+    return this.invoiceFormGroup.controls['email'] as FormControl;
+  }
+
+
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    private utilsService: UtilsService,
+    private utilService: UtilsService,
     private itrService: ItrMsService,
-    private router: Router,
     @Inject(LOCALE_ID) private locale: string
   ) {
 
@@ -77,6 +90,8 @@ export class CancelSubscriptionComponent implements OnInit {
 
   fromOwner(event, isOwner) {
     if (event) {
+      this.ownerId = null;
+      this.filerId = null;
       if (isOwner) {
         this.ownerId = event ? event.userId : null;
         this.getCancelSubscriptionList(0, 'ownerUserId', this.ownerId);
@@ -88,7 +103,7 @@ export class CancelSubscriptionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    this.loggedInUserRoles = this.utilService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
   }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -98,6 +113,10 @@ export class CancelSubscriptionComponent implements OnInit {
     this.smeDropDown?.resetDropdown();
     const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     const loginSMEInfo = data[0];
+    this.invoiceFormGroup.reset();
+    this.invoiceFormGroup.updateValueAndValidity();
+    this.filerId=null;
+    this.ownerId=null;
     if (this.isOwner) {
       this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
@@ -106,15 +125,58 @@ export class CancelSubscriptionComponent implements OnInit {
 
   }
 
+  applyFilter() {
+    const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    const loginSMEInfo = data[0];
+    if (this.filerId) {
+      this.getCancelSubscriptionList(0, 'filerUserId', this.filerId);
+      return;
+    }
+    if (this.isOwner) {
+      this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
+    } else {
+      this.getCancelSubscriptionList(0);
+    }
+  }
+
   getCancelSubscriptionList(pageNo, isUserId?, id?) {
+    let mobileFilter = '';
+    if (
+      this.utilService.isNonEmpty(
+        this.invoiceFormGroup.controls['mobile'].value
+      ) &&
+      this.invoiceFormGroup.controls['mobile'].valid
+    ) {
+      mobileFilter =
+        '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
+    }
+    let emailFilter = '';
+    if (
+      this.utilService.isNonEmpty(
+        this.invoiceFormGroup.controls['email'].value
+      ) &&
+      this.invoiceFormGroup.controls['email'].valid
+    ) {
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+    }
+
+
     let pagination;
     let param;
+
     if (id) {
-      pagination = `&page=${pageNo}&size=${this.config.itemsPerPage}`;
+      pagination = `&page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}`;
       param = '/subscription/cancel/requests?' + isUserId + '=' + id + pagination;
     } else {
-      pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}`;
-      param = '/subscription/cancel/requests' + pagination;
+      let userParam = '';
+      if (this.ownerId) {
+        userParam += `&ownerUserId=${this.ownerId}`;
+      }
+      if (this.filerId) {
+        userParam += `&filerUserId=${this.filerId}`;
+      }
+      pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}`;
+      param = '/subscription/cancel/requests' + pagination + userParam;
     }
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
@@ -130,10 +192,12 @@ export class CancelSubscriptionComponent implements OnInit {
             this.config.totalItems = 0;
           }
         } else {
+          this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
           this._toastMessageService.alert("error", response.message);
         }
       },
       (error) => {
+        this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
       }
     );
@@ -180,30 +244,30 @@ export class CancelSubscriptionComponent implements OnInit {
           debounceMs: 0,
         },
       },
-      {
-        headerName: 'Mobile No.',
-        field: 'reminderMobileNumber',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Email Id',
-        field: 'reminderEmail',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
+      // {
+      //   headerName: 'Mobile No.',
+      //   field: 'reminderMobileNumber',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      // },
+      // {
+      //   headerName: 'Email Id',
+      //   field: 'reminderEmail',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      // },
       {
         headerName: 'Subscription',
         field: 'userSelected',
@@ -352,24 +416,24 @@ export class CancelSubscriptionComponent implements OnInit {
         if (subscriptionData[i].invoiceDetail[x].invoiceNo === null) {
           subscriptionData[i].invoiceDetail[x].invoiceNo = '-';
         }
-        let perInvoiceDetails = subscriptionData[i].invoiceDetail[x].invoiceNo + ': ' + subscriptionData[i].invoiceDetail[x].payableRefundAmount + ': ' + subscriptionData[i].invoiceDetail[x].paymentStatus;
+        let perInvoiceDetails = subscriptionData[i].invoiceDetail[x].invoiceNo + ': ' + subscriptionData[i].invoiceDetail[x].total + ': ' + subscriptionData[i].invoiceDetail[x].paymentStatus;
         invoiceDetails.push(perInvoiceDetails);
         console.log('invoiceDetails', invoiceDetails);
       }
       newData.push({
-        userId: this.utilsService.isNonEmpty(subscriptionData[i].userId) ? subscriptionData[i].userId : '-',
-        userName: this.utilsService.isNonEmpty(subscriptionData[i].userName) ? subscriptionData[i].userName : '-',
-        reminderMobileNumber: this.utilsService.isNonEmpty(subscriptionData[i].reminderMobileNumber) ? subscriptionData[i].reminderMobileNumber : '-',
-        reminderEmail: this.utilsService.isNonEmpty(subscriptionData[i].reminderEmail) ? subscriptionData[i].reminderEmail : '-',
-        userSelected: this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name + '  ' + subscriptionData[i].userSelectedPlan.description.toString()
-          : this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name + '  ' + subscriptionData[i].smeSelectedPlan.description.toString()
+        userId: this.utilService.isNonEmpty(subscriptionData[i].userId) ? subscriptionData[i].userId : '-',
+        userName: this.utilService.isNonEmpty(subscriptionData[i].userName) ? subscriptionData[i].userName : '-',
+        reminderMobileNumber: this.utilService.isNonEmpty(subscriptionData[i].reminderMobileNumber) ? subscriptionData[i].reminderMobileNumber : '-',
+        reminderEmail: this.utilService.isNonEmpty(subscriptionData[i].reminderEmail) ? subscriptionData[i].reminderEmail : '-',
+        userSelected: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name + '  ' + subscriptionData[i].userSelectedPlan.description.toString()
+          : this.utilService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name + '  ' + subscriptionData[i].smeSelectedPlan.description.toString()
             : '-',
-        servicesType: this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType :
-          this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.servicesType : '-',
-        assigneeName: (this.utilsService.isNonEmpty(subscriptionData[i].assigneeName) && subscriptionData[i].subscriptionAssigneeId !== 0) ? subscriptionData[i].assigneeName : 'NA',
-        cancellationRequestDate: this.utilsService.isNonEmpty(subscriptionData[i].cancellationRequestDate) ? subscriptionData[i].cancellationRequestDate : '-',
+        servicesType: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType :
+          this.utilService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.servicesType : '-',
+        assigneeName: (this.utilService.isNonEmpty(subscriptionData[i].assigneeName) && subscriptionData[i].subscriptionAssigneeId !== 0) ? subscriptionData[i].assigneeName : 'NA',
+        cancellationRequestDate: this.utilService.isNonEmpty(subscriptionData[i].cancellationRequestDate) ? subscriptionData[i].cancellationRequestDate : null,
         invoiceDetails: invoiceDetails.toString(),
-        payableSubscriptionAmount: this.utilsService.isNonEmpty(subscriptionData[i].payableSubscriptionAmount) ? subscriptionData[i].payableSubscriptionAmount : '-',
+        payableSubscriptionAmount: this.utilService.isNonEmpty(subscriptionData[i].payableSubscriptionAmount) ? subscriptionData[i].payableSubscriptionAmount : '-',
         cancellationStatus: subscriptionData[i].cancellationStatus,
 
 
@@ -380,7 +444,7 @@ export class CancelSubscriptionComponent implements OnInit {
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
-        promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
+        promoCode: this.utilService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
       });
     }
@@ -420,7 +484,13 @@ export class CancelSubscriptionComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result) {
-        this.getCancelSubscriptionList(0);
+        const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+        const loginSMEInfo = data[0];
+        if (this.isOwner) {
+          this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
+        } else {
+          this.getCancelSubscriptionList(0);
+        }
       }
     });
   }
@@ -453,19 +523,6 @@ export class CancelSubscriptionComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
     });
-
-  }
-
-  createUpdateSubscription(subscription) {
-    let subscriptionData = {
-      type: 'edit',
-      data: subscription,
-    };
-    sessionStorage.setItem(
-      'subscriptionObject',
-      JSON.stringify(subscriptionData)
-    );
-    this.router.navigate(['/subscription/create-subscription']);
   }
 
 }

@@ -15,7 +15,7 @@
             width="50%"
           />
         </h2>
-        <form [formGroup]="form" class="" *ngIf="mode === 'SIGN_IN'">         
+        <form [formGroup]="form" class="" *ngIf="mode === 'SIGN_IN'">
             <mat-label style="color: #07070c">Mobile Number</mat-label>
             <mat-form-field appearance="outline">
               <input matInput placeholder="Mobile Number"
@@ -28,7 +28,7 @@
               />
               <span class="fa fa-mobile errspan" aria-hidden="true"></span>
             </mat-form-field>
-       
+
           <!--  <button [disabled]="!form.controls['user.valid" type="submit" class="btn"
                         (click)="sendOtpOnWhatapp(form.controls['user.value)"
                         style="margin-left: auto; margin-right: auto; display: block; min-width:40%;border:none;outline:none;">Login
@@ -55,11 +55,11 @@
               </span>
             </mat-form-field>
           </div>
-          
-              <button type="submit" class="btn" (click)="onSubmit()">
+
+              <button type="submit" [disabled]="loading" class="btn" (click)="onSubmit()">
                 Login
               </button>
-          
+
           <div >
               <div class="card__col-xs-12 card__col-sm-12" style="text-align: right;">
                   <a class="link-style" (click)="changeMode('FORGOT_PASSWORD')">Reset
@@ -102,10 +102,4 @@
       </div>
     </div>
   </div>
-  <!-- <div>
-        <p>
-            For any assistance please drop an email to
-            <a href="mailto:appsupport@taxbuddy.com" target="_blank">appsupport@taxbuddy.com</a>
-        </p>
-    </div> -->
 </div>

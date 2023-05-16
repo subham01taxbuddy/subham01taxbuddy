@@ -15,7 +15,7 @@
     <form [formGroup]="salaryForm">
         <div formArrayName="salaryArray">
             <div class="tds-on boxClr" *ngFor="let salary of getSalaryArray.controls | paginate:config ;let i=index"
-                [formGroupName]="fieldGlobalIndex(i)">
+                [formGroupName]="i">
                 <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="chkSp">
                 </mat-checkbox>
                 <div class="row">
@@ -88,7 +88,7 @@
                         <table class="numSp">
                             <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
                         </table>
-                        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                        <pagination-controls id="salaryPagination" (pageChange)="pageChanged($event)"></pagination-controls>
                     </div>
                     <div class="col-sm-3" style="text-align: right;">
                         <button class="tbd-btn save-btn" (click)="save()">Save</button>
@@ -99,5 +99,5 @@
         </div>
 
     </form>
-    
+
 </div>
