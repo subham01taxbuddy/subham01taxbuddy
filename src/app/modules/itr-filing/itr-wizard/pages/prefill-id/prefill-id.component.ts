@@ -387,6 +387,10 @@ export class PrefillIdComponent implements OnInit {
         ExemptIncomesOTH.amount =
           this.uploadedJson[ITR_Type].TaxExmpIntIncDtls?.OthersInc
             ?.OthersTotalTaxExe - totalOtherExemptAmount;
+      } else if (this.ITR_Type === 'ITR2') {
+        ExemptIncomesOTH.amount =
+          this.uploadedJson[this.ITR_Type].ScheduleEI?.TotalExemptInc -
+          totalOtherExemptAmount;
       }
     }
   }
@@ -3448,7 +3452,6 @@ export class PrefillIdComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.ITR_Obj)
       );
-      // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
     }
 
     // EXEMPT INCOME
