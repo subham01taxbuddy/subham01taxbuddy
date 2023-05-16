@@ -1078,9 +1078,9 @@ export class AssignedNewUsersComponent implements OnInit {
     // if (isAgent) {
     //   param = param + '&isAgent=true';
     // }
-    if(this.filerUserId){
-      param= param + `&filerUserId=${this.filerUserId}`
-    }
+    // if(this.filerUserId){
+    //   param= param + `&filerUserId=${this.filerUserId}`
+    // }
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
