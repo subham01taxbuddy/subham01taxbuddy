@@ -3974,6 +3974,102 @@ export class PrefillIdComponent implements OnInit {
               JSON.stringify(this.ITR_Obj)
             );
           }
+
+          // LAND & BUILDING
+          {
+            const SaleofLandBuildDtlsStcg =
+              this.uploadedJson[this.ITR_Type].ScheduleCGFor23
+                ?.ShortTermCapGainFor23?.SaleofLandBuild?.SaleofLandBuildDtls;
+
+            SaleofLandBuildDtlsStcg?.forEach((landAndBuilding) => {
+              const SaleofLandBuildStcgDetails = {
+                assessmentYear: '',
+                assesseeType: '',
+                residentialStatus: '',
+                assetType: 'PLOT_OF_LAND',
+                deduction: [],
+                improvement: [
+                  {
+                    id: null,
+                    srn: null,
+                    financialYearOfImprovement: null,
+                    dateOfImprovement: null,
+                    costOfImprovement: landAndBuilding.ImproveCost,
+                    indexCostOfImprovement: null,
+                  },
+                ],
+                buyersDetails:
+                  landAndBuilding.TrnsfImmblPrprty.TrnsfImmblPrprtyDtls.map(
+                    (
+                      {
+                        NameOfBuyer,
+                        PANofBuyer,
+                        PercentageShare,
+                        Amount,
+                        AddressOfProperty,
+                        StateCode,
+                        CountryCode,
+                        PinCode,
+                      },
+                      index
+                    ) => ({
+                      aadhaarNumber: null,
+                      address: AddressOfProperty,
+                      amount: Amount,
+                      country: CountryCode,
+                      name: NameOfBuyer,
+                      pan: PANofBuyer,
+                      pin: PinCode,
+                      share: PercentageShare,
+                      srn: index,
+                      state: StateCode,
+                    })
+                  ),
+                assetDetails: [
+                  {
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'SHORT',
+                    sellDate: this.parseAndFormatDate(
+                      landAndBuilding.DateofSale
+                    ),
+                    sellValue: null,
+                    stampDutyValue: null,
+                    valueInConsideration: landAndBuilding.FullConsideration50C,
+                    sellExpense: landAndBuilding.ExpOnTrans,
+                    purchaseDate: this.parseAndFormatDate(
+                      landAndBuilding.DateofPurchase
+                    ),
+                    purchaseCost: landAndBuilding.AquisitCost,
+                    isinCode: null,
+                    nameOfTheUnits: null,
+                    sellOrBuyQuantity: 1,
+                    sellValuePerUnit: null,
+                    purchaseValuePerUnit: null,
+                    algorithm: 'cgProperty',
+                    fmvAsOn31Jan2018: null,
+                    capitalGain: landAndBuilding.Balance,
+                    indexCostOfAcquisition: landAndBuilding.AquisitCostIndex,
+                    totalFairMarketValueOfCapitalAsset: null,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  },
+                ],
+                deductionAmount: null,
+              };
+
+              this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+            });
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+          }
         }
       }
     }
