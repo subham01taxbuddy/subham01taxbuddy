@@ -88,7 +88,7 @@ export class TdsOnSalaryComponent implements OnInit {
           paidRefund: []
         };
       }
-      this.Copy_ITR_JSON.taxPaid['onSalary'] = this.salaryForm.value.salaryArray;
+      this.Copy_ITR_JSON.taxPaid['onSalary'] = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.onSave.emit();
       this.loading = false;
