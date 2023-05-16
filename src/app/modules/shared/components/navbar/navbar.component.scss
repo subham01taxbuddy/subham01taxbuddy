@@ -12,13 +12,31 @@
     color: white;
     padding: 10px 15px;
     border: solid 2px;
-    background-color: red;
+    background-color: #000000;
 }
 
 .btn-logout:hover {
-    background-color: white;
-    color: red;
-    border: solid 2px red;
+    background-color:#7e7e7e;
+}
+
+.user{
+    color: #04a4bc;
+    font-weight:600;
+    margin-top: -4px;
+}
+
+.titl-tx {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.back{
+    color: #2199e8;
+}
+.back:hover {
+    color: #0d65a0;
 }
 
 .btn-help {
@@ -29,17 +47,38 @@
     font-weight: 600;
     line-height: 1em;
     border-radius: 5px;
-    transition-property: color, background-color;
-    transition-duration: 0.25s;
     cursor: pointer;
-    color: white;
+    color:#63b12d;
     padding: 10px 15px;
-    border: solid 2px;
-    background-color: #63b12d;
+    // border: solid 2px;
+    // background-color: #63b12d;
 }
 
 .btn-help:hover {
+    color:#41751b;
+}
+
+.btn-call {
+    display: inline-block;
+    margin: 8px;
+    padding: 12px 15px;
+    text-align: center;
+    font-weight: 600;
+    line-height: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    color:#63b12d;
+    padding: 10px 15px;
     background-color: white;
     color: #63b12d;
     border: solid 2px #63b12d;
+    // border: solid 2px;
+    // background-color: #63b12d;
+    margin-top: 10px;
+}
+
+.btn-call:hover {
+    color: #ffffff;
+    border: solid 2px #63b12d;
+    background-color: #63b12d;
 }

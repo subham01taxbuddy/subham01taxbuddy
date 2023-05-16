@@ -38,4 +38,8 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
       this.subscription.unsubscribe();
     }
   }
+
+  goBack() {
+    this.saveAndNext.emit(false);
+  }
 }

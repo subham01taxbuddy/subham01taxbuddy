@@ -169,7 +169,7 @@
       </div>
       <div class="row">
         <div style="text-align: center">
-          <button class="tbd-btn" (click)="updateUserDetails()">Save</button>
+          <button class="tbd-btn" [disabled]="loading" (click)="updateUserDetails()">Save</button>
         </div>
       </div>
     </div>
@@ -236,7 +236,7 @@
               </mat-form-field>
             </div>
             <div class="col-sm-4" *ngIf="smeSelectedPlanId">
-              <button class="btn" style="background: #00aeca; border-radius: 5px"
+              <button class="btn" [disabled]="loading" style="background: #00aeca; border-radius: 5px"
                 (click)="applySmeSelectedPlan(smeSelectedPlanId)">
                 Apply
               </button>
@@ -478,25 +478,25 @@
       </div>
       <hr />
       <div style="float: right">
-        <button class="btn" style="background: #4f9a20; border-radius: 5px" (click)="updateSubscription()"
+        <button class="btn" style="background: #4f9a20; border-radius: 5px" [disabled]="loading" (click)="updateSubscription()"
           *ngIf="this?.userSubscription?.payableSubscriptionAmount >= 0">
           <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate Invoice' :
           'Save'}}
         </button>
       </div>
       <div style="float: right">
-        <button class="btn" style="background: #4f9a20; border-radius: 5px"
+        <button class="btn" [disabled]="loading" style="background: #4f9a20; border-radius: 5px"
           *ngIf="this?.userSubscription?.payableSubscriptionAmount < 0">
           <i class="fas fa-wallet"></i> Save & Issue Refund Request
         </button>
       </div>
       <div style="float: right">
-        <button class="btn" style="background: #4f9a20; border-radius: 5px" (click)="location.back()">
+        <button class="btn" style="background: #4f9a20; border-radius: 5px" [disabled]="loading" (click)="location.back()">
           Cancel
         </button>
       </div>
       <div style="float: right">
-        <button class="tbd-btn cancel-btn" (click)="cancelSubscription()"><i
+        <button class="tbd-btn cancel-btn" [disabled]="loading" (click)="cancelSubscription()"><i
           class="fa fa-close"></i>
           Cancel Subscription
         </button>
@@ -579,7 +579,7 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <button class="btn" style="background: #4f9a20; border-radius: 5px">
+          <button class="btn" [disabled]="loading" style="background: #4f9a20; border-radius: 5px">
             <i class="fas fa-wallet"></i> Generate
           </button>
         </div>

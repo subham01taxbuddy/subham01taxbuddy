@@ -634,12 +634,12 @@
     <!-- </form> -->
     <hr class="bordr">
     <div class="cen">
-      
+
         <button class="cancel" (click)="goBack()">Back</button>
-    
-      
-        <button class="tbd-btn" (click)="updateSmeDetails()">Save</button>
-     
+
+
+        <button class="tbd-btn" [disabled]="loading" (click)="updateSmeDetails()">Save</button>
+
     </div>
   </div>
 </div>

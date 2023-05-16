@@ -1,19 +1,7 @@
 import { Component, DoCheck } from '@angular/core';
-import { NavbarService } from '../../../../services/navbar.service';
-import { Router } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { UtilsService } from '../../../../services/utils.service';
-import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Input } from '@angular/core';
-import { PerformaInvoiceComponent } from 'src/app/modules/subscription/components/performa-invoice/performa-invoice.component';
-import { AssignedUsersComponent } from "../../../tasks/pages/assigned-users/assigned-users.component";
-import { AssignedNewUsersComponent } from "../../../tasks/pages/assigned-new-users/assigned-new-users.component";
-import { ScheduledCallComponent } from "../../../tasks/pages/scheduled-call/scheduled-call.component";
-import { FilingsComponent } from "../../../tasks/pages/filings/filings.component";
-import { ExceptionsComponent } from "../../../tasks/pages/exceptions/exceptions.component";
-import { SignUpExceptionsComponent } from "../../../tasks/pages/sign-up-exceptions/sign-up-exceptions.component";
-import { EriExceptionsComponent } from "../../../tasks/pages/exceptions/eri-exceptions/eri-exceptions.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,24 +10,18 @@ import { EriExceptionsComponent } from "../../../tasks/pages/exceptions/eri-exce
 })
 export class SidebarComponent implements DoCheck {
   loading: boolean = false;
-  showSidebar!: boolean;
+  openSidebar: boolean = true;
   loggedInUserRoles: any;
-  @Input() data: any;
-  hideSideBar!: boolean;
   loggedInSme: any;
   roles: any;
-  cardTitle: any;
-
-  PerformaInvoiceComponent: PerformaInvoiceComponent;
+  currentPath = '';
 
   constructor(
-    private navbarService: NavbarService,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private route: Router,
     private utilsService: UtilsService,
-    private toastMsgService: ToastMessageService,
-    private itrMsService: ItrMsService
   ) {
+    this.currentPath = route.url;
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('loggedInUserData', this.loggedInUserRoles);
     this.route.events.subscribe((url: any) => {
@@ -49,10 +31,25 @@ export class SidebarComponent implements DoCheck {
       //   this.hideSideBar = false;
       // }
     });
+    this.setActiveMenu();
   }
 
-  dropdownPanel: any = {};
-  dropdownPanelChild: any = {};
+  setActiveMenu() {
+    this.menus.forEach(element => {
+      if (element.url) {
+        if (this.currentPath.includes(element.url)) {
+          element.active = true;
+        }
+      } else {
+        element.submenu.forEach(data => {
+          if (this.currentPath.includes(data.url)) {
+            element.active = true;
+          }
+        });
+      }
+
+    });
+  }
 
   menus: Menu[] = [
     {
@@ -68,6 +65,14 @@ export class SidebarComponent implements DoCheck {
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard/main',
+      roles: ['ROLE_OWNER'],
+      submenu: []
+    },
+    {
+      name: 'Leader Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard/leader',
       roles: ['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER'],
       submenu: []
     },
@@ -158,15 +163,7 @@ export class SidebarComponent implements DoCheck {
     }
   ];
   ngDoCheck() {
-    this.showSidebar = NavbarService.getInstance().showSideBar;
-    // if(this.route?.url?.includes('user-docs')){
-    //   this.showSidebar=true;
-    // }
-  }
-
-  closeSideBar() {
-    NavbarService.getInstance().closeSideBar = true;
-    // this.route.navigate(['/requests/fill', JSON.stringify(data)]);
+    // this.showSidebar = NavbarService.getInstance().showSideBar;
   }
 
   isApplicable(permissionRoles: any) {
@@ -181,16 +178,13 @@ export class SidebarComponent implements DoCheck {
   }
 
   toggle(index: number) {
-    // 멀티 오픈을 허용하지 않으면 타깃 이외의 모든 submenu를 클로즈한다.
-    // if (!this.config.multi) {
-    //   this.menus
-    //     .filter((menu, i) => i !== index && menu.active)
-    //     .forEach(menu => (menu.active = !menu.active));
-    // }
-
-    // Menu의 active를 반전
     this.menus[index].active = !this.menus[index].active;
   }
+
+  activateNow(index) {
+    this.menus[index].active = true;
+  }
+
 
 }
 

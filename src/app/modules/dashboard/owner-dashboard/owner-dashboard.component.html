@@ -8,18 +8,62 @@
 <div class="col-sm-6">
   <div class="float-right">
     <span class="TxBg">Documents Uploaded</span>
-      <span class="numTxBg">91</span>
+      <span class="numTxBg">{{commissionData?.documentsUploaded || 'NA'}}</span>
     </div>
 </div>
 </div>
+
+
+
   <div class="row rowClr">
 
-    <div class="col-sm-6">
-      <div class="radius">
+    <div class="row rowSp">
+      <div class="col-sm-12">
+        <h5 class="bdrbl1">ITR Overview:</h5>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">    
+            <span class="bluTx">2535</span><br>
+            <span class="TxSm">Assign Users</span>  
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">    
+            <span class="bluTx">30</span><br>
+            <span class="TxSm">Open</span>  
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">    
+            <span class="bluTx">1688</span><br>
+            <span class="TxSm">Document Uploaded</span>  
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">    
+            <span class="bluTx">196</span><br>
+            <span class="TxSm">In Process</span>  
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">    
+            <span class="bluTx">285</span><br>
+            <span class="TxSm">Waiting for confirmation</span>  
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">    
+            <span class="bluTx">184</span><br>
+            <span class="TxSm">Back Out</span>  
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <div class="radiuSrch">
         <div class="row">
           <div class="col-sm-4">
-            <!-- <form class="form-inline"> -->
-              <div>
+            <div>
                 <mat-label> Search By Filer </mat-label>
                 <mat-form-field appearance="outline">
                   <input matInput type="text"  [formControl]="searchFiler" [matAutocomplete]="auto" />
@@ -30,15 +74,7 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-              </div>
-              <!-- <div>
-                <label for="start-date">Select Filer:</label>
-                <input type="search" placeholder="Search Filer" aria-label="Search" class="form-control mr-sm-2">
-              </div> -->
-              <!-- <div>
-                <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-              </div> -->
-            <!-- </form> -->
+              </div>            
           </div>
           <div class="col-sm-3">
             <div>
@@ -54,10 +90,66 @@
                 [min]="minDate" [max]="maxDate">
             </div>
           </div>
-          <div class="col-sm-2 ">
-            <button class="proceed2" (click)="search('all')" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+         
+          <div class="col-sm-2">
+            <button class="srch-btn" (click)="search('all')" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+          </div>
+        
+      </div>
+    </div>
+    </div>
+
+     <div class="col-sm-6">
+      <div class="radius">
+      <!-- Internal Row Starts -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="radius2 spTp RedBk">
+          <div class="inBxL">
+          <span class="numTxSm redTx"><i class="fa fa-bullhorn"></i> {{invoiceData?.unpaidInvoiceCount || 'NA'}}</span><br>
+          <span class="TxSm"> Unpaid Invoices</span>
+          </div>
+          <div class="inBxR">
+          <span class="numTxSm redTx">{{invoiceData?.unpaidAmount || 'NA'}}</span><br>
+          <span class="TxSm"> Unpaid Amount</span>
+          </div>
+          <span class="redtxsm">*Ensure payment of outstanding invoices to earn {{invoiceData?.unpaidAmount || 'NA'}} more in commission</span>
+        </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="radius2">
+          <div class="inBxL">
+          <span class="numTxSm">{{invoiceData?.noOfInvoicesRaised || 'NA'}}</span><br>
+          <span class="TxSm">No of Invoices Raised</span>
+          </div>
+          <div class="inBxR">
+          <span class="numTxSm">{{invoiceData?.revenueGenerated || 'NA'}}</span><br>
+          <span class="TxSm">Revenue Generated</span>
           </div>
         </div>
+        </div>
+
+        <div class="col-sm-12 tpSp1">
+          <div class="radius2 grBk">
+          <div class="inBxL">
+          <span class="numTxSm grTx">{{invoiceData?.paidInvoiceCount || 'NA'}}</span><br>
+          <span class="TxSm">Paid Invoices</span>
+          </div>
+          <div class="inBxR">
+          <span class="numTxSm grTx">{{invoiceData?.paidAmount || 'NA'}}</span><br>
+          <span class="TxSm">Paid Amount</span>
+          </div>
+        </div>
+
+        </div>
+
+
+
+
+
+      </div>
+      <!-- Internal Row Ends -->
       </div>
     </div>
 
@@ -84,63 +176,8 @@
         </div>
       </div>
     </div>
-
-    <div class="col-sm-6 mvup-custom">
-      <div class="radius">
-      <!-- Internal Row Starts -->
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="radius2 spTp RedBk">
-          <div class="inBxL">
-          <span class="numTxSm redTx"><i class="fa fa-bullhorn"></i>{{invoiceData?.unpaidInvoiceCount || 'NA'}}</span><br>
-          <span class="TxSm"> Unpaid Invoices</span>
-          </div>
-          <div class="inBxR">
-          <span class="numTxSm redTx">{{invoiceData?.unpaidAmount || 'NA'}}</span><br>
-          <span class="TxSm"> Unpaid Amount</span>
-          </div>
-          <span class="redtxsm">*Ensure payment of outstanding invoices to earn {{invoiceData?.unpaidAmount || 'NA'}} more in commission</span>
-        </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="radius2">
-          <div class="inBxL">
-          <span class="numTxSm">{{invoiceData?.noOfInvoicesRaised || 'NA'}}</span><br>
-          <span class="TxSm">No of Invoices Raised</span>
-          </div>
-          <div class="inBxR">
-          <span class="numTxSm">{{invoiceData?.revenueGenerated || 'NA'}}</span><br>
-          <span class="TxSm">Revenue Generated</span>
-          </div>
-        </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="radius2 grBk">
-          <div class="inBxL">
-          <span class="numTxSm grTx">{{invoiceData?.paidInvoiceCount || 'NA'}}</span><br>
-          <span class="TxSm">Paid Invoices</span>
-          </div>
-          <div class="inBxR">
-          <span class="numTxSm grTx">{{invoiceData?.paidAmount || 'NA'}}</span><br>
-          <span class="TxSm">Paid Amount</span>
-          </div>
-        </div>
-
-        </div>
-
-
-
-
-
-      </div>
-      <!-- Internal Row Ends -->
-      </div>
-    </div>
-
-
-  <div class="col-sm-6">
+    <div class="col-sm-6"></div>
+  <div class="col-sm-6 spRtTp">
   <div class="radius">
     <span class="TxSm"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
     <span class="numTxBg">{{commissionData?.totalITRFiled || 'NA'}}</span>

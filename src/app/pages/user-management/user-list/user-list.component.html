@@ -1,20 +1,16 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="main clearfix">
-  <div class="content content_full">
-    <div class="content__container">
-      <div class="align-items-center row">
-        <div class="col-sm-10">
-          <b style="font-size: 20px">All Users</b>
-        </div>
-      </div>
+  <div class="align-items-center row">
+    <div class="col-sm-6">
+         <b style="font-size: 20px">All Users</b>
+    </div>
+  </div>
      
-      <div class="card">
-
-      <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4">
-          <div class="input">
+      <div class="rowClr">
+        <div class="surround">
+       <div class="row">
+          <div class="col-sm-4">
             <label class="input__label" for="attr">Select attribute</label>
             <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
               <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
@@ -22,8 +18,8 @@
                 {{drop.name}}</option>
             </select>
           </div>
-        </div>
-        <div class="col-lg-4 col-md-4">
+        
+        <div class="col-sm-4">
           <div class="input">
             <label class="input__label" for="attr">Enter value</label>
             <div class="input__select">
@@ -32,25 +28,38 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-4 col-md-4">
-          <a class="btn tbd-btn" (click)="advanceSearch(advanceSearchKey.value)"><i
-            class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</a>
+         <div class="col-sm-4">
+          <button class="srch-btn btnTp" (click)="advanceSearch(advanceSearchKey.value)"><i
+            class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
         </div>
-      </div>
-    </div>
 
-      <div class="tableTop">
+
+    </div>
+</div>
+</div>
+
+<!-- Table -->
+
+
+        <div class="tableSpc">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="txTit">
+                All Users Details:
+              </div>
+            </div>           
+            </div>
         <table>
           <tr *ngFor="let item of userInfo | paginate:config"></tr>
         </table>
 
-        <ag-grid-angular class="ag-theme-balham" [gridOptions]="usersGridOptions"
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
           (rowClicked)="onUsersRowClicked($event)" paginationPageSize=15 pagination=true>
 
         </ag-grid-angular>
 
       </div>
-     </div>
+   
 
       <!-- <div class="card">
 
@@ -94,8 +103,5 @@
 
         </div>
       </div> -->
-
-
-    </div>
-  </div>
 </div>
+

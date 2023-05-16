@@ -111,7 +111,7 @@
                 <th scope="col">ITR Filed</th>
                 <th scope="col">Paid Revenue (₹)</th>
                 <th scope="col">Commission Earned (₹)</th>
-                <th scope="col">Conversion Ratios</th>
+                <!-- <th scope="col">Conversion Ratios</th> -->
               </tr>
             </thead>
             <tbody>
@@ -131,7 +131,7 @@
                 <td [ngClass]="{ 'text-success': item.totalItrFiled }">{{ item.totalItrFiled }}</td>
                 <td>{{ item.totalPaidRevenue }}</td>
                 <td>{{ item.totalCommissionEarned }}</td>
-                <td>{{'NA'}}</td>
+                <!-- <td>{{'NA'}}</td> -->
               </tr>
               <tr *ngIf="!searchQuery">
                 <td colspan="4"></td>
@@ -139,7 +139,7 @@
                 <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
                 <td class="text-success">{{ grandTotal?.totalPaidRevenue }}</td>
                 <td class="text-success">{{ grandTotal?.totalCommissionEarned }}</td>
-                <td>{{ 'NA' }}</td>
+                <!-- <td>{{ 'NA' }}</td> -->
               </tr>
               <!-- <tr>
                 <th scope="row">1</th>

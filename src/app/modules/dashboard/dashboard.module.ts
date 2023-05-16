@@ -15,6 +15,10 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MaterialModule } from '../shared/material.module';
 import { SharedModule } from '../shared/shared.module';
+import { LeaderDashboardComponent } from './leader-dashboard/leader-dashboard.component';
+import { SubLeaderDashboardComponent } from './sub-leader-dashboard/sub-leader-dashboard.component';
+import { TeamReportDashboardComponent } from './team-report-dashboard/team-report-dashboard.component';
+import { LeaderAttendanceDashboardComponent } from './leader-attendance-dashboard/leader-attendance-dashboard.component';
 
 
 @NgModule({
@@ -22,7 +26,11 @@ import { SharedModule } from '../shared/shared.module';
     DashboardComponent,
     OwnerDashboardComponent,
     MainDashboardComponent,
-    AttendanceReportComponent
+    AttendanceReportComponent,
+    LeaderDashboardComponent,
+    SubLeaderDashboardComponent,
+    TeamReportDashboardComponent,
+    LeaderAttendanceDashboardComponent
   ],
   imports: [
     CommonModule,

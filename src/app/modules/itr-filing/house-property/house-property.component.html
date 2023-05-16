@@ -100,12 +100,10 @@
           <hr />
           <div>
             <!-- page-navigation-buttons  -->
-            <div class="flex justify-between items-center">
-              <div>
-                <button class="btn" (click)="goBack()">
-                  Back to Source page
+            <div class="flex justify-between p-[30px] back-foot">
+                <button class="lgtBtn" (click)="goBack()"><mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+                  <span class="font-semibold">&nbsp;Back to Source Page</span>
                 </button>
-              </div>
             </div>
           </div>
 
@@ -1443,8 +1441,8 @@
           <!-- action buttons  -->
           <div class="flex justify-between">
             <!-- <a class="btn btn-cancel">Cancel</a> -->
-            <button class="btn" (click)="cancelHpForm()">Cancel</button>
-            <button class="btn" [disabled]="isDisable" (click)="saveHouseProperty('','')">Save</button>
+            <button class="lgtBtn" (click)="cancelHpForm()">Cancel</button>
+            <button class="lgtBtn" [disabled]="isDisable" (click)="saveHouseProperty('','')">Save</button>
           </div>
         </div>
       </form>
