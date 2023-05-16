@@ -51,4 +51,15 @@ export const environment = {
 
 	externalScripts: {
 	}
+	,
+	firebaseConfig : {
+		apiKey: "AIzaSyCTINXADOkr4isp-GJXu5IjV8kPlqb7OZo",
+		authDomain: "taxbuddy-29fe2.firebaseapp.com",
+		databaseURL: "https://taxbuddy-29fe2.firebaseio.com",
+		projectId: "taxbuddy-29fe2",
+		storageBucket: "taxbuddy-29fe2.appspot.com",
+		messagingSenderId: "294419985055",
+		appId: "1:294419985055:web:333066a5ba29aad79d28aa",
+		measurementId: "G-K3L7DS9C92"
+	  },
 };
