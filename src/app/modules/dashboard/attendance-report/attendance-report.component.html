@@ -20,37 +20,37 @@
     </div>
     <div class="col-sm-2">
       <div class="radius3">
-          <span class="bluTx">2535</span><br>
+          <span class="bluTx">{{itrOverview?.assignedUsersCount || 'NA'}}</span><br>
           <span class="TxSm">Assign Users</span>
       </div>
     </div>
     <div class="col-sm-2">
       <div class="radius3">
-          <span class="bluTx">30</span><br>
+          <span class="bluTx">{{itrOverview?.openCount || 'NA'}}</span><br>
           <span class="TxSm">Open</span>
       </div>
     </div>
     <div class="col-sm-2">
       <div class="radius3">
-          <span class="bluTx">1688</span><br>
+          <span class="bluTx">{{itrOverview?.documentUploadedCount || 'NA'}}</span><br>
           <span class="TxSm">Document Uploaded</span>
       </div>
     </div>
     <div class="col-sm-2">
       <div class="radius3">
-          <span class="bluTx">196</span><br>
+          <span class="bluTx">{{itrOverview?.inProcessCount || 'NA'}}</span><br>
           <span class="TxSm">In Process</span>
       </div>
     </div>
     <div class="col-sm-2">
       <div class="radius3">
-          <span class="bluTx">285</span><br>
+          <span class="bluTx">{{itrOverview?.waitingForConfirmationCount || 'NA'}}</span><br>
           <span class="TxSm">Waiting for confirmation</span>
       </div>
     </div>
     <div class="col-sm-2">
       <div class="radius3">
-          <span class="bluTx">184</span><br>
+          <span class="bluTx">{{itrOverview?.backedOutCount || 'NA'}}</span><br>
           <span class="TxSm">Back Out</span>
       </div>
     </div>
@@ -60,17 +60,17 @@
   <div class="col-sm-12">
   <div class="tpMain">
       <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Partners</span>&nbsp;
-      <span class="numTxBg1">{{ partnerCount }}</span>
+      <span class="numTxBg1">{{ partnerCount}}</span>
       <!-- Inside Row -->
       <div class="row">
         <div class="col-sm-3">
           <div class="radius2">
             <div class="inBxL">
-              <span class="numTxSm grTx1">{{ activePartnerCount }}</span><br>
+              <span class="numTxSm grTx1">{{ activePartnerCount}}</span><br>
               <span  class="TxSm">Active Partners</span>
             </div>
             <div class="inBxR">
-              <span  class="numTxSm OrgTx">{{ inactivePartnerCount }}</span><br>
+              <span  class="numTxSm OrgTx">{{ inactivePartnerCount}}</span><br>
               <span  class="TxSm">Inactive Partners</span>
             </div>
           </div>
@@ -78,11 +78,11 @@
         <div class="col-sm-3">
           <div class="radius2">
             <div class="inBxL">
-              <span class="numTxSm grTx1">{{ assignmentOnCount }}</span><br>
+              <span class="numTxSm grTx1">{{ assignmentOnCount}}</span><br>
               <span  class="TxSm">Assignment On</span>
             </div>
             <div class="inBxR">
-              <span  class="numTxSm OrgTx">{{ assignmentOffCount }}</span><br>
+              <span  class="numTxSm OrgTx">{{ assignmentOffCount}}</span><br>
               <span  class="TxSm">Assignment Off</span>
             </div>
           </div>
