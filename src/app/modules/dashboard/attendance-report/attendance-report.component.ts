@@ -63,6 +63,7 @@ export class AttendanceReportComponent implements OnInit {
   inactivePartnerCount: number;
   assignmentOnCount: number;
   assignmentOffCount: number;
+  itrOverview:any;
 
   constructor(
     private userMsService: UserMsService,
@@ -83,7 +84,7 @@ export class AttendanceReportComponent implements OnInit {
     // this.getFilers();
     this.getPartnerDetails();
     this.filteredData = this.allDetails;
-
+    this.getItrUserOverview();
   }
 
   filterData() {
@@ -157,6 +158,28 @@ export class AttendanceReportComponent implements OnInit {
     this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
     this.assignmentOnCount = this.allDetails.filter(item => item.assignmentStatus === 'On').length;
     this.assignmentOffCount = this.allDetails.filter(item => item.assignmentStatus === 'Off').length;
+  }
+
+  getItrUserOverview(){
+  // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
+  this.loading = true;
+  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+  let ownerUserId = this.loggedInSmeUserId;
+
+  let param =`/dashboard/itr-users-overview?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}`
+
+  this.itrService.getMethod(param).subscribe((response: any) => {
+    if (response.success) {
+      this.itrOverview = response.data;
+    }else{
+       this.loading = false;
+       this. _toastMessageService.alert("error",response.message);
+     }
+  },(error) => {
+    this.loading = false;
+    this. _toastMessageService.alert("error","Error");
+  })
   }
 
 }

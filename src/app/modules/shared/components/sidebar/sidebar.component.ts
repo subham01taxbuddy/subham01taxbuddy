@@ -73,7 +73,7 @@ export class SidebarComponent implements DoCheck {
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard/leader',
-      roles: ['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER'],
+      roles: ['ROLE_ADMIN','ROLE_LEADER'],
       submenu: []
     },
     {
