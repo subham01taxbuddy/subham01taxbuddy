@@ -1,100 +1,26 @@
-<div *ngIf="true" class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
-<ul id="accordion" class="accordion">
-  <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
-    <div class="menu sidebar__item" (click)="toggle(i)" *ngIf="!menu.url && isApplicable(menu.roles)">
-      {{ menu.name }}
-      <i *ngIf="!menu.active" class="fa fa-chevron-right"></i>
-      <i *ngIf="menu.active" class="fa fa-chevron-up"></i>
-    </div>
-    <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}"
-       routerLinkActive="sidebar__item_active" [routerLinkActiveOptions]="{exact:true}"
-       class="sidebar__item">
-      <span>{{ menu.name }}</span>
-    </a>
-    <ul class="submenu" #submenu *ngIf="menu.active">
-      <li *ngFor="let submenu of menu.submenu">
-        <a *ngIf="isApplicable(submenu.roles)" routerLink="{{submenu.url}}" class="sidebar__name norTx" class="sidebar__item"
-           routerLinkActive="sidebar__item_active">
-          <span>{{ submenu.name }}</span>
-        </a>
-      </li>
-    </ul>
-  </li>
-</ul>
-</div>
-<div *ngIf="false" class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar"
-  [class.hideSideMenu]="hideSideBar">
-
-  <nav class="sidebar">
-    <a class="sidebar__item" routerLink="/tasks" routerLinkActive="" (click)="closeSideBar()">
-      <span class="sidebar__name norTx">My Tasks</span>
-    </a>
-
-    <div *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_OWNER', 'ROLE_LEADER'])" class="d-menu">
-      <a class="sidebar__item" href="javascript:void(0)" (click)="dropdownPanel['sme'] = !dropdownPanel['sme']">
-        <span class="sidebar__name norTx">SME Management</span>
-      </a>
-      <div *ngIf="dropdownPanel['sme']" class="d-menu-links">
-        <a *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" class="sidebar__subitem"
-          routerLink="/sme-management-new/unassignedsme" href="javascript:void(0)">
-          <span class="sidebar__subname norTx">Unassigned SME</span>
-        </a>
-        <a class="sidebar__subitem" routerLink="/sme-management-new/assignedsme" href="javascript:void(0)">
-          <span class="sidebar__subname norTx">Assigned SME</span>
-        </a>
-        <a class="sidebar__subitem" routerLink="/sme-management-new/resignedsme" href="javascript:void(0)">
-          <span class="sidebar__subname norTx">Resigned SME</span>
-        </a>
+<div class="left-sidebar fixed" [class.sidebar-close]="!openSidebar">
+  <ul id="accordion" class="accordion">
+    <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
+      <div class="menu sidebar__item menu-name" (click)="$event.stopPropagation();toggle(i)"
+        *ngIf="!menu.url && isApplicable(menu.roles)">
+        {{ menu.name }}
+        <i *ngIf="!menu.active" class="fa fa-chevron-right menu-icon"></i>
+        <i *ngIf="menu.active" class="fa fa-chevron-up menu-icon"></i>
       </div>
-    </div>
-    <div class="d-menu">
-      <a href="javascript:void(0)" class="sidebar__item"
-        (click)="dropdownPanel['subscription'] = !dropdownPanel['subscription']">
-        <span class="sidebar__name norTx">Subscription</span>
+      <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}" routerLinkActive="sidebar__item_active"
+        [routerLinkActiveOptions]="{exact:true}" class="sidebar__item" href="javascript:void(0)">
+        <span>{{ menu.name }}</span>
       </a>
-      <div *ngIf="dropdownPanel['subscription']" class="d-menu-links">
-        <a class="sidebar__subitem" routerLink="/subscription/assigned-subscription" href="javascript:void(0)">
-          <span class="sidebar__subname norTx">Assigned-Sub</span>
-        </a>
-        <div class="d-sub-menu">
-          <a class="sidebar__subitem" (click)="
-              dropdownPanelChild['invoice'] = !dropdownPanelChild['invoice']
-            " href="javascript:void(0)">
-            <span class="sidebar__subname norTx">Invoice</span>
-          </a>
-          <div *ngIf="dropdownPanelChild['invoice']" class="d-menu-links">
-            <a class="sidebar__subitem" routerLink="/subscription/proforma-invoice" href="javascript:void(0)">
-              <span class="sidebar__subname norTx">Proforma Invoice</span>
+      <div *ngIf="menu.active">
+        <ul class="submenu" #submenu>
+          <li *ngFor="let submenu of menu.submenu">
+            <a *ngIf="isApplicable(submenu.roles)" routerLink="{{submenu.url}}" class="sidebar__name sidebar__item"
+              routerLinkActive="sidebar__item_active " href="javascript:void(0)"  (click)="activateNow(i)">
+              <span>{{ submenu.name }}</span>
             </a>
-          </div>
-          <div *ngIf="dropdownPanelChild['invoice']" class="d-menu-links">
-            <a class="sidebar__subitem" routerLink="/subscription/tax-invoice" href="javascript:void(0)">
-              <span class="sidebar__subname norTx">Tax Invoice</span>
-            </a>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
-    </div>
-
-    <!--    <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"-->
-    <!--       (click)="closeSideBar()">-->
-    <!--      <span class="sidebar__name norTx">User Management</span>-->
-    <!--    </a>-->
-    <a *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" class="sidebar__item" routerLink="/review"
-      routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
-      <span class="sidebar__name norTx">Review</span>
-    </a>
-    <a *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" class="sidebar__item" routerLink="/bo-partners"
-      routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
-      <span class="sidebar__name norTx">Bo-Partners</span>
-    </a>
-    <!-- <a class="sidebar__item" routerLink="/subscription" routerLinkActive="sidebar__item_active"
-       (click)="closeSideBar()">
-      <span class="sidebar__name norTx">Subscription</span>
-    </a>  -->
-    <!-- <a class="sidebar__item item-act" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
-            <i class="material-icons actTx">description</i>
-            <span class="sidebar__name actTx">ITR Filing Process</span>
-        </a> -->
-  </nav>
+    </li>
+  </ul>
 </div>
