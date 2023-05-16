@@ -350,13 +350,16 @@ export class OwnerDashboardComponent implements OnInit {
 
   goTo(form?){
     if (form == 'myUsers') {
-      this.router.navigate(['/tasks/assigned-users-new']);
+      this.router.navigate(['/tasks/assigned-users-new'], { queryParams: { statusId: '2' } });
     }
     if(form == 'myItr'){
-      this.router.navigate(['/tasks/filings']);
+      this.router.navigate(['/tasks/filings'],{ queryParams: { statusId: 'WIP' } });
+    }
+    if(form == 'myItr1'){
+      this.router.navigate(['/tasks/filings'],{ queryParams: { statusId: 'ITR_FILED' } });
     }
     if(form == 'scheduleCall'){
-      this.router.navigate(['/tasks/schedule-call']);
+      this.router.navigate(['/tasks/schedule-call'],{ queryParams: { statusId: '17' } });
     }
   }
 
