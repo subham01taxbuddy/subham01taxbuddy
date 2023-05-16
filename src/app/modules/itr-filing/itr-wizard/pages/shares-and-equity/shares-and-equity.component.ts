@@ -473,6 +473,7 @@ export class SharesAndEquityComponent
               res.assetDetails[0].capitalGain
             );
           } else {
+            this.loading = false;
             securities.controls['capitalGain'].setValue(0);
           }
 
