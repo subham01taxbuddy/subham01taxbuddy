@@ -44,6 +44,7 @@ export class AssignedNewUsersComponent implements OnInit {
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
   searchVal:any;
+  searchStatusId:any;
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -95,13 +96,26 @@ export class AssignedNewUsersComponent implements OnInit {
     this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
-    this.search();
+    // this.search();
     this.getAgentList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
-      console.log('q param',this.searchVal)
-      this.searchParam.mobileNumber = this.searchVal;
-      this.search('mobile');
+      this.searchStatusId = params['statusId'];
+
+      if(this.searchVal){
+        // console.log('q param',this.searchVal)
+        this.searchParam.mobileNumber = this.searchVal;
+        this.search('mobile');
+      }
+      else if(this.searchStatusId){
+        // console.log('q param',this.searchStatus)
+        this.searchParam.statusId = this.searchStatusId;
+        this.search('status');
+      }
+      else {
+        this.search();
+      }
+
     })
   }
 

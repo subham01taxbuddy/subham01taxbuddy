@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./leader-dashboard.component.scss']
 })
 export class LeaderDashboardComponent implements OnInit {
-  view:string = 'leader';
+  view:string = 'attendance';
 
   constructor() { }
 

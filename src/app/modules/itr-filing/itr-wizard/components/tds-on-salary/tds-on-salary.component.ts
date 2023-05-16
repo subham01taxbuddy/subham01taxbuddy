@@ -28,10 +28,7 @@ export class TdsOnSalaryComponent implements OnInit {
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.config = {
-      itemsPerPage: 2,
-      currentPage: 1,
-    };
+
 
     this.salaryForm = this.inItForm();
     if (this.Copy_ITR_JSON.taxPaid?.onSalary && this.Copy_ITR_JSON.taxPaid?.onSalary.length > 0) {
@@ -42,6 +39,16 @@ export class TdsOnSalaryComponent implements OnInit {
       this.addMore();
     }
     this.salaryForm.disable();
+
+    this.config = {
+      id: "salaryPagination",
+      itemsPerPage: 2,
+      currentPage: 1,
+      totalItems: this.Copy_ITR_JSON.taxPaid?.onSalary.length,
+      // pageCount: this.getSalaryArray.controls.length/this.config.itemsPerPage
+    };
+    this.salaryForm.markAllAsTouched();
+    this.salaryForm.markAsDirty();
   }
 
   inItForm() {
@@ -69,6 +76,7 @@ export class TdsOnSalaryComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
+    this.salaryForm.enable();
     if (this.salaryForm.valid) {
       if (!this.Copy_ITR_JSON.taxPaid) {
         this.Copy_ITR_JSON.taxPaid = {
