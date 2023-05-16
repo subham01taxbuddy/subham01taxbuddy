@@ -104,9 +104,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.getMasterStatusList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
-      console.log('q param',this.searchVal)
-      this.searchParams.mobileNumber = this.searchVal;
-      this.myItrsList(0,'');
+      if(this.searchVal) {
+        console.log('q param', this.searchVal)
+        this.searchParams.mobileNumber = this.searchVal;
+        this.myItrsList(0, '');
+      }
     })
   }
   ngAfterContentChecked() {

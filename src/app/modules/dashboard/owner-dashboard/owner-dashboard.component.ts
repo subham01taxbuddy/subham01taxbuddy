@@ -336,10 +336,14 @@ export class OwnerDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
+        if(response.success == false){
+          this.loading = false;
+          this._toastMessageService.alert('error',response.message)
+        }
       },
       (error) => {
         this.loading = false;
-        this._toastMessageService.alert('error', 'Error');
+        this._toastMessageService.alert('error',"Error while filer commission report: Not_found: Data not found");
       }
     );
   }

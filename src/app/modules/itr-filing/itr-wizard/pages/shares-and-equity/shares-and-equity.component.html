@@ -89,7 +89,7 @@
                   >
                   <mat-error
                     *ngIf="
-                      securitiesForm.controls['securitiesArray'].controls[
+                      getSecuritiesArray.controls[
                         i
                       ].controls['nameOfTheUnits'].hasError('pattern')
                     "
@@ -164,9 +164,7 @@
                   <mat-datepicker #sellDate> </mat-datepicker>
                   <mat-error
                     *ngIf="
-                      securitiesForm.controls['securitiesArray'].controls[
-                        i
-                      ].controls['sellDate'].hasError('required')
+                      securitiesForm.controls['securitiesArray'].controls[i].controls['sellDate'].hasError('required')
                     "
                   >
                     Enter valid Date.

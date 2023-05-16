@@ -4,7 +4,6 @@
   }
 
 
-
   .rowClr {
     background-color: #e4e4ff;
     padding:0px 20px 10px 20px;
@@ -38,8 +37,8 @@
     margin-bottom:0px;
     display:block;
     box-shadow: 1px 2px #e4e4ff;
-  }
-
+  } 
+  
   .grTx {
     color: #63b12d !important;
   }
@@ -71,7 +70,7 @@
 
   input {
     border: 1px solid #cccccc!important;
-    padding: 5px!important;
+    padding: 6px!important;
   }
 
   .mvup {
@@ -81,6 +80,14 @@
   .mvup-custom {
     margin-top: -102px;
   }
+
+  .spRtTp {
+    margin-top: -210px;
+}
+
+.tpSp1{
+  margin-top:15px;
+}
 
 
   .spTp {
@@ -108,11 +115,7 @@
     padding-left: 0px;
     padding-right:10px;
   }
-  .TxSm{
-    font-size:16px;
-    color:#000000;
-    font-weight:normal;
-  }
+ 
   .numTxSm{
     font-size: 18px;
     color: #04a4bc;
@@ -242,8 +245,9 @@
     padding:6px 10px 6px 10px;
     box-shadow: 2px 4px #e4e4ff;
     font-size:13px;
-    margin-top: 10px;
+    margin: 0px 0px 20px 0px;
     // margin-left: -75px;
+    float:right;
   }
   .proceed2:hover {
     background-color: #006c7d !important;
@@ -256,9 +260,10 @@
 
 
 .bdrbl {
-  border-bottom: 1px solid #dadada;
+  // border-bottom: 1px solid #dadada;
   padding-bottom: 15px;
 }
+
 .form-control{
   flex-direction:row;
  }

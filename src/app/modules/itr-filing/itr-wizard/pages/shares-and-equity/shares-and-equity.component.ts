@@ -142,6 +142,17 @@ export class SharesAndEquityComponent
     } else {
       this.addMoreData();
     }
+
+    if (!this.securitiesForm.valid) {
+      this.loading = false;
+      this.securitiesForm.markAllAsTouched();
+      this.securitiesForm.markAsDirty();
+      $('input.ng-invalid').first().focus();
+      this.utilsService.showSnackBar(
+        'Please verify securities data and try again.'
+      );
+    }
+
   }
 
   initBrokerList(itrObject: ITR_JSON) {
@@ -462,6 +473,7 @@ export class SharesAndEquityComponent
               res.assetDetails[0].capitalGain
             );
           } else {
+            this.loading = false;
             securities.controls['capitalGain'].setValue(0);
           }
 
@@ -667,10 +679,13 @@ export class SharesAndEquityComponent
         }
       );
     } else if (!this.securitiesForm.valid) {
+      this.loading = false;
+      $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
         'Please verify securities data and try again.'
       );
     } else {
+      this.loading = false;
       this.utilsService.showSnackBar(
         'Please verify deduction form and try again'
       );

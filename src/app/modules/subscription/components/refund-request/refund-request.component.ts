@@ -41,7 +41,7 @@ export class RefundRequestComponent implements OnInit {
 
     mobile: new FormControl(''),
     email: new FormControl(''),
-    txbdyInvoiceId: new FormControl(''),
+    invoiceNo: new FormControl(''),
   });
 
   get mobile() {
@@ -52,8 +52,8 @@ export class RefundRequestComponent implements OnInit {
     return this.invoiceFormGroup.controls['email'] as FormControl;
   }
 
-  get txbdyInvoiceId() {
-    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as FormControl;
+  get invoiceNo() {
+    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
   constructor(
@@ -95,8 +95,8 @@ export class RefundRequestComponent implements OnInit {
 
   fromOwner(event, isOwner) {
     if (event) {
-      this.ownerId=null;
-      this.filerId=null;
+      this.ownerId = null;
+      this.filerId = null;
       if (this.isOwner) {
         this.ownerId = event ? event.userId : null;
         this.getRefundRequestList(0, 'ownerUserId', this.ownerId);
@@ -120,8 +120,8 @@ export class RefundRequestComponent implements OnInit {
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
-    this.filerId=null;
-    this.ownerId=null;
+    this.filerId = null;
+    this.ownerId = null;
     if (this.isOwner) {
       this.getRefundRequestList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
@@ -166,12 +166,12 @@ export class RefundRequestComponent implements OnInit {
     let invoiceFilter = '';
     if (
       this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['txbdyInvoiceId'].value
+        this.invoiceFormGroup.controls['invoiceNo'].value
       )
     ) {
       invoiceFilter =
-        '&txbdyInvoiceId=' +
-        this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
+        '&invoiceNo=' +
+        this.invoiceFormGroup.controls['invoiceNo'].value;
     }
 
     if (id) {
@@ -306,7 +306,7 @@ export class RefundRequestComponent implements OnInit {
 
       {
         headerName: 'Subscription',
-        field: 'subscription',
+        field: 'serviceDetail',
         width: 320,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -358,9 +358,21 @@ export class RefundRequestComponent implements OnInit {
       },
 
       {
-        headerName: 'Invoice Details (No :  Amount)',
-        field: 'invoiceDetails',
-        width: 250,
+        headerName: 'Invoice No.',
+        field: 'invoiceNo',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Invoice Amount',
+        field: 'invoiceAmount',
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -378,7 +390,7 @@ export class RefundRequestComponent implements OnInit {
       },
       {
         headerName: 'Amount Paid Updates',
-        field: 'payableRefundAmount',
+        field: 'refundPaidAmount',
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'left' },
@@ -435,16 +447,6 @@ export class RefundRequestComponent implements OnInit {
   createRowData(subscriptionData) {
     const newData = [];
     for (let i = 0; i < subscriptionData.length; i++) {
-      const invoiceDetails = [];
-      if (subscriptionData[i].invoiceDetail && subscriptionData[i].invoiceDetail.length > 0) {
-        for (let x = 0; x < subscriptionData[i].invoiceDetail?.length; x++) {
-          if (subscriptionData[i].invoiceDetail[x].invoiceNo === null) {
-            subscriptionData[i].invoiceDetail[x].invoiceNo = '-';
-          }
-          let perInvoiceDetails = subscriptionData[i].invoiceDetail[x].invoiceNo + ': ' + subscriptionData[i].invoiceDetail[x].payableRefundAmount + ': ' + subscriptionData[i].invoiceDetail[x].paymentStatus;
-          invoiceDetails.push(perInvoiceDetails);
-        }
-      }
       newData.push({
         userId: this.utilsService.isNonEmpty(subscriptionData[i].userId) ? subscriptionData[i].userId : '-',
         name: this.utilsService.isNonEmpty(subscriptionData[i].name) ? subscriptionData[i].name : '-',
@@ -452,15 +454,15 @@ export class RefundRequestComponent implements OnInit {
         email: this.utilsService.isNonEmpty(subscriptionData[i].email) ? subscriptionData[i].email : '-',
         refundRequestType: this.utilsService.isNonEmpty(subscriptionData[i].refundRequestType) ? subscriptionData[i].refundRequestType : '-',
         requestCreatedDate: subscriptionData[i].requestCreatedDate,
-        subscription: this.utilsService.isNonEmpty(subscriptionData[i].subscription) ? subscriptionData[i].subscription : '-',
+        serviceDetail: this.utilsService.isNonEmpty(subscriptionData[i].serviceDetail) ? subscriptionData[i].serviceDetail : '-',
         oldSubscriptionAmount: this.utilsService.isNonEmpty(subscriptionData[i].oldSubscriptionAmount) ? subscriptionData[i].oldSubscriptionAmount : '-',
         newSubscriptionAmount: this.utilsService.isNonEmpty(subscriptionData[i].newSubscriptionAmount) ? subscriptionData[i].newSubscriptionAmount : '-',
         serviceType: this.utilsService.isNonEmpty(subscriptionData[i].serviceType) ? subscriptionData[i].serviceType : '-',
         assignedToName: this.utilsService.isNonEmpty(subscriptionData[i].assignedToName) ? subscriptionData[i].assignedToName : '-',
-        invoiceDetails: invoiceDetails.toString(),
+        invoiceNo: this.utilsService.isNonEmpty(subscriptionData[i].invoiceNo) ? subscriptionData[i].invoiceNo : '-',
+        invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].invoiceAmount) ? subscriptionData[i].invoiceAmount : '-',
         payableRefundAmount: this.utilsService.isNonEmpty(subscriptionData[i].payableRefundAmount) ? subscriptionData[i].payableRefundAmount : '-',
-
-
+        refundPaidAmount: this.utilsService.isNonEmpty(subscriptionData[i].refundPaidAmount) ? subscriptionData[i].refundPaidAmount : '-',
       });
     }
     return newData;

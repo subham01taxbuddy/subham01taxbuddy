@@ -1,8 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="main clearfix" style="padding-top: 0px">
+<div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-10">
+    <div class="col-sm-6">
       <b style="font-size: 20px">Create User</b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -11,10 +11,14 @@
       </p>
     </div>
   </div>
-  <div class="card">
+  <div class="rowClr">
+    <div class="surround">
+   
+   
     <form [formGroup]="signUpForm">
-      <div class="card__row">
-        <div class="card__col-lg-3">
+      <div class="row">
+
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>PAN Number</mat-label>
             <input placeholder="PAN" formControlName="panNumber" autocomplete="off"
@@ -23,25 +27,25 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>First name</mat-label>
             <input placeholder="First Name" type="text" formControlName="firstName" capitalizeFirst matInput required>
           </mat-form-field>
         </div>
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>Middle Name</mat-label>
             <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
           </mat-form-field>
         </div>
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
             <input placeholder="Last Name" type="text" formControlName="lastName" capitalizeFirst matInput required>
           </mat-form-field>
         </div>
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>Select country</mat-label>
             <input type="text" placeholder="Select country" matInput formControlName="countryCode"
@@ -62,7 +66,7 @@
             </mat-select>
           </mat-form-field> -->
         </div>
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>Mobile Number</mat-label>
             <input matInput  [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
@@ -73,7 +77,7 @@
               valid mobile no.</mat-error>
           </mat-form-field>
         </div>
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>Email Address</mat-label>
             <input matInput type="email" placeholder="Enter email address" formControlName="email" name="mobile"
@@ -84,7 +88,7 @@
               email address.</mat-error>
           </mat-form-field>
         </div>
-        <div class="card__col-lg-3">
+        <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>Select Service Type</mat-label>
             <mat-select placeholder="Select Service Type" formControlName="serviceType" required
@@ -97,26 +101,29 @@
               Service type </mat-error>
           </mat-form-field>
         </div>
-       <div class="card__col-lg-8" *ngIf="!coOwnerCheck">
+       <div class="col-sm-12 spsTp" *ngIf="!coOwnerCheck">
          <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
             [disabled]="assignedToMe">
          </app-sme-list-drop-down>
        </div>
-       <div class="card__col-lg-8" *ngIf="coOwnerCheck">
+       <div class="col-sm-0" *ngIf="coOwnerCheck">
         <app-co-owner-list-drop-down  (sendCoOwner)="fromSme1($event, true)"
           (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
-        <div class="card__col-lg-3" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
+        <div class="col-sm-0" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
           <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
             to me!</mat-checkbox>
         </div>
 
 
-        <div class=" card__col-xs-12">
-          <button class="tbd-btn" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
+        <div class="col-sm-12">
+          <button class="rt-btn" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
         </div>
+
       </div>
-    </form>
-  </div>
-</div>
+     </form>
+
+      
+    </div>
+    </div>

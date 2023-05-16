@@ -33,6 +33,7 @@
 }
 
 @media screen and (max-width: 768px) {
+
     .header__logo-img,
     .header__logo-img:after,
     .header__logo-img:before {
@@ -355,10 +356,16 @@ a.text-l-green:hover {
 
 /* background */
 
-.sidebar__item_active,
 .sidebar__item:hover {
-    background-color: #446682;
+    color: #63b12d !important;
+    /* color: orange !important; */
 }
+
+.sidebar__item_active {
+    /* color: #63b12d !important; */
+    color: orange !important;
+}
+
 
 
 /* --[#0d0d0d]-- */
