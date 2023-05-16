@@ -3838,6 +3838,64 @@ export class PrefillIdComponent implements OnInit {
               JSON.stringify(this.ITR_Obj)
             );
           }
+
+          // EQUITY 112A
+          {
+            const EquityMF112A =
+              this.uploadedJson[this.ITR_Type].Schedule112A?.Schedule112ADtls;
+
+            EquityMF112A.forEach((equityLtcg) => {
+              const equityLtcgDetail = {
+                assessmentYear: '',
+                assesseeType: '',
+                residentialStatus: '',
+                assetType: 'EQUITY_SHARES_LISTED',
+                deduction: [],
+                improvement: [],
+                buyersDetails: [],
+                assetDetails: [
+                  {
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'LONG',
+                    sellDate: null,
+                    sellValue: equityLtcg.TotSaleValue,
+                    stampDutyValue: null,
+                    valueInConsideration: null,
+                    sellExpense: equityLtcg.ExpExclCnctTransfer,
+                    purchaseDate: null,
+                    purchaseCost: equityLtcg.AcquisitionCost,
+                    isinCode: equityLtcg.ISINCode,
+                    nameOfTheUnits: equityLtcg.ShareUnitName,
+                    sellOrBuyQuantity: equityLtcg.NumSharesUnits,
+                    sellValuePerUnit: equityLtcg.SalePricePerShareUnit,
+                    purchaseValuePerUnit:
+                      equityLtcg.AcquisitionCost / equityLtcg.NumSharesUnits,
+                    algorithm: 'cgSharesMF',
+                    fmvAsOn31Jan2018: equityLtcg.FairMktValuePerShareunit,
+                    capitalGain: equityLtcg.Balance,
+                    indexCostOfAcquisition: null,
+                    totalFairMarketValueOfCapitalAsset:
+                      equityLtcg.TotFairMktValueCapAst,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  },
+                ],
+                deductionAmount: null,
+              };
+
+              this.ITR_Obj.capitalGain.push(equityLtcgDetail);
+            });
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+          }
         }
 
         // STCG
