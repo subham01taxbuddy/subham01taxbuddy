@@ -3652,6 +3652,78 @@ export class PrefillIdComponent implements OnInit {
 
           this.ITR_Obj.capitalGain.push(SaleofBondsDebntrDetails);
         }
+
+        // OTHER ASSETS
+        {
+          const SaleofAssetNA =
+            this.uploadedJson[this.ITR_Type].ScheduleCGFor23?.LongTermCapGain23
+              ?.SaleofAssetNA;
+
+          const SaleofAssetNADetail = {
+            assessmentYear: '',
+            assesseeType: '',
+            residentialStatus: '',
+            assetType: 'GOLD',
+            deduction: [
+              {
+                srn: null,
+                underSection: 'Deduction 54F',
+                orgAssestTransferDate: null,
+                purchaseDate: null,
+                panOfEligibleCompany: null,
+                purchaseDatePlantMachine: null,
+                costOfNewAssets: null,
+                investmentInCGAccount: null,
+                totalDeductionClaimed: SaleofAssetNA?.DeductionUs54F,
+                costOfPlantMachinary: null,
+                usedDeduction: null,
+              },
+            ],
+            improvement: [
+              {
+                id: null,
+                srn: null,
+                financialYearOfImprovement: null,
+                dateOfImprovement: null,
+                costOfImprovement: SaleofAssetNA.DeductSec48?.ImproveCost,
+                indexCostOfImprovement: null,
+              },
+            ],
+            buyersDetails: [],
+            assetDetails: [
+              {
+                id: null,
+                hasIndexation: null,
+                isUploaded: null,
+                srn: null,
+                description: null,
+                gainType: 'LONG',
+                sellDate: null,
+                sellValue: null,
+                stampDutyValue: null,
+                valueInConsideration: SaleofAssetNA?.FullConsideration,
+                sellExpense: SaleofAssetNA.DeductSec48?.ExpOnTrans,
+                purchaseDate: null,
+                purchaseCost: SaleofAssetNA.DeductSec48?.AquisitCost,
+                isinCode: null,
+                nameOfTheUnits: null,
+                sellOrBuyQuantity: 1,
+                sellValuePerUnit: null,
+                purchaseValuePerUnit: null,
+                algorithm: 'cgProperty',
+                fmvAsOn31Jan2018: null,
+                capitalGain: SaleofAssetNA?.CapgainonAssets,
+                indexCostOfAcquisition: null,
+                totalFairMarketValueOfCapitalAsset: null,
+                grandFatheredValue: null,
+                brokerName: null,
+              },
+            ],
+            deductionAmount: null,
+          };
+
+          this.ITR_Obj.capitalGain.push(SaleofAssetNADetail);
+        }
       }
     }
 
