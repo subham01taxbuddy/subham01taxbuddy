@@ -547,6 +547,308 @@ export class SummaryComponent implements OnInit {
       };
     }
 
+    if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
+      this.keys = {
+        //SALARY INCOME
+        IncomeFromSal:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.Salaries,
+
+        //   GrossSalary:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.GrossSalary,
+
+        // TotalAllwncExemptUs10:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     .AllwncExemptUs10?.TotalAllwncExemptUs10,
+
+        // ProfessionalTaxUs16iii:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.ProfessionalTaxUs16iii,
+
+        // EntertainmentAlw16ii:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.EntertainmentAlw16ii,
+
+        // DeductionUs16ia:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.DeductionUs16ia,
+
+        // //HOUSE PROPERTY
+
+        TotalIncomeOfHP:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.IncomeFromHP,
+
+        // TypeOfHP:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.TypeOfHP,
+        // GrossRentReceived:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.GrossRentReceived,
+        // TaxPaidlocalAuth:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.TaxPaidlocalAuth,
+        // AnnualValue:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.AnnualValue,
+        // StandardDeduction:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.StandardDeduction,
+        // InterestPayable:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.InterestPayable,
+
+        // //OTHER SOURCES
+        IncomeOthSrc:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.IncFromOS
+            .TotIncFromOS,
+
+        // SAV: this.ITR_JSON.itrSummaryJson[this.itrType][
+        //   this.ITR14IncomeDeductions
+        // ].OthersInc.OthersIncDtlsOthSrc.find(
+        //   (val) => val.OthSrcNatureDesc === 'SAV'
+        // )?.OthSrcOthAmount,
+
+        // IFD: this.ITR_JSON.itrSummaryJson[this.itrType][
+        //   this.ITR14IncomeDeductions
+        // ].OthersInc.OthersIncDtlsOthSrc.find(
+        //   (val) => val.OthSrcNatureDesc === 'IFD'
+        // )?.OthSrcOthAmount,
+
+        // TAX: this.ITR_JSON.itrSummaryJson[this.itrType][
+        //   this.ITR14IncomeDeductions
+        // ].OthersInc.OthersIncDtlsOthSrc.find(
+        //   (val) => val.OthSrcNatureDesc === 'TAX'
+        // )?.OthSrcOthAmount,
+
+        // FAP: this.ITR_JSON.itrSummaryJson[this.itrType][
+        //   this.ITR14IncomeDeductions
+        // ].OthersInc.OthersIncDtlsOthSrc.find(
+        //   (val) => val.OthSrcNatureDesc === 'FAP'
+        // )?.OthSrcOthAmount,
+
+        // OTH: this.ITR_JSON.itrSummaryJson[this.itrType][
+        //   this.ITR14IncomeDeductions
+        // ].OthersInc.OthersIncDtlsOthSrc.find(
+        //   (val) => val.OthSrcNatureDesc === 'OTH'
+        // )?.OthSrcOthAmount,
+
+        // DIV: this.ITR_JSON.itrSummaryJson[this.itrType][
+        //   this.ITR14IncomeDeductions
+        // ].OthersInc.OthersIncDtlsOthSrc.find(
+        //   (val) => val.OthSrcNatureDesc === 'DIV'
+        // )?.OthSrcOthAmount,
+
+        GrossTotIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.TotalTI,
+
+        CurrentYearLoss:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.CurrentYearLoss,
+
+        BalanceAfterSetoffLosses:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.BalanceAfterSetoffLosses,
+
+        BroughtFwdLossesSetoff:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.BroughtFwdLossesSetoff,
+
+        // //DEDUCTIONS
+        TotalChapVIADeductions:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.DeductionsUnderScheduleVIA,
+
+        GrossTotalIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.GrossTotalIncome,
+
+        IncChargeTaxSplRate111A112:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.IncChargeTaxSplRate111A112,
+
+        // Deductions: Object.entries(
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
+        //     ?.DeductUndChapVIA
+        // )
+        //   .filter(
+        //     ([key, item]) =>
+        //       key !== '80C' &&
+        //       key !== '80CCC' &&
+        //       key !== 'Section80CCDEmployeeOrSE'
+        //   )
+        //   .map(([key, item]) => ({ name: key, amount: item })),
+
+        TotalIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.TotalIncome,
+
+        IncChargeableTaxSplRates:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.IncChargeableTaxSplRates,
+
+        NetAgricultureIncomeOrOtherIncomeForRate:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.NetAgricultureIncomeOrOtherIncomeForRate,
+
+        AggregateIncome:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.AggregateIncome,
+
+        LossesOfCurrentYearCarriedFwd:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+            ?.LossesOfCurrentYearCarriedFwd,
+
+        // //TAXES PAID
+        // TotalTaxPayable:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.TotalTaxPayable,
+
+        // TDSonSalary:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TDSonSalary,
+
+        // TotalTDSonSalaries:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries
+        //     ?.TotalTDSonSalaries,
+
+        // TDSonOthThanSal:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+        //     ?.TDSonOthThanSal,
+
+        // TotalTDSonOthThanSals:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+        //     ?.TotalTDSonOthThanSals,
+
+        // TDS3Details:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+        //     ?.TDS3Details,
+
+        // TotalTDS3Details:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+        //     ?.TotalTDS3Details,
+
+        // TCS: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TCS,
+
+        // TotalSchTCS: this.ITR_JSON.itrSummaryJson[this.itrType]?.TotalSchTCS,
+
+        // TaxPayment:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments?.TaxPayment,
+
+        // TotalTaxPayments:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments
+        //     ?.TotalTaxPayments,
+
+        // Rebate87A:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.Rebate87A,
+
+        // TaxPayableOnRebate:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.TaxPayableOnRebate,
+
+        // EducationCess:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.EducationCess,
+
+        // GrossTaxLiability:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.GrossTaxLiability,
+
+        // Section89:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.Section89,
+
+        // NetTaxLiability:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.NetTaxLiability,
+
+        // IntrstPayUs234A:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.IntrstPay.IntrstPayUs234A,
+
+        // IntrstPayUs234B:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.IntrstPay.IntrstPayUs234B,
+
+        // IntrstPayUs234C:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.IntrstPay.IntrstPayUs234C,
+
+        // LateFilingFee234F:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     ?.IntrstPay.LateFilingFee234F,
+
+        // TotalIntrstPay:
+        //   this.itrType === 'ITR1'
+        //     ? this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //         ?.TotalIntrstPay
+        //     : this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //         ?.IntrstPay.LateFilingFee234F +
+        //       this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //         ?.IntrstPay.IntrstPayUs234C +
+        //       this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //         ?.IntrstPay.IntrstPayUs234B +
+        //       this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //         ?.IntrstPay.IntrstPayUs234A,
+
+        // TotTaxPlusIntrstPay:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+        //     .TotTaxPlusIntrstPay,
+
+        TotalTaxesPaid:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI'].TaxPaid
+            .TaxesPaid?.TotalTaxesPaid,
+
+        // BalTaxPayable:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid?.BalTaxPayable,
+
+        // // EXEMPT INCOME
+        // ExemptIncAgriOthUs10Total:
+        //   this.itrType === 'ITR1'
+        //     ? this.ITR_JSON.itrSummaryJson[this.itrType][
+        //         this.ITR14IncomeDeductions
+        //       ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Total
+        //     : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
+        //         .OthersInc?.OthersTotalTaxExe,
+
+        // ExemptIncomeDetails:
+        //   this.itrType === 'ITR1'
+        //     ? this.ITR_JSON.itrSummaryJson[this.itrType][
+        //         this.ITR14IncomeDeductions
+        //       ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
+        //     : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
+        //         .OthersInc?.OthersIncDtls,
+
+        // IncChargeableUnderBus:
+        //   this.itrType === 'ITR4'
+        //     ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+        //         .PersumptiveInc44AE?.IncChargeableUnderBus
+        //     : 0,
+
+        // NatOfBus44AD:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP.NatOfBus44AD,
+
+        // PersumptiveInc44ADGrossIncome:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+        //     .PersumptiveInc44AD.GrsTrnOverBank +
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+        //     .PersumptiveInc44AD.GrsTrnOverAnyOthMode,
+
+        // TotPersumptiveInc44AD:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+        //     .PersumptiveInc44AD.TotPersumptiveInc44AD,
+
+        // NatOfBus44ADA:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP.NatOfBus44ADA,
+
+        // GrsReceipt44ADA:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+        //     .PersumptiveInc44ADA.GrsReceipt,
+
+        // TotPersumptiveInc44ADA:
+        //   this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+        //     .PersumptiveInc44ADA.TotPersumptiveInc44ADA,
+      };
+    }
+
     console.log(this.keys.ExemptIncomeDetails, 'this.keys.Deductions');
 
     return this.keys;

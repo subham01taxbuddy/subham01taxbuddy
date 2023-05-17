@@ -3119,16 +3119,15 @@ export class PrefillIdComponent implements OnInit {
             }
 
             // any other
-            const BalanceNoRaceHorse =
-              this.uploadedJson[this.ITR_Type].ScheduleOS
-                ?.IncOthThanOwnRaceHorse?.BalanceNoRaceHorse;
+            const IncChargeable =
+              this.uploadedJson[this.ITR_Type].ScheduleOS?.IncChargeable;
 
-            if (BalanceNoRaceHorse) {
+            if (IncChargeable) {
               const anyOtherIncome = this.ITR_Obj.incomes.find(
                 (anyOtherIncome) => anyOtherIncome.incomeType === 'ANY_OTHER'
               );
               anyOtherIncome.amount =
-                BalanceNoRaceHorse -
+                IncChargeable -
                 IntrstFrmSavingBank -
                 IntrstFrmTermDeposit -
                 IntrstFrmIncmTaxRefund -
