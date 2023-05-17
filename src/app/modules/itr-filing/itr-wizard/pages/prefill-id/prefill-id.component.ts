@@ -5,7 +5,11 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { Inject } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { OtherIncomeComponent } from '../../../other-income/other-income.component';
 import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
@@ -43,7 +47,8 @@ export class PrefillIdComponent implements OnInit {
     private router: Router,
     private toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -1112,6 +1117,7 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
+  ITR_Obj: ITR_JSON;
   // Uploading Utility JSON
   uploadUtilityItrJson(file: FileList) {
     if (file.length > 0) {
@@ -1140,7 +1146,6 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  ITR_Obj: ITR_JSON;
   mapItrJson(ItrJSON: any) {
     // ITR_Obj IS THE TB ITR OBJECT
     this.ITR_Obj = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -3613,6 +3618,23 @@ export class PrefillIdComponent implements OnInit {
       document.getElementById('input-jsonfile-id').click();
     } else if (type == 'utility') {
       document.getElementById('input-utility-file-jsonfile-id').click();
+      const dialogRef = this.dialog.open(KommunicateDialogComponent, {
+        width: '250px',
+        data: {
+          message:
+            'Once you upload a JSON all the existing changes if any will be discarded, and you cannot edit the details once you have uploaded the JSON. If edit is done, the TaxBuddy JSON will be generated and the same will be filed.',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result === 'yes') {
+          this.utilsService.createEmptyJson(
+            this.ITR_JSON.userId,
+            this.ITR_JSON.assessmentYear,
+            this.ITR_JSON.financialYear
+          );
+        }
+      });
     }
   }
 
