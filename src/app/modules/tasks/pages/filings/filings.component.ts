@@ -48,6 +48,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
   searchVal:any;
+  searchStatusId:any;
   searchParams = {
     mobileNumber: null,
     email: null,
@@ -104,9 +105,15 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.getMasterStatusList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
+      this.searchStatusId = params['statusId'];
+
       if(this.searchVal) {
         console.log('q param', this.searchVal)
         this.searchParams.mobileNumber = this.searchVal;
+        this.myItrsList(0, '');
+      }
+      else if(this.searchStatusId){
+        this.searchParams.selectedStatusId = this.searchStatusId;
         this.myItrsList(0, '');
       }
     })

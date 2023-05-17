@@ -41,6 +41,7 @@ export class ScheduledCallComponent implements OnInit {
   loggedUserId: any;
   showByAdminUserId: boolean = true;
   searchVal: any;
+  searchStatusId:any;
   searchParam: any = {
     page: 0,
     size: 30,
@@ -87,9 +88,22 @@ export class ScheduledCallComponent implements OnInit {
     this.showScheduleCallList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
-      console.log('q param', this.searchVal)
-      this.searchParam.mobileNumber = this.searchVal;
-      this.search('mobile');
+      this.searchStatusId = params['statusId'];
+
+      // console.log('q param', this.searchVal)
+      // this.searchParam.mobileNumber = this.searchVal;
+      // this.search('mobile');
+
+      if(this.searchVal){
+        // console.log('q param',this.searchVal)
+        this.searchParam.mobileNumber = this.searchVal;
+        this.search('mobile');
+      }
+      else if(this.searchStatusId){
+        // console.log('q param',this.searchStatus)
+        this.searchParam.statusId = this.searchStatusId;
+        this.search('status');
+      }
     })
   }
 

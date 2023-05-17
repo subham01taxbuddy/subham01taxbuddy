@@ -601,7 +601,7 @@ export class SharesAndEquityComponent
           this.utilsService.smoothScrollToTop();
         }
       );
-    } else if (this.securitiesForm.valid && this.deductionForm.valid) {
+    } else if (this.securitiesForm.valid && ((this.deduction && this.deductionForm.valid) || !this.deduction)) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {
         this.Copy_ITR_JSON.capitalGain = [];

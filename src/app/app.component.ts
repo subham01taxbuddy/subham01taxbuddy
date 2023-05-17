@@ -1,6 +1,9 @@
 
 import { Component } from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
+import {initializeApp} from "@angular/fire/app";
+import {environment} from "../environments/environment";
+import {getMessaging, getToken} from "@angular/fire/messaging";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -58,5 +61,15 @@ export class AppComponent {
        (window as any).kommunicate = m; m._globals = kommunicateSettings;
     }
     )(document,  (window as any).kommunicate || {});
+
+    //get the registration token for cloud messaging
+    //const firebaseApp = initializeApp(environment.firebaseConfig);
+    // const messaging = getMessaging(firebaseApp);
+    // getToken(messaging).then((currentToken)=>{
+    //   console.log('token response:', )
+    // }).catch((err) => {
+    //   console.log('An error occurred while retrieving token. ', err);
+    //   // ...
+    // });
   }
 }

@@ -29,6 +29,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    this.getMastersData();
     let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
     if (natureOfBusiness) {
       this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44AD');

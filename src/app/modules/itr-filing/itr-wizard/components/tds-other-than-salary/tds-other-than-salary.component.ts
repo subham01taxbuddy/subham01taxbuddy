@@ -153,7 +153,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.loading = true;
     if (this.salaryForm.valid) {
       if (this.showHeadOfIncome === 'TDTS') {
-        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = this.salaryForm.value.salaryArray;
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
         this.onSave.emit();
         this.loading = false;

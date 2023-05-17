@@ -197,7 +197,6 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     if (this.addClientForm.valid) {
       this.loading = true;
       this.headers = new HttpHeaders();
-
       const param = '/eri/v1/api';
       const request = {
         serviceName: 'EriValidateClientService',

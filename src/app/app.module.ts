@@ -23,6 +23,11 @@ import { TokenInterceptor } from './services/token-interceptor';
 import Auth from '@aws-amplify/auth';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
+import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
+import {getMessaging, provideMessaging} from '@angular/fire/messaging';
+import {AngularFireModule} from "@angular/fire/compat";
+import {environment} from "../environments/environment";
+import {AngularFireMessagingModule, SERVICE_WORKER} from "@angular/fire/compat/messaging";
 
 @NgModule({
   declarations: [
@@ -38,6 +43,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     PagesModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    AngularFireModule,
+    AngularFireMessagingModule,
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideMessaging(() => getMessaging()),
   ],
   providers: [
     NavbarService,
@@ -59,6 +68,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     //     });
     //   }
     // }
+    { provide: SERVICE_WORKER, useFactory: () => typeof navigator !== 'undefined' && navigator.serviceWorker?.register('firebase-messaging-sw.js', { scope: '__' }) || undefined },
   ],
   bootstrap: [AppComponent]
 })

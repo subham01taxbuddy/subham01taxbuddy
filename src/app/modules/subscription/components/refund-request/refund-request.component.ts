@@ -97,7 +97,7 @@ export class RefundRequestComponent implements OnInit {
     if (event) {
       this.ownerId = null;
       this.filerId = null;
-      if (this.isOwner) {
+      if (isOwner) {
         this.ownerId = event ? event.userId : null;
         this.getRefundRequestList(0, 'ownerUserId', this.ownerId);
       } else {
