@@ -30,6 +30,7 @@ export class TcsComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
+      id: "tcsPagination",
       itemsPerPage: 3,
       currentPage: 1,
     };

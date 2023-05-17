@@ -1,6 +1,6 @@
 import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Optional} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +14,11 @@ import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { environment } from 'src/environments/environment';
+import {AngularFireMessagingModule} from "@angular/fire/compat/messaging";
+import {getMessaging, getToken, Messaging, onMessage} from "@angular/fire/messaging";
+import {initializeApp} from "@angular/fire/app";
+import {EMPTY, from, Observable} from "rxjs";
+import { share, tap } from 'rxjs/operators';
 
 declare let $: any;
 
@@ -32,6 +37,9 @@ export class LoginComponent implements OnInit {
   userId:any;
   serviceType:any;
 
+  token$: Observable<any> = EMPTY;
+  message$: Observable<any> = EMPTY;
+
   constructor(
     private fb: FormBuilder,
     public http: HttpClient,
@@ -43,8 +51,31 @@ export class LoginComponent implements OnInit {
     public utilsService: UtilsService,
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
+    @Optional() messaging: Messaging
   ) {
     NavbarService.getInstance().component_link = this.component_link;
+
+    if (messaging) {
+      this.token$ = from(
+        navigator.serviceWorker.register('firebase-messaging-sw.js', { type: 'module', scope: '__' }).
+        then(serviceWorkerRegistration =>
+          getToken(messaging, {
+            serviceWorkerRegistration,
+            // vapidKey: environment.vapidKey,
+          }).then((value)=>{
+            console.log('recvd token as=> ', value);
+            sessionStorage.setItem('webToken', value);
+          })
+        )).pipe(
+        tap(token => console.log('FCM', {token})),
+        share()
+      );
+      this.message$ = new Observable(sub => onMessage(messaging, it => sub.next(it))).pipe(
+        tap(it => console.log('FCM', it)),
+      );
+    } else {
+      console.log('messaging not initialise');
+    }
   }
 
   ngOnInit() {
@@ -92,7 +123,6 @@ export class LoginComponent implements OnInit {
         this.changeMode('FORGOT_PASSWORD', params['mobile']);
       }
     });
-
 
   }
   gotoCloud(){
@@ -252,6 +282,23 @@ export class LoginComponent implements OnInit {
     await this.utilsService.getStoredFyList();
   }
 
+  registerLogin(userId){
+    //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
+    let token = sessionStorage.getItem('webToken');
+    let query = ''
+    if(token){
+      query = `&firebaseWebToken=${token}`;
+    }
+    const param = `/sme-login?smeUserId=${userId}${query}`;
+    this.userMsService.postMethod(param).subscribe((res:any)=>{
+      if(res.success){
+        console.log('sme login registered successfully');
+      }else {
+        console.log('login', res);
+      }
+    });
+  }
+
   getSmeInfoDetails(userId) {
     if(!userId) {
       return;
@@ -266,6 +313,9 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.InitChat();
         }, 2000);
+
+        //register sme login
+        this.registerLogin(userId);
 
         this.utilsService.getStoredSmeList();
         this.getAgentList();

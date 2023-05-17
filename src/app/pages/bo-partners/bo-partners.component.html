@@ -2,16 +2,15 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-10">
+    <div class="col-sm-6">
       <b style="font-size: 20px">Partners</b>
     </div>
   </div>
-  <div class="content content_full">
-    <div class="content__container">
-      <div class="card">
-        <div class="card__row">
+  <div class="rowClr">
+    <div class="surround">   
           <form [formGroup]="boPartnerDateForm">
-            <div class="card__col-md-3">
+    <div class="row">
+            <div class="col-sm-3">
               <mat-label>From Date</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
                 <input matInput placeholder="DD/MM/YYYY" formControlName="fromDate" [matDatepicker]="picker1"
@@ -28,7 +27,7 @@
               </mat-form-field>
             </div>
 
-            <div class="card__col-md-3">
+            <div class="col-sm-3">
               <mat-label>To Date</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput placeholder="DD/MM/YYYY" formControlName="toDate" [matDatepicker]="picker2"
@@ -42,7 +41,7 @@
                   date</mat-error>
               </mat-form-field>
             </div>
-            <div class="card__col-md-3">
+            <div class="col-sm-3">
               <mat-label>Mobile Number: </mat-label>
               <mat-form-field appearance="outline">
                 <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text" digitsOnly
@@ -51,7 +50,7 @@
               </mat-form-field>
             </div>
 
-            <div class="card__col-md-2">
+            <div class="col-sm-3 spsTp">
               <!-- <button
                 class="btn"
                 style="border: none; cursor: pointer"
@@ -60,26 +59,35 @@
               >
                 Search
               </button> -->
-              <button class="tbd-btn" style=" cursor: pointer" (click)="getBoPartners('mobile')">
-                Search
+              <button class="srch-btn" style=" cursor: pointer" (click)="getBoPartners('mobile')">
+                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
               </button>
-              <button class="clrLnk" (click)="resetFilters()">
-                Clear
+              <button class="clrLnk movLf" (click)="resetFilters()">
+                Clear form
               </button>
             </div>
-          </form>
-        </div>
-        <p style="float: right">
-          Total Count: <b>{{ config.totalItems }}</b>
-        </p>
+          </div>
 
-        <br />
-        <div class="card__row">
+          </form>        
+      </div>
+      </div>
+      <!-- Table -->
+      <div class="tableSpc">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="txTit">
+              Partners Details:
+            </div>
+          </div>
+          <div class="col-sm-4">
+          <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+          </div>
+          </div>
           <table>
             <tr *ngFor="let item of boPartnersInfo | paginate : config"></tr>
           </table>
 
-          <ag-grid-angular class="ag-theme-balham" [gridOptions]="partnersGridOptions"
+          <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="partnersGridOptions"
             (rowClicked)="onUsersRowClicked($event)">
           </ag-grid-angular>
 
@@ -95,6 +103,3 @@
         <!-- </ag-grid-angular>
         </div> -->
       </div>
-    </div>
-  </div>
-</div>

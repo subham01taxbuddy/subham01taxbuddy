@@ -468,6 +468,16 @@ export class ItrWizardComponent implements OnInit {
     });
   }
 
+  goToCloud(){
+    const url = this.router.createUrlTree(['itr-filing/docs/user-docs/'],{
+      queryParams:{
+        userId: this.ITR_JSON.userId,
+        serviceType:'ITR',
+      }
+    }).toString();
+    window.open(url, '_blank');
+  }
+
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
     sessionStorage.removeItem('incomeSources');

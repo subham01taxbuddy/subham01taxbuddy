@@ -385,7 +385,7 @@ export class TaxInvoiceComponent implements OnInit {
     this.status.setValue(this.Status[0].value);
     this.mobile.setValue(null);
     this.email.setValue(null);
-    this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
+    this.invoiceNo.setValue(null);
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
     this?.smeDropDown?.resetDropdown();
@@ -429,11 +429,12 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     if(agentId){
-      userFilter='';
      if(this.coOwnerId && !this.coFilerId){
+      userFilter='';
       userFilter += `&ownerUserId=${this.coOwnerId}`;
      }
      if(this.coFilerId){
+      userFilter='';
       userFilter += `&filerUserId=${this.coFilerId}`;
      }
     }
@@ -453,7 +454,11 @@ export class TaxInvoiceComponent implements OnInit {
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
 
     if (this.coOwnerToggle.value == true && isCoOwner) {
-      param = param + '&searchAsCoOwner=true';
+      if(this.coOwnerId || this.coFilerId){
+        param
+      }else{
+        param = param + '&searchAsCoOwner=true';
+      }
     }
     else {
       param;

@@ -62,4 +62,7 @@ export class PresumptiveIncomeComponent extends WizardNavigation implements OnIn
       this.subscription.unsubscribe();
     }
   }
+  goBack() {
+    this.saveAndNext.emit(false);
+  }
 }

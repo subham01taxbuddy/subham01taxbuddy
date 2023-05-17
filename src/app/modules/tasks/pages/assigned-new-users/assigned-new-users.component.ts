@@ -4,7 +4,7 @@ import { formatDate } from '@angular/common';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
@@ -43,6 +43,8 @@ export class AssignedNewUsersComponent implements OnInit {
   ogStatusList: any = [];
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
+  searchVal:any;
+  searchStatusId:any;
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -62,6 +64,7 @@ export class AssignedNewUsersComponent implements OnInit {
     private dialog: MatDialog,
     private itrMsService: ItrMsService,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
@@ -93,8 +96,27 @@ export class AssignedNewUsersComponent implements OnInit {
     this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
-    this.search();
+    // this.search();
     this.getAgentList();
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchVal = params['mobileNumber'];
+      this.searchStatusId = params['statusId'];
+
+      if(this.searchVal){
+        // console.log('q param',this.searchVal)
+        this.searchParam.mobileNumber = this.searchVal;
+        this.search('mobile');
+      }
+      else if(this.searchStatusId){
+        // console.log('q param',this.searchStatus)
+        this.searchParam.statusId = this.searchStatusId;
+        this.search('status');
+      }
+      else {
+        this.search();
+      }
+
+    })
   }
 
   ngOnDestroy() {
@@ -1065,6 +1087,9 @@ export class AssignedNewUsersComponent implements OnInit {
     }
     if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
       param = `/${this.agentId}/user-list-new?${data}`;
+    }
+    else {
+      param;
     }
 
     this.userMsService.getMethod(param).subscribe(

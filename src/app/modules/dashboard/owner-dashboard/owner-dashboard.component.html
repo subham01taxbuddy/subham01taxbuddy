@@ -3,53 +3,172 @@
 <div class="main clearfix">
   <div class="row">
     <div class="col-sm-6">
-  <h4 class="bdrbl">Owner's Dashboard:</h4>
+  <h4 class="bdrbl">Filer's Dashboard:</h4>
 </div>
 <div class="col-sm-6">
   <div class="float-right">
     <span class="TxBg">Documents Uploaded</span>
-      <span class="numTxBg">91</span>
+      <span class="numTxBg">{{commissionData?.documentsUploaded || 'NA'}}</span>
     </div>
 </div>
 </div>
+
+
+
   <div class="row rowClr">
 
-    <div class="col-sm-6">
-      <div class="radius">       
+    <!-- <div class="row rowSp">
+      <div class="col-sm-12">
+        <h5 class="bdrbl1">ITR Overview:</h5>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">2535</span><br>
+            <span class="TxSm">Assign Users</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">30</span><br>
+            <span class="TxSm">Open</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">1688</span><br>
+            <span class="TxSm">Document Uploaded</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">196</span><br>
+            <span class="TxSm">In Process</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">285</span><br>
+            <span class="TxSm">Waiting for confirmation</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">184</span><br>
+            <span class="TxSm">Back Out</span>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="col-sm-12">
+      <div class="radiuSrch">
         <div class="row">
-          <div class="col-sm-5">
-          <form class="form-inline">
-          <input type="search" placeholder="Select Filer" aria-label="Search" class="form-control mr-sm-2">
-          </form>
+          <div class="col-sm-4">
+            <div>
+                <mat-label> Search By Filer </mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text"  [formControl]="searchFiler" [matAutocomplete]="auto" />
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name"
+                      (click)="getFilerNameId(option1)">
+                      {{ option1.name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
           </div>
-          <div class="col-sm-5">
-          <form action="/action_page.php">
-            <!-- <span class="TxSm"> Select Date Range:</span> -->
-          <input  type="date" id="date" name="Select Date"></form>
+          <div class="col-sm-3">
+            <div>
+              <label for="start-date">Start Date:</label>
+              <input  type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
+                [min]="minDate" [max]="maxDate">
+            </div>
           </div>
+          <div class="col-sm-3">
+            <div>
+              <label for="end-date">End Date:</label>
+              <input  type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate"
+                [min]="minDate" [max]="maxDate">
+            </div>
+          </div>
+
           <div class="col-sm-2">
-          <button class="proceed2"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" (click)="search('all')" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
-          </div>     
+
+      </div>
+    </div>
+    </div>
+
+     <div class="col-sm-6">
+      <div class="radius">
+      <!-- Internal Row Starts -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="radius2 spTp RedBk">
+          <div class="inBxL">
+          <span class="numTxSm redTx"><i class="fa fa-bullhorn"></i> {{invoiceData?.unpaidInvoiceCount || 'NA'}}</span><br>
+          <span class="TxSm"> Unpaid Invoices</span>
+          </div>
+          <div class="inBxR">
+          <span class="numTxSm redTx">{{invoiceData?.unpaidAmount || 'NA'}}</span><br>
+          <span class="TxSm"> Unpaid Amount</span>
+          </div>
+          <span class="redtxsm">*Ensure payment of outstanding invoices to earn {{invoiceData?.unpaidAmount || 'NA'}} more in commission</span>
+        </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="radius2">
+          <div class="inBxL">
+          <span class="numTxSm">{{invoiceData?.noOfInvoicesRaised || 'NA'}}</span><br>
+          <span class="TxSm">No of Invoices Raised</span>
+          </div>
+          <div class="inBxR">
+          <span class="numTxSm">{{invoiceData?.revenueGenerated || 'NA'}}</span><br>
+          <span class="TxSm">Revenue Generated</span>
+          </div>
+        </div>
+        </div>
+
+        <div class="col-sm-12 tpSp1">
+          <div class="radius2 grBk">
+          <div class="inBxL">
+          <span class="numTxSm grTx">{{invoiceData?.paidInvoiceCount || 'NA'}}</span><br>
+          <span class="TxSm">Paid Invoices</span>
+          </div>
+          <div class="inBxR">
+          <span class="numTxSm grTx">{{invoiceData?.paidAmount || 'NA'}}</span><br>
+          <span class="TxSm">Paid Amount</span>
+          </div>
+        </div>
+
+        </div>
+
+
+
+
+
+      </div>
+      <!-- Internal Row Ends -->
       </div>
     </div>
 
     <div class="col-sm-6">
       <div class="radius">
         <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission Earned</span>&nbsp;
-        <span class="numTxBg">₹27,315</span>
-    
+        <span class="numTxBg">{{commissionData?.totalCommissionEarned || 'NA'}}</span>
+
         <div class="row">
           <div class="col-sm-6">
             <div class="radius1 grBk">
-            <span class="numTxSm grTx">₹10,000</span><br>
+            <span class="numTxSm grTx">{{commissionData?.totalCommissionReceived || 'NA'}}</span><br>
             <span class="TxSm">Received</span><br>
             <span class="grytx">Amount Approved</span>
           </div>
           </div>
           <div class="col-sm-6">
             <div class="radius1 OrgBk">
-            <span class="numTxSm OrgTx">₹17,315</span><br>
+            <span class="numTxSm OrgTx">{{commissionData?.totalCommissionReceivable || 'NA'}}</span><br>
             <span class="TxSm">Receivable</span><br>
             <span class="grytx">Approval in Progress</span>
           </div>
@@ -57,102 +176,47 @@
         </div>
       </div>
     </div>
-
-    <div class="col-sm-6 mvup">
-      <div class="radius">
-      <!-- Internal Row Starts -->
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="radius2 spTp RedBk">
-          <div class="inBxL">
-          <span class="numTxSm redTx"><i class="fa fa-bullhorn"></i> 30</span><br>
-          <span class="TxSm"> Unpaid Invoices</span>     
-          </div>      
-          <div class="inBxR">
-          <span class="numTxSm redTx">₹18,210</span><br>
-          <span class="TxSm"> Unpaid Amount</span>   
-          </div>
-          <span class="redtxsm">*Ensure payment of outstanding invoices to earn ₹9,000 more in commission</span>
-        </div>
-        </div>
-        
-        <div class="col-sm-6">
-          <div class="radius2">
-          <div class="inBxL">
-          <span class="numTxSm">91</span><br>
-          <span class="TxSm">No of Invoices Raised</span>     
-          </div>      
-          <div class="inBxR">
-          <span class="numTxSm">₹54,620</span><br>
-          <span class="TxSm">Revenue Generated</span>   
-          </div>
-        </div>
-        </div>
-    
-        <div class="col-sm-6">
-          <div class="radius2 grBk">
-          <div class="inBxL">
-          <span class="numTxSm grTx">61</span><br>
-          <span class="TxSm">Paid Invoices</span>     
-          </div>      
-          <div class="inBxR">
-          <span class="numTxSm grTx">₹36,410</span><br>
-          <span class="TxSm">Paid Amount</span>   
-          </div>      
-        </div>
-    
-        </div>
-       
-      
-    
-        
-     
-      </div>
-      <!-- Internal Row Ends -->
-      </div>
-    </div>
-   
-   
-  <div class="col-sm-6">
+    <div class="col-sm-6"></div>
+  <div class="col-sm-6 spRtTp">
   <div class="radius">
     <span class="TxSm"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
-    <span class="numTxBg">73</span>
+    <span class="numTxBg">{{commissionData?.totalITRFiled || 'NA'}}</span>
     <!-- Inside Row -->
     <div class="row">
       <div class="col-sm-2">
         <div class="radius1">
-        <span class="numTxSm">28</span><br>
-        <span class="TxSm">ITR1</span><br>       
+        <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
+        <span class="TxSm">ITR1</span><br>
       </div>
       </div>
       <div class="col-sm-2">
         <div class="radius1">
-        <span class="numTxSm">11</span><br>
-        <span class="TxSm">ITR2</span><br>       
+        <span class="numTxSm">{{commissionData?.itr2 || 'NA'}}</span><br>
+        <span class="TxSm">ITR2</span><br>
       </div>
       </div>
       <div class="col-sm-2">
         <div class="radius1">
-        <span class="numTxSm">16</span><br>
-        <span class="TxSm">ITR3</span><br>       
+        <span class="numTxSm">{{commissionData?.itr3 || 'NA'}}</span><br>
+        <span class="TxSm">ITR3</span><br>
       </div>
       </div>
       <div class="col-sm-2">
         <div class="radius1">
-        <span class="numTxSm">16</span><br>
-        <span class="TxSm">ITR4</span><br>       
+        <span class="numTxSm">{{commissionData?.itr4 || 'NA'}}</span><br>
+        <span class="TxSm">ITR4</span><br>
       </div>
       </div>
       <div class="col-sm-2">
         <div class="radius1">
-        <span class="numTxSm">2</span><br>
+        <span class="numTxSm">{{commissionData?.other || 'NA'}}</span><br>
         <span class="TxSm">Other</span>
       </div>
       </div>
       <div class="col-sm-2">
         <div class="radius1">
-        <span class="numTxSm">2</span><br>
-        <span class="TxSm">ITR U</span><br>       
+        <span class="numTxSm">{{commissionData?.itrU || 'NA'}}</span><br>
+        <span class="TxSm">ITR U</span><br>
       </div>
       </div>
       </div>
@@ -162,13 +226,20 @@
 </div>
 
 <!-- Tables Start -->
-<div class="row"> 
+<div class="row">
   <div class="col-sm-6">
   <div class="radiusTab">
       <div class="tx">Document Uploaded but filing not yet started</div>
-      <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
+      <button class="proceed2" (click)="goTo('myUsers')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">
       <thead>
+        <!-- <tr>
+          <th scope="col">#</th>
+          <th scope="col">User Name</th>
+          <th scope="col">Contact Number</th>
+          <th scope="col">Doc Upload Date</th>
+          <th scope="col">Payment Status</th>
+        </tr> -->
         <tr>
           <th scope="col">#</th>
           <th scope="col">User Name</th>
@@ -178,7 +249,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let item of docUploadedData?.content | paginate:config.docUpload; let i = index">
+          <td>{{ i+1 }}</td>
+          <td>{{ item.userName }}</td>
+          <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
+          <td>{{ item.docUploadDate | date:'short' }}</td>
+          <td [ngClass]="{'text-danger': item.paymentStatus === 'Unpaid'}">{{ item.paymentStatus }}</td>
+        </tr>
+        <!-- <tr>
           <th scope="row">1</th>
           <td>Revati Laghate</td>
           <td>9869550196</td>
@@ -212,14 +290,16 @@
           <td>8113002109</td>
           <td>03/03/2022</td>
           <td class="unpaid">Unpaid</td>
-        </tr>
-      </tbody>      
+        </tr> -->
+      </tbody>
     </table>
-    <nav aria-label="..." class="float-right">
+    <pagination-controls class="pagination" (pageChange)="pageChanged($event,'docUpload')"></pagination-controls>
+
+    <!-- <nav aria-label="..." class="float-right">
       <ul class="pagination">
         <li class="page-item disabled">
           <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>        
+        </li>
         <li class="page-item active">
           <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
         </li>
@@ -228,16 +308,23 @@
           <a class="page-link" href="#">Next</a>
         </li>
       </ul>
-    </nav>
-   
+    </nav> -->
+
   </div>
   </div>
   <div class="col-sm-6">
   <div class="radiusTab">
       <div class="tx">Waiting for Confirmation</div>
-      <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
+      <button class="proceed2" (click)="goTo('myItr')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">
       <thead>
+        <!-- <tr>
+          <th scope="col">#</th>
+          <th scope="col">User Name</th>
+          <th scope="col">Contact Number</th>
+          <th scope="col">Summary Sent Date</th>
+          <th scope="col">Confirmation & Status</th>
+        </tr> -->
         <tr>
           <th scope="col">#</th>
           <th scope="col">User Name</th>
@@ -247,7 +334,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let item of summaryConfirmationData?.content | paginate:config.summaryConfirmation; let i = index">
+          <td>{{ i+1 }}</td>
+          <td>{{ item.userName }}</td>
+          <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
+          <td>{{ item.summarySentDate | date:'short' }}</td>
+          <td>{{ item.userConfirmationStatus }}</td>
+        </tr>
+        <!-- <tr>
           <th scope="row">1</th>
           <td>Revati Laghate</td>
           <td>9869550196</td>
@@ -281,14 +375,16 @@
           <td>8113002109</td>
           <td>03/03/2022</td>
           <td>Awaiting CNF</td>
-        </tr>
-      </tbody>      
+        </tr> -->
+      </tbody>
     </table>
-    <nav aria-label="..." class="float-right">
+    <pagination-controls class="pagination" (pageChange)="pageChanged($event,'summaryConfirmation')"></pagination-controls>
+
+    <!-- <nav aria-label="..." class="float-right">
       <ul class="pagination">
         <li class="page-item disabled">
           <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>        
+        </li>
         <li class="page-item active">
           <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
         </li>
@@ -297,29 +393,41 @@
           <a class="page-link" href="#">Next</a>
         </li>
       </ul>
-    </nav>
-   
+    </nav> -->
+
   </div>
   </div>
   <div class="col-sm-6">
     <div class="radiusTab">
         <div class="tx">ITR Filed E- verification Pending</div>
-        <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
+        <button class="proceed2" (click)="goTo('myItr1')">Proceed <i class="fa fa-long-arrow-right"></i></button>
       <table class="table table-bordered">
         <thead>
-          <tr>
+          <!-- <tr>
             <th scope="col">#</th>
             <th scope="col">User Name</th>
             <th scope="col">Contact Number</th>
             <th scope="col">ITR Filed date</th>
-           </tr>
+           </tr> -->
+           <tr>
+            <th scope="col">#</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Contact Number</th>
+            <th scope="col">ITR Filed date</th>
+          </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr *ngFor="let item of eVerificationPendingData?.content | paginate:config.eVerificationPending; let i = index">
+            <td>{{ i+1 }}</td>
+            <td>{{ item.userName }}</td>
+            <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
+            <td>{{ item.itrFiledDate | date:'short' }}</td>
+          </tr>
+          <!-- <tr>
             <th scope="row">1</th>
             <td>Revati Laghate</td>
-            <td>9869550196</td>  
-            <td>03/12/2022</td>       
+            <td>9869550196</td>
+            <td>03/12/2022</td>
           </tr>
           <tr>
             <th scope="row">2</th>
@@ -344,14 +452,16 @@
             <td>Anupama Ps</td>
             <td>8113002109</td>
             <td>03/03/2022</td>
-          </tr>
-        </tbody>      
+          </tr> -->
+        </tbody>
       </table>
-      <nav aria-label="..." class="float-right">
+      <pagination-controls class="pagination" (pageChange)="pageChanged($event,'eVerificationPending')"></pagination-controls>
+
+      <!-- <nav aria-label="..." class="float-right">
         <ul class="pagination">
           <li class="page-item disabled">
             <a class="page-link" href="#" tabindex="-1">Previous</a>
-          </li>        
+          </li>
           <li class="page-item active">
             <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
           </li>
@@ -360,67 +470,83 @@
             <a class="page-link" href="#">Next</a>
           </li>
         </ul>
-      </nav>
-     
+      </nav> -->
+
     </div>
     </div>
     <div class="col-sm-6">
       <div class="radiusTab">
           <div class="tx">Scheduled Calls</div>
-          <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
+          <button class="proceed2" (click)="goTo('scheduleCall')">Proceed <i class="fa fa-long-arrow-right"></i></button>
         <table class="table table-bordered">
           <thead>
-            <tr>
+            <!-- <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
               <th scope="col">Contact Number</th>
               <th scope="col">Schedule Call Date</th>
               <th scope="col">Time</th>
-             </tr>
+             </tr> -->
+             <tr>
+              <th scope="col">#</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Contact Number</th>
+              <th scope="col">Schedule Call Date Time</th>
+              <!-- <th scope="col">Time</th> -->
+            </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let item of scheduleCallData?.content | paginate:config.scheduleCall; let i = index;">
+              <td>{{ i+1 }}</td>
+              <td>{{ item.userName }}</td>
+              <td><a [routerLink]="['/tasks/schedule-call']" [queryParams]="{mobileNumber: item.userMobile}">{{ item.userMobile }}</a></td>
+              <!-- <td>{{ item.userMobile }}</td> -->
+              <td>{{ item.scheduleCallTime | date:'short' }}</td>
+            </tr>
+            <!-- <tr>
               <th scope="row">1</th>
               <td>Revati Laghate</td>
-              <td>9869550196</td>  
-              <td>03/12/2022</td> 
-              <td>Null</td>       
+              <td>9869550196</td>
+              <td>03/12/2022</td>
+              <td>Null</td>
             </tr>
             <tr>
               <th scope="row">2</th>
               <td>Talwinder Singh</td>
               <td>9781519460</td>
               <td>03/12/2022</td>
-              <td>Null</td> 
+              <td>Null</td>
             </tr>
             <tr>
               <th scope="row">3</th>
               <td>Sumit Kumar</td>
               <td>9717362887</td>
               <td>13/03/2022</td>
-              <td>Null</td> 
+              <td>Null</td>
             </tr>
             <tr>
               <th scope="row">4</th>
               <td>Prakash Chim</td>
               <td>8956917455</td>
               <td>13/03/2022</td>
-              <td>Null</td> 
+              <td>Null</td>
             </tr>
             <tr>
               <th scope="row">5</th>
               <td>Anupama Ps</td>
               <td>8113002109</td>
               <td>03/03/2022</td>
-              <td>Null</td> 
-            </tr>
-          </tbody>      
+              <td>Null</td>
+            </tr> -->
+          </tbody>
         </table>
-        <nav aria-label="..." class="float-right">
+        <pagination-controls class="pagination" (pageChange)="pageChanged($event,'scheduleCall')"></pagination-controls>
+
+        <!-- <nav aria-label="..." class="float-right">
           <ul class="pagination">
             <li class="page-item disabled">
               <a class="page-link" href="#" tabindex="-1">Previous</a>
-            </li>        
+            </li>
             <li class="page-item active">
               <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
             </li>
@@ -429,8 +555,8 @@
               <a class="page-link" href="#">Next</a>
             </li>
           </ul>
-        </nav>
-       
+        </nav> -->
+
       </div>
       </div>
 

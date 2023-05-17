@@ -10,7 +10,7 @@ import {
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -47,6 +47,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   loggedInSme:any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
+  searchVal:any;
+  searchStatusId:any;
   searchParams = {
     mobileNumber: null,
     email: null,
@@ -64,7 +66,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     private router: Router,
     private dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
@@ -100,6 +103,20 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchVal = params['mobileNumber'];
+      this.searchStatusId = params['statusId'];
+
+      if(this.searchVal) {
+        console.log('q param', this.searchVal)
+        this.searchParams.mobileNumber = this.searchVal;
+        this.myItrsList(0, '');
+      }
+      else if(this.searchStatusId){
+        this.searchParams.selectedStatusId = this.searchStatusId;
+        this.myItrsList(0, '');
+      }
+    })
   }
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
@@ -181,6 +198,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     // &searchAsCoOwner=true&page=0
     this.loading = true;
     return new Promise((resolve, reject) => {
+      let loggedInId = this.utilsService.getLoggedInUserID();
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
@@ -190,10 +208,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
 
       if (this.utilsService.isNonEmpty(this.coOwnerId)) {
+        param = `/itr-list?page=${pageNo}&pageSize=20`;
         param = param + `&ownerUserId=${this.coOwnerId}`;
       }
 
       if (this.utilsService.isNonEmpty(this.coFilerId)) {
+        // param = `/itr-list?page=${pageNo}&pageSize=20`;
         param = param + `&filerUserId=${this.coFilerId}`;
       }
 
@@ -214,7 +234,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
 
       if (this.coOwnerToggle.value == true && filingTeamMemberId) {
+       if(this.coOwnerId || this.coFilerId){
+        param
+       }else{
         param = param + '&searchAsCoOwner=true';
+       }
       }
       else {
         param;
@@ -1016,7 +1040,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
     if(this.coOwnerDropDown){
+      let loggedInId = this.utilsService.getLoggedInUserID();
       this.coOwnerDropDown.resetDropdown();
+      this.coFilerId=null;
+      this.coOwnerId=null;
+      this.searchParams.ownerUserId=loggedInId;
+      this.searchParams.filerUserId=null;
       this.myItrsList(0, true)
     }else{
       this.search();
