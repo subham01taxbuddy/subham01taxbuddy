@@ -119,7 +119,7 @@ export class SidebarComponent implements DoCheck {
       url: null,
       roles: [],
       submenu: [
-        { name: 'Assigned Subscription', url: '/subscription/assigned-subscription', roles: [] },
+        { name: 'Assign Subscription', url: '/subscription/assigned-subscription', roles: [] },
         { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
       ]
     },
