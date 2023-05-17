@@ -210,8 +210,18 @@ export class LandAndBuildingComponent
         this.assestTypesDropdown = result;
         this.cgCreateRowData();
         if (this.ITR_JSON.capitalGain?.length > 0) {
-          //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
-          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
+          let array = [];
+          this.properties.forEach((prop) => {
+            array.push(
+              this.fb.group({
+                index: prop.id - 1,
+                selected: false,
+              })
+            );
+          });
+          this.propertiesForm = this.fb.group({
+            propertiesArray: this.fb.array(array),
+          });
         }
       },
       (error) => {
@@ -278,6 +288,19 @@ export class LandAndBuildingComponent
         console.log('Capital gain save result=', result);
         this.utilsService.smoothScrollToTop();
         this.cgCreateRowData();
+
+        let array = [];
+        this.properties.forEach((prop) => {
+          array.push(
+            this.fb.group({
+              index: prop.id - 1,
+              selected: false,
+            })
+          );
+        });
+        this.propertiesForm = this.fb.group({
+          propertiesArray: this.fb.array(array),
+        });
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
