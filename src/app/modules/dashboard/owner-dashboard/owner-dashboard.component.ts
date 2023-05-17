@@ -59,6 +59,7 @@ export class OwnerDashboardComponent implements OnInit {
   eVerificationPendingData:any;
   scheduleCallData:any;
   commissionData:any;
+  today: Date;
 
   constructor(
     private userMsService: UserMsService,
@@ -70,6 +71,7 @@ export class OwnerDashboardComponent implements OnInit {
   ) {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
+    this.today = new Date();
    }
 
   ngOnInit(): void {

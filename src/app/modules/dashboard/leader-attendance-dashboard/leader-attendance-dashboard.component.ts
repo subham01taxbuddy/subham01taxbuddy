@@ -83,12 +83,19 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.getItrUserOverview();
   }
 
+  getAllOwnerDetails(){
+    // API to get partner details
+  // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?ownerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
+
+}
+
   getItrUserOverview(){
     // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
+    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?leaderUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    // let ownerUserId = this.loggedInSmeUserId;
+    let leaderUserId = this.loggedInSmeUserId;
 
     let param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}`
 
