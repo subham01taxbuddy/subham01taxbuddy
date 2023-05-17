@@ -1,4 +1,5 @@
 <!-- Operation Team Report -->
+<div *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')">
 <div class="row rowClr">
 
     <div class="col-sm-9 spTpL">
@@ -42,7 +43,7 @@
       </div>
     </div>
 
-    
+
       <div class="col-sm-6">
         <div class="radius">
           <span class="TxHd"><i class="fa fa-file-o"></i> Invoice</span>&nbsp;
@@ -84,7 +85,7 @@
               <span class="numTxSm redTx1">18,210</span><br>
               <span class="TxSm">Unpaid Amount</span>
             </div>
-            </div>            
+            </div>
             </div>
           <!-- Inside Row Ends -->
         </div>
@@ -138,7 +139,7 @@
       </div>
 
 
-    
+
   <div class="col-sm-4">
   <div class="radius">
     <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
@@ -162,15 +163,15 @@
         <span class="numTxSm OrgTx">30</span><br>
         <span class="TxSm">Inactive Partners</span><br>
       </div>
-      </div>     
+      </div>
       <div class="col-sm-6">
         <div class="radius1">
         <span class="numTxSm OrgTx">30</span><br>
         <span class="TxSm">Assignment Off</span><br>
       </div>
       </div>
-    
-    
+
+
       </div>
     <!-- Inside Row Ends -->
   </div>
@@ -251,8 +252,10 @@
     </div>
   </div>
 </div>
+</div>
 
 <!-- My Team Report -->
+<div *ngIf="roles?.includes('ROLE_LEADER')">
 <div class="row rowClr">
 
     <div class="col-sm-9 spTpL">
@@ -268,11 +271,11 @@
     <div class="col-sm-12">
       <div class="radius">
         <div class="row">
-            <div class="col-sm-3"> 
+            <div class="col-sm-3">
                 <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Select Owner" aria-label="Search">           
+                <input class="form-control mr-sm-2" type="search" placeholder="Select Owner" aria-label="Search">
                 </form>
-            </div> 
+            </div>
           <div class="col-sm-3">
             <div>
               <label for="start-date">Start Date:</label>
@@ -294,7 +297,7 @@
       </div>
     </div>
 
-    
+
       <div class="col-sm-6">
         <div class="radius">
           <span class="TxHd"><i class="fa fa-file-o"></i> Invoice</span>&nbsp;
@@ -319,7 +322,7 @@
               <span class="TxSm">Paid Invoices</span><br>
             </div>
             </div>
-                
+
             </div>
           <!-- Inside Row Ends -->
         </div>
@@ -373,7 +376,7 @@
       </div>
 
 
-    
+
   <div class="col-sm-4">
   <div class="radius">
     <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
@@ -397,15 +400,15 @@
         <span class="numTxSm OrgTx">30</span><br>
         <span class="TxSm">Inactive Partners</span><br>
       </div>
-      </div>     
+      </div>
       <div class="col-sm-6">
         <div class="radius1">
         <span class="numTxSm OrgTx">30</span><br>
         <span class="TxSm">Assignment Off</span><br>
       </div>
       </div>
-    
-    
+
+
       </div>
     <!-- Inside Row Ends -->
   </div>
@@ -485,4 +488,5 @@
       <!-- Inside Row Ends -->
     </div>
   </div>
+</div>
 </div>
