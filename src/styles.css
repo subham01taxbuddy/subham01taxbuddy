@@ -313,6 +313,31 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+
+.count1 {
+  color: #07070C;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: right;
+  margin-right: 25px;
+}
+
+.txClr1 {
+  color: #00AECA;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.clrTp {
+  margin-top: 27px!important;
+}
+.clrTp1 {
+  margin-top: 27px!important;
+  margin-left:-100px!important;
+}
+.srchBtnSps{
+    margin-top: 20px!important;
+}
 .dwldBtn {
   border-radius: 5px;
   color: #00aeca;

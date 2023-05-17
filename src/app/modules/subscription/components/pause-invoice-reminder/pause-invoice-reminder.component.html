@@ -1,17 +1,20 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div style="padding-top: 0px;">
-  <div class="align-items-center row">
-    <div class="col-sm-10">
-      <b style="font-size: 20px">Pause Reminder</b>
-    </div>
-  </div>
-    <div class="card">
-      
-      <div class="card__row" >
-        <!-- <div class="card__col-xs-12 card__col-sm-12"> -->
-            <div class="filter__col card__col-sm-4 card__col-xs-10">
 
-              <div class="input">
+<div class="align-items-center row">
+  <div class="col-sm-10">
+    <b style="font-size: 25px">Pause Invoice Reminder </b>
+  </div>
+  <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+    <p>
+      <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
+    </p>
+  </div>
+</div>
+
+<div class="rowClr">
+<div class="surround">
+<div class="row">
+  <div class="col-sm-6">
                 <label class="input__label" for="attr">Enter Invoice Number</label>
                 <div class="input__select">
                   <input maxlength="100" class="select__box ogp_select" style="background-image:none" [(ngModel)]="invoiceNo"
@@ -20,42 +23,31 @@
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
                 </div>
               </div>
-            </div>
-            <div class="filter__col card__col-sm-2 card__col-xs-10">
-              <a class="btn btn_stroke filter__add-link" (click)="invoiceSearch(invoiceNo)"><i
-                  class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+
+            <div class="col-sm-6 spsTp">
+              <button class="srch-btn srchBtnSps" (click)="invoiceSearch(invoiceNo)"><i
+                  class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
             </div>
 
-            <div class="filter__col card__col-sm-4 card__col-xs-12">
-            </div>
-          <!-- </div> -->
-        </div>
+</div>
+</div>
+</div>    
 
-        <div class="card__row" style="margin-top: 0px;">
-          <br><br>
-          <div class="card__row" style="margin-top: 0px;">
-            <div class="card__row">
-              <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceGridOptions"
-                  (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
-              </ag-grid-angular>
-            </div>
-            <br><br>
-          </div>
-        </div>
+<!-- Table Below -->
+<div class="tableSpc">
+  <div class="row">
+  <div class="col-sm-8">
+    <div class="txTit">
+      Existing Paused Reminders Details:
+    </div>
+  </div>
+  <div class="col-sm-4">
+  <!-- <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>  -->
+  </div>
+  </div>
+  <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceGridOptions" (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
+  </ag-grid-angular> -->
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="existingInvoicesGridOptions" (rowClicked)="onExistingInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
+  </ag-grid-angular>
 
-        <div class="card-head">
-          <label>Existing Paused Reminders</label>
-        </div>
-        <div class="card__row" style="margin-top: 0px;">
-          <br><br>
-          <div class="card__row" style="margin-top: 0px;">
-            <div class="card__row">
-              <ag-grid-angular class="ag-theme-balham" [gridOptions]="existingInvoicesGridOptions"
-                  (rowClicked)="onExistingInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
-              </ag-grid-angular>
-            </div>
-            <br><br>
-          </div>
-        </div>
-     </div>
   </div>

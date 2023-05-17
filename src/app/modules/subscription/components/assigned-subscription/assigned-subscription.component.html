@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div>
+
   <div class="align-items-center row">
     <div class="col-sm-10">
       <b style="font-size: 20px">Assigned Subscription </b>
@@ -10,41 +10,34 @@
       </p>
     </div>
   </div>
-  <div class="content-wrapper">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12" style="margin-top: 10px;">
-          <div class="card" style="margin-top: 10px;">
-            <div class="card__row">
-              <div class="filter__col card__col-xs-12" *ngIf="!coOwnerCheck">
-                <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-                  (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-              </div>
-              <div class="card__row" *ngIf="coOwnerCheck">
-                <div class="filter__col card__col-xs-12">
-                  <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                    (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 15px;">
-                <div class="col-sm-3">
-                  <mat-label> Financial Year </mat-label>
-                  <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="assessmentYear" readonly>
+
+  <div class="rowClr">
+  <div class="surround">
+  <div class="row">
+      <div class="col-sm-8" *ngIf="!coOwnerCheck">
+       <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+       </div>
+       <div class="col-sm-4">
+       <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+       </div>
+       <div class="col-sm-3 spsTp">
+        <mat-label> Financial Year </mat-label>
+        <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="assessmentYear" readonly>
                     <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
                     <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
                       {{year.financialYear}}
                     </mat-option>
                   </mat-select> -->
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-3" *ngIf="false">
-                  <mat-label> Search by Name </mat-label>
-                  <mat-form-field appearance="outline" class="customBg">
-                    <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-                    <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
-                      <mat-icon style="color: #00AECA">search</mat-icon>
-                    </button>
+         </mat-form-field>
+        </div>
+        <div class="col-sm-3 spsTp" *ngIf="false">
+          <mat-label> Search by Name </mat-label>
+          <mat-form-field appearance="outline" class="customBg">
+          <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
+          <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
+          <mat-icon style="color: #00AECA">search</mat-icon>
+          </button>
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
                         (click)="getFilerNameId(option)">
@@ -52,8 +45,8 @@
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
-                </div>
-                <div class="col-sm-3">
+            </div>
+                <div class="col-sm-3 spsTp">
                   <mat-label> Search Mobile Number</mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
@@ -67,30 +60,38 @@
                     </mat-option>
                   </mat-autocomplete> -->
                   </mat-form-field>
+            </div>
+                <div class="col-sm-3 spsTp">
+                  <button *ngIf="isAllowed" class="srch-btn srchBtnSps" (click)="createSub()"> Create Subscription </button>
                 </div>
-                <div class="col-sm-3 ">
-                  <button *ngIf="isAllowed" class="btn createBtn" (click)="createSub()"> Create Subscription </button>
-                </div>
-                <div class="col-sm-2">
-                  <button class="tbd-btn-clear" (click)="this.resetFilters()">
-                    <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
-                    Clear
+                <div class="col-sm-2 spsTp">
+                  <button class="clrLnk" (click)="this.resetFilters()">
+                    Clear form
                   </button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row" style="margin-top: 15px;">
-          <div class="col-12">
+
+</div>
+</div>
+</div>
+<!-- Table Below -->
+<div class="tableSpc">
+  <div class="row">
+  <div class="col-sm-8">
+    <div class="txTit">
+      Assigned Subscription Details:
+    </div>
+  </div>
+  <div class="col-sm-4">
+  <!-- <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>  -->
+  </div>
+  </div>
+
             <table>
               <tr *ngFor="let item of userInfo | paginate : config"></tr>
             </table>
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions"
+            <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="subscriptionListGridOptions"
               [rowSelection]="rowSelection" (rowClicked)="onSubscriptionRowClicked($event)">
             </ag-grid-angular>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-          </div>
-        </div>
-      </div>
-    </div>
+      
+</div>
