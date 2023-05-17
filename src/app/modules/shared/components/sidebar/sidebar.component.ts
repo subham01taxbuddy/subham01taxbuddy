@@ -52,22 +52,22 @@ export class SidebarComponent implements DoCheck {
   }
 
   menus: Menu[] = [
-    // {
-    //   name: 'Partner Dashboard',
-    //   // iconClass: 'fa fa-globe',
-    //   active: false,
-    //   url: '/dashboard',
-    //   roles: [],
-    //   submenu: []
-    // },
-    // {
-    //   name: 'Owner Dashboard',
-    //   // iconClass: 'fa fa-globe',
-    //   active: false,
-    //   url: '/dashboard/main',
-    //   roles: [],
-    //   submenu: []
-    // },
+    {
+      name: 'Partner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard',
+      roles: [],
+      submenu: []
+    },
+    {
+      name: 'Owner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard/main',
+      roles: [],
+      submenu: []
+    },
     {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
