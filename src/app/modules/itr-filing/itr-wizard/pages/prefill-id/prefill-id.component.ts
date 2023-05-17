@@ -4130,6 +4130,354 @@ export class PrefillIdComponent implements OnInit {
           }
         }
       }
+
+      // SCHEDULE CFL
+      {
+        const CFL = this.uploadedJson[this.ITR_Type].ScheduleCFL;
+
+        // AY 2014 - 2015
+        {
+          const LossCFFromPrev8thYearFromAY = CFL.LossCFFromPrev8thYearFromAY;
+
+          if (LossCFFromPrev8thYearFromAY) {
+            const LossCFFromPrev8thYearFromAYItrObj = {
+              id: null,
+              assessmentPastYear: '2014-15',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev8thYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev8thYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev8thYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev8thYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(LossCFFromPrev8thYearFromAYItrObj);
+          }
+        }
+
+        // AY 2015 - 2016
+        {
+          const LossCFFromPrev7thYearFromAY = CFL.LossCFFromPrev7thYearFromAY;
+
+          if (LossCFFromPrev7thYearFromAY) {
+            const LossCFFromPrev7thYearFromAYITtrObj = {
+              id: null,
+              assessmentPastYear: '2015-16',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev7thYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev7thYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev7thYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev7thYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(
+              LossCFFromPrev7thYearFromAYITtrObj
+            );
+          }
+        }
+
+        // AY 2016 - 2017
+        {
+          const LossCFFromPrev6thYearFromAY = CFL.LossCFFromPrev6thYearFromAY;
+
+          if (LossCFFromPrev6thYearFromAY) {
+            const LossCFFromPrev6thYearFromAYITtrObj = {
+              id: null,
+              assessmentPastYear: '2016-17',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev6thYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev6thYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev6thYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev6thYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(
+              LossCFFromPrev6thYearFromAYITtrObj
+            );
+          }
+        }
+
+        // AY 2017 - 2018
+        {
+          const LossCFFromPrev5thYearFromAY = CFL.LossCFFromPrev5thYearFromAY;
+
+          if (LossCFFromPrev5thYearFromAY) {
+            const LossCFFromPrev5thYearFromAYITtrObj = {
+              id: null,
+              assessmentPastYear: '2017-18',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev5thYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev5thYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev5thYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev5thYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(
+              LossCFFromPrev5thYearFromAYITtrObj
+            );
+          }
+        }
+
+        // AY 2018 - 2019
+        {
+          const LossCFFromPrev4thYearFromAY = CFL.LossCFFromPrev4thYearFromAY;
+
+          if (LossCFFromPrev4thYearFromAY) {
+            const LossCFFromPrev4thYearFromAYITtrObj = {
+              id: null,
+              assessmentPastYear: '2018-19',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev4thYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev4thYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev4thYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev4thYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(
+              LossCFFromPrev4thYearFromAYITtrObj
+            );
+          }
+        }
+
+        // AY 2019 - 2020
+        {
+          const LossCFFromPrev3rdYearFromAY = CFL.LossCFFromPrev3rdYearFromAY;
+
+          if (LossCFFromPrev3rdYearFromAY) {
+            const LossCFFromPrev3rdYearFromAYITtrObj = {
+              id: null,
+              assessmentPastYear: '2019-20',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(
+              LossCFFromPrev3rdYearFromAYITtrObj
+            );
+          }
+        }
+
+        // AY 2020 - 2021
+        {
+          const LossCFFromPrev2ndYearFromAY = CFL.LossCFFromPrev2ndYearFromAY;
+
+          if (LossCFFromPrev2ndYearFromAY) {
+            const LossCFFromPrev2ndYearFromAYItrObj = {
+              id: null,
+              assessmentPastYear: '2020-21',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail
+                  ?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail
+                  ?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail
+                  ?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(LossCFFromPrev2ndYearFromAYItrObj);
+          }
+        }
+
+        // AY 2021 - 2022
+        {
+          const LossCFFromPrevYrToAY = CFL.LossCFFromPrevYrToAY;
+
+          if (LossCFFromPrevYrToAY) {
+            const LossCFFromPrevYrToAYItrObj = {
+              id: null,
+              assessmentPastYear: '2021-22',
+              dateofFilling: this.parseAndFormatDate(
+                LossCFFromPrevYrToAY.CarryFwdLossDetail?.DateOfFiling
+              ),
+              housePropertyLoss:
+                LossCFFromPrevYrToAY.CarryFwdLossDetail?.TotalHPPTILossCF,
+              pastYear: 0,
+              STCGLoss:
+                LossCFFromPrevYrToAY.CarryFwdLossDetail?.TotalSTCGPTILossCF,
+              LTCGLoss:
+                LossCFFromPrevYrToAY.CarryFwdLossDetail?.TotalLTCGPTILossCF,
+
+              hasEdit: null,
+              speculativeBusinessLoss: null,
+              broughtForwordBusinessLoss: null,
+              setOffWithCurrentYearSpeculativeBusinessIncome: null,
+              setOffWithCurrentYearBroughtForwordBusinessIncome: null,
+              setOffWithCurrentYearHPIncome: null,
+              setOffWithCurrentYearSTCGIncome: null,
+              setOffWithCurrentYearLTCGIncome: null,
+              carryForwardAmountBusiness: null,
+              carryForwardAmountSpeculative: null,
+              carryForwardAmountHP: null,
+              carryForwardAmountSTCGIncome: null,
+              carryForwardAmountLTCGIncome: null,
+              totalLoss: null,
+            };
+
+            this.ITR_Obj.pastYearLosses.push(LossCFFromPrevYrToAYItrObj);
+          }
+        }
+      }
     }
 
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
