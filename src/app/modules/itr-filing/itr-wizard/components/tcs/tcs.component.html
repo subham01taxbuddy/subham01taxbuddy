@@ -78,7 +78,7 @@
                     <table>
                         <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
                     </table>
-                    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                    <pagination-controls id="tcsPagination" (pageChange)="pageChanged($event)"></pagination-controls>
                 </div>
                 <div class="card__col-sm-3" style="text-align: right;">
                     <button type="submit" class="tbd-btn save-btn" (click)="save()">Save</button>

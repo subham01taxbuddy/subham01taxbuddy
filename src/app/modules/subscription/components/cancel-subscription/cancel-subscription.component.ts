@@ -416,7 +416,7 @@ export class CancelSubscriptionComponent implements OnInit {
         if (subscriptionData[i].invoiceDetail[x].invoiceNo === null) {
           subscriptionData[i].invoiceDetail[x].invoiceNo = '-';
         }
-        let perInvoiceDetails = subscriptionData[i].invoiceDetail[x].invoiceNo + ': ' + subscriptionData[i].invoiceDetail[x].payableRefundAmount + ': ' + subscriptionData[i].invoiceDetail[x].paymentStatus;
+        let perInvoiceDetails = subscriptionData[i].invoiceDetail[x].invoiceNo + ': ' + subscriptionData[i].invoiceDetail[x].total + ': ' + subscriptionData[i].invoiceDetail[x].paymentStatus;
         invoiceDetails.push(perInvoiceDetails);
         console.log('invoiceDetails', invoiceDetails);
       }

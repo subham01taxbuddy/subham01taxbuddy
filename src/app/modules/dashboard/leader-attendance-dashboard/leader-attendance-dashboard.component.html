@@ -14,6 +14,48 @@
   </div> -->
     </div>
 
+    <div class="row rowSp">
+      <div class="col-sm-12">
+        <h5 class="bdrbl1">ITR Overview:</h5>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">{{itrOverview?.assignedUsersCount || 'NA'}}</span><br>
+            <span class="TxSm">Assign Users</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">{{itrOverview?.openCount || 'NA'}}</span><br>
+            <span class="TxSm">Open</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">{{itrOverview?.documentUploadedCount || 'NA'}}</span><br>
+            <span class="TxSm">Document Uploaded</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">{{itrOverview?.inProcessCount || 'NA'}}</span><br>
+            <span class="TxSm">In Process</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">{{itrOverview?.waitingForConfirmationCount || 'NA'}}</span><br>
+            <span class="TxSm">Waiting for confirmation</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+            <span class="bluTx">{{itrOverview?.backedOutCount || 'NA'}}</span><br>
+            <span class="TxSm">Back Out</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Total Partners -->
     <div class="col-sm-12">
         <div class="tpMain">
