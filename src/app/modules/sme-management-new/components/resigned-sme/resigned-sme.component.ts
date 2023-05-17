@@ -306,7 +306,7 @@ export class ResignedSmeComponent implements OnInit {
         this.loading = true;
         let param = '/resignedSme-to-partner?userId=' + data.userId;
 
-        this.userService.postMethod(param, '').subscribe((res: any) => {
+        this.userMsService.postMethod(param, '').subscribe((res: any) => {
           this.loading = false;
           if (res.success) {
             this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
