@@ -1285,7 +1285,8 @@
                     class="color-panel accordion-border"
                     [disabled]="[
                       totalCapitalGain('AMT') === 0 &&
-                      !ITR_JSON.systemFlags.hasCapitalGain
+                      !ITR_JSON.systemFlags.hasCapitalGain &&
+                      !ITR_JSON.itrSummaryJson
                         ? true
                         : false
                     ]"
@@ -1315,7 +1316,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.capitalGain
+                                  keys.TotalCapGains
+                                    ? keys.TotalCapGains
+                                    : summaryDetail.capitalGain
                                 )
                               }}</label
                             >
@@ -1328,7 +1331,9 @@
                     <div class="bxHed" *ngIf="slab(-1, 'INPUT').length > 0">
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
-                        getSlabWiseTotal(-1)
+                        keys.ShortTermAppRate
+                          ? keys.ShortTermAppRate
+                          : getSlabWiseTotal(-1)
                       }}</span>
                     </div>
                     <table
@@ -1387,7 +1392,9 @@
                     <div class="bxHed" *ngIf="slab(15, 'INPUT').length > 0">
                       Short term capital gain @ 15%
                       <span style="float: right">{{
-                        getSlabWiseTotal(15)
+                        keys.ShortTerm15Per
+                          ? keys.ShortTerm15Per
+                          : getSlabWiseTotal(15)
                       }}</span>
                     </div>
                     <table
@@ -1446,7 +1453,9 @@
                     <div class="bxHed" *ngIf="slab(10, 'INPUT').length > 0">
                       Long term capital gain @ 10%
                       <span style="float: right">{{
-                        getSlabWiseTotal(10)
+                        keys.LongTerm10Per
+                          ? keys.LongTerm10Per
+                          : getSlabWiseTotal(10)
                       }}</span>
                     </div>
                     <table
@@ -1505,7 +1514,9 @@
                     <div class="bxHed" *ngIf="slab(20, 'INPUT').length > 0">
                       Long term capital gain @ 20%
                       <span style="float: right">{{
-                        getSlabWiseTotal(20)
+                        keys.LongTerm20Per
+                          ? keys.LongTerm20Per
+                          : getSlabWiseTotal(20)
                       }}</span>
                     </div>
                     <table
@@ -1673,9 +1684,7 @@
                             <th>Particulars</th>
                             <th>Amount</th>
                           </tr>
-                          <tr
-                            *ngIf="keys.SAV || keys.IFD || keys.TAX || keys.OTH"
-                          >
+                          <tr *ngIf="keys.SAV || keys.IFD || keys.TAX">
                             <th colspan="2">Interest Income</th>
                           </tr>
 
@@ -1699,7 +1708,7 @@
                               Rs {{ utilsService.currencyFormatter(keys.TAX) }}
                             </td>
                           </tr>
-                          <tr *ngIf="keys.OTH">
+                          <tr>
                             <td>Any Other Interest Income</td>
                             <td>
                               Rs
@@ -1931,7 +1940,10 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.currentYearIFHPSetOff === 0 ? true : false
+                      summaryDetail.currentYearIFHPSetOff === 0 &&
+                      !ITR_JSON.itrSummaryJson
+                        ? true
+                        : false
                     ]"
                     #setOff
                   >
@@ -2631,7 +2643,12 @@
                   <!-- ************************ Losses To Be Carried Forward  ************************ -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[totalCarryForword === 0 ? true : false]"
+                    [disabled]="[
+                      totalCarryForword === 0 ||
+                      keys.LossesOfCurrentYearCarriedFwd === 0
+                        ? true
+                        : false
+                    ]"
                     #lossCarryFwd
                   >
                     <mat-expansion-panel-header>
@@ -2666,7 +2683,7 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  totalCarryForword
+                                  totalCarryForword ? totalCarryForword : 0
                                 )
                               }}</label
                             >

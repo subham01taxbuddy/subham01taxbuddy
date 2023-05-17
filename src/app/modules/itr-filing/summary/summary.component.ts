@@ -358,12 +358,6 @@ export class SummaryComponent implements OnInit {
           (val) => val.OthSrcNatureDesc === 'FAP'
         )?.OthSrcOthAmount,
 
-        OTH: this.ITR_JSON.itrSummaryJson[this.itrType][
-          this.ITR14IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
-          (val) => val.OthSrcNatureDesc === 'OTH'
-        )?.OthSrcOthAmount,
-
         DIV: this.ITR_JSON.itrSummaryJson[this.itrType][
           this.ITR14IncomeDeductions
         ].OthersInc.OthersIncDtlsOthSrc.find(
@@ -382,14 +376,7 @@ export class SummaryComponent implements OnInit {
         Deductions: Object.entries(
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
             ?.DeductUndChapVIA
-        )
-          .filter(
-            ([key, item]) =>
-              key !== '80C' &&
-              key !== '80CCC' &&
-              key !== 'Section80CCDEmployeeOrSE'
-          )
-          .map(([key, item]) => ({ name: key, amount: item })),
+        ).map(([key, item]) => ({ name: key, amount: item })),
 
         TotalIncome:
           this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
@@ -552,23 +539,18 @@ export class SummaryComponent implements OnInit {
         // 1. SALARY INCOME
         IncomeFromSal:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.Salaries,
-
         //   GrossSalary:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.GrossSalary,
-
         // TotalAllwncExemptUs10:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     .AllwncExemptUs10?.TotalAllwncExemptUs10,
-
         // ProfessionalTaxUs16iii:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.ProfessionalTaxUs16iii,
-
         // EntertainmentAlw16ii:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.EntertainmentAlw16ii,
-
         // DeductionUs16ia:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.DeductionUs16ia,
@@ -576,7 +558,6 @@ export class SummaryComponent implements OnInit {
         // 2. HOUSE PROPERTY
         TotalIncomeOfHP:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.IncomeFromHP,
-
         // TypeOfHP:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.TypeOfHP,
@@ -599,47 +580,41 @@ export class SummaryComponent implements OnInit {
         // 4. BUSINESS INCOME
 
         // 4. CAPITAL GAIN INCOME
+        TotalCapGains:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+            .TotalCapGains,
+
+        ShortTermAppRate:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+            .ShortTerm?.ShortTermAppRate,
+
+        ShortTerm15Per:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+            .ShortTerm?.ShortTerm15Per,
+
+        LongTerm10Per:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+            .LongTerm?.LongTerm10Per,
+
+        LongTerm20Per:
+          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+            .LongTerm?.LongTerm20Per,
 
         // 5. OHER SOURCES
         IncomeOthSrc:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.IncFromOS
             .TotIncFromOS,
 
-        // SAV: this.ITR_JSON.itrSummaryJson[this.itrType][
-        //   this.ITR14IncomeDeductions
-        // ].OthersInc.OthersIncDtlsOthSrc.find(
-        //   (val) => val.OthSrcNatureDesc === 'SAV'
-        // )?.OthSrcOthAmount,
-
-        // IFD: this.ITR_JSON.itrSummaryJson[this.itrType][
-        //   this.ITR14IncomeDeductions
-        // ].OthersInc.OthersIncDtlsOthSrc.find(
-        //   (val) => val.OthSrcNatureDesc === 'IFD'
-        // )?.OthSrcOthAmount,
-
-        // TAX: this.ITR_JSON.itrSummaryJson[this.itrType][
-        //   this.ITR14IncomeDeductions
-        // ].OthersInc.OthersIncDtlsOthSrc.find(
-        //   (val) => val.OthSrcNatureDesc === 'TAX'
-        // )?.OthSrcOthAmount,
-
-        // FAP: this.ITR_JSON.itrSummaryJson[this.itrType][
-        //   this.ITR14IncomeDeductions
-        // ].OthersInc.OthersIncDtlsOthSrc.find(
-        //   (val) => val.OthSrcNatureDesc === 'FAP'
-        // )?.OthSrcOthAmount,
-
-        // OTH: this.ITR_JSON.itrSummaryJson[this.itrType][
-        //   this.ITR14IncomeDeductions
-        // ].OthersInc.OthersIncDtlsOthSrc.find(
-        //   (val) => val.OthSrcNatureDesc === 'OTH'
-        // )?.OthSrcOthAmount,
-
-        // DIV: this.ITR_JSON.itrSummaryJson[this.itrType][
-        //   this.ITR14IncomeDeductions
-        // ].OthersInc.OthersIncDtlsOthSrc.find(
-        //   (val) => val.OthSrcNatureDesc === 'DIV'
-        // )?.OthSrcOthAmount,
+        SAV: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+          .IncOthThanOwnRaceHorse?.IntrstFrmSavingBank,
+        IFD: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+          .IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit,
+        TAX: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+          .IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund,
+        FAP: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+          .IncOthThanOwnRaceHorse?.FamilyPension,
+        DIV: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+          .IncOthThanOwnRaceHorse?.DividendGross,
 
         // 6. TOTAL HEAD WISE INCOME
         GrossTotIncome:
@@ -675,17 +650,10 @@ export class SummaryComponent implements OnInit {
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
             ?.DeductionsUnderScheduleVIA,
 
-        // Deductions: Object.entries(
-        //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-        //     ?.DeductUndChapVIA
-        // )
-        //   .filter(
-        //     ([key, item]) =>
-        //       key !== '80C' &&
-        //       key !== '80CCC' &&
-        //       key !== 'Section80CCDEmployeeOrSE'
-        //   )
-        //   .map(([key, item]) => ({ name: key, amount: item })),
+        Deductions: Object.entries(
+          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleVIA
+            ?.DeductUndChapVIA
+        ).map(([key, item]) => ({ name: key, amount: item })),
 
         // 13. TOTAL INCOME
         TotalIncome:
@@ -715,16 +683,13 @@ export class SummaryComponent implements OnInit {
         TaxPayableOnTotInc:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI?.TaxPayableOnTotInc,
-
         TaxAtNormalRatesOnAggrInc:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI
             ?.TaxAtNormalRatesOnAggrInc,
-
         TaxAtSpecialRates:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI?.TaxAtSpecialRates,
-
         RebateOnAgriInc:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI?.RebateOnAgriInc,
@@ -758,15 +723,12 @@ export class SummaryComponent implements OnInit {
         TotTaxRelief:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.TotTaxRelief,
-
         Section89:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.Section89,
-
         Section90:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.Section90,
-
         Section91:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.Section91,
@@ -793,7 +755,7 @@ export class SummaryComponent implements OnInit {
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.IntrstPay?.LateFilingFee234F,
 
-        // 26. AGGREAGTE LIABILITY
+        // 26. AGGREGATE LIABILITY
         AggregateTaxInterestLiability:
           this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability,
