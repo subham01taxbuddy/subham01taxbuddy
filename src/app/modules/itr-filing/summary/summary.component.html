@@ -2781,12 +2781,34 @@
                                 >keyboard_arrow_up
                               </mat-icon>
                             </div>
-                            <label class="rtNumb1">
+                            <label
+                              class="rtNumb1"
+                              *ngIf="
+                                this.itrType === 'ITR1' ||
+                                this.itrType === 'ITR4'
+                              "
+                            >
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   keys.TotalTaxPayable
                                     ? keys.TotalTaxPayable
+                                    : summaryDetail.totalTax
+                                )
+                              }}
+                            </label>
+                            <label
+                              class="rtNumb1"
+                              *ngIf="
+                                this.itrType === 'ITR2' ||
+                                this.itrType === 'ITR3'
+                              "
+                            >
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  keys.TaxPayableOnTotInc
+                                    ? keys.TaxPayableOnTotInc
                                     : summaryDetail.totalTax
                                 )
                               }}
@@ -2797,7 +2819,10 @@
                     </mat-expansion-panel-header>
 
                     <div
-                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalTaxPayable"
+                      *ngIf="
+                        ITR_JSON.itrSummaryJson &&
+                        (keys.TotalTaxPayable || keys.TaxPayableOnTotInc)
+                      "
                     >
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -2815,7 +2840,9 @@
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalTaxPayable
+                                  keys.TaxAtNormalRatesOnAggrInc
+                                    ? keys.TaxAtNormalRatesOnAggrInc
+                                    : keys.TotalTaxPayable
                                 )
                               }}
                             </td>
@@ -2825,7 +2852,13 @@
                             <td>
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
-                              >&nbsp;{{ utilsService.currencyFormatter(0) }}
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  keys.TaxAtSpecialRates
+                                    ? keys.TaxAtSpecialRates
+                                    : 0
+                                )
+                              }}
                             </td>
                           </tr>
                           <tr>
@@ -2833,7 +2866,13 @@
                             <td>
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
-                              >&nbsp;-{{ utilsService.currencyFormatter(0) }}
+                              >&nbsp;-{{
+                                utilsService.currencyFormatter(
+                                  keys.RebateOnAgriInc
+                                    ? keys.RebateOnAgriInc
+                                    : 0
+                                )
+                              }}
                             </td>
                           </tr>
                         </tbody>
@@ -2978,7 +3017,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.surcharge
+                                  keys.TotalSurcharge
+                                    ? keys.TotalSurcharge
+                                    : summaryDetail.surcharge
                                 )
                               }}</label
                             >
@@ -3061,7 +3102,7 @@
                       summaryDetail.taxReliefUnder89 +
                         summaryDetail.taxReliefUnder90_90A +
                         summaryDetail.taxReliefUnder91 ===
-                      0
+                        0 && !ITR_JSON.itrSummaryJson
                         ? true
                         : false
                     ]"
@@ -3087,7 +3128,13 @@
                                 >keyboard_arrow_up
                               </mat-icon>
                             </div>
-                            <label class="rtNumb1">
+                            <label
+                              class="rtNumb1"
+                              *ngIf="
+                                this.itrType === 'ITR1' ||
+                                this.itrType === 'ITR4'
+                              "
+                            >
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
@@ -3096,6 +3143,20 @@
                                     : summaryDetail.taxReliefUnder89 +
                                         summaryDetail.taxReliefUnder90_90A +
                                         summaryDetail.taxReliefUnder91
+                                )
+                              }}</label
+                            >
+                            <label
+                              class="rtNumb1"
+                              *ngIf="
+                                this.itrType === 'ITR2' ||
+                                this.itrType === 'ITR3'
+                              "
+                            >
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  keys.TotTaxRelief
                                 )
                               }}</label
                             >
@@ -3128,7 +3189,9 @@
                           <td class="">
                             <i class="material-icons icRup">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.taxReliefUnder90_90A
+                                keys.Section90
+                                  ? keys.Section90
+                                  : summaryDetail.taxReliefUnder90_90A
                               )
                             }}
                           </td>
@@ -3138,7 +3201,9 @@
                           <td class="">
                             <i class="material-icons">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
-                                summaryDetail.taxReliefUnder91
+                                keys.Section91
+                                  ? keys.Section91
+                                  : summaryDetail.taxReliefUnder91
                               )
                             }}
                           </td>
@@ -3312,12 +3377,34 @@
                             27. Aggregate Liability (25+26)
                           </div>
                           <div class="col-lg-4 col-md-4 col-sm-4">
-                            <label class="rtNumb">
+                            <label
+                              class="rtNumb"
+                              *ngIf="
+                                this.itrType === 'ITR1' ||
+                                this.itrType === 'ITR4'
+                              "
+                            >
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   keys.TotTaxPlusIntrstPay
                                     ? keys.TotTaxPlusIntrstPay
+                                    : summaryDetail.agrigateLiability
+                                )
+                              }}
+                            </label>
+                            <label
+                              class="rtNumb"
+                              *ngIf="
+                                this.itrType === 'ITR2' ||
+                                this.itrType === 'ITR3'
+                              "
+                            >
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  keys.AggregateTaxInterestLiability
+                                    ? keys.AggregateTaxInterestLiability
                                     : summaryDetail.agrigateLiability
                                 )
                               }}
@@ -3575,41 +3662,82 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr
-                            *ngFor="
-                              let otherThanSalary16A of keys.TDSonOthThanSal
+                          <ng-container
+                            *ngIf="
+                              this.itrType === 'ITR1' || this.itrType === 'ITR4'
                             "
                           >
-                            <td>
-                              {{
-                                otherThanSalary16A
-                                  .EmployerOrDeductorOrCollectDetl
-                                  .EmployerOrDeductorOrCollecterName
-                              }}
-                            </td>
-                            <td>
-                              {{
-                                otherThanSalary16A
-                                  .EmployerOrDeductorOrCollectDetl.TAN
-                              }}
-                            </td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  otherThanSalary16A.AmtForTaxDeduct
-                                )
-                              }}
-                            </td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  otherThanSalary16A.ClaimOutOfTotTDSOnAmtPaid
-                                )
-                              }}
-                            </td>
-                          </tr>
+                            <tr
+                              *ngFor="
+                                let otherThanSalary16A of keys.TDSonOthThanSal
+                              "
+                            >
+                              <td>
+                                {{
+                                  otherThanSalary16A
+                                    .EmployerOrDeductorOrCollectDetl
+                                    .EmployerOrDeductorOrCollecterName
+                                }}
+                              </td>
+                              <td>
+                                {{
+                                  otherThanSalary16A
+                                    .EmployerOrDeductorOrCollectDetl.TAN
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary16A.AmtForTaxDeduct
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary16A.ClaimOutOfTotTDSOnAmtPaid
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
+                          <ng-container
+                            *ngIf="
+                              this.itrType === 'ITR2' || this.itrType === 'ITR3'
+                            "
+                          >
+                            <tr
+                              *ngFor="
+                                let otherThanSalary16A of keys.TDSonOthThanSal
+                              "
+                            >
+                              <td>
+                                {{ otherThanSalary16A.TDSCreditName }}
+                              </td>
+                              <td>
+                                {{ otherThanSalary16A.TANOfDeductor }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary16A.GrossAmount
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary16A.TaxDeductCreditDtls
+                                      ?.TaxClaimedOwnHands
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
                           <tr>
                             <th>Total Amount</th>
                             <th></th>
@@ -3732,28 +3860,70 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr
-                            *ngFor="let otherThanSalary26QB of keys.TDS3Details"
+                          <ng-container
+                            *ngIf="
+                              this.itrType === 'ITR1' || this.itrType === 'ITR4'
+                            "
                           >
-                            <td>{{ otherThanSalary26QB.NameOfTenant }}</td>
-                            <td>{{ otherThanSalary26QB.PANofTenant }}</td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  otherThanSalary26QB.GrsRcptToTaxDeduct
-                                )
-                              }}
-                            </td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  otherThanSalary26QB.TDSClaimed
-                                )
-                              }}
-                            </td>
-                          </tr>
+                            <tr
+                              *ngFor="
+                                let otherThanSalary26QB of keys.TDS3Details
+                              "
+                            >
+                              <td>{{ otherThanSalary26QB.NameOfTenant }}</td>
+                              <td>{{ otherThanSalary26QB.PANofTenant }}</td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary26QB.GrsRcptToTaxDeduct
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary26QB.TDSClaimed
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
+                          <ng-container
+                            *ngIf="
+                              this.itrType === 'ITR2' || this.itrType === 'ITR3'
+                            "
+                          >
+                            <tr
+                              *ngFor="
+                                let otherThanSalary26QB of keys.TDS3Details
+                              "
+                            >
+                              <td>{{ otherThanSalary26QB.TDSCreditName }}</td>
+                              <td>
+                                {{ otherThanSalary26QB.PANOfBuyerTenant }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary26QB.GrossAmount
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary26QB.TaxDeductCreditDtls
+                                      ?.TaxClaimedOwnHands
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
+
                           <tr>
                             <th>Total Amount</th>
                             <th></th>
@@ -3886,7 +4056,9 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  tcs.AmtTaxCollected
+                                  tcs.TotalTCS
+                                    ? tcs.TotalTCS
+                                    : tcs.AmtTaxCollected
                                 )
                               }}
                             </td>
