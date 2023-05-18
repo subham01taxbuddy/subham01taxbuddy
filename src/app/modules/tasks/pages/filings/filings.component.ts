@@ -199,6 +199,12 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
+      let loggedInUserRoles = this.utilsService.getUserRoles();
+
+        if(loggedInUserRoles.includes('ROLE_FILER')){
+          this.searchParams.filerUserId = loggedInId;
+          }
+
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
@@ -1036,6 +1042,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.config.itemsPerPage = 10;
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
+    this.searchParams.panNumber=null;
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
@@ -1064,7 +1071,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     let req = {
       serviceName: 'EriITRLifeCycleStatus',
       pan: data.panNumber,
-      ay: '2022',
+      ay: data.assessmentYear.substring(0, 4),
     };
 
     this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {

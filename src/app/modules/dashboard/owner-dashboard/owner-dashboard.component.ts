@@ -130,21 +130,25 @@ export class OwnerDashboardComponent implements OnInit {
 
   config = {
     docUpload:{
+      id:"pagination1",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
     },
     summaryConfirmation:{
+      id:"pagination2",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
     },
     eVerificationPending:{
+      id:"pagination3",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
     },
       scheduleCall:{
+      id:"pagination4",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
