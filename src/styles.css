@@ -718,15 +718,17 @@ pagination-controls {
   margin-left: 17%;
   background-color: #ffffff;
   color: #00AECA;
-  border: 1px solid #00AECA;
+  border: 2px solid #00AECA;
   border-radius: 6px;
   height: 50px;
   width: auto;
   margin-top: 10px;
   margin-bottom: 20px;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   padding: 0px 14px 0px 14px;
+  font-size: 15.5px;
 }
+
 
 .lgtBtn:hover {
   background-color: #00AECA;
@@ -755,7 +757,7 @@ pagination-controls {
 
 .saveBtnIn {
   margin-right: 7%;
-  background-color: #4F9A20;
+  background-color: #338202;
   border-color: #4F9A20;
   color: #ffffff;
   border-radius: 6px;
@@ -767,9 +769,10 @@ pagination-controls {
 }
 
 .saveBtnIn:hover {
-  background-color: #EEFFE4;
+  background-color: #ffffff;
   color: #4F9A20;
-  border: 1px solid #4F9A20;
+  border: 2px solid #4F9A20;
+  font-weight:600 !important;
 }
 
 
