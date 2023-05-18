@@ -547,9 +547,23 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
+          let statusText = '';
+          if (itrStatus.length !== 0) {
+            const nameArray = itrStatus.filter(
+              (item: any) => item.statusId === params.data.statusId
+            );
+            if (nameArray.length !== 0) {
+              statusSequence = nameArray[0].sequence;
+              statusText = nameArray[0].statusName;
+            } else {
+              statusText = '-';
+            }
+          } else {
+            statusText = params.data.statusId;
+          }
           return `<button type="button" class="action_icon add_button" title="Update Status"
-          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ITR Conf Recvd.
+          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e; text-align: left">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
         width:120,
@@ -661,7 +675,7 @@ export class AssignedNewUsersComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
             background: transparent; font-size: 12px; cursor:pointer;">
             <i class="fas fa-chevron-right" aria-hidden="true" data-action-type="more-options"></i>
-           </button>`;          
+           </button>`;
         },
         width: 65,
         pinned: 'right',
