@@ -1071,7 +1071,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     let req = {
       serviceName: 'EriITRLifeCycleStatus',
       pan: data.panNumber,
-      ay: '2022',
+      ay: data.assessmentYear.substring(0, 4),
     };
 
     this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
