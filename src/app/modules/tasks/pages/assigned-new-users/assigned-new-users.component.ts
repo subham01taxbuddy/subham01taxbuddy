@@ -349,36 +349,36 @@ export class AssignedNewUsersComponent implements OnInit {
           debounceMs: 0,
         },
       },
-      {
-        headerName: 'Status',
-        field: 'statusId',
-        width: 90,
-        suppressMovable: true,
-        sortable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          // console.log('params === ', params, params.data.statusId);
-          // console.log('itrStatus array === ', itrStatus);
-          if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter(
-              (item: any) => item.statusId === params.data.statusId
-            );
-            if (nameArray.length !== 0) {
-              statusSequence = nameArray[0].sequence;
-              return nameArray[0].statusName;
-            } else {
-              return '-';
-            }
-          } else {
-            return params.data.statusId;
-          }
-        },
-      },
+      // {
+      //   headerName: 'Status',
+      //   field: 'statusId',
+      //   width: 90,
+      //   suppressMovable: true,
+      //   sortable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      //   valueGetter: function nameFromCode(params) {
+      //     // console.log('params === ', params, params.data.statusId);
+      //     // console.log('itrStatus array === ', itrStatus);
+      //     if (itrStatus.length !== 0) {
+      //       const nameArray = itrStatus.filter(
+      //         (item: any) => item.statusId === params.data.statusId
+      //       );
+      //       if (nameArray.length !== 0) {
+      //         statusSequence = nameArray[0].sequence;
+      //         return nameArray[0].statusName;
+      //       } else {
+      //         return '-';
+      //       }
+      //     } else {
+      //       return params.data.statusId;
+      //     }
+      //   },
+      // },
       {
         headerName: 'Owner Name',
         field: 'ownerName',
@@ -561,19 +561,19 @@ export class AssignedNewUsersComponent implements OnInit {
           } else {
             statusText = params.data.statusId;
           }
-          return `<button type="button" class="action_icon add_button" title="Update Status"
-          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e; text-align: left">
-            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
+          return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
+          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i>${statusText}
            </button>`;
         },
-        width:120,
+        width:180,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
+            textAlign: 'left',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            'align-items': 'left',
+            'justify-content': 'left',
           };
         },
       },
@@ -633,22 +633,22 @@ export class AssignedNewUsersComponent implements OnInit {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#04a4bc">
+              background: transparent; font-size: 13px; cursor:pointer;color:#04a4bc" data-action-type="startFiling">
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i> Yet to Start
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: red">
+              background: transparent; font-size: 16px; cursor:pointer;color: red" data-action-type="startFiling">
               <i class="fa fa-circle" title="User Backed out" aria-hidden="true" data-action-type="startFiling"></i>
               </button>`;
             } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
               return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: green">
+              background: transparent; font-size: 16px; cursor:pointer;color: green" data-action-type="startFiling">
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
               return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#2dd35c"font-weight:bold;>
+              background: transparent; font-size: 13px; cursor:pointer;color:#2dd35c"font-weight:bold; data-action-type="startFiling">
               <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>In Progress
             </button>`;
             }
