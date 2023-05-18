@@ -2,6 +2,8 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {sortBy} from "lodash";
 import {Schedules} from "../../../../shared/interfaces/schedules";
 import {AppConstants} from "../../../../shared/constants";
+import {ITR_JSON} from "../../../../shared/interfaces/itr-input.interface";
+import {UtilsService} from "../../../../../services/utils.service";
 
 @Component({
   selector: 'app-source-of-incomes',
@@ -11,41 +13,52 @@ import {AppConstants} from "../../../../shared/constants";
 export class SourceOfIncomesComponent implements OnInit {
 
   sourcesList = [];
+  ITR_JSON: ITR_JSON;
+  eriClientValidUpto: any;
 
   @Output() scheduleSelected: EventEmitter<any> = new EventEmitter();
 
-  constructor(private schedules: Schedules) {
+  constructor(private schedules: Schedules,
+              private utilsService: UtilsService) {
   }
   ngOnInit(): void {
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
+    this.utilsService
+      .getUserProfile(this.ITR_JSON.userId)
+      .then((result: any) => {
+        console.log(result);
+        this.eriClientValidUpto = result.eriClientValidUpto
+      });
 
     let incomeSources = JSON.parse(sessionStorage.getItem('incomeSources'));
 
     if(!incomeSources) {
-      let ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.sourcesList = [
         {
           name: 'Salary',
-          selected: (ITR_JSON.employers != null && ITR_JSON.employers.length > 0) ? true : false,
+          selected: (this.ITR_JSON.employers != null && this.ITR_JSON.employers.length > 0) ? true : false,
           schedule: this.schedules.SALARY
         },
         {
           name: 'House Property',
-          selected: (ITR_JSON.houseProperties != null && ITR_JSON.houseProperties.length > 0) ? true : false,
+          selected: (this.ITR_JSON.houseProperties != null && this.ITR_JSON.houseProperties.length > 0) ? true : false,
           schedule: this.schedules.HOUSE_PROPERTY
         },
         {
           name: 'Business / Profession',
-          selected: (ITR_JSON.business != null && ITR_JSON.business.presumptiveIncomes?.length > 0) ? true : false,
+          selected: (this.ITR_JSON.business != null && this.ITR_JSON.business.presumptiveIncomes?.length > 0) ? true : false,
           schedule: this.schedules.BUSINESS_INCOME
         },
         {
           name: 'Capital Gain',
-          selected: (ITR_JSON.capitalGain != null && ITR_JSON.capitalGain.length > 0) ? true : false,
+          selected: (this.ITR_JSON.capitalGain != null && this.ITR_JSON.capitalGain.length > 0) ? true : false,
           schedule: this.schedules.CAPITAL_GAIN
         },
         {
           name: 'Futures / Options',
-          selected: (ITR_JSON.business != null && ITR_JSON.business.profitLossACIncomes?.length > 0) ? true : false,
+          selected: (this.ITR_JSON.business != null && this.ITR_JSON.business.profitLossACIncomes?.length > 0) ? true : false,
           schedule: this.schedules.SPECULATIVE_INCOME
         },
 

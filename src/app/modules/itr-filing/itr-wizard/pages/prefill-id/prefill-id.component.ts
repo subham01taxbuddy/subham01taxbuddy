@@ -63,6 +63,7 @@ export class PrefillIdComponent implements OnInit {
             ? name
             : result.fName + ' ' + result.lName,
           itrId: this.ITR_JSON.itrId,
+          eriClientValidUpto: result.eriClientValidUpto
         };
       });
   }

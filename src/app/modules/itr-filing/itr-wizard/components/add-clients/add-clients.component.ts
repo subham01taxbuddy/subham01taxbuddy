@@ -170,7 +170,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
               this.myStepper.selectedIndex = 1;
             }
           } else {
-            if (res.hasOwnProperty('errors')) {
+            if (res && res.hasOwnProperty('errors')) {
               if (res.errors instanceof Array && res.errors.length > 0)
                 this.utiService.showSnackBar(res.errors[0].desc);
               this.otpSend = false;
