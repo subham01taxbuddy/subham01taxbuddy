@@ -1,15 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { User } from '../../subscription/components/performa-invoice/performa-invoice.component';
-import { Observable } from 'rxjs';
+import { Observable, map, startWith } from 'rxjs';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -45,13 +46,6 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   toDateMin: any;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  searchFiler = new FormControl('');
-  filerId:any;
-  filerUserId:any;
-  options1: User[] = [];
-  filerList: any;
-  filerNames: User[];
-  filteredFilers: Observable<any[]>;
   allDetails:any;
   today: Date;
   grandTotal:any;
@@ -63,6 +57,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   assignmentOnCount: number;
   assignmentOffCount: number;
   itrOverview:any;
+  allPartnerDetails:any;
 
   constructor(
     private userMsService: UserMsService,
@@ -80,14 +75,91 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    this.getItrUserOverview();
+    this.search();
   }
 
-  getAllOwnerDetails(){
-    // API to get partner details
-  // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?ownerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
+  search(){
+    this.getItrUserOverview();
+    this.getAllPartnerDetails();
+  }
 
-}
+  getAllPartnerDetails(){
+    // API to get partner commission details by Leader :-
+  // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?fromDate=2023-04-01&toDate=2023-05-16
+  // &page=0&size=30&leaderUserId=8664
+  this.loading = true;
+  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+  // let leaderUserId = this.loggedInSmeUserId
+
+  let param=''
+    let userFilter = '';
+    if (this.leaderId && !this.ownerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    else if (this.ownerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+    }
+    else{
+      userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
+    }
+
+    param =`/dashboard/partner-commission?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+
+    this.itrService.getMethod(param).subscribe((response: any) => {
+      if(response.success == false){
+        this.allDetails=null;
+        this.calculateCounts();
+        this. _toastMessageService.alert("error",response.message);
+      }
+      if (response.success) {
+        this.loading = false;
+        this.allDetails = response.data;
+        this.calculateCounts();
+        // this.config.docUpload.totalItems = response.data.totalElements;
+        const totalItrFiled = this.allDetails.reduce((total, item) => total + item.totalItrFiled, 0);
+        const totalPaidRevenue = this.allDetails.reduce((total, item) => total + item.totalPaidRevenue, 0);
+        const totalCommissionEarned = this.allDetails.reduce((total, item) => total + item.totalCommissionEarned, 0);
+
+        // Assign the totals to a property
+        this.grandTotal = {
+        totalItrFiled,
+        totalPaidRevenue,
+        totalCommissionEarned,
+        };
+
+      }else{
+        this.allDetails=null;
+        this.calculateCounts();
+         this.loading = false;
+         this. _toastMessageService.alert("error",response.message);
+       }
+    },(error) => {
+      this.allDetails=null;
+      this.calculateCounts();
+      this.loading = false;
+      this. _toastMessageService.alert("error","Error");
+    });
+
+
+  }
+
+  calculateCounts() {
+    if(this.allDetails){
+    this.partnerCount = this.allDetails?.length;
+    this.activePartnerCount = this.allDetails?.filter(item => item.hasFilerLoggedInToday).length;
+    this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
+    this.assignmentOnCount = this.allDetails?.filter(item => item.assignmentStatus === 'On').length;
+    this.assignmentOffCount = this.allDetails?.filter(item => item.assignmentStatus === 'Off').length;
+    }else{
+      this.partnerCount = 0;
+      this.activePartnerCount=0;
+      this.inactivePartnerCount=0;
+      this.assignmentOnCount=0;
+      this.assignmentOffCount=0;
+      this.grandTotal=null;
+    }
+  }
 
   getItrUserOverview(){
     // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
@@ -95,11 +167,24 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    let leaderUserId = this.loggedInSmeUserId;
+    // let leaderUserId = this.loggedInSmeUserId;
 
-    let param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}`
+    let param=''
+    let userFilter = '';
+    if (this.leaderId && !this.ownerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.ownerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+    }
+
+     param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
 
     this.itrService.getMethod(param).subscribe((response: any) => {
+      if(response.success == false){
+        this.itrOverview=null;
+        this. _toastMessageService.alert("error",response.message);
+      }
       if (response.success) {
         this.itrOverview = response.data;
       }else{
@@ -109,6 +194,36 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     },(error) => {
       this.loading = false;
       this. _toastMessageService.alert("error","Error");
-    })
+    });
+  }
+
+  leaderId: number;
+  ownerId: number;
+  agentId: number;
+
+  fromSme1(event, isOwner) {
+     console.log('sme-drop-down', event, isOwner);
+     if (isOwner) {
+      this.leaderId = event ? event.userId : null;
+    } else {
+      this.ownerId = event ? event.userId : null;
     }
+    if (this.ownerId) {
+      this.agentId = this.ownerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+  }
+
+  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
+  resetFilters() {
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date().toISOString().slice(0, 10));
+    this?.leaderDropDown?.resetDropdown();
+    this.search();
+  }
+
 }
