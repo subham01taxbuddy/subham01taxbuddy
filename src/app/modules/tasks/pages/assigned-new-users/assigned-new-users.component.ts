@@ -547,23 +547,9 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          let statusText = '';
-          if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter(
-              (item: any) => item.statusId === params.data.statusId
-            );
-            if (nameArray.length !== 0) {
-              statusSequence = nameArray[0].sequence;
-              statusText = nameArray[0].statusName;
-            } else {
-              statusText = '-';
-            }
-          } else {
-            statusText = params.data.statusId;
-          }
           return `<button type="button" class="action_icon add_button" title="Update Status"
-          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e; text-align: left">
-            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
+          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ITR Conf Recvd.
            </button>`;
         },
         width:120,
@@ -633,8 +619,8 @@ export class AssignedNewUsersComponent implements OnInit {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#04a4bc">
-              <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i> Yet to Start
+              background: transparent; font-size: 16px; cursor:pointer;color: blue">
+              <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling">Yet to Start</i> 
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
               return `<button type="button" class="action_icon add_button" style="border: none;
@@ -648,8 +634,8 @@ export class AssignedNewUsersComponent implements OnInit {
             </button>`;
             } else {
               return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#2dd35c"font-weight:bold;>
-              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>In Progress
+              background: transparent; font-size: 13px; cursor:pointer;color: orange"font-weight:bold;>
+              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling">In Progress</i>
             </button>`;
             }
           } else {
@@ -675,7 +661,7 @@ export class AssignedNewUsersComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
             background: transparent; font-size: 12px; cursor:pointer;">
             <i class="fas fa-chevron-right" aria-hidden="true" data-action-type="more-options"></i>
-           </button>`;
+           </button>`;          
         },
         width: 65,
         pinned: 'right',
