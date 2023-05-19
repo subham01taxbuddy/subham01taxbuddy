@@ -13,7 +13,7 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 
 export interface User {
   name: string;
-  userId:Number;
+  userId: Number;
 }
 
 @Component({
@@ -31,20 +31,20 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     new Date().getDate()
   );
   ownerList: any;
-  leaderList:any;
-  leaderNames:User[];
-  filteredOptions1 :Observable<User[]>;
+  leaderList: any;
+  leaderNames: User[];
+  filteredOptions1: Observable<User[]>;
   stateDropdown = AppConstants.stateDropdown;
   ownerNames: User[];
   options: User[] = [];
-  options1:User[] = [];
+  options1: User[] = [];
   filteredOptions: Observable<User[]>;
   itrTypesData = [];
-  ownerUserId:any;
-  loggedInSme:any;
+  ownerUserId: any;
+  loggedInSme: any;
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
-  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
-  'Santali', 'Sindhi', 'Urdu']
+    'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
+    'Santali', 'Sindhi', 'Urdu']
   itrTypeList = [
     { value: 1, display: 'ITR 1' },
     { value: 2, display: 'ITR 2' },
@@ -52,6 +52,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     { value: 4, display: 'ITR 4' },
 
   ];
+  boPartnersInfo: any;
 
   constructor(
     private fb: FormBuilder,
@@ -60,18 +61,18 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private activatedRoute: ActivatedRoute,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getOwner();
     this.getLeader();
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.smeFormGroup.patchValue(this.smeObj); // all
-    this.setFormValues(this.smeObj);
+    // this.setFormValues(this.smeObj);
     console.log('sme obj', this.smeObj);
     const userId = this.smeObj.userId;
-
+    this.getPartnerDetails();
     this.filteredOptions = this.searchOwner.valueChanges.pipe(
       startWith(''),
       map((value) => {
@@ -85,6 +86,32 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         const name = typeof value === 'string' ? value : value?.name;
         return name ? this._filter(name as string) : this.options1.slice();
       })
+    );
+  }
+
+  getPartnerDetails() {
+    let param = `/partner-detail?page=0&size=1&mobileNumber=${this.smeObj.callingNumber}`;
+
+    this.userMsService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        console.log('bo-partners list: ', response);
+        if (Array.isArray(response.content)) {
+          this.loading = false;
+          this.boPartnersInfo = response.content[0];
+          this.setPartnerDetails(this.boPartnersInfo);
+          this._toastMessageService.alert('success', 'Partner details get Successfully');
+        } else {
+          this.boPartnersInfo = null;
+          this.loading = false;
+          this._toastMessageService.alert('error', 'Failed to get partner details');
+        }
+      },
+      (error) => {
+        this.boPartnersInfo = null;
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Failed to get partner details');
+      }
     );
   }
 
@@ -109,6 +136,17 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     this.itrTypesData = this.itrTypes.value;
   }
 
+  setPartnerDetails(boPartnersInfo) {
+    if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo.mobileNumber);
+    if (!this.name.value) this.name.setValue(boPartnersInfo.name);
+    if (!this.email.value) this.email.setValue(boPartnersInfo.emailAddress);
+    if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
+    if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo.referredBy);
+    if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo.incomeTaxBasic);
+    if (!this.qualification.value) this.qualification.setValue(boPartnersInfo.qualification);
+    if (!this.state.value) this.state.setValue(boPartnersInfo.state);
+  }
+
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
     name: new FormControl(''),
@@ -118,8 +156,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
     state: new FormControl(''),
-    searchOwner: new FormControl('',[Validators.required]),
-    searchLeader: new FormControl('',[Validators.required]),
+    searchOwner: new FormControl('', [Validators.required]),
+    searchLeader: new FormControl('', [Validators.required]),
   });
 
   get mobileNumber() {
@@ -153,91 +191,91 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     return this.smeFormGroup.controls['searchLeader'] as FormControl;
   }
 
-  roles : FormGroup =this.fb.group({
+  roles: FormGroup = this.fb.group({
     admin: new FormControl(''),
     leader: new FormControl(''),
     owner: new FormControl(''),
-    filer :new FormControl(''),
-    leadEngagement:new FormControl(''),
+    filer: new FormControl(''),
+    leadEngagement: new FormControl(''),
   });
 
-  get admin(){
+  get admin() {
     return this.roles.controls['admin'] as FormControl
   }
-  get leader(){
+  get leader() {
     return this.roles.controls['leader'] as FormControl
   }
-  get owner(){
+  get owner() {
     return this.roles.controls['owner'] as FormControl
   }
-  get filer(){
+  get filer() {
     return this.roles.controls['filer'] as FormControl
   }
-  get leadEngagement(){
+  get leadEngagement() {
     return this.roles.controls['leadEngagement'] as FormControl
   }
 
   getOwner() {
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId = this.loggedInSme[0].userId
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
-      console.log("ownerlist",this.ownerList)
+      console.log("ownerlist", this.ownerList)
       this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId:item.userId  };
+        return { name: item.name, userId: item.userId };
       });
       this.options = this.ownerNames;
       console.log(' ownerName -> ', this.ownerNames);
     });
   }
 
-  ownerDetails :any;
-  getownerNameId(option){
-    this.ownerDetails =option
+  ownerDetails: any;
+  getownerNameId(option) {
+    this.ownerDetails = option
     console.log(option)
   }
 
-  getLeader(){
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+  getLeader() {
+    const loggedInSmeUserId = this.loggedInSme[0].userId
     let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
 
       this.leaderList = result.data;
       console.log('leader list result -> ', result);
       this.leaderNames = this.leaderList.map((item) => {
-        return { name: item.name, userId:item.userId  };
+        return { name: item.name, userId: item.userId };
       });
       this.options1 = this.leaderNames;
-      console.log('leader name list ',this.leaderNames)
+      console.log('leader name list ', this.leaderNames)
     })
 
   }
 
-  leaderDetails:any;
-  getLeaderNameId(option1){
-    this.leaderDetails=option1
+  leaderDetails: any;
+  getLeaderNameId(option1) {
+    this.leaderDetails = option1
     console.log(option1)
   }
 
 
   onCheckboxChange(checkboxNumber: number) {
-    if(checkboxNumber === 1) {
+    if (checkboxNumber === 1) {
       this.leader.setValue(false);
       this.owner.setValue(false);
       this.filer.setValue(false);
     }
-    if(checkboxNumber === 2) {
+    if (checkboxNumber === 2) {
       this.admin.setValue(false);
       this.owner.setValue(false);
       this.filer.setValue(false);
     }
-    if(checkboxNumber === 3) {
+    if (checkboxNumber === 3) {
       this.leader.setValue(false);
       this.admin.setValue(false);
       this.filer.setValue(false);
     }
-    if(checkboxNumber === 4) {
+    if (checkboxNumber === 4) {
       this.leader.setValue(false);
       this.owner.setValue(false);
       this.owner.setValue(false);
@@ -256,44 +294,44 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   // }
 
   updateSmeDetails() {
-    let parentId :any
-    let parentName:any
-    if(this.filer.value ===true){
-      parentId= this.ownerDetails?.userId;
-      parentName= this.ownerDetails?.name;
+    let parentId: any
+    let parentName: any
+    if (this.filer.value === true) {
+      parentId = this.ownerDetails?.userId;
+      parentName = this.ownerDetails?.name;
     }
-    if(this.owner.value ===true){
-      parentId=this.leaderDetails?.userId;
-      parentName= this.leaderDetails?.name;
+    if (this.owner.value === true) {
+      parentId = this.leaderDetails?.userId;
+      parentName = this.leaderDetails?.name;
     }
 
     // if( this.smeObj.roles=null){
     //   this.smeObj.roles=[];
     // }
-    if(this.owner.value === true){
-      this.smeObj.roles=[];
+    if (this.owner.value === true) {
+      this.smeObj.roles = [];
       this.smeObj.roles.push('ROLE_OWNER')
     }
-    if(this.filer.value === true){
-      this.smeObj.roles=[];
+    if (this.filer.value === true) {
+      this.smeObj.roles = [];
       this.smeObj.roles.push('ROLE_FILER');
 
     }
-    if(this.leader.value === true){
-      this.smeObj.roles=[];
+    if (this.leader.value === true) {
+      this.smeObj.roles = [];
       this.smeObj.roles.push('ROLE_LEADER')
     }
-    if(this.admin.value === true){
-      this.smeObj.roles=[];
+    if (this.admin.value === true) {
+      this.smeObj.roles = [];
       this.smeObj.roles.push('ROLE_ADMIN')
     }
 
 
-    if(this.leader.value || this.utilsService.isNonEmpty(this.searchLeader.value) || (this.utilsService.isNonEmpty(this.searchOwner.value))){
-    const userId = this.smeObj.userId;
-    console.log(userId);
-    const param = `/sme-details-new/${userId}`;
-    // if (this.smeFormGroup.valid) {
+    if (this.leader.value || this.utilsService.isNonEmpty(this.searchLeader.value) || (this.utilsService.isNonEmpty(this.searchOwner.value))) {
+      const userId = this.smeObj.userId;
+      console.log(userId);
+      const param = `/sme-details-new/${userId}`;
+      // if (this.smeFormGroup.valid) {
       this.loading = true;
 
       let finalReq: any = {};
@@ -310,10 +348,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       finalReq.callingNumber = this.smeObj.callingNumber;
       finalReq.serviceType = this.smeObj.serviceType;
       finalReq.roles = this.smeObj.roles;
-      finalReq.languages =this.languages.value;
-      finalReq.qualification =this.qualification?.value;
-      finalReq.referredBy =this.referredBy.value;
-      finalReq.state =this.state.value;
+      finalReq.languages = this.languages.value;
+      finalReq.qualification = this.qualification?.value;
+      finalReq.referredBy = this.referredBy.value;
+      finalReq.state = this.state.value;
       finalReq.botId = this.smeObj.botId;
       finalReq.displayName = this.smeObj.displayName;
       finalReq.active = this.smeObj.active;
@@ -335,15 +373,15 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       // let requestData = JSON.parse(JSON.stringify(finalReq));
       // console.log('requestData', requestData);
       this.userMsService.putMethod(param, finalReq).subscribe(
-        (res:any) => {
+        (res: any) => {
           console.log('SME assignment updated', res);
           this.loading = false;
-          if(res.success ===false){
+          if (res.success === false) {
             this._toastMessageService.alert(
               'false',
               'failed to update sme details '
             );
-          }else{
+          } else {
             this._toastMessageService.alert(
               'success',
               'sme details updated successfully'
@@ -355,8 +393,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.loading = false;
         }
       );
-    }else {
-      if(this.owner.value && !this.utilsService.isNonEmpty(this.searchLeader.value)) {
+    } else {
+      if (this.owner.value && !this.utilsService.isNonEmpty(this.searchLeader.value)) {
         this._toastMessageService.alert('error', 'Please select leader name.');
         this.loading = false;
       } else if (this.filer.value && !this.utilsService.isNonEmpty(this.searchOwner.value)) {
@@ -376,8 +414,8 @@ export interface SmeObj {
   serviceType: string
   roles: string[]
   languages: string[]
-  qualification:string
-  referredBy:string
+  qualification: string
+  referredBy: string
   parentId: number
   botId: string
   displayName: string
