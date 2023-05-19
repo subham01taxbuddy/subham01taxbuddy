@@ -563,7 +563,7 @@ export class AssignedNewUsersComponent implements OnInit {
           }
           return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
           style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i>${statusText}
+            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
         width:180,
