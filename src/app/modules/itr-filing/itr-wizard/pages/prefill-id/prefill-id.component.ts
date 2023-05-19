@@ -44,7 +44,6 @@ export class PrefillIdComponent implements OnInit {
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
   userProfile: any;
-  userItrId: any;
 
   constructor(
     private router: Router,
@@ -3634,12 +3633,12 @@ export class PrefillIdComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
-        this.userItrId = this.ITR_JSON.itrId;
         if (result === 'YES') {
           this.ITR_JSON = this.utilsService.createEmptyJson(
             this.userProfile,
             this.ITR_JSON.assessmentYear,
-            this.ITR_JSON.financialYear
+            this.ITR_JSON.financialYear,
+            this.ITR_JSON.itrId
           );
 
           sessionStorage.setItem(

@@ -496,13 +496,17 @@ export class UtilsService {
     );
   }
 
-  createEmptyJson(profile: any, assessmentYear: any, financialYear: any) {
-    let ItrId = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  createEmptyJson(
+    profile: any,
+    assessmentYear: any,
+    financialYear: any,
+    itrId?: any
+  ) {
     const ITR_JSON: ITR_JSON = {
       ackStatus: '',
       acknowledgementReceived: false,
       userId: this.isNonEmpty(profile) ? profile.userId : null,
-      itrId: ItrId.itrId ? ItrId.itrId : null,
+      itrId: itrId ? itrId : null,
       pid: '',
       email: this.isNonEmpty(profile) ? profile.emailAddress : '',
       contactNumber: this.isNonEmpty(profile) ? profile.mobileNumber : '',
