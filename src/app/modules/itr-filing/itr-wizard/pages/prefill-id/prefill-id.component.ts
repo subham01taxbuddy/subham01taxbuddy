@@ -3642,7 +3642,11 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_JSON.financialYear
           );
 
-          this.ITR_JSON.itrId = this.userItrId;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+
           document.getElementById('input-utility-file-jsonfile-id').click();
         }
       });
