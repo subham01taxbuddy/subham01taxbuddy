@@ -38,6 +38,7 @@ export class PrefillIdComponent implements OnInit {
   allowanceDetails23: any;
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
+  itrSummaryJson: any;
 
   constructor(
     private router: Router,
@@ -63,7 +64,7 @@ export class PrefillIdComponent implements OnInit {
             ? name
             : result.fName + ' ' + result.lName,
           itrId: this.ITR_JSON.itrId,
-          eriClientValidUpto: result.eriClientValidUpto
+          eriClientValidUpto: result.eriClientValidUpto,
         };
       });
   }
@@ -1141,6 +1142,8 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
+        this.itrSummaryJson = JSONData;
+
         this.uploadedJson = JSONData.ITR;
         if (this.uploadedJson) {
           this.utilsService.showSnackBar('JSON has been sucessfully uploaded');
@@ -1166,7 +1169,8 @@ export class PrefillIdComponent implements OnInit {
     // ITR JSON IS THE UPLOADED UTILITY JSON
     console.log('Uploaded Utility: ', ItrJSON);
 
-    this.ITR_Obj.itrSummaryJson = ItrJSON;
+    //setting itrSummaryJson in ITR obj
+    this.ITR_Obj.itrSummaryJson = this.itrSummaryJson;
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
     {
