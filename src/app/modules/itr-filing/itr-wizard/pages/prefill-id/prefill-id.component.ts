@@ -74,7 +74,7 @@ export class PrefillIdComponent implements OnInit {
             ? name
             : result.fName + ' ' + result.lName,
           itrId: this.ITR_JSON.itrId,
-          eriClientValidUpto: result.eriClientValidUpto
+          eriClientValidUpto: result.eriClientValidUpto,
         };
       });
   }
@@ -973,7 +973,7 @@ export class PrefillIdComponent implements OnInit {
               if (json80DSeniorCitizen) {
                 const json80DSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
-                    .Sec80DSelfFamSrCtznHealth.SeniorCitizenFlag;
+                    .Sec80DSelfFamSrCtznHealth?.SeniorCitizenFlag;
 
                 // console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
 
@@ -982,28 +982,28 @@ export class PrefillIdComponent implements OnInit {
                   itrObjSelf80D.premium =
                     this.uploadedJson[
                       this.ITR_Type
-                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremSlfFamSrCtzn;
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HlthInsPremSlfFamSrCtzn;
                   // SELF PREVENTIVE HEALTH CHECK UP
                   itrObjSelf80D.preventiveCheckUp =
                     this.uploadedJson[
                       this.ITR_Type
-                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn;
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFamSrCtzn;
                   // SELF MEDICAL EXPENDITURE
                   itrObjSelf80D.medicalExpenditure =
                     this.uploadedJson[
                       this.ITR_Type
-                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpSlfFamSrCtzn;
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn;
                 } else {
                   // SELF HEALTH INSURANCE PREMIUM
                   itrObjSelf80D.premium =
                     this.uploadedJson[
                       this.ITR_Type
-                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HealthInsPremSlfFam;
                   // SELF PREVENTIVE HEALTH CHECK UP
                   itrObjSelf80D.preventiveCheckUp =
                     this.uploadedJson[
                       this.ITR_Type
-                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam;
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFam;
                 }
               }
 
