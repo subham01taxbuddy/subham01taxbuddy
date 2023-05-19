@@ -43,6 +43,8 @@ export class PrefillIdComponent implements OnInit {
   allowanceDetails23: any;
   @Input() data: any;
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
+  userProfile: any;
+  userItrId: any;
 
   constructor(
     private router: Router,
@@ -59,6 +61,9 @@ export class PrefillIdComponent implements OnInit {
       .getUserProfile(this.ITR_JSON.userId)
       .then((result: any) => {
         console.log(result);
+        (this.userProfile = result),
+          console.log(this.userProfile, 'USERPROFILE');
+
         this.data = {
           userId: this.ITR_JSON.userId,
           panNumber: this.ITR_JSON.panNumber
@@ -4505,16 +4510,15 @@ export class PrefillIdComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
+        this.userItrId = this.ITR_JSON.itrId;
         if (result === 'YES') {
           this.ITR_JSON = this.utilsService.createEmptyJson(
-            this.ITR_JSON.userId,
+            this.userProfile,
             this.ITR_JSON.assessmentYear,
             this.ITR_JSON.financialYear
           );
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
+
+          this.ITR_JSON.itrId = this.userItrId;
           document.getElementById('input-utility-file-jsonfile-id').click();
         }
       });
