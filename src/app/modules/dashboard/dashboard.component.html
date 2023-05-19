@@ -200,6 +200,11 @@
           <td>{{ item.docUploadDate | date:'short' }}</td>
           <td [ngClass]="{'text-danger': item.paymentStatus === 'Unpaid'}">{{ item.paymentStatus }}</td>
         </tr>
+        <tr *ngIf="docUploadedData?.content?.length === 0">
+          <td colspan="5" class="text-center">
+            No Records Found
+          </td>
+        </tr>
         <!-- <tr>
           <th scope="row">1</th>
           <td>Revati Laghate</td>
@@ -237,7 +242,7 @@
         </tr> -->
       </tbody>
     </table>
-    <pagination-controls class="pagination" (pageChange)="pageChanged($event,'docUpload')"></pagination-controls>
+    <pagination-controls *ngIf="docUploadedData?.content?.length > 0" id="pagination1" class="pagination" (pageChange)="pageChanged($event,'docUpload')"></pagination-controls>
     <!-- <nav aria-label="..." class="float-right">
       <ul class="pagination">
         <li class="page-item disabled">
@@ -257,7 +262,7 @@
   </div>
   <div class="col-sm-6">
   <div class="radiusTab">
-      <div class="tx">Waiting for Confirmation</div>
+      <div class="tx">Waiting for Confirmation - As On ({{ today | date:'dd MMMM yyyy' }})</div>
       <button class="proceed" (click)="goTo('myItr')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">
       <thead>
@@ -284,6 +289,11 @@
           <td>{{ item.summarySentDate | date:'short' }}</td>
           <td>{{ item.userConfirmationStatus }}</td>
         </tr>
+        <tr *ngIf="summaryConfirmationData?.content?.length === 0">
+          <td colspan="5" class="text-center">
+            No Records Found
+          </td>
+        </tr>
         <!-- <tr>
           <th scope="row">1</th>
           <td>Revati Laghate</td>
@@ -321,7 +331,7 @@
         </tr> -->
       </tbody>
     </table>
-    <pagination-controls class="pagination" (pageChange)="pageChanged($event,'summaryConfirmation')"></pagination-controls>
+    <pagination-controls *ngIf="summaryConfirmationData?.content?.length > 0" id="pagination2" class="pagination" (pageChange)="pageChanged($event,'summaryConfirmation')"></pagination-controls>
     <!-- <nav aria-label="..." class="float-right">
       <ul class="pagination">
         <li class="page-item disabled">
@@ -365,6 +375,11 @@
             <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
             <td>{{ item.itrFiledDate | date:'short' }}</td>
           </tr>
+          <tr *ngIf="eVerificationPendingData?.content?.length === 0">
+            <td colspan="4" class="text-center">
+              No Records Found
+            </td>
+          </tr>
           <!-- <tr>
             <th scope="row">1</th>
             <td>Revati Laghate</td>
@@ -397,7 +412,7 @@
           </tr> -->
         </tbody>
       </table>
-      <pagination-controls class="pagination" (pageChange)="pageChanged($event,'eVerificationPending')"></pagination-controls>
+      <pagination-controls *ngIf="eVerificationPendingData?.content?.length > 0" id="pagination3" class="pagination" (pageChange)="pageChanged($event,'eVerificationPending')"></pagination-controls>
       <!-- <nav aria-label="..." class="float-right">
         <ul class="pagination">
           <li class="page-item disabled">
@@ -444,6 +459,11 @@
               <!-- <td>{{ item.userMobile }}</td> -->
               <td>{{ item.scheduleCallTime | date:'short' }}</td>
             </tr>
+            <tr *ngIf="scheduleCallData?.content?.length === 0">
+              <td colspan="4" class="text-center">
+                No Records Found
+              </td>
+            </tr>
             <!-- <tr>
               <th scope="row">1</th>
               <td>Revati Laghate</td>
@@ -481,7 +501,7 @@
             </tr> -->
           </tbody>
         </table>
-        <pagination-controls class="pagination" (pageChange)="pageChanged($event,'scheduleCall')"></pagination-controls>
+        <pagination-controls *ngIf="scheduleCallData?.content?.length > 0" id="pagination4" class="pagination" (pageChange)="pageChanged($event,'scheduleCall')"></pagination-controls>
         <!-- <nav aria-label="..." class="float-right">
           <ul class="pagination">
             <li class="page-item disabled">

@@ -13,8 +13,10 @@
 .radius {
     border-radius: 8px;
     background-color: #ffffff;
+    // background-color:#ebebff;
     padding: 10px;
     margin-top: 15px;
+    border: 2px solid #2199e8;
 }
 
 .radius1 {
@@ -249,6 +251,16 @@ th {
     margin-left: -75px;
 }
 
+.proceed1-custom{
+  background-color: #04a4bc !important;
+    color: #ffffff !important;
+    border-radius: 5px;
+    padding: 6px;
+    box-shadow: 2px 4px #e4e4ff;
+    font-size: 19px;
+    margin-top: 20px;
+}
+
 .proceed1:hover {
     background-color: #006c7d !important;
 }
@@ -261,4 +273,12 @@ th {
 .bdrbl {
     border-bottom: 1px solid #dadada;
     padding-bottom: 15px;
+}
+
+.active-status {
+  color: green;
+}
+
+.inactive-status {
+  color: red;
 }

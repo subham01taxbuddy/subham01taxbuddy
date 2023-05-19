@@ -59,6 +59,7 @@ export class OwnerDashboardComponent implements OnInit {
   eVerificationPendingData:any;
   scheduleCallData:any;
   commissionData:any;
+  today: Date;
 
   constructor(
     private userMsService: UserMsService,
@@ -70,6 +71,7 @@ export class OwnerDashboardComponent implements OnInit {
   ) {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
+    this.today = new Date();
    }
 
   ngOnInit(): void {
@@ -130,21 +132,25 @@ export class OwnerDashboardComponent implements OnInit {
 
   config = {
     docUpload:{
+      id:"pagination1",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
     },
     summaryConfirmation:{
+      id:"pagination2",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
     },
     eVerificationPending:{
+      id:"pagination3",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,
     },
       scheduleCall:{
+      id:"pagination4",
       itemsPerPage: 5,
       currentPage: 1,
       totalItems: null,

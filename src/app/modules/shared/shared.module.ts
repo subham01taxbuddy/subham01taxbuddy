@@ -52,6 +52,7 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
 import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import {RequestManager} from "./services/request-manager";
+import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import {RequestManager} from "./services/request-manager";
     ConfirmDialogComponent,
     ServiceDropDownComponent,
     CoOwnerListDropDownComponent,
+    LeaderListDropdownComponent,
   ],
   imports: [
     CommonModule,
@@ -145,6 +147,7 @@ import {RequestManager} from "./services/request-manager";
         Schedules,
         ServiceDropDownComponent,
         CoOwnerListDropDownComponent,
+        LeaderListDropdownComponent,
     ],
   providers: [StorageService, Schedules, RequestManager],
   entryComponents: [

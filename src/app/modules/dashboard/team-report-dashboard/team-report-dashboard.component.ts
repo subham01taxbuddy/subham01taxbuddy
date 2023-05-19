@@ -69,4 +69,30 @@ export class TeamReportDashboardComponent implements OnInit {
     this.roles = this.utilsService.getUserRoles();
   }
 
+  getInvoiceReports(){
+      // API to get invoice report for dashboard of leader
+      // https://uat-api.taxbuddy.com/user/dashboard/invoice-report?leaderUserId=2132&fromDate=2023-05-05&toDate=2023-05-05&serviceType=ITR
+
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let leaderUserId = this.loggedInSmeUserId;
+    let serviceType = 'ITR';
+
+    let param = `/dashboard/invoice-report?leaderUserId=${leaderUserId}&fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR`
+
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+         this.invoiceData = response.data;
+
+      }else{
+        this.loading = false;
+        this. _toastMessageService.alert("error",response.message);
+      }
+    },(error) => {
+      this.loading = false;
+      this. _toastMessageService.alert("error","Error");
+    })
+  }
 }

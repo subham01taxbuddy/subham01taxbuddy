@@ -12,7 +12,7 @@
         <span>{{ menu.name }}</span>
       </a>
       <div *ngIf="menu.active">
-        <ul class="submenu" #submenu>
+        <ul class="submenu hilit" #submenu>
           <li *ngFor="let submenu of menu.submenu">
             <a *ngIf="isApplicable(submenu.roles)" routerLink="{{submenu.url}}" class="sidebar__name sidebar__item"
               routerLinkActive="sidebar__item_active " href="javascript:void(0)"  (click)="activateNow(i)">
