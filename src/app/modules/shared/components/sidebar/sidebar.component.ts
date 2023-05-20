@@ -68,14 +68,14 @@ export class SidebarComponent implements DoCheck {
       roles: ['ROLE_OWNER'],
       submenu: []
     },
-    {
-      name: 'Leader Dashboard',
-      // iconClass: 'fa fa-globe',
-      active: false,
-      url: '/dashboard/leader',
-      roles: ['ROLE_ADMIN','ROLE_LEADER'],
-      submenu: []
-    },
+    // {
+    //   name: 'Leader Dashboard',
+    //   // iconClass: 'fa fa-globe',
+    //   active: false,
+    //   url: '/dashboard/leader',
+    //   roles: ['ROLE_ADMIN','ROLE_LEADER'],
+    //   submenu: []
+    // },
     {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
