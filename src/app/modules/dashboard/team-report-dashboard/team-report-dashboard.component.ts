@@ -180,10 +180,10 @@ export class TeamReportDashboardComponent implements OnInit {
     let param=''
     let userFilter = '';
     if (this.leaderId && !this.ownerId) {
-      userFilter += `?leaderUserId=${this.leaderId}`;
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
     if (this.ownerId) {
-      userFilter += `?ownerUserId=${this.ownerId}`;
+      userFilter += `&ownerUserId=${this.ownerId}`;
     }
 
     param = `/dashboard/filers-partnerAssignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
