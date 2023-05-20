@@ -1,9 +1,9 @@
 <!-- Operation Team Report -->
-<div *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER')">
+<div>
 <div class="row rowClr">
 
     <div class="col-sm-9 spTpL">
-        <h5 class="bdrbl1">Operation Team Report:</h5>
+        <h5 class="bdrbl1">Team Report:</h5>
     </div>
 
     <div class="col-sm-3 spTpR">
@@ -13,7 +13,7 @@
     </div>
 
     <div class="col-sm-12">
-      <div class="radius">
+      <div class="radius" *ngIf="false">
         <div class="row">
           <div class="col-sm-0">
             <!-- <form class="form-inline"> -->
@@ -41,48 +41,96 @@
           </div>
         </div>
       </div>
+
+      <div class="radius">
+        <div class="row">
+
+          <div class="col-sm-5">
+            <!-- <form class="form-inline">
+                      <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
+                          aria-label="Search">
+                  </form> -->
+            <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
+              (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown>
+          </div>
+          <div class="col-sm-2">
+            <div>
+              <label for="start-date">Start Date:</label>
+              <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
+                [min]="minDate" [max]="maxDate">
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div>
+              <label for="end-date">End Date:</label>
+              <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minDate"
+                [max]="maxDate">
+            </div>
+          </div>
+
+          <!-- <div class="col-sm-4">
+                  <form action="/action_page.php">
+                      <span class="TxSm"> Select Date Range: </span>
+                      <input type="date" id="date" name="Select Date">
+                  </form>
+              </div> -->
+
+           <div class="col-sm-2 text-center">
+                  <button class="proceed1-custom" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+          <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
+           </div>
+
+          <div class="col-sm-1 text-center" style="margin-top: 25px;">
+            <button class="tbd-btn-clear" (click)="this.resetFilters()">
+              <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
+              Clear
+            </button>
+          </div>
+
+        </div>
+      </div>
     </div>
 
 
       <div class="col-sm-6">
         <div class="radius">
           <span class="TxHd"><i class="fa fa-file-o"></i> Invoice</span>&nbsp;
-          <span class="numTxBg">91</span>
+          <span class="numTxBg"></span>
           <!-- Inside Row -->
           <div class="row">
             <div class="col-sm-4">
                 <div class="radius1">
-                <span class="numTxSm">91</span><br>
+                <span class="numTxSm">{{invoiceData.noOfInvoicesRaised || 'NA'}}</span><br>
                 <span class="TxSm">Invoice Raised</span>
               </div>
               </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
-              <span class="numTxSm grTx">₹54,630</span><br>
+              <span class="numTxSm grTx">₹ {{invoiceData?.revenueGenerated || 'NA'}}</span><br>
               <span class="TxSm">Revenue Generated</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
-              <span class="numTxSm grTx">61</span><br>
+              <span class="numTxSm grTx">{{invoiceData?.paidInvoiceCount || 'NA'}}</span><br>
               <span class="TxSm">Paid Invoices</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
-              <span class="numTxSm grTx">₹36,420</span><br>
+              <span class="numTxSm grTx">₹ {{invoiceData?.paidAmount || 'NA'}}</span><br>
               <span class="TxSm">Paid Amount</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 RedBk">
-              <span class="numTxSm redTx1">30</span><br>
+              <span class="numTxSm redTx1">{{invoiceData?.unpaidInvoiceCount || 'NA'}}</span><br>
               <span class="TxSm">Unpaid Invoices</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 RedBk">
-              <span class="numTxSm redTx1">18,210</span><br>
+              <span class="numTxSm redTx1">₹ {{invoiceData?.unpaidAmount || 'NA'}}</span><br>
               <span class="TxSm">Unpaid Amount</span>
             </div>
             </div>
@@ -93,43 +141,43 @@
 
       <div class="col-sm-6">
         <div class="radius">
-          <span class="TxHd"><i class="fa fa-users" aria-hidden="true"></i> Operation Team</span>&nbsp;
-          <span class="numTxBg">180</span>
+          <span class="TxHd"><i class="fa fa-users" aria-hidden="true"></i> Operation Team - As On ({{ today | date:'dd MMMM yyyy' }})</span>&nbsp;
+          <span class="numTxBg"></span>
           <!-- Inside Row -->
           <div class="row">
             <div class="col-sm-4">
               <div class="radius1">
-              <span class="numTxSm">30</span><br>
+              <span class="numTxSm">{{operationTeamData?.totalSMEs || 'NA'}}</span><br>
               <span class="TxSm">Total SME's</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1">
-              <span class="numTxSm">30</span><br>
+              <span class="numTxSm">{{operationTeamData?.internalSMEs || 'NA'}}</span><br>
               <span class="TxSm">Internal SME's</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1">
-              <span class="numTxSm">30</span><br>
+              <span class="numTxSm">{{operationTeamData?.partner || 'NA'}}</span><br>
               <span class="TxSm">Partner</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1">
-              <span class="numTxSm">30</span><br>
+              <span class="numTxSm">{{operationTeamData?.leaders || 'NA'}}</span><br>
               <span class="TxSm">Leaders</span><br>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1">
-              <span class="numTxSm">30</span><br>
+              <span class="numTxSm">{{operationTeamData?.owners || 'NA'}}</span><br>
               <span class="TxSm">Owners</span>
             </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1">
-              <span class="numTxSm">30</span><br>
+              <span class="numTxSm">{{operationTeamData?.filersPartners || 'NA'}}</span><br>
               <span class="TxSm">Filers/Partners</span>
             </div>
             </div>
@@ -143,30 +191,30 @@
   <div class="col-sm-4">
   <div class="radius">
     <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
-    <span class="numTxBg">120</span>
+    <span class="numTxBg"></span>
     <!-- Inside Row -->
     <div class="row">
       <div class="col-sm-6">
         <div class="radius1">
-        <span class="numTxSm grTx">30</span><br>
+        <span class="numTxSm grTx">{{partnersAssignmentData?.activePartners || 'NA'}}</span><br>
         <span class="TxSm">Active Partners</span>
       </div>
       </div>
       <div class="col-sm-6">
         <div class="radius1">
-        <span class="numTxSm grTx">30</span><br>
+        <span class="numTxSm grTx">{{partnersAssignmentData?.assignmentOn || 'NA'}}</span><br>
         <span class="TxSm">Assignment On</span><br>
       </div>
       </div>
       <div class="col-sm-6">
         <div class="radius1">
-        <span class="numTxSm OrgTx">30</span><br>
+        <span class="numTxSm OrgTx">{{partnersAssignmentData?.inactivePartners || 'NA'}}</span><br>
         <span class="TxSm">Inactive Partners</span><br>
       </div>
       </div>
       <div class="col-sm-6">
         <div class="radius1">
-        <span class="numTxSm OrgTx">30</span><br>
+        <span class="numTxSm OrgTx">{{partnersAssignmentData?.assignmentOff || 'NA'}}</span><br>
         <span class="TxSm">Assignment Off</span><br>
       </div>
       </div>
@@ -255,7 +303,7 @@
 </div>
 
 <!-- My Team Report -->
-<div *ngIf="roles?.includes('ROLE_LEADER')">
+<div *ngIf="false">
 <div class="row rowClr">
 
     <div class="col-sm-9 spTpL">
