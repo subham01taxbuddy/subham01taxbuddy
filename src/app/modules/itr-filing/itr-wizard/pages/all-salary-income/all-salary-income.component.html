@@ -1,8 +1,8 @@
-<div *ngIf="showList">
+<div *ngIf="showList" class="mrgArd">
   <div>
     <span class="subTitle">Employer Details:</span>
     <button
-      class="tbd-btn save-btn"
+      class="new-add btnRt"
       style="align-self: end"
       (click)="addEmployer(-1)"
     >
@@ -48,7 +48,7 @@
       </mat-accordion>
     </div>
     <button
-      class="delete-btn btnGry"
+      class="delete-btn"
       (click)="deleteEmployers()"
       [disabled]="!isEmployerSelected()"
     >
@@ -62,8 +62,7 @@
   (deactivate)="unsubscribe()"
 ></router-outlet>
 <div *ngIf="showList" class="flex justify-between p-[30px] back-foot">
-  <button class="lgtBtn" (click)="goBack()">
-    <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-    <span class="font-semibold">&nbsp;Back to Main Page</span>
+  <button class="lgtBtn" (click)="goBack()">    
+    <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Main Page    
   </button>
 </div>

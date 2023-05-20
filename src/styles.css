@@ -313,6 +313,95 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.brdSpc {
+  margin-left: 20px!important;
+  margin-top: 8px!important;
+}
+.btnRt {
+  float:right;
+}
+.nmTxAl {
+  margin-right: 17%;
+  color: #000000;
+  font-weight: 500;
+}
+.spcBrd {
+  margin-top: 0px;
+  margin-left: 20px;
+  border-bottom: 1px solid #dfdfdf;
+  padding-bottom: 10px;
+}
+.hdBack{
+  display: block;
+  background-color: #f0f0f5;
+  padding: 10px;
+  height: 45px;
+  margin:0px 25px 0px 15px;
+}
+
+.ttlTx{
+  color: #21415b;
+  font-weight: 600;
+  font-size: 24px;
+  margin-top: -5px;
+  display: block;
+}
+.aligBtn {
+  margin-top: -35px;
+  padding-right: 20px;
+}
+.action-buttons {
+  border: none;
+  float: right;
+  padding:5px 10px 5px 10px;
+  background-color:#fafafa;
+  border-radius:5px;
+  margin-right:5px;
+  border:1px solid #00aeca;
+  font-size:14px;
+  color:#00aeca!important;
+}
+.action-buttons:hover {
+  border: none;
+  float: right;
+  padding:5px 10px 5px 10px;
+  background-color:#00aeca;
+  border-radius:5px;
+  margin-right:5px;
+  border:2px solid #00aeca;
+  font-size:14px;
+  color:#ffffff!important;
+}
+.action-buttons1 {
+  border: none;
+  cursor: pointer;
+  float: right;
+  background: transparent;
+  padding:5px 10px 5px 10px;
+  background-color:#ffffe3;
+  border-radius:5px;
+  /* box-shadow: 1px 1px #888888; */
+  margin-right:5px;
+  border:1px solid #cccccc;
+  font-size:14px;
+}
+.action-buttons1:hover{
+  background-color:#ffffc0;
+}
+.new-add {
+  display: inline-block;
+  padding: 6px 9px 6px 9px;
+  text-align: center;
+  font-weight: 500;
+  border-radius: 5px;
+  background-color: #f1f9ff;
+  color: #04a4bc;
+  border: 1px solid #04a4bc;
+}
+.new-add:hover {
+  background-color:#04a4bc;
+  color: #ffffff;
+}
 
 .count1 {
   color: #07070C;
@@ -629,8 +718,9 @@ pagination-controls {
   font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 150%;
+  padding: 10px;
   text-align: center;
   color: #E20000;
 }
@@ -687,7 +777,17 @@ pagination-controls {
   letter-spacing: -0.022em;
   color: #FF6B00;
 }
-
+.mat-expansion-panel{
+  border: 1px solid #00AECA;
+  color: #00AECA;
+}
+.padArd{
+  padding:20px;
+}
+.mrgArd{
+  margin: 20px 55px 0px 30px;
+  display:block;
+}
 .mat-expansion-panel-header {
   height: 55px;
   display: flex;
@@ -696,7 +796,7 @@ pagination-controls {
   padding: 0 24px;
   border-radius: 6px;
   transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #E3E3E3;
+  /* border: 1px solid #E3E3E3; */
 }
 
 .mat-expansion-panel:not([class*=mat-elevation-z]) {
@@ -953,7 +1053,7 @@ mat-step-header .mat-step-label.mat-step-label-active {
   padding: 0 24px;
   border-radius: 6px;
   transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #E3E3E3;
+  /* border: 1px solid #E3E3E3; */
 }
 
 .mat-expansion-panel-header:hover {
