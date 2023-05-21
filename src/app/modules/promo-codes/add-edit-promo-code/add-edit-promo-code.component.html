@@ -119,6 +119,22 @@
             </div>
 
         </div>
+
+        <div class="card__col-lg-4 card__col-sm-12" *ngIf="data.mode === 'edit'">
+          <mat-label>Status</mat-label>
+          <mat-form-field appearance="outline">
+              <mat-select placeholder="Change Status" formControlName="active" required>
+                  <mat-option *ngFor="let obj of statusList" [value]="obj.value">
+                      {{ obj.label }}
+                  </mat-option>
+              </mat-select>
+               <mat-error *ngIf="promoCodeForm.controls['active'].hasError('required')">Select status.
+              </mat-error>
+              <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
+                  sure want to create FIXED pricing promo code?</mat-hint> -->
+          </mat-form-field>
+      </div>
+
         <div class="card__row" *ngIf="false">
             <table *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'">
                 <thead>

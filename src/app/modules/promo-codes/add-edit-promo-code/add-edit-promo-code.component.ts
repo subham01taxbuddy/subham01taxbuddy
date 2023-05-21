@@ -32,6 +32,7 @@ export class AddEditPromoCodeComponent implements OnInit {
 
   loading!: boolean;
   discountData: any = [{ label: 'Amount', value: 'AMOUNT' }, { label: 'Percentage', value: 'PERCENTAGE' }];
+  statusList:any = [{label:'Active' , value:true},{label:'InActive',value:false}]
   promoCodeForm!: FormGroup;
   minEndDate: any = new Date();
   allPlans: any[] = [];
