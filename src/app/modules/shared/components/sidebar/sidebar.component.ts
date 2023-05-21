@@ -160,6 +160,14 @@ export class SidebarComponent implements DoCheck {
       url: '/bo-partners',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
+    },
+    {
+      name: 'Promo-Codes',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: '/promo-code',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
     }
   ];
   ngDoCheck() {
