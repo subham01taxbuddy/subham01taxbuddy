@@ -555,7 +555,7 @@ export class BoPartnersComponent implements OnInit {
 </body>
 
 </html>`);
-    data.append('cc', 'partnersleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
+    data.append('cc', 'partnerleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
     data.append('isHtml', 'true');
     data.append('to', partnerData.emailAddress);
 
