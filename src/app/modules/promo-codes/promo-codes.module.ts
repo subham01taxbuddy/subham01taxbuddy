@@ -6,6 +6,7 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from '../shared/shared.module';
 import { PromoCodeRoutes } from './promo-codes.routing';
+import {AddEditPromoCodeComponent} from './add-edit-promo-code/add-edit-promo-code.component'
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { PromoCodeRoutes } from './promo-codes.routing';
     NgxLoadingModule.forRoot({}),
   ],
   declarations: [
-    PromoCodesComponent
+    PromoCodesComponent,
+    AddEditPromoCodeComponent
   ],
   entryComponents: [
     PromoCodesComponent,

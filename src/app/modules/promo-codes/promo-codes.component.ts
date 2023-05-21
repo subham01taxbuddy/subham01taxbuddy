@@ -11,6 +11,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
+import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-code.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -289,7 +290,24 @@ export class PromoCodesComponent implements OnInit {
 
   }
 
-  addPromoCode(){
+  addPromoCode(title, key, data){
+    let disposable = this.dialog.open(AddEditPromoCodeComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        title: title,
+        leadData: data,
+        mode: key
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.data === "promoAdded") {
+          this.getPromoCodeList();
+        }
+      }
+    })
 
   }
 
@@ -304,15 +322,31 @@ export class PromoCodesComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'editPromo': {
-          this.editPromo();
+          this.editPromo(params);
           break;
         }
       }
     }
   }
 
-  editPromo(){
+  editPromo(params){
+    let disposable = this.dialog.open(AddEditPromoCodeComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        title: 'Edit Promo-Code',
+        data: params.data,
+        mode: 'edit'
+      }
+    })
 
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.data === "promoUpdated") {
+          this.getPromoCodeList();
+        }
+      }
+    })
   }
 
   pageChanged(event){
