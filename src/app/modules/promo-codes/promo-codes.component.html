@@ -10,7 +10,7 @@
       <div class="col-sm-3">
         <mat-label> Enter Promo-Code </mat-label>
         <mat-form-field appearance="outline">
-          <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" />
+          <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
           <mat-error *ngIf="searchValue?.hasError('required') ">
             This field is required</mat-error>
         </mat-form-field>
