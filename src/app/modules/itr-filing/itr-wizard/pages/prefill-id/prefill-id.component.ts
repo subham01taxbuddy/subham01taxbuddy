@@ -410,106 +410,172 @@ export class PrefillIdComponent implements OnInit {
 
   // Taking the other income name from json and checking for those income in our itr object. If it exists then mapping jsons amount to itr object amount
   updateOtherIncomes(otherIncomes, ITR_Type) {
-    // create a mapping object to map the JSON names to the new names of ITR Object
-    const mapping = {
-      SAV: 'SAVING_INTEREST',
-      IFD: 'FD_RD_INTEREST',
-      DIV: '', // we have a different object of dividend Income.It is taken care of below
-      FAP: 'FAMILY_PENSION',
-      TAX: 'TAX_REFUND_INTEREST',
-      OTH: 'ANY_OTHER',
-    };
+    if (ITR_Type === 'ITR1' || ITR_Type === 'ITR4') {
+      // const mapping = {
+      //   SAV: 'SAVING_INTEREST',
+      //   IFD: 'FD_RD_INTEREST',
+      //   DIV: '', // we have a different object of dividend Income.It is taken care of below
+      //   FAP: 'FAMILY_PENSION',
+      //   TAX: 'TAX_REFUND_INTEREST',
+      //   OTH: 'ANY_OTHER',
+      // };
 
-    // Finding Dividend Income in utility JSON
-    const typeDiv = this.uploadedJson[ITR_Type][
-      this.ITR14_IncomeDeductions
-    ].OthersInc?.OthersIncDtlsOthSrc?.find(
-      (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'DIV'
-    );
-
-    // getting dividend Incomes quarter wise
-    if (typeDiv) {
-      const jsonDividendObj = typeDiv.DividendInc?.DateRange;
-      if (jsonDividendObj.Upto15Of6) {
-        this.ITR_Obj.dividendIncomes?.push({
-          income: jsonDividendObj.Upto15Of6,
-          date: '2022-04-28T18:30:00.000Z',
-          quarter: 1,
-        });
-      }
-      if (jsonDividendObj.Upto15Of9) {
-        this.ITR_Obj.dividendIncomes?.push({
-          income: jsonDividendObj.Upto15Of9,
-          date: '2022-07-28T18:30:00.000Z',
-          quarter: 2,
-        });
-      }
-      if (jsonDividendObj.Up16Of9To15Of12) {
-        this.ITR_Obj.dividendIncomes?.push({
-          income: jsonDividendObj.Up16Of9To15Of12,
-          date: '2022-09-28T18:30:00.000Z',
-          quarter: 3,
-        });
-      }
-      if (jsonDividendObj.Up16Of12To15Of3) {
-        this.ITR_Obj.dividendIncomes?.push({
-          income: jsonDividendObj.Up16Of12To15Of3,
-          date: '2022-12-28T18:30:00.000Z',
-          quarter: 4,
-        });
-      }
-      if (jsonDividendObj.Up16Of3To31Of3) {
-        this.ITR_Obj.dividendIncomes?.push({
-          income: jsonDividendObj.Up16Of3To31Of3,
-          date: '2023-03-20T18:30:00.000Z',
-          quarter: 5,
-        });
-      }
-    }
-
-    for (let i = 0; i < otherIncomes.length; i++) {
-      // console.log('i ==>>>>', i);
-      const type = otherIncomes[i];
-      // For dividend Income mapping
-      // For all the other incomes mapping
+      // Savings Interest Income
       {
-        // use the mapping object to get the new name for the current type
-        const newName = mapping[type];
+        // finding and storing the object in utility with the name SAV
+        const JsonDetailSAV = this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'SAV'
+        );
 
-        try {
-          // finding and storing the object with the same NatureDesc (type) present in JSON Object
-          const JsonDetail = this.uploadedJson[ITR_Type][
-            this.ITR14_IncomeDeductions
-          ].OthersInc.OthersIncDtlsOthSrc.find(
-            (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === type
-          );
-          // console.log('JSONOTHERINCOME====>>>>', JsonDetail);
+        // if SAV is present in the utility json then pushing the below object in incomes array
+        if (JsonDetailSAV) {
+          // Pushing SAV amount from utility in our ITR object
+          this.ITR_Obj.incomes.push({
+            incomeType: 'SAVING_INTEREST',
+            details: null,
+            amount: JsonDetailSAV.OthSrcOthAmount,
+            expenses: null,
+          });
+        }
+      }
 
-          if (JsonDetail) {
-            // finding and storing the object with the same NatureDesc (type) present in ITR Object
-            let itrObjOtherIncome = this.ITR_Obj.incomes.find(
-              (itrObjOtherIncome) => itrObjOtherIncome.incomeType === newName
-            );
-            // console.log('ITROBJOTHERINCOME====>>>>', itrObjOtherIncome);
+      // Income from Interest from deposits income
+      {
+        // finding and storing the object in utility with the name IFD
+        const JsonDetailIFD = this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'IFD'
+        );
 
-            // If same type is not found in the ITR Object then show an error message
-            if (!itrObjOtherIncome) {
-              console.log(
-                `Exempt Income - ${type} Income was not found in the ITR Object`
-              );
-              itrObjOtherIncome = {
-                amount: 0,
-                details: '',
-                expenses: 0,
-                incomeType: newName,
-              };
-            }
+        // if IFD is present in the utility json then pushing the below object in incomes array
+        if (JsonDetailIFD) {
+          // Pushing IFD amount from utility in our ITR object
+          this.ITR_Obj.incomes.push({
+            incomeType: 'FD_RD_INTEREST',
+            details: null,
+            amount: JsonDetailIFD.OthSrcOthAmount,
+            expenses: null,
+          });
+        }
+      }
 
-            itrObjOtherIncome.amount = JsonDetail.OthSrcOthAmount;
+      // Income from Family Pension Income
+      {
+        // finding and storing the object in utility with the name SAV
+        const JsonDetailFAP = this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'FAP'
+        );
+
+        // if SAV is present in the utility json then pushing the below object in incomes array
+        if (JsonDetailFAP) {
+          // Pushing SAV from utility in our ITR object
+          this.ITR_Obj.incomes.push({
+            incomeType: 'FAMILY_PENSION',
+            details: null,
+            amount: JsonDetailFAP.OthSrcOthAmount,
+            expenses: null,
+          });
+        }
+      }
+
+      // Income from income tax refund
+      {
+        // finding and storing the object in utility with the name TAX
+        const JsonDetailTAX = this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'TAX'
+        );
+
+        // if TAX is present in the utility json then pushing the below object in incomes array
+        if (JsonDetailTAX) {
+          // Pushing TAX amount from utility in our ITR object
+          this.ITR_Obj.incomes.push({
+            incomeType: 'TAX_REFUND_INTEREST',
+            details: null,
+            amount: JsonDetailTAX.OthSrcOthAmount,
+            expenses: null,
+          });
+        }
+      }
+
+      // Income from any other - For other income we are taking OTH key only. Anything apart from these keys will not be parsed in ITR 1&4
+      {
+        // finding and storing the object in utility with the name OTH
+        const JsonDetailOTH = this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].OthersInc.OthersIncDtlsOthSrc.find(
+          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'OTH'
+        );
+
+        // if TAX is present in the utility json then pushing the below object in incomes array
+        if (JsonDetailOTH) {
+          // Pushing TAX amount from utility in our ITR object
+          this.ITR_Obj.incomes.push({
+            incomeType: 'ANY_OTHER',
+            details: null,
+            amount: JsonDetailOTH.OthSrcOthAmount,
+            expenses: null,
+          });
+        }
+      }
+
+      // Finding Dividend Income in utility JSON
+      {
+        const DIV = this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].OthersInc?.OthersIncDtlsOthSrc?.find(
+          (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'DIV'
+        );
+
+        // getting dividend Incomes quarter wise
+        if (DIV) {
+          const jsonDividendObj = DIV.DividendInc?.DateRange;
+
+          if (jsonDividendObj.Upto15Of6) {
+            this.ITR_Obj.dividendIncomes?.push({
+              income: jsonDividendObj.Upto15Of6,
+              date: '2022-04-28T18:30:00.000Z',
+              quarter: 1,
+            });
           }
-        } catch (error) {
-          console.log(`Error occurred for type ${type}: `, error);
-          this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+
+          if (jsonDividendObj.Upto15Of9) {
+            this.ITR_Obj.dividendIncomes?.push({
+              income: jsonDividendObj.Upto15Of9,
+              date: '2022-07-28T18:30:00.000Z',
+              quarter: 2,
+            });
+          }
+
+          if (jsonDividendObj.Up16Of9To15Of12) {
+            this.ITR_Obj.dividendIncomes?.push({
+              income: jsonDividendObj.Up16Of9To15Of12,
+              date: '2022-09-28T18:30:00.000Z',
+              quarter: 3,
+            });
+          }
+
+          if (jsonDividendObj.Up16Of12To15Of3) {
+            this.ITR_Obj.dividendIncomes?.push({
+              income: jsonDividendObj.Up16Of12To15Of3,
+              date: '2022-12-28T18:30:00.000Z',
+              quarter: 4,
+            });
+          }
+
+          if (jsonDividendObj.Up16Of3To31Of3) {
+            this.ITR_Obj.dividendIncomes?.push({
+              income: jsonDividendObj.Up16Of3To31Of3,
+              date: '2023-03-20T18:30:00.000Z',
+              quarter: 5,
+            });
+          }
         }
       }
     }
