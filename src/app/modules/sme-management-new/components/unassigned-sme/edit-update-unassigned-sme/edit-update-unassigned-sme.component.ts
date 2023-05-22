@@ -139,7 +139,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   setPartnerDetails(boPartnersInfo) {
     if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo.mobileNumber);
     if (!this.name.value) this.name.setValue(boPartnersInfo.name);
-    if (!this.email.value) this.email.setValue(boPartnersInfo.emailAddress);
+    if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo.emailAddress);
     if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
     if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo.referredBy);
     if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo.incomeTaxBasic);
@@ -150,7 +150,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
     name: new FormControl(''),
-    email: new FormControl(''),
+    smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
@@ -166,8 +166,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   get name() {
     return this.smeFormGroup.controls['name'] as FormControl;
   }
-  get email() {
-    return this.smeFormGroup.controls['email'] as FormControl;
+  get smeOriginalEmail() {
+    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl;
   }
   get languages() {
     return this.smeFormGroup.controls['languages'] as FormControl;
@@ -343,7 +343,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
       finalReq.userId = this.smeObj.userId;
       finalReq.name = this.name.value;
-      finalReq.email = this.email.value;
+      finalReq.smeOriginalEmail = this.smeOriginalEmail.value;
       finalReq.mobileNumber = this.mobileNumber.value;
       finalReq.callingNumber = this.smeObj.callingNumber;
       finalReq.serviceType = this.smeObj.serviceType;
@@ -408,7 +408,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 export interface SmeObj {
   userId: number
   name: string
-  email: string
+  smeOriginalEmail: string
   mobileNumber: string
   callingNumber: string
   serviceType: string
