@@ -70,8 +70,9 @@ export class PayoutsComponent implements OnInit {
     };
   }
 
+  loggedInUserId: number;
   ngOnInit() {
-
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
   }
 
   clearValue() {
@@ -127,7 +128,7 @@ export class PayoutsComponent implements OnInit {
 
   serviceCall(queryString){
     this.loading = true;
-    const param = `/itr-filing-credit?fromDate=2023-01-01&toDate=2023-05-11&page=0&size=20${queryString}`;
+    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=0&size=20${queryString}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
@@ -143,11 +144,6 @@ export class PayoutsComponent implements OnInit {
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar('Please try again, failed to get data');
-
-      //TODO: for test purpose
-      this.usersGridOptions.api?.setRowData(this.createRowData([]));
-      this.userInfo = [];
-      this.config.totalItems = 0;
     });
   }
 
@@ -284,13 +280,16 @@ export class PayoutsComponent implements OnInit {
         },
         valueGetter:function(params:any) {
           var id = params.data.ackNumber;
-          var lastSix = id.substr(id.length - 6);
-          var day = lastSix.slice(0, 2);
-          var month = lastSix.slice(2, 4);
-          var year = lastSix.slice(4, 6);
-          let dateString = `20${year}-${month}-${day}`;
-          console.log(dateString, year, month, day)
-          return dateString;
+          if(id) {
+            var lastSix = id.substr(id.length - 6);
+            var day = lastSix.slice(0, 2);
+            var month = lastSix.slice(2, 4);
+            var year = lastSix.slice(4, 6);
+            let dateString = `20${year}-${month}-${day}`;
+            console.log(dateString, year, month, day)
+            return dateString;
+          }
+          return '';
         }
       },
       {
@@ -333,7 +332,7 @@ export class PayoutsComponent implements OnInit {
       },
       {
         headerName: 'GST Amount',
-        field: 'mobileNumber',
+        field: 'gstAmount',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -345,7 +344,7 @@ export class PayoutsComponent implements OnInit {
       },
       {
         headerName: 'Without GST Amount',
-        field: 'mobileNumber',
+        field: 'amountwithoutGST',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -381,7 +380,7 @@ export class PayoutsComponent implements OnInit {
       },
       {
         headerName: 'TDS Amount',
-        field: 'pan',
+        field: 'tdsOnCommissionEarned',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -393,18 +392,9 @@ export class PayoutsComponent implements OnInit {
       },
       {
         headerName: 'Final Amount To Pay',
-        field: 'gender',
+        field: 'commissionPayable',
         width: 100,
         suppressMovable: true,
-        valueGetter: function (params: any) {
-          if (params.data.gender === 'MALE') {
-            return 'Male';
-          } else if (params.data.gender === 'FEMALE') {
-            return 'Female'
-          } else {
-            return params.data.gender
-          }
-        },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -544,58 +534,7 @@ export class PayoutsComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    var userArray = [{
-        "userId":91,
-        "userName":"abc def",
-        "userMobileNumber":"234234231",
-        "ackNumber":"2323242423",
-        "serviceId":54630.0,
-        "serviceType":"ITR",
-        "itrType":2134,
-        "filerUserId":7002,
-        "ownerUserId":7003,
-
-        "invoiceNo":"SSBA/2023/389",
-        "subscriptionId":546,
-        "invoiceAmount":54630.0,
-        "invoicePaymentStatus":"Paid",
-        "invoiceDate":"2023-02-15T11:10:02.820Z",
-        "invoicePaymentDate":"2023-02-16T11:10:02.820Z",
-
-        "commissionEarned":4630.0,
-        "commissionPaymentStatus":"Paid",
-        "commissionPaymentDate":"2023-02-16T11:10:02.820Z",
-        "commissionPercentage":40,
-        "commissionPaymentApprovalStatus":"APPROVED",
-        "razorPayPaymentId":1820
-      },{
-        "userId":91,
-        "userName":"abc def",
-        "userMobileNumber":"234234231",
-        "ackNumber":"2323242423",
-        "serviceId":54630.0,
-        "serviceType":"ITR",
-        "itrType":2134,
-        "filerUserId":7002,
-        "ownerUserId":7003,
-
-        "invoiceNo":"SSBA/2023/389",
-        "subscriptionId":546,
-        "invoiceAmount":54630.0,
-        "invoicePaymentStatus":"Paid",
-        "invoiceDate":"2023-02-15T11:10:02.820Z",
-        "invoicePaymentDate":"2023-02-16T11:10:02.820Z",
-
-        "commissionEarned":4630.0,
-        "commissionPaymentStatus":"Paid",
-        "commissionPaymentDate":"2023-02-16T11:10:02.820Z",
-        "commissionPercentage":40,
-        "commissionPaymentApprovalStatus":"APPROVED",
-        "razorPayPaymentId":1820
-      }];
-
-    this.selectedEntries = [];
-    return userArray;
+    return userData;
   }
 
   onUsersRowClicked(params: any) {
@@ -627,7 +566,7 @@ export class PayoutsComponent implements OnInit {
       return;
     }
     let serviceIds = selectedRows.flatMap(item=> item.serviceId);
-    let param = '/partner-commission';
+    let param = '/dashboard/partner-commission';
     let request = {
       serviceIdList: serviceIds,
       commissionPaymentApprovalStatus: 'APPROVED'
