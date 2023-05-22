@@ -38,8 +38,8 @@
     margin-bottom:0px;
     display:block;
     box-shadow: 1px 2px #e4e4ff;
-  } 
-  
+  }
+
   .grTx {
     color: #63b12d !important;
   }
@@ -108,7 +108,7 @@
     padding-left: 0px;
     padding-right:10px;
   }
- 
+
   .numTxSm{
     font-size: 18px;
     color: #04a4bc;
@@ -212,6 +212,17 @@
     box-shadow: 2px 4px #e4e4ff;
     font-size:15px;
   }
+
+  .proceed1-custom{
+    background-color: #04a4bc !important;
+      color: #ffffff !important;
+      border-radius: 5px;
+      padding: 6px;
+      box-shadow: 2px 4px #e4e4ff;
+      font-size: 19px;
+      margin-top: 20px;
+  }
+
   .proceed:hover {
     background-color: #006c7d !important;
   }
@@ -253,11 +264,15 @@
 
 
 .spTpL{
-   margin-top:20px; 
+   margin-top:20px;
 }
 
 .spTpR{
-    margin-top:20px; 
+    margin-top:20px;
     text-align:right;
+ }
+
+ .form-control{
+  flex-direction:row;
  }
 

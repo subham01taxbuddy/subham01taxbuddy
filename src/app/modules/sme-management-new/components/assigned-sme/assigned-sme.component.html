@@ -33,7 +33,7 @@
     </div>
     <div class="col-sm-3">
       <div class="input__label">
-        <button class="btn clrBtn"  (click)="advanceSearch(advanceSearchKey.value)">
+        <button class="btn clrBtn" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
       </div>

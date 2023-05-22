@@ -15,16 +15,16 @@
  <div class="rowClr">
  <div class="surround">
  <div class="row">
-            
+
               <!-- <div class="col-sm-6" *ngIf="coOwnerCheck">
                 <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
               </div> -->
-        
+
             <div class="col-sm-6" *ngIf="!coOwnerCheck">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-           
-             
+
+
                 <!-- <div class="col-sm-4">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
@@ -66,10 +66,10 @@
                     </mat-autocomplete>
                   </mat-form-field>
                 </div> -->
-           
+
 
             <!-- <div *ngIf="false">
-              <div class="col-sm-3" *ngIf="!coOwnerCheck">              
+              <div class="col-sm-3" *ngIf="!coOwnerCheck">
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input
@@ -90,7 +90,7 @@
                   </mat-form-field>
                 </div>
               </div> -->
-        
+
 
               <div class="col-sm-2">
                 <mat-label> Select FY </mat-label>
@@ -182,39 +182,39 @@
 
                 <button
                   *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') "
-                  class="dwldBtn"
+                  class="dwldBtn" [disabled]="loading"
                   (click)="downloadInvoicesSummary()"
                 >
                   <i class="fa fa-download" aria-hidden="true"></i> Download
                   File
                 </button>
-                
-                 
-                <button class="clrLnk mvRth" (click)="this.resetFilters()">
+
+
+                <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                   <!--              <div class="fa-layers fa-1x fa-fw">-->
                   <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
                   <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
                   <!--              </div>-->
                  Clear form
                 </button>
-                     
-        
-                      
-                
+
+
+
+
 
                 <button class="srch-btn mvRth" (click)="getInvoice('isAgent','agentId')">
                   <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
                 </button>
              </div>
 
-           
-              
+
+
 
 
 </div>
 </div>
 </div>
-      
+
 <!-- Table Below -->
 <div class="tableSpc">
   <div class="row">
@@ -224,7 +224,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-  <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div> 
+  <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div>
   </div>
   </div>
 
@@ -238,4 +238,3 @@
 
 </div>
 
-    

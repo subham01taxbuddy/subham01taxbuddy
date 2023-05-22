@@ -14,17 +14,17 @@
       </p>
     </div>
   </div>
-  
+
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-        <div class="col-sm-7"  *ngIf="!coOwnerCheck">            
+        <div class="col-sm-7"  *ngIf="!coOwnerCheck">
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
-        <div class="col-sm-0" *ngIf="coOwnerCheck">          
+        <div class="col-sm-0" *ngIf="coOwnerCheck">
             <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
-        
+
           <div class="col-sm-2 spsTp">
             <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)" [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
           </div>
@@ -55,18 +55,18 @@
             </mat-form-field>
           </div>
           <div class="col-sm-2 spsTp">
-            <button class="srch-btn" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
+            <button class="srch-btn" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
                 aria-hidden="true"></i>&nbsp;Search</button>
           </div>
           <div class="col-sm-2 spsTp">
-            <button class="clrLnk" (click)="this.resetFilters()">
+            <button class="clrLnk" [disabled]="loading" (click)="this.resetFilters()">
               Clear form
             </button>
           </div>
-       
-                
-      
- 
+
+
+
+
   </div>
 </div>
 </div>
@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-        <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+        <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
         </div>
         </div>
         <table>
@@ -94,9 +94,5 @@
         </ag-grid-angular>
 
         <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-    
+
     </div>
-
-
-  
- 
