@@ -138,6 +138,14 @@ export class SidebarComponent implements DoCheck {
       ]
     },
     {
+      name: 'Payouts',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: '/payouts',
+      roles: ['ROLE_LEADER'],
+      submenu: []
+    },
+    {
       name: 'All Users',
       // iconClass: 'fa fa-code',
       active: true,

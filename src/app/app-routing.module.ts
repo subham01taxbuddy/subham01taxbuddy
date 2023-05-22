@@ -36,6 +36,7 @@ export const appRoutes: Routes = [
     path: 'bo-partners', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/pages/bo-partners/bo-partners.module').then(m => m.BoPartnersModule)
   },
   { path: 'dashboard', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
+  { path: 'payouts', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/payouts/payouts.module').then(m => m.PayoutsModule) },
   { path: '**', redirectTo: 'login' },
 ];
 
