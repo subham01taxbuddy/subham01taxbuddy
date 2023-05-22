@@ -82,10 +82,10 @@ export class AssignedSmeComponent implements OnInit {
     this.searchVal = "";
   }
   advanceSearch(key: any) {
-    if (this.searchVal !== "") {
+    if (this.searchVal !== "" && this.key) {
       this.getSmeSearchList(key, this.searchVal);
     }else{
-      this._toastMessageService.alert('error','Please enter value.');
+      this._toastMessageService.alert('error','Please select attribute and enter search value..');
     }
   }
 
