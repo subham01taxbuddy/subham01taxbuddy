@@ -6,7 +6,7 @@
          <b style="font-size: 20px">All Users</b>
     </div>
   </div>
-     
+
       <div class="rowClr">
         <div class="surround">
        <div class="row">
@@ -18,7 +18,7 @@
                 {{drop.name}}</option>
             </select>
           </div>
-        
+
         <div class="col-sm-4">
           <div class="input">
             <label class="input__label" for="attr">Enter value</label>
@@ -29,7 +29,7 @@
           </div>
         </div>
          <div class="col-sm-4">
-          <button class="srch-btn btnTp" (click)="advanceSearch(advanceSearchKey.value)"><i
+          <button class="srch-btn btnTp" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
         </div>
 
@@ -47,7 +47,7 @@
               <div class="txTit">
                 All Users Details:
               </div>
-            </div>           
+            </div>
             </div>
         <table>
           <tr *ngFor="let item of userInfo | paginate:config"></tr>
@@ -59,7 +59,7 @@
         </ag-grid-angular>
 
       </div>
-   
+
 
       <!-- <div class="card">
 
@@ -69,7 +69,7 @@
               <div class="input">
                 <label class="input__label" for="attr">Select attribute</label>
                 <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
-             
+
                   <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
                     {{drop.name}}</option>
                 </select>
