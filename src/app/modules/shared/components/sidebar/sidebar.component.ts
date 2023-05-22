@@ -137,6 +137,14 @@ export class SidebarComponent implements DoCheck {
         { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
+    // {
+    //   name: 'Payouts',
+    //   // iconClass: 'fa fa-code',
+    //   active: true,
+    //   url: '/payouts',
+    //   roles: ['ROLE_LEADER'],
+    //   submenu: []
+    // },
     {
       name: 'All Users',
       // iconClass: 'fa fa-code',
@@ -158,6 +166,14 @@ export class SidebarComponent implements DoCheck {
       // iconClass: 'fa fa-code',
       active: true,
       url: '/bo-partners',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
+    },
+    {
+      name: 'Promo-Codes',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: '/promo-code',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     }
