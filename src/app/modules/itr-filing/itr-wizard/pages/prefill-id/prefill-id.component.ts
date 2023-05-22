@@ -998,117 +998,117 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // if (newName === 'Section80D') {
-            //   // finding the Section80D array for self in itr object
-            //   const itrObjSelf80D = this.ITR_Obj.insurances?.find(
-            //     (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
-            //   );
-            //   // console.log('self80DObjFound', itrObjSelf80D);
+            if (newName === 'Section80D') {
+              // finding the Section80D array for self in itr object
+              const itrObjSelf80D = this.ITR_Obj.insurances?.find(
+                (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
+              );
+              // console.log('self80DObjFound', itrObjSelf80D);
 
-            //   // finding the Section80D array for parents in itr object
-            //   const itrObjParents80D = this.ITR_Obj.insurances.find(
-            //     (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
-            //   );
-            //   // console.log('itrObjParents80D', itrObjParents80D);
+              // finding the Section80D array for parents in itr object
+              const itrObjParents80D = this.ITR_Obj.insurances.find(
+                (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
+              );
+              // console.log('itrObjParents80D', itrObjParents80D);
 
-            //   // finding the Section80D array for self in json
-            //   const json80DSeniorCitizen =
-            //     this.uploadedJson[
-            //       this.ITR_Type
-            //     ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
-            //       'SeniorCitizenFlag'
-            //     );
+              // finding the Section80D array for self in json
+              const json80DSeniorCitizen =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                  'SeniorCitizenFlag'
+                );
 
-            //   if (json80DSeniorCitizen) {
-            //     const json80DSeniorCitizenFlag =
-            //       this.uploadedJson[this.ITR_Type].Schedule80D
-            //         .Sec80DSelfFamSrCtznHealth?.SeniorCitizenFlag;
+              if (json80DSeniorCitizen) {
+                const json80DSeniorCitizenFlag =
+                  this.uploadedJson[this.ITR_Type].Schedule80D
+                    .Sec80DSelfFamSrCtznHealth?.SeniorCitizenFlag;
 
-            //     // console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
+                // console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
 
-            //     if (json80DSeniorCitizenFlag === 'Y') {
-            //       // SELF HEALTH INSURANCE PREMIUM
-            //       itrObjSelf80D.premium =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HlthInsPremSlfFamSrCtzn;
-            //       // SELF PREVENTIVE HEALTH CHECK UP
-            //       itrObjSelf80D.preventiveCheckUp =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFamSrCtzn;
-            //       // SELF MEDICAL EXPENDITURE
-            //       itrObjSelf80D.medicalExpenditure =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn;
-            //     } else {
-            //       // SELF HEALTH INSURANCE PREMIUM
-            //       itrObjSelf80D.premium =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HealthInsPremSlfFam;
-            //       // SELF PREVENTIVE HEALTH CHECK UP
-            //       itrObjSelf80D.preventiveCheckUp =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFam;
-            //     }
-            //   }
+                if (json80DSeniorCitizenFlag === 'Y') {
+                  // SELF HEALTH INSURANCE PREMIUM
+                  itrObjSelf80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HlthInsPremSlfFamSrCtzn;
+                  // SELF PREVENTIVE HEALTH CHECK UP
+                  itrObjSelf80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFamSrCtzn;
+                  // SELF MEDICAL EXPENDITURE
+                  itrObjSelf80D.medicalExpenditure =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn;
+                } else {
+                  // SELF HEALTH INSURANCE PREMIUM
+                  itrObjSelf80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HealthInsPremSlfFam;
+                  // SELF PREVENTIVE HEALTH CHECK UP
+                  itrObjSelf80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFam;
+                }
+              }
 
-            //   // finding the Section80D array for parents in itr object
-            //   const json80DParentsSeniorCitizen = this.uploadedJson[
-            //     this.ITR_Type
-            //   ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
-            //     'ParentsSeniorCitizenFlag'
-            //   );
+              // finding the Section80D array for parents in itr object
+              const json80DParentsSeniorCitizen = this.uploadedJson[
+                this.ITR_Type
+              ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                'ParentsSeniorCitizenFlag'
+              );
 
-            //   if (json80DParentsSeniorCitizen) {
-            //     this.ITR_Obj.systemFlags.hasParentOverSixty = true;
-            //     const json80DParentsSeniorCitizenFlag =
-            //       this.uploadedJson[this.ITR_Type].Schedule80D
-            //         .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
+              if (json80DParentsSeniorCitizen) {
+                this.ITR_Obj.systemFlags.hasParentOverSixty = true;
+                const json80DParentsSeniorCitizenFlag =
+                  this.uploadedJson[this.ITR_Type].Schedule80D
+                    .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
 
-            //     // console.log(
-            //     //   'json80DSeniorCitizenFlag',
-            //     //   json80DParentsSeniorCitizenFlag
-            //     // );
+                // console.log(
+                //   'json80DSeniorCitizenFlag',
+                //   json80DParentsSeniorCitizenFlag
+                // );
 
-            //     if (json80DParentsSeniorCitizenFlag === 'Y') {
-            //       // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
-            //       itrObjParents80D.premium =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
+                if (json80DParentsSeniorCitizenFlag === 'Y') {
+                  // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
 
-            //       // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
-            //       itrObjParents80D.preventiveCheckUp =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
+                  // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
 
-            //       // PARENTS MEDICAL EXPENDITURE
-            //       itrObjParents80D.medicalExpenditure =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
-            //     } else {
-            //       // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
-            //       itrObjParents80D.premium =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
+                  // PARENTS MEDICAL EXPENDITURE
+                  itrObjParents80D.medicalExpenditure =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
+                } else {
+                  // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.premium =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
 
-            //       // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
-            //       itrObjParents80D.preventiveCheckUp =
-            //         this.uploadedJson[
-            //           this.ITR_Type
-            //         ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
-            //     }
-            //   } else {
-            //     this.ITR_Obj.systemFlags.hasParentOverSixty = false;
-            //   }
-            // }
+                  // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
+                  itrObjParents80D.preventiveCheckUp =
+                    this.uploadedJson[
+                      this.ITR_Type
+                    ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
+                }
+              } else {
+                this.ITR_Obj.systemFlags.hasParentOverSixty = false;
+              }
+            }
 
             // There is some issue in this, need to fix later
             // if (newName === 'POLITICAL') {
@@ -1123,50 +1123,23 @@ export class PrefillIdComponent implements OnInit {
 
             // All the other Deductions here
             try {
-              // finding and storing the object with the same NatureDesc (type) present in JSON Object
-              const jsonInvestmentDetails = investmentNames.find(
-                (investmentDetail) => investmentDetail === type
-              );
-              // console.log('jsonInvestmentDetails====>>>>', jsonInvestmentDetails);
-
-              if (jsonInvestmentDetails) {
-                {
-                  // finding and storing the object with the same NatureDesc (type) present in ITR Object
-                  let jsonItrObjInvestments = this.ITR_Obj.investments.find(
-                    (jsonItrObjInvestment) =>
-                      jsonItrObjInvestment.investmentType === newName
-                  );
-                  // console.log(
-                  //   'jsonItrObjInvestments====>>>>',
-                  //   jsonItrObjInvestments
-                  // );
-
-                  // If same type is not found in the ITR Object then show an error message
-                  if (!jsonItrObjInvestments) {
-                    console.log(
-                      `Exempt Income - ${newName} Income was not found in the ITR Object`
-                    );
-                    jsonItrObjInvestments = {
-                      amount: 0,
-                      details: '',
-                      investmentType: newName,
-                    };
-                  }
-
-                  jsonItrObjInvestments.amount = investments[i][1];
-                  // console.log('setting amounts===>', investments[i][1]);
+              if (
+                newName === 'ELSS' ||
+                newName === 'PENSION_FUND' ||
+                newName === 'PS_EMPLOYEE' ||
+                newName === 'PS_EMPLOYER' ||
+                newName === 'PENSION_SCHEME'
+              ) {
+                if (investments[i][1] > 0) {
+                  this.ITR_Obj.investments.push({
+                    investmentType: newName,
+                    amount: investments[i][1],
+                    details: newName,
+                  });
                 }
               }
             } catch (error) {
               console.log(`Error occurred for type ${type}: `, error);
-              if (
-                error.message.includes(`Error handling ${mapping[newName]}`)
-              ) {
-              } else {
-                this.utilsService.showSnackBar(
-                  `Error occurred for type ${type}`
-                );
-              }
             }
           }
         }
