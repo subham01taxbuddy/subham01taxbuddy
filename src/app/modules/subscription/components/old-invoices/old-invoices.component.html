@@ -61,11 +61,11 @@
             <div class="row">
               <div>
                 <button class="btn"
-                  style="background: #00aeca; border-radius: 5px; float: right" (click)="downloadInvoicesSummary()">
+                  style="background: #00aeca; border-radius: 5px; float: right" [disabled]="loading" (click)="downloadInvoicesSummary()">
                   <i class="fa fa-download" aria-hidden="true"></i> Download
                   File
                 </button>
-                <button class="btn" style="background: #00aeca; border-radius: 5px; float: right" (click)="getInvoices()">
+                <button class="btn" style="background: #00aeca; border-radius: 5px; float: right" [disabled]="loading" (click)="getInvoices()">
                   <i class="fas fa-file-invoice" aria-hidden="true"></i> Show
                   Invoice
                 </button>

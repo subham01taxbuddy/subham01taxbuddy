@@ -21,7 +21,7 @@
     <div class="col-sm-0" *ngIf="coOwnerCheck">
           <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)" (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>
    </div>
-  
+
       <div class="col-sm-3 spsTp">
         <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
       </div>
@@ -93,12 +93,12 @@
       </div>
 
       <div class="col-sm-2 spsTp">
-        <button class="srch-btn" (click)="this.search()">
+        <button class="srch-btn" [disabled]="loading" (click)="this.search()">
           <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
         </button>
       </div>
       <div class="col-sm-2 spsTp">
-        <button class="clrLnk lfsp" (click)="this.resetFilters()">
+        <button class="clrLnk lfsp" [disabled]="loading" (click)="this.resetFilters()">
           Clear form
        </button>
       </div>
@@ -109,16 +109,16 @@
       <!-- Table -->
  <div class="tableSpc">
  <div class="row">
-  <div class="col-sm-8">  
+  <div class="col-sm-8">
     <div class="txTit">
-    ITR Filing Details: 
+    ITR Filing Details:
     </div>
-  </div>   
+  </div>
   <div class="col-sm-4">
-    <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+    <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
   </div>
 </div>
-   
+
       <table>
         <tr *ngFor="let item of itrDataList | paginate : config"></tr>
       </table>

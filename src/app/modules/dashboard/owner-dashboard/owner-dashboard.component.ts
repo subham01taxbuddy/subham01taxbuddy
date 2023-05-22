@@ -60,6 +60,7 @@ export class OwnerDashboardComponent implements OnInit {
   scheduleCallData:any;
   commissionData:any;
   today: Date;
+  itrOverview:any;
 
   constructor(
     private userMsService: UserMsService,
@@ -85,6 +86,7 @@ export class OwnerDashboardComponent implements OnInit {
     this.getItrFilledEVerificationPendingList('eVerificationPending');
     this.getScheduleCallDetails('scheduleCall');
     this.getPartnerCommission();
+    this.getItrUserOverview();
   }
 
   getFilers() {
@@ -192,6 +194,7 @@ export class OwnerDashboardComponent implements OnInit {
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
       this.getScheduleCallDetails('scheduleCall');
+      this.getItrUserOverview();
     }
 
   }
@@ -354,6 +357,37 @@ export class OwnerDashboardComponent implements OnInit {
     );
   }
 
+  getItrUserOverview(){
+    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=7521&fromDate=2023-04-01&toDate=2023-05-16&page=0&size=30
+    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
+  this.loading = true;
+  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+  let param=''
+  let userFilter = '';
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }else{
+      userFilter += `&ownerUserId=${this.loggedInSmeUserId}`;
+    }
+
+
+  param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
+
+  this.itrService.getMethod(param).subscribe((response: any) => {
+    if (response.success) {
+      this.itrOverview = response.data;
+    }else{
+       this.loading = false;
+       this. _toastMessageService.alert("error",response.message);
+     }
+  },(error) => {
+    this.loading = false;
+    this. _toastMessageService.alert("error","Error");
+  })
+  }
+
   goTo(form?){
     if (form == 'myUsers') {
       this.router.navigate(['/tasks/assigned-users-new'], { queryParams: { statusId: '2' } });
@@ -379,6 +413,15 @@ export class OwnerDashboardComponent implements OnInit {
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
     this.toDateMin = FromDate;
+  }
+
+  resetFilters(){
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date().toISOString().slice(0, 10));
+    this.searchFiler.setValue(null);
+    this.filerId=null
+    this.filerUserId=this.loggedInSmeUserId;
+    this.search('all');
   }
 
 

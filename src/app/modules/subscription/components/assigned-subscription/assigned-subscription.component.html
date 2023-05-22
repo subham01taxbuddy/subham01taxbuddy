@@ -42,7 +42,7 @@
                   <mat-label> Search by Name </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-                    <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
+                    <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button>
                     <mat-autocomplete #auto="matAutocomplete">
@@ -57,7 +57,7 @@
                   <mat-label> Search Mobile Number</mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
-                    <button (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
+                    <button [disabled]="loading" (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button>
                     <!-- <mat-icon matSuffix>search</mat-icon> -->
@@ -72,7 +72,7 @@
                   <button *ngIf="isAllowed" class="btn createBtn" (click)="createSub()"> Create Subscription </button>
                 </div>
                 <div class="col-sm-2">
-                  <button class="tbd-btn-clear" (click)="this.resetFilters()">
+                  <button class="tbd-btn-clear" [disabled]="loading" (click)="this.resetFilters()">
                     <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
                     Clear
                   </button>

@@ -13,8 +13,8 @@
   </div>
   <div class="rowClr">
     <div class="surround">
-   
-   
+
+
     <form [formGroup]="signUpForm">
       <div class="row">
 
@@ -118,12 +118,12 @@
 
 
         <div class="col-sm-12">
-          <button class="rt-btn" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
+          <button class="rt-btn" [disabled]="loading" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
         </div>
 
       </div>
      </form>
 
-      
+
     </div>
     </div>

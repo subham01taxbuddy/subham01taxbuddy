@@ -3,43 +3,91 @@
 <div class="main clearfix">
   <div class="row">
     <div class="col-sm-6">
-  <h4>Partners/Filers Dashboard:</h4>
+  <h4>Activities:</h4>
 </div>
-<div class="col-sm-6">
+<!-- <div class="col-sm-6">
   <div class="float-right">
     <span class="TxBg">Documents Uploaded</span>
       <span class="numTxBg">{{commissionData?.documentsUploaded || 'NA'}}</span>
     </div>
+</div> -->
 </div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="radius">
+      <div class="row align-items-end">
+        <div class="col-sm-4">
+          <!-- <form class="form-inline"> -->
+          <!-- <span class="TxSm"> Select Date: </span>
+          <input type="date" id="date" name="Select Date">         -->
+          <div>
+            <label for="start-date">Start Date:</label>
+            <input matInput type="date" id="date" name="start-date" class="form-control" [formControl]="startDate"
+            [min]="minDate" [max]="maxDate" >
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div>
+            <label for="end-date">End Date:</label>
+            <input matInput type="date" id="date" name="end-date" class="form-control" [formControl]="endDate"
+             [min]="minDate" [max]="maxDate">
+          </div>
+        </div>
+        <div class="col-sm-4 text-center">
+          <button class="proceed" (click)="search('all')"><i class="fa fa-search" aria-hidden="true" ></i> Search </button>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
 </div>
+
+  <div class="row rowSp">
+    <div class="col-sm-12">
+      <h5 class="bdrbl1">ITR Overview:</h5>
+    </div>
+    <div class="col-sm-2">
+      <div class="radius3">
+        <span class="bluTx">{{itrOverview?.assignedUsersCount || 'NA'}}</span><br>
+        <span class="TxSm">Assign Users</span>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="radius3">
+        <span class="bluTx">{{itrOverview?.openCount || 'NA'}}</span><br>
+        <span class="TxSm">Open</span>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="radius3">
+        <span class="bluTx">{{itrOverview?.documentUploadedCount || 'NA'}}</span><br>
+        <span class="TxSm">Document Uploaded</span>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="radius3">
+        <span class="bluTx">{{itrOverview?.inProcessCount || 'NA'}}</span><br>
+        <span class="TxSm">In Process</span>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="radius3">
+        <span class="bluTx">{{itrOverview?.waitingForConfirmationCount || 'NA'}}</span><br>
+        <span class="TxSm">Waiting for confirmation</span>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="radius3">
+        <span class="bluTx">{{itrOverview?.backedOutCount || 'NA'}}</span><br>
+        <span class="TxSm">Back Out</span>
+      </div>
+    </div>
+  </div>
   <div class="row rowClr">
 
     <div class="col-sm-6">
-      <div class="radius">
-        <div class="row align-items-end">
-          <div class="col-sm-4">
-            <!-- <form class="form-inline"> -->
-            <!-- <span class="TxSm"> Select Date: </span>
-            <input type="date" id="date" name="Select Date">         -->
-            <div>
-              <label for="start-date">Start Date:</label>
-              <input matInput type="date" id="date" name="start-date" class="form-control" [formControl]="startDate"
-              [min]="minDate" [max]="maxDate" >
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div>
-              <label for="end-date">End Date:</label>
-              <input matInput type="date" id="date" name="end-date" class="form-control" [formControl]="endDate"
-               [min]="minDate" [max]="maxDate">
-            </div>
-          </div>
-          <div class="col-sm-4 text-center">
-            <button class="proceed" (click)="search('all')"><i class="fa fa-search" aria-hidden="true" ></i> Search </button>
-          </div>
-          <!-- </form> -->
-        </div>
-      </div>
+
     </div>
 
     <div class="col-sm-6">
