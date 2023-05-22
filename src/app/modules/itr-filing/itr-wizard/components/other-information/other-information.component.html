@@ -1,14 +1,18 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div class="card card-header">
-  <div class="card__row pb-2 pt-2">
-    <div class="card__col-xs-10 card__col-sm-10" style="font-size: 18px">
-      Whether you were director in a company at any time during the previous
+
+  <!-- first radio bar starts -->
+  
+  <div class="gryBk">
+    <div class="row">
+
+    <div class="col-sm-8">
+      <div class="txBg">Whether you were director in a company at any time during the previous
       year?
+      </div>
     </div>
-    <div class="card__col-xs-2 card__col-sm-2 text-right">
+
+    <div class="col-sm-4 text-right">
       <mat-radio-group
         name="directorInCompany"
         (change)="ChangeDirectorStatus()"
@@ -27,232 +31,242 @@
         >
       </mat-radio-group>
     </div>
+
+    <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
+      <button class="new-add btnRt spsTp" (click)="addDirectorDetails('Add director details', 'ADD', null)">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add New Company
+      </button>
+    </div>
+    <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
+      <form [formGroup]="directorForm">
+        <div formArrayName="directorsArray">
+          <div class="card" *ngFor="let director of getDirectorsArray.controls | paginate : config;
+              let i = index" [formGroupName]="fieldGlobalIndex(i)">
+            <div class="card__row card__col-xs-12">
+              <div class="card__col-sm-11">
+                <mat-checkbox
+                  color="primary"
+                  name="hasEdit[i]"
+                  formControlName="hasEdit"
+                  class="ml30"
+                >
+                  {{
+                    directorForm.controls["directorsArray"].controls[i].controls[
+                      "companyName"
+                    ].value
+                  }}
+                </mat-checkbox>
+              </div>
+              <div class="card__col-sm-1 edit-head">
+                <button
+                  type="button"
+                  class="edit-donation"
+                  (click)="editDirectorForm(i)"
+                >
+                  <mat-icon> edit_square </mat-icon>Edit
+                </button>
+              </div>
+            </div>
+    
+            <div class="row">
+              <div class="col-sm-4">
+                <mat-form-field class="input-field-width">
+                  <input
+                    type="text"
+                    trim
+                    matInput
+                    formControlName="companyName"
+                    placeholder="Name of company"
+                    name="companyName"
+                    class="input-field"
+                    maxlength="125"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['companyName'].hasError('required')
+                    "
+                    >Enter the Name of company.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-form-field class="input-field-width">
+                  <mat-select
+                    placeholder="Type of Company"
+                    name="typeOfCompany"
+                    formControlName="typeOfCompany"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let type of typeOfCompanies"
+                      [value]="type.value"
+                    >
+                      {{ type.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['typeOfCompany'].hasError('required')
+                    "
+                    >Enter the type of company.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-form-field class="input-field-width">
+                  <input
+                    type="text"
+                    trim
+                    upperCase
+                    matInput
+                    formControlName="companyPAN"
+                    placeholder="PAN of company"
+                    name="companyPAN"
+                    class="input-field"
+                    maxlength="10"
+                    [required]="
+                      directorForm.controls['directorsArray'].controls[i]
+                        .controls['typeOfCompany'].value === 'D'
+                    "
+                  />
+                  <mat-error
+                    *ngIf="
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['companyPAN'].hasError('pattern')
+                    "
+                    >Enter valid PAN number.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-form-field class="input-field-width">
+                  <mat-select
+                    placeholder="Select shares type"
+                    name="country"
+                    formControlName="sharesType"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let type of sharesTypes"
+                      [value]="type.value"
+                    >
+                      {{ type.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['sharesType'].hasError('required')
+                    "
+                    >Select the shares type.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-form-field class="input-field-width">
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="din"
+                    placeholder="Director identification number(DIN)"
+                    name="din"
+                    class="input-field"
+                    maxlength="8"
+                    digitsOnly
+                    minlength="8"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    [required]="
+                      directorForm.controls['directorsArray'].controls[i]
+                        .controls['typeOfCompany'].value === 'D'
+                    "
+                  />
+                  <mat-error
+                    *ngIf="
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['din'].hasError('pattern') ||
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['din'].hasError('minLength') ||
+                      directorForm.controls['directorsArray'].controls[
+                        i
+                      ].controls['din'].hasError('maxLength')
+                    "
+                  >
+                    Enter 8 digit DIN.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="display-flex fotSp">
+            <div class="card__col-xs-12">
+              <div class="card__col-sm-3">
+                <button
+                  type="submit"
+                  class="tbd-btn-secondary btnGry"
+                  (click)="deleteDirectors()"
+                >
+                  <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                </button>
+              </div>
+              <div class="card__col-sm-6 txt-center">
+                <table>
+                  <tr
+                    *ngFor="
+                      let item of getDirectorsArray.controls | paginate : config
+                    "
+                  ></tr>
+                </table>
+                <pagination-controls
+                  (pageChange)="pageChanged($event)"
+                ></pagination-controls>
+              </div>
+              <div class="card__col-sm-3" style="text-align: right">
+                <button
+                  type="submit"
+                  class="tbd-btn save-btn"
+                  [disabled]="directorForm.invalid"
+                  (click)="saveDirectorDetials($event)"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+
   </div>
-  <div
-    style="text-align: right"
-    *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany"
-  >
-    <button
-      class="tbd-btn-small addOthr"
-      (click)="addDirectorDetails('Add director details', 'ADD', null)"
-    >
-      <i class="fa fa-plus" aria-hidden="true"></i> Add New Company
+  </div>
+  
+  
+
+
+
+  <!-- first radio bar ends -->
+
+
+
+  <div class="col-sm-12 spsTp bdrTp">
+    <button class="tbd-btn save-btn mvRth" [disabled]="!isEditOther" (click)="saveAndContinue($event)">
+      Save
     </button>
   </div>
-  <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
-    <form [formGroup]="directorForm">
-      <div formArrayName="directorsArray">
-        <div
-          class="card"
-          *ngFor="
-            let director of getDirectorsArray.controls | paginate : config;
-            let i = index
-          "
-          [formGroupName]="fieldGlobalIndex(i)"
-        >
-          <div class="card__row card__col-xs-12">
-            <div class="card__col-sm-11">
-              <mat-checkbox
-                color="primary"
-                name="hasEdit[i]"
-                formControlName="hasEdit"
-                class="ml30"
-              >
-                {{
-                  directorForm.controls["directorsArray"].controls[i].controls[
-                    "companyName"
-                  ].value
-                }}
-              </mat-checkbox>
-            </div>
-            <div class="card__col-sm-1 edit-head">
-              <button
-                type="button"
-                class="edit-donation"
-                (click)="editDirectorForm(i)"
-              >
-                <mat-icon> edit_square </mat-icon>Edit
-              </button>
-            </div>
-          </div>
 
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field class="input-field-width">
-                <input
-                  type="text"
-                  trim
-                  matInput
-                  formControlName="companyName"
-                  placeholder="Name of company"
-                  name="companyName"
-                  class="input-field"
-                  maxlength="125"
-                  required
-                />
-                <mat-error
-                  *ngIf="
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['companyName'].hasError('required')
-                  "
-                  >Enter the Name of company.
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field class="input-field-width">
-                <mat-select
-                  placeholder="Type of Company"
-                  name="typeOfCompany"
-                  formControlName="typeOfCompany"
-                  required
-                >
-                  <mat-option
-                    *ngFor="let type of typeOfCompanies"
-                    [value]="type.value"
-                  >
-                    {{ type.label }}
-                  </mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['typeOfCompany'].hasError('required')
-                  "
-                  >Enter the type of company.
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field class="input-field-width">
-                <input
-                  type="text"
-                  trim
-                  upperCase
-                  matInput
-                  formControlName="companyPAN"
-                  placeholder="PAN of company"
-                  name="companyPAN"
-                  class="input-field"
-                  maxlength="10"
-                  [required]="
-                    directorForm.controls['directorsArray'].controls[i]
-                      .controls['typeOfCompany'].value === 'D'
-                  "
-                />
-                <mat-error
-                  *ngIf="
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['companyPAN'].hasError('pattern')
-                  "
-                  >Enter valid PAN number.
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field class="input-field-width">
-                <mat-select
-                  placeholder="Select shares type"
-                  name="country"
-                  formControlName="sharesType"
-                  required
-                >
-                  <mat-option
-                    *ngFor="let type of sharesTypes"
-                    [value]="type.value"
-                  >
-                    {{ type.label }}
-                  </mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['sharesType'].hasError('required')
-                  "
-                  >Select the shares type.
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field class="input-field-width">
-                <input
-                  type="text"
-                  matInput
-                  formControlName="din"
-                  placeholder="Director identification number(DIN)"
-                  name="din"
-                  class="input-field"
-                  maxlength="8"
-                  digitsOnly
-                  minlength="8"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  [required]="
-                    directorForm.controls['directorsArray'].controls[i]
-                      .controls['typeOfCompany'].value === 'D'
-                  "
-                />
-                <mat-error
-                  *ngIf="
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['din'].hasError('pattern') ||
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['din'].hasError('minLength') ||
-                    directorForm.controls['directorsArray'].controls[
-                      i
-                    ].controls['din'].hasError('maxLength')
-                  "
-                >
-                  Enter 8 digit DIN.</mat-error
-                >
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="display-flex fotSp">
-          <div class="card__col-xs-12">
-            <div class="card__col-sm-3">
-              <button
-                type="submit"
-                class="tbd-btn-secondary btnGry"
-                (click)="deleteDirectors()"
-              >
-                <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-              </button>
-            </div>
-            <div class="card__col-sm-6 txt-center">
-              <table>
-                <tr
-                  *ngFor="
-                    let item of getDirectorsArray.controls | paginate : config
-                  "
-                ></tr>
-              </table>
-              <pagination-controls
-                (pageChange)="pageChanged($event)"
-              ></pagination-controls>
-            </div>
-            <div class="card__col-sm-3" style="text-align: right">
-              <button
-                type="submit"
-                class="tbd-btn save-btn"
-                [disabled]="directorForm.invalid"
-                (click)="saveDirectorDetials($event)"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+<!-- Row ends here -->
+
+   
+
 <br />
 <div class="card card-header">
   <div class="card__row pb-2 pt-2">
@@ -741,12 +755,4 @@
   </div>
 </div>
 
-<div class="footer__buttons clearfix">
-  <button
-    class="tbd-btn save-btn"
-    [disabled]="!isEditOther"
-    (click)="saveAndContinue($event)"
-  >
-    Save
-  </button>
-</div>
+

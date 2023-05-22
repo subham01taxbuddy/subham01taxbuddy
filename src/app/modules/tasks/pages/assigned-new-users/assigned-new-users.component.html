@@ -2,7 +2,7 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-9">
+    <div class="col-sm-6">
       <b style="font-size: 20px">My Users</b>
     </div>
     <div class="col-sm-3" *ngIf="(roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER'))">
@@ -18,10 +18,10 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-        <div class="col-sm-7"  *ngIf="!coOwnerCheck">            
+        <div class="col-sm-12 bckClr"  *ngIf="!coOwnerCheck">            
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
-        <div class="col-sm-0" *ngIf="coOwnerCheck">          
+        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">          
             <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
         
@@ -39,7 +39,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
+          <div class="col-sm-3 spsTp">
             <mat-form-field appearance="outline">
               <mat-label>Mobile Number: </mat-label>
               <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber" type="text" digitsOnly
@@ -54,14 +54,14 @@
               <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
             </mat-form-field>
           </div>
-          <div class="col-sm-2 spsTp">
-            <button class="srch-btn" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                aria-hidden="true"></i>&nbsp;Search</button>
-          </div>
-          <div class="col-sm-2 spsTp">
-            <button class="clrLnk" (click)="this.resetFilters()">
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="clrLnk mvRth" (click)="this.resetFilters()">
               Clear form
             </button>
+
+            <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
+                aria-hidden="true"></i>&nbsp;Search</button>         
+            
           </div>
        
                 
@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-        <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div> 
         </div>
         </div>
         <table>

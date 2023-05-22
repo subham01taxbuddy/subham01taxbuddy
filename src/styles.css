@@ -313,6 +313,15 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.dtTp {
+  margin-top: 30px!important;
+}
+.bckClr {
+  background-color: #f7f7fa;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+}
 .brdSpc {
   margin-left: 20px!important;
   margin-top: 8px!important;
@@ -9393,23 +9402,23 @@ body[dir=rtl] .checkbox[checked=true] {
   transition-duration: 0.25s;
   cursor: pointer;
   border: none;
-  background-color: #EEFFE4;
-  color: #494949;
-  border: 1px solid #494949;
+  background-color: #edf6fd;
+  color: #003c61;
+  border: 1px solid #003c61;
   width: auto;
 }
 
 .tbd-btn:disabled,
 .tbd-btn[disabled] {
-  border: 1px solid #999999;
+  border: 1px solid #003c61;
   background-color: #cccccc;
-  color: #666666;
+  color: #003c61;
 }
 
 .tbd-btn:hover {
-  background-color: #4F9A20;
-  color: #ffffff;
-  border: 1px solid #4F9A20;
+  background-color: #d4e9fa;
+  color: #003c61;
+  border: 1px solid #003c61;
 }
 
 

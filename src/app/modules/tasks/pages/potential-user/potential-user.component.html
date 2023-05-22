@@ -1,10 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <b style="font-size: 20px">Potential User </b>
     </div>
-    <div class="col-sm-4" *ngIf="roles?.includes('ROLE_OWNER')">
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
       <p>
         <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
       </p>
@@ -13,10 +13,10 @@
   <div class="rowClr">
   <div class="surround">
    <div class="row">
-        <div class="col-sm-9"  *ngIf="!coOwnerCheck">
+        <div class="col-sm-12 bckClr"  *ngIf="!coOwnerCheck">
           <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
          </div>
-        <div class="col-sm-0" *ngIf="coOwnerCheck">
+        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
           <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
            <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
@@ -32,7 +32,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
+          <div class="col-sm-3 spsTp">
             <mat-form-field appearance="outline">
               <mat-label>Mobile Number: </mat-label>
               <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber" digitsOnly type="text"
@@ -40,20 +40,16 @@
                 onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
+          <div class="col-sm-6 spsTp">
             <mat-form-field appearance="outline">
               <mat-label>Email Address: </mat-label>
               <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
             </mat-form-field>
           </div>
-          <div class="col-sm-2 spsTp">
-            <button class="srch-btn" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                aria-hidden="true"></i>&nbsp;Search</button>
-          </div>
-          <div class="col-sm-2 spsTp">
-            <button class="clrLnk" (click)="resetFilters()">
-            Clear Form
-          </button>
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="clrLnk mvRth" (click)="resetFilters()">Clear Form</button>
+            <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
+                aria-hidden="true"></i>&nbsp;Search</button> 
           </div>
      
         </div>
@@ -68,7 +64,7 @@
             </div>
           </div>
           <div class="col-sm-4">
-          <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+          <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
           </div>
           </div>
 

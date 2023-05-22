@@ -2,10 +2,10 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <b style="font-size: 20px">ITRs</b>
     </div>
-    <div class="col-sm-4" *ngIf="roles?.includes('ROLE_OWNER')">
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
       <p>
         <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
       </p>
@@ -15,14 +15,14 @@
   <div class="rowClr">
     <div class="surround">
    <div class="row">
-    <div class="col-sm-7" *ngIf="!coOwnerCheck">
+    <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
       <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event)" (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
     </div>
-    <div class="col-sm-0" *ngIf="coOwnerCheck">
+    <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
           <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)" (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>
    </div>
   
-      <div class="col-sm-3 spsTp">
+      <div class="col-sm-2 spsTp">
         <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
       </div>
 <!--      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">-->
@@ -45,7 +45,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-sm-3 spsTp">
+      <div class="col-sm-2 spsTp">
         <mat-form-field appearance="outline">
           <mat-label>Mobile Number: </mat-label>
           <input
@@ -58,7 +58,7 @@
           />
         </mat-form-field>
       </div>
-      <div class="col-sm-3 spsTp">
+      <div class="col-sm-4 spsTp">
         <mat-form-field appearance="outline">
           <mat-label>Email Address: </mat-label>
           <input
@@ -92,16 +92,14 @@
         </mat-form-field>
       </div>
 
-      <div class="col-sm-2 spsTp">
-        <button class="srch-btn" (click)="this.search()">
-          <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-        </button>
-      </div>
-      <div class="col-sm-2 spsTp">
-        <button class="clrLnk lfsp" (click)="this.resetFilters()">
+      <div class="col-sm-12 spsTp bdrTp">
+        <button class="clrLnk mvRth" (click)="this.resetFilters()">
           Clear form
        </button>
-      </div>
+        <button class="srch-btn mvRth" (click)="this.search()">
+          <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+        </button>    
+   </div>
 
     </div>
   </div>
@@ -115,7 +113,7 @@
     </div>
   </div>   
   <div class="col-sm-4">
-    <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+     <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
   </div>
 </div>
    

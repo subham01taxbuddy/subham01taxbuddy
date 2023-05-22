@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
   <div class="align-items-center row">
-    <div class="col-sm-9">
+    <div class="col-sm-4">
     <b style="font-size: 20px">Assigned SME </b>
   </div>
   <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -15,11 +15,11 @@
 <div class="surround">
 <div class="row">
 
-    <div class="col-sm-7" *ngIf="coOwnerCheck">
+    <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
       <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-6 spsTp">
         <label class="input__label" for="attr">Select attribute</label>
         <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
           <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
@@ -27,7 +27,7 @@
         </select>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-6 spsTp">
         <label class="input__label" for="attr">Enter value</label>
         <div class="input__select">
           <input type="text" class="select__box ogp_select" style="background-image:none"
@@ -35,12 +35,10 @@
         </div>
     </div>
 
-    <div class="col-sm-3 spsTp">
-      <div class="input__label">
-        <button class="srch-btn srchBtnSps"  (click)="advanceSearch(advanceSearchKey.value)">
+    <div class="col-sm-12 spsTp bdrTp">     
+        <button class="srch-btn mvRth"  (click)="advanceSearch(advanceSearchKey.value)">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
-      </div>
     </div>
 
 </div>

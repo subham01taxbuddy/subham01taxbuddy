@@ -2,7 +2,7 @@
 
 
   <div class="align-items-center row">
-    <div class="col-sm-10">
+    <div class="col-sm-4">
       <b style="font-size: 25px">Proforma Invoices </b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -20,7 +20,7 @@
                 <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
               </div> -->
         
-            <div class="col-sm-6" *ngIf="!coOwnerCheck">
+            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
            
@@ -92,7 +92,7 @@
               </div> -->
         
 
-              <div class="col-sm-2">
+              <div class="col-sm-3 spsTp">
                 <mat-label> Select FY </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -104,7 +104,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-2 spsTp">
+              <div class="col-sm-3 dtTp">
 
                 <mat-form-field appearance="outline">
                   <mat-label>From Date</mat-label>
@@ -116,7 +116,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-2 spsTp">
+              <div class="col-sm-3 dtTp">
                   <mat-form-field appearance="outline">
                   <mat-label>To Date</mat-label>
                   <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" autocomplete="off" />
@@ -144,7 +144,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-3 spsTp">
+              <div class="col-sm-4 spsTp">
                 <mat-label> Mobile Number </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -156,7 +156,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-3 spsTp">
+              <div class="col-sm-4 spsTp">
                 <mat-label> Email </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -167,7 +167,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-3 spsTp">
+              <div class="col-sm-4 spsTp">
                 <mat-label> Invoice No. </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -224,7 +224,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-  <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div> 
+  <div class="count1"> Total Count: <span class="txClr1">{{ totalInvoice }}</span></div>
   </div>
   </div>
 

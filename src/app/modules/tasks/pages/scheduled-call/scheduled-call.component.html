@@ -2,7 +2,7 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <b style="font-size: 20px">Scheduled Calls</b>
     </div>
        
@@ -15,13 +15,13 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-        <div class="col-sm-10" *ngIf="!coOwnerCheck">    
+        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">    
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
-        <div class="col-sm-0"  *ngIf="coOwnerCheck">
+        <div class="col-sm-12 bckClr"  *ngIf="coOwnerCheck">
            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
-        <div class="col-sm-2 spsTp">
+        <div class="col-sm-3 spsTp">
             <mat-form-field appearance="outline">
               <mat-label>Select Status</mat-label>
               <mat-select
@@ -53,7 +53,7 @@
               />
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
+          <div class="col-sm-5 spsTp">
             <mat-form-field appearance="outline">
               <mat-label>Email Address: </mat-label>
               <input
@@ -64,21 +64,14 @@
               />
             </mat-form-field>
           </div>
-          <div class="col-sm-2 spsTp">
-            <button class="srch-btn" (click)="this.search('mobile','isAgent')">
-              <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-            </button>
-          </div>
-          <div class="col-sm-2 spsTp">
-            <!-- <a class="btn btn_stroke filter__add-link" (click)="this.search('mobile')"><i class="fa fa-search"
-                aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a> -->
-            <button class="clrLnk" (click)="this.resetFilters()">
-              <!--              <div class="fa-layers fa-1x fa-fw">-->
-              <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
-              <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
-              <!--              </div>-->
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="clrLnk mvRth" (click)="this.resetFilters()">
               Clear form
             </button>
+            <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')">
+              <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+            </button>
+       
           </div>
         </div>
       </div>
@@ -94,7 +87,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-  <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+  <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
   </div>
   </div>
           <table>

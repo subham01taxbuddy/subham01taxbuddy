@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="align-items-center row">
-    <div class="col-sm-10">
+    <div class="col-sm-4">
       <b style="font-size: 25px">Refund Request</b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -16,18 +16,18 @@
     <div class="surround">
     <div class="row">
     
-    <div class="col-sm-8">
+    <div class="col-sm-12 bckClr">
     <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
      </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-4 spsTp">
      <mat-label> Mobile Number </mat-label>
       <mat-form-field appearance="outline">
       <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
       </mat-form-field>
      </div>
 
-     <div class="col-sm-4 spsTp">
+     <div class="col-sm-5 spsTp">
      <mat-label> Email Address: </mat-label>
      <mat-form-field appearance="outline">
      <input type="text" matInput [formControl]="email" />
@@ -40,15 +40,16 @@
      <input matInput [formControl]="invoiceNo" />
      </mat-form-field>
      </div>
-     <div class="col-sm-2 spsTp">
-     <button class="srch-btn srchBtnSps" (click)="applyFilter()">
+     <div class="col-sm-12 spsTp bdrTp">
+      <button class="clrLnk mvRth" (click)="resetFilters()">
+        Clear form
+      </button> 
+
+     <button class="srch-btn mvRth" (click)="applyFilter()">
      <i class="fas fa-search" aria-hidden="true"></i> Search
      </button>
-     </div>
-     <div class="col-sm-2 spsTp">
-        <button class="clrLnk clrTp" (click)="resetFilters()">
-        Clear form
-        </button> 
+    
+        
      </div>
 
 </div>

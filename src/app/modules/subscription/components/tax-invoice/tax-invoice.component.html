@@ -1,10 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
   <div class="align-items-center row">
-    <div class="col-sm-9">
+    <div class="col-sm-4">
       <b style="font-size: 25px">Tax Invoices </b>
     </div>
-    <div class="col-sm-3" *ngIf="roles?.includes('ROLE_OWNER')">
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
       <p>
         <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
       </p>
@@ -15,11 +15,11 @@
   <div class="surround">
    <div class="row">
   
-   <div class="col-sm-7" *ngIf="coOwnerCheck">
+   <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
    <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
   </div>
  
-   <div class="col-sm-9" *ngIf="!coOwnerCheck">
+   <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
    <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
    </div>
    
@@ -62,7 +62,7 @@
               </div>
             </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-3 spsTp">
                 <mat-label> Select FY </mat-label>
                 <mat-form-field appearance="outline">
                   <input type="text" matInput [formControl]="assessmentYear" readonly>
@@ -73,7 +73,7 @@
                   </mat-select> -->
               </mat-form-field>
               </div>
-              <div class="col-sm-2 spsTp dtTp">
+              <div class="col-sm-3 dtTp">
                 <!-- <mat-label> From Date </mat-label> -->
                 <mat-form-field appearance="outline">
                   <mat-label>From Date</mat-label>
@@ -86,7 +86,7 @@
                       date</mat-error>
               </mat-form-field>
               </div>
-              <div class="col-sm-2 spsTp dtTp">
+              <div class="col-sm-3 dtTp">
                 <!-- <mat-label> To Date </mat-label> -->
                 <mat-form-field appearance="outline">
                   <mat-label>To Date</mat-label>
@@ -101,7 +101,7 @@
               </mat-form-field>
               </div>
 
-              <div class="col-sm-2 spsTp">
+              <div class="col-sm-3 spsTp">
                 <mat-label> Mobile Number: </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -113,7 +113,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-3 spsTp">
+              <div class="col-sm-6 spsTp">
                 <mat-label> Email Address: </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -123,7 +123,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="col-sm-3 spsTp">
+              <div class="col-sm-6 spsTp">
                 <mat-label> Invoice No. </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -171,7 +171,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-  <div class="count"> Total Invoice Count: <b>{{totalInvoice}}</b></div> 
+  <div class="count1"> Total Invoice Count: <span class="txClr1">{{totalInvoice}}</span></div>
   </div>
   </div>
 

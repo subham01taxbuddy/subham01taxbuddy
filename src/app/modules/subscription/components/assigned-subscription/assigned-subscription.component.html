@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
   <div class="align-items-center row">
-    <div class="col-sm-10">
+    <div class="col-sm-4">
       <b style="font-size: 20px">Assigned Subscription </b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -14,13 +14,13 @@
   <div class="rowClr">
   <div class="surround">
   <div class="row">
-      <div class="col-sm-8" *ngIf="!coOwnerCheck">
+      <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
        <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
        </div>
-       <div class="col-sm-4">
+       <div class="col-sm-12 bckClr">
        <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
        </div>
-       <div class="col-sm-3 spsTp">
+       <div class="col-sm-6 spsTp">
         <mat-label> Financial Year </mat-label>
         <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="assessmentYear" readonly>
@@ -31,7 +31,7 @@
                   </mat-select> -->
          </mat-form-field>
         </div>
-        <div class="col-sm-3 spsTp" *ngIf="false">
+        <div class="col-sm-6 spsTp" *ngIf="false">
           <mat-label> Search by Name </mat-label>
           <mat-form-field appearance="outline" class="customBg">
           <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
@@ -46,7 +46,7 @@
                     </mat-autocomplete>
                   </mat-form-field>
             </div>
-                <div class="col-sm-3 spsTp">
+                <div class="col-sm-6 spsTp">
                   <mat-label> Search Mobile Number</mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
@@ -61,13 +61,13 @@
                   </mat-autocomplete> -->
                   </mat-form-field>
             </div>
-                <div class="col-sm-3 spsTp">
-                  <button *ngIf="isAllowed" class="srch-btn srchBtnSps" (click)="createSub()"> Create Subscription </button>
-                </div>
-                <div class="col-sm-2 spsTp">
-                  <button class="clrLnk" (click)="this.resetFilters()">
+                <div class="col-sm-12 spsTp bdrTp">
+                  <button class="clrLnk mvRth" (click)="this.resetFilters()">
                     Clear form
                   </button>
+                  <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
+               
+                  
                 </div>
 
 </div>
