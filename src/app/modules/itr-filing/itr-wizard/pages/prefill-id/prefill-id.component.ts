@@ -316,7 +316,6 @@ export class PrefillIdComponent implements OnInit {
   updateExemptIncomes(exemptIncomeTypes, ITR_Type) {
     for (let i = 0; i < exemptIncomeTypes.length; i++) {
       const type = exemptIncomeTypes[i];
-
       try {
         // finding and storing the object with the same NatureDesc (type) present in JSON Object
         let JsonDetail = null;
@@ -341,24 +340,12 @@ export class PrefillIdComponent implements OnInit {
         }
 
         if (JsonDetail && JsonDetail.NatureDesc !== 'OTH') {
-          // finding and storing the object with the same NatureDesc (type) present in ITR Object
-          const itrObjAllowance = this.ITR_Obj.exemptIncomes.find(
-            (itrObjAllowance) => itrObjAllowance.natureDesc === type
-          );
-
-          // If same type is not found in the ITR Object then show an error message
-          if (!itrObjAllowance) {
-            console.log(
-              `Exempt Income - ${type} Income was not found in the ITR Object`
-            );
-          }
-
-          if (
-            JsonDetail &&
-            itrObjAllowance &&
-            JsonDetail.NatureDesc === itrObjAllowance.natureDesc
-          ) {
-            itrObjAllowance.amount = JsonDetail.OthAmount;
+          if (JsonDetail && JsonDetail.NatureDesc) {
+            this.ITR_Obj.exemptIncomes.push({
+              natureDesc: JsonDetail.NatureDesc,
+              amount: JsonDetail.OthAmount,
+              othNatOfInc: null,
+            });
           } else {
             console.log(`Exempt Income - ${type} not found`);
           }
@@ -371,39 +358,52 @@ export class PrefillIdComponent implements OnInit {
 
     //FOR EXEMPT INCOME - OTHERS
     {
-      const ExemptIncomesOTH = this.ITR_Obj.exemptIncomes.find(
-        (ExemptIncomesOTH) => ExemptIncomesOTH.natureDesc === 'OTH'
-      );
-      console.log(ExemptIncomesOTH, 'totalExemptIncomesExceptOTH');
-
+      // getting all the exemptincome in itrObject
       const totalExemptIncomesExceptOTH = [
         ...Object.values(this.ITR_Obj.exemptIncomes)
           .filter((other) => other.natureDesc !== 'OTH')
           .map((other) => other.amount),
       ];
-      console.log(
-        'totalExemptIncomesExceptOTH ==>>',
-        totalExemptIncomesExceptOTH
-      );
 
-      // sum the values in the anyOtherFields array
+      // sum the values in the totalExemptIncomesExceptOTH
       const totalOtherExemptAmount = totalExemptIncomesExceptOTH.reduce(
         (acc, val) => acc + val,
         0
       );
-      console.log('totalAnyOtherAmount ==>>', totalOtherExemptAmount);
 
       if (this.ITR_Type === 'ITR1') {
-        this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
-          .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalOtherExemptAmount;
+        const othExemptDiff1 =
+          this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
+            .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalOtherExemptAmount;
+        if (othExemptDiff1 > 0) {
+          this.ITR_Obj.exemptIncomes.push({
+            natureDesc: 'OTH',
+            amount: othExemptDiff1,
+            othNatOfInc: null,
+          });
+        }
       } else if (this.ITR_Type === 'ITR4') {
-        ExemptIncomesOTH.amount =
+        const othExemptDiff4 =
           this.uploadedJson[ITR_Type].TaxExmpIntIncDtls?.OthersInc
             ?.OthersTotalTaxExe - totalOtherExemptAmount;
+        if (othExemptDiff4 > 0) {
+          this.ITR_Obj.exemptIncomes.push({
+            natureDesc: 'OTH',
+            amount: othExemptDiff4,
+            othNatOfInc: null,
+          });
+        }
       } else if (this.ITR_Type === 'ITR2') {
-        ExemptIncomesOTH.amount =
+        const othExemptDiff2 =
           this.uploadedJson[this.ITR_Type].ScheduleEI?.TotalExemptInc -
           totalOtherExemptAmount;
+        if (othExemptDiff2 > 0) {
+          this.ITR_Obj.exemptIncomes.push({
+            natureDesc: 'OTH',
+            amount: othExemptDiff2,
+            othNatOfInc: null,
+          });
+        }
       }
     }
   }
