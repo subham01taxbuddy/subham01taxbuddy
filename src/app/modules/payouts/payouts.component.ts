@@ -426,6 +426,43 @@ export class PayoutsComponent implements OnInit {
         }
       },
       {
+        headerName: 'Approved By',
+        field: 'commissionPaymentApprovedBy',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.commissionPaymentApprovedBy)
+          let filer1 = list;
+          let filer = filer1?.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          console.log('filer', filer);
+          return filer
+        }
+      },{
+        headerName: 'Approved Date',
+        field: 'commissionPaymentApprovalDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        }
+      },
+      {
         headerName: 'See/Add Notes',
         editable: false,
         suppressMenu: true,
