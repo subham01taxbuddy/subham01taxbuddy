@@ -410,7 +410,6 @@ export class PrefillIdComponent implements OnInit {
 
   // Taking the other income name from json and checking for those income in our itr object. If it exists then mapping jsons amount to itr object amount
   updateOtherIncomes(otherIncomes, ITR_Type) {
-    // console.log('otherIncomes List =>', otherIncomes);
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       SAV: 'SAVING_INTEREST',
@@ -421,63 +420,57 @@ export class PrefillIdComponent implements OnInit {
       OTH: 'ANY_OTHER',
     };
 
+    // Finding Dividend Income in utility JSON
+    const typeDiv = this.uploadedJson[ITR_Type][
+      this.ITR14_IncomeDeductions
+    ].OthersInc?.OthersIncDtlsOthSrc?.find(
+      (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'DIV'
+    );
+
+    // getting dividend Incomes quarter wise
+    if (typeDiv) {
+      const jsonDividendObj = typeDiv.DividendInc?.DateRange;
+      if (jsonDividendObj.Upto15Of6) {
+        this.ITR_Obj.dividendIncomes?.push({
+          income: jsonDividendObj.Upto15Of6,
+          date: '2022-04-28T18:30:00.000Z',
+          quarter: 1,
+        });
+      }
+      if (jsonDividendObj.Upto15Of9) {
+        this.ITR_Obj.dividendIncomes?.push({
+          income: jsonDividendObj.Upto15Of9,
+          date: '2022-07-28T18:30:00.000Z',
+          quarter: 2,
+        });
+      }
+      if (jsonDividendObj.Up16Of9To15Of12) {
+        this.ITR_Obj.dividendIncomes?.push({
+          income: jsonDividendObj.Up16Of9To15Of12,
+          date: '2022-09-28T18:30:00.000Z',
+          quarter: 3,
+        });
+      }
+      if (jsonDividendObj.Up16Of12To15Of3) {
+        this.ITR_Obj.dividendIncomes?.push({
+          income: jsonDividendObj.Up16Of12To15Of3,
+          date: '2022-12-28T18:30:00.000Z',
+          quarter: 4,
+        });
+      }
+      if (jsonDividendObj.Up16Of3To31Of3) {
+        this.ITR_Obj.dividendIncomes?.push({
+          income: jsonDividendObj.Up16Of3To31Of3,
+          date: '2023-03-20T18:30:00.000Z',
+          quarter: 5,
+        });
+      }
+    }
+
     for (let i = 0; i < otherIncomes.length; i++) {
       // console.log('i ==>>>>', i);
       const type = otherIncomes[i];
       // For dividend Income mapping
-      {
-        const typeDiv = this.uploadedJson[ITR_Type][
-          this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
-          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'DIV'
-        );
-        if (typeDiv) {
-          const itrObjectDividendQuarterList = this.ITR_Obj.dividendIncomes.map(
-            (key) => key
-          );
-          const jsonDividendObj = typeDiv.DividendInc.DateRange;
-          // console.log(
-          //   'Dividend Income =>>>',
-          //   typeDiv,
-          //   itrObjectDividendQuarterList,
-          //   jsonDividendObj
-          // );
-
-          if (jsonDividendObj.Upto15Of6) {
-            const individualDividendIncomes = itrObjectDividendQuarterList.find(
-              (dividendIncomes) => dividendIncomes.quarter === 1
-            );
-            individualDividendIncomes.income = jsonDividendObj.Upto15Of6;
-          }
-
-          if (jsonDividendObj.Upto15Of9) {
-            const individualDividendIncomes = itrObjectDividendQuarterList.find(
-              (dividendIncomes) => dividendIncomes.quarter === 2
-            );
-            individualDividendIncomes.income = jsonDividendObj.Upto15Of9;
-          }
-
-          if (jsonDividendObj.Up16Of9To15Of12) {
-            const individualDividendIncomes = itrObjectDividendQuarterList.find(
-              (dividendIncomes) => dividendIncomes.quarter === 3
-            );
-            individualDividendIncomes.income = jsonDividendObj.Up16Of9To15Of12;
-          }
-          if (jsonDividendObj.Up16Of12To15Of3) {
-            const individualDividendIncomes = itrObjectDividendQuarterList.find(
-              (dividendIncomes) => dividendIncomes.quarter === 4
-            );
-            individualDividendIncomes.income = jsonDividendObj.Up16Of12To15Of3;
-          }
-          if (jsonDividendObj.Up16Of3To31Of3) {
-            const individualDividendIncomes = itrObjectDividendQuarterList.find(
-              (dividendIncomes) => dividendIncomes.quarter === 5
-            );
-            individualDividendIncomes.income = jsonDividendObj.Up16Of3To31Of3;
-          }
-        }
-      }
-
       // For all the other incomes mapping
       {
         // use the mapping object to get the new name for the current type
@@ -1233,23 +1226,19 @@ export class PrefillIdComponent implements OnInit {
     // setting assesseType, need to set for HUF dynamically
     this.ITR_Obj.assesseeType = 'INDIVIDUAL';
 
-    //Finding the way
-    // console.log(
-    //   'Checking the JSON',
-    //   ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo
-    // );
-
     // SOME DEDUCTION FIELDS, HP CODE UPDATE
     if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
-      if (this.ITR_Obj.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo.PAN) {
+      if (
+        this.ITR_Obj?.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo?.PAN
+      ) {
         this.utilsService.showSnackBar(
           'PAN from the uploaded JSON and the PAN from Users Profile / Customer Profile are different'
         );
       }
 
       if (
-        this.ITR_Obj.contactNumber !==
-        String(ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo)
+        this.ITR_Obj?.contactNumber !==
+        String(ItrJSON[this.ITR_Type].PersonalInfo.Address?.MobileNo)
       ) {
         this.utilsService.showSnackBar(
           'Contact Number from the uploaded JSON and Mobile No. from Users Profile / Customer Profile are different'
@@ -1257,32 +1246,34 @@ export class PrefillIdComponent implements OnInit {
       }
 
       if (
-        this.ITR_Obj.panNumber === ItrJSON[this.ITR_Type].PersonalInfo.PAN &&
-        this.ITR_Obj.contactNumber ===
-          String(ItrJSON[this.ITR_Type].PersonalInfo.Address.MobileNo)
+        this.ITR_Obj.panNumber === ItrJSON[this.ITR_Type].PersonalInfo?.PAN &&
+        this.ITR_Obj?.contactNumber ===
+          String(ItrJSON[this.ITR_Type].PersonalInfo.Address?.MobileNo)
       ) {
         // PERSONAL INFORMATION
         {
           // CUSTOMER PROFILE
           {
             this.ITR_Obj.email =
-              ItrJSON[this.ITR_Type].PersonalInfo.Address.EmailAddress;
+              ItrJSON[this.ITR_Type].PersonalInfo.Address?.EmailAddress;
             this.ITR_Obj.family[0].fName =
-              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.FirstName;
+              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName?.FirstName;
             this.ITR_Obj.family[0].mName =
-              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.MiddleName;
+              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName?.MiddleName;
             this.ITR_Obj.family[0].lName =
-              ItrJSON[this.ITR_Type].PersonalInfo.AssesseeName.SurNameOrOrgName;
+              ItrJSON[
+                this.ITR_Type
+              ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
             this.ITR_Obj.family[0].fatherName =
-              ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+              ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
 
             if (this.ITR_Type === 'ITR1') {
-              if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'N') {
+              if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N') {
                 this.regime = 'OLD';
                 this.ITR_Obj.regime = this.regime;
                 this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
               } else if (
-                ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y'
+                ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'Y'
               ) {
                 this.regime = 'NEW';
                 this.ITR_Obj.regime = this.regime;
@@ -1298,27 +1289,27 @@ export class PrefillIdComponent implements OnInit {
               // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
               // optionForCurrentAY
               if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 1
+                ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 1
               ) {
                 this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
               } else if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 2
+                ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 2
               ) {
                 this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
               } else if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 3
+                ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 3
               ) {
                 this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
               } else if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 4
+                ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 4
               ) {
                 this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
               } else if (
-                ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime === 5
+                ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 5
               ) {
                 this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
               } else if (
-                !ItrJSON[this.ITR_Type].FilingStatus.OptingNewTaxRegime
+                !ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime
               ) {
                 this.utilsService.showSnackBar(
                   'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
@@ -1328,7 +1319,7 @@ export class PrefillIdComponent implements OnInit {
               // everOptedNewRegime
               {
                 //Setting 1st question as yes / no
-                if (ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegime === 'Y') {
+                if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'Y') {
                   this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
                 } else {
                   this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
@@ -1341,24 +1332,24 @@ export class PrefillIdComponent implements OnInit {
                     ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
                         ItrJSON[
                           this.ITR_Type
-                        ].FilingStatus.NewTaxRegimeDtls.AssessmentYear)
+                        ].FilingStatus.NewTaxRegimeDtls?.AssessmentYear)
                     : null;
 
                   ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                    ?.Form10IEDtls.Form10IEDate
+                    ?.Form10IEDtls?.Form10IEDate
                     ? (this.ITR_Obj.everOptedNewRegime.date =
                         this.parseAndFormatDate(
                           ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                            .Form10IEDtls.Form10IEDate
+                            ?.Form10IEDtls?.Form10IEDate
                         ))
                     : null;
 
                   ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                    ?.Form10IEDtls.Form10IEAckNo
+                    ?.Form10IEDtls?.Form10IEAckNo
                     ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
                         ItrJSON[
                           this.ITR_Type
-                        ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                        ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
                     : null;
                 }
 
@@ -1373,7 +1364,7 @@ export class PrefillIdComponent implements OnInit {
               {
                 //Setting 1st question as yes / no
                 if (
-                  ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegime ===
+                  ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegime ===
                   'Y'
                 ) {
                   this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
@@ -1390,7 +1381,7 @@ export class PrefillIdComponent implements OnInit {
                     ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
                         ItrJSON[
                           this.ITR_Type
-                        ].FilingStatus.OptedOutNewTaxRegimeDtls.AssessmentYear)
+                        ].FilingStatus.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                     : null;
 
                   ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
@@ -1398,7 +1389,7 @@ export class PrefillIdComponent implements OnInit {
                     ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
                         this.parseAndFormatDate(
                           ItrJSON[this.ITR_Type].FilingStatus
-                            .OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEDate
+                            .OptedOutNewTaxRegimeDtls.Form10IEDtls?.Form10IEDate
                         ))
                     : null;
 
@@ -1407,7 +1398,7 @@ export class PrefillIdComponent implements OnInit {
                     ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
                         ItrJSON[
                           this.ITR_Type
-                        ].FilingStatus.OptedOutNewTaxRegimeDtls.Form10IEDtls.Form10IEAckNo)
+                        ].FilingStatus.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                     : null;
                 }
 
@@ -1419,19 +1410,19 @@ export class PrefillIdComponent implements OnInit {
               }
 
               this.ITR_Obj.regime =
-                this.ITR_Obj.optionForCurrentAY.currentYearRegime;
+                this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-              this.regime = this.ITR_Obj.optionForCurrentAY.currentYearRegime;
+              this.regime = this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-              ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
+              ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
                 ? (this.ITR_Obj.optionForCurrentAY.date =
                     this.parseAndFormatDate(
-                      ItrJSON[this.ITR_Type].FilingStatus.Form10IEDate
+                      ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
                     ))
                 : null;
-              ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo
+              ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo
                 ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                    ItrJSON[this.ITR_Type].FilingStatus.Form10IEAckNo)
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
                 : null;
 
               // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -1473,10 +1464,10 @@ export class PrefillIdComponent implements OnInit {
             }
 
             this.ITR_Obj.aadharNumber =
-              ItrJSON[this.ITR_Type].PersonalInfo.AadhaarCardNo;
+              ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
             // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
-            this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo.DOB);
+            this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo?.DOB);
             this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
           }
 
@@ -1485,27 +1476,28 @@ export class PrefillIdComponent implements OnInit {
             // ADDRESS DETAILS -
             {
               this.ITR_Obj.address.pinCode =
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.PinCode;
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.PinCode;
               this.ITR_Obj.address.country =
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.CountryCode;
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.CountryCode;
               this.ITR_Obj.address.state =
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.StateCode;
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.StateCode;
               this.ITR_Obj.address.city =
                 ItrJSON[
                   this.ITR_Type
-                ].PersonalInfo.Address.CityOrTownOrDistrict;
+                ].PersonalInfo.Address?.CityOrTownOrDistrict;
               this.ITR_Obj.address.flatNo =
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceNo;
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceNo;
               this.ITR_Obj.address.premisesName =
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.ResidenceName;
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceName;
               this.ITR_Obj.address.area =
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.RoadOrStreet +
-                ItrJSON[this.ITR_Type].PersonalInfo.Address.LocalityOrArea;
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.RoadOrStreet +
+                ItrJSON[this.ITR_Type].PersonalInfo.Address?.LocalityOrArea;
             }
             //BANK DETAILS
             {
               const UtilityBankDetails =
-                ItrJSON[this.ITR_Type].Refund.BankAccountDtls.AddtnlBankDetails;
+                ItrJSON[this.ITR_Type].Refund.BankAccountDtls
+                  ?.AddtnlBankDetails;
 
               if (!UtilityBankDetails || UtilityBankDetails.length === 0) {
                 this.ITR_Obj.bankDetails = [];
@@ -1513,7 +1505,7 @@ export class PrefillIdComponent implements OnInit {
                   'There are no bank details in the JSON that you have provided'
                 );
               } else {
-                this.ITR_Obj.bankDetails = UtilityBankDetails.map(
+                this.ITR_Obj.bankDetails = UtilityBankDetails?.map(
                   ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
                     return {
                       id: null,
@@ -1536,7 +1528,7 @@ export class PrefillIdComponent implements OnInit {
         {
           {
             const salaryDetails =
-              ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
+              ItrJSON[this.ITR_Type]?.[this.ITR14_IncomeDeductions];
             console.log(salaryDetails, 'salaryDetails');
 
             if (
@@ -1683,7 +1675,7 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.employers.push(keys);
 
               this.updateSalaryAllowances(
-                salaryDetails.AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
+                salaryDetails.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
                   (value) => value.SalNatureDesc
                 ),
                 this.ITR_Type
@@ -1780,7 +1772,7 @@ export class PrefillIdComponent implements OnInit {
         {
           {
             const housePropertyDetails =
-              ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions];
+              ItrJSON[this.ITR_Type]?.[this.ITR14_IncomeDeductions];
             console.log(housePropertyDetails, 'housePropertyDetails');
 
             if (
@@ -1899,7 +1891,7 @@ export class PrefillIdComponent implements OnInit {
         // OTHER INCOMES
         {
           if (
-            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].OthersInc
+            ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]?.OthersInc
               .OthersIncDtlsOthSrc
           ) {
             // All other incomes
@@ -1907,7 +1899,7 @@ export class PrefillIdComponent implements OnInit {
               //getting all the exempt income keys from the JSON and passing it to the updateOtherIncomes function
               const availableOtherIncomes = this.uploadedJson[this.ITR_Type][
                 this.ITR14_IncomeDeductions
-              ].OthersInc.OthersIncDtlsOthSrc.map(
+              ].OthersInc?.OthersIncDtlsOthSrc?.map(
                 (value) => value.OthSrcNatureDesc
               );
               // console.log('OtherIncomes => ', availableOtherIncomes);
