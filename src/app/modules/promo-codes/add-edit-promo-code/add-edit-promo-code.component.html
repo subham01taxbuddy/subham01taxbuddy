@@ -1,0 +1,172 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<form [formGroup]="promoCodeForm">
+    <mat-dialog-content>
+        <div class="card__row">
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-label>Promo Code</mat-label>
+                <mat-form-field appearance="outline">
+                    <input matInput placeholder="Enter coupon" formControlName="code" required>
+                    <mat-error *ngIf="promoCodeForm.controls['code'].hasError('required')">Enter promo code</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-label>Title</mat-label>
+                <mat-form-field appearance="outline">
+                    <input matInput placeholder="Enter title" formControlName="title" required>
+                    <mat-error *ngIf="promoCodeForm.controls['title'].hasError('required')">Enter title</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-label>Description</mat-label>
+                <mat-form-field appearance="outline">
+                    <input matInput formControlName="description">
+                </mat-form-field>
+            </div>
+
+        </div>
+        <div class="card__row">
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-label>Start Date</mat-label>
+                <mat-form-field appearance="outline">
+                    <input matInput formControlName="startDate" [matDatepicker]="picker1" autocomplete="off"
+                        (dateChange)="setEndDateValidate(promoCodeForm.controls['startDate'].value)">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="promoCodeForm.controls['startDate'].hasError('required')">Select start date
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-4 card__col-sm-12">
+                  <mat-label>End Date</mat-label>
+                <mat-form-field appearance="outline">
+                    <input matInput formControlName="endDate" [matDatepicker]="picker2" autocomplete="off"
+                        [min]="minEndDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error *ngIf="promoCodeForm.controls['endDate'].hasError('required')">Select end
+                        date</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-label>Discount Type</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-select placeholder="Discount Type" formControlName="discountType"
+                        (selectionChange)="setValidation($event)" required>
+                        <mat-option *ngFor="let obj of discountData" [value]="obj.value">
+                            {{ obj.label }}
+                        </mat-option>
+                    </mat-select>
+                     <mat-error *ngIf="promoCodeForm.controls['discountType'].hasError('required')">Select discount type.
+                    </mat-error>
+                    <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
+                        sure want to create FIXED pricing promo code?</mat-hint> -->
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="card__row">
+            <div class="card__col-lg-6 card__col-sm-12" *ngIf="promoCodeForm.controls['discountType'].value === 'PERCENTAGE'">
+              <mat-label>Discount Percent</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Discount Percent" maxlength="2" formControlName="discountPercent" required
+                  type="number"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                <mat-error *ngIf="promoCodeForm.controls['discountPercent'].hasError('required')">Enter discount
+                  percent.
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="card__col-lg-6 card__col-sm-12" *ngIf="promoCodeForm.controls['discountType'].value === 'AMOUNT'">
+              <mat-label>Discount Amount</mat-label>
+              <mat-form-field appearance="outline">
+
+                <input matInput placeholder="Discount Amount" formControlName="discountAmount" required type="number" maxlength="8"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                <mat-error *ngIf="promoCodeForm.controls['discountPercent'].hasError('required')">Enter discount
+                  amount.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-6 card__col-sm-12" *ngIf="promoCodeForm.controls['discountType'].value === 'AMOUNT'">
+              <mat-label>Minimum Order Amount</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Minimum Order Amount" formControlName="minOrderAmount" required type="number"
+                  maxlength="8"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                <mat-error *ngIf="promoCodeForm.controls['minOrderAmount'].hasError('required')">Enter minimum order
+                  amount.</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-6 card__col-sm-12" *ngIf="promoCodeForm.controls['discountType'].value === 'PERCENTAGE'">
+              <mat-label>Max Discount Amount</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Max Discount Amount" formControlName="maxDiscountAmount" required type="number"
+                  maxlength="8"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                <mat-error *ngIf="promoCodeForm.controls['maxDiscountAmount'].hasError('required')">Enter max discount
+                  amount.</mat-error>
+              </mat-form-field>
+            </div>
+
+        </div>
+
+        <div class="card__col-lg-4 card__col-sm-12" *ngIf="data.mode === 'edit'">
+          <mat-label>Status</mat-label>
+          <mat-form-field appearance="outline">
+              <mat-select placeholder="Change Status" formControlName="active" required>
+                  <mat-option *ngFor="let obj of statusList" [value]="obj.value">
+                      {{ obj.label }}
+                  </mat-option>
+              </mat-select>
+               <mat-error *ngIf="promoCodeForm.controls['active'].hasError('required')">Select status.
+              </mat-error>
+              <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
+                  sure want to create FIXED pricing promo code?</mat-hint> -->
+          </mat-form-field>
+      </div>
+
+        <div class="card__row" *ngIf="false">
+            <table *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'">
+                <thead>
+                    <tr>
+                        <th><b>Plan Name</b></th>
+                        <th><b>Oroginal Amount</b></th>
+                        <th><b>Discount Amount</b> <span style="color: red;"> **</span>(All are required)</th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="discountDetails">
+                    <tr *ngFor="let coOwn of getFixedPricingArray.controls; let i=index" [formGroupName]="i">
+                        <td>
+                            <input matInput formControlName="name">
+                        </td>
+                        <td>
+                            <input matInput formControlName="originalPrice">
+                        </td>
+                        <td>
+                            <!-- <mat-form-field> -->
+                            <input matInput name="coOwn[i]" formControlName="totalAmount" autocomplete="off"
+                                type="number" maxlength="5" required
+                                onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            <!-- </mat-form-field> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="centered">
+        <button mat-raised-button [ngClass]="'add-button'" (click)="addEdit()" tabindex="1">{{data.title}}</button>
+        <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+    </mat-dialog-actions>
+</form>
