@@ -30,14 +30,14 @@
                         </mat-form-field>
                     </div>
                     <div class="col-sm-3">
-                        <button class="btn btnClr" (click)="applyFilter()">
+                        <button class="btn btnClr" [disabled]="loading" (click)="applyFilter()">
                             <i class="fas fa-search" aria-hidden="true"></i> Search
                         </button>
                     </div>
                 </div>
                 <div class="row">
                     <div>
-                        <button class="tbd-btn-clear" (click)="resetFilters()">
+                        <button class="tbd-btn-clear" [disabled]="loading" (click)="resetFilters()">
                             <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
                             Clear
                         </button>
