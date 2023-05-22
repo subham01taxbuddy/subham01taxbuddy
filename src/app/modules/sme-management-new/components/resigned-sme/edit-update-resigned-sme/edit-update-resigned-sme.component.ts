@@ -419,7 +419,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
     name: new FormControl('', [Validators.required]),
-    email: new FormControl(''),
+    smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
@@ -434,8 +434,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   get name() {
     return this.smeFormGroup.controls['name'] as FormControl;
   }
-  get email() {
-    return this.smeFormGroup.controls['email'] as FormControl;
+  get smeOriginalEmail() {
+    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl;
   }
   get languages() {
     return this.smeFormGroup.controls['languages'] as FormControl;
@@ -460,8 +460,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     {
       coOwner: new FormControl(''),
       callingNumber: new FormControl(''),
-      officialEmail: new FormControl(''),
-      kommId: new FormControl(''),
+      smeOfficialEmail: new FormControl(''),
+      email: new FormControl(''),
       displayName: new FormControl(''),
       internal: new FormControl(''),
       leaveStartDate: new FormControl(''),
@@ -479,8 +479,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   get callingNumber() {
     return this.otherSmeInfo.controls['callingNumber'] as FormControl;
   }
-  get officialEmail() {
-    return this.otherSmeInfo.controls['officialEmail'] as FormControl;
+  get smeOfficialEmail() {
+    return this.otherSmeInfo.controls['smeOfficialEmail'] as FormControl;
   }
   get displayName() {
     return this.otherSmeInfo.controls['displayName'] as FormControl;
@@ -488,8 +488,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   get internal() {
     return this.otherSmeInfo.controls['internal'] as FormControl;
   }
-  get kommId() {
-    return this.otherSmeInfo.controls['kommId'] as FormControl;
+  get email() {
+    return this.otherSmeInfo.controls['email'] as FormControl;
   }
   get leaveStartDate() {
     return this.otherSmeInfo.controls['leaveStartDate'] as FormControl;

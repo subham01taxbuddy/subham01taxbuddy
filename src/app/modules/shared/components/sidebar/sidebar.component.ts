@@ -137,6 +137,14 @@ export class SidebarComponent implements DoCheck {
         { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
+    // {
+    //   name: 'Payouts',
+    //   // iconClass: 'fa fa-code',
+    //   active: true,
+    //   url: '/payouts',
+    //   roles: ['ROLE_LEADER'],
+    //   submenu: []
+    // },
     {
       name: 'All Users',
       // iconClass: 'fa fa-code',
