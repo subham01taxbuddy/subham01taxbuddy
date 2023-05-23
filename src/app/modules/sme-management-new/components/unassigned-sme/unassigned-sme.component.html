@@ -12,41 +12,41 @@
     </div>
   </div>
 
-<div class="card" style="margin-top: 5px">
-  <div class="row">
-    <div class="col-sm-3">
-        <label class="input__label" for="attr">Select attribute</label>
-        <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
-          <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-            {{drop.name}}</option>
-        </select>
-    </div>
-    <div class="col-sm-3">
-        <label class="input__label" for="attr">Enter value</label>
-        <div class="input__select">
-          <input type="text" class="select__box ogp_select" style="background-image:none"
-            [(ngModel)]="searchVal" name="searchVal" />
+  <div class="card" style="margin-top: 5px">
+    <div class="row">
+      <div class="col-sm-3">
+          <label class="input__label" for="attr">Select attribute</label>
+          <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
+            <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+              {{drop.name}}</option>
+          </select>
+      </div>
+      <div class="col-sm-3">
+          <label class="input__label" for="attr">Enter value</label>
+          <div class="input__select">
+            <input type="text" class="select__box ogp_select" style="background-image:none"
+              [(ngModel)]="searchVal" name="searchVal" />
+          </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="input__label">
+          <button class="btn clrBtn text-center" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
+            <i class="fa fa-search" aria-hidden="true"></i> Search
+          </button>
         </div>
-    </div>
-    <div class="col-sm-3">
-      <div class="input__label">
-        <button class="btn clrBtn text-center" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
-          <i class="fa fa-search" aria-hidden="true"></i> Search
-        </button>
       </div>
     </div>
+
+
+
+
+        <table>
+          <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+        </table>
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
+          (rowClicked)="onSmeRowClicked($event)">
+        </ag-grid-angular>
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
   </div>
-
-
-
-
-      <table>
-        <tr *ngFor="let item of smeInfo | paginate : config"></tr>
-      </table>
-      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
-        (rowClicked)="onSmeRowClicked($event)">
-      </ag-grid-angular>
-      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
-</div>
 </div>
