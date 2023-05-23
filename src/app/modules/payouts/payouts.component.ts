@@ -388,7 +388,7 @@ export class PayoutsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Payment Status',
+        headerName: 'Payout Status',
         field: 'commissionPaymentStatus',
         width: 120,
         suppressMovable: true,
@@ -550,10 +550,10 @@ export class PayoutsComponent implements OnInit {
       this.utilsService.showSnackBar('Please select entries to approve');
       return;
     }
-    let serviceIds = selectedRows.flatMap(item=> item.serviceId);
+    let invoices = selectedRows.flatMap(item=> item.invoiceNo);
     let param = '/dashboard/partner-commission';
     let request = {
-      serviceIdList: serviceIds,
+      invoiceNoList: invoices,
       commissionPaymentApprovalStatus: 'APPROVED'
     };
     this.loading = true;
