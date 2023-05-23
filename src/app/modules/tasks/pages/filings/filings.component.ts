@@ -89,17 +89,18 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       console.log(this.router.getCurrentNavigation().extras.state);
       this.search();
     }
+
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: null,
+    };
   }
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
-    this.config = {
-      itemsPerPage: 20,
-      currentPage: 1,
-      totalItems: null,
-    };
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
@@ -260,11 +261,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
-          if (res.data?.content instanceof Array) {
-            this.itrDataList = res.data['content'];
-            this.config.totalItems = res.data.totalElements;
+          if (res?.data?.content instanceof Array) {
+            this.itrDataList = res?.data?.content;
+            this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData(res.data['content'])
+              this.createOnSalaryRowData(this.itrDataList)
             );
           } else {
             this.itrDataList = [];
