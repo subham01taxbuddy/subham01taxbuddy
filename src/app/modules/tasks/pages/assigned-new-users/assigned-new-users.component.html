@@ -18,17 +18,10 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-<<<<<<< HEAD
-        <div class="col-sm-12 bckClr"  *ngIf="!coOwnerCheck">            
-            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-        </div>
-        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">          
-=======
         <div class="col-sm-7"  *ngIf="!coOwnerCheck">
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
         <div class="col-sm-0" *ngIf="coOwnerCheck">
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
             <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
 
@@ -61,17 +54,12 @@
               <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
             </mat-form-field>
           </div>
-<<<<<<< HEAD
-          <div class="col-sm-12 spsTp bdrTp">
-            <button class="clrLnk mvRth" (click)="this.resetFilters()">
-=======
-          <div class="col-sm-2 spsTp">
+          <div class="col-sm-2 spsTp bdrTp">
             <button class="srch-btn" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
                 aria-hidden="true"></i>&nbsp;Search</button>
           </div>
           <div class="col-sm-2 spsTp">
             <button class="clrLnk" [disabled]="loading" (click)="this.resetFilters()">
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
               Clear form
             </button>
 
@@ -97,11 +85,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-<<<<<<< HEAD
         <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div> 
-=======
-        <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
         </div>
         </div>
         <table>
