@@ -3,78 +3,34 @@
 <div class="main clearfix">
   <div class="row">
     <div class="col-sm-6">
-  <h4 class="bdrbl">Filer's Dashboard:</h4>
+  <h4 class="bdrbl">Activities:</h4>
 </div>
-<div class="col-sm-6">
+<!-- <div class="col-sm-6">
   <div class="float-right">
     <span class="TxBg">Documents Uploaded</span>
       <span class="numTxBg">{{commissionData?.documentsUploaded || 'NA'}}</span>
     </div>
-</div>
+</div> -->
 </div>
 
 
 
   <div class="row rowClr">
 
-    <!-- <div class="row rowSp">
-      <div class="col-sm-12">
-        <h5 class="bdrbl1">ITR Overview:</h5>
-      </div>
-      <div class="col-sm-2">
-        <div class="radius3">
-            <span class="bluTx">2535</span><br>
-            <span class="TxSm">Assign Users</span>
-        </div>
-      </div>
-      <div class="col-sm-2">
-        <div class="radius3">
-            <span class="bluTx">30</span><br>
-            <span class="TxSm">Open</span>
-        </div>
-      </div>
-      <div class="col-sm-2">
-        <div class="radius3">
-            <span class="bluTx">1688</span><br>
-            <span class="TxSm">Document Uploaded</span>
-        </div>
-      </div>
-      <div class="col-sm-2">
-        <div class="radius3">
-            <span class="bluTx">196</span><br>
-            <span class="TxSm">In Process</span>
-        </div>
-      </div>
-      <div class="col-sm-2">
-        <div class="radius3">
-            <span class="bluTx">285</span><br>
-            <span class="TxSm">Waiting for confirmation</span>
-        </div>
-      </div>
-      <div class="col-sm-2">
-        <div class="radius3">
-            <span class="bluTx">184</span><br>
-            <span class="TxSm">Back Out</span>
-        </div>
-      </div>
-    </div> -->
-
     <div class="col-sm-12">
       <div class="radiuSrch">
         <div class="row">
-          <div class="col-sm-4">
-            <div>
-                <mat-label> Search By Filer </mat-label>
-                <mat-form-field appearance="outline">
-                  <input matInput type="text"  [formControl]="searchFiler" [matAutocomplete]="auto" />
-                  <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name"
-                      (click)="getFilerNameId(option1)">
-                      {{ option1.name }}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-              </div>
+          <div class="col-sm-3">
+            <mat-label> Search By Filer </mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="text" [formControl]="searchFiler" [matAutocomplete]="auto" />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option1 of filteredFilers | async" [value]="option1.name"
+                  (click)="getFilerNameId(option1)">
+                  {{ option1.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
           <div class="col-sm-3">
             <div>
@@ -91,12 +47,60 @@
             </div>
           </div>
 
-          <div class="col-sm-2">
+          <div class="col-sm-2 text-center">
             <button class="srch-btn" (click)="search('all')" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+          </div>
+          <div class="col-sm-1 text-center" style="margin-top: 25px;">
+            <button class="tbd-btn-clear" (click)="this.resetFilters()">
+              <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
+              Clear
+            </button>
           </div>
 
       </div>
     </div>
+    </div>
+
+    <div class="row rowSp">
+      <div class="col-sm-12">
+        <h5 class="bdrbl1">ITR Overview:</h5>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+          <span class="bluTx">{{itrOverview?.assignedUsersCount || 'NA'}}</span><br>
+          <span class="TxSm">Assign Users</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+          <span class="bluTx">{{itrOverview?.openCount || 'NA'}}</span><br>
+          <span class="TxSm">Open</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+          <span class="bluTx">{{itrOverview?.documentUploadedCount || 'NA'}}</span><br>
+          <span class="TxSm">Document Uploaded</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+          <span class="bluTx">{{itrOverview?.inProcessCount || 'NA'}}</span><br>
+          <span class="TxSm">In Process</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+          <span class="bluTx">{{itrOverview?.waitingForConfirmationCount || 'NA'}}</span><br>
+          <span class="TxSm">Waiting for confirmation</span>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="radius3">
+          <span class="bluTx">{{itrOverview?.backedOutCount || 'NA'}}</span><br>
+          <span class="TxSm">Back Out</span>
+        </div>
+      </div>
     </div>
 
      <div class="col-sm-6">
@@ -257,7 +261,7 @@
           <td [ngClass]="{'text-danger': item.paymentStatus === 'Unpaid'}">{{ item.paymentStatus }}</td>
         </tr>
         <tr *ngIf="docUploadedData?.content?.length === 0">
-          <td colspan="4" class="text-center">
+          <td colspan="5" class="text-center">
             No Records Found
           </td>
         </tr>
@@ -319,7 +323,7 @@
   </div>
   <div class="col-sm-6">
   <div class="radiusTab">
-      <div class="tx">Waiting for Confirmation</div>
+      <div class="tx">Waiting for Confirmation - As On ({{ today | date:'dd MMMM yyyy' }})</div>
       <button class="proceed2" (click)="goTo('myItr')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">
       <thead>
@@ -347,7 +351,7 @@
           <td>{{ item.userConfirmationStatus }}</td>
         </tr>
         <tr *ngIf="summaryConfirmationData?.content?.length === 0">
-          <td colspan="4" class="text-center">
+          <td colspan="5" class="text-center">
             No Records Found
           </td>
         </tr>

@@ -46,12 +46,23 @@
               <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
             </mat-form-field>
           </div>
+<<<<<<< HEAD
           <div class="col-sm-12 spsTp bdrTp">
             <button class="clrLnk mvRth" (click)="resetFilters()">Clear Form</button>
             <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
                 aria-hidden="true"></i>&nbsp;Search</button> 
+=======
+          <div class="col-sm-2 spsTp">
+            <button class="srch-btn" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
+                aria-hidden="true"></i>&nbsp;Search</button>
           </div>
-     
+          <div class="col-sm-2 spsTp">
+            <button class="clrLnk" [disabled]="loading" (click)="resetFilters()">
+            Clear Form
+          </button>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
+          </div>
+
         </div>
       </div>
       </div>
@@ -64,7 +75,11 @@
             </div>
           </div>
           <div class="col-sm-4">
+<<<<<<< HEAD
           <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+=======
+          <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
           </div>
           </div>
 

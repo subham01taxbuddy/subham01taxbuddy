@@ -77,6 +77,10 @@
               "vendorChunk": false,
               "buildOptimizer": false,
               "serviceWorker": false,
+              "index": {
+                "input": "src/environments/prod/index.html",
+                "output": "index.html"
+              },
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -104,6 +108,10 @@
               "vendorChunk": false,
               "buildOptimizer": false,
               "serviceWorker": false,
+              "index": {
+                "input": "src/environments/staging/index.html",
+                "output": "index.html"
+              },
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -121,6 +129,10 @@
               "vendorChunk": false,
               "buildOptimizer": false,
               "serviceWorker": false,
+              "index": {
+                "input": "src/environments/dev/index.html",
+                "output": "index.html"
+              },
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

@@ -255,9 +255,7 @@ export class AssignedNewUsersComponent implements OnInit {
       this.filerId = event? event.userId : null;
     }
     if(this.filerId) {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-      this.filerUserId = this.filerId;
+      this.agentId = this.filerId;
     } else if(this.ownerId) {
       this.agentId = this.ownerId;
       this.search('agent');

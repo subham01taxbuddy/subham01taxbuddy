@@ -5,7 +5,7 @@
     <div class="col-sm-4">
       <b style="font-size: 20px">Scheduled Calls</b>
     </div>
-       
+
         <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
           <p>
             <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
@@ -15,7 +15,11 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
+<<<<<<< HEAD
         <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">    
+=======
+        <div class="col-sm-10" *ngIf="!coOwnerCheck">
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
         <div class="col-sm-12 bckClr"  *ngIf="coOwnerCheck">
@@ -64,8 +68,24 @@
               />
             </mat-form-field>
           </div>
+<<<<<<< HEAD
           <div class="col-sm-12 spsTp bdrTp">
             <button class="clrLnk mvRth" (click)="this.resetFilters()">
+=======
+          <div class="col-sm-2 spsTp">
+            <button class="srch-btn" [disabled]="loading" (click)="this.search('mobile','isAgent')">
+              <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+            </button>
+          </div>
+          <div class="col-sm-2 spsTp">
+            <!-- <a class="btn btn_stroke filter__add-link" (click)="this.search('mobile')"><i class="fa fa-search"
+                aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a> -->
+            <button class="clrLnk" [disabled]="loading" (click)="this.resetFilters()">
+              <!--              <div class="fa-layers fa-1x fa-fw">-->
+              <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
+              <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
+              <!--              </div>-->
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
               Clear form
             </button>
             <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')">
@@ -87,7 +107,11 @@
     </div>
   </div>
   <div class="col-sm-4">
+<<<<<<< HEAD
   <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+=======
+  <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
   </div>
   </div>
           <table>
@@ -102,6 +126,6 @@
                 <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
             </div> -->
 </div>
-    
-  
+
+
 

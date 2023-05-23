@@ -21,7 +21,7 @@
 
     <div class="col-sm-6 spsTp">
         <label class="input__label" for="attr">Select attribute</label>
-        <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
+        <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey [ngClass]="{'error': showError && (!key || !searchVal)}">
           <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
             {{drop.name}}</option>
         </select>
@@ -31,12 +31,18 @@
         <label class="input__label" for="attr">Enter value</label>
         <div class="input__select">
           <input type="text" class="select__box ogp_select" style="background-image:none"
-            [(ngModel)]="searchVal" name="searchVal" />
+            [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
         </div>
     </div>
+<<<<<<< HEAD
 
     <div class="col-sm-12 spsTp bdrTp">     
         <button class="srch-btn mvRth"  (click)="advanceSearch(advanceSearchKey.value)">
+=======
+    <div class="col-sm-3">
+      <div class="input__label">
+        <button class="btn clrBtn" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
     </div>

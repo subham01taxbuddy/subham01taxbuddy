@@ -3,7 +3,8 @@
 <div class="cardRect mrgArd">
   <div class="card__title">Customer Declaration</div>
   <form [formGroup]="declarationsForm">
-    <div style="line-height: 2em; font-size: 16px;">
+    <div class="row">
+    <div class="col-sm-12">
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <strong>I</strong>,&nbsp;
       <mat-form-field style="width: 30% !important; ">
@@ -42,9 +43,7 @@
           PAN Number
         </mat-error>
       </mat-form-field>
-    </div>
-
-    <div>
+    
       <mat-form-field style="width: 35% !important;">
         <input matInput type="text" maxlength="25" formControlName="place" placeholder="Place" class="input-field"
                required>
@@ -55,8 +54,8 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="footer__buttons clearfix">
-      <button class="tbd-btn save-btn" (click)="saveAndContinue()">Save
+    <div class="col-sm-12 spsTp bdrTp">
+      <button class="tbd-btn save-btn mvRth" (click)="saveAndContinue()">Save
       </button>
     </div>
     <!--  <div class="card_footer">
@@ -68,6 +67,7 @@
                     aria-hidden="true"></i></a>
               </div>
             </div> -->
+   </div>
   </form>
 </div>
 <!-- </div> -->

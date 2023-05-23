@@ -51,6 +51,8 @@ export class DashboardComponent implements OnInit {
   eVerificationPendingData:any;
   scheduleCallData:any;
   commissionData:any;
+  today: Date;
+  itrOverview:any;
 
   constructor(
     private userMsService: UserMsService,
@@ -62,6 +64,7 @@ export class DashboardComponent implements OnInit {
   ) {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
+    this.today = new Date();
   }
 
   ngOnInit(): void {
@@ -73,6 +76,7 @@ export class DashboardComponent implements OnInit {
     this.getItrFilledEVerificationPendingList('eVerificationPending');
     this.getScheduleCallDetails('scheduleCall');
     this.getPartnerCommission();
+    this.getItrUserOverview();
   }
 
   config = {
@@ -137,6 +141,7 @@ export class DashboardComponent implements OnInit {
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
       this.getScheduleCallDetails('scheduleCall');
+      this.getItrUserOverview();
     }
 
   }
@@ -296,6 +301,33 @@ getPartnerCommission(){
     }
   );
 }
+
+getItrUserOverview(){
+    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
+    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?leaderUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let filerUserId = this.loggedInSmeUserId;
+
+    let param =`/dashboard/itr-users-overview?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&page=0&size=30`
+
+    this.itrService.getMethod(param).subscribe((response: any) => {
+      if(response.success == false){
+        this.itrOverview=null;
+        this. _toastMessageService.alert("error",response.message);
+      }
+      if (response.success) {
+        this.itrOverview = response.data;
+      }else{
+         this.loading = false;
+         this. _toastMessageService.alert("error",response.message);
+       }
+    },(error) => {
+      this.loading = false;
+      this. _toastMessageService.alert("error","Error");
+    });
+  }
 
 goTo(form?){
   if (form == 'myUsers') {

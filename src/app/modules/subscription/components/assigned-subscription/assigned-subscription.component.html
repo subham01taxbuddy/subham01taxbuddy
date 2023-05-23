@@ -29,6 +29,7 @@
                       {{year.financialYear}}
                     </mat-option>
                   </mat-select> -->
+<<<<<<< HEAD
          </mat-form-field>
         </div>
         <div class="col-sm-6 spsTp" *ngIf="false">
@@ -38,6 +39,17 @@
           <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
           <mat-icon style="color: #00AECA">search</mat-icon>
           </button>
+=======
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3" *ngIf="false">
+                  <mat-label> Search by Name </mat-label>
+                  <mat-form-field appearance="outline" class="customBg">
+                    <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
+                    <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
+                      <mat-icon style="color: #00AECA">search</mat-icon>
+                    </button>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
                         (click)="getFilerNameId(option)">
@@ -50,7 +62,7 @@
                   <mat-label> Search Mobile Number</mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
-                    <button (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
+                    <button [disabled]="loading" (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button>
                     <!-- <mat-icon matSuffix>search</mat-icon> -->
@@ -60,6 +72,20 @@
                     </mat-option>
                   </mat-autocomplete> -->
                   </mat-form-field>
+<<<<<<< HEAD
+=======
+                </div>
+                <div class="col-sm-3 ">
+                  <button *ngIf="isAllowed" class="btn createBtn" (click)="createSub()"> Create Subscription </button>
+                </div>
+                <div class="col-sm-2">
+                  <button class="tbd-btn-clear" [disabled]="loading" (click)="this.resetFilters()">
+                    <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
+                    Clear
+                  </button>
+                </div>
+              </div>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
             </div>
                 <div class="col-sm-12 spsTp bdrTp">
                   <button class="clrLnk mvRth" (click)="this.resetFilters()">
@@ -93,5 +119,12 @@
               [rowSelection]="rowSelection" (rowClicked)="onSubscriptionRowClicked($event)">
             </ag-grid-angular>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+<<<<<<< HEAD
       
 </div>
+=======
+          </div>
+        </div>
+      </div>
+    </div>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9

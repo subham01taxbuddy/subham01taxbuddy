@@ -62,13 +62,18 @@
 </div>
 
 <!-- Table -->
-<div class="tableSpc">
+  <div class="tableSpc">
   <div class="row">
-  <div class="col-sm-8">
-    <div class="txTit">
-      Review Details:
+    <div class="col-sm-8">
+      <div class="txTit">
+        Review Details:
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
     </div>
   </div>
+<<<<<<< HEAD
   <div class="col-sm-4">
   <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
   </div>
@@ -76,10 +81,15 @@
           <table>
             <tr *ngFor="let item of userInfo | paginate : config"></tr>
           </table>
+=======
+  <table>
+    <tr *ngFor="let item of userInfo | paginate : config"></tr>
+  </table>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
 
-          <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="reviewGridOptions" (rowClicked)="onRowClicked($event)">
-          </ag-grid-angular>
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="reviewGridOptions" (rowClicked)="onRowClicked($event)">
+  </ag-grid-angular>
 
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-        </div>
-  
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+</div>

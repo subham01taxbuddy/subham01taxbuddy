@@ -13,6 +13,44 @@
   </div>
   </div>
 
+<<<<<<< HEAD
+=======
+<div class="card" style="margin-top: 5px">
+  <div class="row">
+    <div class="col-sm-3">
+        <label class="input__label" for="attr">Select attribute</label>
+        <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey [ngClass]="{'error': showError && (!key || !searchVal)}">
+          <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+            {{drop.name}}</option>
+        </select>
+    </div>
+    <div class="col-sm-3">
+        <label class="input__label" for="attr">Enter value</label>
+        <div class="input__select">
+          <input type="text" class="select__box ogp_select" style="background-image:none"
+            [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+        </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="input__label">
+        <button class="btn clrBtn text-center" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
+          <i class="fa fa-search" aria-hidden="true"></i> Search
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card__row">
+  <div class="card__col-xs-12 card__col-sm-12">
+    <p style="float: left;">Total Count: <b>{{this.config.totalItems }}</b></p>
+    <br>
+  </div>
+</div>
+<div>
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-12">
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
       <table>
         <tr *ngFor="let item of smeInfo | paginate : config"></tr>
       </table>

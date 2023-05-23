@@ -1,5 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
+<<<<<<< HEAD
 <div class="align-items-center row">
     <div class="col-sm-4">
       <b style="font-size: 25px">Refund Request</b>
@@ -77,3 +78,55 @@
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
 </div>
+=======
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <mat-label> Mobile Number </mat-label>
+                        <mat-form-field appearance="outline">
+                            <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-label> Email </mat-label>
+                        <mat-form-field appearance="outline">
+                            <input type="text" matInput [formControl]="email" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-label> Invoice No. </mat-label>
+                        <mat-form-field appearance="outline">
+                            <input matInput [formControl]="invoiceNo" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btnClr" [disabled]="loading" (click)="applyFilter()">
+                            <i class="fas fa-search" aria-hidden="true"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <button class="tbd-btn-clear" [disabled]="loading" (click)="resetFilters()">
+                            <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-12">
+                <table>
+                    <tr *ngFor="let item of userInfo | paginate : config"></tr>
+                </table>
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="refundListGridOptions"
+                    [rowSelection]="rowSelection" (rowClicked)="onRefundRowClicked($event)">
+                </ag-grid-angular>
+                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+>>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
