@@ -500,9 +500,12 @@ export class UtilsService {
     profile: any,
     assessmentYear: any,
     financialYear: any,
-    itrId?: any
+    itrId?: any,
+    filingTeamMemberId?: any,
+    id?: any
   ) {
     const ITR_JSON: ITR_JSON = {
+      id: id ? id : null,
       ackStatus: '',
       acknowledgementReceived: false,
       userId: this.isNonEmpty(profile) ? profile.userId : null,
@@ -521,7 +524,7 @@ export class UtilsService {
       currency: 'INR',
       locale: 'en_IN',
       financialYear: financialYear,
-      filingTeamMemberId: null,
+      filingTeamMemberId: filingTeamMemberId ? filingTeamMemberId : null,
       planIdSelectedByUser: null,
       planIdSelectedByTaxExpert: null,
       eFillingPortalPassword: '*****',
