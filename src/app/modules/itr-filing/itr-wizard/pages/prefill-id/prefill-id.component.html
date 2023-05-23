@@ -23,7 +23,6 @@
 
           <div class="flex flex-col items-center">
             <div
-              *ngIf="!data?.eriClientValidUpto"
               class="flex flex-row items-center space-between"
             >
               <button
@@ -45,7 +44,7 @@
               </button>
             </div>
 
-            <div *ngIf="data?.eriClientValidUpto" style="font-size: 12px">
+            <div *ngIf="data?.eriClientValidUpto" class="txHd alTxH" style="font-size: 12px">
               Client added, valid upto
               {{ data?.eriClientValidUpto | date }}
             </div>

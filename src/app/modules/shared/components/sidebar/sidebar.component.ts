@@ -52,20 +52,28 @@ export class SidebarComponent implements DoCheck {
   }
 
   menus: Menu[] = [
+    {
+      name: 'Partner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard',
+      roles: ['ROLE_FILER'],
+      submenu: []
+    },
+    {
+      name: 'Owner Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard/main',
+      roles: ['ROLE_OWNER'],
+      submenu: []
+    },
     // {
-    //   name: 'Partner Dashboard',
+    //   name: 'Leader Dashboard',
     //   // iconClass: 'fa fa-globe',
     //   active: false,
-    //   url: '/dashboard',
-    //   roles: [],
-    //   submenu: []
-    // },
-    // {
-    //   name: 'Owner Dashboard',
-    //   // iconClass: 'fa fa-globe',
-    //   active: false,
-    //   url: '/dashboard/main',
-    //   roles: [],
+    //   url: '/dashboard/leader',
+    //   roles: ['ROLE_ADMIN','ROLE_LEADER'],
     //   submenu: []
     // },
     {
@@ -111,7 +119,7 @@ export class SidebarComponent implements DoCheck {
       url: null,
       roles: [],
       submenu: [
-        { name: 'Assigned Subscription', url: '/subscription/assigned-subscription', roles: [] },
+        { name: 'Assign Subscription', url: '/subscription/assigned-subscription', roles: [] },
         { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
       ]
     },
@@ -129,6 +137,14 @@ export class SidebarComponent implements DoCheck {
         { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
+    // {
+    //   name: 'Payouts',
+    //   // iconClass: 'fa fa-code',
+    //   active: true,
+    //   url: '/payouts',
+    //   roles: ['ROLE_LEADER'],
+    //   submenu: []
+    // },
     {
       name: 'All Users',
       // iconClass: 'fa fa-code',
@@ -150,6 +166,14 @@ export class SidebarComponent implements DoCheck {
       // iconClass: 'fa fa-code',
       active: true,
       url: '/bo-partners',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
+    },
+    {
+      name: 'Promo-Codes',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: '/promo-code',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     }

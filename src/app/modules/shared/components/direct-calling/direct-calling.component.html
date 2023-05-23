@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <label style="font-size: 18px;
-font-weight: bold;">Call</label>
-<button mat-dialog-close tabindex="-1" class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+font-weight: bold;">Call Unlisted Number:</label>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close moveR"><i class="fa fa-times" aria-hidden="true"></i></button>
 
 <div class="card__row">
     <div class="card__col-xs-8">
@@ -15,6 +15,6 @@ font-weight: bold;">Call</label>
         </mat-form-field>
     </div>
     <div class="card__col-xs-4">
-        <button type="submit" class="tbd-btn" (click)="call()">Call</button>
+        <button type="submit" class="pop-btn" (click)="call()"><i class="fa fa-phone phrevs" aria-hidden="true"></i> Call</button>
     </div>
 </div>

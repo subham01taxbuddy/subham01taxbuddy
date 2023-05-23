@@ -456,7 +456,7 @@ export class BoPartnersComponent implements OnInit {
         noOfEmployees: data[i].noOfEmployees,
         areaOfExpertise: data[i].areaOfExpertise,
         status: data[i].status,
-        currentstatus: data[i].currentstatus.status,
+        currentstatus: data[i].currentstatus?.status,
         aadhaarUrl: data[i].aadhaarUrl,
         panUrl: data[i].panUrl,
         signedNDAUrl: data[i].signedNDAUrl,
@@ -555,7 +555,7 @@ export class BoPartnersComponent implements OnInit {
 </body>
 
 </html>`);
-    data.append('cc', 'partnersleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
+    data.append('cc', 'partnerleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
     data.append('isHtml', 'true');
     data.append('to', partnerData.emailAddress);
 

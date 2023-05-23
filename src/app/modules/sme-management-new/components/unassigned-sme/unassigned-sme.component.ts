@@ -132,7 +132,7 @@ export class UnassignedSmeComponent implements OnInit {
       },
       {
         headerName: 'Email',
-        field: 'email',
+        field: 'smeOriginalEmail',
         width: 190,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },

@@ -1,0 +1,29 @@
+<div>
+  <div class="row">
+    <div class="col-sm-6">
+      <mat-label> Search By Leader </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto>
+          <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
+            (click)="getLeaderNameId(option);">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-label> Search By Owner </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto1" />
+        <mat-autocomplete #auto1>
+          <mat-option *ngFor="let option1 of filteredOwners | async" [value]="option1.name"
+            (click)="getOwnerNameId(option1)">
+            {{ option1.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
