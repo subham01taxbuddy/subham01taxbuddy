@@ -10,19 +10,19 @@
       </p>
     </div>
   </div>
-  
+
   <div class="rowClr">
   <div class="surround">
    <div class="row">
-  
+
    <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
    <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
   </div>
- 
+
    <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
    <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
    </div>
-   
+
    <div *ngIf="false" >
                  <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
@@ -48,7 +48,7 @@
                   </mat-form-field>
                 </div>
               </div>
-   
+
 
             <div *ngIf="false">
               <div class="col-sm-6" *ngIf="!coOwnerCheck">
@@ -58,7 +58,7 @@
                     <!-- <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button> -->
-                  </mat-form-field>               
+                  </mat-form-field>
               </div>
             </div>
 
@@ -143,12 +143,12 @@
                   </mat-select>
               </mat-form-field>
               </div> -->
-          
-     
+
+
               <div class="col-sm-12 spsTp bdrTp">
-                <button *ngIf="!roles?.includes('ROLE_OWNER') && !roles?.includes('ROLE_FILER')" class="dwldBtn" (click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
-                
-                <button class="clrLnk mvRth" (click)="this.resetFilters()">
+                <button *ngIf="!roles?.includes('ROLE_OWNER') && !roles?.includes('ROLE_FILER')" class="dwldBtn" [disabled]="loading" (click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
+
+                <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                   <!--              <div class="fa-layers fa-1x fa-fw">-->
                   <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
                   <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->

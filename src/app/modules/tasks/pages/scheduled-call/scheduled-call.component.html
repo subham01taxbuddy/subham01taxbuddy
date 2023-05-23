@@ -5,7 +5,7 @@
     <div class="col-sm-4">
       <b style="font-size: 20px">Scheduled Calls</b>
     </div>
-       
+
         <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
           <p>
             <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
@@ -15,7 +15,7 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">    
+        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
         <div class="col-sm-12 bckClr"  *ngIf="coOwnerCheck">
@@ -65,13 +65,13 @@
             </mat-form-field>
           </div>
           <div class="col-sm-12 spsTp bdrTp">
-            <button class="clrLnk mvRth" (click)="this.resetFilters()">
+            <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
               Clear form
             </button>
-            <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')">
+            <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')">
               <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
             </button>
-       
+
           </div>
         </div>
       </div>
@@ -102,6 +102,6 @@
                 <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
             </div> -->
 </div>
-    
-  
+
+
 

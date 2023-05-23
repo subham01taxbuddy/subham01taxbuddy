@@ -31,14 +31,14 @@
                         </mat-form-field>
                     </div>
                     <div class="col-sm-12 spsTp bdrTp">
-                      <button class="clrLnk mvRth" (click)="resetFilters()">
+                      <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
                         Clear form
                       </button>
-                        <button class="srch-btn mvRth" (click)="applyFilter()">
+                        <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
                             <i class="fas fa-search" aria-hidden="true"></i> Search
                         </button>
-                   
-                        
+
+
                     </div>
 </div>
 </div>

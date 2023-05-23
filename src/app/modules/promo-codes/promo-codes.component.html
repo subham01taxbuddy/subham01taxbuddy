@@ -1,0 +1,59 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="main clearfix">
+  <div class="row">
+    <div class="col-sm-6">
+      <h4>Promo Codes:</h4>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row">
+      <div class="col-sm-3">
+        <mat-label> Enter Promo-Code </mat-label>
+        <mat-form-field appearance="outline">
+          <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
+          <mat-error *ngIf="searchValue?.hasError('required') ">
+            This field is required</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-3">
+        <mat-label>Select Service Type</mat-label>
+        <app-service-drop-down #serviceDropDown (sendService)="fromServiceType($event)"
+          [formControl]="serviceType"></app-service-drop-down>
+      </div>
+      <div class="col-sm-3">
+        <button class="btn createBtn" (click)="searchPromoCode()">
+          <i class="fa fa-search" aria-hidden="true"></i> Search
+        </button>
+      </div>
+      <div class="col-sm-3">
+        <div class="input__label">
+          <button class="btn createBtn" (click)="addPromoCode('Add Promo-Code','Add', '')">
+            Add Promo-Code
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 5px;">
+    <div class="clo-sm-6">
+      Total Count: <b>{{totalCount}}</b>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 40px;">
+    <!-- <table>
+      <tr *ngFor="let item of PromoCodeInfo | paginate:config"></tr>
+    </table> -->
+
+    <ag-grid-angular class="ag-theme-balham" [gridOptions]="promoCodeGridOptions" (rowClicked)="onPromoCodeRowClicked($event)">
+      <!-- paginationPageSize=15 pagination=true -->
+    </ag-grid-angular>
+
+    <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
+  </div>
+
+
+
+
+</div>

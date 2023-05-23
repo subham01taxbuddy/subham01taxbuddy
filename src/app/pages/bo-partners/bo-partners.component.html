@@ -7,7 +7,7 @@
     </div>
   </div>
   <div class="rowClr">
-    <div class="surround">   
+    <div class="surround">
           <form [formGroup]="boPartnerDateForm">
     <div class="row">
             <div class="col-sm-3">
@@ -59,16 +59,16 @@
               >
                 Search
               </button> -->
-              <button class="srch-btn" style=" cursor: pointer" (click)="getBoPartners('mobile')">
+              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getBoPartners('mobile')">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
               </button>
-              <button class="clrLnk movLf" (click)="resetFilters()">
+              <button class="clrLnk movLf" [disabled]="loading" (click)="resetFilters()">
                 Clear form
               </button>
             </div>
           </div>
 
-          </form>        
+          </form>
       </div>
       </div>
       <!-- Table -->
@@ -102,4 +102,4 @@
                  paginationPageSize=15 pagination=true-->
         <!-- </ag-grid-angular>
         </div> -->
-      </div>
+</div>

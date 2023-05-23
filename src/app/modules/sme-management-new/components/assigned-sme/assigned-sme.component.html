@@ -35,8 +35,8 @@
         </div>
     </div>
 
-    <div class="col-sm-12 spsTp bdrTp">     
-        <button class="srch-btn mvRth"  (click)="advanceSearch(advanceSearchKey.value)">
+    <div class="col-sm-12 spsTp bdrTp">
+        <button class="srch-btn mvRth"  [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
     </div>
@@ -53,7 +53,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-  <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div> 
+  <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
   </div>
   </div>
 
@@ -64,5 +64,5 @@
         (rowClicked)="onSmeRowClicked($event)" >
       </ag-grid-angular>
       <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-    
+
  </div>

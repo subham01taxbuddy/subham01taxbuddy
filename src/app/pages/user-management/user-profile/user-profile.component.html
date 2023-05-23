@@ -452,7 +452,7 @@
             </div>
 
             <div class="card__row">
-                <button class="btn" (click)="updateUserProfile()">Update</button>
+                <button [disabled]="loading" class="btn" (click)="updateUserProfile()">Update</button>
                 <button class="btn" (click)="onCancelClick()">Cancel</button>
             </div>
         </div>
