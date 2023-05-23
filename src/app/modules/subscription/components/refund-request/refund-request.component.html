@@ -16,7 +16,7 @@
   <div class="rowClr">
     <div class="surround">
     <div class="row">
-    
+
     <div class="col-sm-12 bckClr">
     <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
      </div>
@@ -42,15 +42,15 @@
      </mat-form-field>
      </div>
      <div class="col-sm-12 spsTp bdrTp">
-      <button class="clrLnk mvRth" (click)="resetFilters()">
+      <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
         Clear form
-      </button> 
+      </button>
 
-     <button class="srch-btn mvRth" (click)="applyFilter()">
+     <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
      <i class="fas fa-search" aria-hidden="true"></i> Search
      </button>
-    
-        
+
+
      </div>
 
 </div>
@@ -69,7 +69,7 @@
     <!-- <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div>  -->
     </div>
     </div>
-    
+
     <table>
     <tr *ngFor="let item of userInfo | paginate : config"></tr>
     </table>

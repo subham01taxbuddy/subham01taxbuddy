@@ -36,7 +36,7 @@
           <mat-label> Search by Name </mat-label>
           <mat-form-field appearance="outline" class="customBg">
           <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-          <button (click)="searchByName()" mat-button matSuffix mat-icon-button>
+          <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
           <mat-icon style="color: #00AECA">search</mat-icon>
           </button>
 =======
@@ -88,12 +88,12 @@
 >>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
             </div>
                 <div class="col-sm-12 spsTp bdrTp">
-                  <button class="clrLnk mvRth" (click)="this.resetFilters()">
+                  <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                     Clear form
                   </button>
                   <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
-               
-                  
+
+
                 </div>
 
 </div>

@@ -75,9 +75,9 @@
               Clear form
             </button>
 
-            <button class="srch-btn mvRth" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                aria-hidden="true"></i>&nbsp;Search</button>         
-            
+            <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
+                aria-hidden="true"></i>&nbsp;Search</button>
+
           </div>
 
 
