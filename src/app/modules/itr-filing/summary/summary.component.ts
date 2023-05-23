@@ -263,15 +263,15 @@ export class SummaryComponent implements OnInit {
   summaryToolMapping() {
     // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
     {
-      if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR1')) {
+      if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR1')) {
         this.itrType = 'ITR1';
         this.ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
         this.taxComputation = 'ITR1_TaxComputation';
-      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR2')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR2')) {
         this.itrType = 'ITR2';
-      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR3')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR3')) {
         this.itrType = 'ITR3';
-      } else if (this.ITR_JSON.itrSummaryJson.hasOwnProperty('ITR4')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR4')) {
         this.itrType = 'ITR4';
         this.ITR14IncomeDeductions = 'IncomeDeductions';
         this.taxComputation = 'TaxComputation';
@@ -282,263 +282,295 @@ export class SummaryComponent implements OnInit {
       this.keys = {
         //SALARY INCOME
         IncomeFromSal:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.IncomeFromSal,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.IncomeFromSal,
 
         GrossSalary:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.GrossSalary,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.GrossSalary,
 
         TotalAllwncExemptUs10:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .AllwncExemptUs10?.TotalAllwncExemptUs10,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ].AllwncExemptUs10?.TotalAllwncExemptUs10,
 
         ProfessionalTaxUs16iii:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.ProfessionalTaxUs16iii,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.ProfessionalTaxUs16iii,
 
         EntertainmentAlw16ii:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.EntertainmentAlw16ii,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.EntertainmentAlw16ii,
 
         DeductionUs16ia:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.DeductionUs16ia,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.DeductionUs16ia,
 
         //HOUSE PROPERTY
 
         TotalIncomeOfHP:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.TotalIncomeOfHP,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.TotalIncomeOfHP,
         TypeOfHP:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.TypeOfHP,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.TypeOfHP,
         GrossRentReceived:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.GrossRentReceived,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.GrossRentReceived,
         TaxPaidlocalAuth:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.TaxPaidlocalAuth,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.TaxPaidlocalAuth,
         AnnualValue:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.AnnualValue,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.AnnualValue,
         StandardDeduction:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.StandardDeduction,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.StandardDeduction,
         InterestPayable:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.InterestPayable,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.InterestPayable,
 
         //OTHER SOURCES
         IncomeOthSrc:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.IncomeOthSrc,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.IncomeOthSrc,
 
-        SAV: this.ITR_JSON.itrSummaryJson[this.itrType][
+        SAV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
         ].OthersInc.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'SAV'
         )?.OthSrcOthAmount,
 
-        IFD: this.ITR_JSON.itrSummaryJson[this.itrType][
+        IFD: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
         ].OthersInc.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'IFD'
         )?.OthSrcOthAmount,
 
-        TAX: this.ITR_JSON.itrSummaryJson[this.itrType][
+        TAX: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
         ].OthersInc.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'TAX'
         )?.OthSrcOthAmount,
 
-        FAP: this.ITR_JSON.itrSummaryJson[this.itrType][
+        FAP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
         ].OthersInc.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'FAP'
         )?.OthSrcOthAmount,
 
-        DIV: this.ITR_JSON.itrSummaryJson[this.itrType][
+        DIV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
         ].OthersInc.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'DIV'
         )?.OthSrcOthAmount,
 
         GrossTotIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.GrossTotIncome,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.GrossTotIncome,
 
         //DEDUCTIONS
         TotalChapVIADeductions:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            .DeductUndChapVIA?.TotalChapVIADeductions,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ].DeductUndChapVIA?.TotalChapVIADeductions,
 
         Deductions: Object.entries(
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.DeductUndChapVIA
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.DeductUndChapVIA
         ).map(([key, item]) => ({ name: key, amount: item })),
 
         TotalIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            ?.TotalIncome,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            this.ITR14IncomeDeductions
+          ]?.TotalIncome,
 
         //TAXES PAID
         TotalTaxPayable:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.TotalTaxPayable,
 
         TDSonSalary:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries?.TDSonSalary,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
+            ?.TDSonSalary,
 
         TotalTDSonSalaries:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonSalaries
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
             ?.TotalTDSonSalaries,
 
         TDSonOthThanSal:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonOthThanSals
             ?.TDSonOthThanSal,
 
         TotalTDSonOthThanSals:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TDSonOthThanSals
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonOthThanSals
             ?.TotalTDSonOthThanSals,
 
         TDS3Details:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3Dtls
             ?.TDS3Details,
 
         TotalTDS3Details:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3Dtls
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3Dtls
             ?.TotalTDS3Details,
 
-        TCS: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TCS,
+        TCS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS?.TCS,
 
-        TotalSchTCS: this.ITR_JSON.itrSummaryJson[this.itrType]?.TotalSchTCS,
+        TotalSchTCS:
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TotalSchTCS,
 
         TaxPayment:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments?.TaxPayment,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
+            ?.TaxPayment,
 
         TotalTaxPayments:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPayments
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
             ?.TotalTaxPayments,
 
         Rebate87A:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.Rebate87A,
 
         TaxPayableOnRebate:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.TaxPayableOnRebate,
 
         EducationCess:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.EducationCess,
 
         GrossTaxLiability:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.GrossTaxLiability,
 
         Section89:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.Section89,
 
         NetTaxLiability:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.NetTaxLiability,
 
         IntrstPayUs234A:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.IntrstPay.IntrstPayUs234A,
 
         IntrstPayUs234B:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.IntrstPay.IntrstPayUs234B,
 
         IntrstPayUs234C:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.IntrstPay.IntrstPayUs234C,
 
         LateFilingFee234F:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             ?.IntrstPay.LateFilingFee234F,
 
         TotalIntrstPay:
           this.itrType === 'ITR1'
-            ? this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                ?.TotalIntrstPay
-            : this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                ?.IntrstPay.LateFilingFee234F +
-              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                ?.IntrstPay.IntrstPayUs234C +
-              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                ?.IntrstPay.IntrstPayUs234B +
-              this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
-                ?.IntrstPay.IntrstPayUs234A,
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.TotalIntrstPay
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.IntrstPay.LateFilingFee234F +
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.IntrstPay.IntrstPayUs234C +
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.IntrstPay.IntrstPayUs234B +
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.IntrstPay.IntrstPayUs234A,
 
         TotTaxPlusIntrstPay:
-          this.ITR_JSON.itrSummaryJson[this.itrType][this.taxComputation]
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][this.taxComputation]
             .TotTaxPlusIntrstPay,
 
         TotalTaxesPaid:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid.TaxesPaid
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid.TaxesPaid
             ?.TotalTaxesPaid,
 
         BalTaxPayable:
-          this.ITR_JSON.itrSummaryJson[this.itrType].TaxPaid?.BalTaxPayable,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
+            ?.BalTaxPayable,
 
         // EXEMPT INCOME
         ExemptIncAgriOthUs10Total:
           this.itrType === 'ITR1'
-            ? this.ITR_JSON.itrSummaryJson[this.itrType][
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Total
-            : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
-                .OthersInc?.OthersTotalTaxExe,
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                .TaxExmpIntIncDtls.OthersInc?.OthersTotalTaxExe,
 
         ExemptIncomeDetails:
           this.itrType === 'ITR1'
-            ? this.ITR_JSON.itrSummaryJson[this.itrType][
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
-            : this.ITR_JSON.itrSummaryJson[this.itrType].TaxExmpIntIncDtls
-                .OthersInc?.OthersIncDtls,
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                .TaxExmpIntIncDtls.OthersInc?.OthersIncDtls,
 
         IncChargeableUnderBus:
           this.itrType === 'ITR4'
-            ? this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
                 .PersumptiveInc44AE?.IncChargeableUnderBus
             : 0,
 
         NatOfBus44AD:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP?.NatOfBus44AD,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            ?.NatOfBus44AD,
 
         PersumptiveInc44ADGrossIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
             ?.PersumptiveInc44AD?.GrsTrnOverBank +
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
             ?.PersumptiveInc44AD?.GrsTrnOverAnyOthMode,
 
         TotPersumptiveInc44AD:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
             ?.PersumptiveInc44AD?.TotPersumptiveInc44AD,
 
         NatOfBus44ADA:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP?.NatOfBus44ADA,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            ?.NatOfBus44ADA,
 
         GrsReceipt44ADA:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
             ?.PersumptiveInc44ADA?.GrsReceipt,
 
         TotPersumptiveInc44ADA:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleBP
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
             ?.PersumptiveInc44ADA?.TotPersumptiveInc44ADA,
       };
+      console.log(this.keys, 'this.keys ITR1&4');
+      return this.keys;
     }
 
     if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
       this.keys = {
         // 1. SALARY INCOME
         IncomeFromSal:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.Salaries,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+            ?.Salaries,
         //   GrossSalary:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.GrossSalary,
@@ -557,7 +589,8 @@ export class SummaryComponent implements OnInit {
 
         // 2. HOUSE PROPERTY
         TotalIncomeOfHP:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.IncomeFromHP,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+            ?.IncomeFromHP,
         // TypeOfHP:
         //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
         //     ?.TypeOfHP,
@@ -581,252 +614,241 @@ export class SummaryComponent implements OnInit {
 
         // 4. CAPITAL GAIN INCOME
         TotalCapGains:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']?.CapGain
             .TotalCapGains,
 
         ShortTermAppRate:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']?.CapGain
             .ShortTerm?.ShortTermAppRate,
 
         ShortTerm15Per:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']?.CapGain
             .ShortTerm?.ShortTerm15Per,
 
         LongTerm10Per:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']?.CapGain
             .LongTerm?.LongTerm10Per,
 
         LongTerm20Per:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.CapGain
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']?.CapGain
             .LongTerm?.LongTerm20Per,
 
         // 5. OHER SOURCES
         IncomeOthSrc:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.IncFromOS
-            .TotIncFromOS,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+            ?.IncFromOS.TotIncFromOS,
 
-        SAV: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+        SAV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
           .IncOthThanOwnRaceHorse?.IntrstFrmSavingBank,
-        IFD: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+        IFD: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
           .IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit,
-        TAX: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+        TAX: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
           .IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund,
-        FAP: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+        FAP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
           .IncOthThanOwnRaceHorse?.FamilyPension,
-        DIV: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleOS
+        DIV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
           .IncOthThanOwnRaceHorse?.DividendGross,
 
         // 6. TOTAL HEAD WISE INCOME
         GrossTotIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.TotalTI,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+            ?.TotalTI,
 
         // 7. LOSSES OF CURRENT YEAR
         CurrentYearLoss:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.CurrentYearLoss,
 
         // 8. BALANCE AFTER CURRENT YEAR SET OFF
         BalanceAfterSetoffLosses:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.BalanceAfterSetoffLosses,
 
         // 9. BROUGHT FORWARD LOSSES SETOFF
         BroughtFwdLossesSetoff:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.BroughtFwdLossesSetoff,
 
         // 10. GROSS TOTAL INCOME
         GrossTotalIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.GrossTotalIncome,
 
         // 11. INCOME CHARGEABLE AT SPECIAL RATES
         IncChargeTaxSplRate111A112:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.IncChargeTaxSplRate111A112,
 
         // 12. ====================DEDUCTIONS==================
         TotalChapVIADeductions:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.DeductionsUnderScheduleVIA,
 
         Deductions: Object.entries(
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleVIA
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleVIA
             ?.DeductUndChapVIA
         ).map(([key, item]) => ({ name: key, amount: item })),
 
         // 13. TOTAL INCOME
         TotalIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']?.TotalIncome,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+            ?.TotalIncome,
 
         // 14. INCOME CHARGEABLE AT SPECIAL RATES
         IncChargeableTaxSplRates:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.IncChargeableTaxSplRates,
 
         // 15. NET AGRICULTURE INCOME
         NetAgricultureIncomeOrOtherIncomeForRate:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.NetAgricultureIncomeOrOtherIncomeForRate,
 
         // 16. AGGREGATE INCOME
         AggregateIncome:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.AggregateIncome,
 
         // 17. LOSSES TO BE CARRIED FORWARD
         LossesOfCurrentYearCarriedFwd:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB-TI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
             ?.LossesOfCurrentYearCarriedFwd,
 
         // 18. =====================TOTAL TAX=====================
         TaxPayableOnTotInc:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI?.TaxPayableOnTotInc,
         TaxAtNormalRatesOnAggrInc:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI
             ?.TaxAtNormalRatesOnAggrInc,
         TaxAtSpecialRates:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI?.TaxAtSpecialRates,
         RebateOnAgriInc:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability.TaxPayableOnTI?.RebateOnAgriInc,
 
         // 19. REBATE 87A
         Rebate87A:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.Rebate87A,
 
         // 20. TAX AFTER REBATE
         TaxPayableOnRebate:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxPayableOnRebate,
 
         // 21 TOTAL SURCHARGE
         TotalSurcharge:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TotalSurcharge,
 
         // 22. HEALTH AND EDUCATION CESS
         EducationCess:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.EducationCess,
 
         // 23. GROSS TAX LIABILITY
         GrossTaxLiability:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.GrossTaxLiability,
 
         // 24. TAX RELIEF
         TotTaxRelief:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.TotTaxRelief,
         Section89:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.Section89,
         Section90:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.Section90,
         Section91:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.TaxRelief?.Section91,
 
         // 25. NET TAX LIABILITY
         NetTaxLiability:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.NetTaxLiability,
 
         // 26. INTEREST AND FEE
         TotalIntrstPay:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay,
         IntrstPayUs234A:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234A,
         IntrstPayUs234B:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234B,
         IntrstPayUs234C:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234C,
         LateFilingFee234F:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.IntrstPay?.LateFilingFee234F,
 
         // 26. AGGREGATE LIABILITY
         AggregateTaxInterestLiability:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI']
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
             ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability,
 
         // 27. =====================TAX PAID======================
         TotalTaxesPaid:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI'].TaxPaid
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI'].TaxPaid
             .TaxesPaid?.TotalTaxesPaid,
 
         TDSonSalary:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS1.TDSonSalary,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS1
+            .TDSonSalary,
         TotalTDSonSalaries:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS1
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS1
             .TotalTDSonSalaries,
 
         TDSonOthThanSal:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS2
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS2
             .TDSOthThanSalaryDtls,
         TotalTDSonOthThanSals:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS2
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS2
             ?.TotalTDSonOthThanSals,
 
         TDS3Details:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3
             .TDS3onOthThanSalDtls,
         TotalTDS3Details:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTDS3
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3
             ?.TotalTDS3OnOthThanSal,
 
-        TCS: this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TCS,
+        TCS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS?.TCS,
         TotalSchTCS:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleTCS?.TotalSchTCS,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
+            ?.TotalSchTCS,
 
         TaxPayment:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleIT?.TaxPayment,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
+            ?.TaxPayment,
         TotalTaxPayments:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleIT
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
             ?.TotalTaxPayments,
 
         // 29. AMOUNT PAYABLE / REFUND
         BalTaxPayable:
-          this.ITR_JSON.itrSummaryJson[this.itrType]['PartB_TTI'].TaxPaid
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI'].TaxPaid
             ?.BalTaxPayable,
 
         // 30. EXEMPT INCOME
         ExemptIncAgriOthUs10Total:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleEI.TotalExemptInc,
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI
+            .TotalExemptInc,
         ExemptIncomeDetails:
-          this.ITR_JSON.itrSummaryJson[this.itrType].ScheduleEI.OthersInc
+          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI.OthersInc
             ?.OthersIncDtls,
       };
+      console.log(this.keys, 'this.keys ITR2&3');
+      return this.keys;
     }
-
-    console.log(this.keys.ExemptIncomeDetails, 'this.keys.Deductions');
-
-    return this.keys;
-
-    // let GrossSalary;
-    // if (this.itrType === 'ITR1') {
-    //   GrossSalary =
-    //     this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-    //       .GrossSalary;
-    // }
-
-    // console.log(
-    //   'perquisities',
-    //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-    //     .PerquisitesValue
-    // );
-
-    // return GrossSalary;
   }
 
   getUserName(type) {

@@ -26,7 +26,17 @@ export class UnassignedSmeComponent implements OnInit {
     // owner:true,
     mobileNumber: null,
     emailId: null
-  }
+  };
+  searchMenus = [{
+    value: 'mobileNumber', name: 'Mobile Number'
+  },{
+    value: 'name', name: 'Name'
+  },{
+    value:'smeOriginalEmail',name:'Email ID'
+  },];
+  searchVal: string = "";
+  key: any;
+  showError: boolean = false;
 
   constructor(
     private userMsService: UserMsService,
@@ -55,6 +65,55 @@ export class UnassignedSmeComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getSmeList();
+  }
+
+  clearValue() {
+    this.searchVal = "";
+  }
+
+  advanceSearch(key: any) {
+    if (!this.key || !this.searchVal) {
+      this.showError = true;
+      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+      return;
+    }else{
+      this.showError = false;
+      this.getSmeSearchList(key, this.searchVal);
+    }
+
+    // if (this.searchVal !== "" && this.key) {
+    //   this.getSmeSearchList(key, this.searchVal);
+    // }else{
+    //   this.showError = true;
+    //   this._toastMessageService.alert('error','Please select attribute and enter search value.');
+    // }
+  }
+
+  getSmeSearchList(key: any, searchValue: any) {
+    this.loading = true;
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
+
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+        this.loading = false;
+        console.log("Search result:", result)
+        if (Array.isArray(result.data.content) && result.data.content.length > 0
+        ) {
+          this.loading = false;
+          this.smeInfo = result.data.content;
+          this.config.totalItems = result.data.totalElements;
+          this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert('error','No Lead Data Found .');
+          // this.getSmeList();
+        }
+     },(error) => {
+      this.loading = false;
+      this._toastMessageService.alert('error','No Lead Data Found .');
+    });
+
   }
 
   getSmeList() {

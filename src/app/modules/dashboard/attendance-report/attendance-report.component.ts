@@ -84,7 +84,7 @@ export class AttendanceReportComponent implements OnInit {
     // this.getFilers();
     this.getPartnerDetails();
     this.filteredData = this.allDetails;
-    this.getItrUserOverview();
+    // this.getItrUserOverview();
   }
 
   filterData() {
@@ -160,27 +160,27 @@ export class AttendanceReportComponent implements OnInit {
     this.assignmentOffCount = this.allDetails.filter(item => item.assignmentStatus === 'Off').length;
   }
 
-  getItrUserOverview(){
-    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=7521&fromDate=2023-04-01&toDate=2023-05-16&page=0&size=30
-    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
-  this.loading = true;
-  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-  let ownerUserId = this.loggedInSmeUserId;
+  // getItrUserOverview(){
+  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=7521&fromDate=2023-04-01&toDate=2023-05-16&page=0&size=30
+  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?ownerUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
+  // this.loading = true;
+  // let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+  // let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+  // let ownerUserId = this.loggedInSmeUserId;
 
-  let param =`/dashboard/itr-users-overview?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}&page=0&size=30`
+  // let param =`/dashboard/itr-users-overview?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}&page=0&size=30`
 
-  this.itrService.getMethod(param).subscribe((response: any) => {
-    if (response.success) {
-      this.itrOverview = response.data;
-    }else{
-       this.loading = false;
-       this. _toastMessageService.alert("error",response.message);
-     }
-  },(error) => {
-    this.loading = false;
-    this. _toastMessageService.alert("error","Error");
-  })
-  }
+  // this.itrService.getMethod(param).subscribe((response: any) => {
+  //   if (response.success) {
+  //     this.itrOverview = response.data;
+  //   }else{
+  //      this.loading = false;
+  //      this. _toastMessageService.alert("error",response.message);
+  //    }
+  // },(error) => {
+  //   this.loading = false;
+  //   this. _toastMessageService.alert("error","Error");
+  // })
+  // }
 
 }

@@ -67,7 +67,7 @@
     margin-top: -128px;
   }
   .mvup-custom {
-    margin-top: -102px;
+    margin-top: -190px;
   }
 
 
@@ -180,8 +180,13 @@
     padding:6px 10px 6px 10px;
     box-shadow: 2px 4px #e4e4ff;
     font-size:15px;
-    margin-left: -13px;
+    // margin-left: -13px;
+    margin-bottom: 1px
   }
   .proceed:hover {
     background-color: #006c7d !important;
   }
+
+  .form-control{
+    flex-direction:row;
+   }

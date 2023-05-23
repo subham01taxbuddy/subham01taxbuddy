@@ -145,6 +145,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo.incomeTaxBasic);
     if (!this.qualification.value) this.qualification.setValue(boPartnersInfo.qualification);
     if (!this.state.value) this.state.setValue(boPartnersInfo.state);
+    if (!this.special.value) this.special.setValue(boPartnersInfo.incomeTaxSpecial);
   }
 
   smeFormGroup: FormGroup = this.fb.group({
@@ -158,6 +159,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     state: new FormControl(''),
     searchOwner: new FormControl('', [Validators.required]),
     searchLeader: new FormControl('', [Validators.required]),
+    special: new FormControl(''),
   });
 
   get mobileNumber() {
@@ -189,6 +191,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
   get searchLeader() {
     return this.smeFormGroup.controls['searchLeader'] as FormControl;
+  }
+
+  get special() {
+    return this.smeFormGroup.controls['special'] as FormControl;
   }
 
   roles: FormGroup = this.fb.group({
