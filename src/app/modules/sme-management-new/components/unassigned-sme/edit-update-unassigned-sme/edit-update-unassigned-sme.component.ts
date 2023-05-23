@@ -140,7 +140,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo.mobileNumber);
     if (!this.name.value) this.name.setValue(boPartnersInfo.name);
     if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo.emailAddress);
-    if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
+    // if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
     if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo.referredBy);
     if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo.incomeTaxBasic);
     if (!this.qualification.value) this.qualification.setValue(boPartnersInfo.qualification);
