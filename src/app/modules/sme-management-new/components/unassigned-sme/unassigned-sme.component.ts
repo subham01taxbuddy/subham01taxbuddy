@@ -36,6 +36,7 @@ export class UnassignedSmeComponent implements OnInit {
   },];
   searchVal: string = "";
   key: any;
+  showError: boolean = false;
 
   constructor(
     private userMsService: UserMsService,
@@ -71,11 +72,21 @@ export class UnassignedSmeComponent implements OnInit {
   }
 
   advanceSearch(key: any) {
-    if (this.searchVal !== "" && this.key) {
-      this.getSmeSearchList(key, this.searchVal);
+    if (!this.key || !this.searchVal) {
+      this.showError = true;
+      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+      return;
     }else{
-      this._toastMessageService.alert('error','Please select attribute and enter search value.');
+      this.showError = false;
+      this.getSmeSearchList(key, this.searchVal);
     }
+
+    // if (this.searchVal !== "" && this.key) {
+    //   this.getSmeSearchList(key, this.searchVal);
+    // }else{
+    //   this.showError = true;
+    //   this._toastMessageService.alert('error','Please select attribute and enter search value.');
+    // }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
