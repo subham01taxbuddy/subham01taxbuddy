@@ -30,22 +30,16 @@
                             <input type="text" matInput [formControl]="email" />
                         </mat-form-field>
                     </div>
-<<<<<<< HEAD
                     <div class="col-sm-12 spsTp bdrTp">
                       <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
                         Clear form
                       </button>
                         <button class="srch-btn mvRth" (click)="applyFilter()">
-=======
-                    <div class="col-sm-3">
-                        <button class="btn btnClr" [disabled]="loading" (click)="applyFilter()">
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
                             <i class="fas fa-search" aria-hidden="true"></i> Search
                         </button>
 
 
                     </div>
-<<<<<<< HEAD
 </div>
 </div>
 </div>
@@ -70,26 +64,3 @@
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
 </div>
-=======
-                    <div class="col-sm-3"> <button class="tbd-btn-clear" [disabled]="loading" (click)="resetFilters()">
-                            <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
-                            Clear
-                        </button></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" style="margin-top: 50px;">
-            <div class="col-12">
-                <table>
-                    <tr *ngFor="let item of userInfo | paginate : config"></tr>
-                </table>
-                <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions"
-                    [rowSelection]="rowSelection" (rowClicked)="onSubscriptionRowClicked($event)">
-                </ag-grid-angular>
-                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-            </div>
-        </div>
-    </div>
-</div>
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9

@@ -34,15 +34,9 @@
             [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
         </div>
     </div>
-<<<<<<< HEAD
 
     <div class="col-sm-12 spsTp bdrTp">     
-        <button class="srch-btn mvRth"  (click)="advanceSearch(advanceSearchKey.value)">
-=======
-    <div class="col-sm-3">
-      <div class="input__label">
-        <button class="btn clrBtn" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
+        <button class="srch-btn mvRth" [disabled]="loading"  (click)="advanceSearch(advanceSearchKey.value)">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
     </div>

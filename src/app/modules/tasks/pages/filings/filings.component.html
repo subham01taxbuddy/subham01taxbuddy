@@ -21,13 +21,8 @@
     <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
           <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)" (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>
    </div>
-<<<<<<< HEAD
   
       <div class="col-sm-2 spsTp">
-=======
-
-      <div class="col-sm-3 spsTp">
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
         <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
       </div>
 <!--      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">-->
@@ -97,18 +92,8 @@
         </mat-form-field>
       </div>
 
-<<<<<<< HEAD
       <div class="col-sm-12 spsTp bdrTp">
-        <button class="clrLnk mvRth" (click)="this.resetFilters()">
-=======
-      <div class="col-sm-2 spsTp">
-        <button class="srch-btn" [disabled]="loading" (click)="this.search()">
-          <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-        </button>
-      </div>
-      <div class="col-sm-2 spsTp">
-        <button class="clrLnk lfsp" [disabled]="loading" (click)="this.resetFilters()">
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
+        <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
           Clear form
        </button>
         <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search()">
@@ -128,11 +113,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-<<<<<<< HEAD
      <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
-=======
-    <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
->>>>>>> 349d2507628047f60cb484937b44a68c4d9f7bc9
   </div>
 </div>
 
