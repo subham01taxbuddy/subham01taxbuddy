@@ -17,7 +17,7 @@
 <!--          <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)" (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>-->
 <!--        </div>-->
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <label class="input__label">Select attribute</label>
           <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
             <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
@@ -26,7 +26,7 @@
           </select>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <div class="input">
             <label class="input__label">Enter value</label>
             <div class="input__select">
@@ -35,10 +35,19 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
+          <label class="input__label">Select Status</label>
+          <select class="select__box ogp_select" (change)="getSearchList('status', selectedStatus)" [(ngModel)]="selectedStatus">
+            <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+            <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
+              {{drop.name}}</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
           <button class="srch-btn btnTp" (click)="advanceSearch(advanceSearchKey.value)"><i
             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
         </div>
+
 
 
       </div>

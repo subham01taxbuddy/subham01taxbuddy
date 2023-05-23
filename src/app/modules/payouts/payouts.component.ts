@@ -9,9 +9,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ItrMsService} from "../../services/itr-ms.service";
 import {NavbarService} from "../../services/navbar.service";
 import {formatDate} from "@angular/common";
-import {RoleUpdateComponent} from "../../pages/user-management/role-update/role-update.component";
 import {UserNotesComponent} from "../shared/components/user-notes/user-notes.component";
-import {MoreOptionsDialogComponent} from "../tasks/components/more-options-dialog/more-options-dialog.component";
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
 
 @Component({
@@ -32,6 +30,12 @@ export class PayoutsComponent implements OnInit {
   }, {
     value: 'invoiceNo', name: 'Invoice No'
   }, ];
+  statusList = [
+    {value: '', name: 'All'},
+    {value: 'APPROVED', name: 'Approved'},
+    {value: 'NOT_APPROVED', name: 'Yet To Approve'}
+  ];
+  selectedStatus: any;
   searchVal: string = "";
   currentUserId: number = 0;
   user_data: any = [];
@@ -103,27 +107,8 @@ export class PayoutsComponent implements OnInit {
 
   getSearchList(key: any, searchValue: any) {
 
-    return new Promise((resolve, reject) => {
-      this.user_data = [];
-      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
-        console.log("Search result:", res)
-        if (Array.isArray(res.records)) {
-          this.user_data = res.records;
-          console.log('user_data -> ', this.user_data);
-          this.usersGridOptions.api?.setRowData(this.createRowData(this.user_data));
-          this.userInfo = this.user_data;
-          this.config.totalItems = this.user_data.length;
-        }
-        this.loading = false;
-        return resolve(true)
-      }, err => {
-        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
-        this.loading = false;
-        this.user_data = [];
-        this.userInfo=[];
-        return resolve(false)
-      });
-    });
+    let queryString = `&${key}=${searchValue}`;
+    this.serviceCall(queryString);
   }
 
   serviceCall(queryString){
