@@ -50,6 +50,30 @@
 <script type="text/javascript" src="https://unpkg.com/chartjs-chart-geo@3"></script>
 <script src="../../../../assets/scripts/app.js?v=5.0"></script>
 
+<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase/init.js"></script>
+<script>
+  // Retrieve Firebase Messaging object.
+  const firebaseConfig = {
+    apiKey: 'AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk',
+    authDomain: 'taxbuddy-uat.firebaseapp.com',
+    databaseURL: 'https://taxbuddy-uat.firebaseio.com',
+    projectId: 'taxbuddy-uat',
+    storageBucket: 'taxbuddy-uat.appspot.com',
+    messagingSenderId: '805239680508',
+    appId: '1:805239680508:web:b9258ec04023b0fda05679',
+    measurementId: 'G-DMWVKK98X2',
+  };
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+  messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+    // Update the UI to include the received message.
+    // self.registration.showNotification(title, { body, icon: image || '/assets/img/logo-img.svg' });
+    alert(payload.notification.body);
+  });
+</script>
 </body>
 
 </html>
