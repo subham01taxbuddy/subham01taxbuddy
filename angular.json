@@ -64,7 +64,9 @@
             ],
             "scripts": [
               "node_modules/mammoth/mammoth.browser.min.js"
-            ]
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
