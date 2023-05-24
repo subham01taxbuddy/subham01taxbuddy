@@ -93,7 +93,7 @@ export class UnassignedSmeComponent implements OnInit {
     this.loading = true;
     const loggedInSmeUserId=this.loggedInSme[0].userId
     // let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/${loggedInSmeUserId}?page=0&pageSize=30&${key}=${searchValue}`
+    let param = `/sme-details-new/${loggedInSmeUserId}?page=0&pageSize=30&assigned=false&${key}=${searchValue}`
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
         this.loading = false;
