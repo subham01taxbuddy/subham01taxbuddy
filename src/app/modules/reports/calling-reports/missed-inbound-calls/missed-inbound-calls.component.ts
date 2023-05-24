@@ -1,5 +1,5 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatePipe, formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -55,7 +55,7 @@ export class MissedInboundCallsComponent implements OnInit {
   };
   statusDropDown:any
   missedInboundCallGridOptions: GridOptions;
-  statusList:any = [{label:'All' , value:'ALL'},{label:'Pending',value:'PENDING'},{label:'Completed',value:'COMPLETED'}]
+  statusList:any = [{label:'All' , value:'All'},{label:'Pending',value:'Pending'},{label:'Completed',value:'Completed'}]
 
   constructor(
     public datePipe: DatePipe,
@@ -66,6 +66,7 @@ export class MissedInboundCallsComponent implements OnInit {
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     private dialog: MatDialog,
+    @Inject(LOCALE_ID) private locale: string,
   ) {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
@@ -169,8 +170,8 @@ export class MissedInboundCallsComponent implements OnInit {
         clientName: missedInboundCallInfo[i].clientName,
         clientNumber: missedInboundCallInfo[i].clientNumber,
         callDate: missedInboundCallInfo[i].callDate,
-        smeName: missedInboundCallInfo[i].smeName,
-        currentStatus: missedInboundCallInfo[i].currentStatus,
+        assignedUserName: missedInboundCallInfo[i].assignedUserName,
+        currentStatus: missedInboundCallInfo[i].currentStatus || '-',
         parentName: missedInboundCallInfo[i].parentName,
       })
       missedInboundCallArray.push(smeReportInfo);
@@ -219,11 +220,18 @@ export class MissedInboundCallsComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: (data) => {
+          if(data?.value != '-'){
+            return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
+          }else{
+            return '-';
+          }
         }
       },
       {
         headerName: 'SME Name',
-        field: 'smeName',
+        field: 'assignedUserName',
         sortable: true,
         width: 185,
         suppressMovable: true,
@@ -265,6 +273,7 @@ export class MissedInboundCallsComponent implements OnInit {
         headerName: 'Call',
         editable: false,
         suppressMenu: true,
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
@@ -332,6 +341,7 @@ export class MissedInboundCallsComponent implements OnInit {
   resetFilters(){
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
+    this.status.setValue('All')
     this?.smeDropDown?.resetDropdown();
     this.showMissedInboundCall();
   }
