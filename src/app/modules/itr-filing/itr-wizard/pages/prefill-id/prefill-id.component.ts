@@ -2568,33 +2568,33 @@ export class PrefillIdComponent implements OnInit {
         // CUSTOMER PROFILE
         {
           this.ITR_Obj.panNumber =
-            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.PAN;
+            ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.PAN;
 
           this.ITR_Obj.contactNumber =
-            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address?.MobileNo;
+            ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.MobileNo;
 
           this.ITR_Obj.email =
             ItrJSON[
               this.ITR_Type
-            ].PartA_GEN1?.PersonalInfo.Address.EmailAddress;
+            ].PartA_GEN1.PersonalInfo?.Address?.EmailAddress;
 
           this.ITR_Obj.family[0].fName =
             ItrJSON[
               this.ITR_Type
-            ].PartA_GEN1?.PersonalInfo.AssesseeName.FirstName;
+            ].PartA_GEN1.PersonalInfo?.AssesseeName?.FirstName;
 
           this.ITR_Obj.family[0].mName =
             ItrJSON[
               this.ITR_Type
-            ].PartA_GEN1?.PersonalInfo.AssesseeName.MiddleName;
+            ].PartA_GEN1.PersonalInfo?.AssesseeName?.MiddleName;
 
           this.ITR_Obj.family[0].lName =
             ItrJSON[
               this.ITR_Type
-            ].PartA_GEN1?.PersonalInfo.AssesseeName.SurNameOrOrgName;
+            ].PartA_GEN1.PersonalInfo?.AssesseeName?.SurNameOrOrgName;
 
           this.ITR_Obj.family[0].fatherName =
-            ItrJSON[this.ITR_Type].Verification.Declaration.FatherName;
+            ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
 
           // SETTING REGIME TYPE FOR ITR2
           if (this.ITR_Type === 'ITR2') {
@@ -2621,7 +2621,7 @@ export class PrefillIdComponent implements OnInit {
 
           // SETTING RESIDENTIAL STATUS
           const residentialStatusJson =
-            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ResidentialStatus;
+            ItrJSON[this.ITR_Type].PartA_GEN1.FilingStatus?.ResidentialStatus;
 
           if (residentialStatusJson === 'RES') {
             this.ITR_Obj.residentialStatus = 'RESIDENT';
@@ -2638,9 +2638,9 @@ export class PrefillIdComponent implements OnInit {
           // Updating employer details based on the key that we get from json in our itr obj employer category
           {
             let jsonEmployerCategory =
-              ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0].NatureOfEmployment;
+              ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]?.NatureOfEmployment;
 
-            console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
+            // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
 
             if (jsonEmployerCategory === 'CGOV') {
               this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
@@ -2664,11 +2664,11 @@ export class PrefillIdComponent implements OnInit {
           }
 
           this.ITR_Obj.aadharNumber =
-            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.AadhaarCardNo;
+            ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AadhaarCardNo;
 
           // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
           this.parseAndFormatDate(
-            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo.DOB
+            ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
           );
           this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
         }
@@ -2678,37 +2678,37 @@ export class PrefillIdComponent implements OnInit {
           // ADDRESS DETAILS -
           {
             this.ITR_Obj.address.pinCode =
-              ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address.PinCode;
+              ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.PinCode;
 
             this.ITR_Obj.address.country =
               ItrJSON[
                 this.ITR_Type
-              ].PartA_GEN1?.PersonalInfo?.Address?.CountryCode;
+              ].PartA_GEN1.PersonalInfo?.Address?.CountryCode;
 
             this.ITR_Obj.address.state =
               ItrJSON[
                 this.ITR_Type
-              ].PartA_GEN1?.PersonalInfo?.Address?.StateCode;
+              ].PartA_GEN1.PersonalInfo?.Address?.StateCode;
 
             this.ITR_Obj.address.city =
               ItrJSON[
                 this.ITR_Type
-              ].PartA_GEN1?.PersonalInfo?.Address?.CityOrTownOrDistrict;
+              ].PartA_GEN1.PersonalInfo?.Address?.CityOrTownOrDistrict;
 
             this.ITR_Obj.address.flatNo =
               ItrJSON[
                 this.ITR_Type
-              ].PartA_GEN1?.PersonalInfo?.Address?.ResidenceNo;
+              ].PartA_GEN1.PersonalInfo?.Address?.ResidenceNo;
 
             this.ITR_Obj.address.premisesName =
               ItrJSON[
                 this.ITR_Type
-              ].PartA_GEN1?.PersonalInfo?.Address?.ResidenceName;
+              ].PartA_GEN1.PersonalInfo?.Address?.ResidenceName;
 
             this.ITR_Obj.address.area =
-              ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address
+              ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address
                 ?.RoadOrStreet +
-              ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.Address
+              ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address
                 ?.LocalityOrArea;
           }
 
