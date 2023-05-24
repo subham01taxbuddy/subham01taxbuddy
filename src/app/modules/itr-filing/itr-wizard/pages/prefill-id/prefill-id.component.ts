@@ -4542,15 +4542,21 @@ export class PrefillIdComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
-        this.userItrId = this.ITR_JSON.itrId;
         if (result === 'YES') {
           this.ITR_JSON = this.utilsService.createEmptyJson(
             this.userProfile,
             this.ITR_JSON.assessmentYear,
-            this.ITR_JSON.financialYear
+            this.ITR_JSON.financialYear,
+            this.ITR_JSON.itrId,
+            this.ITR_JSON.filingTeamMemberId,
+            this.ITR_JSON.id
           );
 
-          this.ITR_JSON.itrId = this.userItrId;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+
           document.getElementById('input-utility-file-jsonfile-id').click();
         }
       });
