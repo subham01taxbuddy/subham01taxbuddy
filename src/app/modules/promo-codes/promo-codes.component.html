@@ -1,13 +1,18 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="main clearfix">
-  <div class="row">
-    <div class="col-sm-6">
-      <h4>Promo Codes:</h4>
+  <div class="align-items-center row">
+    <div class="col-sm-8">
+      <b style="font-size: 20px">Promo Codes:</b>
+    </div>
+    <div class="col-sm-4">
+       <button class="new-add mvRth1" (click)="addPromoCode('Add Promo-Code','Add', '')"><i aria-hidden="true" class="fa fa-plus"></i> Add Promo-Code </button>
     </div>
   </div>
-  <div class="card">
-    <div class="row">
-      <div class="col-sm-3">
+
+  <div class="rowClr">
+  <div class="surround">
+  <div class="row">
+      <div class="col-sm-5">
         <mat-label> Enter Promo-Code </mat-label>
         <mat-form-field appearance="outline">
           <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
@@ -15,45 +20,42 @@
             This field is required</mat-error>
         </mat-form-field>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-5">
         <mat-label>Select Service Type</mat-label>
         <app-service-drop-down #serviceDropDown (sendService)="fromServiceType($event)"
           [formControl]="serviceType"></app-service-drop-down>
       </div>
-      <div class="col-sm-3">
-        <button class="btn createBtn" (click)="searchPromoCode()">
+      <div class="col-sm-2">
+        <button class="srch-btn srchSpcTp" (click)="searchPromoCode()">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
       </div>
-      <div class="col-sm-3">
-        <div class="input__label">
-          <button class="btn createBtn" (click)="addPromoCode('Add Promo-Code','Add', '')">
-            Add Promo-Code
-          </button>
-        </div>
+   
+    </div>
+  </div>
+</div>
+
+<!-- Table Below -->
+
+<div class="tableSpc">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="txTit">
+        Promo Code Details:
       </div>
     </div>
+  <div class="col-sm-4">
+  <div class="count1"> Total Count: <span class="txClr1">{{totalCount}}</span></div>
   </div>
-
-  <div class="row" style="margin-top: 5px;">
-    <div class="clo-sm-6">
-      Total Count: <b>{{totalCount}}</b>
-    </div>
   </div>
+          <table>
+            <tr *ngFor="let item of PromoCodeInfo | paginate : config"></tr>
+          </table>
 
-  <div class="row" style="margin-top: 40px;">
-    <!-- <table>
-      <tr *ngFor="let item of PromoCodeInfo | paginate:config"></tr>
-    </table> -->
+   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="promoCodeGridOptions" (rowClicked)="onPromoCodeRowClicked($event)">
+  </ag-grid-angular>
 
-    <ag-grid-angular class="ag-theme-balham" [gridOptions]="promoCodeGridOptions" (rowClicked)="onPromoCodeRowClicked($event)">
-      <!-- paginationPageSize=15 pagination=true -->
-    </ag-grid-angular>
-
-    <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
-  </div>
-
-
-
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
 
 </div>
