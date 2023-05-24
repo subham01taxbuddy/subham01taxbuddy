@@ -10,7 +10,7 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-5">
             <label class="input__label" for="attr">Select attribute</label>
             <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
               <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
@@ -19,7 +19,7 @@
             </select>
           </div>
 
-        <div class="col-sm-4">
+        <div class="col-sm-5">
           <div class="input">
             <label class="input__label" for="attr">Enter value</label>
             <div class="input__select">
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-         <div class="col-sm-4">
+         <div class="col-sm-2">
           <button class="srch-btn btnTp" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
         </div>

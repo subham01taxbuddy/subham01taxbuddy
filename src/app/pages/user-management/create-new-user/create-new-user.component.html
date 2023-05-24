@@ -19,7 +19,7 @@
       <div class="row">
 
         <!-- searchh area starts -->
-        <div class="col-sm-10 bckClr" *ngIf="!coOwnerCheck">
+        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
           <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
              [disabled]="assignedToMe">
           </app-sme-list-drop-down>

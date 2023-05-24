@@ -61,25 +61,16 @@
           </mat-autocomplete> -->
           </mat-form-field>
         </div>
-        <div class="col-sm-3 ">
-          <button *ngIf="isAllowed" class="btn createBtn" (click)="createSub()"> Create Subscription </button>
-        </div>
-        <div class="col-sm-2">
-          <button class="tbd-btn-clear" [disabled]="loading" (click)="this.resetFilters()">
-            <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
-            Clear
-          </button>
+        <div class="col-sm-12 spsTp bdrTp">
+          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+            Clear form
+        </button>
+          <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
+       
+          
         </div>
       </div>
     </div>
-    <div class="col-sm-12 spsTp bdrTp">
-      <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-        Clear form
-      </button>
-      <button *ngIf="isAllowed" class="srch-btn mvRth" [disabled]="loading" (click)="createSub()"> Create Subscription </button>
-
-    </div>
-
   </div>
 
   <!-- Table Below -->

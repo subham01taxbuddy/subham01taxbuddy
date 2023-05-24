@@ -1,4 +1,4 @@
-import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import {GridOptions} from "ag-grid-community";
 import {UserMsService} from "../../services/user-ms.service";
 import {ToastMessageService} from "../../services/toast-message.service";
@@ -11,6 +11,7 @@ import {NavbarService} from "../../services/navbar.service";
 import {formatDate} from "@angular/common";
 import {UserNotesComponent} from "../shared/components/user-notes/user-notes.component";
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
+import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 
 @Component({
   selector: 'app-payouts',
@@ -18,6 +19,8 @@ import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-
   styleUrls: ['./payouts.component.scss']
 })
 export class PayoutsComponent implements OnInit {
+
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -87,15 +90,19 @@ export class PayoutsComponent implements OnInit {
   ownerId: number;
   filerId: number;
   fromOwner(event) {
-    this.ownerId = event ? event.userId : null;
-    console.log('fromowner:', event);
-    let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}` : '';
-    this.serviceCall(queryString);
+    if(event) {
+      this.ownerId = event ? event.userId : null;
+      console.log('fromowner:', event);
+      let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}` : '';
+      this.serviceCall(queryString);
+    }
   }
   fromFiler(event) {
-    this.filerId = event ? event.userId : null;
-    let queryString = this.filerId ? `&filerUserId=${this.filerId}` : '';
-    this.serviceCall(queryString);
+    if(event) {
+      this.filerId = event ? event.userId : null;
+      let queryString = this.filerId ? `&filerUserId=${this.filerId}` : '';
+      this.serviceCall(queryString);
+    }
   }
 
   advanceSearch(key: any) {
@@ -603,5 +610,13 @@ export class PayoutsComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  resetFilters(){
+    this.filerId = null;
+    this.ownerId = null;
+    this.selectedStatus = null;
+    this.key = null;
+    this?.smeDropDown?.resetDropdown();
   }
 }

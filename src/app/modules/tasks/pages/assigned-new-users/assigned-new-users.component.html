@@ -18,10 +18,10 @@
       <div class="rowClr">
         <div class="surround">
        <div class="row">
-        <div class="col-sm-7"  *ngIf="!coOwnerCheck">
+        <div class="col-sm-12 bckClr"  *ngIf="!coOwnerCheck">
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
-        <div class="col-sm-0" *ngIf="coOwnerCheck">
+        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
             <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
         </div>
 
@@ -54,17 +54,14 @@
               <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
             </mat-form-field>
           </div>
-          <div class="col-sm-2 spsTp bdrTp">
-            <button class="srch-btn" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                aria-hidden="true"></i>&nbsp;Search</button>
-          </div>
-          <div class="col-sm-2 spsTp">
-            <button class="clrLnk" [disabled]="loading" (click)="this.resetFilters()">
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
               Clear form
             </button>
 
             <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                aria-hidden="true"></i>&nbsp;Search</button>
+                aria-hidden="true"></i>&nbsp;Search</button>       
+            
 
           </div>
 
