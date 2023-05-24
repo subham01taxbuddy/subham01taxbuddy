@@ -2,14 +2,17 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-6">
+    <div class="col-sm-8">
       <b style="font-size: 20px">Review</b>
+    </div>
+    <div class="col-sm-4">
+      <button class="new-add mvRth1" (click)="addReview('Add Review', 'Add', '')"><i aria-hidden="true" class="fa fa-plus"></i> Add Review</button>
     </div>
   </div>
   <div class="rowClr">
     <div class="surround">
    <div class="row">
-            <div class="col-sm-4 spsTp">
+            <div class="col-sm-5">
               <mat-form-field appearance="outline">
                 <mat-label>Select Platform</mat-label>
                 <mat-select
@@ -26,7 +29,7 @@
               </mat-form-field>
             </div>
 
-            <div class="col-sm-4 spsTp">
+            <div class="col-sm-5">
               <mat-form-field appearance="outline">
                 <mat-label>Select Status</mat-label>
                 <mat-select
@@ -43,18 +46,11 @@
               </mat-form-field>
             </div>
 
-            <div class="col-sm-2 spsTp">
+            <div class="col-sm-2">
               <button class="srch-btn" (click)="this.getReview('0')">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-              </button>
-            </div>
-
-            <div class="col-sm-2 spsTp">
-              <button
-                class=" tbd-btn"
-                (click)="addReview('Add Review', 'Add', '')"
-                >Add Review</button
-              >
+              </button>     
+              
             </div>
 
 </div>
@@ -69,17 +65,17 @@
         Review Details:
       </div>
     </div>
-    <div class="col-sm-4">
-      <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
-    </div>
+  <div class="col-sm-4">
+  <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
   </div>
-  <table>
-    <tr *ngFor="let item of userInfo | paginate : config"></tr>
-  </table>
+  </div>
+          <table>
+            <tr *ngFor="let item of userInfo | paginate : config"></tr>
+          </table>
 
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="reviewGridOptions" (rowClicked)="onRowClicked($event)">
   </ag-grid-angular>
 
   <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 </div>
-</div>
+

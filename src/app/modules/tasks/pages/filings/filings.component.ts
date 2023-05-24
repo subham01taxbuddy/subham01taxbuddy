@@ -28,6 +28,7 @@ import { ServiceDropDownComponent } from 'src/app/modules/shared/components/serv
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 @Component({
   selector: 'app-filings',
@@ -59,6 +60,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     filerUserId: null,
   };
   constructor(
+    private reviewService:ReviewService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private userMsService: UserMsService,
@@ -953,6 +955,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   // }
 
   async startCalling(user) {
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     const agentNumber = await this.utilsService.getMyCallingNumber();
     if (!agentNumber) {
       this.toastMsgService.alert('error', "You don't have calling role.");
@@ -961,27 +964,42 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('user: ', user);
     this.loading = true;
     let customerNumber = user.contactNumber;
-    const param = `/prod/call-support/call`;
+    // const param = `/prod/call-support/call`;
+    const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
       customer_number: customerNumber,
     };
     console.log('reqBody:', reqBody);
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
-      (result: any) => {
-        console.log('Call Result: ', result);
+    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
+    //   (result: any) => {
+    //     console.log('Call Result: ', result);
+    //     this.loading = false;
+    //     if (result.success.status) {
+    //       this.toastMsgService.alert('success', result.success.message);
+    //     }
+    //   },
+    //   (error) => {
+    //     this.utilsService.showSnackBar(
+    //       'Error while making call, Please try again.'
+    //     );
+    //     this.loading = false;
+    //   }
+    // );
+
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+      this.loading = false;
+      if(result.success == false){
         this.loading = false;
-        if (result.success.status) {
-          this.toastMsgService.alert('success', result.success.message);
-        }
-      },
-      (error) => {
-        this.utilsService.showSnackBar(
-          'Error while making call, Please try again.'
-        );
-        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-    );
+      if (result.success == true) {
+            this.toastMsgService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+    })
   }
 
   updateStatus(mode, client) {

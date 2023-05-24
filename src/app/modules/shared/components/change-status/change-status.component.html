@@ -11,7 +11,8 @@
 
 <mat-dialog-content>
     <form [formGroup]="changeStatus">
-        <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode === 'Update Status'">
+    <div class="row">
+        <div class="col-sm-6" *ngIf="data.mode === 'Update Status'">
             <mat-form-field appearance="outline">
                 <mat-label>Select Status </mat-label>
                 <mat-select placeholder="Select Status" formControlName="selectStatus"
@@ -25,7 +26,7 @@
             </mat-form-field>
         </div>
 
-        <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode === 'Update Caller'">
+        <div class="col-sm-4" *ngIf="data.mode === 'Update Caller'">
             <mat-form-field appearance="outline">
                 <mat-label>Select Caller</mat-label>
                 <mat-select placeholder="Select Agent" formControlName="callerAgentUserId"
@@ -39,9 +40,11 @@
             </mat-form-field>
         </div>
 
-        <div class="card__col-xs-4 card__col-sm-14">
+        <div class="col-sm-2">
             <button mat-raised-button color="primary" (click)="addStatus()" tabindex="1">{{data.mode}}</button>
         </div>
+
+    </div>
     </form>
 
 </mat-dialog-content>

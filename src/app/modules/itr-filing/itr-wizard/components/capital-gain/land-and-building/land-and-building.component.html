@@ -3,16 +3,12 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<div style="padding-top: 20px">
+<div class="mrgArd">
   <div *ngIf="labView === 'TABLE'">
     <div class="card__row">
       <span class="pageTitle">Land & Building</span>
-      <button
-        class="tbd-btn save-btn"
-        style="float: right"
-        (click)="addCapitalGain('ADD', '')"
-      >
-        Add More&nbsp;&nbsp; <i class="fa fa-plus" aria-hidden="true"></i>
+      <button class="new-add btnRt" (click)="addCapitalGain('ADD', '')">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add More
       </button>
     </div>
     <form [formGroup]="propertiesForm">

@@ -1,10 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="card">
-
     <form [formGroup]="customerProfileForm">
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+        <div class="row">
+            <div class="col-sm-4">
                 <mat-label>PAN Number</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matInput placeholder="PAN" name="panNumber" formControlName="panNumber"
@@ -16,7 +14,7 @@
                         Enter PAN Number.</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4">
                 <mat-label>Mobile Number</mat-label>
                 <mat-form-field appearance="outline">
                     <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
@@ -28,7 +26,7 @@
                         10 digit mobile number</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4">
                 <mat-label>Email Address</mat-label>
                 <mat-form-field appearance="outline">
                     <input matInput placeholder="Email address" name="email" formControlName="email" class="input-field"
@@ -39,9 +37,8 @@
                         email</mat-error>
                 </mat-form-field>
             </div>
-        </div>
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+       
+        <div class="col-sm-4 spsTp">
                 <mat-label>First name</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matTooltip="First name as per PAN" [pattern]="charRegex"
@@ -53,7 +50,7 @@
                         character only</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Middle name</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matTooltip="Middle name as per PAN" [pattern]="charRegex"
@@ -65,7 +62,7 @@
                         character only</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Last name</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matTooltip="Last name as per PAN" [pattern]="charRegex"
@@ -79,10 +76,8 @@
                         Enter last name.</mat-error>
                 </mat-form-field>
             </div>
-        </div>
 
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Father Name</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matInput placeholder="Father's name" name="mobile"
@@ -94,7 +89,7 @@
                         Enter father name</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Residential status</mat-label>
                 <mat-form-field appearance="outline">
                     <mat-select placeholder="Residential status" name="residentialStatus"
@@ -106,7 +101,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Employee Category</mat-label>
                 <mat-form-field appearance="outline">
                     <mat-select placeholder="Employer Category" name="employerCategory"
@@ -117,10 +112,8 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-        </div>
-
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+  
+            <div class="col-sm-4 spsTp">
                 <mat-label>Return Type</mat-label>
                 <mat-form-field appearance="outline">
                     <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
@@ -131,7 +124,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+            <div class="col-sm-4 spsTp" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
                 <mat-label>Acknowledgement number</mat-label>
                 <mat-form-field appearance="outline">
                     <input matTooltip="Acknowledgement number maximum of 15 digit" matTooltipClass="tab-tooltip"
@@ -145,7 +138,7 @@
                         15 digit Acknowledgement number</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+            <div class="col-sm-4 spsTp" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
                 <mat-label>Date of filing</mat-label>
                 <mat-form-field appearance="outline">
                     <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
@@ -155,9 +148,8 @@
                     <mat-datepicker #revisedPicker></mat-datepicker>
                 </mat-form-field>
             </div>
-        </div>
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+      
+        <div class="col-sm-4 spsTp">
                 <mat-label>Aadhaar Number</mat-label>
                 <mat-form-field appearance="outline">
                     <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
@@ -174,7 +166,7 @@
                         12 digit aadhar number</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Date Of Birth</mat-label>
                 <mat-form-field appearance="outline">
                     <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
@@ -188,7 +180,7 @@
                         Select date of birth</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="col-sm-4 spsTp">
                 <mat-label>Gender</mat-label>
                 <mat-radio-group formControlName="gender" style="display: flex;">
                     <mat-radio-button style="margin-left:0px;margin-right: 15px;" labelPosition='after'
@@ -197,11 +189,10 @@
                     </mat-radio-button>
                 </mat-radio-group>
             </div>
-        </div>
-        <div class="">
-            <div class="card__row footer__buttons clearfix" style="margin-top: 40px;">
-                <button class="tbd-btn save-btn" [disabled]="!isEditCustomer && customerProfileForm.invalid" (click)="saveProfile('CONTINUE')">Save </button>
+     
+            <div class="col-sm-12 spsTp bdrTp">
+                <button class="tbd-btn save-btn mvRth" [disabled]="!isEditCustomer && customerProfileForm.invalid" (click)="saveProfile('CONTINUE')">Save </button>
             </div>
         </div>
     </form>
-</div>
+

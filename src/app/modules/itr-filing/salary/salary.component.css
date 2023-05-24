@@ -7,6 +7,7 @@
   border-radius: 4px;
 }
 
+
 .table-responsive {
   overflow-x: auto;
 }
@@ -28,7 +29,7 @@ th {
 
 td {
   text-align: left; 
-  padding: 0px 0px 0px 15px;
+  padding: 0px 0px 10px 15px;
   font-size: 14px;
   border: 1px solid #ddd;
 }
@@ -90,7 +91,7 @@ table {
   table-layout: auto;
   border-collapse: collapse;
   border-spacing: 0;
-  width: 90%;
+  width: 100%;
   border: 1px solid #ddd;
   margin-bottom: 10px;
 
@@ -119,5 +120,5 @@ table {
 }
 
 .cardRect {
-  margin-left: 60px;
+  /* margin-left: 60px; */
 }

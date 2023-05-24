@@ -2,7 +2,7 @@
 
 <div class="main clearfix">
   <div class="align-items-center row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <b style="font-size: 20px">Create User</b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -17,6 +17,23 @@
 
     <form [formGroup]="signUpForm">
       <div class="row">
+
+        <!-- searchh area starts -->
+        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+          <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
+             [disabled]="assignedToMe">
+          </app-sme-list-drop-down>
+        </div>
+        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+         <app-co-owner-list-drop-down  (sendCoOwner)="fromSme1($event, true)"
+           (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+         </div>
+         <div class="col-sm-2 bckClr" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
+           <mat-checkbox style="padding-top: 14px;" class="example-margin bldFnt" [(ngModel)]="assignedToMe"
+             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
+             to me!</mat-checkbox>
+         </div>
+        <!-- search area ends -->
 
         <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
@@ -101,24 +118,11 @@
               Service type </mat-error>
           </mat-form-field>
         </div>
-       <div class="col-sm-12 spsTp" *ngIf="!coOwnerCheck">
-         <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
-            [disabled]="assignedToMe">
-         </app-sme-list-drop-down>
-       </div>
-       <div class="col-sm-0" *ngIf="coOwnerCheck">
-        <app-co-owner-list-drop-down  (sendCoOwner)="fromSme1($event, true)"
-          (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-        </div>
-        <div class="col-sm-0" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
-          <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
-            [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
-            to me!</mat-checkbox>
-        </div>
 
 
-        <div class="col-sm-12">
-          <button class="rt-btn" [disabled]="loading" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
+
+        <div class="col-sm-12 spsTp bdrTp">
+          <button class="rt-btn" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
         </div>
 
       </div>

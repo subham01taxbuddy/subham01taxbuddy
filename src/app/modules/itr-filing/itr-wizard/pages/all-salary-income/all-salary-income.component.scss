@@ -6,6 +6,35 @@
   float: right;
 }
 
+
+
+.chk {
+  float:left;
+  margin-top: 3px;
+}
+
+.lfTx{
+  float:left;
+  margin-left: -35px;
+  margin-top: 3px;
+}
+.fig{
+    margin-top: 3px;
+    margin-right: 25px;
+    float:right;
+}
+
+.btnArw {
+  float: right;
+    margin-right: -116px !important;
+    margin-top: 6px !important;
+}
+
+
+.mv-rght{
+  text-align:right;
+}
+
 .subTitle {
   font-family: 'DM Sans';
   font-style: normal;
@@ -32,33 +61,9 @@
   color: #1E1E1E;
 }
 
-.mat-icon {
-  color: #00AECA;
-  float: right;
-}
-
 .mat-expansion-panel-header-title {
   display: block;
   margin-right: 0px;
 }
 
-.delete-btn {
-  background: #FFE1E1;
-  border: 1px solid #E20000;
-  border-radius: 6px;
-  font-family: 'DM Sans';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 150%;
-  /* identical to box height, or 30px */
-  text-align: center;
-  color: #E20000;
-}
 
-.delete-btn:disabled {
-  background: #F5F5F5;
-  border: 1px solid #BDBDBD;
-  color: #BDBDBD;
-  padding:10px;
-}

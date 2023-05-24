@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.sass']
 })
-export class SidebarComponent implements DoCheck {
+export class SidebarComponent{
   loading: boolean = false;
   openSidebar: boolean = true;
   loggedInUserRoles: any;
@@ -176,11 +176,23 @@ export class SidebarComponent implements DoCheck {
       url: '/promo-code',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
+    },
+
+    {
+      name: 'Reports',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: null,
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: [
+        { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
+      ]
     }
   ];
-  ngDoCheck() {
-    // this.showSidebar = NavbarService.getInstance().showSideBar;
-  }
+
+  // ngDoCheck() {
+  //   // this.showSidebar = NavbarService.getInstance().showSideBar;
+  // }
 
   isApplicable(permissionRoles: any) {
     if (permissionRoles.length === 0) {

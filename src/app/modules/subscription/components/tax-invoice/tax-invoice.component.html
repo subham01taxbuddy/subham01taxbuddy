@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div>
+
   <div class="align-items-center row">
-    <div class="col-sm-10">
+    <div class="col-sm-4">
       <b style="font-size: 25px">Tax Invoices </b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
@@ -10,26 +10,21 @@
       </p>
     </div>
   </div>
-  <div class="content-wrapper">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12" style="margin-top: 10px;">
-          <div class="card" style="margin-top: 10px;">
-<!--            <div>-->
-<!--              <b style="font-size: 20px">{{cardTitle}} View </b>-->
-<!--            </div>-->
-              <div class="row">
-                <div class="filter__col card__col-xs-12" *ngIf="coOwnerCheck">
-                  <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                    (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-                </div>
-              </div>
-            <div class="row" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div *ngIf="false" >
-              <div class="row">
-                <div class="col-sm-6">
+
+  <div class="rowClr">
+  <div class="surround">
+   <div class="row">
+
+   <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+   <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+  </div>
+
+   <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+   <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+   </div>
+
+   <div *ngIf="false" >
+                 <div class="col-sm-6">
                   <mat-label> Search By Owner </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" (blur)="setList()">
@@ -53,25 +48,21 @@
                   </mat-form-field>
                 </div>
               </div>
-            </div>
 
-            <div *ngIf="false" >
-              <div class="row" *ngIf="!coOwnerCheck">
-                <div >
+
+            <div *ngIf="false">
+              <div class="col-sm-6" *ngIf="!coOwnerCheck">
                   <mat-label> Search By Filer </mat-label>
                   <mat-form-field appearance="outline" class="customBg">
                     <input type="text" matInput [formControl]="searchFiler" >
                     <!-- <button (click)="searchByFiler()" mat-button matSuffix mat-icon-button>
                       <mat-icon style="color: #00AECA">search</mat-icon>
                     </button> -->
-
                   </mat-form-field>
-                </div>
               </div>
             </div>
 
-            <div class="row" style="margin-top: 20px;">
-              <div class="col-sm-3">
+              <div class="col-sm-3 spsTp">
                 <mat-label> Select FY </mat-label>
                 <mat-form-field appearance="outline">
                   <input type="text" matInput [formControl]="assessmentYear" readonly>
@@ -82,8 +73,8 @@
                   </mat-select> -->
               </mat-form-field>
               </div>
-              <div class="col-sm-3">
-                <mat-label> From Date </mat-label>
+              <div class="col-sm-3 dtTp">
+                <!-- <mat-label> From Date </mat-label> -->
                 <mat-form-field appearance="outline">
                   <mat-label>From Date</mat-label>
                   <input matInput [formControl]="startDate"  [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
@@ -95,8 +86,8 @@
                       date</mat-error>
               </mat-form-field>
               </div>
-              <div class="col-sm-3">
-                <mat-label> To Date </mat-label>
+              <div class="col-sm-3 dtTp">
+                <!-- <mat-label> To Date </mat-label> -->
                 <mat-form-field appearance="outline">
                   <mat-label>To Date</mat-label>
                   <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
@@ -110,8 +101,8 @@
               </mat-form-field>
               </div>
 
-              <div class="col-sm-3">
-                <mat-label> Mobile Number </mat-label>
+              <div class="col-sm-3 spsTp">
+                <mat-label> Mobile Number: </mat-label>
                 <mat-form-field appearance="outline">
                   <input
                   [numbersOnly]="true"
@@ -122,8 +113,8 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-sm-3">
-                <mat-label> Email </mat-label>
+              <div class="col-sm-6 spsTp">
+                <mat-label> Email Address: </mat-label>
                 <mat-form-field appearance="outline">
                   <input
                     type="text"
@@ -132,7 +123,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-6 spsTp">
                 <mat-label> Invoice No. </mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -152,49 +143,42 @@
                   </mat-select>
               </mat-form-field>
               </div> -->
-            </div>
-            <hr>
-            <div class="row">
-              <div >
-                <button *ngIf="!roles?.includes('ROLE_OWNER') && !roles?.includes('ROLE_FILER')" class="btn " style=" background: #00AECA;
-                border-radius: 5px; float: right;" [disabled]="loading" (click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
-                <button  class="btn " style=" background: #00AECA;
-                border-radius: 5px; float: right;" [disabled]="loading" (click)="getInvoice('isAgent','agentId')"><i  class="fas fa-file-invoice" aria-hidden="true" ></i> Show Invoice </button>
-                <button class="tbd-btn" [disabled]="loading" (click)="this.resetFilters()">
+          
+     
+              <div class="col-sm-12 spsTp bdrTp">
+                <button *ngIf="!roles?.includes('ROLE_OWNER') && !roles?.includes('ROLE_FILER')" class="dwldBtn" [disabled]="loading"(click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
+                
+                <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                   <!--              <div class="fa-layers fa-1x fa-fw">-->
                   <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
                   <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
                   <!--              </div>-->
-                  <span class="fa-stack" style="width: 1.5em">
-                    <i class="fa fa-filter fa-stack-1x"></i>
-                    <i class="fa fa-slash fa-stack-1x"></i>
-                  </span>Clear
+                 Clear form
                 </button>
+
+                <button  class="srch-btn mvRth" (click)="getInvoice('isAgent','agentId')"><i  class="fas fa-file-invoice" aria-hidden="true" ></i> Show Invoice </button>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row" style="float: right; margin-top: 20px; margin-right: 10px;">
-        <span style="float: right;"> Total Invoice Count: <b>{{totalInvoice}}</b>
-<!--          |-->
-<!--          paid:-->
-<!--          <b>{{getCount('paid')}}</b>-->
-        </span>
-      </div>
-       <br>
-       <div class="row" style="margin-top: 55px;">
-        <div class="col-12">
+
+</div>
+</div>
+</div>
+<!-- Table Below -->
+<div class="tableSpc">
+  <div class="row">
+  <div class="col-sm-8">
+    <div class="txTit">
+      Tax Invoice Details:
+    </div>
+  </div>
+  <div class="col-sm-4">
+  <div class="count1"> Total Invoice Count: <span class="txClr1">{{totalInvoice}}</span></div>
+  </div>
+  </div>
+
           <table>
             <tr *ngFor="let item of invoiceInfo | paginate : config"></tr>
           </table>
-          <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceListGridOptions"
-            (rowClicked)="onInvoiceRowClicked($event)">
+          <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="invoiceListGridOptions" (rowClicked)="onInvoiceRowClicked($event)">
           </ag-grid-angular>
           <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>

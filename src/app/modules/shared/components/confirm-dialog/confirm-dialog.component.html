@@ -1,7 +1,9 @@
 <div *ngIf="data?.title" mat-dialog-title>{{data.title}}</div>
 <hr>
-<mat-dialog-content>{{data.message}}</mat-dialog-content>
-<mat-dialog-actions class="conf-btn">
+<div>
+  <mat-dialog-content>{{data.message}}</mat-dialog-content>
+</div>
+<div mat-dialog-actions align="center">
   <button mat-raised-button color="primary" [mat-dialog-close]="'YES'" tabindex="1">Yes</button>
   <button mat-raised-button color="warn" class="mt" [mat-dialog-close]="'NO'" tabindex="-1">No</button>
-</mat-dialog-actions>
+</div>

@@ -23,6 +23,7 @@ import { ToastMessage } from 'src/app/classes/toast';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -115,6 +116,7 @@ export class PerformaInvoiceComponent implements OnInit {
     },
   ];
   constructor(
+    private reviewService:ReviewService,
     private fb: FormBuilder,
     public datePipe: DatePipe,
     private utilService: UtilsService,
@@ -1068,8 +1070,10 @@ export class PerformaInvoiceComponent implements OnInit {
   }
 
   async placeCall(user) {
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     console.log('user: ', user);
-    const param = `/prod/call-support/call`;
+    // const param = `/prod/call-support/call`;
+    const param = `tts/outbound-call`;
     const agentNumber = await this.utilService.getMyCallingNumber();
     console.log('agent number', agentNumber);
     if (!agentNumber) {
@@ -1081,22 +1085,35 @@ export class PerformaInvoiceComponent implements OnInit {
       agent_number: agentNumber,
       customer_number: user.phone,
     };
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
-      (result: any) => {
-        console.log('Call Result: ', result);
+    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
+    //   (result: any) => {
+    //     console.log('Call Result: ', result);
+    //     this.loading = false;
+    //     if (result.success.status) {
+    //       this._toastMessageService.alert('success', result.success.message);
+    //     }
+    //   },
+    //   (error) => {
+    //     this._toastMessageService.alert(
+    //       'error',
+    //       'Error while making call, Please try again.'
+    //     );
+    //     this.loading = false;
+    //   }
+    // );
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+      this.loading = false;
+      if(result.success == false){
         this.loading = false;
-        if (result.success.status) {
-          this._toastMessageService.alert('success', result.success.message);
-        }
-      },
-      (error) => {
-        this._toastMessageService.alert(
-          'error',
-          'Error while making call, Please try again.'
-        );
-        this.loading = false;
+        this.utilService.showSnackBar('Error while making call, Please try again.');
       }
-    );
+      if (result.success == true) {
+            this._toastMessageService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+    })
   }
 
   showNotes(client) {

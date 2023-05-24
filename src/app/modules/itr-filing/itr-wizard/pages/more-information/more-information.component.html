@@ -2,7 +2,7 @@
 
 <div *ngIf="showList">
   <div>
-    <mat-accordion class="headers-align">
+    <mat-accordion class="headers-align mrgArd">
       <mat-expansion-panel *ngFor="let topic of topicList" hideToggle>
         <mat-expansion-panel-header (click)="gotoSection(topic)">
           <mat-panel-title>{{topic.label}}</mat-panel-title>

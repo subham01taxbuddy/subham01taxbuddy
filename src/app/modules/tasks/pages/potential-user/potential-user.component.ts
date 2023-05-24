@@ -11,6 +11,7 @@ import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes
 import { FormControl } from '@angular/forms';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 @Component({
   selector: 'app-potential-user',
@@ -44,6 +45,7 @@ export class PotentialUserComponent implements OnInit {
 
 
   constructor(
+    private reviewService:ReviewService,
     private utilsService: UtilsService,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private userMsService: UserMsService,
@@ -566,22 +568,37 @@ export class PotentialUserComponent implements OnInit {
   }
 
   call(data) {
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
     this.loading = true;
-    const param = `/prod/call-support/call`;
+    // const param = `/prod/call-support/call`;
     // TODO check the caller agent number;
+    const param = `tts/outbound-call`;
     const reqBody = {
       "agent_number": data.callerAgentNumber,
       "customer_number": data.mobileNumber
     }
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+    //   this.loading = false;
+    //   if (result.success.status) {
+    //     this._toastMessageService.alert("success", result.success.message)
+    //   }
+    // }, error => {
+    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
+    //   this.loading = false;
+    // })
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success.status) {
-        this._toastMessageService.alert("success", result.success.message)
+      if(result.success == false){
+        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
+      if (result.success == true) {
+            this._toastMessageService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
     })
   }
 
