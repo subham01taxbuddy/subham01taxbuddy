@@ -496,12 +496,20 @@ export class UtilsService {
     );
   }
 
-  createEmptyJson(profile: any, assessmentYear: any, financialYear: any) {
+  createEmptyJson(
+    profile: any,
+    assessmentYear: any,
+    financialYear: any,
+    itrId?: any,
+    filingTeamMemberId?: any,
+    id?: any
+  ) {
     const ITR_JSON: ITR_JSON = {
+      id: id ? id : null,
       ackStatus: '',
       acknowledgementReceived: false,
       userId: this.isNonEmpty(profile) ? profile.userId : null,
-      itrId: null,
+      itrId: itrId ? itrId : null,
       pid: '',
       email: this.isNonEmpty(profile) ? profile.emailAddress : '',
       contactNumber: this.isNonEmpty(profile) ? profile.mobileNumber : '',
@@ -516,7 +524,7 @@ export class UtilsService {
       currency: 'INR',
       locale: 'en_IN',
       financialYear: financialYear,
-      filingTeamMemberId: null,
+      filingTeamMemberId: filingTeamMemberId ? filingTeamMemberId : null,
       planIdSelectedByUser: null,
       planIdSelectedByTaxExpert: null,
       eFillingPortalPassword: '*****',
