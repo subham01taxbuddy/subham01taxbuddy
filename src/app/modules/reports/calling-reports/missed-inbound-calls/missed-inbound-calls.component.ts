@@ -5,6 +5,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -60,6 +61,7 @@ export class MissedInboundCallsComponent implements OnInit {
     public datePipe: DatePipe,
     private userMsService: UserMsService,
     private reportService: ReportService,
+    private reviewService:ReviewService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
@@ -291,8 +293,35 @@ export class MissedInboundCallsComponent implements OnInit {
     }
   }
 
-  placeCall(params){
+  async placeCall(params){
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    if (!agentNumber) {
+      this._toastMessageService.alert('error', "You don't have calling role.");
+      return;
+    }
+    this.loading = true;
+    let customerNumber = params.clientNumber;
+    const param = `tts/outbound-call`;
+    const reqBody = {
+      agent_number: agentNumber,
+      customer_number: customerNumber,
+    };
+    console.log('reqBody:', reqBody);
 
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+      this.loading = false;
+      if(result.success == false){
+        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
+      }
+      if (result.success == true) {
+            this._toastMessageService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+    })
   }
 
   downloadReport(){
