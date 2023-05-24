@@ -75,11 +75,14 @@ export class PayoutsComponent implements OnInit {
       currentPage: 1,
       totalItems: 80
     };
+
   }
 
   loggedInUserId: number;
   ngOnInit() {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
+    this.selectedStatus = this.statusList[2].value;
+    this.getSearchList('status', this.selectedStatus);
   }
 
   clearValue() {
