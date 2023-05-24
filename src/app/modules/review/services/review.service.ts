@@ -25,7 +25,7 @@ export class ReviewService {
     return this.httpClient.get<T>(environment.reviewUrl + param[0], { headers: this.headers });
   }
 
-  
+
   putMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

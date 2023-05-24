@@ -26,6 +26,7 @@ import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dia
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import {RequestManager} from "../../../shared/services/request-manager";
 import {Subscription} from "rxjs";
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -56,6 +57,7 @@ export class AssignedNewUsersComponent implements OnInit {
   agents = [];
   agentId = null;
   constructor(
+    private reviewService:ReviewService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -673,7 +675,7 @@ export class AssignedNewUsersComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
             background: transparent; font-size: 12px; cursor:pointer;">
             <i class="fas fa-chevron-right" aria-hidden="true" data-action-type="more-options"></i>
-           </button>`;          
+           </button>`;
         },
         width: 65,
         pinned: 'right',
@@ -918,11 +920,13 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   async call(data) {
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
     let agent_number
     this.loading = true;
-    const param = `/prod/call-support/call`;
+    // const param = `/prod/call-support/call`;
     // TODO check the caller agent number;
+    const param = `tts/outbound-call`;
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber);
     if (!agentNumber) {
@@ -938,14 +942,27 @@ export class AssignedNewUsersComponent implements OnInit {
       "agent_number": agent_number,
       "customer_number": data.mobileNumber
     }
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+    //   this.loading = false;
+    //   if (result.success.status) {
+    //     this._toastMessageService.alert("success", result.success.message)
+    //   }
+    // }, error => {
+    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
+    //   this.loading = false;
+    // })
+
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success.status) {
-        this._toastMessageService.alert("success", result.success.message)
+      if(result.success == false){
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
+      if (result.success == true) {
+            this._toastMessageService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
     })
   }
 
