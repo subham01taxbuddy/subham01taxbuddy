@@ -2601,23 +2601,23 @@ export class PersonalInformationComponent implements OnInit {
     if (this.customerProfileForm.valid) {
       this.loading = true;
       // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
-      if (ref) {
-        this.ITR_JSON.family = [
-          {
-            pid: null,
-            fName: this.customerProfileForm.controls['firstName'].value,
-            mName: this.customerProfileForm.controls['middleName'].value,
-            lName: this.customerProfileForm.controls['lastName'].value,
-            fatherName: this.customerProfileForm.controls['fatherName'].value,
-            age: this.ITR_JSON.family[0]['age'],
-            gender: this.ITR_JSON.family[0]['gender'],
-            relationShipCode: 'SELF',
-            relationType: 'SELF',
-            dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth'],
-          },
-        ];
-        Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      }
+      // if (ref) {
+      //   this.ITR_JSON.family = [
+      //     {
+      //       pid: null,
+      //       fName: this.customerProfileForm.controls['firstName'].value,
+      //       mName: this.customerProfileForm.controls['middleName'].value,
+      //       lName: this.customerProfileForm.controls['lastName'].value,
+      //       fatherName: this.customerProfileForm.controls['fatherName'].value,
+      //       age: this.ITR_JSON.family[0]['age'],
+      //       gender: this.ITR_JSON.family[0]['gender'],
+      //       relationShipCode: 'SELF',
+      //       relationType: 'SELF',
+      //       dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth'],
+      //     },
+      //   ];
+      //   Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+      // }
       console.log('this.ITR_JSON: ', this.ITR_JSON);
       // const response = await this.verifyAllBanks();
       // console.log('Bank API response in saveProfile', ":", response);
