@@ -150,17 +150,158 @@ export class DailyCallingReportComponent implements OnInit {
 
   }
 
-  createRowData(callingData:any){
-    const rowData: any[] = [];
+  // createRowData(callingData:any){
+  //   const rowData: any[] = [];
 
 
-    return rowData;
+  //   return callingData;
+  // }
+
+  createRowData(callingData) {
+    console.log('callingRepoInfo -> ', callingData);
+    var callingRepoInfoArray = [];
+    for (let i = 0; i < callingData.length; i++) {
+      let agentReportInfo = Object.assign({}, callingRepoInfoArray[i], {
+        filerName: callingData[i].filerName,
+        outboundCalls: callingData[i].outboundCalls,
+        outboundConnected: callingData[i].outboundConnected,
+        outboundAnsweredRatio: callingData[i].outboundAnsweredRatio,
+        inboundCalls: callingData[i].inboundCalls,
+        inboundConnected: callingData[i].inboundConnected,
+        inboundAnsweredRatio: callingData[i].inboundAnsweredRatio,
+        noOfMissedCall: callingData[i].noOfMissedCall,
+        parentName: callingData[i].parentName,
+        // icPct: callingData[i].inboundCall > 0 ? ((callingData[i].inboundAnsweredCall / callingData[i].inboundCall) * 100).toFixed(2) : 0.00,
+      })
+      callingRepoInfoArray.push(agentReportInfo);
+    }
+    console.log('callingRepoInfoArray-> ', callingRepoInfoArray)
+    return callingRepoInfoArray;
   }
 
   reportsCodeColumnDef(){
-    return [{
+    return [
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
+        sortable: true,
+        width: 150,
+        pinned:'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Outbound Call',
+        field: 'outboundCalls',
+        sortable: true,
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Outbound Connected',
+        field: 'outboundConnected',
+        sortable: true,
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Outbound Answered Ratio',
+        field: 'outboundAnsweredRatio',
+        sortable: true,
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound Call',
+        field: 'inboundCalls',
+        sortable: true,
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound Connected',
+        field: 'inboundConnected',
+        sortable: true,
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound Answered Ratio',
+        field: 'inboundAnsweredRatio',
+        sortable: true,
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'No of Missed Call',
+        field: 'noOfMissedCall',
+        sortable: true,
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Parent Name',
+        field: 'parentName',
+        sortable: true,
+        pinned:'right',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
 
-    }]
+    ]
   }
 
   downloadReport(){
