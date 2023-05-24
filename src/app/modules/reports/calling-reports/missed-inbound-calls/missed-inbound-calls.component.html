@@ -11,7 +11,20 @@
         <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
           (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
       </div>
-
+      <div class="col-sm-2">
+        <mat-label>Status</mat-label>
+        <mat-form-field appearance="outline">
+            <mat-select placeholder="Select Status" [formControl]="status" required>
+                <mat-option *ngFor="let obj of statusList" [value]="obj.value">
+                    {{ obj.label }}
+                </mat-option>
+            </mat-select>
+             <!-- <mat-error *ngIf="promoCodeForm.controls['active'].hasError('required')">Select status.
+            </mat-error> -->
+            <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
+                sure want to create FIXED pricing promo code?</mat-hint> -->
+        </mat-form-field>
+      </div>
       <div class="col-sm-2 spsTp">
         <mat-form-field appearance="outline">
           <mat-label>From Date</mat-label>
@@ -33,9 +46,6 @@
           <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
         </mat-form-field>
       </div>
-      <div class="col-sm-2 spsTp">
-
-      </div>
       <div class="col-sm-12 spsTp bdrTp">
         <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
           <i class="fa fa-download" aria-hidden="true"></i> Download File
@@ -49,4 +59,27 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="tableSpc">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="txTit">
+        Missed Inbound Call Details:
+      </div>
+    </div>
+    <!-- <div class="col-sm-4">
+  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
+  </div> -->
+  </div>
+
+  <table>
+    <tr *ngFor="let item of missedInboundCallingReport | paginate : config"></tr>
+  </table>
+
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallGridOptions"
+  (rowClicked)="onRowClicked($event)">
+  </ag-grid-angular>
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
 </div>

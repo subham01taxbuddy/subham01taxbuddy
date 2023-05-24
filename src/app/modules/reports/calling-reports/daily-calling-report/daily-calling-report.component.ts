@@ -82,7 +82,7 @@ export class DailyCallingReportComponent implements OnInit {
    }
 
   ngOnInit() {
-    // this.showReports();
+   this.showReports();
   }
 
   ownerId: number;
@@ -111,6 +111,7 @@ export class DailyCallingReportComponent implements OnInit {
 
   showReports(){
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?fromDate=2023-04-01&toDate=2023-05-16
+    // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?filerUserId=11029&page=0&pageSize=10&fromDate=2023-05-01&toDate=2023-05-24&ownerUserId=7521
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -317,7 +318,9 @@ export class DailyCallingReportComponent implements OnInit {
   }
 
   pageChanged(event){
-
+    this.config.currentPage = event;
+    this.searchParam.page = event - 1;
+    this.showReports();
   }
 
   setToDateValidation(FromDate) {
