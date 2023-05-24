@@ -1,13 +1,12 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="card">
 
     <form [formGroup]="customerProfileForm">
-        <div class="card__row card__col-xs-12">
-            <div class="card__title card__col-xs-8 sub-heading">Address Details</div>
+        <div class="col-sm-12">
+            <div class="sub-heading">Address Details</div>
         </div>
         <div formGroupName="address">
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-3">
+            <div class="row">
+                <div class="col-sm-3">
                     <mat-label>PIN Code</mat-label>
                     <mat-form-field appearance="outline">
                         <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
@@ -19,7 +18,7 @@
                             6 digit PIN code.</mat-error>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-3">
+                <div class="col-sm-3">
                     <mat-label>Select country</mat-label>
                     <mat-form-field appearance="outline">
                         <mat-select placeholder="Select country" name="country" formControlName="country"
@@ -31,7 +30,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-3">
+                <div class="col-sm-3">
                     <mat-label>Select state</mat-label>
                     <mat-form-field appearance="outline">
                         <mat-select placeholder="Select state" name="state" formControlName="state" required>
@@ -41,7 +40,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-3">
+                <div class="col-sm-3">
                     <mat-label>City</mat-label>
                     <mat-form-field appearance="outline">
                         <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
@@ -55,9 +54,8 @@
                             city name.</mat-error>
                     </mat-form-field>
                 </div>
-            </div>
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-4">
+         
+                <div class="col-sm-4 spsTp">
                     <mat-label>Flat/Door/Block No.</mat-label>
                     <mat-form-field appearance="outline">
                         <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
@@ -68,15 +66,15 @@
                             flat/door/block no.</mat-error>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-4">
+                <div class="col-sm-4 spsTp">
                     <mat-label>Premises name</mat-label>
                     <mat-form-field appearance="outline">
                         <input type="text" trim matInput placeholder="Premises name" name="premisesName"
                             formControlName="premisesName" class="input-field" maxlength="50">
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                    <mat-label>Area/ Locality</mat-label>
+                <div class="col-sm-4 spsTp">
+                    <mat-label>Area/Locality</mat-label>
                     <mat-form-field appearance="outline">
                         <input type="text" trim matInput placeholder="Area/ Locality Characters Only" [pattern]="charRegex" name="area"
                             formControlName="area" class="input-field" maxlength="50" required>
@@ -87,10 +85,9 @@
                             Enter character only</mat-error>
                     </mat-form-field>
                 </div>
-            </div>
-        </div>
-        <hr>
-        <div class="card__row card__col-xs-12">
+       
+        <hr class="spsTp">
+        <div class="col-sm-12">
             <div class="card__title sub-heading mt-2 card__col-xs-10">Bank Details</div>
             <div class="card__col-xs-2 txt-center">
                 <button mat-icon-button color="warn" class="add-btn" (click)="addMoreBanks(this.customerProfileForm)"
@@ -233,10 +230,13 @@
 <!--            </div>-->
 <!--        </div>-->
 
-        <div class="footer__buttons clearfix">
-            <button class="tbd-btn save-btn" [disabled]="!isEditPersonal && customerProfileForm.invalid"
+        <div class="col-sm-12 spsTp bdrTp">
+            <button class="tbd-btn save-btn mvRth" [disabled]="!isEditPersonal && customerProfileForm.invalid"
                 (click)="saveProfile('NEXT')">Save
             </button>
         </div>
+
+    </div>
+    </div>
     </form>
-</div>
+

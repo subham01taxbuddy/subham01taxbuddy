@@ -1,61 +1,79 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div class="content-wrapper">
-    <div class="container">
-        <div class="col-sm-12" style="margin-top: 10px;">
-            <div class="card" style="margin-top: 10px;">
-                <div class="card__row">
-                    <div class="filter__col card__col-xs-12">
-                        <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)"
-                            (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
-                    </div>
 
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <mat-label> Mobile Number </mat-label>
-                        <mat-form-field appearance="outline">
-                            <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <mat-label> Email </mat-label>
-                        <mat-form-field appearance="outline">
-                            <input type="text" matInput [formControl]="email" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <mat-label> Invoice No. </mat-label>
-                        <mat-form-field appearance="outline">
-                            <input matInput [formControl]="invoiceNo" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3">
-                        <button class="btn btnClr" [disabled]="loading" (click)="applyFilter()">
-                            <i class="fas fa-search" aria-hidden="true"></i> Search
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        <button class="tbd-btn-clear" [disabled]="loading" (click)="resetFilters()">
-                            <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
-                            Clear
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" style="margin-top: 50px;">
-            <div class="col-12">
-                <table>
-                    <tr *ngFor="let item of userInfo | paginate : config"></tr>
-                </table>
-                <ag-grid-angular class="ag-theme-balham" [gridOptions]="refundListGridOptions"
-                    [rowSelection]="rowSelection" (rowClicked)="onRefundRowClicked($event)">
-                </ag-grid-angular>
-                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-            </div>
-        </div>
+<div class="align-items-center row">
+    <div class="col-sm-4">
+      <b style="font-size: 25px">Refund Request</b>
     </div>
+    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
+      <p>
+        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
+      </p>
+    </div>
+  </div>
+
+
+  <div class="rowClr">
+    <div class="surround">
+    <div class="row">
+
+    <div class="col-sm-12 bckClr">
+    <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
+     </div>
+
+    <div class="col-sm-4 spsTp">
+     <mat-label> Mobile Number </mat-label>
+      <mat-form-field appearance="outline">
+      <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
+      </mat-form-field>
+     </div>
+
+     <div class="col-sm-5 spsTp">
+     <mat-label> Email Address: </mat-label>
+     <mat-form-field appearance="outline">
+     <input type="text" matInput [formControl]="email" />
+     </mat-form-field>
+     </div>
+
+     <div class="col-sm-3 spsTp">
+     <mat-label> Invoice No: </mat-label>
+     <mat-form-field appearance="outline">
+     <input matInput [formControl]="invoiceNo" />
+     </mat-form-field>
+     </div>
+     <div class="col-sm-12 spsTp bdrTp">
+      <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
+        Clear form
+      </button>
+
+     <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
+     <i class="fas fa-search" aria-hidden="true"></i> Search
+     </button>
+
+
+     </div>
+
+</div>
+</div>
+</div>
+
+<!-- Table Below -->
+<div class="tableSpc">
+    <div class="row">
+    <div class="col-sm-8">
+      <div class="txTit">
+        Refund Request Details:
+      </div>
+    </div>
+    <div class="col-sm-4">
+    <!-- <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div>  -->
+    </div>
+    </div>
+
+    <table>
+    <tr *ngFor="let item of userInfo | paginate : config"></tr>
+    </table>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="refundListGridOptions" [rowSelection]="rowSelection" (rowClicked)="onRefundRowClicked($event)">
+    </ag-grid-angular>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
 </div>

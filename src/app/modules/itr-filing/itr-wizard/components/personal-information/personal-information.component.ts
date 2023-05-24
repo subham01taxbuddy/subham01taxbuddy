@@ -2549,7 +2549,7 @@ export class PersonalInformationComponent implements OnInit {
     });
   }
 
-  isFormValid(){
+  isFormValid() {
     //check if at least one account is selected for refund
     var isBankSelected = false;
     this.customerProfileForm.controls['bankDetails'].value.forEach((bank) => {
@@ -2580,7 +2580,7 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.panNumber
     );
 
-    if(!this.isFormValid()){
+    if (!this.isFormValid()) {
       return;
     }
 
@@ -2601,21 +2601,23 @@ export class PersonalInformationComponent implements OnInit {
     if (this.customerProfileForm.valid) {
       this.loading = true;
       // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
-      this.ITR_JSON.family = [
-        {
-          pid: null,
-          fName: this.customerProfileForm.controls['firstName'].value,
-          mName: this.customerProfileForm.controls['middleName'].value,
-          lName: this.customerProfileForm.controls['lastName'].value,
-          fatherName: this.customerProfileForm.controls['fatherName'].value,
-          age: this.ITR_JSON.family[0]['age'],
-          gender: this.ITR_JSON.family[0]['gender'],
-          relationShipCode: 'SELF',
-          relationType: 'SELF',
-          dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth'],
-        },
-      ];
-      Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+      // if (ref) {
+      //   this.ITR_JSON.family = [
+      //     {
+      //       pid: null,
+      //       fName: this.customerProfileForm.controls['firstName'].value,
+      //       mName: this.customerProfileForm.controls['middleName'].value,
+      //       lName: this.customerProfileForm.controls['lastName'].value,
+      //       fatherName: this.customerProfileForm.controls['fatherName'].value,
+      //       age: this.ITR_JSON.family[0]['age'],
+      //       gender: this.ITR_JSON.family[0]['gender'],
+      //       relationShipCode: 'SELF',
+      //       relationType: 'SELF',
+      //       dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth'],
+      //     },
+      //   ];
+      //   Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+      // }
       console.log('this.ITR_JSON: ', this.ITR_JSON);
       // const response = await this.verifyAllBanks();
       // console.log('Bank API response in saveProfile', ":", response);
@@ -2630,8 +2632,8 @@ export class PersonalInformationComponent implements OnInit {
           this.utilsService.showSnackBar(
             'Customer profile updated successfully.'
           );
-          if(!ref) {
-            this.saveAndNext.emit({subTab: true, tabName: 'OTHER'});
+          if (!ref) {
+            this.saveAndNext.emit({ subTab: true, tabName: 'OTHER' });
           }
         },
         (error) => {

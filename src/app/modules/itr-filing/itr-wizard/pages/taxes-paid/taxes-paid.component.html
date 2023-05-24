@@ -1,13 +1,8 @@
-<div class="spc-blw">
-  <ngx-loading
-    [show]="loading"
-    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-  ></ngx-loading>
+<div class="spc-blw mrgArd">
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
   <div class="card__row display-flex">
-    <div
-      class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6"
-    >
+    <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
       <app-tds-on-salary (onSave)="saveAll()"></app-tds-on-salary>
     </div>
     <div class="space-in"></div>

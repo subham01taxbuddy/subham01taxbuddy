@@ -26,6 +26,7 @@ import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dia
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import {RequestManager} from "../../../shared/services/request-manager";
 import {Subscription} from "rxjs";
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -56,6 +57,7 @@ export class AssignedNewUsersComponent implements OnInit {
   agents = [];
   agentId = null;
   constructor(
+    private reviewService:ReviewService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -347,36 +349,36 @@ export class AssignedNewUsersComponent implements OnInit {
           debounceMs: 0,
         },
       },
-      {
-        headerName: 'Status',
-        field: 'statusId',
-        width: 90,
-        suppressMovable: true,
-        sortable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          // console.log('params === ', params, params.data.statusId);
-          // console.log('itrStatus array === ', itrStatus);
-          if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter(
-              (item: any) => item.statusId === params.data.statusId
-            );
-            if (nameArray.length !== 0) {
-              statusSequence = nameArray[0].sequence;
-              return nameArray[0].statusName;
-            } else {
-              return '-';
-            }
-          } else {
-            return params.data.statusId;
-          }
-        },
-      },
+      // {
+      //   headerName: 'Status',
+      //   field: 'statusId',
+      //   width: 90,
+      //   suppressMovable: true,
+      //   sortable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      //   valueGetter: function nameFromCode(params) {
+      //     // console.log('params === ', params, params.data.statusId);
+      //     // console.log('itrStatus array === ', itrStatus);
+      //     if (itrStatus.length !== 0) {
+      //       const nameArray = itrStatus.filter(
+      //         (item: any) => item.statusId === params.data.statusId
+      //       );
+      //       if (nameArray.length !== 0) {
+      //         statusSequence = nameArray[0].sequence;
+      //         return nameArray[0].statusName;
+      //       } else {
+      //         return '-';
+      //       }
+      //     } else {
+      //       return params.data.statusId;
+      //     }
+      //   },
+      // },
       {
         headerName: 'Owner Name',
         field: 'ownerName',
@@ -545,19 +547,33 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Update Status"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+          let statusText = '';
+          if (itrStatus.length !== 0) {
+            const nameArray = itrStatus.filter(
+              (item: any) => item.statusId === params.data.statusId
+            );
+            if (nameArray.length !== 0) {
+              statusSequence = nameArray[0].sequence;
+              statusText = nameArray[0].statusName;
+            } else {
+              statusText = '-';
+            }
+          } else {
+            statusText = params.data.statusId;
+          }
+          return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
+          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width:80,
+        width:180,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
+            textAlign: 'left',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            'align-items': 'left',
+            'justify-content': 'left',
           };
         },
       },
@@ -592,8 +608,8 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
+            <i class="far fa-file-alt" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,
@@ -609,7 +625,7 @@ export class AssignedNewUsersComponent implements OnInit {
       },
       {
         headerName: 'Start Filing',
-        width: 68,
+        width: 90,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
@@ -617,23 +633,23 @@ export class AssignedNewUsersComponent implements OnInit {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: blue">
-              <i class="fa fa-circle" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i>
+              background: transparent; font-size: 13px; cursor:pointer;color:#04a4bc" data-action-type="startFiling">
+              <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i> Yet to Start
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: red">
+              background: transparent; font-size: 16px; cursor:pointer;color: red" data-action-type="startFiling">
               <i class="fa fa-circle" title="User Backed out" aria-hidden="true" data-action-type="startFiling"></i>
               </button>`;
             } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
               return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: green">
+              background: transparent; font-size: 16px; cursor:pointer;color: green" data-action-type="startFiling">
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
               return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: orange">
-              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>
+              background: transparent; font-size: 13px; cursor:pointer;color:#2dd35c"font-weight:bold; data-action-type="startFiling">
+              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>In Progress
             </button>`;
             }
           } else {
@@ -657,8 +673,8 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
+            background: transparent; font-size: 12px; cursor:pointer;">
+            <i class="fas fa-chevron-right" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
         width: 65,
@@ -904,11 +920,13 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   async call(data) {
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
     let agent_number
     this.loading = true;
-    const param = `/prod/call-support/call`;
+    // const param = `/prod/call-support/call`;
     // TODO check the caller agent number;
+    const param = `tts/outbound-call`;
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber);
     if (!agentNumber) {
@@ -924,14 +942,27 @@ export class AssignedNewUsersComponent implements OnInit {
       "agent_number": agent_number,
       "customer_number": data.mobileNumber
     }
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+    //   this.loading = false;
+    //   if (result.success.status) {
+    //     this._toastMessageService.alert("success", result.success.message)
+    //   }
+    // }, error => {
+    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
+    //   this.loading = false;
+    // })
+
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success.status) {
-        this._toastMessageService.alert("success", result.success.message)
+      if(result.success == false){
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
+      if (result.success == true) {
+            this._toastMessageService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
     })
   }
 

@@ -1,29 +1,25 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="align-items-center row">
-  <div class="col-sm-10">
-    <b style="font-size: 20px">Resigned SME </b>
-  </div>
-</div>
-
-<div class="card__row">
-  <div class="card__col-xs-12 card__col-sm-12">
-    <p style="float: left">
-      Total Count: <b>{{this.config.totalItems }}</b>
-    </p>
-    <br />
-  </div>
-</div>
-<div>
-  <div class="row" style="margin-top: 15px">
-    <div class="col-12">
-      <table>
-        <tr *ngFor="let item of smeInfo | paginate : config"></tr>
-      </table>
-      <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
-        (rowClicked)="onSmeRowClicked($event)">
-      </ag-grid-angular>
-      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+<!-- Table Below -->
+<div class="tableSpc">
+  <div class="row">
+  <div class="col-sm-8">
+    <div class="txTit">
+      Resigned SME Details:
     </div>
   </div>
+  <div class="col-sm-4">
+  <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div> 
+  </div>
+  </div>
+
+  <table>
+  <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+  </table>
+
+   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
+        (rowClicked)="onSmeRowClicked($event)">
+   </ag-grid-angular>
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
 </div>

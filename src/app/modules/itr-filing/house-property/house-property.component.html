@@ -1,8 +1,5 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="mrgArd btmSpc">
 <mat-accordion class="headers-align">
   <mat-expansion-panel
     [expanded]="step === 0"
@@ -23,14 +20,9 @@
       <!--      </div>-->
     </mat-expansion-panel-header>
 
-    <div style="padding: 0 24px 24px 24px">
       <form [formGroup]="housePropertyForm">
         <!-- type-of-hp selection  -->
-        <div
-          class="card__row"
-          *ngIf="hpView === 'TABLE'"
-          style="height: 100%; position: relative"
-        >
+        <div class="row" *ngIf="hpView === 'TABLE'">
           <div>
             <!-- add-more-hp-button  -->
             <div style="text-align: right">
@@ -41,7 +33,7 @@
             </div>
 
             <div
-              class="card"
+              class=""
               style="padding: 25px"
               *ngFor="let house of ITR_JSON.houseProperties; let i = index"
               hideToggle
@@ -52,7 +44,7 @@
                 style="cursor: pointer"
               >
                 <!-- checkbox  -->
-                <div class="flex justify-between gap-[50px]">
+                <div class="">
                   <div class="custom-control custom-checkbox">
                     <input
                       class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
@@ -184,13 +176,14 @@
           </div> -->
         </div>
 
-        <div class="card" *ngIf="hpView === 'FORM'">
+        <div class="" *ngIf="hpView === 'FORM'">
           <div class="card__row flex flex-col gap-[10px]">
             <!-- type-of-property-radio-buttons  -->
-            <div class="card__row">
-              <div class="card__col-xs-12">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="mgnBtm">
                 <!-- type-of-property-selection  -->
-                <mat-radio-group
+                <mat-radio-group                  
                   aria-label="Select an option"
                   placeholder="Select Property Type"
                   name="propertyType"
@@ -203,17 +196,20 @@
                   required
                 >
                   <mat-radio-button
+                  class="fntWgt"
                     *ngFor="let propertyType of propertyTypeDropdown"
                     [value]="propertyType.value"
                     >{{ propertyType.label | titlecase }}</mat-radio-button
                   >
                 </mat-radio-group>
+                </div>
               </div>
             </div>
 
             <!-- input-table  -->
-            <div class="card__row flex justify-center">
-              <table class="table">
+            <div class="col-sm-12">
+            <div class="tableSps">
+            <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th scope="col" style="font-size: 12px !important">
@@ -542,6 +538,8 @@
                 </tbody>
               </table>
             </div>
+          </div>
+          
 
             <!-- old-principal&interest  -->
             <!-- <div class="card__row">
@@ -792,7 +790,7 @@
           <!-- property-details  -->
           <div class="card__row flex flex-col gap-[10px]">
             <div class="card__title" style="padding: 0px 15px; font-size: 20px">
-              Property Details
+              Property Details:
             </div>
             <div
               class="card__row flex flex-row justify-between"
@@ -942,13 +940,13 @@
           <!-- co-ownership details  -->
           <div class="card__row flex flex-col gap-[10px]">
             <div class="card__title" style="padding: 0 15px; font-size: 20px">
-              Co - Ownership Details
+              Co-Ownership Details:
             </div>
             <div class="card__row card__row" style="padding: 0px 15px">
               <div class="flex gap-[25px] flex-col">
                 <!-- co-owner yes-no selection  -->
                 <div class="card__col-xs-12 flex justify-between items-center">
-                  <div>Is the property jointly owned? *</div>
+                  <div class="titlBg">Is the property jointly owned? *</div>
                   <mat-radio-group
                     name="isCoOwners"
                     (change)="haveCoOwners()"
@@ -974,7 +972,7 @@
                       (click)="addMoreCoOwner()"
                     >
                       <i class="fa fa-plus-square" aria-hidden="true"></i> Add
-                    </button>
+                    </button>             
                   </div>
                 </div>
 
@@ -1096,7 +1094,7 @@
                           <mat-form-field
                             appearance="outline"
                             class="input-field-width"
-                            style="width: 90% !important"
+                            style="width: 100% !important"
                           >
                             <input
                               matInput
@@ -1439,13 +1437,20 @@
             </div>
           </div>
           <!-- action buttons  -->
-          <div class="flex justify-between">
-            <!-- <a class="btn btn-cancel">Cancel</a> -->
-            <button class="lgtBtn" (click)="cancelHpForm()">Cancel</button>
-            <button class="lgtBtn" [disabled]="isDisable" (click)="saveHouseProperty('','')">Save</button>
-          </div>
+          
         </div>
       </form>
-    </div>
+   
   </mat-expansion-panel>
 </mat-accordion>
+<div class="flex justify-between p-[30px] back-foot">
+  <!-- <a class="btn btn-cancel">Cancel</a> -->
+  <button class="lgtBtn" (click)="goBack()">
+    <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+    <span class="font-semibold">&nbsp;Back to Main Page</span>
+  </button>
+  <button class="saveBtnIn" (click)="saveEmployerDetails()">
+    <span class="font-semibold">Save All</span>
+  </button>
+</div>
+</div>

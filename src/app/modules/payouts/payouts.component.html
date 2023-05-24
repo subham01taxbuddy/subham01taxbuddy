@@ -10,14 +10,14 @@
   <div class="rowClr">
     <div class="surround">
       <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-12 bckClr">
           <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event)" (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
         </div>
 <!--        <div class="col-sm-0" *ngIf="coOwnerCheck">-->
 <!--          <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)" (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>-->
 <!--        </div>-->
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <label class="input__label">Select attribute</label>
           <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
             <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
@@ -26,7 +26,7 @@
           </select>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <div class="input">
             <label class="input__label">Enter value</label>
             <div class="input__select">
@@ -35,7 +35,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <label class="input__label">Select Status</label>
           <select class="select__box ogp_select" (change)="getSearchList('status', selectedStatus)" [(ngModel)]="selectedStatus">
             <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
@@ -43,9 +43,13 @@
               {{drop.name}}</option>
           </select>
         </div>
-        <div class="col-sm-3">
-          <button class="srch-btn btnTp" (click)="advanceSearch(advanceSearchKey.value)"><i
+        <div class="col-sm-12 spsTp bdrTp">
+          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">            
+            Clear form
+           </button>
+          <button class="srch-btn mvRth" (click)="advanceSearch(advanceSearchKey.value)"><i
             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+            
         </div>
 
 
@@ -63,7 +67,8 @@
         <span class="txTit">Payout Details: </span>
       </div>
       <div class="col-sm-3">
-        <button class="tbd-btn spRt" (click)="approveSelected()"> Approve </button>
+        <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>
+        <span class="txblw">Select checkbox(below) then Approve the entries.</span>
       </div>
 
     </div>

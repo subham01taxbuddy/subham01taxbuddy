@@ -1,8 +1,5 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-<div style="padding-top: 20px; padding-bottom: 130px">
+<ngx-loading [show]="loading"  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="mrgArd">
   <mat-accordion class="headers-align">
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
@@ -13,10 +10,10 @@
       </mat-expansion-panel-header>
       <form [formGroup]="employerDetailsFormGroup">
         <div class="cardRect">
-          <div class="sectionTitle">Employer Details</div>
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">Name of the employer*</mat-label>
+          <div class="sectionTitle">Employer Details:</div>
+          <div class="row">
+            <div class="col-sm-4">
+              <mat-label class="inputLabel">Name of the employer:*</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -49,8 +46,8 @@
                 >
               </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-5">
-              <mat-label class="inputLabel">Employer TAN</mat-label>
+            <div class="col-sm-4">
+              <mat-label class="inputLabel">Employer TAN:</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -77,10 +74,9 @@
                 </mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label class="inputLabel">Address of employer</mat-label>
+       
+            <div class="col-sm-4">
+              <mat-label class="inputLabel">Address of employer:</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -103,7 +99,7 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-5">
+            <div class="col-sm-4 spsTp">
               <mat-label class="inputLabel">Town/City</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -136,10 +132,8 @@
                 >
               </mat-form-field>
             </div>
-          </div>
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label>Select state</mat-label>
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">Select state:</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select
                   placeholder="Select state"
@@ -164,8 +158,8 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-5">
-              <mat-label>Pin Code</mat-label>
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">Pin Code</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -201,9 +195,8 @@
             </div>
           </div>
           <hr style="margin-bottom: 10px" />
-          <div class="sectionTitle">Salary Details</div>
-          <div>
-            <table class="table table-bordered">
+          <div class="sectionTitle">Salary Details:</div>
+           <table class="table table-bordered col-sm-12">
               <thead>
                 <tr class="table-head">
                   <th>Salary Type</th>
@@ -240,7 +233,7 @@
                 </tr>
               </tbody>
             </table>
-          </div>
+         
         </div>
       </form>
     </mat-expansion-panel>
@@ -256,7 +249,7 @@
       <form [formGroup]="allowanceFormGroup">
         <div class="cardRect">
           <!-- <div class="sectionTitle">Exempt Allowance</div> -->
-          <table class="table table-bordered">
+            <table class="table table-bordered">
             <thead style="background: #eaeaea">
               <tr class="table-head">
                 <th>Allowance Type</th>
@@ -291,8 +284,8 @@
                 </td>
               </tr>
             </tbody>
-          </table>
-        </div>
+          </table>        
+    </div>
       </form>
     </mat-expansion-panel>
 
@@ -304,11 +297,11 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="cardRect">
-        <!-- <div class="sectionTitle">Deductions u/s 16</div> -->
-        <div class="card__row">
+        <!-- <div class="sectionTitle">Deductions u/s 16</div> -->        
           <form [formGroup]="deductionsFormGroup">
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label>Entertainment Allowance</mat-label>
+            <div class="row">
+            <div class="col-sm-6">
+              <mat-label class="inputLabel">Entertainment Allowance:</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   digitsOnly
@@ -330,8 +323,8 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-label>Professional Tax</mat-label>
+            <div class="col-sm-6">
+              <mat-label class="inputLabel">Professional Tax:</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   digitsOnly
@@ -354,8 +347,9 @@
                 </mat-error>
               </mat-form-field>
             </div>
+          </div>
           </form>
-        </div>
+       
       </div>
     </mat-expansion-panel>
   </mat-accordion>

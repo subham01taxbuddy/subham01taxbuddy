@@ -1,9 +1,9 @@
 
 import { Component } from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {initializeApp} from "@angular/fire/app";
-import {environment} from "../environments/environment";
-import {getMessaging, getToken} from "@angular/fire/messaging";
+import { Router} from '@angular/router';
+import { SwUpdate } from '@angular/service-worker';
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,6 +15,8 @@ export class AppComponent {
 
   constructor(
     private router: Router,
+    public swUpdate: SwUpdate,
+    private dialog: MatDialog
   ) {
     // router.events.subscribe((val) => {
     //   console.log(val);
@@ -62,14 +64,31 @@ export class AppComponent {
     }
     )(document,  (window as any).kommunicate || {});
 
-    //get the registration token for cloud messaging
-    //const firebaseApp = initializeApp(environment.firebaseConfig);
-    // const messaging = getMessaging(firebaseApp);
-    // getToken(messaging).then((currentToken)=>{
-    //   console.log('token response:', )
-    // }).catch((err) => {
-    //   console.log('An error occurred while retrieving token. ', err);
-    //   // ...
-    // });
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.available.subscribe(() => {
+        this.reloadWindow();
+      })
+    }
+
+  }
+
+  reloadWindow() {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Update Available!',
+        message: 'We have made some feature updates to Admin. Please click Reload button to get latest features.',
+        isHide: true
+      },
+      disableClose: true,
+      panelClass: 'reloadWindowPopup'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        // if(environment.production){
+        //   this.cmService.signOut();
+        // }
+        window.location.reload();
+      }
+    })
   }
 }

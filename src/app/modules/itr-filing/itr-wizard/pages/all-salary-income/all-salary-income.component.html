@@ -1,8 +1,8 @@
-<div *ngIf="showList">
+<div *ngIf="showList" class="mrgArd">
   <div>
     <span class="subTitle">Employer Details:</span>
     <button
-      class="tbd-btn save-btn"
+      class="new-add btnRt"
       style="align-self: end"
       (click)="addEmployer(-1)"
     >
@@ -20,35 +20,44 @@
         >
           <mat-expansion-panel-header>
             <mat-panel-title (click)="editEmployerDetails(i)">
-              <div class="flex justify-between">
+              <div class="container">
+              <div class="row">
                 <!-- checkbox & title  -->
-                <div class="flex justify-between gap-[50px]">
-                  <mat-checkbox
-                    name="selected[i]"
-                    formControlName="selected"
-                    (click)="$event.stopPropagation()"
-                  >
+                <div class="col-sm-10">
+                  <div class="row">
+                  <div class="col-sm-1">
+                  <mat-checkbox class="chk" name="selected[i]" formControlName="selected" (click)="$event.stopPropagation()">
                   </mat-checkbox>
-                  <div class="employerTitle">
+                  </div>
+                  <div class="col-sm-11">
+                  <div class="employerTitle lfTx">
                     {{ employer.value.employerName }}
+                  </div>
+                  </div>
                   </div>
                 </div>
 
-                <div style="margin-left: 50%">
-                  {{ this.ITR_JSON.employers[i].taxableIncome }}
-                </div>
+                <div class="col-sm-2 mv-rght">                
+                  
+                <div class="fig">{{ this.ITR_JSON.employers[i].taxableIncome }} </div>  
 
-                <mat-icon (click)="editEmployerDetails(i)">
-                  arrow_forward_ios
-                </mat-icon>
+                <div class="btnArw">
+                  <mat-icon (click)="editEmployerDetails(i)" >
+                    arrow_forward_ios
+                  </mat-icon>                       
+                  </div>
+                
               </div>
+
+              </div>
+            </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
     <button
-      class="delete-btn btnGry"
+      class="delete-btn"
       (click)="deleteEmployers()"
       [disabled]="!isEmployerSelected()"
     >
@@ -62,8 +71,7 @@
   (deactivate)="unsubscribe()"
 ></router-outlet>
 <div *ngIf="showList" class="flex justify-between p-[30px] back-foot">
-  <button class="lgtBtn" (click)="goBack()">
-    <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-    <span class="font-semibold">&nbsp;Back to Main Page</span>
+  <button class="lgtBtn" (click)="goBack()">    
+    <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Main Page    
   </button>
 </div>
