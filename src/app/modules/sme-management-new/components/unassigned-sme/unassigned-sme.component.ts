@@ -92,8 +92,8 @@ export class UnassignedSmeComponent implements OnInit {
   getSmeSearchList(key: any, searchValue: any) {
     this.loading = true;
     const loggedInSmeUserId=this.loggedInSme[0].userId
-    let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
+    // let data = this.utilsService.createUrlParams(this.searchParam);
+    let param = `/sme-details-new/${loggedInSmeUserId}?page=0&pageSize=30&${key}=${searchValue}`
 
     this.userMsService.getMethod(param).subscribe((result: any) => {
         this.loading = false;
