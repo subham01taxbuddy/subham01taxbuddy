@@ -79,7 +79,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   }
 
   search(){
-    this.getItrUserOverview();
+    // this.getItrUserOverview();
     this.getAllPartnerDetails();
   }
 
@@ -161,41 +161,41 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     }
   }
 
-  getItrUserOverview(){
-    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
-    // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?leaderUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
-    this.loading = true;
-    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    // let leaderUserId = this.loggedInSmeUserId;
+  // getItrUserOverview(){
+  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
+  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?leaderUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
+  //   this.loading = true;
+  //   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+  //   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+  //   // let leaderUserId = this.loggedInSmeUserId;
 
-    let param=''
-    let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
-      userFilter += `&leaderUserId=${this.leaderId}`;
-    }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
+  //   let param=''
+  //   let userFilter = '';
+  //   if (this.leaderId && !this.ownerId) {
+  //     userFilter += `&leaderUserId=${this.leaderId}`;
+  //   }
+  //   if (this.ownerId) {
+  //     userFilter += `&ownerUserId=${this.ownerId}`;
+  //   }
 
-     param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
+  //    param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
-      if(response.success == false){
-        this.itrOverview=null;
-        this. _toastMessageService.alert("error",response.message);
-      }
-      if (response.success) {
-        this.itrOverview = response.data;
-      }else{
-         this.loading = false;
-         this. _toastMessageService.alert("error",response.message);
-       }
-    },(error) => {
-      this.loading = false;
-      this. _toastMessageService.alert("error","Error");
-    });
-  }
+  //   this.itrService.getMethod(param).subscribe((response: any) => {
+  //     if(response.success == false){
+  //       this.itrOverview=null;
+  //       this. _toastMessageService.alert("error",response.message);
+  //     }
+  //     if (response.success) {
+  //       this.itrOverview = response.data;
+  //     }else{
+  //        this.loading = false;
+  //        this. _toastMessageService.alert("error",response.message);
+  //      }
+  //   },(error) => {
+  //     this.loading = false;
+  //     this. _toastMessageService.alert("error","Error");
+  //   });
+  // }
 
   leaderId: number;
   ownerId: number;

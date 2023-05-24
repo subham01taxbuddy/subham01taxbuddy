@@ -59,10 +59,10 @@
               >
                 Search
               </button> -->
-              <button class="srch-btn" style=" cursor: pointer" (click)="getBoPartners('mobile')">
+              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getBoPartners('mobile')">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
               </button>
-              <button class="clrLnk movLf" (click)="resetFilters()">
+              <button class="clrLnk movLf" [disabled]="loading" (click)="resetFilters()">
                 Clear form
               </button>
             </div>

@@ -37,7 +37,7 @@
             </mat-form-field>
           </div>
           <div class=" card__col-xs-12 card__col-sm-3">
-            <button class="tbd-btn" (click)="generateOtp()">Generate OTP</button>
+            <button class="tbd-btn" [disabled]="loading" (click)="generateOtp()">Generate OTP</button>
           </div>
         </div>
       </mat-dialog-content>
@@ -52,7 +52,7 @@
             </mat-form-field>
           </div>
           <div class=" card__col-xs-12 card__col-sm-6">
-            <button type="submit" class="tbd-btn-secondary" (click)="validateOtp()">E-Verify</button>
+            <button type="submit" [disabled]="loading" class="tbd-btn-secondary" (click)="validateOtp()">E-Verify</button>
           </div>
         </div>
       </mat-dialog-actions>
@@ -62,6 +62,6 @@
     <p> Mark as e verification done, Only in case e verification is done from outside the BO. It will only update here
       as e
       verified for the future reference</p><br>
-    <button type="submit" class="tbd-btn-secondary" (click)="markAsEverified()">Mark as E - verify</button>
+    <button type="submit" class="tbd-btn-secondary" [disabled]="loading" (click)="markAsEverified()">Mark as E - verify</button>
   </mat-tab>
 </mat-tab-group>

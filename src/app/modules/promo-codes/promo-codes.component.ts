@@ -83,15 +83,14 @@ export class PromoCodesComponent implements OnInit {
 
   getPromoCodeList(){
     this.loading = true;
-    let param = '/promocodes?isActive=true';
+    let param = '/promocodes';
     this.itrService.getMethod(param).subscribe((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;
-      if (Array.isArray(result) && result.length > 0) {
-        this.PromoCodeInfo=result;
-        this.totalCount = result.length;
-        this.promoCodeGridOptions.api?.setRowData(this.createRowData(result));
-      }
+      this.PromoCodeInfo = result?.content;
+      this.totalCount = result?.content?.length;
+      this.promoCodeGridOptions.api?.setRowData(this.createRowData(result.content));
+
     }, error => {
       this.loading = false;
     })
@@ -166,7 +165,12 @@ export class PromoCodesComponent implements OnInit {
       suppressMovable: true,
       cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       cellRenderer: (data) => {
-        return formatDate(data.value, 'dd MMM yyyy', this.locale)
+        if(data?.value != '-'){
+          return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
+        }else {
+          return '-';
+        }
+
       },
       filter: "agTextColumnFilter",
       filterParams: {
@@ -181,7 +185,12 @@ export class PromoCodesComponent implements OnInit {
       suppressMovable: true,
       cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       cellRenderer: (data) => {
-        return formatDate(data.value, 'dd MMM yyyy', this.locale)
+        if(data?.value != '-'){
+          return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
+        }else{
+          return '-';
+        }
+
       },
       filter: "agTextColumnFilter",
       filterParams: {

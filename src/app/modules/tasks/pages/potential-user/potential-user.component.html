@@ -47,15 +47,15 @@
             </mat-form-field>
           </div>
           <div class="col-sm-2 spsTp">
-            <button class="srch-btn" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
+            <button class="srch-btn" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
                 aria-hidden="true"></i>&nbsp;Search</button>
           </div>
           <div class="col-sm-2 spsTp">
-            <button class="clrLnk" (click)="resetFilters()">
+            <button class="clrLnk" [disabled]="loading" (click)="resetFilters()">
             Clear Form
           </button>
           </div>
-     
+
         </div>
       </div>
       </div>
@@ -68,7 +68,7 @@
             </div>
           </div>
           <div class="col-sm-4">
-          <div class="count"> Total Count: <b>{{config.totalItems}}</b></div> 
+          <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>
           </div>
           </div>
 
