@@ -114,7 +114,10 @@ export class PayoutsComponent implements OnInit {
 
   getSearchList(key: any, searchValue: any) {
 
-    let queryString = `&${key}=${searchValue}`;
+    let queryString = '';
+    if(this.utilsService.isNonEmpty(searchValue)) {
+      queryString = `&${key}=${searchValue}`;
+    }
     this.serviceCall(queryString);
   }
 
