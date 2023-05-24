@@ -350,31 +350,31 @@ export class SummaryComponent implements OnInit {
 
         SAV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ].OthersInc?.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'SAV'
         )?.OthSrcOthAmount,
 
         IFD: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ].OthersInc?.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'IFD'
         )?.OthSrcOthAmount,
 
         TAX: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ].OthersInc?.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'TAX'
         )?.OthSrcOthAmount,
 
         FAP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ].OthersInc?.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'FAP'
         )?.OthSrcOthAmount,
 
         DIV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
           this.ITR14IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ].OthersInc?.OthersIncDtlsOthSrc.find(
           (val) => val.OthSrcNatureDesc === 'DIV'
         )?.OthSrcOthAmount,
 
