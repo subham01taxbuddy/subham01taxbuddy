@@ -48,7 +48,7 @@ import {ServiceWorkerModule} from "@angular/service-worker";
     AngularFireMessagingModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately' }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
   ],
   providers: [
     NavbarService,
