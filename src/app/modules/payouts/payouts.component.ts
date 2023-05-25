@@ -624,5 +624,6 @@ export class PayoutsComponent implements OnInit {
     this.selectedStatus = null;
     this.key = null;
     this?.smeDropDown?.resetDropdown();
+    this.clearValue();
   }
 }
