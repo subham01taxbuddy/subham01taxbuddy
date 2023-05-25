@@ -136,6 +136,7 @@ export class PromoCodesComponent implements OnInit {
         maxDiscountAmount: this.utileService.isNonEmpty(promoCodeData[i].maxDiscountAmount) ? promoCodeData[i].maxDiscountAmount : '-',
         userCount: this.utileService.isNonEmpty(promoCodeData[i].usedCount) ? promoCodeData[i].usedCount : '-',
         description: this.utileService.isNonEmpty(promoCodeData[i].description) ? promoCodeData[i].description : '-',
+        active: this.utileService.isNonEmpty(promoCodeData[i].active) ? promoCodeData[i].active : '-',
       })
       promoCodeArray.push(promoCodeInfo);
     }
@@ -364,6 +365,7 @@ export class PromoCodesComponent implements OnInit {
   }
 
   editPromo(params){
+    console.log('data for edit ',params)
     let disposable = this.dialog.open(AddEditPromoCodeComponent, {
       width: '65%',
       height: 'auto',
