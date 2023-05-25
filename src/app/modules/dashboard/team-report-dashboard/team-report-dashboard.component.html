@@ -231,20 +231,20 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="radius1 grBk">
-          <span class="numTxSm grTx">27,315</span><br>
-          <span class="TxSm">Total Commission Earned (18K)</span><br>
+          <span class="numTxSm grTx"> ₹ {{commissionData?.totalCommissionEarned || 'NA'}}</span><br>
+          <span class="TxSm">Total Commission Earned</span><br>
         </div>
         </div>
         <div class="col-sm-6">
           <div class="radius1 grBk">
-          <span class="numTxSm grTx">9</span><br>
-          <span class="TxSm">Paid (10K)</span><br>
+          <span class="numTxSm grTx">₹ {{commissionData?.receivedAmount || 'NA'}}</span><br>
+          <span class="TxSm">Paid</span><br>
         </div>
         </div>
         <div class="col-sm-6">
           <div class="radius1 OrgBk">
-          <span class="numTxSm OrgTx">30.33</span><br>
-          <span class="TxSm">Payable (8K)</span><br>
+          <span class="numTxSm OrgTx">₹ {{commissionData?.receivableAmount || 'NA'}}</span><br>
+          <span class="TxSm">Payable </span><br>
         </div>
         </div>
 
@@ -256,42 +256,42 @@
   <div class="col-sm-4">
     <div class="radius">
       <span class="TxHd"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
-      <span class="numTxBg">73</span>
+      <span class="numTxBg">{{commissionData?.totalItrFiled || 'NA'}}</span>
       <!-- Inside Row -->
       <div class="row">
         <div class="col-sm-4">
           <div class="radius1">
-          <span class="numTxSm">28</span><br>
+          <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
           <span class="TxSm">ITR1</span><br>
         </div>
         </div>
         <div class="col-sm-4">
           <div class="radius1">
-          <span class="numTxSm">11</span><br>
+          <span class="numTxSm">{{commissionData?.itr2 || 'NA'}}</span><br>
           <span class="TxSm">ITR2</span><br>
         </div>
         </div>
         <div class="col-sm-4">
           <div class="radius1">
-          <span class="numTxSm">16</span><br>
+          <span class="numTxSm">{{commissionData?.itr3 || 'NA'}}</span><br>
           <span class="TxSm">ITR3</span><br>
         </div>
         </div>
         <div class="col-sm-4">
           <div class="radius1">
-          <span class="numTxSm">16</span><br>
+          <span class="numTxSm">{{commissionData?.itr4 || 'NA'}}</span><br>
           <span class="TxSm">ITR4</span><br>
         </div>
         </div>
         <div class="col-sm-4">
           <div class="radius1">
-          <span class="numTxSm">2</span><br>
+          <span class="numTxSm">{{commissionData?.other || 'NA'}}</span><br>
           <span class="TxSm">Other</span>
         </div>
         </div>
         <div class="col-sm-4">
           <div class="radius1">
-          <span class="numTxSm">2</span><br>
+          <span class="numTxSm">{{commissionData?.itrU || 'NA'}}</span><br>
           <span class="TxSm">ITR U</span><br>
         </div>
         </div>

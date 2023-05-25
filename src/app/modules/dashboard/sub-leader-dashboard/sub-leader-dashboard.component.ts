@@ -182,6 +182,7 @@ export class SubLeaderDashboardComponent implements OnInit {
   getPartnerCommission(){
     // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?filerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
     // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission/{filerUserId}?fromDate=2023-05-06&toDate=2023-05-06
+     //https://uat-api.taxbuddy.com/itr/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-05-16
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     this.loading = true;
@@ -199,7 +200,7 @@ export class SubLeaderDashboardComponent implements OnInit {
       userFilter += `leaderUserId=${this.loggedInSmeUserId}`;
     }
 
-    param = `/dashboard/partner-commission?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
+    param = `/dashboard/partner-commission-cumulative?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
 
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
