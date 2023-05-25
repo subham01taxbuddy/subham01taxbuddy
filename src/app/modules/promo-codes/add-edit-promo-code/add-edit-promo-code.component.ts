@@ -65,13 +65,14 @@ export class AddEditPromoCodeComponent implements OnInit {
       maxDiscountAmount: [''],
       usedCount: [0],
       deactivationReason: [''],
-      active: [true],
+      active: [''],
       discountDetails: this.fb.array([])
     })
 
     if(this.data.mode == 'edit'){
       //Title , Description , End Date , Status
       this.promoCodeForm.patchValue(this.promoCodeInfo);
+      this.promoCodeForm?.controls['active'].setValue(this.promoCodeInfo?.active);
       this.promoCodeForm?.controls['code'].setValue(this.promoCodeInfo?.code);
       this.promoCodeForm?.controls['minOrderAmount'].setValue(this.promoCodeInfo?.minimumOrderAmnt);
       this.promoCodeForm?.controls['code'].disable();
@@ -92,6 +93,9 @@ export class AddEditPromoCodeComponent implements OnInit {
       this.promoCodeForm?.controls['usedCount'].updateValueAndValidity();
       this.promoCodeForm?.controls['deactivationReason'].disable();
       this.promoCodeForm?.controls['deactivationReason'].updateValueAndValidity();
+      var currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+      this.minEndDate = currentDate;
     }
   }
 
