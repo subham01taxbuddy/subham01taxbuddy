@@ -67,7 +67,7 @@ export class UpdateSmeNotesComponent implements OnInit {
       "pathParameters": {
         "id": this.data.leadData.id
       },
-      "environment": environment.environment
+      // "environment": environment.environment
     }
     this.reviewService.putMethod(param, requestBody).subscribe((res: any) => {
       this._toastMessageService.alert("success", 'Review Updated Successfully!!');
@@ -95,7 +95,7 @@ export class UpdateSmeNotesComponent implements OnInit {
       "pathParameters": {
         "id": this.data.leadData.id
       },
-      "environment": environment.environment
+      // "environment": environment.environment
     }
     this.reviewService.putMethod(param, requestBody).subscribe((res: any) => {
       this._toastMessageService.alert("success", 'Review Status Updated Successfully!!');

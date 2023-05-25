@@ -16,7 +16,7 @@ export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   userData: any;
-  constructor(private router: Router, public utilsService: UtilsService) {}
+  constructor(private router: Router, public utilsService: UtilsService) { }
 
   /**
    * intercept all XHR request
@@ -64,6 +64,7 @@ export class TokenInterceptor implements HttpInterceptor {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
+          environment: environment.environment
         },
       });
     }
