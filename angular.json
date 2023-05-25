@@ -64,7 +64,9 @@
             ],
             "scripts": [
               "node_modules/mammoth/mammoth.browser.min.js"
-            ]
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -76,7 +78,7 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "serviceWorker": false,
+              "serviceWorker": true,
               "index": {
                 "input": "src/environments/prod/index.html",
                 "output": "index.html"
@@ -107,7 +109,7 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "serviceWorker": false,
+              "serviceWorker": true,
               "index": {
                 "input": "src/environments/staging/index.html",
                 "output": "index.html"
@@ -128,7 +130,7 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "serviceWorker": false,
+              "serviceWorker": true,
               "index": {
                 "input": "src/environments/dev/index.html",
                 "output": "index.html"

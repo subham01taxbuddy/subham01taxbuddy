@@ -28,6 +28,7 @@ import {getMessaging, provideMessaging} from '@angular/fire/messaging';
 import {AngularFireModule} from "@angular/fire/compat";
 import {environment} from "../environments/environment";
 import {AngularFireMessagingModule, SERVICE_WORKER} from "@angular/fire/compat/messaging";
+import {ServiceWorkerModule} from "@angular/service-worker";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {AngularFireMessagingModule, SERVICE_WORKER} from "@angular/fire/compat/m
     AngularFireMessagingModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
   ],
   providers: [
     NavbarService,
