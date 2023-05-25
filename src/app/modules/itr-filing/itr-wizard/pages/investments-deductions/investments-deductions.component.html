@@ -3,28 +3,16 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 <div class="spc-blw mrgArd">
-  <div class="card__row display-flex">
-    <div class="card__col-lg-6">
-      <div
-        class="card__title card__col-lg-8"
-        style="padding: 10px; font-size: 20px"
-      >
-        Investment/ Deduction Details
-      </div>
-    </div>
-    <div class="card__col-lg-6"></div>
-  </div>
+
   <form [formGroup]="investmentDeductionForm">
     <div class="card__row display-flex">
-      <div
-        class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6"
-      >
+      <div class="col-sm-6 cardBdr">
         <div class="display-flex card__col-sm-12">
           <div
             class="card__title card__col-sm-9"
             style="padding: 10px 0; font-size: 18px"
           >
-            Investment/ Deduction
+          Investment/Deduction Details:
           </div>
           <div class="edit clearfix invest-edit card__col-sm-3">
             <button class="edit_btn invest" (click)="editForm('investment')">
@@ -32,8 +20,8 @@
             </button>
           </div>
         </div>
-        <div class="card__row">
-          <div class="card__col-lg-6">
+        <div class="row grup">
+          <div class="col-lg-6 spsTp">
             <mat-label>Under section 80C</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -46,12 +34,12 @@
               />
             </mat-form-field>
           </div>
-          <div class="card__col-lg-6">
-            <mat-label>Under section 80CCC</mat-label>
+          <div class="col-lg-6 spsTp">
+            <mat-label>Under sec. 80CCC</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="Under section 80CCC"
+                placeholder="Under sec. 80CCC"
                 formControlName="PENSION_FUND"
                 maxlength="8"
                 autocomplete="off"
@@ -59,12 +47,12 @@
               />
             </mat-form-field>
           </div>
-          <div class="card__col-lg-6">
-            <mat-label>Under section 80CCD (1)</mat-label>
+          <div class="col-lg-6 spsTp">
+            <mat-label>Under sec. 80CCD (1)</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="Under section 80CCD (1)"
+                placeholder="Under sec. 80CCD (1)"
                 formControlName="PS_EMPLOYEE"
                 maxlength="8"
                 autocomplete="off"
@@ -72,12 +60,12 @@
               />
             </mat-form-field>
           </div>
-          <div class="card__col-lg-6">
-            <mat-label>Under section 80CCD (2)</mat-label>
+          <div class="col-lg-6 spsTp">
+            <mat-label>Under sec. 80CCD (2)</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="Under section 80CCD (2)"
+                placeholder="Under sec. 80CCD (2)"
                 maxlength="8"
                 formControlName="PS_EMPLOYER"
                 autocomplete="off"
@@ -85,12 +73,12 @@
               />
             </mat-form-field>
           </div>
-          <div class="card__col-lg-6">
-            <mat-label>Under section 80CCD (1B)</mat-label>
+          <div class="col-lg-6 spsTp">
+            <mat-label>Under sec. 80CCD (1B)</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="Under section 80CCD (1B)"
+                placeholder="Under sec. 80CCD (1B)"
                 maxlength="8"
                 formControlName="PENSION_SCHEME"
                 autocomplete="off"
@@ -99,12 +87,12 @@
             </mat-form-field>
           </div>
 
-          <div class="card__col-lg-6">
-            <mat-label>Under section 80E</mat-label>
+          <div class="col-lg-6 spsTp">
+            <mat-label>Under sec. 80E</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="Under section 80E"
+                placeholder="Under sec. 80E"
                 maxlength="8"
                 formControlName="us80e"
                 autocomplete="off"
@@ -113,12 +101,12 @@
             </mat-form-field>
           </div>
 
-          <div class="card__col-lg-6" *ngIf="!ITR_JSON.systemFlags?.hraAvailed">
-            <mat-label>Under section 80GG</mat-label>
+          <div class="col-lg-6 spsTp" *ngIf="!ITR_JSON.systemFlags?.hraAvailed">
+            <mat-label>Under sec. 80GG</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput
-                placeholder="Under section 80GG"
+                placeholder="Under sec. 80GG"
                 maxlength="8"
                 formControlName="us80gg"
                 autocomplete="off"
@@ -129,14 +117,15 @@
         </div>
 
         <div style="padding-top: 20px">
-          Other Deductions
-          <div class="card__row">
-            <div class="card__col-lg-6">
-              <mat-label>Under section 80GGC</mat-label>
+      
+          <div class="row grup">
+            <div class="col-lg-12">Other Deductions:</div>
+            <div class="col-lg-6">
+              <mat-label>Under sec. 80GGC</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   matInput
-                  placeholder="Under section 80GGC"
+                  placeholder="Under sec. 80GGC"
                   maxlength="8"
                   formControlName="us80ggc"
                   autocomplete="off"
@@ -145,12 +134,12 @@
                 <mat-hint>Donation is in other than cash mode</mat-hint>
               </mat-form-field>
             </div>
-            <div class="card__col-lg-6">
-              <mat-label>Under section 80EEB</mat-label>
+            <div class="col-lg-6">
+              <mat-label>Under sec. 80EEB</mat-label>
               <mat-form-field appearance="outline">
                 <input
                   matInput
-                  placeholder="Under section 80EEB"
+                  placeholder="Under sec. 80EEB"
                   maxlength="8"
                   formControlName="us80eeb"
                   autocomplete="off"
@@ -165,9 +154,9 @@
                 >
               </mat-form-field>
             </div>
-            <div class="save_buttons clearfix">
+            <div class="col-sm-12 spsTp bdrTp">
               <button
-                class="tbd-btn save-btn"
+                class="tbd-btn save-btn mvRth"
                 [disabled]="investmentDeductionForm.invalid"
                 (click)="saveInvestmentDeductions()"
               >

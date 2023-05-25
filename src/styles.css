@@ -313,6 +313,27 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.km-chat-icon-sidebox svg {
+  width: 30px!important;
+}
+
+.km-chat-icon-sidebox {
+  width: 48px!important;
+  height: 48px!important;
+}
+
+.grup {
+  background-color: #f7f7fa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.cardBdr {
+  border-radius: 8px;
+  padding: 10px 30px 10px 30px;
+  border: 1px solid #cccccc!important;
+  background-color:#ffffff;
+}
 
 .txtMn {
   font-weight: bold;
@@ -705,6 +726,11 @@ width:60px;
 
 pagination-controls {
   float:right!important;
+  margin-right:5%!important;
+}
+
+.ag-theme-balham .ag-paging-panel {
+  margin-right:5%!important;
 }
 
 .spsTp {
