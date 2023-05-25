@@ -70,9 +70,28 @@ export class AddEditPromoCodeComponent implements OnInit {
     })
 
     if(this.data.mode == 'edit'){
+      //Title , Description , End Date , Status
       this.promoCodeForm.patchValue(this.promoCodeInfo);
       this.promoCodeForm?.controls['code'].setValue(this.promoCodeInfo?.code);
       this.promoCodeForm?.controls['minOrderAmount'].setValue(this.promoCodeInfo?.minimumOrderAmnt);
+      this.promoCodeForm?.controls['code'].disable();
+      this.promoCodeForm?.controls['code'].updateValueAndValidity();
+      this.promoCodeForm?.controls['startDate'].disable();
+      this.promoCodeForm?.controls['startDate'].updateValueAndValidity();
+      this.promoCodeForm?.controls['discountType'].disable();
+      this.promoCodeForm?.controls['discountType'].updateValueAndValidity();
+      this.promoCodeForm?.controls['discountAmount'].disable();
+      this.promoCodeForm?.controls['discountAmount'].updateValueAndValidity();
+      this.promoCodeForm?.controls['discountPercent'].disable();
+      this.promoCodeForm?.controls['discountPercent'].updateValueAndValidity();
+      this.promoCodeForm?.controls['minOrderAmount'].disable();
+      this.promoCodeForm?.controls['minOrderAmount'].updateValueAndValidity();
+      this.promoCodeForm?.controls['maxDiscountAmount'].disable();
+      this.promoCodeForm?.controls['maxDiscountAmount'].updateValueAndValidity();
+      this.promoCodeForm?.controls['usedCount'].disable();
+      this.promoCodeForm?.controls['usedCount'].updateValueAndValidity();
+      this.promoCodeForm?.controls['deactivationReason'].disable();
+      this.promoCodeForm?.controls['deactivationReason'].updateValueAndValidity();
     }
   }
 
@@ -183,31 +202,39 @@ export class AddEditPromoCodeComponent implements OnInit {
    }
 
    editPromoCode(){
-    // if (this.promoCodeForm.valid) {
-    //   this.loading = true;
-    //   let param = '/promocodes';
-    //   let promoCodeRequest = this.promoCodeForm.getRawValue();
-    //   this.itrService.putMethod(param, promoCodeRequest).subscribe((res: any) => {
-    //     console.log('Coupon added responce: ', res);
-    //     this.loading = false;
-    //     if (res.hasOwnProperty('response')) {
-    //       this._toastMessageService.alert("success", res.response)
-    //     } else {
-    //       this._toastMessageService.alert("success", "Promo-Code Updated successfully.")
-    //     }
-    //     setTimeout(() => {
-    //       this.dialogRef.close({ event: 'close', data: 'promoUpdated', coupon: promoCodeRequest.code })
-    //     }, 3000)
-    //   },
-    //     error => {
-    //       this.loading = false;
-    //       console.log('Error during adding new coupon: ', error);
-    //       this._toastMessageService.alert("error", "There is issue to updating promocode.")
-    //       this.dialogRef.close({})
-    //     })
-    // } else {
-    //   this._toastMessageService.alert("error", "Please add all required values")
-    // }
+    // http://localhost:9050/itr/promocodes/buddyday25
+    if (this.promoCodeForm.valid) {
+      let code = this.promoCodeInfo?.code;
+      this.loading = true;
+      let param = `/promocodes/${code}`;
+      let promoCodeRequest = {
+        "title": this.promoCodeForm.get('title').value,
+        "description": this.promoCodeForm.get('description').value,
+        "endDate": this.promoCodeForm.get('endDate').value,
+        "active":this.promoCodeForm.get('active').value,
+
+      }
+      this.itrService.putMethod(param, promoCodeRequest).subscribe((res: any) => {
+        console.log('Coupon added responce: ', res);
+        this.loading = false;
+        if (res.success) {
+          this._toastMessageService.alert("success", "Promo-Code Updated successfully.")
+        } else {
+          this._toastMessageService.alert("error", res.message)
+        }
+        setTimeout(() => {
+          this.dialogRef.close({ event: 'close', data: 'promoUpdated', coupon:this.promoCodeInfo?.code, })
+        }, 3000)
+      },
+        error => {
+          this.loading = false;
+          console.log('Error during adding new coupon: ', error);
+          this._toastMessageService.alert("error", "There is issue to updating promocode.")
+          this.dialogRef.close({})
+        })
+    } else {
+      this._toastMessageService.alert("error", "Please add all required values")
+    }
   }
 
   addPromoCode() {
@@ -242,10 +269,10 @@ export class AddEditPromoCodeComponent implements OnInit {
       this.itrService.postMethod(param, promoCodeRequest).subscribe((res: any) => {
         console.log('Coupon added responce: ', res);
         this.loading = false;
-        if (res.hasOwnProperty('response')) {
-          this._toastMessageService.alert("success", res.response)
+        if (res.success) {
+          this._toastMessageService.alert("success", "Promo Code Added Successfully")
         } else {
-          this._toastMessageService.alert("success", "Promo Code added successfully.")
+          this._toastMessageService.alert("error", res.message)
         }
         setTimeout(() => {
           this.dialogRef.close({ event: 'close', data: 'promoAdded', coupon: promoCodeRequest.code })
