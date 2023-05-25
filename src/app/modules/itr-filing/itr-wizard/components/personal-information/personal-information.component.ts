@@ -2618,6 +2618,7 @@ export class PersonalInformationComponent implements OnInit {
       //   ];
       //   Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       // }
+      Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       console.log('this.ITR_JSON: ', this.ITR_JSON);
       // const response = await this.verifyAllBanks();
       // console.log('Bank API response in saveProfile', ":", response);
