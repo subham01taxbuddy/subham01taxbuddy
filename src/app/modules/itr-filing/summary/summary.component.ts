@@ -198,6 +198,17 @@ export class SummaryComponent implements OnInit {
       this.summaryToolMapping();
     }
 
+    // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
+    if (this.ITR_JSON.itrType === '1') {
+      this.itrType = 'ITR1';
+    } else if (this.ITR_JSON.itrType === '2') {
+      this.itrType = 'ITR2';
+    } else if (this.ITR_JSON.itrType === '3') {
+      this.itrType = 'ITR3';
+    } else if (this.ITR_JSON.itrType === '4') {
+      this.itrType = 'ITR4';
+    }
+
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
       (result: any) => {
         // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
