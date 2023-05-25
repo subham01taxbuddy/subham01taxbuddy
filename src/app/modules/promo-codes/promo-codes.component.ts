@@ -47,6 +47,10 @@ export class PromoCodesComponent implements OnInit {
   promoCodeGridOptions: GridOptions;
   PromoCodeInfo:any;
   totalCount=0
+  searchParam: any = {
+    page: 0,
+    pageSize: 20,
+  };
 
 
   constructor(
@@ -82,13 +86,20 @@ export class PromoCodesComponent implements OnInit {
   }
 
   getPromoCodeList(){
+    //'http://uat-api.taxbuddy.com/itr/promocodes?page=0&pageSize=30'
     this.loading = true;
-    let param = '/promocodes';
+    let data = this.utileService.createUrlParams(this.searchParam);
+
+    let param='';
+
+    
+    param = `/promocodes?${data}`;
     this.itrService.getMethod(param).subscribe((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;
       this.PromoCodeInfo = result?.content;
-      this.totalCount = result?.content?.length;
+      this.totalCount = result?.totalElements;
+      this.config.totalItems = result?.totalElements;
       this.promoCodeGridOptions.api?.setRowData(this.createRowData(result.content));
 
     }, error => {
@@ -359,6 +370,9 @@ export class PromoCodesComponent implements OnInit {
   }
 
   pageChanged(event){
+    this.config.currentPage = event;
+    this.searchParam.page = event - 1;
+    this.getPromoCodeList();
 
   }
 }
