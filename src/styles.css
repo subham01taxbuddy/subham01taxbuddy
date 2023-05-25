@@ -313,6 +313,92 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.km-chat-icon-sidebox svg {
+  width: 30px!important;
+}
+
+.km-chat-icon-sidebox {
+  width: 48px!important;
+  height: 48px!important;
+}
+
+.grup {
+  background-color: #f7f7fa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.cardBdr {
+  border-radius: 8px;
+  padding: 10px 30px 10px 30px;
+  border: 1px solid #cccccc!important;
+  background-color:#ffffff;
+}
+
+.txtMn {
+  font-weight: bold;
+  font-size: 18px;
+  margin: -10px 0px 10px;
+}
+.txtMn1 {
+  font-weight: bold;
+  font-size: 16px;
+  margin: -15px 0px 20px 8px;
+  float: left;
+  width: 100%;
+}
+.vwDoc{
+  padding: 0px 20px 5px 20px; 
+  display: block; 
+  text-decoration:underline;
+}
+
+.bdrImg {
+  border: 1px solid #cccccc;
+  padding: 10px;
+}
+
+
+.slctBtn {
+  background-color: #ffffff;
+  color: #ff7a00;
+  width: 120px;
+  border-radius:8px;
+  padding:5px;
+  border:1px solid #ff7a00;
+}
+.slctBtn:hover {
+  background-color: #f0f0f5;
+}
+
+.upldBtn {
+  background-color: #007a8d;
+  color: #ffffff;
+  width: 120px;
+  border-radius:8px;
+  padding:5px;
+ }
+
+.upldBtn:hover{
+  background-color: #00AECA;
+}
+
+
+
+.docBox {
+  background-color: #f7f7fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 10px 5px 5px 5px;
+  border:1px solid #e4e4ff;
+}
+.radiusMain {
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-top: 15px;
+  border: 2px solid #2199e8;
+}
 .dtTp {
   margin-top: 30px!important;
 }
@@ -479,6 +565,11 @@ button {
   margin-right:30px;
   margin-bottom:10px;
 }
+.mvRth2{
+  float: right;
+  margin-left:10px;
+  margin-right:0px;
+}
 .pop-btn {
   display: inline-block;
     margin: 8px;
@@ -635,6 +726,11 @@ width:60px;
 
 pagination-controls {
   float:right!important;
+  margin-right:5%!important;
+}
+
+.ag-theme-balham .ag-paging-panel {
+  margin-right:5%!important;
 }
 
 .spsTp {
@@ -813,6 +909,10 @@ pagination-controls {
 }
 .mrgArd{
   margin: 20px 55px 0px 30px;
+  display:block;
+}
+.mrgArdSpcBlw{
+  margin: 20px 55px 150px 30px;
   display:block;
 }
 .mat-expansion-panel-header {

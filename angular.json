@@ -78,7 +78,7 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "serviceWorker": false,
+              "serviceWorker": true,
               "index": {
                 "input": "src/environments/prod/index.html",
                 "output": "index.html"
@@ -109,7 +109,7 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "serviceWorker": false,
+              "serviceWorker": true,
               "index": {
                 "input": "src/environments/staging/index.html",
                 "output": "index.html"
@@ -130,7 +130,7 @@
               "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "serviceWorker": false,
+              "serviceWorker": true,
               "index": {
                 "input": "src/environments/dev/index.html",
                 "output": "index.html"

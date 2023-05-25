@@ -76,7 +76,7 @@ export class AppComponent {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Update Available!',
-        message: 'We have made some feature updates to Admin. Please click Reload button to get latest features.',
+        message: 'New updates for the back office is available, please click yes to get latest features . If any data is not saved please save and then click on browser refresh button.',
         isHide: true
       },
       disableClose: true,
