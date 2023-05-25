@@ -419,10 +419,16 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           },
           {
             label: 'Income from Capital Gains',
-            old: this.oldSummaryIncome?.summaryIncome.cgIncomeN
-              .totalSpecialRateIncome,
-            new: this.newSummaryIncome?.summaryIncome.cgIncomeN
-              .totalSpecialRateIncome,
+            old:
+              this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                .totalSpecialRateIncome +
+              this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                .totalNormalRateIncome,
+            new:
+              this.newSummaryIncome?.summaryIncome.cgIncomeN
+                .totalSpecialRateIncome +
+              this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                .totalNormalRateIncome,
           },
           {
             label: 'Income from Other Sources',
