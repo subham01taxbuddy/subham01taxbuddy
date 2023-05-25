@@ -42,9 +42,8 @@
         </div>
       </div>
 
-      <div class="radius">
+      <div class="radiusMain">
         <div class="row">
-
           <div class="col-sm-5">
             <!-- <form class="form-inline">
                       <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
@@ -75,15 +74,12 @@
                   </form>
               </div> -->
 
-           <div class="col-sm-2 text-center">
-                  <button class="proceed1-custom" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+           <div class="col-sm-3 text-center">
+                  <button class="srch-btn" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
-           </div>
-
-          <div class="col-sm-1 text-center" style="margin-top: 25px;">
-            <button class="tbd-btn-clear" (click)="this.resetFilters()">
-              <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
-              Clear
+         
+            <button class="clrLnk mvRth" (click)="this.resetFilters()">
+               Clear form
             </button>
           </div>
 

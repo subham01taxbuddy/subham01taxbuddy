@@ -1,10 +1,15 @@
-<div class="doc">
-  <div>
+<div class="row">
+ 
+<div class="col-sm-12">
+  <div class="doc">
     <app-document-upload (uploadDocument)="afterUploadDocs($event)" [userId]="userId" (openDocument)="openDocument($event)"></app-document-upload>
     <br>
     <div *ngIf="documents">
+      <div class="col-sm-12">  
+        <div class="txtMn1">Select below Document(s) to view:</div> 
+      </div> 
       <span *ngFor="let docs of documents; let i=index">
-        <div style="padding: 5px; display: block; text-decoration:underline;">
+        <div class="vwDoc">          
           <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
 
           <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
@@ -37,4 +42,5 @@
     </div>
     <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
   </div>
+</div>
 </div>
