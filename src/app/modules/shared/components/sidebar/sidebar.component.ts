@@ -183,7 +183,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-code',
       active: true,
       url: null,
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
       ]
