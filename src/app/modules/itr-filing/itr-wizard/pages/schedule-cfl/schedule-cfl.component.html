@@ -1,7 +1,8 @@
 
 <form [formGroup]="cflForm">    
-<div class="mrgArd">    
-<div class="row">
+<div class="mrgArdSpcBlw">    
+   <div class="txtTitle"> Losses To Be Carried Forward (Schedule CFL):</div>
+<div class="row cardBack">
         <div class="col-sm-8">
     <table class="table table-bordered" style="border: 1px solid #bdc3c7; width: 300px;overflow: scroll;margin-bottom:100px;">
         <thead class="table-header">
@@ -111,21 +112,23 @@
         </tbody>
         
     </table>
-</div>
-</div>
 
-    <div class="display-flex">
-        <div class="card__col-xs-12">
-            <div class="card__col-sm-6">
-                <button type="submit" class="tbd-btn-secondary" (click)="deleteCflArray()"><i class="fa fa-close"
-                        aria-hidden="true">&nbsp;</i>Clear</button>
-            </div>
+</div>
+<div class="col-sm-12 spsTp bdrTp">
+    <div class="row">
+        <div class="col-sm-6">
+            <button type="submit" class="clr-btn" (click)="deleteCflArray()"><i class="fa fa-close"
+                    aria-hidden="true">&nbsp;</i>Clear</button>
+        </div>
 
-            <div class="card__col-sm-6" style="text-align: right;">
-                <button type="submit" class="tbd-btn save-btn" (click)="save()">Save</button>
-            </div>
+        <div class="col-sm-6">
+            <button type="submit" class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
         </div>
     </div>
+</div>
+</div>
+
+   
 
     <div class="flex justify-between p-[30px] back-foot">
         <button class="lgtBtn">
