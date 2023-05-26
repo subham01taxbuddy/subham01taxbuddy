@@ -72,9 +72,9 @@ export class PayoutsComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: 20,
       currentPage: 1,
-      totalItems: 80
+      totalItems: 0
     };
 
   }
@@ -135,14 +135,14 @@ export class PayoutsComponent implements OnInit {
     } else if(this.ownerId){
       queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
     }
-    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=0&size=20${queryString}`;
+    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${queryString}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
       if(result.success) {
         this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
         this.userInfo = result.data.content;
-        this.config.totalItems = result.totalElements;
+        this.config.totalItems = result.data.totalElements;
       } else {
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
@@ -156,7 +156,7 @@ export class PayoutsComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    // this.getUserData(event - 1);
+    this.serviceCall('');
   }
 
   getUserData(pageNo: any) {
@@ -636,4 +636,5 @@ export class PayoutsComponent implements OnInit {
     this.clearValue();
     this.serviceCall('');
   }
+
 }
