@@ -140,8 +140,8 @@ export class PayoutsComponent implements OnInit {
       this.loading = false;
       console.log(result);
       if(result.success) {
-        this.usersGridOptions.api?.setRowData(this.createRowData(result['data']));
-        this.userInfo = result['data'];
+        this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
+        this.userInfo = result.data.content;
         this.config.totalItems = result.totalElements;
       } else {
         this.usersGridOptions.api?.setRowData([]);
