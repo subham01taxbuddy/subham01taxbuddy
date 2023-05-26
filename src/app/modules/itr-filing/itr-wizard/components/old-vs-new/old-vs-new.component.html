@@ -1,4 +1,5 @@
-<ngx-loading  [show]="loading"
+<ngx-loading
+  [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
@@ -526,9 +527,10 @@
             </div>
 
             <!-- Section 89 -->
-            <div class="flex items-center">
+            <div class="flex items-center" style="margin-bottom: 10px">
               <div class="card__col-xs-9 question-label">1. Section 89</div>
               <div class="card__col-xs-3">
+                <mat-label>Section 89</mat-label>
                 <mat-form-field appearance="outline">
                   <input
                     matInput
@@ -538,6 +540,61 @@
                     digitsOnly
                   />
                 </mat-form-field>
+              </div>
+            </div>
+            <div
+              *ngIf="summaryToolReliefsForm.get('section89').value"
+              class="flex"
+              style="margin-left: auto"
+            >
+              <div class="card__col-xs-6">
+                <mat-label>Acknowledgement Number</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="acknowledgement"
+                    formControlName="acknowledgement89"
+                    placeholder="Acknowledgement"
+                    digitsOnly
+                    required
+                  />
+                </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgement89')
+                      .hasError('required')
+                  "
+                >
+                  In order to claim relief, please enter the required fields
+                </mat-error>
+              </div>
+              <div class="card__col-xs-6">
+                <mat-label>Acknowledgement Date</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="acknowledgementDate"
+                    formControlName="acknowledgementDate89"
+                    placeholder="Acknowledgement Date"
+                    required
+                    [matDatepicker]="picker1"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgementDate89')
+                      .hasError('required')
+                  "
+                >
+                  In order to claim relief, please enter the required fields
+                </mat-error>
               </div>
             </div>
             <hr />
@@ -559,9 +616,64 @@
                 </mat-form-field>
               </div>
             </div>
+            <div
+              *ngIf="summaryToolReliefsForm.get('section90').value"
+              class="flex"
+              style="margin-left: auto"
+            >
+              <div class="card__col-xs-6">
+                <mat-label>Acknowledgement Number</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="acknowledgement"
+                    formControlName="acknowledgement90"
+                    placeholder="Acknowledgement"
+                    digitsOnly
+                    required
+                  />
+                </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgement90')
+                      .hasError('required')
+                  "
+                >
+                  In order to claim relief, please enter the required fields
+                </mat-error>
+              </div>
+              <div class="card__col-xs-6">
+                <mat-label>Acknowledgement Date</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="acknowledgementDate"
+                    formControlName="acknowledgementDate90"
+                    placeholder="Acknowledgement Date"
+                    required
+                    [matDatepicker]="picker1"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgementDate90')
+                      .hasError('required')
+                  "
+                >
+                  In order to claim relief, please enter the required fields
+                </mat-error>
+              </div>
+            </div>
             <hr />
 
-            <!-- section 90  -->
+            <!-- section 91  -->
             <div class="flex items-center">
               <div class="card__col-xs-9 question-label">3. Section 91</div>
               <div class="card__col-xs-3">
@@ -574,6 +686,61 @@
                     digitsOnly
                   />
                 </mat-form-field>
+              </div>
+            </div>
+            <div
+              *ngIf="summaryToolReliefsForm.get('section91').value"
+              class="flex"
+              style="margin-left: auto"
+            >
+              <div class="card__col-xs-6">
+                <mat-label>Acknowledgement Number</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="acknowledgement"
+                    formControlName="acknowledgement91"
+                    placeholder="Acknowledgement"
+                    digitsOnly
+                    required
+                  />
+                </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgement91')
+                      .hasError('required')
+                  "
+                >
+                  In order to claim relief, please enter the required fields
+                </mat-error>
+              </div>
+              <div class="card__col-xs-6">
+                <mat-label>Acknowledgement Date</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="acknowledgementDate"
+                    formControlName="acknowledgementDate91"
+                    placeholder="Acknowledgement Date"
+                    required
+                    [matDatepicker]="picker1"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-error
+                  *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgementDate91')
+                      .hasError('required')
+                  "
+                >
+                  In order to claim relief, please enter the required fields
+                </mat-error>
               </div>
             </div>
             <hr />
