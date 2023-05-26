@@ -72,9 +72,9 @@ export class PayoutsComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: 20,
       currentPage: 1,
-      totalItems: 80
+      totalItems: 0
     };
 
   }
@@ -97,15 +97,17 @@ export class PayoutsComponent implements OnInit {
     if(event) {
       this.ownerId = event ? event.userId : null;
       console.log('fromowner:', event);
-      let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}` : '';
-      this.serviceCall(queryString);
+      //let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+      //let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
+      this.serviceCall('');
     }
   }
   fromFiler(event) {
     if(event) {
       this.filerId = event ? event.userId : null;
-      let queryString = this.filerId ? `&filerUserId=${this.filerId}` : '';
-      this.serviceCall(queryString);
+      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
+      this.serviceCall('');
     }
   }
 
@@ -127,14 +129,20 @@ export class PayoutsComponent implements OnInit {
 
   serviceCall(queryString){
     this.loading = true;
-    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=0&size=20${queryString}`;
+    let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+    if(this.filerId) {
+      queryString += this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
+    } else if(this.ownerId){
+      queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
+    }
+    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${queryString}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
       if(result.success) {
-        this.usersGridOptions.api?.setRowData(this.createRowData(result['data']));
-        this.userInfo = result['data'];
-        this.config.totalItems = result.totalElements;
+        this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
+        this.userInfo = result.data.content;
+        this.config.totalItems = result.data.totalElements;
       } else {
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
@@ -148,7 +156,7 @@ export class PayoutsComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    // this.getUserData(event - 1);
+    this.serviceCall('');
   }
 
   getUserData(pageNo: any) {
@@ -622,9 +630,11 @@ export class PayoutsComponent implements OnInit {
   resetFilters(){
     this.filerId = null;
     this.ownerId = null;
-    this.selectedStatus = null;
+    this.selectedStatus = this.statusList[2].value;
     this.key = null;
     this?.smeDropDown?.resetDropdown();
     this.clearValue();
+    this.serviceCall('');
   }
+
 }
