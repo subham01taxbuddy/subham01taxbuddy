@@ -348,6 +348,11 @@ export class DailyCallingReportComponent implements OnInit {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerId = this.loggedInSme[0].userId;
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerId = this.loggedInSme[0].userId;
+    }
     this.showReports();
   }
 
