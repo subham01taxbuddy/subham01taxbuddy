@@ -1598,7 +1598,28 @@ export class PrefillIdComponent implements OnInit {
                   salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                     null ||
                   this.regime === 'NEW'
-                    ? []
+                    ? [
+                        {
+                          allowanceType: 'GRATUITY',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMMUTED_PENSION',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LEAVE_ENCASHMENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ANY_OTHER',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                      ]
                     : [
                         {
                           allowanceType: 'HOUSE_RENT',
@@ -1694,6 +1715,8 @@ export class PrefillIdComponent implements OnInit {
                 ),
                 this.ITR_Type
               );
+
+              this.ITR_Obj.systemFlags.hasSalary = true;
             }
 
             // OLD CODE
@@ -1806,7 +1829,7 @@ export class PrefillIdComponent implements OnInit {
                     : housePropertyDetails?.TypeOfHP,
                 grossAnnualRentReceived:
                   housePropertyDetails?.GrossRentReceived,
-                propertyTax: housePropertyDetails?.propertyTax,
+                propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                 ownerPercentage: null,
                 address: '',
                 city: '',
@@ -1839,6 +1862,7 @@ export class PrefillIdComponent implements OnInit {
               };
 
               this.ITR_Obj.houseProperties.push(hpKeys);
+              this.ITR_Obj.systemFlags.hasHouseProperty = true;
             }
           }
 
@@ -2049,7 +2073,7 @@ export class PrefillIdComponent implements OnInit {
           //SALARY TDS
           {
             const jsonSalaryTDS =
-              ItrJSON[this.ITR_Type].TDSonSalaries.TDSonSalary;
+              ItrJSON[this.ITR_Type]?.TDSonSalaries?.TDSonSalary;
             // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
             if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
@@ -2138,7 +2162,7 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.taxPaid.otherThanSalary16A =
-              jsonOtherThanSalaryTDS.map(mapJsonToITRObj16A);
+              jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
 
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
@@ -2178,7 +2202,7 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.taxPaid.otherThanSalary26QB =
-              jsonOtherThanSalary26QBTDS3.map(mapJsonToITRObj);
+              jsonOtherThanSalary26QBTDS3?.map(mapJsonToITRObj);
 
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
@@ -2197,7 +2221,7 @@ export class PrefillIdComponent implements OnInit {
                 'There are no TCS tax paid other than salary details in the JSON that you have provided'
               );
             } else {
-              this.ITR_Obj.taxPaid.tcs = jsonTCS.map(
+              this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
                 ({
                   EmployerOrDeductorOrCollectDetl: {
                     TAN,
@@ -2243,7 +2267,7 @@ export class PrefillIdComponent implements OnInit {
                 'There are no advance taxes or self assessment taxes paid details in the JSON that you have provided'
               );
             } else {
-              this.ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT.map(
+              this.ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT?.map(
                 ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
                   return {
                     id: null,
@@ -2279,14 +2303,15 @@ export class PrefillIdComponent implements OnInit {
             {
               const NatOfBus44AD =
                 ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44AD;
-              const NatOfBus44ADLength = NatOfBus44AD.length;
+              const NatOfBus44ADLength = NatOfBus44AD?.length;
               // console.log('NatOfBus44AD', NatOfBus44AD);
 
               const PersumptiveInc44AD =
-                ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44AD;
+                ItrJSON[this.ITR_Type].ScheduleBP?.PersumptiveInc44AD;
               // console.log('PersumptiveInc44AD', PersumptiveInc44AD);
 
-              NatOfBus44AD.forEach((obj) => {
+              NatOfBus44AD?.forEach((obj) => {
+                this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
                 let newObject = {
                   receipts: null,
                   presumptiveIncome: null,
@@ -2371,7 +2396,8 @@ export class PrefillIdComponent implements OnInit {
                 ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
               // console.log('PersumptiveInc44ADA', PersumptiveInc44ADA);
 
-              NatOfBus44ADA.forEach((obj) => {
+              NatOfBus44ADA?.forEach((obj) => {
+                this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
                 let newObject = {
                   receipts: null,
                   presumptiveIncome: null,
@@ -2556,8 +2582,8 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj.panNumber =
             ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.PAN;
 
-          this.ITR_Obj.contactNumber =
-            ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.MobileNo;
+          // this.ITR_Obj.contactNumber =
+          //   ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.MobileNo;
 
           this.ITR_Obj.email =
             ItrJSON[
@@ -2840,9 +2866,7 @@ export class PrefillIdComponent implements OnInit {
               employerTAN: salary?.TANofEmployer,
               periodFrom: '',
               periodTo: '',
-              taxableIncome:
-                ItrJSON[this.ITR_Type].ScheduleS?.TotIncUnderHeadSalaries /
-                salaries?.length,
+              taxableIncome: null,
               standardDeduction:
                 ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia,
               employerCategory: salary?.NatureOfEmployment,
@@ -2858,7 +2882,28 @@ export class PrefillIdComponent implements OnInit {
               ],
               allowance:
                 this.regime === 'NEW'
-                  ? []
+                  ? [
+                      {
+                        allowanceType: 'GRATUITY',
+                        taxableAmount: 0,
+                        exemptAmount: null,
+                      },
+                      {
+                        allowanceType: 'COMMUTED_PENSION',
+                        taxableAmount: 0,
+                        exemptAmount: null,
+                      },
+                      {
+                        allowanceType: 'LEAVE_ENCASHMENT',
+                        taxableAmount: 0,
+                        exemptAmount: null,
+                      },
+                      {
+                        allowanceType: 'ANY_OTHER',
+                        taxableAmount: 0,
+                        exemptAmount: null,
+                      },
+                    ]
                   : [
                       {
                         allowanceType: 'HOUSE_RENT',
@@ -2935,6 +2980,7 @@ export class PrefillIdComponent implements OnInit {
               calculators: null,
             };
             this.ITR_Obj.employers.push(employerDetails);
+            this.ITR_Obj.systemFlags.hasSalary = true;
           });
 
           // calling updateSalaryAllowance function to update allowances and deductions if regime is OLD.
@@ -3048,6 +3094,7 @@ export class PrefillIdComponent implements OnInit {
               ],
             };
             this.ITR_Obj.houseProperties.push(housePropertyDetails);
+            this.ITR_Obj.systemFlags.hasHouseProperty = true;
           });
         }
       }
@@ -3220,7 +3267,7 @@ export class PrefillIdComponent implements OnInit {
           //SALARY TDS
           {
             const jsonSalaryTDS =
-              ItrJSON[this.ITR_Type].ScheduleTDS1?.TDSonSalary;
+              ItrJSON[this.ITR_Type]?.ScheduleTDS1?.TDSonSalary;
             // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
             if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
@@ -3615,6 +3662,7 @@ export class PrefillIdComponent implements OnInit {
                   };
 
                   this.ITR_Obj.capitalGain.push(zcbDetail);
+                  this.ITR_Obj.systemFlags.hasCapitalGain = true;
                 }
               });
 
@@ -3696,6 +3744,9 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.capitalGain.push(SaleofBondsDebntrDetails);
+            if (SaleofBondsDebntr) {
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
+            }
           }
 
           // OTHER ASSETS
@@ -3768,6 +3819,9 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.capitalGain.push(SaleofAssetNADetail);
+            if (SaleofAssetNA) {
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
+            }
           }
 
           // LAND & BUILDING
@@ -3876,6 +3930,9 @@ export class PrefillIdComponent implements OnInit {
               };
 
               this.ITR_Obj.capitalGain.push(SaleofLandBuildDetails);
+              if (SaleofLandBuildDtls) {
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
+              }
             });
 
             // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -3936,6 +3993,7 @@ export class PrefillIdComponent implements OnInit {
                 };
 
                 this.ITR_Obj.capitalGain.push(equityLtcgDetail);
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
               });
 
               // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -4005,6 +4063,9 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.capitalGain.push(SaleOnOtherAssetsDetail);
+            if (SaleOnOtherAssets) {
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
+            }
           }
 
           // EQUITY 111A
@@ -4072,6 +4133,7 @@ export class PrefillIdComponent implements OnInit {
                 };
 
                 this.ITR_Obj.capitalGain.push(equityStcgDetail);
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
               }
             });
 
@@ -4173,6 +4235,7 @@ export class PrefillIdComponent implements OnInit {
               };
 
               this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
             });
 
             // Have to remove this later and keep only one function that sets the whole JSON in the ITR object

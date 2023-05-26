@@ -124,7 +124,11 @@
             <div class="incBx">
               <span class="inTex">Income Tax Payable:</span><br /><br />
               <span class="inNo"
-                >{{ utilsService.currencyFormatter(taxable) }}.00</span
+                >{{
+                  utilsService.currencyFormatter(
+                    keys.BalTaxPayable ? keys.BalTaxPayable : taxable
+                  )
+                }}.00</span
               >
             </div>
             <p class="paIncTx">
