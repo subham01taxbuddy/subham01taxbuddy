@@ -5,6 +5,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -38,13 +39,13 @@ export const MY_FORMATS = {
   ],
 })
 export class DailyCallingReportComponent implements OnInit {
-  loading =false;
+  loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
   toDateMin: any;
-  maxDate = new Date(2024,2,31);
+  maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
-  dailyCallingReport:any;
+  dailyCallingReport: any;
   config: any;
   searchParam: any = {
     page: 0,
@@ -59,6 +60,7 @@ export class DailyCallingReportComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
+    private jsonToCsvService: JsonToCsvService
   ) {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
@@ -70,7 +72,7 @@ export class DailyCallingReportComponent implements OnInit {
       enableCellTextSelection: true,
       onGridReady: (params) => { },
       sortable: true,
-      filter:true,
+      filter: true,
     };
 
 
@@ -79,10 +81,10 @@ export class DailyCallingReportComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     };
-   }
+  }
 
   ngOnInit() {
-   this.showReports();
+    this.showReports();
   }
 
   ownerId: number;
@@ -109,7 +111,7 @@ export class DailyCallingReportComponent implements OnInit {
 
   }
 
-  showReports(){
+  showReports() {
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?fromDate=2023-04-01&toDate=2023-05-16
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?filerUserId=11029&page=0&pageSize=10&fromDate=2023-05-01&toDate=2023-05-24&ownerUserId=7521
     this.loading = true;
@@ -118,7 +120,7 @@ export class DailyCallingReportComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     // let leaderUserId = this.loggedInSmeUserId;
 
-    let param=''
+    let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
@@ -130,22 +132,18 @@ export class DailyCallingReportComponent implements OnInit {
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if(response.success == false){
-        this. _toastMessageService.alert("error",response.message);
-
-      }
       if (response.success) {
         this.dailyCallingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(this.dailyCallingReport));
 
-      }else{
-         this.loading = false;
-         this. _toastMessageService.alert("error",response.message);
-       }
-    },(error) => {
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
       this.loading = false;
-      this. _toastMessageService.alert("error","Error");
+      this._toastMessageService.alert("error", "Error");
     });
 
 
@@ -180,14 +178,14 @@ export class DailyCallingReportComponent implements OnInit {
     return callingRepoInfoArray;
   }
 
-  reportsCodeColumnDef(){
+  reportsCodeColumnDef() {
     return [
       {
         headerName: 'Filer Name',
         field: 'filerName',
         sortable: true,
         width: 150,
-        pinned:'left',
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -291,7 +289,7 @@ export class DailyCallingReportComponent implements OnInit {
         headerName: 'Parent Name',
         field: 'parentName',
         sortable: true,
-        pinned:'right',
+        pinned: 'right',
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -305,19 +303,44 @@ export class DailyCallingReportComponent implements OnInit {
     ]
   }
 
-  downloadReport(){
+  downloadReport() {
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
+    let param = ''
+    let userFilter = '';
+    if (this.ownerId && !this.filerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+    }
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&page=0&pageSize=100000${userFilter}`;
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        return this.jsonToCsvService.downloadFile(response?.data?.content);
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", 'Failed to get daily-calling-report');
+    });
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  resetFilters(){
+  resetFilters() {
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
     this.showReports();
   }
 
-  pageChanged(event){
+  pageChanged(event) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showReports();

@@ -20,7 +20,6 @@ import { UtilsService } from './services/utils.service';
 
 import { TokenInterceptor } from './services/token-interceptor';
 
-import Auth from '@aws-amplify/auth';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
