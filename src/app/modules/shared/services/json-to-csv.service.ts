@@ -25,7 +25,7 @@ export class JsonToCsvService {
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvData);  
     hiddenElement.target = '_blank';  
       
-    hiddenElement.download = 'test.csv';  
+    hiddenElement.download = 'daily-calling-report.csv';  
     hiddenElement.click();  
   
   }
