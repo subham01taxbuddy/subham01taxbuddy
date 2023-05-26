@@ -1263,20 +1263,7 @@ export class PrefillIdComponent implements OnInit {
         );
       }
 
-      if (
-        this.ITR_Obj?.contactNumber !==
-        String(ItrJSON[this.ITR_Type].PersonalInfo.Address?.MobileNo)
-      ) {
-        this.utilsService.showSnackBar(
-          'Contact Number from the uploaded JSON and Mobile No. from Users Profile / Customer Profile are different'
-        );
-      }
-
-      if (
-        this.ITR_Obj.panNumber === ItrJSON[this.ITR_Type].PersonalInfo?.PAN &&
-        this.ITR_Obj?.contactNumber ===
-          String(ItrJSON[this.ITR_Type].PersonalInfo.Address?.MobileNo)
-      ) {
+      if (this.ITR_Obj.panNumber === ItrJSON[this.ITR_Type].PersonalInfo?.PAN) {
         // PERSONAL INFORMATION
         {
           // CUSTOMER PROFILE
