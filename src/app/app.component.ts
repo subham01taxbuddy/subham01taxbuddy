@@ -1,9 +1,12 @@
 
-import { Component } from '@angular/core';
+import {Component, Optional} from '@angular/core';
 import { Router} from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
+import {EMPTY, from, Observable} from "rxjs";
+import { Messaging, onMessage , getToken } from "@angular/fire/messaging";
+import {share, tap} from "rxjs/operators";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,10 +16,14 @@ export class AppComponent {
 
   title = 'app works!';
 
+  token$: Observable<any> = EMPTY;
+  message$: Observable<any> = EMPTY;
+
   constructor(
     private router: Router,
     public swUpdate: SwUpdate,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    @Optional() messaging: Messaging
   ) {
     // router.events.subscribe((val) => {
     //   console.log(val);
@@ -70,13 +77,37 @@ export class AppComponent {
       })
     }
 
+    if (messaging) {
+      console.log('got it');
+      this.token$ = from(
+        navigator.serviceWorker.register('firebase-messaging-sw.js', { type: 'module', scope: '__' }).
+        then(serviceWorkerRegistration =>
+          getToken(messaging, {
+            serviceWorkerRegistration,
+            // vapidKey: environment.vapidKey,
+          }).then((value)=>{
+            console.log('recvd token as=> ', value);
+            sessionStorage.setItem('webToken', value); 
+          })
+        )).pipe(
+        tap(token => console.log('FCM', {token})),
+        share()
+      );
+
+      this.message$ = new Observable(sub => onMessage(messaging, it => sub.next(it))).pipe(
+        tap(it => console.log('FCM', it)),
+      );
+    } else {
+      console.log('messaging not initialise');
+    }
+
   }
 
   reloadWindow() {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Update Available!',
-        message: 'We have made some feature updates to Admin. Please click Reload button to get latest features.',
+        message: 'New updates for the back office is available, please click yes to get latest features . If any data is not saved please save and then click on browser refresh button.',
         isHide: true
       },
       disableClose: true,

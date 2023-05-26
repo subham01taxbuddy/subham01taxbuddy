@@ -61,6 +61,7 @@ export class OwnerDashboardComponent implements OnInit {
   commissionData:any;
   today: Date;
   itrOverview:any;
+  ownerId:any;
 
   constructor(
     private userMsService: UserMsService,
@@ -85,7 +86,7 @@ export class OwnerDashboardComponent implements OnInit {
     this.getSummaryConfirmationList('summaryConfirmation');
     this.getItrFilledEVerificationPendingList('eVerificationPending');
     this.getScheduleCallDetails('scheduleCall');
-    this.getPartnerCommission();
+    this.getCommission();
     this.getItrUserOverview();
   }
 
@@ -189,7 +190,7 @@ export class OwnerDashboardComponent implements OnInit {
       this.getScheduleCallDetails(searchType);
     }else{
       this.getInvoiceReports();
-      this.getPartnerCommission();
+      this.getCommission();
       this.getDocUploadedList('docUpload');
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
@@ -206,8 +207,17 @@ export class OwnerDashboardComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let filerUserId = this.filerUserId;
     let serviceType = 'ITR';
+    let param=''
+    let userFilter = '';
+    this.ownerId = this.loggedInSmeUserId
 
-    let param = `/dashboard/invoice-report?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR`
+    if (this.filerId) {
+      userFilter += `filerUserId=${this.filerId}`;
+    }else{
+      userFilter += `ownerUserId=${this.ownerId}`;
+    }
+
+    param = `/dashboard/invoice-report?${userFilter}&fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR`
 
     this.userMsService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -325,6 +335,43 @@ export class OwnerDashboardComponent implements OnInit {
       this.loading = false;
       this. _toastMessageService.alert("error","Error");
     })
+  }
+
+  getCommission(){
+    if (this.filerId) {
+      this.getPartnerCommission();
+    }else{
+      this.getPartnerCommissionOwnerView();
+    }
+  }
+
+  getPartnerCommissionOwnerView(){
+    //https://uat-api.taxbuddy.com/itr/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-05-16
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    this.loading = true;
+    let ownerUserId =this.loggedInSmeUserId;
+
+    let param = `/dashboard/partner-commission-cumulative?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}`;
+
+    this.itrService.getMethod(param).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.commissionData = response?.data;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+        if(response.success == false){
+          this.loading = false;
+          this._toastMessageService.alert('error',response.message)
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error',"Error while filer commission report: Not_found: Data not found");
+      }
+    );
   }
 
   getPartnerCommission(){

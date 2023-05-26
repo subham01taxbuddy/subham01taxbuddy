@@ -1,4 +1,4 @@
-import { Component,Inject,LOCALE_ID,OnInit } from '@angular/core';
+import { Component,Inject,LOCALE_ID,OnInit, ViewChild } from '@angular/core';
 import { GridOptions} from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -12,6 +12,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-code.component';
+import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -47,6 +48,10 @@ export class PromoCodesComponent implements OnInit {
   promoCodeGridOptions: GridOptions;
   PromoCodeInfo:any;
   totalCount=0
+  searchParam: any = {
+    page: 0,
+    pageSize: 20,
+  };
 
 
   constructor(
@@ -82,13 +87,32 @@ export class PromoCodesComponent implements OnInit {
   }
 
   getPromoCodeList(){
+    //'http://uat-api.taxbuddy.com/itr/promocodes?page=0&pageSize=30&code=earlybird30&serviceType=ITR'
     this.loading = true;
-    let param = '/promocodes';
+    let data = this.utileService.createUrlParams(this.searchParam);
+
+    let param='';
+    let searchFilter='';
+    if(this.searchValue.value){
+      // param = '&code=' + this.searchValue.value;
+      this.searchParam.page=0
+      data=this.utileService.createUrlParams(this.searchParam);
+      searchFilter += `&code=${this.searchValue.value}`;
+    }
+    let serviceFilter='';
+    if(this.serviceType.value){
+      this.searchParam.page=0
+      data=this.utileService.createUrlParams(this.searchParam);
+      serviceFilter += `&serviceType=${this.serviceType.value}`;
+    }
+
+    param = `/promocodes?${data}${searchFilter}${serviceFilter}`;
     this.itrService.getMethod(param).subscribe((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;
       this.PromoCodeInfo = result?.content;
-      this.totalCount = result?.content?.length;
+      this.totalCount = result?.totalElements;
+      this.config.totalItems = result?.totalElements;
       this.promoCodeGridOptions.api?.setRowData(this.createRowData(result.content));
 
     }, error => {
@@ -110,7 +134,9 @@ export class PromoCodesComponent implements OnInit {
         discountPercent: this.utileService.isNonEmpty(promoCodeData[i].discountPercent) ? promoCodeData[i].discountPercent : '-',
         minimumOrderAmnt: this.utileService.isNonEmpty(promoCodeData[i].minOrderAmount) ? promoCodeData[i].minOrderAmount : '-',
         maxDiscountAmount: this.utileService.isNonEmpty(promoCodeData[i].maxDiscountAmount) ? promoCodeData[i].maxDiscountAmount : '-',
-        userCount: this.utileService.isNonEmpty(promoCodeData[i].usedCount) ? promoCodeData[i].usedCount : '-'
+        userCount: this.utileService.isNonEmpty(promoCodeData[i].usedCount) ? promoCodeData[i].usedCount : '-',
+        description: this.utileService.isNonEmpty(promoCodeData[i].description) ? promoCodeData[i].description : '-',
+        active: this.utileService.isNonEmpty(promoCodeData[i].active) ? promoCodeData[i].active : '-',
       })
       promoCodeArray.push(promoCodeInfo);
     }
@@ -149,7 +175,7 @@ export class PromoCodesComponent implements OnInit {
     {
       headerName: 'Description',
       field: 'description',
-      width: 200,
+      width: 250,
       // pinned: 'left',
       suppressMovable: true,
       filter: "agTextColumnFilter",
@@ -296,7 +322,7 @@ export class PromoCodesComponent implements OnInit {
   }
 
   searchPromoCode(){
-
+    this.getPromoCodeList();
   }
 
   addPromoCode(title, key, data){
@@ -321,7 +347,7 @@ export class PromoCodesComponent implements OnInit {
   }
 
   fromServiceType(event){
-
+    this.serviceType.setValue(event)
   }
 
 
@@ -339,6 +365,7 @@ export class PromoCodesComponent implements OnInit {
   }
 
   editPromo(params){
+    console.log('data for edit ',params)
     let disposable = this.dialog.open(AddEditPromoCodeComponent, {
       width: '65%',
       height: 'auto',
@@ -359,6 +386,19 @@ export class PromoCodesComponent implements OnInit {
   }
 
   pageChanged(event){
+    this.config.currentPage = event;
+    this.searchParam.page = event - 1;
+    this.getPromoCodeList();
 
+  }
+
+ @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
+  resetFilters(){
+    // this.searchParam.page = 0;
+    this?.serviceDropDown?.resetService();
+    this?.serviceType?.setValue(null);
+    this?.searchValue.setValue(null);
+    this.pageChanged(1);
+    // this.getPromoCodeList();
   }
 }

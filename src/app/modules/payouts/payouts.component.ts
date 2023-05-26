@@ -59,6 +59,7 @@ export class PayoutsComponent implements OnInit {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef(this.allFilerList),
+      headerHeight: 60,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       paginateChildRows:true,
@@ -624,5 +625,6 @@ export class PayoutsComponent implements OnInit {
     this.selectedStatus = null;
     this.key = null;
     this?.smeDropDown?.resetDropdown();
+    this.clearValue();
   }
 }

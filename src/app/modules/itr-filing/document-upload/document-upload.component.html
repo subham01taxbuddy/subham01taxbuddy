@@ -1,8 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div>
-  <div class="card__row">
-      <div class="card__col-xs-12 card__col-sm-4">
-          <div>
+<div class="docBox">
+  <div class="row"> 
+    <div class="col-sm-12">  
+        <div class="txtMn">Upload Document here:</div> 
+    </div> 
+      <div class="col-sm-8">  
+       <mat-label> Select Path:</mat-label>    
               <form class="example-form">
                   <mat-form-field appearance="outline">
                       <input type="text" placeholder="{{getSelectedItems()}}" aria-label="Number" matInput
@@ -30,11 +33,11 @@
                           </mat-tree>
                       </mat-autocomplete>
                   </mat-form-field>
-              </form>
-          </div>
+              </form>         
       </div>
-      <div class="card__col-xs-12 card__col-sm-4">
+      <div class="col-sm-4">
           <!-- <form class="example-form"> -->
+            <mat-label> Which Document?:</mat-label>   
           <mat-form-field appearance="outline">
               <mat-label>Select option</mat-label>
               <mat-select placeholder="Select option" (selectionChange)="clearDocVal()" [(ngModel)]="selectedFileType"
@@ -48,7 +51,7 @@
           </mat-form-field>
           <!-- </form> -->
       </div>
-  <div class="card__col-xs-12 card__col-sm-4">
+  <div class="col-sm-12 spsTp bdrTp">
   <!-- <select (change)="clearDocVal()" #typeOfDoc>
       <option value="" disabled>Select option</option>
       <option *ngFor="let doc of docType" [value]="doc.value">
@@ -59,27 +62,33 @@
   <input type="file" id="input-file-id" hidden #file (change)="uploadFile($event.target.files)"
          accept=".pdf, .jpg, .jpeg, .png, .xls, .doc, .xlsx, .docx">
   <!-- <button class="sendBtn" mdButton (click)="upload()">Upload Media File</button> -->
-  <button mat-mini-fab color="warn" aria-label="Example icon button with a heart icon"
-          title="Click to select media file" (click)="upload()">
-    <mat-icon>attachment</mat-icon>
-  </button>
-  <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
+
 
   <!-- <button [disabled]="!uploadDoc"
       (click)="checkDocPassProtected(selectedFileType, uploadDoc, filePassword)">Upload</button> -->
-  <button mat-mini-fab color="primary" [disabled]="!uploadDoc" title="Click to upload selected file"
+  <button class="upldBtn mvRth2" [disabled]="!uploadDoc" title="Click to upload selected file"
           (click)="checkDocPassProtected(selectedFileType, uploadDoc, filePassword)">
-    <mat-icon>upload</mat-icon>
+    <mat-icon>upload</mat-icon> Upload
   </button>
-  <br>
+
+  <button class="slctBtn mvRth2" aria-label="Example icon button with a heart icon"
+  title="Click to select media file" (click)="upload()">
+<mat-icon>attachment</mat-icon> Attach
+</button>
+
+<label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
+
 
   <div *ngIf="isPassProtected" style="margin: 20px;">
     <label><b>Enter Password :</b></label>
     <input type="text" placeholder="Enter Password" [(ngModel)]="filePassword">
   </div>
 </div>
+
 </div>
+
 </div>
+
 
 
 
