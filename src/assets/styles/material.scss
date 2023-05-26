@@ -286,14 +286,15 @@ mat-label {
 }
 
 mat-form-field .mat-form-field {
-  &-underline {
-    position: static;
-    //bottom: auto;
-  }
-  &-subscript-wrapper {
-    position: absolute;
-    overflow: visible;
-  }
+    &-underline {
+        position: static;
+        //bottom: auto;
+    }
+
+    &-subscript-wrapper {
+        position: absolute;
+        overflow: visible;
+    }
 }
 
 .mat-form-field {
@@ -316,9 +317,10 @@ mat-form-field .mat-form-field {
                     // color: #07070C;
                     color: #00A4BF;
                 }
-              .mat-input-element:disabled {
-                color: #07070C;
-              }
+
+                .mat-input-element:disabled {
+                    color: #07070C;
+                }
 
                 .mat-select {
                     .mat-select-trigger {
@@ -328,10 +330,17 @@ mat-form-field .mat-form-field {
                                     font-weight: 400;
                                     font-size: 12.6259px;
                                     line-height: 14px;
-                                    color: #1d1dce;
+                                    color: #00A4BF;
                                 }
+
                             }
                         }
+                    }
+                }
+
+                .mat-select-disabled {
+                    .mat-select-min-line {
+                        color: #07070C !important;
                     }
                 }
             }
