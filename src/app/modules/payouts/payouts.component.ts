@@ -27,8 +27,6 @@ export class PayoutsComponent implements OnInit {
   config: any;
   userInfo: any = [];
   searchMenus = [{
-    value: 'emailAddress', name: 'Email Id'
-  }, {
     value: 'mobileNumber', name: 'Mobile Number'
   }, {
     value: 'invoiceNo', name: 'Invoice No'
