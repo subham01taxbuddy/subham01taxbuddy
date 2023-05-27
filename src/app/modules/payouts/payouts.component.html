@@ -37,19 +37,19 @@
         </div>
         <div class="col-sm-4">
           <label class="input__label">Select Status</label>
-          <select class="select__box ogp_select" (change)="getSearchList('status', selectedStatus)" [(ngModel)]="selectedStatus">
+          <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
             <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
             <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
               {{drop.name}}</option>
           </select>
         </div>
         <div class="col-sm-12 spsTp bdrTp">
-          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">            
+          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
             Clear form
            </button>
           <button class="srch-btn mvRth" (click)="advanceSearch(advanceSearchKey.value)"><i
             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
-            
+
         </div>
 
 
@@ -77,10 +77,11 @@
     </table>
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
-                     (rowClicked)="onUsersRowClicked($event)" paginationPageSize=15 pagination=true>
+                     (rowClicked)="onUsersRowClicked($event)">
 
     </ag-grid-angular>
 
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>
 

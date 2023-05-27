@@ -39,6 +39,7 @@
     "file-saver": "^2.0.5",
     "highcharts": "^10.0.0",
     "jquery": "^3.6.4",
+    "json2csv": "~5.0.6",
     "lodash": "^4.17.21",
     "mammoth": "^1.4.21",
     "moment": "^2.29.1",

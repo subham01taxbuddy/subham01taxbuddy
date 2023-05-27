@@ -37,9 +37,6 @@ export class LoginComponent implements OnInit {
   userId:any;
   serviceType:any;
 
-  token$: Observable<any> = EMPTY;
-  message$: Observable<any> = EMPTY;
-
   constructor(
     private fb: FormBuilder,
     public http: HttpClient,
@@ -50,32 +47,11 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     public utilsService: UtilsService,
     private storageService: StorageService,
-    private activatedRoute: ActivatedRoute,
-    @Optional() messaging: Messaging
+    private activatedRoute: ActivatedRoute
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
-    if (messaging) {
-      this.token$ = from(
-        navigator.serviceWorker.register('firebase-messaging-sw.js', { type: 'module', scope: '__' }).
-        then(serviceWorkerRegistration =>
-          getToken(messaging, {
-            serviceWorkerRegistration,
-            // vapidKey: environment.vapidKey,
-          }).then((value)=>{
-            console.log('recvd token as=> ', value);
-            sessionStorage.setItem('webToken', value);
-          })
-        )).pipe(
-        tap(token => console.log('FCM', {token})),
-        share()
-      );
-      this.message$ = new Observable(sub => onMessage(messaging, it => sub.next(it))).pipe(
-        tap(it => console.log('FCM', it)),
-      );
-    } else {
-      console.log('messaging not initialise');
-    }
+
   }
 
   ngOnInit() {

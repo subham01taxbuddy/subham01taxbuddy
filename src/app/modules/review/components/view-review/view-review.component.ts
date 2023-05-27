@@ -64,7 +64,7 @@ export class ViewReviewComponent implements OnInit {
     var param = `review/byid`;
     const requestBody = {
       "id": this.data.leadData.id,
-      "environment": environment.environment
+      // "environment": environment.environment
     }
     this.loading = true;
     this.reviewService.postMethod(param, requestBody).subscribe((response: any) => {
@@ -118,7 +118,7 @@ export class ViewReviewComponent implements OnInit {
     this.loading = true;
     const reqBody = {
       "reviewId": this.data.leadData.id,
-      "environment": environment.environment
+      // "environment": environment.environment
     }
     this.reviewService.postMethod(param, reqBody).subscribe(response => {
       if (response instanceof Array && response.length > 0) {
@@ -145,7 +145,7 @@ export class ViewReviewComponent implements OnInit {
       const param2 = {
         reviewId: this.userDetails.id,
         mobileNumber: this.mobileNo,
-        environment: environment.environment,
+        // environment: environment.environment,
       };
       this.loading = true;
       this.reviewService.postMethod(param, param2).subscribe((result) => {
@@ -378,7 +378,7 @@ export class ViewReviewComponent implements OnInit {
           pathParameters: {
             id: this.data.leadData.id,
           },
-          environment: environment.environment,
+          // environment: environment.environment,
         };
         this.userMsService.putMethodAWSURL(param, reqBody).subscribe(
           (response: any) => {

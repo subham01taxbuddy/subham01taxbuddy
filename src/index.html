@@ -51,8 +51,21 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-messaging-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase/init.js"></script>
+<!--<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase/init.js"></script>-->
 <script>
+  function requestPermission() {
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        messaging.getToken().then((currentToken) => {
+          console.log('token in html:', currentToken);
+          sessionStorage.setItem('webToken', currentToken);
+        });
+      } else {
+        console.log('Unable to get permission to notify.');
+      }
+    });
+  }
   // Retrieve Firebase Messaging object.
   const firebaseConfig = {
     apiKey: 'AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk',
@@ -66,6 +79,7 @@
   };
   firebase.initializeApp(firebaseConfig);
   const messaging = firebase.messaging();
+
   messaging.onMessage((payload) => {
     console.log('Message received. ', payload);
     // Update the UI to include the received message.
