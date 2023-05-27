@@ -12,6 +12,7 @@ import {formatDate} from "@angular/common";
 import {UserNotesComponent} from "../shared/components/user-notes/user-notes.component";
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-payouts',
@@ -42,7 +43,7 @@ export class PayoutsComponent implements OnInit {
   user_data: any = [];
   key: any;
   allFilerList: any;
-  selectedEntries: any;
+  allLeaderList: any;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -54,9 +55,12 @@ export class PayoutsComponent implements OnInit {
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
+
+    this.getLeaders();
     this.usersGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.usersCreateColumnDef(this.allFilerList),
+      columnDefs: this.usersCreateColumnDef(this.allFilerList, this.allLeaderList),
       headerHeight: 60,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -85,6 +89,15 @@ export class PayoutsComponent implements OnInit {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.selectedStatus = this.statusList[2].value;
     this.getSearchList('status', this.selectedStatus);
+  }
+
+  getLeaders() {
+    let param = `/sme-details-new/${this.loggedInUserId}?leader=true`;
+    this.userService.getMethod(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      this.allLeaderList = result.data;
+      console.log('leaderlist', this.allLeaderList);
+    });
   }
 
   clearValue() {
@@ -130,7 +143,11 @@ export class PayoutsComponent implements OnInit {
 
   statusChanged(){
     this.config.currentPage = 1;
-    this.serviceCall('');
+    let queryString = '';
+    if(this.utilsService.isNonEmpty(this.searchVal)){
+      queryString = `&${this.key}=${this.searchVal}`;
+    }
+    this.serviceCall(queryString);
   }
 
   serviceCall(queryString){
@@ -155,6 +172,7 @@ export class PayoutsComponent implements OnInit {
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
         this.config.totalItems = 0;
+        this.utilsService.showSnackBar(result.message);
       }
     }, error => {
       this.loading = false;
@@ -184,7 +202,7 @@ export class PayoutsComponent implements OnInit {
       })
   }
 
-  usersCreateColumnDef(list: any) {
+  usersCreateColumnDef(list: any, leaderList:any) {
     return [
       {
         headerName: 'Sr. No.',
@@ -442,15 +460,21 @@ export class PayoutsComponent implements OnInit {
           debounceMs: 0
         },
         valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.commissionPaymentApprovedBy)
-          let filer1 = list;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          console.log('filer', filer);
-          return filer
+          let createdUserId = parseInt(params?.data?.commissionPaymentApprovedBy)
+          let filer1 = leaderList;
+          if (environment.environment === 'UAT' && params?.data?.commissionPaymentApprovedBy === 3000) {
+            return 'Admin';
+          } else if (environment.environment === 'PROD' && params?.data?.commissionPaymentApprovedBy === 7002) {
+            return 'Admin';
+          } else {
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            console.log('filer', filer);
+            return filer;
+          }
         }
       },{
         headerName: 'Approved Date',
@@ -589,7 +613,8 @@ export class PayoutsComponent implements OnInit {
     let param = '/dashboard/partner-commission';
     let request = {
       invoiceNoList: invoices,
-      commissionPaymentApprovalStatus: 'APPROVED'
+      commissionPaymentApprovalStatus: 'APPROVED',
+      commissionPaymentApprovedBy: this.loggedInUserId
     };
     this.loading = true;
     this.itrMsService.putMethod(param, request).subscribe((result: any)=> {
