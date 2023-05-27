@@ -1,8 +1,8 @@
 
-<form [formGroup]="cflForm">    
-<div class="mrgArdSpcBlw">    
-   <div class="txtTitle"> Losses To Be Carried Forward (Schedule CFL):</div>
-<div class="row cardBack">
+<form [formGroup]="cflForm">
+  <div class="mrgArdSpcBlw">
+    <div class="txtTitle"> Losses To Be Carried Forward (Schedule CFL):</div>
+    <div class="row cardBack">
         <div class="table-responsive">
     <table class="table" style="border: 1px solid #bdc3c7;">
         <thead class="table-header">
@@ -110,7 +110,7 @@
                 </td>
             </tr>
         </tbody>
-        
+
     </table>
 
 </div>
@@ -128,9 +128,7 @@
 </div>
 </div>
 
-   
-
-  <div class="flex justify-between p-[30px] back-foot">
+    <div class="flex justify-between p-[30px] back-foot">
     <button class="lgtBtn">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
       <span class="font-semibold" (click)="goBack()"
@@ -141,5 +139,6 @@
     <button class="saveBtnIn">
       <span class="font-semibold" (click)="saveAll()">Save All</span>
     </button>
+  </div>
   </div>
 </form>
