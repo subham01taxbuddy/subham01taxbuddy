@@ -127,6 +127,11 @@ export class PayoutsComponent implements OnInit {
     this.serviceCall(queryString);
   }
 
+  statusChanged(){
+    this.config.currentPage = 1;
+    this.serviceCall('');
+  }
+
   serviceCall(queryString){
     this.loading = true;
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
@@ -134,6 +139,8 @@ export class PayoutsComponent implements OnInit {
       queryString += this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
     } else if(this.ownerId){
       queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
+    } else{
+      queryString += statusFilter;
     }
     const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${queryString}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {

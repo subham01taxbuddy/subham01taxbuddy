@@ -37,7 +37,7 @@
         </div>
         <div class="col-sm-4">
           <label class="input__label">Select Status</label>
-          <select class="select__box ogp_select" (change)="serviceCall('')" [(ngModel)]="selectedStatus">
+          <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
             <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
             <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
               {{drop.name}}</option>
