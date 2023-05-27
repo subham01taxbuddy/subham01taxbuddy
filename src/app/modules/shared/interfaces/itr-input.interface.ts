@@ -1,4 +1,6 @@
 export interface ITR_JSON {
+
+  id: any;
   fixedAssetsDetails?: FixedAssetsDetails[];
   zeroBonds?: any;
   bonds?: any;
