@@ -63,6 +63,9 @@ export class PayoutsComponent implements OnInit {
       paginateChildRows:true,
       paginationPageSize: 15,
       rowSelection:'multiple',
+      isRowSelectable: (rowNode) => {
+        return rowNode.data ? rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
+      },
       onGridReady: params => {
       },
 
@@ -533,11 +536,16 @@ export class PayoutsComponent implements OnInit {
       },
       {
         // headerName: "Approve",
-        // field: "commissionPaymentApprovalStatus",
+        field: "commissionPaymentApprovalStatus",
         headerCheckboxSelection: true,
         width: 50,
         pinned: 'right',
-        checkboxSelection: true,
+        checkboxSelection: (params)=>{
+          return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
+        },
+        showDisabledCheckboxes: (params)=>{
+          return params.data.commissionPaymentApprovalStatus === 'APPROVED'
+        },
         // valueGetter: function (params:any){
         //   return params.data.commissionPaymentApprovalStatus === 'APPROVED';
         // }
