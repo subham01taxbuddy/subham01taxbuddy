@@ -92,7 +92,11 @@ export class PayoutsComponent implements OnInit {
   }
 
   getLeaders() {
-    let param = `/sme-details-new/${this.loggedInUserId}?leader=true`;
+    let adminId = 3000;
+    if (environment.environment === 'PROD') {
+      adminId = 7002;
+    }
+    let param = `/sme-details-new/${adminId}?leader=true`;
     this.userService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.allLeaderList = result.data;
@@ -165,6 +169,7 @@ export class PayoutsComponent implements OnInit {
       this.loading = false;
       console.log(result);
       if(result.success) {
+        this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.allFilerList, this.allLeaderList));
         this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
         this.userInfo = result.data.content;
         this.config.totalItems = result.data.totalElements;
@@ -177,29 +182,15 @@ export class PayoutsComponent implements OnInit {
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar('Please try again, failed to get data');
+      this.usersGridOptions.api?.setRowData([]);
+      this.userInfo = [];
+      this.config.totalItems = 0;
     });
   }
 
   pageChanged(event: any) {
     this.config.currentPage = event;
     this.serviceCall('');
-  }
-
-  getUserData(pageNo: any) {
-    this.loading = true;
-    let param = '/profile?page=' + pageNo + '&pageSize=15'
-    this.userService.getMethod(param).subscribe((result: any) => {
-        console.log('result -> ', result);
-        this.loading = false;
-        this.usersGridOptions.api?.setRowData(this.createRowData(result['content']));
-        this.userInfo = result['content'];
-        this.config.totalItems = result.totalElements;
-      },
-      error => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-        console.log('Error during getting Leads data. -> ', error)
-      })
   }
 
   usersCreateColumnDef(list: any, leaderList:any) {
@@ -459,7 +450,7 @@ export class PayoutsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        valueGetter: function(params) {
+        valueGetter: function(this, params) {
           let createdUserId = parseInt(params?.data?.commissionPaymentApprovedBy)
           let filer1 = leaderList;
           if (environment.environment === 'UAT' && params?.data?.commissionPaymentApprovedBy === 3000) {
