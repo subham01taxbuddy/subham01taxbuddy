@@ -3,7 +3,7 @@
 <div class="main clearfix">
   <div class="align-items-center row">
     <div class="col-sm-6">
-      <b style="font-size: 20px">My Users</b>
+      <b style="font-size: 20px">Filter - My Users:</b>
     </div>
     <div class="col-sm-3" *ngIf="(roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER'))">
       <button class="tbd-btn spRt" style="float:right" (click)="openBulkReAssignment()">Bulk Re-Assignment</button>
