@@ -816,8 +816,9 @@ width:60px;
 }
 
 pagination-controls {
-  float:right!important;
-  margin-right:5%!important;
+  float: right!important;
+  margin-right: 180px!important;
+  margin-top: 10px;
 }
 
 .ag-theme-balham .ag-paging-panel {
