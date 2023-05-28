@@ -5,25 +5,25 @@
 
 <form [formGroup]="promoCodeForm">
     <mat-dialog-content>
-        <div class="card__row">
-            <div class="card__col-lg-4 card__col-sm-12">
+        <div class="row">
+            <div class="col-sm-4">
                 <mat-label>Promo Code</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput placeholder="Enter coupon" formControlName="code" required>
                     <mat-error *ngIf="promoCodeForm.controls['code'].hasError('required')">Enter promo code</mat-error>
                 </mat-form-field>
             </div>
 
-            <div class="card__col-lg-4 card__col-sm-12">
+            <div class="col-sm-4">
                 <mat-label>Title</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1" >
                     <input matInput placeholder="Enter title" formControlName="title" required>
                     <mat-error *ngIf="promoCodeForm.controls['title'].hasError('required')">Enter title</mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-lg-4 card__col-sm-12">
+            <div class="col-sm-4 ">
                 <mat-label>Description</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput formControlName="description">
                 </mat-form-field>
             </div>
@@ -32,7 +32,7 @@
         <div class="card__row">
             <div class="card__col-lg-4 card__col-sm-12">
                 <mat-label>Start Date</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput formControlName="startDate" [min]="today"
                         [max]="promoCodeForm.controls['endDate'].value" [matDatepicker]="picker1" autocomplete="off"
                         (dateChange)="setEndDateValidate(promoCodeForm.controls['startDate'].value)">
@@ -44,9 +44,9 @@
             </div>
             <div class="card__col-lg-4 card__col-sm-12">
                 <mat-label>End Date</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput formControlName="endDate" [matDatepicker]="picker2" autocomplete="off"
-                        [min]="minEndDate">
+                        [min]="minEndDate" [max]="maxEndDate">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                     <mat-error *ngIf="promoCodeForm.controls['endDate'].hasError('required')">Select end
@@ -56,7 +56,7 @@
 
             <div class="card__col-lg-4 card__col-sm-12">
                 <mat-label>Discount Type</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <mat-select placeholder="Discount Type" formControlName="discountType"
                         (selectionChange)="setValidation($event)" required>
                         <mat-option *ngFor="let obj of discountData" [value]="obj.value">
@@ -74,7 +74,7 @@
             <div class="card__col-lg-6 card__col-sm-12"
                 *ngIf="promoCodeForm.controls['discountType'].value === 'PERCENTAGE'">
                 <mat-label>Discount Percent</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput placeholder="Discount Percent" maxlength="2" formControlName="discountPercent"
                         required type="number"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -93,7 +93,7 @@
             <div class="card__col-lg-6 card__col-sm-12"
                 *ngIf="promoCodeForm.controls['discountType'].value === 'AMOUNT'">
                 <mat-label>Discount Amount</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
 
                     <input matInput placeholder="Discount Amount" formControlName="discountAmount" required
                         type="number" maxlength="8"
@@ -108,7 +108,7 @@
             <div class="card__col-lg-6 card__col-sm-12"
                 *ngIf="promoCodeForm.controls['discountType'].value === 'AMOUNT'">
                 <mat-label>Minimum Order Amount</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput placeholder="Minimum Order Amount" formControlName="minOrderAmount" required
                         type="number" maxlength="8"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -125,7 +125,7 @@
             <div class="card__col-lg-6 card__col-sm-12"
                 *ngIf="promoCodeForm.controls['discountType'].value === 'PERCENTAGE'">
                 <mat-label>Max Discount Amount</mat-label>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="class1">
                     <input matInput placeholder="Max Discount Amount" formControlName="maxDiscountAmount" required
                         type="number" maxlength="8"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -136,7 +136,7 @@
                     <mat-error *ngIf="promoCodeForm.controls['maxDiscountAmount'].hasError('min')">Minimum
                         discount
                         amount should be 0</mat-error>
-                    <mat-error *ngIf="promoCodeForm.controls['maxDiscountAmount'].hasError('max')">Minimum
+                    <mat-error *ngIf="promoCodeForm.controls['maxDiscountAmount'].hasError('max')">Maximum
                         discount
                         amount should be 5000</mat-error>
                 </mat-form-field>
@@ -146,7 +146,7 @@
 
         <div class="card__col-lg-4 card__col-sm-12" *ngIf="data.mode === 'edit'">
             <mat-label>Status</mat-label>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="class1">
                 <mat-select placeholder="Change Status" formControlName="active" required>
                     <mat-option *ngFor="let obj of statusList" [value]="obj.value">
                         {{ obj.label }}

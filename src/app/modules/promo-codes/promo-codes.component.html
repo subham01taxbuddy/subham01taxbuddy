@@ -59,7 +59,9 @@
    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="promoCodeGridOptions" (rowClicked)="onPromoCodeRowClicked($event)">
   </ag-grid-angular>
 
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <div *ngIf="totalCount > 1">
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 </div>
 
 </div>
