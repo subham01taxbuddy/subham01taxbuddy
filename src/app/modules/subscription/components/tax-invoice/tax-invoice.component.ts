@@ -15,6 +15,7 @@ import { Observable, map, startWith } from 'rxjs';
 import {AppConstants} from "../../../shared/constants";
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import {ActivatedRoute} from "@angular/router";
 
 export const MY_FORMATS = {
   parse: {
@@ -109,7 +110,8 @@ export class TaxInvoiceComponent implements OnInit {
     private itrService: ItrMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
-    @Inject(LOCALE_ID) private locale: string
+    @Inject(LOCALE_ID) private locale: string,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ',this.allFilerList)
@@ -172,6 +174,14 @@ export class TaxInvoiceComponent implements OnInit {
 
     this.setFiletedOptions1()
     this.setFiletedOptions2();
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      let invNo = params['invoiceNo'];
+      if(invNo) {
+        this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
+        this.getInvoice();
+      }
+    });
 
     this.getInvoice();
   }

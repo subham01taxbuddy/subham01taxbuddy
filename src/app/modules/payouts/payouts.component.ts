@@ -12,6 +12,7 @@ import {formatDate} from "@angular/common";
 import {UserNotesComponent} from "../shared/components/user-notes/user-notes.component";
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-payouts',
@@ -27,8 +28,6 @@ export class PayoutsComponent implements OnInit {
   config: any;
   userInfo: any = [];
   searchMenus = [{
-    value: 'emailAddress', name: 'Email Id'
-  }, {
     value: 'mobileNumber', name: 'Mobile Number'
   }, {
     value: 'invoiceNo', name: 'Invoice No'
@@ -44,7 +43,7 @@ export class PayoutsComponent implements OnInit {
   user_data: any = [];
   key: any;
   allFilerList: any;
-  selectedEntries: any;
+  allLeaderList: any;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -56,14 +55,21 @@ export class PayoutsComponent implements OnInit {
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
+
+    this.getLeaders();
     this.usersGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.usersCreateColumnDef(this.allFilerList),
+      columnDefs: this.usersCreateColumnDef(this.allFilerList, this.allLeaderList),
+      headerHeight: 60,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       paginateChildRows:true,
       paginationPageSize: 15,
       rowSelection:'multiple',
+      isRowSelectable: (rowNode) => {
+        return rowNode.data ? rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
+      },
       onGridReady: params => {
       },
 
@@ -71,9 +77,9 @@ export class PayoutsComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: 20,
       currentPage: 1,
-      totalItems: 80
+      totalItems: 0
     };
 
   }
@@ -83,6 +89,19 @@ export class PayoutsComponent implements OnInit {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.selectedStatus = this.statusList[2].value;
     this.getSearchList('status', this.selectedStatus);
+  }
+
+  getLeaders() {
+    let adminId = 3000;
+    if (environment.environment === 'PROD') {
+      adminId = 7002;
+    }
+    let param = `/sme-details-new/${adminId}?leader=true`;
+    this.userService.getMethod(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      this.allLeaderList = result.data;
+      console.log('leaderlist', this.allLeaderList);
+    });
   }
 
   clearValue() {
@@ -96,15 +115,17 @@ export class PayoutsComponent implements OnInit {
     if(event) {
       this.ownerId = event ? event.userId : null;
       console.log('fromowner:', event);
-      let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}` : '';
-      this.serviceCall(queryString);
+      //let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+      //let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
+      this.serviceCall('');
     }
   }
   fromFiler(event) {
     if(event) {
       this.filerId = event ? event.userId : null;
-      let queryString = this.filerId ? `&filerUserId=${this.filerId}` : '';
-      this.serviceCall(queryString);
+      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
+      this.serviceCall('');
     }
   }
 
@@ -124,50 +145,55 @@ export class PayoutsComponent implements OnInit {
     this.serviceCall(queryString);
   }
 
+  statusChanged(){
+    this.config.currentPage = 1;
+    let queryString = '';
+    if(this.utilsService.isNonEmpty(this.searchVal)){
+      queryString = `&${this.key}=${this.searchVal}`;
+    }
+    this.serviceCall(queryString);
+  }
+
   serviceCall(queryString){
     this.loading = true;
-    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=0&size=20${queryString}`;
+    let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+    if(this.filerId) {
+      queryString += this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
+    } else if(this.ownerId){
+      queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
+    } else{
+      queryString += statusFilter;
+    }
+    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${queryString}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
       if(result.success) {
-        this.usersGridOptions.api?.setRowData(this.createRowData(result['data']));
-        this.userInfo = result['data'];
-        this.config.totalItems = result.totalElements;
+        this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.allFilerList, this.allLeaderList));
+        this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
+        this.userInfo = result.data.content;
+        this.config.totalItems = result.data.totalElements;
       } else {
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
         this.config.totalItems = 0;
+        this.utilsService.showSnackBar(result.message);
       }
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar('Please try again, failed to get data');
+      this.usersGridOptions.api?.setRowData([]);
+      this.userInfo = [];
+      this.config.totalItems = 0;
     });
   }
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    // this.getUserData(event - 1);
+    this.serviceCall('');
   }
 
-  getUserData(pageNo: any) {
-    this.loading = true;
-    let param = '/profile?page=' + pageNo + '&pageSize=15'
-    this.userService.getMethod(param).subscribe((result: any) => {
-        console.log('result -> ', result);
-        this.loading = false;
-        this.usersGridOptions.api?.setRowData(this.createRowData(result['content']));
-        this.userInfo = result['content'];
-        this.config.totalItems = result.totalElements;
-      },
-      error => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-        console.log('Error during getting Leads data. -> ', error)
-      })
-  }
-
-  usersCreateColumnDef(list: any) {
+  usersCreateColumnDef(list: any, leaderList:any) {
     return [
       {
         headerName: 'Sr. No.',
@@ -424,16 +450,22 @@ export class PayoutsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.commissionPaymentApprovedBy)
-          let filer1 = list;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          console.log('filer', filer);
-          return filer
+        valueGetter: function(this, params) {
+          let createdUserId = parseInt(params?.data?.commissionPaymentApprovedBy)
+          let filer1 = leaderList;
+          if (environment.environment === 'UAT' && params?.data?.commissionPaymentApprovedBy === 3000) {
+            return 'Admin';
+          } else if (environment.environment === 'PROD' && params?.data?.commissionPaymentApprovedBy === 7002) {
+            return 'Admin';
+          } else {
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            console.log('filer', filer);
+            return filer;
+          }
         }
       },{
         headerName: 'Approved Date',
@@ -519,11 +551,16 @@ export class PayoutsComponent implements OnInit {
       },
       {
         // headerName: "Approve",
-        // field: "commissionPaymentApprovalStatus",
+        field: "commissionPaymentApprovalStatus",
         headerCheckboxSelection: true,
         width: 50,
         pinned: 'right',
-        checkboxSelection: true,
+        checkboxSelection: (params)=>{
+          return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
+        },
+        showDisabledCheckboxes: (params)=>{
+          return params.data.commissionPaymentApprovalStatus === 'APPROVED'
+        },
         // valueGetter: function (params:any){
         //   return params.data.commissionPaymentApprovalStatus === 'APPROVED';
         // }
@@ -567,7 +604,8 @@ export class PayoutsComponent implements OnInit {
     let param = '/dashboard/partner-commission';
     let request = {
       invoiceNoList: invoices,
-      commissionPaymentApprovalStatus: 'APPROVED'
+      commissionPaymentApprovalStatus: 'APPROVED',
+      commissionPaymentApprovedBy: this.loggedInUserId
     };
     this.loading = true;
     this.itrMsService.putMethod(param, request).subscribe((result: any)=> {
@@ -621,8 +659,11 @@ export class PayoutsComponent implements OnInit {
   resetFilters(){
     this.filerId = null;
     this.ownerId = null;
-    this.selectedStatus = null;
+    this.selectedStatus = this.statusList[2].value;
     this.key = null;
     this?.smeDropDown?.resetDropdown();
+    this.clearValue();
+    this.serviceCall('');
   }
+
 }

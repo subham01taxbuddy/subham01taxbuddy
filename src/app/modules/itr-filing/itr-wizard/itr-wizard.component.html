@@ -4,86 +4,108 @@
 ></ngx-loading>
 <div class="main clearfix whole-padding">
   <div class="hdBack">
-  <div class="ttlTx">ITR Filing Process</div>
-  <div class="aligBtn">
-    <button class="action-buttons1" title="Users notes" (click)="openNotesDialog()">
-      <i class="fa fa-sticky-note-o fa-1x" aria-hidden="true"></i>
-      Users notes
-    </button>
-    <button class="action-buttons" title="Chat with user" (click)="openChat()">
-      <i class="fa fa-weixin fa-1x" aria-hidden="true"></i>
-      Chat with user
-    </button>
-    <button class="action-buttons" title="Call user" (click)="startCalling()">
-      <i class="fa fa-phone fa-1x fa-flip-horizontal" aria-hidden="true"></i>
-      Call user
-    </button>
-    <button class="action-buttons" title="Document-Cloud" (click)="goToCloud()">
-      <i class="fa fa-cloud" aria-hidden="true"></i>
-      Document Cloud
-    </button>
+    <div class="ttlTx">ITR Filing Process</div>
+    <div class="aligBtn">
+      <button
+        class="action-buttons1"
+        title="Users notes"
+        (click)="openNotesDialog()"
+      >
+        <i class="fa fa-sticky-note-o fa-1x" aria-hidden="true"></i>
+        Users notes
+      </button>
+      <button
+        class="action-buttons"
+        title="Chat with user"
+        (click)="openChat()"
+      >
+        <i class="fa fa-weixin fa-1x" aria-hidden="true"></i>
+        Chat with user
+      </button>
+      <button class="action-buttons" title="Call user" (click)="startCalling()">
+        <i class="fa fa-phone fa-1x fa-flip-horizontal" aria-hidden="true"></i>
+        Call user
+      </button>
+      <button
+        class="action-buttons"
+        title="Document-Cloud"
+        (click)="goToCloud()"
+      >
+        <i class="fa fa-cloud" aria-hidden="true"></i>
+        Document Cloud
+      </button>
+    </div>
   </div>
-</div>
-  <div style="padding: 0 !important">
-    <div class="row brdSpc">     
-        <div class="col-lg-7 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]">
-          <div class="flex items-center gap-x-1">
-            <img src="../../../../assets/icon-font/icon-home-2.svg" alt="home icon"/>
-            <a [ngClass]=" showPrefill ? 'capitalize' : 'capitalize text-color-brands'" (click)="showPrefillView()">Pre-fill Data</a>
-          </div>
-          <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
-            <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon"/>
-            <a (click)="gotoSources()"
-              [ngClass]="
-                showIncomeSources
-                  ? 'capitalize'
-                  : 'capitalize text-color-brands'
-              "
-            >
-              Sources</a
-            >
-          </div>
-          <div
-            class="flex items-center gap-x-1"
-            *ngIf="!showIncomeSources && !showPrefill"
+  <div class="spc-blw" style="padding: 0 !important">
+    <div class="row brdSpc">
+      <div
+        class="col-lg-7 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]"
+      >
+        <div class="flex items-center gap-x-1">
+          <img
+            src="../../../../assets/icon-font/icon-home-2.svg"
+            alt="home icon"
+          />
+          <a
+            [ngClass]="
+              showPrefill ? 'capitalize' : 'capitalize text-color-brands'
+            "
+            (click)="showPrefillView()"
+            >Pre-fill Data</a
           >
-            <img
-              src="../../../../assets/icon-font/icon-arrow-right.svg"
-              alt="arrow right icon"
-            />
-            <a
-              (click)="gotoCgSchedule()"
-              [ngClass]="
-                breadcrumb
-                  ? 'capitalize text-color-brands'
-                  : !showIncomeSources && !showPrefill
-                  ? 'capitalize'
-                  : 'capitalize text-color-brands'
-              "
-              >{{ selectedSchedule }}</a
-            >
-          </div>
-          <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
-            <img
-              src="../../../../assets/icon-font/icon-arrow-right.svg"
-              alt="arrow right icon"
-            />
-            <span
-              [ngClass]="
-                breadcrumb ? 'capitalize' : 'capitalize text-color-brands'
-              "
-              >{{ breadcrumb }}</span
-            >
-          </div>
         </div>
-        <div class="col-lg-5" style="text-align: right">
-          <div class="nmTxAl">
-            {{ customerName }} :&nbsp;&nbsp;<span>{{
-              ITR_JSON.panNumber
-            }}</span>
-          </div>
+        <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
+          <img
+            src="../../../../assets/icon-font/icon-arrow-right.svg"
+            alt="arrow right icon"
+          />
+          <a
+            (click)="gotoSources()"
+            [ngClass]="
+              showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'
+            "
+          >
+            Sources</a
+          >
         </div>
-      
+        <div
+          class="flex items-center gap-x-1"
+          *ngIf="!showIncomeSources && !showPrefill"
+        >
+          <img
+            src="../../../../assets/icon-font/icon-arrow-right.svg"
+            alt="arrow right icon"
+          />
+          <a
+            (click)="gotoCgSchedule()"
+            [ngClass]="
+              breadcrumb
+                ? 'capitalize text-color-brands'
+                : !showIncomeSources && !showPrefill
+                ? 'capitalize'
+                : 'capitalize text-color-brands'
+            "
+            >{{ selectedSchedule }}</a
+          >
+        </div>
+        <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
+          <img
+            src="../../../../assets/icon-font/icon-arrow-right.svg"
+            alt="arrow right icon"
+          />
+          <span
+            [ngClass]="
+              breadcrumb ? 'capitalize' : 'capitalize text-color-brands'
+            "
+            >{{ breadcrumb }}</span
+          >
+        </div>
+      </div>
+      <div class="col-lg-5" style="text-align: right">
+        <div class="nmTxAl">
+          {{ customerName }} :&nbsp;&nbsp;<span>{{ ITR_JSON.panNumber }}</span>
+        </div>
+      </div>
     </div>
     <div *ngIf="showPrefill">
       <app-prefill-id

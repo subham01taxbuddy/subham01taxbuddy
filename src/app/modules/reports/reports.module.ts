@@ -10,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxLoadingModule } from 'ngx-loading';
+import { JsonToCsvService } from '../shared/services/json-to-csv.service';
 
 @NgModule({
   imports: [
@@ -32,5 +33,7 @@ import { NgxLoadingModule } from 'ngx-loading';
   entryComponents: [
     ReportsComponent,
   ],
+  providers:[JsonToCsvService],
+
 })
 export class ReportsModule { }

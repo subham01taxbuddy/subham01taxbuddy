@@ -92,7 +92,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       map((value) => {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
-          this.setOwner({});
+          this.setOwner(null);
           if (this.roles?.includes('ROLE_OWNER')) {
             this.ownerDetails.userId = this.loggedInSme[0].userId;
             this.getFilers();

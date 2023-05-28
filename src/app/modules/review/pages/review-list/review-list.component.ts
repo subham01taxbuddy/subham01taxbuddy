@@ -395,11 +395,11 @@ export class ReviewListComponent implements OnInit {
 
     if (this.selectStatus || this.selectPlatform) {
       var param =
-        `review?environment=${environment.environment}&${pagination}` +
+        `review?${pagination}` +
         status +
         platform;
     } else {
-      var param = `review?environment=${environment.environment}&${pagination}`;
+      var param = `review?${pagination}`;
     }
     this.loading = false;
     this.reviewService.getMethod(param).subscribe(

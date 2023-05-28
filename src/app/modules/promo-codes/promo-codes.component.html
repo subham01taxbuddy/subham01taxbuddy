@@ -12,7 +12,7 @@
   <div class="rowClr">
   <div class="surround">
   <div class="row">
-      <div class="col-sm-5">
+      <div class="col-sm-4">
         <mat-label> Enter Promo-Code </mat-label>
         <mat-form-field appearance="outline">
           <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
@@ -20,17 +20,21 @@
             This field is required</mat-error>
         </mat-form-field>
       </div>
-      <div class="col-sm-5">
+      <!-- <div class="col-sm-4">
         <mat-label>Select Service Type</mat-label>
-        <app-service-drop-down #serviceDropDown (sendService)="fromServiceType($event)"
-          [formControl]="serviceType"></app-service-drop-down>
-      </div>
+        <app-service-drop-down #serviceDropDown (sendService)="fromServiceType($event)"></app-service-drop-down>
+      </div> -->
       <div class="col-sm-2">
         <button class="srch-btn srchSpcTp" (click)="searchPromoCode()">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
       </div>
-   
+      <div class="col-sm-2">
+        <button class="srchSpcTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+          Clear
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

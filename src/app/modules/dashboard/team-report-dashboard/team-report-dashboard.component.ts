@@ -80,7 +80,6 @@ export class TeamReportDashboardComponent implements OnInit {
     this.getOperationTeamDetails();
     this.getPartnersAssignmentDetails();
     this.getTotalCommission();
-    this.getTotalItrFiled();
   }
 
   leaderId: number;
@@ -206,42 +205,37 @@ export class TeamReportDashboardComponent implements OnInit {
 
   getTotalCommission(){
     // API to get totalcommission
+    //https://uat-api.taxbuddy.com/itr/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-05-16
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param=''
     let userFilter = '';
     if (this.leaderId && !this.ownerId) {
-      userFilter += `?leaderUserId=${this.leaderId}`;
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
     if (this.ownerId) {
-      userFilter += `?ownerUserId=${this.ownerId}`;
+      userFilter += `&ownerUserId=${this.ownerId}`;
     }
 
-    // param = `/dashboard/partners-assignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
+    param = `/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
+    this.itrService.getMethod(param).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.commissionData = response?.data;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', "Error while filer commission report: Not_found: Data not found");
+      }
+    );
 
   }
-
-  getTotalItrFiled(){
-    // API to get totalItrFiled
-    this.loading = true;
-    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    let param=''
-    let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
-      userFilter += `?leaderUserId=${this.leaderId}`;
-    }
-    if (this.ownerId) {
-      userFilter += `?ownerUserId=${this.ownerId}`;
-    }
-
-    // param = `/dashboard/partners-assignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
-
-  }
-
-
 
 
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
