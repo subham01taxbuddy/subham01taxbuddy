@@ -58,6 +58,24 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      //profitLossAC
+      if (
+        key === 'profitLossACIncomes' &&
+        Array.isArray(obj[key]) &&
+        obj[key].length > 0
+      ) {
+        for (let i = 0; i < obj[key].length; i++) {
+          const profitLossACIncomes = obj[key][i].incomes;
+          if (
+            (obj[key][i].netProfitfromNonSpeculativeIncome === 0 ||
+              obj[key][i].netProfitfromNonSpeculativeIncome === null) &&
+            obj[key][i].incomes.length === 0
+          ) {
+            delete obj[key][i];
+          }
+        }
+      }
+
       //Employers - allowances & deductions
       if (
         key === 'employers' &&
