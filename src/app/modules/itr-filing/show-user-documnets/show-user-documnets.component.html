@@ -61,7 +61,8 @@
                                   <a style="line-height: 16px;
                                   overflow-wrap: break-word;" href="javascript:void(0)"
                                       (click)="getCommonDocsUrl(folder);preventDownload($event)">{{folder.fileName}}
-                                </a>
+                                  </a>
+                                  <br><span class="dateTime">{{folder.uploadedDate | date:'short'}}</span>
                                 </li>
                               </ul>
                             </div>
