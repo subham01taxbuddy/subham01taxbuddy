@@ -16,6 +16,7 @@ export const environment = {
   lifecycleUrl:
     'https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status',
   lifecycleEnv: 'qa',
+  idleTimeMins: 30,
 
   gdrive: {
     GOOGLE_DRIVE_CLIENT_ID:
