@@ -56,6 +56,8 @@ export class MissedInboundCallsComponent implements OnInit {
   statusDropDown:any
   missedInboundCallGridOptions: GridOptions;
   statusList:any = [{label:'All' , value:'All'},{label:'Pending',value:'Pending'},{label:'Completed',value:'Completed'}]
+  loggedInSme:any;
+  roles:any;
 
   constructor(
     public datePipe: DatePipe,
@@ -90,7 +92,14 @@ export class MissedInboundCallsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loading=false;
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
+
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerId = this.loggedInSme[0].userId;
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerId = this.loggedInSme[0].userId;
+    }
     this.showMissedInboundCall();
   }
 
@@ -121,6 +130,7 @@ export class MissedInboundCallsComponent implements OnInit {
   showMissedInboundCall(){
     // https://uat-api.taxbuddy.com/report/calling-report/missed-inbound-calls
     this.loading = true;
+
     let data = this.utilsService.createUrlParams(this.searchParam);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
@@ -134,6 +144,7 @@ export class MissedInboundCallsComponent implements OnInit {
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
+
     let statusFilter = '';
     if (status) {
       statusFilter = `&status=${status}`;
