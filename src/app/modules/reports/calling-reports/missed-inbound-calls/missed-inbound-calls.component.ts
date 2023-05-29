@@ -278,8 +278,7 @@ export class MissedInboundCallsComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
-            style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
            </button>`;
         },

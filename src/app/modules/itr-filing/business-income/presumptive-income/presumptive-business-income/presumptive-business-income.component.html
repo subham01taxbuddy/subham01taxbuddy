@@ -12,35 +12,26 @@
       margin-right: 15px;
     "
   >
-    <div class="">
-      <div class="card__col-xs-12 card__col-sm-6">
-        <b style="font-size: 14px">Business Income 44AD </b>
+    <div class="row">
+      <div class="col-sm-9">
+        <div>Business Income 44AD </div>
       </div>
-      <div class="card__col-xs-12 card__col-sm-5" style="text-align: right">
-        <button
-          class="tbd-btn-small"
-          style="text-align: right"
-          (click)="addBusinessRow('ADD', businessData)"
-        >
+      <div class="col-sm-3">
+        <button class="new-add btnRt spsTp" (click)="addBusinessRow('ADD', businessData)">
           <i class="fa fa-plus" aria-hidden="true"></i>
-          Add More Business&nbsp;&nbsp;
-        </button>
-      </div>
-      <div class="card__col-xs-12 card__col-sm-1" style="text-align: right">
-        <button
-          class="tbd-btn-small"
-          style="text-align: right"
-          (click)="editBusinessRow('EDIT', businessData)"
-          [disabled]="
-            this.selection.selected.length > 1 ||
-            this.selection.selected.length === 0
-          "
-        >
-          Edit&nbsp;&nbsp;
-        </button>
+          Add More Business</button>
+      </div>      
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <button class="edit-donation" (click)="editBusinessRow('EDIT', businessData)" [disabled]="this.selection.selected.length > 1 ||
+          this.selection.selected.length === 0">
+          <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font"> edit_square </mat-icon> Edit
+      </button>
       </div>
     </div>
-    <div class="card__col-xs-12 card__col-sm-12">
+    <div class="row">
+    <div class="col-sm-12">
       <table class="table-income">
         <thead>
           <tr>
@@ -122,6 +113,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>
 <!-- <div style="text-align: center"> -->
