@@ -2,6 +2,10 @@
   overflow-x: auto;
 }
 
+.table th:first-child {
+  position: relative!important;
+}
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
