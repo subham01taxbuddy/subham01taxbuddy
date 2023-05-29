@@ -35,6 +35,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   statusList: any = [{ label: 'Active', value: true }, { label: 'InActive', value: false }]
   promoCodeForm!: FormGroup;
   minEndDate: any = new Date();
+  maxEndDate: any = new Date('2024-03-31');
   allPlans: any[] = [];
   promoCodeInfo: any;
   today: Date;
@@ -67,7 +68,7 @@ export class AddEditPromoCodeComponent implements OnInit {
       maxDiscountAmount: ['', [Validators.min(0), Validators.max(5000)]],
       usedCount: [0],
       deactivationReason: [''],
-      active: [''],
+      active: ['true'],
       discountDetails: this.fb.array([])
     })
 

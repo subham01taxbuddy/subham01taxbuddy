@@ -68,6 +68,7 @@ export class HousePropertyComponent implements OnInit {
   active: number[];
   activeTenant: number[];
   @Output() saveAndNext = new EventEmitter<any>();
+  taxableIncomesHP: any = [];
 
   constructor(
     private fb: FormBuilder,
@@ -138,6 +139,26 @@ export class HousePropertyComponent implements OnInit {
       'HOUSING deletedFileData LENGTH ---> ',
       this.deletedFileData.length
     );
+
+    this.updateHpTaxaxbleIncome();
+  }
+
+  updateHpTaxaxbleIncome(save?) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // Loop through each index in the ITR_JSON.employers array
+    if (save) {
+      for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+        const taxableIncome = this.ITR_JSON.houseProperties[i].taxableIncome;
+        this.taxableIncomesHP[i] = taxableIncome;
+        console.log(this.taxableIncomesHP, 'taxableIncome');
+      }
+    } else {
+      for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+        const taxableIncome = this.ITR_JSON.houseProperties[i].taxableIncome;
+        this.taxableIncomesHP.push(taxableIncome);
+        console.log(this.taxableIncomesHP, 'taxableIncome');
+      }
+    }
   }
 
   tabChanged() {
@@ -620,20 +641,19 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-   isDisable = false;
+  isDisable = false;
   changePropType(type, mode?) {
     console.log(type);
-    this.isDisable=false;
+    this.isDisable = false;
     if (type === 'SOP') {
       if (this.isSelfOccupied >= this.maxSopAllowed) {
         this.utilsService.showSnackBar(
           'You cannot add more than ' +
             this.maxSopAllowed +
             ' self occupied properties'
-
         );
 
-         this.isDisable = true;
+        this.isDisable = true;
         // this.housePropertyForm.controls['loans'].disable();
         this.housePropertyForm.controls['address'].reset();
         this.housePropertyForm.controls['city'].reset();
@@ -647,7 +667,7 @@ export class HousePropertyComponent implements OnInit {
         //     this.housePropertyForm.controls[control].disable();
         // }
         // this.housePropertyForm.disable();
-        return ;
+        return;
       }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
@@ -672,8 +692,7 @@ export class HousePropertyComponent implements OnInit {
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
       ).controls['interestAmount'].updateValueAndValidity();
-    }
-     else if (type === 'LOP') {
+    } else if (type === 'LOP') {
       if (mode != 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
@@ -851,9 +870,7 @@ export class HousePropertyComponent implements OnInit {
 
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
-      this.utilsService.showSnackBar(
-        'failed to save.'
-      );
+      this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
     }
   }
@@ -884,6 +901,7 @@ export class HousePropertyComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_JSON)
             );
+            this.updateHpTaxaxbleIncome('save');
             this.housePropertyForm.reset();
             this.housePropertyForm.controls['tenant'] = this.fb.array([]);
             this.housePropertyForm.controls['coOwners'] = this.fb.array([]);

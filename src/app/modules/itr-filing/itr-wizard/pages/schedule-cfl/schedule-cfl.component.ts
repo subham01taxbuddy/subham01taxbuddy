@@ -39,6 +39,8 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       hasEdit: '', assessmentPastYear: '2020-21', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
     }, {
       hasEdit: '', assessmentPastYear: '2021-22', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+    }, {
+      hasEdit: '', assessmentPastYear: '2022-23', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
     }
   ]
   constructor(
