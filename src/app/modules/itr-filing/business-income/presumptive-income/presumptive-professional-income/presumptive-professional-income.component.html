@@ -12,34 +12,32 @@
       margin-right: 15px;
     "
   >
-    <div class="">
-      <div class="card__col-xs-12 card__col-sm-6">
-        <b style="font-size: 14px">Professional Income 44ADA </b>
-      </div>
-      <div class="card__col-xs-12 card__col-sm-5" style="text-align: right">
-        <button
-          class="tbd-btn-small"
-          style="text-align: right"
-          (click)="addProfessionalRow('ADD', professionalData)"
-        >
-          <i class="fa fa-plus" aria-hidden="true"></i>
-          Add More Professional Income&nbsp;&nbsp;
-        </button>
-      </div>
-      <div class="card__col-xs-12 card__col-sm-1" style="text-align: right">
-        <button
-          class="tbd-btn-small"
-          style="text-align: right"
-          (click)="editProfessionalRow('EDIT', professionalData)"
-          [disabled]="
-            this.selection.selected.length > 1 ||
-            this.selection.selected.length === 0
-          "
-        >
-          Edit&nbsp;&nbsp;
-        </button>
-      </div>
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="txtTitle">Professional Income 44ADA </div>
     </div>
+    <div class="col-sm-3">
+      <button class="new-add btnRt" (click)="addBusinessRow('ADD', businessData)">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        Add More Professional Income</button>
+    </div>      
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="edit-donation mvRthA" (click)="editProfessionalRow('EDIT', professionalData)" [disabled]="
+      this.selection.selected.length > 1 ||
+      this.selection.selected.length === 0
+    "
+  >
+        <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font"> edit_square </mat-icon> Edit
+    </button>
+    </div>
+  </div>
+
+    <div class="">
+ 
+ 
+  
     <div class="card__col-xs-12 card__col-sm-12">
       <!-- <div style="height: 100%; padding-top: 5px; box-sizing: border-box;">
                 <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham cg-table"
@@ -108,8 +106,8 @@
         ></tr>
       </table>
 
-      <div class="container">
-        <div class="flex justify-between">
+     
+        <div class="col-sm-12 spsTp bdrTp">
           <button
             mat-raised-button
             color="warn"
@@ -118,16 +116,11 @@
           >
             Delete
           </button>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="onContinue()"
-            style="margin-top: 1%"
-          >
+          <button (click)="onContinue()" class="tbd-btn save-btn mvRth">
             Save
           </button>
         </div>
-      </div>
+      
       <!-- <div style="text-align: center"> -->
       <!-- <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
                             &nbsp;&nbsp;Back</button> -->

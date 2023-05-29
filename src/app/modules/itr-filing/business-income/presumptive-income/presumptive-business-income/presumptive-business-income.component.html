@@ -14,17 +14,17 @@
   >
     <div class="row">
       <div class="col-sm-9">
-        <div>Business Income 44AD </div>
+        <div class="txtTitle">Business Income 44AD </div>
       </div>
       <div class="col-sm-3">
-        <button class="new-add btnRt spsTp" (click)="addBusinessRow('ADD', businessData)">
+        <button class="new-add btnRt" (click)="addBusinessRow('ADD', businessData)">
           <i class="fa fa-plus" aria-hidden="true"></i>
           Add More Business</button>
       </div>      
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <button class="edit-donation" (click)="editBusinessRow('EDIT', businessData)" [disabled]="this.selection.selected.length > 1 ||
+        <button class="edit-donation mvRthA" (click)="editBusinessRow('EDIT', businessData)" [disabled]="this.selection.selected.length > 1 ||
           this.selection.selected.length === 0">
           <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font"> edit_square </mat-icon> Edit
       </button>
@@ -92,26 +92,16 @@
         </tbody>
       </table>
 
-      <div class="container">
-        <div class="flex justify-between">
-          <button
-            mat-raised-button
-            color="warn"
-            (click)="removeSelectedRows()"
-            style="margin-top: 1%"
-          >
+      
+        <div class="col-sm-12 spsTp bdrTp">
+          <button mat-raised-button color="warn" (click)="removeSelectedRows()" style="margin-top: 1%">
             Delete
           </button>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="onContinue()"
-            style="margin-top: 1%"
-          >
+          <button (click)="onContinue()" class="tbd-btn save-btn mvRth">
             Save
           </button>
         </div>
-      </div>
+  
     </div>
   </div>
   </div>
