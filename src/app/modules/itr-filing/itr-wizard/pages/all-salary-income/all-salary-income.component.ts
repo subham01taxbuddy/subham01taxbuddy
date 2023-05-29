@@ -20,7 +20,7 @@ export class AllSalaryIncomeComponent
 {
   loading: boolean = false;
   salaryIncomeFormGroup: FormGroup;
-
+  taxableIncomes: any = [];
   showList: boolean;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -36,6 +36,25 @@ export class AllSalaryIncomeComponent
 
   ngOnInit(): void {
     this.initEmployersList();
+    this.updatingTaxableIncome();
+  }
+
+  updatingTaxableIncome(save?) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // Loop through each index in the ITR_JSON.employers array
+    if (save) {
+      for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+        const taxableIncome = this.ITR_JSON.employers[i].taxableIncome;
+        this.taxableIncomes[i] = taxableIncome;
+        console.log(this.taxableIncomes, 'taxableIncome');
+      }
+    } else {
+      for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+        const taxableIncome = this.ITR_JSON.employers[i].taxableIncome;
+        this.taxableIncomes.push(taxableIncome);
+        console.log(this.taxableIncomes, 'taxableIncome');
+      }
+    }
   }
 
   initEmployersList() {
