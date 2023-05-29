@@ -186,7 +186,7 @@ export class ItrFilingReportComponent implements OnInit {
     return [
       {
         headerName: 'Filer Name',
-        field: 'itr1',
+        field: 'filerName',
         sortable: true,
         width: 150,
         pinned: 'left',
