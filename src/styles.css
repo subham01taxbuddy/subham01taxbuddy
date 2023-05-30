@@ -313,11 +313,22 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.mat-expansion-panel-body {
+  padding:0px!important;
+}
 .mat-expansion-indicator{
   display:none!important;
 }
 .mrgArdTog {
-  margin: 20px 55px 20px 230px;
+  margin: 20px 30px 20px 220px;
+  display: block;
+}
+.mrgArdTog1 {
+  margin: 0px 30px 20px 0px;
+  display: block;
+}
+.mrgArdTog2 {
+  margin: 0px 30px 20px 5px;
   display: block;
 }
 .mvRthA {
@@ -530,6 +541,10 @@ button {
 float: right;
 margin-right: 25px;
 }
+.btnRt2 {
+  float: right;
+  margin-bottom: 10px;
+  }
 .nmTxAl {
   margin-right: 17%;
   color: #000000;
@@ -784,7 +799,7 @@ width:60px;
 
 .rowClr{
   background-color: #e4e4ff;
-  padding: 0px 20px 10px 20px;
+  padding: 0px 10px 10px 10px;
   border: 1px solid #e4e4ff;
   box-shadow: 2px 4px #e4e4ff;
 }
@@ -982,7 +997,7 @@ pagination-controls {
 
 .mat-expansion-panel-header.mat-expanded {
   height: 55px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 
 .material-icons {
