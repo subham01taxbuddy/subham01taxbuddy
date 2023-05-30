@@ -5,6 +5,8 @@ import { DailyCallingReportComponent } from './calling-reports/daily-calling-rep
 import { MissedInboundCallsComponent } from './calling-reports/missed-inbound-calls/missed-inbound-calls.component';
 import { ScheduleCallReportComponent } from './calling-reports/schedule-call-report/schedule-call-report.component';
 import { ReportsComponent } from './reports.component';
+import { ItrFilingReportComponent } from './itr-filing-report/itr-filing-report.component';
+import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
 
 
 const routes: Routes = [
@@ -35,10 +37,18 @@ const routes: Routes = [
           },
         ],
       },
+      // {
+      //   path: '',
+      //   redirectTo: 'calling-report',
+      //   pathMatch: 'full',
+      // },
       {
-        path: '',
-        redirectTo: 'calling-report',
-        pathMatch: 'full',
+        path: 'itr-filing-report',
+        component: ItrFilingReportComponent,
+      },
+      {
+        path: 'missed-chat-report',
+        component: MissedChatReportComponent,
       },
     ],
 

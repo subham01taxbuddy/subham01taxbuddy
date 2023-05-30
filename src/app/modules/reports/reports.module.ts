@@ -11,6 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxLoadingModule } from 'ngx-loading';
 import { JsonToCsvService } from '../shared/services/json-to-csv.service';
+import { ItrFilingReportComponent } from './itr-filing-report/itr-filing-report.component';
+import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
 
 @NgModule({
   imports: [
@@ -29,6 +31,8 @@ import { JsonToCsvService } from '../shared/services/json-to-csv.service';
     DailyCallingReportComponent,
     MissedInboundCallsComponent,
     ScheduleCallReportComponent,
+    ItrFilingReportComponent,
+    MissedChatReportComponent,
   ],
   entryComponents: [
     ReportsComponent,

@@ -1,15 +1,17 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
-import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
+import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -22,10 +24,11 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
+
 @Component({
-  selector: 'app-schedule-call-report',
-  templateUrl: './schedule-call-report.component.html',
-  styleUrls: ['./schedule-call-report.component.scss'],
+  selector: 'app-missed-chat-report',
+  templateUrl: './missed-chat-report.component.html',
+  styleUrls: ['./missed-chat-report.component.scss'],
   providers: [
     DatePipe,
     {
@@ -36,18 +39,22 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduleCallReportComponent implements OnInit {
+export class MissedChatReportComponent implements OnInit {
   loading = false;
-  scheduleCallingReport:any;
+  startDate = new FormControl('');
+  endDate = new FormControl('');
+  toDateMin: any;
+  maxDate = new Date(2024, 2, 31);
+  minDate = new Date(2023, 3, 1);
+  missedChatReport: any;
   config: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
   };
+  missedChatReportGridOptions: GridOptions;
   loggedInSme: any;
   roles: any;
-  scheduleCallingReportGridOptions: GridOptions;
-
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -57,7 +64,10 @@ export class ScheduleCallReportComponent implements OnInit {
     private itrService: ItrMsService,
     private jsonToCsvService: JsonToCsvService
   ) {
-    this.scheduleCallingReportGridOptions = <GridOptions>{
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+
+    this.missedChatReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
       enableCellChangeFlash: true,
@@ -84,7 +94,7 @@ export class ScheduleCallReportComponent implements OnInit {
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
+    this.showReports()
   }
 
   ownerId: number;
@@ -112,10 +122,13 @@ export class ScheduleCallReportComponent implements OnInit {
   }
 
   showReports() {
-    // https://uat-api.taxbuddy.com/report/calling-report/schedule-call-report?page=0&pageSize=30&leaderUserId=9362'
+    //https://uat-api.taxbuddy.com/report/calling-report/missed-chat-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&filerUserId=7523'
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     let loggedInId = this.utilsService.getLoggedInUserID();
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -128,13 +141,13 @@ export class ScheduleCallReportComponent implements OnInit {
       userFilter += `&leaderUserId=${loggedInId}`
     }
 
-    param = `/calling-report/schedule-call-report?${data}${userFilter}`;
+    param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.scheduleCallingReport = response?.data?.content;
+        this.missedChatReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
-        this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData(this.scheduleCallingReport));
+        this.missedChatReportGridOptions.api?.setRowData(this.createRowData(this.missedChatReport));
 
       } else {
         this.loading = false;
@@ -146,84 +159,40 @@ export class ScheduleCallReportComponent implements OnInit {
     });
   }
 
-  createRowData(callingData) {
-    console.log('callingRepoInfo -> ', callingData);
-    var callingRepoInfoArray = [];
-    for (let i = 0; i < callingData.length; i++) {
-      let agentReportInfo = Object.assign({}, callingRepoInfoArray[i], {
-        filerName: callingData[i].filerName,
-        totalScheduleCallAssigned: callingData[i].totalScheduleCallAssigned,
-        noOfCallDone: callingData[i].noOfCallDone,
-        noOfCallScheduleForLater: callingData[i].noOfCallScheduleForLater,
-        noOfCallNotDone: callingData[i].noOfCallNotDone,
-        parentName: callingData[i].parentName,
+  createRowData(missedChatData) {
+    console.log('missedRepoInfo -> ', missedChatData);
+    var missedChatRepoInfoArray = [];
+    for (let i = 0; i < missedChatData.length; i++) {
+      let agentReportInfo = Object.assign({}, missedChatRepoInfoArray[i], {
+        noOfMissedChat: missedChatData[i].noOfMissedChat,
+        filerName: missedChatData[i].filerName,
+        parentName: missedChatData[i].parentName,
       })
-      callingRepoInfoArray.push(agentReportInfo);
+      missedChatRepoInfoArray.push(agentReportInfo);
     }
-    console.log('callingRepoInfoArray-> ', callingRepoInfoArray)
-    return callingRepoInfoArray;
+    console.log('missedChatRepoInfoArray-> ', missedChatRepoInfoArray)
+    return missedChatRepoInfoArray;
   }
 
-  reportsCodeColumnDef() {
+  reportsCodeColumnDef(){
     return [
+      {
+        headerName: 'No of missed chat',
+        field: 'noOfMissedChat',
+        sortable: true,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
       {
         headerName: 'Filer Name',
         field: 'filerName',
         sortable: true,
-        width: 200,
-        pinned: 'left',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Total Schedule call assigned',
-        field: 'totalScheduleCallAssigned',
-        sortable: true,
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'No of call Done',
-        field: 'noOfCallDone',
-        sortable: true,
-        width: 170,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'No Call schedule for Later(next day)',
-        field: 'noOfCallScheduleForLater',
-        sortable: true,
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'No of call not done',
-        field: 'noOfCallNotDone',
-        sortable: true,
-        width: 150,
+        // width: 'Auto',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -236,8 +205,7 @@ export class ScheduleCallReportComponent implements OnInit {
         headerName: 'Parent Name',
         field: 'parentName',
         sortable: true,
-        pinned: 'right',
-        width: 200,
+        // width: 'Auto',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -246,42 +214,15 @@ export class ScheduleCallReportComponent implements OnInit {
           debounceMs: 0
         }
       },
-
-
-    ]}
-
-  downloadReport() {
-    this.loading = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
-    let param = ''
-    let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
-    else if (this.filerId) {
-      userFilter += `&filerUserId=${this.filerId}`;
-    }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
-
-    param = `/calling-report/schedule-call-report?page=0&pageSize=100000${userFilter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        return this.jsonToCsvService.downloadFile(response?.data?.content);
-      } else {
-        this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", 'Failed to get daily-calling-report');
-    });
+    ]
   }
+
+  downloadReport(){}
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
@@ -295,5 +236,10 @@ export class ScheduleCallReportComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showReports();
+  }
+
+  setToDateValidation(FromDate) {
+    console.log('FromDate: ', FromDate);
+    this.toDateMin = FromDate;
   }
 }

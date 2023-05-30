@@ -42,8 +42,8 @@
         <div formArrayName="directorsArray">
           <div class="card" *ngFor="let director of getDirectorsArray.controls | paginate : config;
               let i = index" [formGroupName]="fieldGlobalIndex(i)">
-            <div class="card__row card__col-xs-12">
-              <div class="card__col-sm-11">
+            <div class="row">
+              <div class="col-sm-10">
                 <mat-checkbox
                   color="primary"
                   name="hasEdit[i]"
@@ -57,7 +57,7 @@
                   }}
                 </mat-checkbox>
               </div>
-              <div class="card__col-sm-1 edit-head">
+              <div class="col-sm-2">
                 <button
                   type="button"
                   class="edit-donation"
@@ -206,9 +206,9 @@
               </div>
             </div>
           </div>
-          <div class="display-flex fotSp">
-            <div class="card__col-xs-12">
-              <div class="card__col-sm-3">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-3">
                 <button
                   type="submit"
                   class="tbd-btn-secondary btnGry"
@@ -217,7 +217,7 @@
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
               </div>
-              <div class="card__col-sm-6 txt-center">
+              <div class="col-sm-6">
                 <table>
                   <tr
                     *ngFor="
@@ -229,10 +229,10 @@
                   (pageChange)="pageChanged($event)"
                 ></pagination-controls>
               </div>
-              <div class="card__col-sm-3" style="text-align: right">
+              <div class="col-sm-3">
                 <button
                   type="submit"
-                  class="tbd-btn save-btn"
+                  class="tbd-btn save-btn mvRth"
                   [disabled]="directorForm.invalid"
                   (click)="saveDirectorDetials($event)"
                 >
@@ -288,8 +288,8 @@
           <form [formGroup]="sharesForm">
             <div formArrayName="sharesArray">
               <div class="card" *ngFor="let share of getSharesArray.controls | paginate : config; let i = index" [formGroupName]="fieldGlobalIndex(i)">
-                <div class="card__row card__col-xs-12">
-                  <div class="card__col-sm-11">
+                <div class="row">
+                  <div class="col-sm-10">
                     <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
                       {{
                         sharesForm.controls["sharesArray"].controls[i].controls[
@@ -298,7 +298,7 @@
                       }}
                     </mat-checkbox>
                   </div>
-                  <div class="card__col-sm-1 edit-head">
+                  <div class="col-sm-2">
                     <button type="button" class="edit-donation" (click)="editSharesForm(i)">
                       <mat-icon> edit_square </mat-icon>Edit
                     </button>
@@ -395,7 +395,7 @@
                   </div>
                
               
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         matInput
@@ -421,7 +421,7 @@
                   </div>
       
                   <!-- Shares Aquired -->
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -445,7 +445,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field>
                       <input
                         matInput
@@ -465,7 +465,7 @@
                       <mat-datepicker #purchaseDate></mat-datepicker>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -490,7 +490,7 @@
                     </mat-form-field>
                   </div>
               
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -515,7 +515,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -542,7 +542,7 @@
                   </div>
       
                   <!-- Shares Transferred -->
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -570,7 +570,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -602,7 +602,7 @@
                 <!-- Shares Transferred End -->
                 <!-- Closing -->
                 
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -626,7 +626,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
                         digitsOnly
@@ -656,9 +656,9 @@
             </div>
             </div>
           </form>
-          <div class="display-flex fotSp">
-            <div class="card__col-xs-12">
-              <div class="card__col-sm-3">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-3">
                 <button
                   type="submit"
                   class="tbd-btn-secondary btnGry"
@@ -667,7 +667,7 @@
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
               </div>
-              <div class="card__col-sm-6 txt-center">
+              <div class="col-sm-6">
                 <table>
                   <tr
                     *ngFor="
@@ -679,10 +679,10 @@
                   (pageChange)="pageChanged($event)"
                 ></pagination-controls>
               </div>
-              <div class="card__col-sm-3" style="text-align: right">
+              <div class="col-sm-3">
                 <button
                   type="submit"
-                  class="tbd-btn save-btn"
+                  class="tbd-btn save-btn mvRth"
                   [disabled]="directorForm.invalid"
                   (click)="saveUnlistedShares($event)"
                 >

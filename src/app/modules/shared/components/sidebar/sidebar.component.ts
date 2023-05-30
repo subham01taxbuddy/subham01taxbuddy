@@ -186,6 +186,8 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
+        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
+        // { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
       ]
     }
   ];

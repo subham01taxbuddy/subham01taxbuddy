@@ -14,6 +14,7 @@ export const environment = {
     webportal_url: 'https://uat-itr.taxbuddy.com',
     lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
     lifecycleEnv: "dev",
+    idleTimeMins: 30,
 
     gdrive: {
       GOOGLE_DRIVE_CLIENT_ID: '994281120398-930gtuaop72na800aqf6f38uqjc77mvq.apps.googleusercontent.com',
