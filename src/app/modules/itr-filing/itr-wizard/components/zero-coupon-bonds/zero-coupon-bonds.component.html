@@ -40,29 +40,39 @@
             </mat-checkbox>
             <div class="card__col-xs-12 card__col-sm-12">
               <div class="card__col-xs-12 card__col-sm-3">
-                <mat-label>Buy Date*</mat-label>
+                <mat-label>Sale Date*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
+                    [min]="minDate"
                     [max]="maxDate"
                     matInput
                     class="input-field"
+                    (dateChange)="
+                      getGainType(bonds);
+                      calculateTotalCG(bonds);
+                      calMaxPurchaseDate(
+                        this.bondsForm.controls['bondsArray'].controls[i]
+                          .controls['sellDate'].value,
+                        this.bondsForm,
+                        i
+                      )
+                    "
                     readonly
-                    placeholder="Buy Date"
-                    (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
-                    formControlName="purchaseDate"
-                    name="purchaseDate"
-                    [matDatepicker]="purchaseDate"
+                    [matDatepicker]="sellDate"
+                    placeholder="Sale Date"
+                    formControlName="sellDate"
+                    name="sellDate"
                     required
                   />
                   <mat-datepicker-toggle
                     matSuffix
-                    [for]="purchaseDate"
+                    [for]="sellDate"
                   ></mat-datepicker-toggle>
-                  <mat-datepicker #purchaseDate></mat-datepicker>
+                  <mat-datepicker #sellDate></mat-datepicker>
                   <mat-error
                     *ngIf="
                       bondsForm.controls['bondsArray'].controls[i].controls[
-                        'purchaseDate'
+                        'sellDate'
                       ].hasError('required')
                     "
                     >Please select date</mat-error
@@ -122,30 +132,29 @@
                 </mat-form-field>
               </div>
               <div class="card__col-xs-12 card__col-sm-3">
-                <mat-label>Sale Date*</mat-label>
+                <mat-label>Buy Date*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
-                    [min]="minDate"
-                    [max]="maxDate"
+                    [max]="maxPurchaseDate"
                     matInput
                     class="input-field"
-                    (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
                     readonly
-                    [matDatepicker]="sellDate"
-                    placeholder="Sale Date"
-                    formControlName="sellDate"
-                    name="sellDate"
+                    placeholder="Buy Date"
+                    (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
+                    formControlName="purchaseDate"
+                    name="purchaseDate"
+                    [matDatepicker]="purchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
                     matSuffix
-                    [for]="sellDate"
+                    [for]="purchaseDate"
                   ></mat-datepicker-toggle>
-                  <mat-datepicker #sellDate></mat-datepicker>
+                  <mat-datepicker #purchaseDate></mat-datepicker>
                   <mat-error
                     *ngIf="
                       bondsForm.controls['bondsArray'].controls[i].controls[
-                        'sellDate'
+                        'purchaseDate'
                       ].hasError('required')
                     "
                     >Please select date</mat-error
@@ -488,7 +497,9 @@
 <div class="flex justify-between p-[30px] back-foot">
   <button class="lgtBtn">
     <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-    <span class="font-semibold" (click)="goBack()">&nbsp;Back to Capital Gain Topics</span>
+    <span class="font-semibold" (click)="goBack()"
+      >&nbsp;Back to Capital Gain Topics</span
+    >
   </button>
 
   <button class="saveBtnIn">
