@@ -94,6 +94,11 @@
     font-size: 15px;
 }
 
+.dateTime{
+  text-align: left;
+  font-size: 12px;
+}
+
 .container {
   display: flex;
   justify-content: space-between;

@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
@@ -10,6 +11,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -23,9 +25,9 @@ export const MY_FORMATS = {
   },
 };
 @Component({
-  selector: 'app-schedule-call-report',
-  templateUrl: './schedule-call-report.component.html',
-  styleUrls: ['./schedule-call-report.component.scss'],
+  selector: 'app-itr-filing-report',
+  templateUrl: './itr-filing-report.component.html',
+  styleUrls: ['./itr-filing-report.component.scss'],
   providers: [
     DatePipe,
     {
@@ -36,17 +38,22 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduleCallReportComponent implements OnInit {
+export class ItrFilingReportComponent implements OnInit {
   loading = false;
-  scheduleCallingReport:any;
+  startDate = new FormControl('');
+  endDate = new FormControl('');
+  toDateMin: any;
+  maxDate = new Date(2024, 2, 31);
+  minDate = new Date(2023, 3, 1);
+  itrFillingReport: any;
   config: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
   };
+  itrFillingReportGridOptions: GridOptions;
   loggedInSme: any;
   roles: any;
-  scheduleCallingReportGridOptions: GridOptions;
 
   constructor(
     public datePipe: DatePipe,
@@ -57,7 +64,10 @@ export class ScheduleCallReportComponent implements OnInit {
     private itrService: ItrMsService,
     private jsonToCsvService: JsonToCsvService
   ) {
-    this.scheduleCallingReportGridOptions = <GridOptions>{
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+
+    this.itrFillingReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
       enableCellChangeFlash: true,
@@ -84,7 +94,7 @@ export class ScheduleCallReportComponent implements OnInit {
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
+    this.showReports()
   }
 
   ownerId: number;
@@ -112,10 +122,13 @@ export class ScheduleCallReportComponent implements OnInit {
   }
 
   showReports() {
-    // https://uat-api.taxbuddy.com/report/calling-report/schedule-call-report?page=0&pageSize=30&leaderUserId=9362'
+    // https://uat-api.taxbuddy.com/report/calling-report/itr-filing-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&leaderUserId=9523'
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     let loggedInId = this.utilsService.getLoggedInUserID();
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -128,13 +141,13 @@ export class ScheduleCallReportComponent implements OnInit {
       userFilter += `&leaderUserId=${loggedInId}`
     }
 
-    param = `/calling-report/schedule-call-report?${data}${userFilter}`;
+    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.scheduleCallingReport = response?.data?.content;
+        this.itrFillingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
-        this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData(this.scheduleCallingReport));
+        this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
 
       } else {
         this.loading = false;
@@ -146,23 +159,28 @@ export class ScheduleCallReportComponent implements OnInit {
     });
   }
 
-  createRowData(callingData) {
-    console.log('callingRepoInfo -> ', callingData);
-    var callingRepoInfoArray = [];
-    for (let i = 0; i < callingData.length; i++) {
-      let agentReportInfo = Object.assign({}, callingRepoInfoArray[i], {
-        filerName: callingData[i].filerName,
-        totalScheduleCallAssigned: callingData[i].totalScheduleCallAssigned,
-        noOfCallDone: callingData[i].noOfCallDone,
-        noOfCallScheduleForLater: callingData[i].noOfCallScheduleForLater,
-        noOfCallNotDone: callingData[i].noOfCallNotDone,
-        parentName: callingData[i].parentName,
+  createRowData(fillingData) {
+    console.log('fillingRepoInfo -> ', fillingData);
+    var fillingRepoInfoArray = [];
+    for (let i = 0; i < fillingData.length; i++) {
+      let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
+        filerName: fillingData[i].filerName,
+        itr1: fillingData[i].itr1,
+        itr2: fillingData[i].itr2,
+        itr3: fillingData[i].itr3,
+        itr4: fillingData[i].itr4,
+        otherItr: fillingData[i].otherItr,
+        itrU: fillingData[i].itrU,
+        total: fillingData[i].total,
+        ownerName: fillingData[i].ownerName,
+        leaderName: fillingData[i].leaderName,
       })
-      callingRepoInfoArray.push(agentReportInfo);
+      fillingRepoInfoArray.push(agentReportInfo);
     }
-    console.log('callingRepoInfoArray-> ', callingRepoInfoArray)
-    return callingRepoInfoArray;
+    console.log('fillingRepoInfoArray-> ', fillingRepoInfoArray)
+    return fillingRepoInfoArray;
   }
+
 
   reportsCodeColumnDef() {
     return [
@@ -170,7 +188,7 @@ export class ScheduleCallReportComponent implements OnInit {
         headerName: 'Filer Name',
         field: 'filerName',
         sortable: true,
-        width: 200,
+        width: 150,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -181,10 +199,10 @@ export class ScheduleCallReportComponent implements OnInit {
         }
       },
       {
-        headerName: 'Total Schedule call assigned',
-        field: 'totalScheduleCallAssigned',
+        headerName: 'Total ITR Filed',
+        field: 'total',
         sortable: true,
-        width: 180,
+        width: 110,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -194,10 +212,10 @@ export class ScheduleCallReportComponent implements OnInit {
         }
       },
       {
-        headerName: 'No of call Done',
-        field: 'noOfCallDone',
+        headerName: 'ITR 1',
+        field: 'itr1',
         sortable: true,
-        width: 170,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -207,10 +225,10 @@ export class ScheduleCallReportComponent implements OnInit {
         }
       },
       {
-        headerName: 'No Call schedule for Later(next day)',
-        field: 'noOfCallScheduleForLater',
+        headerName: 'ITR 2',
+        field: 'itr2',
         sortable: true,
-        width: 180,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -220,10 +238,10 @@ export class ScheduleCallReportComponent implements OnInit {
         }
       },
       {
-        headerName: 'No of call not done',
-        field: 'noOfCallNotDone',
+        headerName: 'ITR 3',
+        field: 'itr3',
         sortable: true,
-        width: 150,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -233,11 +251,50 @@ export class ScheduleCallReportComponent implements OnInit {
         }
       },
       {
-        headerName: 'Parent Name',
-        field: 'parentName',
+        headerName: 'ITR 4',
+        field: 'itr4',
         sortable: true,
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Other ITR',
+        field: 'otherItr',
+        sortable: true,
+        width: 110,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'ITR U',
+        field: 'itrU',
+        sortable: true,
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Owner Name',
+        field: 'ownerName',
+        sortable: true,
+        width: 140,
         pinned: 'right',
-        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -246,13 +303,29 @@ export class ScheduleCallReportComponent implements OnInit {
           debounceMs: 0
         }
       },
-
-
-    ]}
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        sortable: true,
+        width: 140,
+        pinned: 'right',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+    ]
+  }
 
   downloadReport() {
     this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let loggedInId = this.utilsService.getLoggedInUserID();
+
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -265,7 +338,7 @@ export class ScheduleCallReportComponent implements OnInit {
       userFilter += `&leaderUserId=${loggedInId}`
     }
 
-    param = `/calling-report/schedule-call-report?page=0&pageSize=100000${userFilter}`;
+    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&page=0&pageSize=100000${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -282,6 +355,8 @@ export class ScheduleCallReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
@@ -296,4 +371,10 @@ export class ScheduleCallReportComponent implements OnInit {
     this.searchParam.page = event - 1;
     this.showReports();
   }
+
+  setToDateValidation(FromDate) {
+    console.log('FromDate: ', FromDate);
+    this.toDateMin = FromDate;
+  }
+
 }
