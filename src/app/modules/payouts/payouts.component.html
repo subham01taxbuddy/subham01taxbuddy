@@ -47,7 +47,7 @@
           <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
             Clear form
            </button>
-          <button class="srch-btn mvRth" (click)="advanceSearch(advanceSearchKey.value)"><i
+          <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
 
         </div>

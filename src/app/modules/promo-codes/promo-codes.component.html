@@ -25,7 +25,7 @@
         <app-service-drop-down #serviceDropDown (sendService)="fromServiceType($event)"></app-service-drop-down>
       </div> -->
       <div class="col-sm-2">
-        <button class="srch-btn srchSpcTp" (click)="searchPromoCode()">
+        <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
           <i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
       </div>

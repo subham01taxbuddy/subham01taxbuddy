@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class="col-sm-4">
-            <button class="srch-btn"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
         </div>
       </div>
@@ -75,10 +75,10 @@
               </div> -->
 
            <div class="col-sm-3 text-center">
-                  <button class="srch-btn" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+                  <button class="srch-btn" [disabled]="loading" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
-         
-            <button class="clrLnk mvRth" (click)="this.resetFilters()">
+
+            <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                Clear form
             </button>
           </div>
@@ -335,7 +335,7 @@
             </div>
           </div>
           <div class="col-sm-3">
-            <button class="srch-btn"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
         </div>
       </div>

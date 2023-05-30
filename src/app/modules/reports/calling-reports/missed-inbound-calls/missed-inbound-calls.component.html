@@ -53,7 +53,7 @@
         <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
           Clear form
         </button>
-        <button class="srch-btn mvRth" (click)="showMissedInboundCall()">
+        <button class="srch-btn mvRth" [disabled]="loading" (click)="showMissedInboundCall()">
           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
         </button>
       </div>
