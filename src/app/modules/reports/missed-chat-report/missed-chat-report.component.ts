@@ -162,7 +162,7 @@ export class MissedChatReportComponent implements OnInit {
   createRowData(missedChatData) {
     console.log('missedRepoInfo -> ', missedChatData);
     var missedChatRepoInfoArray = [];
-    for (let i = 0; i < missedChatData.length; i++) {
+    for (let i = 0; i < missedChatData?.length; i++) {
       let agentReportInfo = Object.assign({}, missedChatRepoInfoArray[i], {
         noOfMissedChat: missedChatData[i].noOfMissedChat,
         filerName: missedChatData[i].filerName,
@@ -180,6 +180,7 @@ export class MissedChatReportComponent implements OnInit {
         headerName: 'No of missed chat',
         field: 'noOfMissedChat',
         sortable: true,
+        width: 300,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -192,7 +193,7 @@ export class MissedChatReportComponent implements OnInit {
         headerName: 'Filer Name',
         field: 'filerName',
         sortable: true,
-        // width: 'Auto',
+        width: 350,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -205,7 +206,7 @@ export class MissedChatReportComponent implements OnInit {
         headerName: 'Parent Name',
         field: 'parentName',
         sortable: true,
-        // width: 'Auto',
+        width: 350,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -216,8 +217,6 @@ export class MissedChatReportComponent implements OnInit {
       },
     ]
   }
-
-  downloadReport(){}
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
