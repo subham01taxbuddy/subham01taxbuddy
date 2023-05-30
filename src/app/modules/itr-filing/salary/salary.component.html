@@ -1,4 +1,7 @@
-<ngx-loading [show]="loading"  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <div class="mrgArdSpcBlw">
   <mat-accordion class="headers-align">
     <mat-expansion-panel hideToggle>
@@ -74,7 +77,7 @@
                 </mat-error>
               </mat-form-field>
             </div>
-       
+
             <div class="col-sm-4">
               <mat-label class="inputLabel">Address of employer:</mat-label>
               <mat-form-field appearance="outline">
@@ -110,7 +113,7 @@
                   name="TAN"
                   class="input-field"
                   formControlName="city"
-                  maxlength="20"
+                  maxlength="35"
                 />
                 <mat-error
                   *ngIf="
@@ -196,44 +199,43 @@
           </div>
           <hr style="margin-bottom: 10px" />
           <div class="sectionTitle">Salary Details:</div>
-           <table class="table table-bordered col-sm-12">
-              <thead>
-                <tr class="table-head">
-                  <th>Salary Type</th>
-                  <th>Gross Amount</th>
-                </tr>
-              </thead>
-              <tbody formArrayName="salaryDetails">
-                <tr
-                  *ngFor="let income of getSalaryArray.controls; let i = index"
-                  [formGroupName]="i"
-                >
-                  <td>
-                    {{ income.value.label }}
-                  </td>
+          <table class="table table-bordered col-sm-12">
+            <thead>
+              <tr class="table-head">
+                <th>Salary Type</th>
+                <th>Gross Amount</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="salaryDetails">
+              <tr
+                *ngFor="let income of getSalaryArray.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <td>
+                  {{ income.value.label }}
+                </td>
 
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        name="salaryValue[i]"
-                        formControlName="salaryValue"
-                        (blur)="checkGrossSalary()"
-                        class="input-field"
-                        maxlength="125"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-         
+                <td>
+                  <mat-form-field
+                    class="input-field-width"
+                    style="width: 90% !important"
+                  >
+                    <input
+                      type="text"
+                      trim
+                      matInput
+                      placeholder=""
+                      name="salaryValue[i]"
+                      formControlName="salaryValue"
+                      (blur)="checkGrossSalary()"
+                      class="input-field"
+                      maxlength="125"
+                    />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </form>
     </mat-expansion-panel>
@@ -249,7 +251,7 @@
       <form [formGroup]="allowanceFormGroup">
         <div class="cardRect">
           <!-- <div class="sectionTitle">Exempt Allowance</div> -->
-            <table class="table table-bordered">
+          <table class="table table-bordered">
             <thead style="background: #eaeaea">
               <tr class="table-head">
                 <th>Allowance Type</th>
@@ -284,8 +286,8 @@
                 </td>
               </tr>
             </tbody>
-          </table>        
-    </div>
+          </table>
+        </div>
       </form>
     </mat-expansion-panel>
 
@@ -297,9 +299,9 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="cardRect">
-        <!-- <div class="sectionTitle">Deductions u/s 16</div> -->        
-          <form [formGroup]="deductionsFormGroup">
-            <div class="row">
+        <!-- <div class="sectionTitle">Deductions u/s 16</div> -->
+        <form [formGroup]="deductionsFormGroup">
+          <div class="row">
             <div class="col-sm-6">
               <mat-label class="inputLabel">Entertainment Allowance:</mat-label>
               <mat-form-field appearance="outline">
@@ -348,8 +350,7 @@
               </mat-form-field>
             </div>
           </div>
-          </form>
-       
+        </form>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
