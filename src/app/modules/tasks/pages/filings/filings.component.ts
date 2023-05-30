@@ -199,6 +199,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   myItrsList(pageNo, filingTeamMemberId) {
     // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
     // &searchAsCoOwner=true&page=0
+    //https://uat-api.taxbuddy.com/report/itr-list?page=0&pageSize=20&ownerUserId=7521&financialYear=2022-2023&status=ALL
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -254,7 +255,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
 
       console.log('My Params:', param);
-      this.itrMsService.getMethod(param).subscribe(
+      this.userMsService.getMethodNew(param).subscribe(
         (res: any) => {
           if(res.success == false){
             this.toastMsgService.alert("error",res.message);
