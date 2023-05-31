@@ -75,9 +75,16 @@ export class GoogleDriveService{
     gapi.client.load('drive', 'v3', ()=>{
       const driveId = '0AK1-Qhm_r1YrUk9PVA';
 
+      const ext = fileName.split('.').pop();
+      let mime = '';
+      if(ext === 'xls' || ext === 'xlsx'){
+        mime = 'application/vnd.google-apps.spreadsheet';
+      } else if(ext === 'zip'){
+        mime = 'application/zip';
+      }
       const fileMetadata = {
         name: fileName,
-        mimeType: 'application/vnd.google-apps.spreadsheet',
+        mimeType: mime,
         parents: folderId ? [folderId] : [],
       };
 
@@ -93,7 +100,7 @@ export class GoogleDriveService{
         },
         body:{
           name: fileName,
-          mimeType: 'application/vnd.google-apps.spreadsheet',
+          mimeType: mime,
           parents: folderId ? [folderId] : [],
           metadata: fileMetadata,
           file: file
@@ -111,7 +118,11 @@ export class GoogleDriveService{
 
         this.http.patch(uploadUrl, file, { headers : metadataOptions }).subscribe((metadataRes: any) => {
           console.log('upload by http', metadataRes);
-          window.open(`https://docs.google.com/spreadsheets/d/${metadataRes.id}`);
+          if(ext === 'xls' || ext === 'xlsx') {
+            window.open(`https://docs.google.com/spreadsheets/d/${metadataRes.id}`);
+          } else {
+            window.open(`https://drive.google.com/file/d/${metadataRes.id}/view`);
+          }
         });
 
       });
