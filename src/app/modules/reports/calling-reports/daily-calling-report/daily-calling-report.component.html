@@ -12,12 +12,12 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12 bckClr">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
       
-            <div class="col-sm-3 spsTp">
+            <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
                 <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
@@ -27,7 +27,7 @@
                 <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-sm-3 spsTp">
+            <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
                 <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
