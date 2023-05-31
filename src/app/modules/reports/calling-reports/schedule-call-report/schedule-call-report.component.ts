@@ -282,6 +282,9 @@ export class ScheduleCallReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
