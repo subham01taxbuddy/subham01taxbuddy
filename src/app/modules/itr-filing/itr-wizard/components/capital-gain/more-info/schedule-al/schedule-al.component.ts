@@ -86,7 +86,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     } else {
       this.addMoreAssetsData();
     }
-    if (this.Copy_ITR_JSON.movableAsset) {
+    if (this.Copy_ITR_JSON.movableAsset && this.Copy_ITR_JSON.movableAsset.length > 0) {
       this.Copy_ITR_JSON.movableAsset.forEach((obj) => {
         this.createMovableAssetsForm(obj);
       });
@@ -253,12 +253,8 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-      const movableAssetArray = <FormArray>(
-        this.movableAssetsForm.get('immovableAssetArray')
-      );
-
-      this.Copy_ITR_JSON.immovableAsset = [];
-      this.Copy_ITR_JSON.immovableAsset = movableAssetArray.getRawValue();
+      this.Copy_ITR_JSON.movableAsset = [];
+      this.Copy_ITR_JSON.movableAsset.push(this.movableAssetsForm.getRawValue());
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)

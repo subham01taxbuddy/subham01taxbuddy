@@ -355,6 +355,9 @@ export class ItrFilingReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();

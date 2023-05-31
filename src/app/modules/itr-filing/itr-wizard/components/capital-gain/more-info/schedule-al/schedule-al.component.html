@@ -20,30 +20,30 @@
           <div class="tds-on"
             *ngFor="let immovableAssets of immovableAssetArray.controls | paginate:config ;let i=index"
             [formGroupName]="fieldGlobalIndex(i)">
-            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30 chkAlgn">
+            <mat-checkbox color="primary" name="hasEdit" formControlName="hasEdit" class="ml30 chkAlgn">
             </mat-checkbox>
             <div class="row bdrBtm">
               <div class="col-sm-4">
-                  <mat-label>Description</mat-label>
-                  <mat-form-field class="description" appearance="outline">
-                    <input type="text" trim matInput placeholder="Asset Description" name="description"
-                      formControlName="description" class="input-field" maxlength="50" required>
-                  </mat-form-field>
-                </div>            
-        
-                <div class="col-sm-4">
-                  <mat-label>Amount (Cost) *</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input digitsOnly trim matInput placeholder="Amount" name="amount" formControlName="amount"
-                      class="input-field" maxlength="50" required>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4">
-                  <mat-label>PIN Code *</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
-                      class="input-field" maxlength="6" minlength="6" trim digitsOnly
-                      (blur)="updateDataByPincode(immovableAssets)" required>
+                <mat-label>Description</mat-label>
+                <mat-form-field class="description" appearance="outline">
+                  <input type="text" trim matInput placeholder="Asset Description" name="description"
+                    formControlName="description" class="input-field" maxlength="50" required>
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-4">
+                <mat-label>Amount (Cost) *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim matInput placeholder="Amount" name="amount" formControlName="amount"
+                    class="input-field" maxlength="50" required>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label>PIN Code *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
+                    class="input-field" maxlength="6" minlength="6" trim digitsOnly
+                    (blur)="updateDataByPincode(immovableAssets)" required>
                     <mat-error
                       *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['pinCode'].hasError('pattern')">
                       Enter
@@ -59,70 +59,69 @@
                       Enter
                       6 digit PIN code.
                     </mat-error>
-                  </mat-form-field>
-                </div>
-           
+                </mat-form-field>
+              </div>
+
               <div class="col-sm-4 spsTp">
-                  <mat-label>Flat/Door/Block No *</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
-                      formControlName="flatNo" class="input-field" maxlength="50" required>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Premises name</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input type="text" trim matInput placeholder="Premises name" name="premisesName"
-                      formControlName="premisesName" class="input-field" maxlength="50">
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Road / Street</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input type="text" trim matInput placeholder="Road / Street" name="road" formControlName="road"
-                      class="input-field" maxlength="50">
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Area/ Locality*</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input type="text" trim matInput placeholder="Area/ Locality" name="area" formControlName="area"
-                      class="input-field" maxlength="50" required>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>City*</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
-                      formControlName="city" class="input-field" maxlength="50" required>
-                    <mat-error
-                      *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['city'].hasError('pattern')">
-                      Enter valid
-                      city name.</mat-error>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Select state*</mat-label>
-                  <mat-form-field appearance="outline">
-                    <mat-select placeholder="Select state" name="state" formControlName="state" required>
-                      <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
-                        {{ state.stateName | titlecase}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Select country*</mat-label>
-                  <mat-form-field appearance="outline">
-                    <mat-select placeholder="Select country" name="country" formControlName="country" required>
-                      <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
-                        {{ country.countryName | titlecase}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>  
-        
+                <mat-label>Flat/Door/Block No *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
+                    formControlName="flatNo" class="input-field" maxlength="50" required>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Premises name</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Premises name" name="premisesName"
+                    formControlName="premisesName" class="input-field" maxlength="50">
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Road / Street</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Road / Street" name="road" formControlName="road"
+                    class="input-field" maxlength="50">
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Area/ Locality*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Area/ Locality" name="area" formControlName="area"
+                    class="input-field" maxlength="50" required>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>City*</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
+                    formControlName="city" class="input-field" maxlength="50" required>
+                  <mat-error
+                    *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['city'].hasError('pattern')">
+                    Enter valid
+                    city name.</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Select state*</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select placeholder="Select state" name="state" formControlName="state" required>
+                    <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                      {{ state.stateName | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Select country*</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select placeholder="Select country" name="country" formControlName="country" required>
+                    <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
+                      {{ country.countryName | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
 
             <div class="edit-head">
               <button type="button" class="edit-donation" (click)="editAssetForm(i,'immovable')"><mat-icon>
@@ -130,27 +129,27 @@
                 </mat-icon>Edit </button>
             </div>
           </div>
-      
-            <div class="col-sm-12 spsTp bdrTp">  
-                <div class="row">
-                <div class="col-sm-3">           
-                <button type="submit" class="tbd-btn-delete" (click)="deleteImmovableAssetsArray()"><i
-                    class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
+
+          <div class="col-sm-12 spsTp bdrTp">
+              <div class="row">
+                <div class="col-sm-3">
+                  <button type="submit" class="tbd-btn-delete" (click)="deleteImmovableAssetsArray()"><i
+                      class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
                  </div>
-                 <div class="col-sm-6 pagiAlgn">
-                <table>
-                  <tr *ngFor="let item of immovableAssetArray.controls | paginate:config"></tr>
-                </table>
-                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                <div class="col-sm-6 pagiAlgn">
+                  <table>
+                    <tr *ngFor="let item of immovableAssetArray.controls | paginate:config"></tr>
+                  </table>
+                  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                 </div>
                 <div class="col-sm-3">
                 <button type="submit" class="tbd-btn save-btn mvRth" [disabled]="immovableAssetForm.invalid"
                   (click)="saveImmovableAssets()">Save</button>
-                </div>
+              </div>
               </div>
             </div>
-          
-     
+
+
         </div>
       </form>
     </div>
@@ -164,7 +163,7 @@
     </div>
   </div>
   <div class="cardBdr2">
-  <form [formGroup]="movableAssetsForm">
+    <form [formGroup]="movableAssetsForm">
     <div class="display-flex mt-2">
       <mat-checkbox color="primary" class="chkAlgn1" name="hasEdit" formControlName="hasEdit">
       </mat-checkbox>
@@ -229,7 +228,7 @@
             <input matInput class="input-field" name="cashInHand" formControlName="cashInHand" maxlength="14" digitsOnly
               placeholder="Amount">
           </mat-form-field>
-        </div>   
+        </div>
           <div class="col-sm-4 spsTp">
             <mat-label>C. Liabilities in relation to Assets at (A+B)</mat-label>
             <mat-form-field appearance="outline" class="movable-assets">
@@ -239,7 +238,7 @@
           </div>
 
         </div>
-      
+
 
       <div class="edit-head edit-head1 edit-assets">
         <button type="button" class="edit-donation" (click)="movableAssetsForm.enable()"><mat-icon>
@@ -247,13 +246,14 @@
           </mat-icon>Edit </button>
       </div>
     </div>
-    
+
       <div class="col-sm-12 spsTp bdrTp">
           <button type="submit" class="tbd-btn save-btn mvRth" [disabled]="movableAssetsForm?.invalid"
             (click)="saveMovableAssets()">Save</button>
-      </div>  
+      </div>
+
   </form>
-</div>
+  </div>
 </div>
 
 

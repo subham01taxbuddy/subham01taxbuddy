@@ -7,3 +7,8 @@
   <button mat-raised-button color="primary" [mat-dialog-close]="'YES'" tabindex="1">Yes</button>
   <button mat-raised-button color="warn" class="mt" [mat-dialog-close]="'NO'" tabindex="-1">No</button>
 </div>
+<div>
+  <mat-dialog-actions align="center" *ngIf="data.showActions === false">
+    <button mat-raised-button color="primary" [mat-dialog-close]="'YES'" tabindex="1">Ok</button>
+  </mat-dialog-actions>
+</div>
