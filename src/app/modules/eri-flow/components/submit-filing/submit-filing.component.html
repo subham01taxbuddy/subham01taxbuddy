@@ -81,7 +81,7 @@
       <p style="color:green" *ngIf="manualUpdateForm.valid"> Note: Cool, you have already updated all the data points,
         Click on "Update Filing Details" button to add manual filing data</p>
       <br><br>
-      <button class="tbd-btn" (click)="updateManualFiling()">Update Filing Details</button>
+      <button class="tbd-btn" [disabled]="loading" (click)="updateManualFiling()">Update Filing Details</button>
     </div>
   </div>
 

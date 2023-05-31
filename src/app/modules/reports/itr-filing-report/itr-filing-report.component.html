@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="row">
   <div class="col-sm-6">
-    <h4>ITR Filling Report:</h4>
+    <h4>ITR Filing Report:</h4>
   </div>
 </div>
 <div class="rowClr">
@@ -40,7 +40,7 @@
         <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
           Clear form
         </button>
-        <button class="srch-btn mvRth" (click)="showReports()">
+        <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
         </button>
       </div>
@@ -52,7 +52,7 @@
   <div class="row">
     <div class="col-sm-8">
       <div class="txTit">
-        ITR Filling Reports Details:
+        ITR Filing Reports Details:
       </div>
     </div>
     <!-- <div class="col-sm-4">

@@ -28,7 +28,9 @@ export class OtherAssetImprovementComponent implements OnInit {
   improvementYears = [];
   isImprovement = new FormControl(false);
   OtherAsssetImprovementForm!: FormGroup;
-
+  maxPurchaseDate: Date;
+  minDate: Date;
+  maxDate: Date;
   loading: boolean = false;
   index: number;
   @Input() goldCg: NewCapitalGain;
@@ -57,6 +59,14 @@ export class OtherAssetImprovementComponent implements OnInit {
         buyersDetails: [],
       };
     }
+
+    // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
+    const currentYear = new Date().getFullYear() - 1;
+    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
   }
 
   ngOnInit() {
@@ -74,6 +84,12 @@ export class OtherAssetImprovementComponent implements OnInit {
     //   this.improvementForm.patchValue(this.data.improvement);
     //   this.assetSelected();
     // }
+  }
+
+  calMaxPurchaseDate(sellDate, formGroupName, index) {
+    if (this.utilsService.isNonEmpty(sellDate)) {
+      this.maxPurchaseDate = sellDate;
+    }
   }
 
   getImprovementYears() {
@@ -258,10 +274,16 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   calculateCg(index) {
-    let cgObject = ((this.getOtherAssets.controls[index] as FormGroup).
-      controls['otherAssetsArray'] as FormGroup).value;
-    let improvements = ((this.getOtherAssets.controls[index] as FormGroup).
-      controls['improvementsArray'] as FormGroup).value;
+    let cgObject = (
+      (this.getOtherAssets.controls[index] as FormGroup).controls[
+        'otherAssetsArray'
+      ] as FormGroup
+    ).value;
+    let improvements = (
+      (this.getOtherAssets.controls[index] as FormGroup).controls[
+        'improvementsArray'
+      ] as FormGroup
+    ).value;
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
@@ -404,11 +426,11 @@ export class OtherAssetImprovementComponent implements OnInit {
     );
 
     this.goldCg.assetDetails = [];
-    for (let i=0; i < this.getOtherAssets.controls.length; i++) {
+    for (let i = 0; i < this.getOtherAssets.controls.length; i++) {
       let cgObject = (
         (this.getOtherAssets.controls[i] as FormGroup).controls[
           'otherAssetsArray'
-          ] as FormGroup
+        ] as FormGroup
       ).value;
       this.goldCg.assetDetails.push(cgObject);
     }

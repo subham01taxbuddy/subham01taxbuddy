@@ -125,7 +125,7 @@ export class MissedChatReportComponent implements OnInit {
     //https://uat-api.taxbuddy.com/report/calling-report/missed-chat-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&filerUserId=7523'
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let loggedInId = this.utilsService.getLoggedInUserID();
+    // let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
@@ -134,12 +134,10 @@ export class MissedChatReportComponent implements OnInit {
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
+
 
     param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
@@ -162,7 +160,7 @@ export class MissedChatReportComponent implements OnInit {
   createRowData(missedChatData) {
     console.log('missedRepoInfo -> ', missedChatData);
     var missedChatRepoInfoArray = [];
-    for (let i = 0; i < missedChatData.length; i++) {
+    for (let i = 0; i < missedChatData?.length; i++) {
       let agentReportInfo = Object.assign({}, missedChatRepoInfoArray[i], {
         noOfMissedChat: missedChatData[i].noOfMissedChat,
         filerName: missedChatData[i].filerName,
@@ -180,6 +178,7 @@ export class MissedChatReportComponent implements OnInit {
         headerName: 'No of missed chat',
         field: 'noOfMissedChat',
         sortable: true,
+        width: 300,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -192,7 +191,7 @@ export class MissedChatReportComponent implements OnInit {
         headerName: 'Filer Name',
         field: 'filerName',
         sortable: true,
-        // width: 'Auto',
+        width: 350,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -205,7 +204,7 @@ export class MissedChatReportComponent implements OnInit {
         headerName: 'Parent Name',
         field: 'parentName',
         sortable: true,
-        // width: 'Auto',
+        width: 350,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -217,10 +216,11 @@ export class MissedChatReportComponent implements OnInit {
     ]
   }
 
-  downloadReport(){}
-
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();

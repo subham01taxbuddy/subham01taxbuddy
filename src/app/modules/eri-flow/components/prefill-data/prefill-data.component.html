@@ -8,7 +8,7 @@
       </mat-radio-group>
     </div>
     <div class="card__col-xs-12 card__col-sm-4">
-      <button class="tbd-btn" (click)="getPrefillData()">Request Prefill OTP</button>
+      <button class="tbd-btn" [disabled]="loading" (click)="getPrefillData()">Request Prefill OTP</button>
     </div>
 
   </div>
@@ -31,7 +31,7 @@
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-4">
-        <button class="tbd-btn" (click)="verifyOtp()">Validate & Get Data</button>
+        <button class="tbd-btn" [disabled]="loading" (click)="verifyOtp()">Validate & Get Data</button>
       </div>
     </form>
   </div>

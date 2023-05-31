@@ -106,7 +106,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
 
     param =`/dashboard/partner-commission?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if(response.success == false){
         this.allDetails=null;
         this.calculateCounts();

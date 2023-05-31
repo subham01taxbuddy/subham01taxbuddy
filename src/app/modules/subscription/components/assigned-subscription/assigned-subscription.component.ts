@@ -623,7 +623,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       if (result.success) {
         this.filerList = result.data.content;
