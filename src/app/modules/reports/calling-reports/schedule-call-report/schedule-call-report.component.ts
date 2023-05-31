@@ -128,18 +128,18 @@ export class ScheduleCallReportComponent implements OnInit {
     // https://uat-api.taxbuddy.com/report/calling-report/schedule-call-report?page=0&pageSize=30&leaderUserId=9362'
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let loggedInId = this.utilsService.getLoggedInUserID();
+    // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
+    // else{
+    //   userFilter += `&leaderUserId=${loggedInId}`
+    // }
 
     param = `/calling-report/schedule-call-report?${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
@@ -265,18 +265,18 @@ export class ScheduleCallReportComponent implements OnInit {
 
   downloadReport() {
     this.loading = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
+    // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
+    // else{
+    //   userFilter += `&leaderUserId=${loggedInId}`
+    // }
 
     param = `/calling-report/schedule-call-report?page=0&pageSize=100000${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
