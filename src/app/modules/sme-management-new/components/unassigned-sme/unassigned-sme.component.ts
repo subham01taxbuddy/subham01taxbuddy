@@ -95,7 +95,7 @@ export class UnassignedSmeComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
         console.log("Search result:", result)
         if (Array.isArray(result.data.content) && result.data.content.length > 0
@@ -121,7 +121,7 @@ export class UnassignedSmeComponent implements OnInit {
     const loggedInSmeUserId=this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('sme list result -> ', result);
        if (Array.isArray(result.data.content) && result.data.content.length > 0) {
           this.loading = false;

@@ -125,7 +125,7 @@ export class MissedChatReportComponent implements OnInit {
     //https://uat-api.taxbuddy.com/report/calling-report/missed-chat-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&filerUserId=7523'
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let loggedInId = this.utilsService.getLoggedInUserID();
+    // let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
@@ -134,12 +134,10 @@ export class MissedChatReportComponent implements OnInit {
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
+
 
     param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {

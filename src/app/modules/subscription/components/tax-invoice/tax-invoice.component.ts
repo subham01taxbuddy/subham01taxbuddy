@@ -328,7 +328,7 @@ export class TaxInvoiceComponent implements OnInit {
   getOwner() {
     const loggedInSmeUserId=this.loggedInSme[0].userId
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
@@ -352,7 +352,7 @@ export class TaxInvoiceComponent implements OnInit {
        param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
     }
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.options1=[];
       console.log('filer list result -> ', result);
       this.filerList = result.data;

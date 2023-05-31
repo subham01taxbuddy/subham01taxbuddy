@@ -282,7 +282,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     //https://dev-api.taxbuddy.com/user/sme-details-new/1?smeUserId=1
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
-    this.userMsService.getMethod(param).subscribe((res: any) => {
+    this.userMsService.getMethodNew(param).subscribe((res: any) => {
       console.log(res);
       if (res.success) {
         sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))

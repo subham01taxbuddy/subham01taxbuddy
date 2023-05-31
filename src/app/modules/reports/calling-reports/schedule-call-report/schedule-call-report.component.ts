@@ -10,6 +10,8 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { GridApi } from 'ag-grid-community';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -47,6 +49,8 @@ export class ScheduleCallReportComponent implements OnInit {
   loggedInSme: any;
   roles: any;
   scheduleCallingReportGridOptions: GridOptions;
+  gridApi: GridApi;
+  gridColumnApi: any;
 
   constructor(
     public datePipe: DatePipe,
@@ -62,7 +66,16 @@ export class ScheduleCallReportComponent implements OnInit {
       columnDefs: this.reportsCodeColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => { },
+      onGridReady: (params) => {
+        this.gridApi = params.api;
+        this.gridColumnApi = params.columnApi;
+
+        this.gridApi.sizeColumnsToFit();
+
+        window.addEventListener('resize', () => {
+          this.gridApi.sizeColumnsToFit();
+        });
+      },
       sortable: true,
       filter: true,
     };
@@ -115,18 +128,18 @@ export class ScheduleCallReportComponent implements OnInit {
     // https://uat-api.taxbuddy.com/report/calling-report/schedule-call-report?page=0&pageSize=30&leaderUserId=9362'
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let loggedInId = this.utilsService.getLoggedInUserID();
+    // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
+    // else{
+    //   userFilter += `&leaderUserId=${loggedInId}`
+    // }
 
     param = `/calling-report/schedule-call-report?${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
@@ -252,18 +265,18 @@ export class ScheduleCallReportComponent implements OnInit {
 
   downloadReport() {
     this.loading = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
+    // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
-    }
+    // else{
+    //   userFilter += `&leaderUserId=${loggedInId}`
+    // }
 
     param = `/calling-report/schedule-call-report?page=0&pageSize=100000${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {

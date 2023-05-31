@@ -32,7 +32,7 @@
           <mat-form-field appearance="outline">
             <mat-label>PAN Number</mat-label>
             <input placeholder="PAN" formControlName="panNumber" autocomplete="off"
-              (blur)="getUserInfoByPan(signUpForm.controls['panNumber'])" type="text" maxlength="10" minlength="10"
+              (blur)="getUserInfoByPan(signUpForm.controls['panNumber'].value)" type="text" maxlength="10" minlength="10"
               upperCase matInput>
           </mat-form-field>
         </div>
@@ -80,11 +80,13 @@
           <mat-form-field appearance="outline">
             <mat-label>Mobile Number</mat-label>
             <input matInput  [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
-              pattern="[0-9]{10,20}"  required maxlength="20" />
+            pattern="[0-9]{10,20}" [maxlength]="maxNo" required />
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
               is required</mat-error>
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
               valid mobile no.</mat-error>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number cannot
+                exceed 10 characters.</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-3 spsTp">

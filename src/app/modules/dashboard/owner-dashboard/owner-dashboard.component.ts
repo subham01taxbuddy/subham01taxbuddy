@@ -96,7 +96,7 @@ export class OwnerDashboardComponent implements OnInit {
 
     let param = `/sme-details-new/${this.loggedInSmeUserId}?filer=true`;
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;
@@ -219,7 +219,7 @@ export class OwnerDashboardComponent implements OnInit {
 
     param = `/dashboard/invoice-report?${userFilter}&fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR`
 
-    this.userMsService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
          this.invoiceData = response.data;
@@ -243,7 +243,7 @@ export class OwnerDashboardComponent implements OnInit {
     let filerUserId = this.filerUserId;
     let param =`/dashboard/doc-uploaded-filing-not-started?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         // this.docUploadedData=null;
         this.docUploadedData = response.data;
@@ -266,7 +266,7 @@ export class OwnerDashboardComponent implements OnInit {
   let filerUserId = this.filerUserId;
   let param =`/dashboard/waiting-for-confirmation?filerUserId=${filerUserId}&${data}`
 
-  this.itrService.getMethod(param).subscribe((response: any) => {
+  this.userMsService.getMethodNew(param).subscribe((response: any) => {
     if (response.success) {
       this.summaryConfirmationData = response.data;
       this.config.summaryConfirmation.totalItems = response.data.totalElements;
@@ -292,7 +292,7 @@ export class OwnerDashboardComponent implements OnInit {
 
     let param = `/dashboard/itr-filed-everification-pending?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`;
 
-    this.itrService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         if (response.success) {
           this.eVerificationPendingData = response.data;
@@ -319,9 +319,9 @@ export class OwnerDashboardComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam[configType]);
     let filerUserId = this.filerUserId;
 
-    let param =`/schedule-call-details/${filerUserId}?fromDate=${fromDate}&toDate=${toDate}&statusId=17&${data}`
+    let param =`/dashboard/schedule-call-details/${filerUserId}?fromDate=${fromDate}&toDate=${toDate}&statusId=17&${data}`
 
-    this.userMsService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
          this.scheduleCallData = response.data;
@@ -384,7 +384,7 @@ export class OwnerDashboardComponent implements OnInit {
 
     let param = `/dashboard/partner-commission?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}`;
 
-    this.itrService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
