@@ -10,6 +10,8 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { GridApi } from 'ag-grid-community';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -47,6 +49,8 @@ export class ScheduleCallReportComponent implements OnInit {
   loggedInSme: any;
   roles: any;
   scheduleCallingReportGridOptions: GridOptions;
+  gridApi: GridApi;
+  gridColumnApi: any;
 
   constructor(
     public datePipe: DatePipe,
@@ -62,7 +66,16 @@ export class ScheduleCallReportComponent implements OnInit {
       columnDefs: this.reportsCodeColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => { },
+      onGridReady: (params) => {
+        this.gridApi = params.api;
+        this.gridColumnApi = params.columnApi;
+
+        this.gridApi.sizeColumnsToFit();
+
+        window.addEventListener('resize', () => {
+          this.gridApi.sizeColumnsToFit();
+        });
+      },
       sortable: true,
       filter: true,
     };
