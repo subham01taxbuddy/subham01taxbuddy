@@ -1,43 +1,47 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div class="main clearfix">
-  <div class="align-items-center row">
-    <div class="col-sm-8">
-      <b style="font-size: 20px">Filter - Promo Codes:</b>
-    </div>
-    <div class="col-sm-4">
-       <button class="new-add mvRth1" (click)="addPromoCode('Add Promo-Code','Add', '')"><i aria-hidden="true" class="fa fa-plus"></i> Add Promo-Code </button>
-    </div>
-  </div>
-
-  <div class="rowClr">
-  <div class="surround">
-  <div class="row">
-      <div class="col-sm-4">
-        <mat-label> Enter Promo-Code </mat-label>
-        <mat-form-field appearance="outline">
-          <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
-          <mat-error *ngIf="searchValue?.hasError('required') ">
-            This field is required</mat-error>
-        </mat-form-field>
-      </div>
-      <!-- <div class="col-sm-4">
-        <mat-label>Select Service Type</mat-label>
-        <app-service-drop-down #serviceDropDown (sendService)="fromServiceType($event)"></app-service-drop-down>
-      </div> -->
-      <div class="col-sm-2">
-        <button class="srch-btn srchSpcTp" (click)="searchPromoCode()">
-          <i class="fa fa-search" aria-hidden="true"></i> Search
-        </button>
-      </div>
-      <div class="col-sm-2">
-        <button class="srchSpcTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-          Clear
-        </button>
-      </div>
-
-    </div>
-  </div>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+        <mat-icon> arrow_forward_ios </mat-icon>
+         Filter - Promo Codes:
+        </mat-panel-title>
+        <div class="col-sm-3">
+          <button class="new-add mvRth1 new-add-tp-spc" (click)="$event.stopPropagation(); addPromoCode('Add Promo-Code','Add', '')"><i aria-hidden="true" class="fa fa-plus"></i> Add Promo-Code </button>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">         
+          <div class="row">
+            <div class="col-sm-4">
+              <mat-label> Enter Promo-Code </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
+                <mat-error *ngIf="searchValue?.hasError('required') ">
+                  This field is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3">
+              <button class="srch-btn srchSpcTp" (click)="searchPromoCode()">
+                <i class="fa fa-search" aria-hidden="true"></i> Search
+              </button>
+          
+              <button class="srchSpcTp clrLnk mvRthB" [disabled]="loading" (click)="this.resetFilters()">
+                Clear
+              </button>
+            </div>
+      
+          </div>
 </div>
+</div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
+<div class="main clearfix"> 
 
 <!-- Table Below -->
 

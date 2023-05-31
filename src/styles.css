@@ -313,6 +313,13 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.mvRthB {
+  margin-left: 30px!important;
+  font-size: 16px!important;
+}
+.new-add-tp-spc {
+  margin-top: 13px;
+}
 .mat-expansion-panel-body {
   padding:0px!important;
 }
@@ -395,7 +402,7 @@ button {
   width: 350px;
   border-radius: 8px;
   font-size: 13px;
-  margin: -56px 0px 0px 62%;
+  margin: -56px 0px 0px 65%;
   font-style: italic;
   border: 1px solid #efefef;
   float: left;
@@ -958,6 +965,14 @@ pagination-controls {
   color: #f18203;
   font-weight: 600;
   text-decoration: underline;
+}
+
+.clrLnk1 {
+  color: #f18203;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-left: 10px!important;
+    display: inline-block;
 }
 
 
