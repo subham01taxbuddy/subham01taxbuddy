@@ -7,6 +7,10 @@ import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog
 import {EMPTY, from, Observable} from "rxjs";
 import { Messaging, onMessage , getToken } from "@angular/fire/messaging";
 import {share, tap} from "rxjs/operators";
+import {IdleService} from "./services/idle-service";
+import {NavbarService} from "./services/navbar.service";
+import {HttpClient} from "@angular/common/http";
+import Auth from '@aws-amplify/auth';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -23,6 +27,8 @@ export class AppComponent {
     private router: Router,
     public swUpdate: SwUpdate,
     private dialog: MatDialog,
+    private idleService: IdleService,
+    private http: HttpClient,
     @Optional() messaging: Messaging
   ) {
     // router.events.subscribe((val) => {
@@ -87,7 +93,7 @@ export class AppComponent {
             // vapidKey: environment.vapidKey,
           }).then((value)=>{
             console.log('recvd token as=> ', value);
-            sessionStorage.setItem('webToken', value); 
+            sessionStorage.setItem('webToken', value);
           })
         )).pipe(
         tap(token => console.log('FCM', {token})),
@@ -100,6 +106,87 @@ export class AppComponent {
     } else {
       console.log('messaging not initialise');
     }
+    idleService.idle$.subscribe(s => {
+      if (this.router.url !== '/login') {
+        this.handleIdleTimeout();
+      }
+    });
+    idleService.wake$.subscribe(s => console.log('im awake!'));
+  }
+
+  handleIdleTimeout(){
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Idle Timeout!',
+        message: 'You have been logged out due to inactivity. Please login again.',
+        isHide: true,
+        showActions: false
+      },
+      disableClose: true,
+      panelClass: 'reloadWindowPopup'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('logging out', this.router.url);
+      this.logout();
+    });
+    dialogRef.backdropClick().subscribe(()=>{
+      console.log('logging out');
+      this.logout();
+    })
+  }
+
+  logout() {
+    Auth.signOut()
+      .then(data => {
+        (window as any).Kommunicate.logout();
+        (function (d, m) {
+            var kommunicateSettings =
+              {
+                "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
+                "popupWidget": true,
+                "automaticChatOpenOnNavigation": true,
+                "preLeadCollection":
+                  [
+                    {
+                      "field": "Name", // Name of the field you want to add
+                      "required": true, // Set 'true' to make it a mandatory field
+                      "placeholder": "Enter your name" // add whatever text you want to show in the placeholder
+                    },
+                    {
+                      "field": "Email",
+                      "type": "email",
+                      "required": true,
+                      "placeholder": "Enter your email"
+                    },
+                    {
+                      "field": "Phone",
+                      "type": "number",
+                      "required": true,
+                      "element": "input", // Optional field (Possible values: textarea or input)
+                      "placeholder": "Enter your phone number"
+                    }
+                  ],
+
+              };
+
+            var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+            s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+            var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+            (window as any).kommunicate = m; m._globals = kommunicateSettings;
+          }
+        )(document,  (window as any).kommunicate || {});
+
+        sessionStorage.clear();
+        NavbarService.getInstance().clearAllSessionData();
+        this.router.navigate(['/login']);
+
+        //Ashwini:check if this is needed
+        NavbarService.getInstance(this.http).logout();
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
   }
 
@@ -115,11 +202,10 @@ export class AppComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
-        // if(environment.production){
-        //   this.cmService.signOut();
-        // }
         window.location.reload();
       }
-    })
+
+    });
+
   }
 }

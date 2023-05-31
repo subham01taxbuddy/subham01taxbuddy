@@ -68,14 +68,14 @@ export class SidebarComponent{
       roles: ['ROLE_OWNER'],
       submenu: []
     },
-    // {
-    //   name: 'Leader Dashboard',
-    //   // iconClass: 'fa fa-globe',
-    //   active: false,
-    //   url: '/dashboard/leader',
-    //   roles: ['ROLE_ADMIN','ROLE_LEADER'],
-    //   submenu: []
-    // },
+    {
+      name: 'Leader Dashboard',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/dashboard/leader',
+      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      submenu: []
+    },
     {
       name: 'My Tasks',
       // iconClass: 'fa fa-code',
@@ -186,6 +186,8 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
+        // { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
+        // { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
       ]
     }
   ];

@@ -479,7 +479,7 @@ export class PayoutsComponent implements OnInit {
           debounceMs: 0
         },
         cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          return data.value ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : '-';
         }
       },
       {

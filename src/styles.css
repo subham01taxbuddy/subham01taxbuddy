@@ -313,13 +313,107 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
-.km-chat-icon-sidebox svg {
-  width: 30px!important;
+.mat-expansion-indicator{
+  display:none!important;
+}
+.mrgArdTog {
+  margin: 20px 55px 20px 230px;
+  display: block;
+}
+.mvRthA {
+  margin-right: 0px;
+  margin-bottom: 10px;
+}
+.edit-donation {
+  background: #E5F2F6;
+  border: 0.5px solid #D9D9D9;
+  border-radius: 3px;
+    display: flex;
+    border: 1px solid #838383;
+    margin-top: 8px;
+    margin-right: 0px;
+    float: right;
+    width: 60px;
+    height: 30px;
+    padding-top: 5px;
+}
+.clr-btn {
+  display: inline-block;
+  margin: 8px;
+  padding: 5px 10px;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: #f4f4f4!important;
+  color: #003c61;
+  border: 1px solid #003c61;
+}
+.clr-btn:hover {
+  background-color: #e1e1e1!important;
+}
+.txtTitle{
+  font-weight: 500;
+  font-size: 21.2451px;
+  letter-spacing: -0.022em;
+  color: #1E1E1E;
+  margin-bottom: 11px;
 }
 
-.km-chat-icon-sidebox {
-  width: 48px!important;
-  height: 48px!important;
+.cardBack{
+  padding: 20px 10px 10px 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+}
+.cardB {
+  border: 1px solid #00AECA!important;
+  color: #00AECA!important;
+  background-color:#ffffff!important;
+  margin-top:20px!important;
+}
+
+.bdrBtm {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #efefef;
+  padding-bottom: 20px;
+}
+
+.note1 {
+  background-color: #fafafa;
+  padding: 5px 0px 5px 10px;
+  width: 350px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: -56px 0px 0px 62%;
+  font-style: italic;
+  border: 1px solid #efefef;
+  float: left;
+  color: #b60000;
+}
+
+.edit-head {
+  margin-left:20px!important;
+}
+.edit-head1 {
+  margin-left: 20px!important;
+  margin-right: 10px!important;
+  margin-top: -10px;
+}
+.chkAlgn {
+  margin-left: -25px;
+  margin-right: 20px;
+}
+
+.chkAlgn1 {
+  margin-left: 18px!important;
+  margin-right: 15px!important;
+  margin-top: -5px!important;
+}
+
+.pagiAlgn {
+  margin-left: -150px;
+  margin-top: 13px!important;
+  margin-right: 150px;
 }
 
 .grup {
@@ -328,11 +422,28 @@ button {
   border-radius: 8px;
 }
 
+
+
 .cardBdr {
   border-radius: 8px;
   padding: 10px 30px 10px 30px;
   border: 1px solid #cccccc!important;
   background-color:#ffffff;
+}
+
+.cardBdr1 {
+  border-radius: 8px;
+  padding: 20px 15px 10px 40px;
+  border: 1px solid #cccccc!important;
+  background-color:#fafafa;
+}
+
+.cardBdr2 {
+  border-radius: 8px;
+  padding: 20px 15px 10px 0px;
+  border: 1px solid #cccccc!important;
+  background-color:#fafafa;
+  margin-bottom: 20px;
 }
 
 .txtMn {
@@ -414,6 +525,10 @@ button {
 }
 .btnRt {
   float:right;
+}
+.btnRt1 {
+float: right;
+margin-right: 25px;
 }
 .nmTxAl {
   margin-right: 17%;
@@ -725,8 +840,9 @@ width:60px;
 }
 
 pagination-controls {
-  float:right!important;
-  margin-right:5%!important;
+  float: right!important;
+  margin-right: 180px!important;
+  margin-top: 10px;
 }
 
 .ag-theme-balham .ag-paging-panel {
@@ -875,7 +991,7 @@ pagination-controls {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1.2;
   letter-spacing: normal;
   text-transform: none;

@@ -33,9 +33,10 @@ export class ZeroCouponBondsComponent
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
   config: any;
-  deduction = true;
+  deduction = false;
   minDate: Date;
   maxDate: Date;
+  maxPurchaseDate: Date;
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -127,6 +128,40 @@ export class ZeroCouponBondsComponent
     }
     this.bondsForm.disable();
     this.deductionForm.disable();
+
+    // setting deduction
+    const bondsDeben = this.ITR_JSON.capitalGain?.find(
+      (assetType) => assetType.assetType === 'BONDS'
+    );
+
+    if (bondsDeben?.deduction?.length > 0) {
+      this.deduction = true;
+    } else {
+      this.deduction = false;
+    }
+
+    // this.onChanges();
+  }
+
+  // onChanges() {
+  //   const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+
+  //   console.log(bondsArray, 'securitiesArray');
+  //   for (let i = 0; i < bondsArray.length; i++) {
+  //     (bondsArray.controls[i] as FormGroup).controls[
+  //       'sellDate'
+  //     ].valueChanges.subscribe((value) => {
+  //       if (value) {
+  //         this.calMaxPurchaseDate(value, this.bondsForm, i);
+  //       }
+  //     });
+  //   }
+  // }
+
+  calMaxPurchaseDate(sellDate, formGroupName, index) {
+    if (this.utilsService.isNonEmpty(sellDate)) {
+      this.maxPurchaseDate = sellDate;
+    }
   }
 
   addMore() {

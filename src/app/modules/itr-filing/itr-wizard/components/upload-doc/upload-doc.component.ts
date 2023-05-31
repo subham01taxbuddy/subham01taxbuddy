@@ -78,7 +78,7 @@ export class UploadDocComponent implements OnInit {
     }
 
     this.loading = true;
-    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
       this.docUrl = res['signedUrl'];
@@ -95,7 +95,7 @@ export class UploadDocComponent implements OnInit {
 
   editFile(document) {
     this.loading = true;
-    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
       this.docUrl = res['signedUrl'];
