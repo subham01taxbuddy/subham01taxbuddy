@@ -320,8 +320,11 @@ button {
 .new-add-tp-spc {
   margin-top: 13px;
 }
-.mat-expansion-panel-body {
+.spcArnd{
   padding:0px!important;
+}
+.mat-expansion-panel-body {
+  padding:20px!important;
 }
 .mat-expansion-indicator{
   display:none!important;
