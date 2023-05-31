@@ -110,6 +110,7 @@ export class RefundRequestComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
+    this.resetFilters();
   }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;

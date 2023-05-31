@@ -56,6 +56,23 @@ export class ShowUserDocumnetsComponent implements OnInit {
     });
   }
 
+  gotoDrive(document){
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      console.log(this.docUrl);
+      this.loading = false;
+
+      //open file in gdrive
+      this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
+      // this.gdriveService.getUserConsent();
+    }, error => {
+      this.loading = false;
+    });
+  }
+
   editFile(document) {
     this.loading = true;
     const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
@@ -202,32 +219,23 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
   viewer = 'DOC';
   docUrl = '';
+  supportedTypes = ['pdf', 'xls', 'doc', 'xlsx', 'docx'];
+  supportedImageTypes = ['jpg', 'jpeg', 'png', 'svg'];
+
+  isDocTypeSupported(document){
+    const ext = document.fileName.split('.').pop();
+    return this.supportedTypes.includes(ext.toLowerCase()) || this.supportedImageTypes.includes(ext.toLowerCase());
+  }
+
   getCommonDocsUrl(document) {
-    // this.commonDocuments = this.folders;
-    // if (this.commonDocuments.length > 0) {
-    //   const docType = this.commonDocuments[index].fileName.split('.').pop();
-    //   if (this.commonDocuments[index].isDeleted) {
-    //     this.utilsService.showSnackBar('This file is deleted by ' + this.commonDocuments[index].deletedBy)
-    //     return;
-    //   }
-    //   if (this.commonDocuments[index].isPasswordProtected) {
-    //     this.docDetails.docUrl = this.commonDocuments[index].passwordProtectedFileUrl;
-    //   } else {
-    //     this.docDetails.docUrl = this.commonDocuments[index].signedUrl;
-    //   }
-    //   this.docDetails.docType = docType;
-    // } else {
-    //   this.docDetails.docUrl = '';
-    //   this.docDetails.docType = '';
-    // }
 
     console.log('document selected', document);
     this.loading = true;
     const ext = document.fileName.split('.').pop();
     console.log('this.viewer', this.viewer);
-    if(ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+    if(this.supportedTypes.includes(ext.toLowerCase())) {
       this.viewer = 'DOC';
-    } else {
+    } else if(this.supportedImageTypes.includes(ext.toLowerCase())) {
       this.viewer = 'IMG';
     }
     if (document.isPasswordProtected) {
@@ -249,7 +257,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar(error);
-    })
+    });
   }
 
   preventDownload($event: MouseEvent){
