@@ -116,7 +116,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?leader=true
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('leader list result -> ', result);
       this.leaderList = result.data;
       console.log('leaderlist', this.leaderList);
@@ -140,7 +140,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
       param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     }
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.ownerList = result.data;

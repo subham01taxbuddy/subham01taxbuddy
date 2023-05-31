@@ -425,7 +425,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     const loggedInSmeUserId=this.loggedInSme[0].userId
     console.log(loggedInSmeUserId)
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
@@ -442,7 +442,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     const loggedInSmeUserId=this.loggedInSme[0].userId
     const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
     console.log('sme record by service  -> ', result);
     this.smeRecords=result.data;
       this.smeRoles=this.smeRecords[0];

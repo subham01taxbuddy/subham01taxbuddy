@@ -124,7 +124,7 @@ export class AttendanceReportComponent implements OnInit {
 
   let param =`/dashboard/partner-commission?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}`
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
+  this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
         this.allDetails = response.data;
