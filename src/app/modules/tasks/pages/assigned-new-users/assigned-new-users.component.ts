@@ -566,7 +566,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width:180,
+        width:160,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
