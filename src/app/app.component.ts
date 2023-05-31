@@ -2,7 +2,7 @@
 import {Component, Optional} from '@angular/core';
 import { Router} from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogState} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
 import {EMPTY, from, Observable} from "rxjs";
 import { Messaging, onMessage , getToken } from "@angular/fire/messaging";
@@ -11,6 +11,9 @@ import {IdleService} from "./services/idle-service";
 import {NavbarService} from "./services/navbar.service";
 import {HttpClient} from "@angular/common/http";
 import Auth from '@aws-amplify/auth';
+import { environment } from 'src/environments/environment';
+import { UtilsService } from './services/utils.service';
+import { UserMsService } from './services/user-ms.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -22,6 +25,8 @@ export class AppComponent {
 
   token$: Observable<any> = EMPTY;
   message$: Observable<any> = EMPTY;
+  dialogRef:any;
+  loading=false;
 
   constructor(
     private router: Router,
@@ -29,6 +34,8 @@ export class AppComponent {
     private dialog: MatDialog,
     private idleService: IdleService,
     private http: HttpClient,
+    private utilsService: UtilsService,
+    private userMsService: UserMsService,
     @Optional() messaging: Messaging
   ) {
     // router.events.subscribe((val) => {
@@ -115,7 +122,10 @@ export class AppComponent {
   }
 
   handleIdleTimeout(){
-    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    if (this.dialogRef && this.dialogRef.getState() === MatDialogState.OPEN) {
+      return;
+    }
+     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Idle Timeout!',
         message: 'You have been logged out due to inactivity. Please login again.',
@@ -125,13 +135,15 @@ export class AppComponent {
       disableClose: true,
       panelClass: 'reloadWindowPopup'
     });
-    dialogRef.afterClosed().subscribe(result => {
+    this.dialogRef.afterClosed().subscribe(result => {
       console.log('logging out', this.router.url);
       this.logout();
+      this.smeLogout();
     });
-    dialogRef.backdropClick().subscribe(()=>{
+    this.dialogRef.backdropClick().subscribe(()=>{
       console.log('logging out');
       this.logout();
+      this.smeLogout();
     })
   }
 
@@ -188,6 +200,21 @@ export class AppComponent {
         console.log(err);
       });
 
+  }
+
+  smeLogout(){
+    // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
+    let inActivityTime = environment.idleTimeMins;
+    let smeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}`;
+
+    this.userMsService.postMethod(param, '').subscribe((response:any)=>{
+      this.loading = false;
+
+    }, (error) => {
+      this.loading = false;
+      console.log('error in sme Logout API',error)
+    })
   }
 
   reloadWindow() {
