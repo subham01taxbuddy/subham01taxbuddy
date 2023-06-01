@@ -231,6 +231,7 @@ export class HousePropertyComponent implements OnInit {
           ]),
         ],
         grossAnnualRentReceived: [null],
+        grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
           null,
           [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
@@ -275,6 +276,7 @@ export class HousePropertyComponent implements OnInit {
           ]),
         ],
         grossAnnualRentReceived: [null],
+        grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
           null,
           [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
@@ -746,6 +748,7 @@ export class HousePropertyComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
+
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
@@ -763,6 +766,7 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EE = false;
         hp.isEligibleFor80EEA = false;
       }
+
       this.Copy_ITR_JSON.houseProperties = [];
       this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
@@ -877,6 +881,14 @@ export class HousePropertyComponent implements OnInit {
   isSelfOccupied = 0;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
+    request.houseProperties.forEach((element) => {
+      element.grossAnnualRentReceivedTotal = Number(
+        element.grossAnnualRentReceived
+      );
+      element.grossAnnualRentReceived =
+        this.housePropertyForm.controls['rentPercentage']?.value;
+    });
+
     this.loading = true;
     const param = `/itr/itr-type`;
     this.itrMsService.postMethod(param, request).subscribe(
@@ -933,6 +945,10 @@ export class HousePropertyComponent implements OnInit {
                 'House Property income deleted successfully.'
               );
             }
+            request.houseProperties.forEach((element) => {
+              element.grossAnnualRentReceived =
+                element.grossAnnualRentReceivedTotal;
+            });
             this.loading = false;
           },
           (error) => {
