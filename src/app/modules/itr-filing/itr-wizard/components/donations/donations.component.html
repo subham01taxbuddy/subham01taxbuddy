@@ -153,20 +153,8 @@
                 trim
                 upperCase
               />
-              <mat-hint
-                *ngIf="
-                  generalDonationForm.controls['donationArray'].controls[i]
-                    .controls['donationType'] !== null &&
-                  generalDonationForm.controls['donationArray'].controls[i]
-                    .controls['donationType'] !== '' &&
-                  generalDonationForm.controls['donationArray'].controls[i]
-                    .controls['donationType'] !== undefined &&
-                  generalDonationForm.controls['donationArray'].controls[i]
-                    .controls['donationType'] === 'OTHER'
-                "
-              >
-                In case of funds set by govt as described in section 80G(2),
-                please Use PAN as 'GGGGG0000G'</mat-hint
+              <mat-hint style="margin-top: 10px"
+                >PAN unavailable? Use GGGGG0000G</mat-hint
               >
               <mat-error
                 *ngIf="
