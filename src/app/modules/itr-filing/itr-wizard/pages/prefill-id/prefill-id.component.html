@@ -22,9 +22,7 @@
           </div>
 
           <div class="flex flex-col items-center">
-            <div
-              class="flex flex-row items-center space-between"
-            >
+            <div class="flex flex-row items-center space-between">
               <button
                 class="lgtBtn btn1"
                 type="button"
@@ -44,7 +42,11 @@
               </button>
             </div>
 
-            <div *ngIf="data?.eriClientValidUpto" class="txHd alTxH" style="font-size: 12px">
+            <div
+              *ngIf="data?.eriClientValidUpto"
+              class="txHd alTxH"
+              style="font-size: 12px"
+            >
               Client added, valid upto
               {{ data?.eriClientValidUpto | date }}
             </div>
@@ -218,7 +220,19 @@
                         class="text-base leading-5 text-gray-1100 font-semibold lg:text-left flex items-center gap-[5px]"
                       >
                         <i class="material-icons-outlined adIc">cloud_upload</i>
-                        Upload JSON
+                        Upload JSON &nbsp;
+
+                        <div *ngIf="uploadedJson">
+                          <button
+                            type="button"
+                            class="delete-btn"
+                            (click)="deleteUploadedJson()"
+                            style="size: 10px"
+                          >
+                            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i
+                            >Delete
+                          </button>
+                        </div>
                       </div>
                       <div
                         class="flex gap-x-4 items-stretch flex-col lg:items-center lg:flex-row"
@@ -252,6 +266,7 @@
                         Upload
                       </button>
                     </div>
+
                     <!-- <div
                       *ngIf="ITR_JSON?.prefillDate !== null"
                       style="font-size: 12px"

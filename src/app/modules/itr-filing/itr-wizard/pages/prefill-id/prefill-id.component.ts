@@ -4769,4 +4769,31 @@ export class PrefillIdComponent implements OnInit {
   jsonUpload() {
     this.jsonUploaded.emit(this.uploadedJson);
   }
+
+  deleteUploadedJson() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '700px',
+      data: {
+        title: 'Are you sure you want to delete the uploaded JSON?',
+        message:
+          'Once you delete the JSON, you will have to enter all the details manually again',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result === 'YES') {
+        this.ITR_JSON.itrSummaryJson = null;
+        this.uploadedJson = false;
+        this.utilsService.showSnackBar(
+          'The uploaded JSON has been deleted. You can now proceed ahead.'
+        );
+
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+      }
+    });
+  }
 }
