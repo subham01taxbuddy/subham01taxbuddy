@@ -230,6 +230,9 @@ export class AppComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
         window.location.reload();
+        navigator.serviceWorker.getRegistration('/').then(function(registration) {
+          registration.update();
+        });
       }
 
     });
