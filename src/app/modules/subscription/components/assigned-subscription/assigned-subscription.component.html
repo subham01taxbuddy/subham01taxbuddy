@@ -1,77 +1,85 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-  <div class="align-items-center row">
-    <div class="col-sm-4">
-      <b style="font-size: 20px">Filter - Assigned Subscription: </b>
-    </div>
-    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-      <p>
-        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-      </p>
-    </div>
-  </div>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog1">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Assigned Subscription:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
+           </div>
 
-  <div class="rowClr">
-    <div class="surround">
-      <div class="row">
-        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-           <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+           <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+           </div>
+         <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+           <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
           </div>
-        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-          <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+         <div class="col-sm-6 spsTp">
+           <mat-label> Financial Year </mat-label>
+           <mat-form-field appearance="outline" class="customBg">
+           <input type="text" matInput [formControl]="assessmentYear" readonly>
+                       <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
+                       <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                         {{year.financialYear}}
+                       </mat-option>
+                     </mat-select> -->
+            </mat-form-field>
          </div>
-        <div class="col-sm-6 spsTp">
-          <mat-label> Financial Year </mat-label>
-          <mat-form-field appearance="outline" class="customBg">
-          <input type="text" matInput [formControl]="assessmentYear" readonly>
-                      <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
-                      <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                        {{year.financialYear}}
-                      </mat-option>
-                    </mat-select> -->
+         <div class="col-sm-6 spsTp" *ngIf="false">
+           <mat-label> Search by Name </mat-label>
+           <mat-form-field appearance="outline" class="customBg">
+             <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
+             <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
+               <mat-icon style="color: #00AECA">search</mat-icon>
+             </button>
+             <mat-autocomplete #auto="matAutocomplete">
+               <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
+                 (click)="getFilerNameId(option)">
+                 {{option.name}}
+               </mat-option>
+             </mat-autocomplete>
            </mat-form-field>
-        </div>
-        <div class="col-sm-6 spsTp" *ngIf="false">
-          <mat-label> Search by Name </mat-label>
-          <mat-form-field appearance="outline" class="customBg">
-            <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-            <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
-              <mat-icon style="color: #00AECA">search</mat-icon>
-            </button>
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
-                (click)="getFilerNameId(option)">
-                {{option.name}}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6 spsTp">
-          <mat-label> Search Mobile Number</mat-label>
-          <mat-form-field appearance="outline" class="customBg">
-            <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
-            <button [disabled]="loading" (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
-              <mat-icon style="color: #00AECA">search</mat-icon>
-            </button>
-            <!-- <mat-icon matSuffix>search</mat-icon> -->
-            <!-- <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
-              {{option.name}}
-            </mat-option>
-          </mat-autocomplete> -->
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12 spsTp bdrTp">
-          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-            Clear form
-        </button>
-          <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
+         </div>
+         <div class="col-sm-6 spsTp">
+           <mat-label> Search Mobile Number</mat-label>
+           <mat-form-field appearance="outline" class="customBg">
+             <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
+             <button [disabled]="loading" (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
+               <mat-icon style="color: #00AECA">search</mat-icon>
+             </button>
+             <!-- <mat-icon matSuffix>search</mat-icon> -->
+             <!-- <mat-autocomplete #auto="matAutocomplete">
+             <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
+               {{option.name}}
+             </mat-option>
+           </mat-autocomplete> -->
+           </mat-form-field>
+         </div>
+         <div class="col-sm-12 spsTp bdrTp">
+           <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+             Clear form
+         </button>
+           <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
+ 
+ 
+         </div>
+            </div>
+</div>
+</div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
 
   <!-- Table Below -->
   <div class="tableSpc">

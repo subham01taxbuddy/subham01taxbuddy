@@ -129,7 +129,7 @@ export class CoOwnerListDropDownComponent implements OnInit, OnChanges {
       // 'https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&coOwner=true'
       const loggedInSmeUserId = this.loggedInSme[0].userId;
       let param = `/sme-details-new/${loggedInSmeUserId}?coOwner=true`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
+      this.userMsService.getMethodNew(param).subscribe((result: any) => {
         console.log('owner list result -> ', result);
         this.ownerList = result.data;
         console.log('ownerlist', this.ownerList);
@@ -154,7 +154,7 @@ export class CoOwnerListDropDownComponent implements OnInit, OnChanges {
         param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
       }
 
-      this.userMsService.getMethod(param).subscribe((result: any) => {
+      this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.options1 = [];
         console.log('filer list result -> ', result);
         this.filerList = result.data;

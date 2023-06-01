@@ -1,64 +1,69 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="main clearfix">
-  <div class="align-items-center row">
-    <div class="col-sm-6">
-      <b style="font-size: 20px">Filter - Payouts:</b>
-    </div>
-  </div>
-
-  <div class="rowClr">
-    <div class="surround">
-      <div class="row">
-        <div class="col-sm-12 bckClr">
-          <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event)" (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
-        </div>
-<!--        <div class="col-sm-0" *ngIf="coOwnerCheck">-->
-<!--          <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)" (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>-->
-<!--        </div>-->
-      <div class="row">
-        <div class="col-sm-4">
-          <label class="input__label">Select attribute</label>
-          <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
-            <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-            <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-              {{drop.name}}</option>
-          </select>
-        </div>
-
-        <div class="col-sm-4">
-          <div class="input">
-            <label class="input__label">Enter value</label>
-            <div class="input__select">
-              <input type="text" class="select__box ogp_select" style="background-image:none"
-                     [(ngModel)]="searchVal" name="searchVal" />
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Payouts:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+            <div class="col-sm-12 bckClr">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event)" (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
             </div>
+            <div class="col-sm-4">
+              <label class="input__label">Select attribute</label>
+              <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
+                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                  {{drop.name}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="input">
+                <label class="input__label">Enter value</label>
+                <div class="input__select">
+                  <input type="text" class="select__box ogp_select" style="background-image:none"
+                         [(ngModel)]="searchVal" name="searchVal" />
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <label class="input__label">Select Status</label>
+              <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
+                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+                <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
+                  {{drop.name}}</option>
+              </select>
+            </div>
+            <div class="col-sm-12 spsTp bdrTp">
+              <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+                Clear form
+               </button>
+              <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
+                class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+
+            </div>
+
+
+
           </div>
-        </div>
-        <div class="col-sm-4">
-          <label class="input__label">Select Status</label>
-          <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
-            <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-            <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
-              {{drop.name}}</option>
-          </select>
-        </div>
-        <div class="col-sm-12 spsTp bdrTp">
-          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-            Clear form
-           </button>
-          <button class="srch-btn mvRth" (click)="advanceSearch(advanceSearchKey.value)"><i
-            class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+</div>
+</div>
 
-        </div>
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
 
-
-
-      </div>
-    </div>
-  </div>
-  <br>
-  <!-- Table -->
+<!-- Table -->
+<div class="main clearfix">
 
 
   <div class="tableSpc">
@@ -83,6 +88,6 @@
 
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
-</div>
+
 
 </div>

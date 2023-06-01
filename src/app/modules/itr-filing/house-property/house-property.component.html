@@ -1453,7 +1453,11 @@
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
       <span class="font-semibold">&nbsp;Back to Main Page</span>
     </button>
-    <button class="saveBtnIn" (click)="saveHouseProperty('', '')">
+    <button
+      *ngIf="hpView === 'FORM'"
+      class="saveBtnIn"
+      (click)="saveHouseProperty('', '')"
+    >
       <span class="font-semibold">Save All</span>
     </button>
   </div>

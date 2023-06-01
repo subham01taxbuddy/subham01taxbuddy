@@ -48,10 +48,10 @@
           </div>
 
           <div class="col-sm-2 text-center">
-            <button class="srch-btn" (click)="search('all')" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" [disabled]="loading" (click)="search('all')" ><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
           <div class="col-sm-1 text-center" style="margin-top: 25px;">
-            <button class="tbd-btn-clear" (click)="this.resetFilters()">
+            <button class="tbd-btn-clear" [disabled]="loading" (click)="this.resetFilters()">
               <i class="fa fa-filter" aria-hidden="true"></i>&nbsp;
               Clear
             </button>
@@ -234,7 +234,7 @@
   <div class="col-sm-6">
   <div class="radiusTab">
       <div class="tx">Document Uploaded but filing not yet started</div>
-      <button class="proceed2" (click)="goTo('myUsers')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+      <button class="proceed2" [disabled]="loading" (click)="goTo('myUsers')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">
       <thead>
         <!-- <tr>
@@ -324,7 +324,7 @@
   <div class="col-sm-6">
   <div class="radiusTab">
       <div class="tx">Waiting for Confirmation - As On ({{ today | date:'dd MMMM yyyy' }})</div>
-      <button class="proceed2" (click)="goTo('myItr')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+      <button class="proceed2" [disabled]="loading" (click)="goTo('myItr')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">
       <thead>
         <!-- <tr>
@@ -414,7 +414,7 @@
   <div class="col-sm-6">
     <div class="radiusTab">
         <div class="tx">ITR Filed E- verification Pending</div>
-        <button class="proceed2" (click)="goTo('myItr1')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+        <button class="proceed2" [disabled]="loading" (click)="goTo('myItr1')">Proceed <i class="fa fa-long-arrow-right"></i></button>
       <table class="table table-bordered">
         <thead>
           <!-- <tr>
@@ -496,7 +496,7 @@
     <div class="col-sm-6">
       <div class="radiusTab">
           <div class="tx">Scheduled Calls</div>
-          <button class="proceed2" (click)="goTo('scheduleCall')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+          <button class="proceed2" [disabled]="loading" (click)="goTo('scheduleCall')">Proceed <i class="fa fa-long-arrow-right"></i></button>
         <table class="table table-bordered">
           <thead>
             <!-- <tr>

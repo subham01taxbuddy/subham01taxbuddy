@@ -65,7 +65,7 @@ export class ResignedSmeComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
 
-    this.userMsService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (result: any) => {
         if (
           Array.isArray(result.data.content) &&

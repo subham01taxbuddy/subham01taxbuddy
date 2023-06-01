@@ -566,7 +566,7 @@ export class AssignedNewUsersComponent implements OnInit {
             <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width:180,
+        width:160,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -1102,6 +1102,7 @@ export class AssignedNewUsersComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     //https://dev-api.taxbuddy.com/user/%7BloggedInSmeUserId%7D/user-list-new?page=0&pageSize=20
     //https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100
+    //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20
 
     let param = `/${this.agentId}/user-list-new?${data}`;
     // if (isAgent) {
@@ -1121,7 +1122,7 @@ export class AssignedNewUsersComponent implements OnInit {
       param;
     }
 
-    this.userMsService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       /* {
         next: (v) => console.log(v),
         error: (e) => console.error(e),

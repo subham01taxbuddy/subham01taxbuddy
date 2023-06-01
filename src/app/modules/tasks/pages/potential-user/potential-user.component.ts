@@ -192,6 +192,7 @@ export class PotentialUserComponent implements OnInit {
      this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
+    //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20&active=false
     // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
     // 'https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100&active=false'
     let param = `/${this.agentId}/user-list-new?${data}&active=false`;
@@ -206,7 +207,7 @@ export class PotentialUserComponent implements OnInit {
       param;
     }
 
-    this.userMsService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (result: any) => {
         this.loading = false;
         if(result.success == false){

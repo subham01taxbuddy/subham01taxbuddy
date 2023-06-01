@@ -25,10 +25,10 @@
     background-color: #ffffff;
     padding: 15px;
     margin-top: 15px;
-    box-shadow: 2px 5px #fafafa;
+    // box-shadow: 2px 5px #fafafa;
     border: 1px solid #eaeaea;
     height: auto;
-    box-shadow: 1px 2px #e4e4ff;
+    // box-shadow: 1px 2px #e4e4ff;
 }
 
 .radius2 {
@@ -38,8 +38,8 @@
     margin-top: 0px;
     box-shadow: 2px 5px #fafafa;
     border: 1px solid #eaeaea;
-    height: 100px;
-    margin-bottom: 0px;
+    height: 80px;
+    margin-bottom: 10px;
     display: block;
     box-shadow: 1px 2px #e4e4ff;
 }
@@ -95,7 +95,7 @@ input {
 
 .spTp {
     margin-bottom: 15px;
-    height: 140px;
+    height: 150px;
     margin-top: 5px;
 }
 
@@ -122,9 +122,9 @@ input {
 }
 
 .TxSm {
-    font-size: 16px;
+    font-size: 14px;
     color: #000000;
-    font-weight: normal;
+    font-weight: normal;   
 }
 
 .numTxSm {

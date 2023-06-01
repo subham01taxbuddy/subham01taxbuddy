@@ -30,6 +30,7 @@ export class SharesAndEquityComponent
 
   minDate: Date;
   maxDate: Date;
+  maxPurchaseDate: Date;
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -102,6 +103,12 @@ export class SharesAndEquityComponent
       this.deduction = true;
     } else {
       this.deduction = false;
+    }
+  }
+
+  calMaxPurchaseDate(sellDate, formGroupName, index) {
+    if (this.utilsService.isNonEmpty(sellDate)) {
+      this.maxPurchaseDate = sellDate;
     }
   }
 
