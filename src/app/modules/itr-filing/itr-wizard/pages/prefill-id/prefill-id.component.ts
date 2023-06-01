@@ -1829,6 +1829,7 @@ export class PrefillIdComponent implements OnInit {
                     : housePropertyDetails?.TypeOfHP,
                 grossAnnualRentReceived:
                   housePropertyDetails?.GrossRentReceived,
+                grossAnnualRentReceivedTotal: null,
                 propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                 ownerPercentage: null,
                 address: '',
@@ -3042,6 +3043,7 @@ export class PrefillIdComponent implements OnInit {
                   : 'LOP',
               grossAnnualRentReceived:
                 houseProperty?.Rentdetails?.AnnualLetableValue,
+              grossAnnualRentReceivedTotal: null,
               // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
               propertyTax: houseProperty?.Rentdetails?.LocalTaxes,
               address: houseProperty?.AddressDetailWithZipCode?.AddrDetail,
