@@ -2460,72 +2460,70 @@ export class PrefillIdComponent implements OnInit {
 
             // Financial Particulars - Balance Sheet
             {
-              this.ITR_Obj.business.financialParticulars.id = null;
-              this.ITR_Obj.business.financialParticulars.grossTurnOverAmount =
-                null;
-              this.ITR_Obj.business.financialParticulars.membersOwnCapital =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.PartnerMemberOwnCapital;
-              this.ITR_Obj.business.financialParticulars.securedLoans =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.SecuredLoans;
-              this.ITR_Obj.business.financialParticulars.unSecuredLoans =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.UnSecuredLoans;
-              this.ITR_Obj.business.financialParticulars.advances =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.Advances;
-              this.ITR_Obj.business.financialParticulars.sundryCreditorsAmount =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.SundryCreditors;
-              this.ITR_Obj.business.financialParticulars.otherLiabilities =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.OthrCurrLiab;
-              this.ITR_Obj.business.financialParticulars.totalCapitalLiabilities =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.TotCapLiabilities;
-              this.ITR_Obj.business.financialParticulars.fixedAssets =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.FixedAssets;
-              this.ITR_Obj.business.financialParticulars.inventories =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.Inventories;
-              this.ITR_Obj.business.financialParticulars.sundryDebtorsAmount =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.SundryDebtors;
-              this.ITR_Obj.business.financialParticulars.balanceWithBank =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.BalWithBanks;
-              this.ITR_Obj.business.financialParticulars.cashInHand =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.CashInHand;
-              this.ITR_Obj.business.financialParticulars.loanAndAdvances =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.LoansAndAdvances;
-              this.ITR_Obj.business.financialParticulars.otherAssets =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.OtherAssets;
-              this.ITR_Obj.business.financialParticulars.totalAssets =
-                ItrJSON[
-                  this.ITR_Type
-                ].ScheduleBP.FinanclPartclrOfBusiness.TotalAssets;
-              this.ITR_Obj.business.financialParticulars.investment = null;
-              this.ITR_Obj.business.financialParticulars.GSTRNumber = null;
-              this.ITR_Obj.business.financialParticulars.difference = null;
+              let balanceSheetKeys: any;
+              if (this.ITR_Type === 'ITR4') {
+                balanceSheetKeys = {
+                  id: null,
+                  grossTurnOverAmount: null,
+                  membersOwnCapital:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.PartnerMemberOwnCapital,
+                  securedLoans:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.SecuredLoans,
+                  unSecuredLoans:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.UnSecuredLoans,
+                  advances:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.Advances,
+                  sundryCreditorsAmount:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.SundryCreditors,
+                  otherLiabilities:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.OthrCurrLiab,
+                  totalCapitalLiabilities:
+                    ItrJSON[this.ITR_Type].ScheduleBP.FinanclPartclrOfBusiness
+                      .TotCapLiabilities,
+                  fixedAssets:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.FixedAssets,
+                  inventories:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.Inventories,
+                  sundryDebtorsAmount:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.SundryDebtors,
+                  balanceWithBank:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.BalWithBanks,
+                  cashInHand:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.CashInHand,
+                  loanAndAdvances:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.LoansAndAdvances,
+                  otherAssets:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.OtherAssets,
+                  totalAssets:
+                    ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                      ?.TotalAssets,
+                  investment: null,
+                  GSTRNumber: null,
+                  difference: null,
+                };
+
+                // Check if balanceSheetKeys is not empty and all values are zero
+                const isBalanceSheetKeysEmpty = Object.values(
+                  balanceSheetKeys
+                ).every((value) => value === null || value === 0);
+
+                if (!isBalanceSheetKeysEmpty) {
+                  this.ITR_Obj.business.financialParticulars = balanceSheetKeys;
+                }
+              }
 
               // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
@@ -3727,6 +3725,80 @@ export class PrefillIdComponent implements OnInit {
           JSON.stringify(this.ITR_Obj)
         );
         // console.log(this.ITR_Obj);
+      }
+
+      // Financial Particulars - Balance Sheet
+      {
+        let balanceSheetKeys: any;
+        if (this.ITR_Type === 'ITR3') {
+          balanceSheetKeys = {
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.PartnerMemberOwnCapital,
+            securedLoans:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.SecuredLoans,
+            unSecuredLoans:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.UnSecuredLoans,
+            advances:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.Advances,
+            sundryCreditorsAmount:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.SundryCreditors,
+            otherLiabilities:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.OthrCurrLiab,
+            totalCapitalLiabilities:
+              ItrJSON[this.ITR_Type].ScheduleBP.FinanclPartclrOfBusiness
+                .TotCapLiabilities,
+            fixedAssets:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.FixedAssets,
+            inventories:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.Inventories,
+            sundryDebtorsAmount:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.SundryDebtors,
+            balanceWithBank:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.BalWithBanks,
+            cashInHand:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.CashInHand,
+            loanAndAdvances:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.LoansAndAdvances,
+            otherAssets:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.OtherAssets,
+            totalAssets:
+              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
+                ?.TotalAssets,
+            investment: null,
+            GSTRNumber: null,
+            difference: null,
+          };
+
+          // Check if balanceSheetKeys is not empty and all values are zero
+          const isBalanceSheetKeysEmpty = Object.values(balanceSheetKeys).every(
+            (value) => value === null || value === 0
+          );
+
+          if (!isBalanceSheetKeysEmpty) {
+            this.ITR_Obj.business.financialParticulars = balanceSheetKeys;
+          }
+        }
+
+        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_Obj)
+        );
       }
 
       // SCHEDULE CG
