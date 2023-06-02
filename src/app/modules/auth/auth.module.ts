@@ -9,6 +9,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
+import { AddAffiliateIdComponent } from './pages/login/add-affiliate-id/add-affiliate-id.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { SignUpComponent } from './pages/sign-up/sign-up.component';
     ForgotPasswordComponent,
     ValidateOtpComponent,
     SignInComponent,
-    SignUpComponent
+    SignUpComponent,
+    AddAffiliateIdComponent
   ],
   imports: [
     CommonModule,
