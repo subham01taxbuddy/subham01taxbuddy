@@ -27,6 +27,7 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import {RequestManager} from "../../../shared/services/request-manager";
 import {Subscription} from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -518,6 +519,29 @@ export class AssignedNewUsersComponent implements OnInit {
       //   }
       // },
       {
+        headerName: 'ITR Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
         headerName: 'Call',
         editable: false,
         suppressMenu: true,
@@ -709,7 +733,7 @@ export class AssignedNewUsersComponent implements OnInit {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
@@ -775,8 +799,28 @@ export class AssignedNewUsersComponent implements OnInit {
           this.openReviseReturnDialog(params.data);
           break;
         }
+        case 'getItrStatus': {
+          this.getItrStatus(params.data);
+          break;
+        }
       }
     }
+  }
+
+  getItrStatus(data){
+    let disposable = this.dialog.open(ItrStatusDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: data.userId,
+        clientName: data.name,
+        serviceType: data.serviceType
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+
   }
 
   rowData: any;

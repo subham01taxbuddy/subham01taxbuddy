@@ -132,6 +132,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   getOwners() {
     // API to get owners under leader-
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?owner=true
+    // https://uat-api.taxbuddy.com/user/sme-details-new/9362?ownersByLeader=true
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
     if (this.leaderDetails?.userId) {
