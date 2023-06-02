@@ -20,7 +20,7 @@
 
     <div class="modal-footer clearfix">
         <div class="pull-right">
-            <button mat-raised-button color="primary" class="mr-10" (click)="closeDialog(true)">Submit</button>
+            <button mat-raised-button [disabled]="affiliateId.invalid" color="primary" class="mr-10" (click)="closeDialog(true)">Submit</button>
             <button mat-raised-button color="warn" (click)="closeDialog(false)">Cancel</button>
         </div>
 
