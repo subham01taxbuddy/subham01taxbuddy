@@ -30,6 +30,7 @@ export class SharesAndEquityComponent
 
   minDate: Date;
   maxDate: Date;
+  maxPurchaseDate: Date;
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -102,6 +103,12 @@ export class SharesAndEquityComponent
       this.deduction = true;
     } else {
       this.deduction = false;
+    }
+  }
+
+  calMaxPurchaseDate(sellDate, formGroupName, index) {
+    if (this.utilsService.isNonEmpty(sellDate)) {
+      this.maxPurchaseDate = sellDate;
     }
   }
 
@@ -613,8 +620,7 @@ export class SharesAndEquityComponent
       );
     } else if (
       this.securitiesForm.valid &&
-      this.deduction &&
-      this.deductionForm.valid
+      ((this.deduction && this.deductionForm.valid) || !this.deduction)
     ) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {

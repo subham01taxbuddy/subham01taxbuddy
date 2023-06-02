@@ -86,7 +86,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     } else {
       this.addMoreAssetsData();
     }
-    if (this.Copy_ITR_JSON.movableAsset) {
+    if (this.Copy_ITR_JSON.movableAsset && this.Copy_ITR_JSON.movableAsset.length > 0) {
       this.Copy_ITR_JSON.movableAsset.forEach((obj) => {
         this.createMovableAssetsForm(obj);
       });

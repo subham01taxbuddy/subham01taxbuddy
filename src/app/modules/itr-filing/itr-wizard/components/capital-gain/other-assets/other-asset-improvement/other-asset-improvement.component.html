@@ -31,6 +31,38 @@
                   </div>
 
                   <div>
+                    <!-- sale-date  -->
+                    <div class="card__col-xs-12 card__col-sm-3">
+                      <mat-label>Sale Date/Date of Transfer</mat-label>
+                      <mat-form-field appearance="outline">
+                        <input
+                          matInput
+                          formControlName="sellDate"
+                          name="sellDate"
+                          [matDatepicker]="sellDate"
+                          placeholder="Sale Date/Date of Transfer"
+                          (blur)="calculateGainType(i)"
+                          (dateChange)="
+                            calculateGainType(i);
+                            calMaxPurchaseDate(
+                              this.OtherAsssetImprovementForm.controls[
+                                'otherAssets'
+                              ].controls[i].controls['otherAssetsArray']
+                                .controls['sellDate']?.value,
+                              this.OtherAsssetImprovementForm,
+                              i
+                            )
+                          "
+                          [min]="minDate"
+                          [max]="maxDate"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="sellDate"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #sellDate></mat-datepicker>
+                      </mat-form-field>
+                    </div>
                     <!-- buy-date  -->
                     <div class="card__col-xs-12 card__col-sm-3">
                       <mat-label> Buy Date / Date of Acquisition </mat-label>
@@ -43,6 +75,7 @@
                           placeholder="Buy Date / Date of Acquisition"
                           (blur)="calculateGainType(i)"
                           (dateChange)="calculateGainType(i)"
+                          [max]="maxPurchaseDate"
                         />
                         <mat-datepicker-toggle
                           matSuffix
@@ -51,26 +84,7 @@
                         <mat-datepicker #purchaseDate></mat-datepicker>
                       </mat-form-field>
                     </div>
-                    <!-- sale-date  -->
-                    <div class="card__col-xs-12 card__col-sm-3">
-                      <mat-label>Sale Date/Date of Transfer</mat-label>
-                      <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          formControlName="sellDate"
-                          name="sellDate"
-                          [matDatepicker]="sellDate"
-                          placeholder="Sale Date/Date of Transfer"
-                          (blur)="calculateGainType(i)"
-                          (dateChange)="calculateGainType(i)"
-                        />
-                        <mat-datepicker-toggle
-                          matSuffix
-                          [for]="sellDate"
-                        ></mat-datepicker-toggle>
-                        <mat-datepicker #sellDate></mat-datepicker>
-                      </mat-form-field>
-                    </div>
+
                     <!-- buy-value  -->
                     <div class="card__col-xs-12 card__col-sm-3">
                       <mat-label> Buy Value</mat-label>
@@ -193,7 +207,8 @@
                           class="input-field"
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                          readonly/>
+                          readonly
+                        />
                       </mat-form-field>
                     </div>
                   </div>
@@ -216,7 +231,9 @@
                             class="card__col-xs-11 flex justify-between items-center"
                           >
                             <mat-label
-                              ><strong>Add details of cost of improvements? *</strong>
+                              ><strong
+                                >Add details of cost of improvements? *</strong
+                              >
                             </mat-label>
                             <mat-radio-group [formControl]="isImprovement">
                               <mat-radio-button
