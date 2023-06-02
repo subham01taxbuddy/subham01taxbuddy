@@ -1,46 +1,49 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
-<div class="main clearfix">
-  <div class="align-items-center row">
-    <div class="col-sm-6">
-         <b style="font-size: 20px">Filter - All Users List:</b>
-    </div>
-  </div>
-
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+        <mat-icon> arrow_forward_ios </mat-icon>
+        Filter - All Users List:
+        </mat-panel-title>     
+      </mat-expansion-panel-header>
       <div class="rowClr">
-        <div class="surround">
-       <div class="row">
+        <div class="surround">         
+          <div class="row">
+            <div class="col-sm-5">
+              <label class="input__label" for="attr">Select attribute</label>
+              <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
+                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                  {{drop.name}}</option>
+              </select>
+            </div>
+  
           <div class="col-sm-5">
-            <label class="input__label" for="attr">Select attribute</label>
-            <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
-              <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-              <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                {{drop.name}}</option>
-            </select>
-          </div>
-
-        <div class="col-sm-5">
-          <div class="input">
-            <label class="input__label" for="attr">Enter value</label>
-            <div class="input__select">
-              <input type="text" class="select__box ogp_select" style="background-image:none"
-                [(ngModel)]="searchVal" name="searchVal" />
+            <div class="input">
+              <label class="clrTx" for="attr">Enter value</label>            
+                <input type="text" class="select__box ogp_select" style="background-image:none"
+                  [(ngModel)]="searchVal" name="searchVal" />              
             </div>
           </div>
-        </div>
-         <div class="col-sm-2">
-          <button class="srch-btn btnTp" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
-            class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
-        </div>
-
-
-    </div>
+           <div class="col-sm-2">
+            <button class="srch-btn btnTp" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
+              class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+          </div> 
+  
+      </div>
 </div>
 </div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
+<div class="main clearfix">
 
 <!-- Table -->
-
-
         <div class="tableSpc">
           <div class="row">
             <div class="col-sm-12">

@@ -1012,7 +1012,7 @@ export class UtilsService {
     //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
     const loggedInUserId = this.getLoggedInUserID();
     const param = `/sme-details-new/${loggedInUserId}?filer=true`;
-    return await this.userMsService.getMethod(param).toPromise();
+    return await this.userMsService.getMethodNew(param).toPromise();
   }
 
   async getStoredMasterStatusList() {
@@ -1112,7 +1112,7 @@ export class UtilsService {
     const loggedInUserId = this.getLoggedInUserID();
     //https://api.taxbuddy.com/user/sme-details-new/24346?owner=true&assigned=true
     const param = `/sme-details-new/${loggedInUserId}?owner=true&assigned=true`;
-    return await this.userMsService.getMethod(param).toPromise();
+    return await this.userMsService.getMethodNew(param).toPromise();
   }
 
   async getCurrentItr(userId: any, ay: any, filingTeamMemberId?: any) {
@@ -1471,7 +1471,7 @@ export class UtilsService {
     console.log('logged in sme id ', loggedInUserId);
     const param = `/sme-details-new/${loggedInUserId}?filer=true`;
     // return await this.userMsService.getMethod(param).toPromise();
-    this.userMsService.getMethod(param).subscribe((res: any) => {
+    this.userMsService.getMethodNew(param).subscribe((res: any) => {
       console.log('filer List Result', res);
       if (res.success && res.data instanceof Array) {
         let filerList = res.data;

@@ -1827,8 +1827,10 @@ export class PrefillIdComponent implements OnInit {
                     : housePropertyDetails?.TypeOfHP === 'D'
                     ? 'DLOP'
                     : housePropertyDetails?.TypeOfHP,
-                grossAnnualRentReceived:
+                grossAnnualRentReceivedTotal:
                   housePropertyDetails?.GrossRentReceived,
+                grossAnnualRentReceived: null,
+
                 propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                 ownerPercentage: null,
                 address: '',
@@ -3040,8 +3042,10 @@ export class PrefillIdComponent implements OnInit {
                   : houseProperty?.ifLetOut === 'D'
                   ? 'DLOP'
                   : 'LOP',
-              grossAnnualRentReceived:
+              grossAnnualRentReceivedTotal:
                 houseProperty?.Rentdetails?.AnnualLetableValue,
+              grossAnnualRentReceived: null,
+
               // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
               propertyTax: houseProperty?.Rentdetails?.LocalTaxes,
               address: houseProperty?.AddressDetailWithZipCode?.AddrDetail,
@@ -4768,5 +4772,32 @@ export class PrefillIdComponent implements OnInit {
 
   jsonUpload() {
     this.jsonUploaded.emit(this.uploadedJson);
+  }
+
+  deleteUploadedJson() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '700px',
+      data: {
+        title: 'Are you sure you want to delete the uploaded JSON?',
+        message:
+          'Once you delete the JSON, you will have to enter all the details manually again',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result === 'YES') {
+        this.ITR_JSON.itrSummaryJson = null;
+        this.uploadedJson = false;
+        this.utilsService.showSnackBar(
+          'The uploaded JSON has been deleted. You can now proceed ahead.'
+        );
+
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+      }
+    });
   }
 }

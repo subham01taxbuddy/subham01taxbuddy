@@ -97,7 +97,7 @@ export class PayoutsComponent implements OnInit {
       adminId = 7002;
     }
     let param = `/sme-details-new/${adminId}?leader=true`;
-    this.userService.getMethod(param).subscribe((result: any) => {
+    this.userService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.allLeaderList = result.data;
       console.log('leaderlist', this.allLeaderList);

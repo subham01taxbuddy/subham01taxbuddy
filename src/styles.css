@@ -313,11 +313,32 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.mvRthB {
+  margin-left: 30px!important;
+  font-size: 16px!important;
+}
+.new-add-tp-spc {
+  margin-top: 13px;
+}
+.spcArnd{
+  padding:0px!important;
+}
+.mat-expansion-panel-body {
+  padding:20px!important;
+}
 .mat-expansion-indicator{
   display:none!important;
 }
 .mrgArdTog {
-  margin: 20px 55px 20px 230px;
+  margin: 20px 30px 20px 220px;
+  display: block;
+}
+.mrgArdTog1 {
+  margin: 0px 30px 20px 0px;
+  display: block;
+}
+.mrgArdTog2 {
+  margin: 0px 30px 20px 5px;
   display: block;
 }
 .mvRthA {
@@ -384,7 +405,7 @@ button {
   width: 350px;
   border-radius: 8px;
   font-size: 13px;
-  margin: -56px 0px 0px 62%;
+  margin: -56px 0px 0px 65%;
   font-style: italic;
   border: 1px solid #efefef;
   float: left;
@@ -530,6 +551,10 @@ button {
 float: right;
 margin-right: 25px;
 }
+.btnRt2 {
+  float: right;
+  margin-bottom: 10px;
+  }
 .nmTxAl {
   margin-right: 17%;
   color: #000000;
@@ -784,7 +809,7 @@ width:60px;
 
 .rowClr{
   background-color: #e4e4ff;
-  padding: 0px 20px 10px 20px;
+  padding: 0px 10px 10px 10px;
   border: 1px solid #e4e4ff;
   box-shadow: 2px 4px #e4e4ff;
 }
@@ -947,6 +972,14 @@ pagination-controls {
   text-decoration: underline;
 }
 
+.clrLnk1 {
+  color: #f18203;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-left: 10px!important;
+    display: inline-block;
+}
+
 
 .ngx-pagination {
   margin-left: -35px !important;
@@ -984,7 +1017,7 @@ pagination-controls {
 
 .mat-expansion-panel-header.mat-expanded {
   height: 55px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 
 .material-icons {

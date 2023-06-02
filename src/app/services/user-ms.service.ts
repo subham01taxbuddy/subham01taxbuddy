@@ -12,6 +12,8 @@ export class UserMsService {
   userObj: any;
   TOKEN: any;
   microService: string = '/user';
+  newMicroService: string ='/report';
+
   constructor(private httpClient: HttpClient, private http: HttpClient) { }
 
   getMethod<T>(...param: any): Observable<T> {
@@ -19,6 +21,14 @@ export class UserMsService {
     this.headers.append('Content-Type', 'application/json');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(environment.url + this.microService + param[0], { headers: this.headers });
+    // .map(response => response.json())
+  }
+
+  getMethodNew<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    return this.httpClient.get<T>(environment.url + this.newMicroService + param[0], { headers: this.headers });
     // .map(response => response.json())
   }
 

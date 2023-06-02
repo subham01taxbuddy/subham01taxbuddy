@@ -858,7 +858,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
 
     let param = `/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`;
-    this.userService.getMethod(param).subscribe((result: any) => {
+    this.userService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
       this.filerName.setValue(result.data[0]?.name);
       this.ownerName.setValue(result.data[0]?.parentName);

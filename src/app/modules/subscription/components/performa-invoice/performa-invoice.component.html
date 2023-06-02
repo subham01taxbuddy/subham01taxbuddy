@@ -1,219 +1,148 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog1">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Proforma Invoices:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
+           </div>
 
-  <div class="align-items-center row">
-    <div class="col-sm-4">
-      <b style="font-size: 25px">Filter - Proforma Invoices: </b>
-    </div>
-    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-      <p>
-        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-      </p>
-    </div>
-  </div>
+           <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+          </div>
+    
+        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+          <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+        </div>
 
- <div class="rowClr">
- <div class="surround">
- <div class="row">
+          <div class="col-sm-3 spsTp">
+            <mat-label> Select FY </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                type="text"
+                matInput
+                [formControl]="assessmentYear"
+                readonly
+              />
+            </mat-form-field>
+          </div>
 
-              <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-                <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-              </div>
-        
-            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
+          <div class="col-sm-3 dtTp">
 
+            <mat-form-field appearance="outline">
+              <mat-label>From Date</mat-label>
+              <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate" autocomplete="off"
+                (dateChange)="setToDateValidation(startDate.value)" />
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+            </mat-form-field>
+          </div>
 
-                <!-- <div class="col-sm-4">
-                  <mat-label> Search By Owner </mat-label>
-                  <mat-form-field appearance="outline" class="customBg">
-                    <input
-                      type="text"
-                      matInput
-                      [formControl]="searchOwner"
-                      [matAutocomplete]="auto"
-                      (blur)="setList()"
-                    />
-                    <mat-autocomplete #auto>
-                      <mat-option
-                        *ngFor="let option of filteredOwners | async"
-                        [value]="option.name"
-                        (click)="getOwnerNameId(option);"
-                      >
-                        {{ option.name }}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                </div> -->
-                <!-- <div class="col-sm-3">
-                  <mat-label> Search By Filer </mat-label>
-                  <mat-form-field appearance="outline" class="customBg">
-                    <input
-                      type="text"
-                      matInput
-                      [formControl]="searchFiler"
-                      [matAutocomplete]="auto1"
-                    />
-                    <mat-autocomplete #auto1>
-                      <mat-option
-                        *ngFor="let option1 of filteredFilers | async"
-                        [value]="option1.name"
-                        (click)="getFilerNameId(option1)"
-                      >
-                        {{ option1.name }}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                </div> -->
+          <div class="col-sm-3 dtTp">
+              <mat-form-field appearance="outline">
+              <mat-label>To Date</mat-label>
+              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" autocomplete="off" />
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+              <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+            </mat-form-field>
+          </div>
 
-
-            <!-- <div *ngIf="false">
-              <div class="col-sm-3" *ngIf="!coOwnerCheck">
-                  <mat-label> Search By Filer </mat-label>
-                  <mat-form-field appearance="outline" class="customBg">
-                    <input
-                      type="text"
-                      matInput
-                      [formControl]="searchFiler"
-                      [matAutocomplete]="auto"
-                    />
-                    <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option
-                        *ngFor="let option1 of filteredFilers | async"
-                        [value]="option1.name"
-                        (click)="getFilerNameId(option1)"
-                      >
-                        {{ option1.name }}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                </div>
-              </div> -->
-
-
-              <div class="col-sm-3 spsTp">
-                <mat-label> Select FY </mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    type="text"
-                    matInput
-                    [formControl]="assessmentYear"
-                    readonly
-                  />
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-3 dtTp">
-
-                <mat-form-field appearance="outline">
-                  <mat-label>From Date</mat-label>
-                  <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate" autocomplete="off"
-                    (dateChange)="setToDateValidation(startDate.value)" />
-                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                  <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-3 dtTp">
-                  <mat-form-field appearance="outline">
-                  <mat-label>To Date</mat-label>
-                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" autocomplete="off" />
-                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                  <mat-datepicker #picker2></mat-datepicker>
-                  <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                  <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-3 spsTp">
-                <mat-label>Select Status </mat-label>
-                <mat-form-field appearance="outline">
-                  <mat-select
-                    placeholder="Select Status"
-                    [formControl]="status"
-                  >
-                    <mat-option
-                      *ngFor="let item of Status"
-                      [value]="item.value"
-                    >
-                      {{ item.label }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-4 spsTp">
-                <mat-label> Mobile Number </mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    [numbersOnly]="true"
-                    maxlength="10"
-                    matInput
-                    [formControl]="mobile"
-                  />
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-4 spsTp">
-                <mat-label> Email </mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    type="text"
-                    matInput
-                    [formControl]="email"
-                  />
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-4 spsTp">
-                <mat-label> Invoice No. </mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    type="number"
-                    matInput
-                    [formControl]="txbdyInvoiceId"
-                  />
-                </mat-form-field>
-              </div>
-
-              <div class="col-sm-12 spsTp bdrTp">
-
-                <button
-                  *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') "
-                  class="dwldBtn" [disabled]="loading"
-                  (click)="downloadInvoicesSummary()"
+          <div class="col-sm-3 spsTp">
+            <mat-label>Select Status </mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select
+                placeholder="Select Status"
+                [formControl]="status"
+              >
+                <mat-option
+                  *ngFor="let item of Status"
+                  [value]="item.value"
                 >
-                  <i class="fa fa-download" aria-hidden="true"></i> Download
-                  File
-                </button>
+                  {{ item.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-4 spsTp">
+            <mat-label> Mobile Number </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                [numbersOnly]="true"
+                maxlength="10"
+                matInput
+                [formControl]="mobile"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-4 spsTp">
+            <mat-label> Email </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                type="text"
+                matInput
+                [formControl]="email"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-4 spsTp">
+            <mat-label> Invoice No. </mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                type="number"
+                matInput
+                [formControl]="txbdyInvoiceId"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-12 spsTp bdrTp">
+
+            <button
+              *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') "
+              class="dwldBtn" [disabled]="loading"
+              (click)="downloadInvoicesSummary()"
+            >
+              <i class="fa fa-download" aria-hidden="true"></i> Download
+              File
+            </button>
 
 
-                <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-                  <!--              <div class="fa-layers fa-1x fa-fw">-->
-                  <!--                <span class="fas fa-filter" data-fa-mask="fas fa-filter" ></span>-->
-                  <!--                <span class="fas fa-slash" data-fa-transform="left-0.5"></span>-->
-                  <!--              </div>-->
-                 Clear form
-                </button>
+            <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+                    Clear form
+            </button>
 
 
 
 
 
-                <button class="srch-btn mvRth" (click)="getInvoice('isAgent','agentId')">
-                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
-                </button>
-             </div>
-
-
-
-
-
+            <button class="srch-btn mvRth" (click)="getInvoice('isAgent','agentId')">
+              <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
+            </button>
+         </div>
+            </div>
 </div>
 </div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
 </div>
-
+<!-- New Open Close Filter Ends -->
+  
 <!-- Table Below -->
 <div class="tableSpc">
   <div class="row">

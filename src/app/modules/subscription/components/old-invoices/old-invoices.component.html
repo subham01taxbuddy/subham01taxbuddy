@@ -1,80 +1,79 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-
-<div class="align-items-center row">
-  <div class="col-sm-4">
-    <b style="font-size: 25px">Filter - Old Invoices:</b>
-  </div>
-  <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-    <p>
-      <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-    </p>
-  </div>
-</div>
-
-
-<div class="rowClr">
-  <div class="surround">
-  <div class="row">
-    <div class="col-sm-3">
-                <mat-label> Financial Year </mat-label>
-                <mat-form-field appearance="outline" class="customBg">
-                   <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" (selectionChange)="setDates()" required >
-                    <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
-                      {{item.label}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-    </div>
-    <div class="col-sm-3 spsTp">
-                <!-- <mat-label> From Date </mat-label> -->
-                <mat-form-field appearance="outline">
-                  <mat-label>From Date</mat-label>
-                  <input matInput [formControl]="startDate" [matDatepicker]="picker1" [max]="maxDate" autocomplete="off"
-                    (dateChange)="setToDateValidation(startDate.value)" />
-                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                  <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                </mat-form-field>
-      </div>
-      <div class="col-sm-3 spsTp">
-                <!-- <mat-label> To Date </mat-label> -->
-                <mat-form-field appearance="outline">
-                  <mat-label>To Date</mat-label>
-                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [max]="maxDate" autocomplete="off" />
-                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                  <mat-datepicker #picker2></mat-datepicker>
-                  <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                  <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                </mat-form-field>
-     </div>
-     <div class="col-sm-3">
-                <mat-label>Select Status </mat-label>
-                <mat-form-field appearance="outline">
-                  <mat-select placeholder="Select Status" [formControl]="status" required>
-                    <mat-option *ngFor="let item of Status" [value]="item.value">
-                      {{ item.label }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-    </div>
-              <!-- <div class="col-sm-2" *ngIf="invoiceFormGroup.valid">
-                <button class="btn" style="background: #00aeca; border-radius: 1px; float: right"  (click)="getInvoices()">Show
-                  Invoice</button>
-              </div> -->
-         
-          
-              <div class="col-sm-12 spsTp bdrTp">
-                <button class="dwldBtn" [disabled]="loading" (click)="downloadInvoicesSummary()">
-                  <i class="fa fa-download" aria-hidden="true"></i> Download File
-                </button>
-                <button class="srch-btn mvRth" [disabled]="loading" (click)="getInvoices()">
-                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
-                </button>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog1">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Old Invoices:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+            <div class="col-sm-3">
+                        <mat-label> Financial Year </mat-label>
+                        <mat-form-field appearance="outline" class="customBg">
+                           <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" (selectionChange)="setDates()" required >
+                            <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
+                              {{item.label}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+            </div>
+            <div class="col-sm-3 spsTp">
+                        <!-- <mat-label> From Date </mat-label> -->
+                        <mat-form-field appearance="outline">
+                          <mat-label>From Date</mat-label>
+                          <input matInput [formControl]="startDate" [matDatepicker]="picker1" [max]="maxDate" autocomplete="off"
+                            (dateChange)="setToDateValidation(startDate.value)" />
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>
+                          <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                        </mat-form-field>
               </div>
+              <div class="col-sm-3 spsTp">
+                        <!-- <mat-label> To Date </mat-label> -->
+                        <mat-form-field appearance="outline">
+                          <mat-label>To Date</mat-label>
+                          <input matInput [formControl]="endDate" [matDatepicker]="picker2" [max]="maxDate" autocomplete="off" />
+                          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                          <mat-datepicker #picker2></mat-datepicker>
+                          <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                          <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                        </mat-form-field>
+             </div>
+             <div class="col-sm-3">
+                        <mat-label>Select Status </mat-label>
+                        <mat-form-field appearance="outline">
+                          <mat-select placeholder="Select Status" [formControl]="status" required>
+                            <mat-option *ngFor="let item of Status" [value]="item.value">
+                              {{ item.label }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+            </div>
+                        
+                  
+                      <div class="col-sm-12 spsTp bdrTp">
+                        <button class="dwldBtn" [disabled]="loading" (click)="downloadInvoicesSummary()">
+                          <i class="fa fa-download" aria-hidden="true"></i> Download File
+                        </button>
+                        <button class="srch-btn mvRth" [disabled]="loading" (click)="getInvoices()">
+                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
+                        </button>
+                      </div>
+        
+        </div>
+</div>
+</div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
 
-</div>
-</div>
-</div>
 
 <!-- Table Below -->
 <div class="tableSpc">

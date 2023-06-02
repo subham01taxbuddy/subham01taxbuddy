@@ -274,15 +274,15 @@ export class SummaryComponent implements OnInit {
   summaryToolMapping() {
     // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
     {
-      if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR1')) {
+      if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR1')) {
         this.itrType = 'ITR1';
         this.ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
         this.taxComputation = 'ITR1_TaxComputation';
-      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR2')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR2')) {
         this.itrType = 'ITR2';
-      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR3')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR3')) {
         this.itrType = 'ITR3';
-      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR4')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR4')) {
         this.itrType = 'ITR4';
         this.ITR14IncomeDeductions = 'IncomeDeductions';
         this.taxComputation = 'TaxComputation';
@@ -1259,9 +1259,24 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    if (confirm('Are you sure you want to file the ITR?')) {
-      this.fileITR();
-    }
+    const param = `/subscription-payment-status?userId=9630&serviceType=ITR`;
+    this.itrMsService.getMethod(param).subscribe(
+      (res: any) => {
+        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+          if (confirm('Are you sure you want to file the ITR?')) {
+            this.fileITR();
+          }
+          // console.log(res, 'Paid');
+        } else {
+          this.utilsService.showSnackBar(
+            'Please make sure that the payment has been made by the user to proceed ahead'
+          );
+        }
+      },
+      (error) => {
+        this.utilsService.showSnackBar(error);
+      }
+    );
   }
 
   fileITR() {

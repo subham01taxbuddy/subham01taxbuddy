@@ -16,7 +16,7 @@
     <div class="radiusMain">
       <div class="row">
 
-        <div class="col-sm-5">
+        <div class="col-sm-4">
           <!-- <form class="form-inline">
                     <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
                         aria-label="Search">
@@ -46,11 +46,11 @@
                 </form>
             </div> -->
 
-         <div class="col-sm-3">
-                <button class="srch-btn" [disabled]="loading" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+         <div class="col-sm-4">
+                <button class="srch-btn" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
         <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
 
-          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+          <button class="clrLnk1" [disabled]="loading" (click)="this.resetFilters()">
              Clear form
           </button>
         </div>
@@ -168,7 +168,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <div class="radius2">
                             <div class="inBxL">
                                 <span class="numTxSm">{{invoiceData?.noOfInvoicesRaised || 'NA'}}</span><br>
@@ -181,7 +181,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <div class="radius2 grBk">
                             <div class="inBxL">
                                 <span class="numTxSm grTx">{{invoiceData?.paidInvoiceCount || 'NA'}}</span><br>
@@ -195,10 +195,6 @@
 
                     </div>
 
-
-
-
-
                 </div>
                 <!-- Internal Row Ends -->
             </div>
@@ -211,37 +207,37 @@
                 <span class="numTxBg">{{commissionData?.totalITRFiled || 'NA'}}</span>
                 <!-- Inside Row -->
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="radius1">
                             <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
                             <span class="TxSm">ITR1</span><br>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="radius1">
                             <span class="numTxSm">{{commissionData?.itr2 || 'NA'}}</span><br>
                             <span class="TxSm">ITR2</span><br>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="radius1">
                             <span class="numTxSm">{{commissionData?.itr3 || 'NA'}}</span><br>
                             <span class="TxSm">ITR3</span><br>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="radius1">
                             <span class="numTxSm">{{commissionData?.itr4 || 'NA'}}</span><br>
                             <span class="TxSm">ITR4</span><br>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="radius1">
                             <span class="numTxSm">{{commissionData?.other || 'NA'}}</span><br>
                             <span class="TxSm">Other</span>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="radius1">
                             <span class="numTxSm">{{commissionData?.itrU || 'NA'}}</span><br>
                             <span class="TxSm">ITR U</span><br>

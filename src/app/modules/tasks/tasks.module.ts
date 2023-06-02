@@ -56,6 +56,9 @@ import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/
         EVerificationDialogComponent,
         ItrLifecycleDialogComponent,
         BulkReAssignDialogComponent
+    ],
+    exports:[
+      MoreOptionsDialogComponent
     ]
 
 })
