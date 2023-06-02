@@ -3733,54 +3733,72 @@ export class PrefillIdComponent implements OnInit {
         if (this.ITR_Type === 'ITR3') {
           balanceSheetKeys = {
             id: null,
+
             grossTurnOverAmount: null,
+
             membersOwnCapital:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.PartnerMemberOwnCapital,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.PropFund?.TotPropFund,
+
             securedLoans:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.SecuredLoans,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.LoanFunds?.SecrLoan
+                ?.TotSecrLoan,
+
             unSecuredLoans:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.UnSecuredLoans,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.LoanFunds?.UnsecrLoan
+                ?.TotUnSecrLoan,
+
             advances:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.Advances,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.LoanAdv?.TotLoanAdv,
+
             sundryCreditorsAmount:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.SundryCreditors,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrLiabilitiesProv?.CurrLiabilities?.SundryCred,
+
             otherLiabilities:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.OthrCurrLiab,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrLiabilitiesProv?.Provisions?.TotProvisions,
+
             totalCapitalLiabilities:
-              ItrJSON[this.ITR_Type].ScheduleBP.FinanclPartclrOfBusiness
-                .TotCapLiabilities,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrLiabilitiesProv?.CurrLiabilities?.TotCurrLiabilities -
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrLiabilitiesProv?.CurrLiabilities?.SundryCred,
+
             fixedAssets:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.FixedAssets,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.FixedAsset
+                ?.TotFixedAsset,
+
             inventories:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.Inventories,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrAsset?.Inventories?.TotInventries,
+
             sundryDebtorsAmount:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.SundryDebtors,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrAsset?.SndryDebtors,
+
             balanceWithBank:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.BalWithBanks,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrAsset?.CashOrBankBal?.BankBal,
+
             cashInHand:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.CashInHand,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.CurrAsset?.CashOrBankBal?.CashinHand,
+
             loanAndAdvances:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.LoansAndAdvances,
-            otherAssets:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.OtherAssets,
-            totalAssets:
-              ItrJSON[this.ITR_Type].ScheduleBP?.FinanclPartclrOfBusiness
-                ?.TotalAssets,
-            investment: null,
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                ?.LoanAdv?.TotLoanAdv,
+
+            otherAssets: null,
+
+            totalAssets: null,
+
+            investment:
+              ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.Investments
+                ?.TotInvestments,
+
             GSTRNumber: null,
+
             difference: null,
           };
 
