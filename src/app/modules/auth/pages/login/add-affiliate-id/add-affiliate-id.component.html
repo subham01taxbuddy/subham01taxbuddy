@@ -11,9 +11,8 @@
                 <div *ngIf="affiliateId.errors?.['required']">
                     Please enter the affiliate Id.
                 </div>
-                <div *ngIf="affiliateId.errors?.['pattern']">
-                    Enter
-                    character only</div>
+                <div *ngIf="affiliateId.errors?.['email']">
+                    Enter the valid affiliateId.</div>
             </mat-error>
         </mat-form-field>
     </div>

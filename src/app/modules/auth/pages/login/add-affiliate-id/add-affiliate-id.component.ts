@@ -10,7 +10,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 })
 export class AddAffiliateIdComponent implements OnInit {
   loginSMEInfo: any;
-  affiliateId = new FormControl('', [Validators.required,Validators.pattern(AppConstants.charRegex)])
+  affiliateId = new FormControl('', [Validators.required,Validators.email])
 
   constructor(
     public dialogRef: MatDialogRef<AddAffiliateIdComponent>,
