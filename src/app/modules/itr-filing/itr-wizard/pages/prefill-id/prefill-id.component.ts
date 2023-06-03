@@ -4863,6 +4863,152 @@ export class PrefillIdComponent implements OnInit {
           }
         }
       }
+
+      // Non speculative income ITR3
+      {
+        if (this.ITR_Type === 'ITR3') {
+          const TradingAc = this.uploadedJson[this.ITR_Type]?.TradingAccount;
+          if (
+            TradingAc?.TotRevenueFrmOperations &&
+            TradingAc?.TotRevenueFrmOperations !== 0
+          ) {
+            // Function to create an expense object
+            function createExpenseObject(amount, natureOfIncome) {
+              return {
+                hasExpense: false,
+                expenseType: 'OTHER_EXPENSES',
+                expenseAmount: amount,
+                description: natureOfIncome,
+              };
+            }
+
+            // Function to filter and map OtherIncDtls to create expenses
+            function getExpenses(
+              OtherIncDtls?,
+              DirectExpensesTotal?,
+              TotExciseCustomsVAT?
+            ) {
+              const expenses = [];
+              if (DirectExpensesTotal > 0) {
+                expenses.push({
+                  hasExpense: false,
+                  expenseType: 'OTHER_EXPENSES',
+                  expenseAmount: DirectExpensesTotal,
+                  description: 'DirectExpensesTotal',
+                });
+              }
+
+              if (TotExciseCustomsVAT > 0) {
+                expenses.push({
+                  hasExpense: false,
+                  expenseType: 'OTHER_EXPENSES',
+                  expenseAmount: TotExciseCustomsVAT,
+                  description: 'TotExciseCustomsVAT',
+                });
+              }
+
+              if (OtherIncDtls) {
+                const filteredExpenses = OtherIncDtls.filter(
+                  (element) => element.Amount > 0
+                ).map((item) =>
+                  createExpenseObject(item.Amount, item.NatureOfIncome)
+                );
+                expenses.push(...filteredExpenses);
+              }
+
+              return expenses;
+            }
+
+            const nonSpecIncome = {
+              id: null,
+              businessType: 'NONSPECULATIVEINCOME',
+              totalgrossProfitFromNonSpeculativeIncome:
+                TradingAc?.TotRevenueFrmOperations -
+                (TradingAc?.OpngStckOfFinishedStcks +
+                  TradingAc?.Purchases -
+                  TradingAc?.ClsngStckOfFinishedStcks),
+              netProfitfromNonSpeculativeIncome:
+                TradingAc?.TotRevenueFrmOperations -
+                (TradingAc?.OpngStckOfFinishedStcks +
+                  TradingAc?.Purchases -
+                  TradingAc?.ClsngStckOfFinishedStcks),
+              incomes: [
+                {
+                  id: null,
+                  incomeType: null,
+                  index: 0,
+                  hasEdit: false,
+                  brokerName: null,
+                  turnOver: TradingAc?.TotRevenueFrmOperations,
+                  grossProfit:
+                    TradingAc?.TotRevenueFrmOperations -
+                    (TradingAc?.OpngStckOfFinishedStcks +
+                      TradingAc?.Purchases -
+                      TradingAc?.ClsngStckOfFinishedStcks),
+                  finishedGoodsClosingStock:
+                    TradingAc?.ClsngStckOfFinishedStcks,
+                  finishedGoodsOpeningStock: TradingAc?.OpngStckOfFinishedStcks,
+                  purchase: TradingAc?.Purchases,
+                  netIncome:
+                    TradingAc?.TotRevenueFrmOperations -
+                    (TradingAc?.OpngStckOfFinishedStcks +
+                      TradingAc?.Purchases -
+                      TradingAc?.ClsngStckOfFinishedStcks),
+                  cogs:
+                    TradingAc?.OpngStckOfFinishedStcks +
+                    TradingAc?.Purchases -
+                    TradingAc?.ClsngStckOfFinishedStcks,
+                  tradingExpense: null,
+                },
+              ],
+              expenses:
+                TradingAc?.OtherIncDtls ||
+                TradingAc?.DirectExpensesTotal > 0 ||
+                TradingAc?.DutyTaxPay?.ExciseCustomsVAT?.TotExciseCustomsVAT > 0
+                  ? getExpenses(
+                      TradingAc?.OtherIncDtls,
+                      TradingAc?.DirectExpensesTotal,
+                      TradingAc?.DutyTaxPay?.ExciseCustomsVAT
+                        ?.TotExciseCustomsVAT
+                    )
+                  : [],
+            };
+            this.ITR_Obj.business.profitLossACIncomes.push(nonSpecIncome);
+          }
+        }
+      }
+
+      // speculative income
+      {
+        if (this.ITR_Type === 'ITR3') {
+          const profitAndLossAc = this.uploadedJson[this.ITR_Type]?.PARTA_PL;
+          if (
+            profitAndLossAc?.NetIncomeFrmSpecActivity &&
+            profitAndLossAc?.NetIncomeFrmSpecActivity !== 0
+          ) {
+            const speculativeIncome = {
+              id: null,
+              incomeType: 'SPECULATIVEINCOME',
+              businessType: null,
+              incomes: [
+                {
+                  id: null,
+                  brokerName: null,
+                  incomeType: null,
+                  hasEdit: false,
+                  index: 0,
+                  turnOver: profitAndLossAc?.TurnverFrmSpecActivity,
+                  grossProfit: profitAndLossAc?.GrossProfit,
+                  expenditure: profitAndLossAc?.Expenditure,
+                  netIncome: profitAndLossAc?.NetIncomeFrmSpecActivity,
+                },
+              ],
+            };
+
+            this.ITR_Obj.business.profitLossACIncomes.push(speculativeIncome);
+          }
+        }
+      }
     }
 
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
