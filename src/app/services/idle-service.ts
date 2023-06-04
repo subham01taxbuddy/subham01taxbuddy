@@ -19,6 +19,11 @@ export class IdleService {
     fromEvent(document, 'mousemove').subscribe(() => this.onInteraction());
     fromEvent(document, 'touchstart').subscribe(() => this.onInteraction());
     fromEvent(document, 'keydown').subscribe(() => this.onInteraction());
+    fromEvent(document, 'beforeunload').subscribe(() => this.onPageEvent());
+  }
+
+  onPageEvent(){
+    console.log('on page event');
   }
 
   onInteraction() {
