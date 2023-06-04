@@ -83,7 +83,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       .getUserProfile(this.ITR_JSON.userId)
       .then((result: any) => {
         console.log(result);
-        if (this.ITR_JSON.panNumber) {
+        if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber)) {
           this.addClientForm.controls['panNumber'].setValue(
             this.ITR_JSON.panNumber
           );
@@ -91,6 +91,12 @@ export class AddClientsComponent implements OnInit, OnDestroy {
           this.addClientForm.controls['panNumber'].setValue(result.panNumber);
           this.getUserDataByPan(result.panNumber);
         }
+        let headerObj = {
+          panNumber: this.addClientForm.controls['panNumber'].value,
+          assessmentYear: this.ITR_JSON.assessmentYear,
+          userId: this.ITR_JSON.userId.toString(),
+        };
+        sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
       });
 
     this.personalInfo = this.ITR_JSON.family[0];
@@ -101,12 +107,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     console.log('ITR_JSON: ', this.ITR_JSON);
     console.log('addClientForm value: ', this.addClientForm.value);
 
-    let headerObj = {
-      panNumber: this.ITR_JSON.panNumber,
-      assessmentYear: this.ITR_JSON.assessmentYear,
-      userId: this.ITR_JSON.userId.toString(),
-    };
-    sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+
   }
 
   setOtpValidation() {
