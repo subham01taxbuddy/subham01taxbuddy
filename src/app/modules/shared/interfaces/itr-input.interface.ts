@@ -1,5 +1,4 @@
 export interface ITR_JSON {
-
   id: any;
   fixedAssetsDetails?: FixedAssetsDetails[];
   zeroBonds?: any;
@@ -187,6 +186,7 @@ export interface HouseProperties {
   pinCode: string;
   country: string;
   grossAnnualRentReceived: number;
+  grossAnnualRentReceivedTotal: number;
   propertyTax: number;
   taxableIncome: number;
   exemptIncome: number;

@@ -18,6 +18,19 @@ isSupported().then(isSupported => {
 
     const messaging = getMessaging(app);
 
+    self.addEventListener('notificationclick', function(event) {
+      event.notification.close();
+      console.log('notification click');
+    });
+    self.addEventListener('push', function(event) {
+      console.log('notification click');
+    });
+    // self.addEventListener('notificationclick', function(event) {
+    //   event.notification.close();
+    //   console.log('notification click');
+    // });
+
+
     /*onBackgroundMessage(messaging, (payload) => {
       console.log('[firebase-messaging-sw.js] Received background message ', payload);
       // Customize notification here
