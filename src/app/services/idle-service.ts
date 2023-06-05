@@ -27,6 +27,18 @@ export class IdleService {
   }
 
   onInteraction() {
+    //console.log('checking interaction');
+    let current = new Date().getTime();
+    let last = sessionStorage.getItem('lastInteraction');
+    if(!last){
+      last = current.toString();
+    }
+    sessionStorage.setItem('lastInteraction', current.toString());
+    if(current-parseInt(last) > this.idleAfterSeconds * 1000){
+      //console.log('this was idle****');
+      this.isIdle = true;
+      this.idle$.next(true);
+    }
     // Is idle and interacting, emit Wake
     if (this.isIdle) {
       this.isIdle = false;

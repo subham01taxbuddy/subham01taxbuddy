@@ -261,7 +261,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     });
     disposable.afterClosed().subscribe(result => {
       console.log('result of reassign user ',result);
-      if (result.data === 'success') {
+      if (result?.data === 'success') {
         return this.dialogRef.close({ event: 'close', data: 'success' });
       }
    });

@@ -129,7 +129,7 @@ export class AppComponent {
     });
     idleService.wake$.subscribe(s => {
       this.timedOut = false;
-      console.log('im awake!')
+      console.log('im awake!');
     });
   }
 

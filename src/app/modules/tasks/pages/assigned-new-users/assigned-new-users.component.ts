@@ -1098,6 +1098,9 @@ export class AssignedNewUsersComponent implements OnInit {
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     //https://dev-api.taxbuddy.com/user/%7BloggedInSmeUserId%7D/user-list-new?page=0&pageSize=20
