@@ -187,7 +187,6 @@ export class PrefillIdComponent implements OnInit {
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
   updateSalaryAllowances(salaryAllowances, ITR_Type) {
-    // console.log('salaryAllowances List =>', salaryAllowances, ITR_Type);
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       '10(5)': 'LTA',
@@ -242,10 +241,6 @@ export class PrefillIdComponent implements OnInit {
                   (itrObjSalaryAllowances) =>
                     itrObjSalaryAllowances.allowanceType === newName
                 );
-              // console.log(
-              //   'itrObjSalaryAllowancesDetail====>>>>',
-              //   itrObjSalaryAllowancesDetail
-              // );
 
               // If same type is not found in the ITR Object then show an error message
               if (!itrObjSalaryAllowancesDetail) {
@@ -411,15 +406,6 @@ export class PrefillIdComponent implements OnInit {
   // Taking the other income name from json and checking for those income in our itr object. If it exists then mapping jsons amount to itr object amount
   updateOtherIncomes(otherIncomes, ITR_Type) {
     if (ITR_Type === 'ITR1' || ITR_Type === 'ITR4') {
-      // const mapping = {
-      //   SAV: 'SAVING_INTEREST',
-      //   IFD: 'FD_RD_INTEREST',
-      //   DIV: '', // we have a different object of dividend Income.It is taken care of below
-      //   FAP: 'FAMILY_PENSION',
-      //   TAX: 'TAX_REFUND_INTEREST',
-      //   OTH: 'ANY_OTHER',
-      // };
-
       // Savings Interest Income
       {
         // finding and storing the object in utility with the name SAV
@@ -594,8 +580,6 @@ export class PrefillIdComponent implements OnInit {
           const disabilities80UArray = investments.find(
             (disabilities80U) => disabilities80U[0] === 'Section80U'
           );
-          // console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
-
           if (disabilities80UArray && disabilities80UArray[1] > 75000) {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
           } else if (
@@ -613,7 +597,6 @@ export class PrefillIdComponent implements OnInit {
             // need to implement this later where the whole object is deleted if amount is 0.
             // this.ITR_Obj.disabilities.splice(0, 1);
           }
-          // console.log('IndividualDisabilities80UName', disabilities80U);
         }
 
         // setting 80dd names with this logic
@@ -622,7 +605,6 @@ export class PrefillIdComponent implements OnInit {
           const disabilities80ddArray = investments.find(
             (disabilities80dd) => disabilities80dd[0] === 'Section80DD'
           );
-          // console.log('IndividualDisabilities80ddArray=>', disabilities80ddArray);
 
           if (disabilities80ddArray && disabilities80ddArray[1] > 75000) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
@@ -642,8 +624,6 @@ export class PrefillIdComponent implements OnInit {
             // need to implement this later where the whole object is deleted if amount is 0.
             // this.ITR_Obj.disabilities.splice(0, 2);
           }
-
-          // console.log('IndividualDisabilities80ddName', disabilities80dd);
         }
 
         // setting 80dd names with this logic
@@ -652,7 +632,6 @@ export class PrefillIdComponent implements OnInit {
           const disabilities80DDBArray = investments.find(
             (disabilities80DDB) => disabilities80DDB[0] === 'Section80DDB'
           );
-          // console.log('IndividualDisabilities80DDBArray=>', disabilities80DDBArray);
 
           if (disabilities80DDBArray && disabilities80DDBArray[1] > 40000) {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
@@ -671,7 +650,6 @@ export class PrefillIdComponent implements OnInit {
             // need to implement this later where the whole object is deleted if amount is 0.
             // this.ITR_Obj.disabilities.splice(0, 3);
           }
-          // console.log('IndividualDisabilities80DDBName', disabilities80DDB);
         }
 
         //setting 80G fields
@@ -682,7 +660,6 @@ export class PrefillIdComponent implements OnInit {
             const Don100Percent =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don100Percent
                 ?.DoneeWithPan;
-            // console.log('donation100', Don100Percent);
 
             const mapJsonToITRObjDon100Percent = ({
               DoneeWithPanName,
@@ -727,7 +704,6 @@ export class PrefillIdComponent implements OnInit {
             const Don50PercentNoApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G
                 ?.Don50PercentNoApprReqd?.DoneeWithPan;
-            // console.log('donation50', Don50PercentNoApprReqd);
 
             const mapJsonToITRObjDon50Percent = ({
               DoneeWithPanName,
@@ -777,7 +753,6 @@ export class PrefillIdComponent implements OnInit {
             const Don100PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G
                 ?.Don100PercentApprReqd?.DoneeWithPan;
-            // console.log('donation100AGTI', Don100PercentApprReqd);
 
             const mapJsonToITRObjDon100PercentAGTI = ({
               DoneeWithPanName,
@@ -827,7 +802,6 @@ export class PrefillIdComponent implements OnInit {
             const Don50PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don50PercentApprReqd
                 ?.DoneeWithPan;
-            // console.log('donation50AGTI', Don50PercentApprReqd);
 
             const mapJsonToITRObjDon50PercentAGTI = ({
               DoneeWithPanName,
@@ -872,7 +846,6 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -901,11 +874,9 @@ export class PrefillIdComponent implements OnInit {
           Section80TTA: 0, // Did not find this in itrObject
           Section80TTB: 0, // Did not find this in itrObject
         };
-        // console.log('updateInvestmentsMapping==>>', mapping);
 
         let expenseIndex = 0;
         for (let i = 0; i < investments.length; i++) {
-          // console.log('i ==>>>>', i);
           const type = investmentNames[i];
           {
             // use the mapping object to get the new name for the current type
@@ -948,11 +919,8 @@ export class PrefillIdComponent implements OnInit {
             }
 
             if (newName === disabilities80U) {
-              // console.log('disabilities80uName', disabilities80U);
-
               // finding the 80U array
               const disability80U = this.ITR_Obj.disabilities[0];
-              // console.log('disability80UObjFound', disability80U);
 
               // setting the field name in ITR Obj as per the new name
               if (disability80U) {
@@ -960,16 +928,12 @@ export class PrefillIdComponent implements OnInit {
                 // setting the amount in ITR object
                 const disabilities80UAmount = (disability80U.amount =
                   investments[i][1]);
-                // console.log('disabilities80UAmount', disabilities80UAmount);
               }
             }
 
             if (newName === disabilities80dd) {
-              // console.log('disabilities80ddName', disabilities80dd);
-
               // finding the 80DD array
               const disability80DD = this.ITR_Obj.disabilities[1];
-              // console.log('disability80DDObjFound', disability80DD);
 
               // setting the field name in ITR Obj as per the new name
               if (disability80DD) {
@@ -977,16 +941,12 @@ export class PrefillIdComponent implements OnInit {
                 // setting the amount in ITR object
                 const disabilities80DDAmount = (disability80DD.amount =
                   investments[i][1]);
-                // console.log('disabilities80DDAmount', disabilities80DDAmount);
               }
             }
 
             if (newName === disabilities80DDB) {
-              // console.log('disabilities80DDBName', disabilities80DDB);
-
               // finding the 80DDB array
               const disability80DDB = this.ITR_Obj.disabilities[2];
-              // console.log('disability80DDBObjFound', disability80DDB);
 
               // setting the field name in ITR Obj as per the new name
               if (disability80DDB) {
@@ -994,7 +954,6 @@ export class PrefillIdComponent implements OnInit {
                 // setting the amount in ITR object
                 const disabilities80DDBAmount = (disability80DDB.amount =
                   investments[i][1]);
-                // console.log('disabilities80DDBAmount', disabilities80DDBAmount);
               }
             }
 
@@ -1003,13 +962,11 @@ export class PrefillIdComponent implements OnInit {
               const itrObjSelf80D = this.ITR_Obj.insurances?.find(
                 (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
               );
-              // console.log('self80DObjFound', itrObjSelf80D);
 
               // finding the Section80D array for parents in itr object
               const itrObjParents80D = this.ITR_Obj.insurances.find(
                 (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
               );
-              // console.log('itrObjParents80D', itrObjParents80D);
 
               // finding the Section80D array for self in json
               const json80DSeniorCitizen =
@@ -1023,8 +980,6 @@ export class PrefillIdComponent implements OnInit {
                 const json80DSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
                     .Sec80DSelfFamSrCtznHealth?.SeniorCitizenFlag;
-
-                // console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
 
                 if (json80DSeniorCitizenFlag === 'Y') {
                   // SELF HEALTH INSURANCE PREMIUM
@@ -1068,11 +1023,6 @@ export class PrefillIdComponent implements OnInit {
                 const json80DParentsSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
                     .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
-
-                // console.log(
-                //   'json80DSeniorCitizenFlag',
-                //   json80DParentsSeniorCitizenFlag
-                // );
 
                 if (json80DParentsSeniorCitizenFlag === 'Y') {
                   // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
@@ -1250,11 +1200,12 @@ export class PrefillIdComponent implements OnInit {
       }
     }
 
-    // setting assesseType, need to set for HUF dynamically
+    // setting assesseType, need to set for HUF dynamically later
     this.ITR_Obj.assesseeType = 'INDIVIDUAL';
 
     // SOME DEDUCTION FIELDS, HP CODE UPDATE
     if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
+      // Error if PAN does not match the PAN in ITR OBJECT
       if (
         this.ITR_Obj?.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo?.PAN
       ) {
@@ -1416,7 +1367,6 @@ export class PrefillIdComponent implements OnInit {
                     : null;
                 }
 
-                // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
                 sessionStorage.setItem(
                   AppConstants.ITR_JSON,
                   JSON.stringify(this.ITR_Obj)
@@ -1439,7 +1389,6 @@ export class PrefillIdComponent implements OnInit {
                     ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
                 : null;
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -1449,12 +1398,10 @@ export class PrefillIdComponent implements OnInit {
             // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
             this.ITR_Obj.residentialStatus = 'RESIDENT';
 
-            // Updating employer categaory based on the key that we get from json in our itr obj employer category
+            // Updating employer category based on the key that we get from json in our itr obj employer category
             {
               let jsonEmployerCategory =
                 ItrJSON[this.ITR_Type].PersonalInfo?.EmployerCategory;
-
-              // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
 
               if (jsonEmployerCategory === 'CGOV') {
                 this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
@@ -1480,7 +1427,7 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.aadharNumber =
               ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
-            // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
+            // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
             this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo?.DOB);
             this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
           }
@@ -1718,90 +1665,6 @@ export class PrefillIdComponent implements OnInit {
 
               this.ITR_Obj.systemFlags.hasSalary = true;
             }
-
-            // OLD CODE
-            // if (ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].GrossSalary) {
-            //   // Net salary Income
-            //   this.ITR_Obj.employers[0].taxableIncome =
-            //     ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].IncomeFromSal;
-
-            //   // Standard deduction of 50k
-            //   this.ITR_Obj.employers[0].standardDeduction =
-            //     ItrJSON[this.ITR_Type][
-            //       this.ITR14_IncomeDeductions
-            //     ].DeductionUs16ia;
-
-            //   //Total of exempt income (Salary allowances total)
-            //   if (this.regime === 'OLD') {
-            //     this.ITR_Obj.employers[0].exemptIncome =
-            //       ItrJSON[this.ITR_Type][
-            //         this.ITR14_IncomeDeductions
-            //       ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
-            //   }
-
-            //   // Salary 17(1)
-            //   this.ITR_Obj.employers[0].salary[0].taxableAmount =
-            //     ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].Salary;
-
-            //   // Salary 17(2)
-            //   this.ITR_Obj.employers[0].perquisites[0].taxableAmount =
-            //     ItrJSON[this.ITR_Type][
-            //       this.ITR14_IncomeDeductions
-            //     ].PerquisitesValue;
-
-            //   // Salary 17(3)
-            //   this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
-            //     ItrJSON[this.ITR_Type][
-            //       this.ITR14_IncomeDeductions
-            //     ].ProfitsInSalary;
-
-            //   // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-            //   if (this.regime === 'OLD') {
-            //     const availableSalaryAllowances = this.uploadedJson[
-            //       this.ITR_Type
-            //     ][
-            //       this.ITR14_IncomeDeductions
-            //     ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-            //       (value) => value.SalNatureDesc
-            //     );
-            //     // console.log(
-            //     //   'Available salary allowances in JSON => ',
-            //     //   availableSalaryAllowances
-            //     // );
-            //     this.updateSalaryAllowances(
-            //       availableSalaryAllowances,
-            //       this.ITR_Type
-            //     );
-            //   }
-
-            //   try {
-            //     const deductions = this.ITR_Obj.employers[0].deductions;
-            //     if (deductions && deductions[0]) {
-            //       deductions[0].exemptAmount =
-            //         ItrJSON[this.ITR_Type][
-            //           this.ITR14_IncomeDeductions
-            //         ].ProfessionalTaxUs16iii;
-            //     } else {
-            //       console.error('Cannot access deductions or its first element');
-            //     }
-            //   } catch (error) {
-            //     console.error('Cannot access ITR_Obj or its properties', error);
-            //   }
-            //   // DEDUCTIONS - PROFESSIONAL TAX
-            //   // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
-            //   //   ItrJSON[this.ITR_Type][
-            //   //     this.ITR14_IncomeDeductions
-            //   //   ].ProfessionalTaxUs16iii;
-
-            //   // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
-            // } else {
-            //   console.log(
-            //     'SALARY INCOME',
-            //     `ItrJSON[this.ITR_Type]${[
-            //       this.ITR14_IncomeDeductions,
-            //     ]}.GrossSalary does not exist`
-            //   );
-            // }
           }
         }
 
@@ -1867,82 +1730,22 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.systemFlags.hasHouseProperty = true;
             }
           }
-
-          // if (
-          //   ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP
-          // ) {
-          // House Property Type
-          // this.ITR_Obj.houseProperties[0].propertyType =
-          //   ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
-          //   'S'
-          //     ? 'SOP'
-          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
-          //         .TypeOfHP === 'L'
-          //     ? 'LOP'
-          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
-          //         .TypeOfHP === 'D'
-          //     ? 'DLOP'
-          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP;
-          // // There is no principal amount for itr1&4 in json. Hence, did not map it
-          // this.ITR_Obj.houseProperties[0].grossAnnualRentReceived =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].GrossRentReceived;
-          // Property Tax
-          // this.ITR_Obj.houseProperties[0].propertyTax =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].TaxPaidlocalAuth;
-          // Not able to map annualValue as we are not storing it in the ITRobject. Anyways, the annual value is being displayed properly on UI after parsing
-          // Annual Value 30% / Exempt Income (in itr4 object)
-          // this.ITR_Obj.houseProperties[0].exemptIncome =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].AnnualValue30Percent;
-          // if (!this.ITR_Obj.houseProperties[0].loans) {
-          //   this.ITR_Obj.houseProperties[0].loans = [];
-          // }
-          // this.ITR_Obj.houseProperties[0].loans.push({
-          //   loanType: '',
-          //   principalAmount: 0,
-          //   interestAmount: 0,
-          // });
-          // Interest on HP loan
-          // this.ITR_Obj.houseProperties[0].loans[0].interestAmount =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].InterestPayable;
-          // Total Hp income
-          // this.ITR_Obj.houseProperties[0].taxableIncome =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].TotalIncomeOfHP;
-          //80EE AND 80EEA values need to be set as true if interest is above 2l. However, this has to be done from the sme's end. PENDING
-          // } else {
-          //   console.log(
-          //     'ITRJSON => ITR4 => HOUSE PROPERTY',
-          //     `ItrJSON[this.ITR_Type]${[
-          //       this.ITR14_IncomeDeductions,
-          //     ]}.TotalIncomeOfHP`
-          //   );
-          // }
         }
 
         // OTHER INCOMES
         {
           if (
             ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]?.OthersInc
-              .OthersIncDtlsOthSrc
+              ?.OthersIncDtlsOthSrc
           ) {
             // All other incomes
             if (this.ITR_Obj.incomes) {
-              //getting all the exempt income keys from the JSON and passing it to the updateOtherIncomes function
+              //getting all the other income keys from the JSON and passing it to the updateOtherIncomes function
               const availableOtherIncomes = this.uploadedJson[this.ITR_Type][
                 this.ITR14_IncomeDeductions
               ].OthersInc?.OthersIncDtlsOthSrc?.map(
                 (value) => value.OthSrcNatureDesc
               );
-              // console.log('OtherIncomes => ', availableOtherIncomes);
               this.updateOtherIncomes(availableOtherIncomes, this.ITR_Type);
             } else {
               console.log(
@@ -1959,7 +1762,6 @@ export class PrefillIdComponent implements OnInit {
             );
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -1980,8 +1782,6 @@ export class PrefillIdComponent implements OnInit {
                 ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
                   (value) => value.NatureDesc
                 );
-                // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
               } else {
                 console.log(
@@ -2010,8 +1810,6 @@ export class PrefillIdComponent implements OnInit {
                 ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.map(
                   (value) => value.NatureDesc
                 );
-                // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
               } else {
                 console.log(
@@ -2028,7 +1826,6 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -2041,14 +1838,11 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductUndChapVIA
           ) {
             if (this.ITR_Obj.investments) {
-              //getting all the exempt income keys from the JSON and passing it to the updateInvestments function
+              //getting all the deductions keys from the JSON and passing it to the updateInvestments function
               const availableInvestments = Object.entries(
                 this.uploadedJson[this.ITR_Type][this.ITR14_IncomeDeductions]
                   .DeductUndChapVIA
               ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
-
-              // console.log('availableInvestments==>>', availableInvestments);
-
               this.updateInvestments(availableInvestments, this.ITR_Type);
             } else {
               console.log(
@@ -2063,7 +1857,7 @@ export class PrefillIdComponent implements OnInit {
               ]}.DeductUndChapVIA does not exist in JSON`
             );
           }
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -2076,7 +1870,6 @@ export class PrefillIdComponent implements OnInit {
           {
             const jsonSalaryTDS =
               ItrJSON[this.ITR_Type]?.TDSonSalaries?.TDSonSalary;
-            // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
             if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
               this.ITR_Obj.taxPaid.onSalary = [];
@@ -2106,7 +1899,6 @@ export class PrefillIdComponent implements OnInit {
               );
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
@@ -2119,11 +1911,9 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Type === 'ITR1'
                 ? 'TDSonOthThanSal'
                 : 'TDSonOthThanSalDtls';
-            // console.log('otherThanSalary16A', otherThanSalary16A);
 
             const jsonOtherThanSalaryTDS: Array<object> =
               ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
-            // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
 
             const mapJsonToITRObj16A = ({
               EmployerOrDeductorOrCollectDetl,
@@ -2170,7 +1960,6 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // TDS3Details / otherThanSalary26QB
@@ -2210,7 +1999,6 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // TCS - TAX COLLECTED AT SOURCE
@@ -2252,16 +2040,13 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // Advance and self assessment tax
           {
             const taxPayment =
               this.ITR_Type === 'ITR1' ? 'TaxPayments' : 'ScheduleIT';
-            // console.log('taxPayment', taxPayment);
             const jsonAdvSAT = ItrJSON[this.ITR_Type][taxPayment].TaxPayment;
-            // console.log('jsonAdvSAT', jsonAdvSAT);
 
             if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
               this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
@@ -2290,27 +2075,22 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // BUSINESS AND PROFESSION - PRESUMPTIVE INCOME
         {
           if (this.ITR_Type === 'ITR4') {
-            // Business44AD - If json is uploaded more than once than this will keep on pushing the new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
             {
               const NatOfBus44AD =
                 ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44AD;
               const NatOfBus44ADLength = NatOfBus44AD?.length;
-              // console.log('NatOfBus44AD', NatOfBus44AD);
 
               const PersumptiveInc44AD =
                 ItrJSON[this.ITR_Type].ScheduleBP?.PersumptiveInc44AD;
-              // console.log('PersumptiveInc44AD', PersumptiveInc44AD);
 
               NatOfBus44AD?.forEach((obj) => {
                 this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
@@ -2367,36 +2147,27 @@ export class PrefillIdComponent implements OnInit {
                   tradeName: obj.NameOfBusiness,
                   businessDescription: obj.Description,
                 };
-
-                // console.log('newObject', newObject);
                 this.ITR_Obj.business.presumptiveIncomes.push(newObject);
-
-                // console.log(
-                //   'businessDescriptionObject',
-                //   businessDescriptionObject
-                // );
                 this.ITR_Obj.business.businessDescription.push(
                   businessDescriptionObject
                 );
               });
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
               );
             }
 
-            // Profession44ADA - If json is uploaded more than once than this will keep on pushing new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
+            // Profession44ADA
             {
               const NatOfBus44ADA =
                 ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44ADA;
               const NatOfBus44ADALength = NatOfBus44ADA.length;
-              // console.log('NatOfBus44ADA', NatOfBus44ADA);
 
               const PersumptiveInc44ADA =
                 ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
-              // console.log('PersumptiveInc44ADA', PersumptiveInc44ADA);
 
               NatOfBus44ADA?.forEach((obj) => {
                 this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
@@ -2443,15 +2214,8 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Obj.business.businessDescription.push(
                   professionDescriptionObject
                 );
-
-                // console.log('newObjectProfession', newObject);
-                // console.log(
-                //   'businessDescriptionObject',
-                //   professionDescriptionObject
-                // );
               });
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -2525,7 +2289,6 @@ export class PrefillIdComponent implements OnInit {
                 }
               }
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -2557,15 +2320,12 @@ export class PrefillIdComponent implements OnInit {
               ItrJSON[this.ITR_Type].Verification.Place;
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
