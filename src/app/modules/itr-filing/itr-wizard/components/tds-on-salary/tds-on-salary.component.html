@@ -45,7 +45,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 spsTp">
                         <mat-label>Total Amount credited*</mat-label>
                         <mat-form-field appearance="outline">
                             <input formControlName="totalAmountCredited" matInput placeholder="Amt other than cash"
@@ -57,7 +57,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 spsTp">
                         <mat-label>Total Tax Deducted*</mat-label>
                         <mat-form-field appearance="outline">
                             <input formControlName="totalTdsDeposited" matInput placeholder="Amt other than cash"
@@ -84,14 +84,14 @@
                         <button type="submit" class="tbd-btn-secondary delBtn" (click)="deleteSalaryArray()"><i
                                 class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete</button>
                     </div>
-                    <div class="col-sm-6" style="text-align:center;">
+                    <div class="col-sm-6">
                         <table class="numSp">
                             <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
                         </table>
-                        <pagination-controls id="salaryPagination" (pageChange)="pageChanged($event)"></pagination-controls>
+                        <pagination-controls id="salaryPagination" (pageChange)="pageChanged($event)" class="pgNmbr"></pagination-controls>
                     </div>
-                    <div class="col-sm-3" style="text-align: right;">
-                        <button class="tbd-btn save-btn" (click)="save()">Save</button>
+                    <div class="col-sm-3">
+                        <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
                       </div>
 
                 </div>

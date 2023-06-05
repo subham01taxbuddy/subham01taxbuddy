@@ -253,7 +253,7 @@ $altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
     text-align: right;
     margin-top: 20px;
     padding: 14px 0 19px;
-    border-top-style: solid;
+    border-top-style: solid;   
 
     .edit_btn {
         display: flex;
@@ -269,7 +269,13 @@ $altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
         border: 1px solid #797979;
         border-radius: 6.86273px;
     }
+    
+    .edit_btn:hover {
+        background: #c2e8f7;
+    }
 }
+
+
 
 
 mat-label {
