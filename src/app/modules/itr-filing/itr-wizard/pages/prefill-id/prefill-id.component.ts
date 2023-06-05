@@ -2342,9 +2342,6 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj.panNumber =
             ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.PAN;
 
-          // this.ITR_Obj.contactNumber =
-          //   ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.MobileNo;
-
           this.ITR_Obj.email =
             ItrJSON[
               this.ITR_Type
@@ -2560,8 +2557,6 @@ export class PrefillIdComponent implements OnInit {
             let jsonEmployerCategory =
               ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]?.NatureOfEmployment;
 
-            // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
-
             if (jsonEmployerCategory === 'CGOV') {
               this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
             } else if (jsonEmployerCategory === 'SGOV') {
@@ -2702,7 +2697,6 @@ export class PrefillIdComponent implements OnInit {
                 ?.HeldUnlistedEqShrPrYrFlg === 'Y'
             ) {
               this.ITR_Obj.systemFlags.haveUnlistedShares = true;
-
               const HeldUnlistedEqShrPrYrFlg =
                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                   ?.HeldUnlistedEqShrPrYr?.HeldUnlistedEqShrPrYrDtls;
@@ -2888,7 +2882,6 @@ export class PrefillIdComponent implements OnInit {
               calculators: null,
             };
             this.ITR_Obj.employers.push(employerDetails);
-            this.ITR_Obj.systemFlags.hasSalary = true;
           });
 
           // calling updateSalaryAllowance function to update allowances and deductions if regime is OLD.
@@ -3004,7 +2997,6 @@ export class PrefillIdComponent implements OnInit {
               ],
             };
             this.ITR_Obj.houseProperties.push(housePropertyDetails);
-            this.ITR_Obj.systemFlags.hasHouseProperty = true;
           });
         }
       }
@@ -3012,7 +3004,6 @@ export class PrefillIdComponent implements OnInit {
       // OTHER INCOME
       {
         // DIVIDEND INCOMES
-
         const jsonDividendObj =
           this.uploadedJson[this.ITR_Type].ScheduleOS?.DividendIncUs115BBDA
             ?.DateRange;
@@ -3178,7 +3169,6 @@ export class PrefillIdComponent implements OnInit {
           {
             const jsonSalaryTDS =
               ItrJSON[this.ITR_Type]?.ScheduleTDS1?.TDSonSalary;
-            // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
             if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
               this.ITR_Obj.taxPaid.onSalary = [];
@@ -3208,12 +3198,10 @@ export class PrefillIdComponent implements OnInit {
               );
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
@@ -3226,7 +3214,6 @@ export class PrefillIdComponent implements OnInit {
 
           const jsonOtherThanSalaryTDS: Array<object> =
             ItrJSON[this.ITR_Type].ScheduleTDS2?.TDSOthThanSalaryDtls;
-          // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
 
           const mapJsonToITRObj16A = ({
             TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
@@ -3259,7 +3246,6 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // TDS3Details / otherThanSalary26QB
@@ -3299,7 +3285,6 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // TCS - TAX COLLECTED AT SOURCE
@@ -3339,7 +3324,6 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // Advance and self assessment tax
@@ -3373,12 +3357,10 @@ export class PrefillIdComponent implements OnInit {
           }
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log(this.ITR_Obj);
       }
 
       // INVESTMENTS / DEDUCTIONS
@@ -3407,7 +3389,6 @@ export class PrefillIdComponent implements OnInit {
           );
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
@@ -3426,8 +3407,6 @@ export class PrefillIdComponent implements OnInit {
             ].ScheduleEI?.OthersInc?.OthersIncDtls.map(
               (value) => value.NatureDesc
             );
-            // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
             this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
           } else {
             console.log(
@@ -3443,12 +3422,10 @@ export class PrefillIdComponent implements OnInit {
           );
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
       }
 
       // DECLARATION
@@ -3479,12 +3456,10 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type].Verification.Place;
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log(this.ITR_Obj);
       }
 
       // Financial Particulars - Balance Sheet
@@ -3570,9 +3545,9 @@ export class PrefillIdComponent implements OnInit {
           if (!isBalanceSheetKeysEmpty) {
             this.ITR_Obj.business.financialParticulars = balanceSheetKeys;
           }
+          this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
@@ -3668,7 +3643,6 @@ export class PrefillIdComponent implements OnInit {
                 }
               });
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -3935,9 +3909,8 @@ export class PrefillIdComponent implements OnInit {
                 };
                 this.ITR_Obj.capitalGain.push(SaleofLandBuildDetails);
               });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -3997,9 +3970,8 @@ export class PrefillIdComponent implements OnInit {
 
                 this.ITR_Obj.capitalGain.push(equityLtcgDetail);
               });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -4149,7 +4121,6 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.systemFlags.hasCapitalGain = true;
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
@@ -4252,7 +4223,6 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.systemFlags.hasCapitalGain = true;
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
@@ -4734,6 +4704,7 @@ export class PrefillIdComponent implements OnInit {
                   : [],
             };
             this.ITR_Obj.business.profitLossACIncomes.push(nonSpecIncome);
+            this.ITR_Obj.systemFlags.hasFutureOptionsIncome = true;
           }
         }
       }
@@ -4766,6 +4737,7 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.business.profitLossACIncomes.push(speculativeIncome);
+            this.ITR_Obj.systemFlags.hasFutureOptionsIncome = true;
           }
         }
       }
