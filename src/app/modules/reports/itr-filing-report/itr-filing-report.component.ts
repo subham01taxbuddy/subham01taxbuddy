@@ -57,6 +57,7 @@ export class ItrFilingReportComponent implements OnInit {
   itrFillingReportGridOptions: GridOptions;
   loggedInSme: any;
   roles: any;
+  disableCheckboxes = false;
 
   constructor(
     public datePipe: DatePipe,
@@ -109,8 +110,10 @@ export class ItrFilingReportComponent implements OnInit {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.ownerId = event ? event.userId : null;
+      this.disableCheckboxes=true
     } else {
       this.filerId = event ? event.userId : null;
+
     }
     if (this.filerId) {
       this.agentId = this.filerId;
@@ -121,6 +124,11 @@ export class ItrFilingReportComponent implements OnInit {
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
+    }
+    if(this.ownerId || this.filerId){
+      this.disableCheckboxes=true;
+    }else{
+      this.disableCheckboxes=false;
     }
 
   }
@@ -133,6 +141,12 @@ export class ItrFilingReportComponent implements OnInit {
    if (this.ownerId) {
      this.agentId = this.ownerId;
    }
+
+   if(this.leaderId || this.ownerId){
+    this.disableCheckboxes=true;
+  }else{
+    this.disableCheckboxes=false;
+  }
  }
 
   showReports() {
