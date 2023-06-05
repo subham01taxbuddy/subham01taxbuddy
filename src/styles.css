@@ -313,6 +313,16 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.mvRthEdt {
+  float: right;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+.mv{
+  margin-right:20px!important;
+  }
+
 .titTx1 {
   font-size: 17px;
   color: #04A4BC;
@@ -962,8 +972,8 @@ width:60px;
 }
 
 pagination-controls {
-  float: right!important;
-  margin-right: 180px!important;
+  float: right;
+  margin-right: 180px;
   margin-top: 10px;
 }
 
@@ -1045,10 +1055,11 @@ pagination-controls {
   border: 1px solid #cccccc;
   border-radius: 10px;
   padding: 20px;
+  margin-bottom: 10px;
 }
 
 .add_btn {
-  background-color: #EEFFE4 !important;
+  background-color: #E5F2F7 !important;
   color: #797979 !important;
   display: flex;
   flex-direction: row;
@@ -1060,6 +1071,10 @@ pagination-controls {
   height: 32.21px;
   margin-right: 10px;
   border-radius: 6.86273px;
+  border: 1px solid #797979;
+}
+.add_btn:hover {
+  background-color: #cde5ef !important;
 }
 
 .clrLnk {
