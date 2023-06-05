@@ -47,6 +47,9 @@ export class ItrStatusDialogComponent implements OnInit {
   showRefundNote: any;
   itrLifeCycleSummaryList: any = [];
   itrFilingDueDate: any;
+  draftSummaryDocDetails: any;
+  invoiceDetails: any;
+  ITRSummaryDocDetails: any;
 
   constructor(
     public dialogRef: MatDialogRef<ItrStatusDialogComponent>,
@@ -167,15 +170,15 @@ export class ItrStatusDialogComponent implements OnInit {
     if (response.data?.addPan?.customAttributes) {
       this.panNumber.setValue(response.data?.addPan?.customAttributes?.panNumber);
     }
-    // if (response.data?.userApprovalCompSummary?.uiAction === 'Editable' || response.data?.userApprovalCompSummary?.taskStatus === 'InProgress') {
-    //   this.fetchDraftSummary();
-    // }
-    // if (response.data?.paymentCompletion?.customAttributes?.paymentId) {
-    //   this.fetchInvoice();
-    // }
-    // if (response.data?.userApprovalItrSummary?.uiAction === 'Editable' || response.data?.userApprovalItrSummary?.taskStatus === 'InProgress') {
-    //   this.fetchITRSummary();
-    // }
+    if (response.data?.userApprovalCompSummary?.uiAction === 'Editable' || response.data?.userApprovalCompSummary?.taskStatus === 'InProgress') {
+      this.fetchDraftSummary();
+    }
+    if (response.data?.paymentCompletion?.customAttributes?.paymentId) {
+      this.fetchInvoice();
+    }
+    if (response.data?.userApprovalItrSummary?.uiAction === 'Editable' || response.data?.userApprovalItrSummary?.taskStatus === 'InProgress') {
+      this.fetchITRSummary();
+    }
 
 
     // response.data.itrFiledStatus = {
@@ -302,6 +305,28 @@ export class ItrStatusDialogComponent implements OnInit {
     // this.showSubmitButton();
     // this.getPlanDetails();
   }
+
+  fetchDraftSummary() {
+    const param = `/v1/cloud/signed-s3-url?userId=${this.data.userId}&documentTag=DRAFT_SUMMARY`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.draftSummaryDocDetails = result?.data;
+    })
+  }
+
+  fetchInvoice() {
+    const param = `/v1/cloud/signed-s3-url?userId=${this.data.userId}&documentTag=INVOICE`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.invoiceDetails = result?.data;
+    })
+  }
+
+  fetchITRSummary() {
+    const param = `/v1/cloud/signed-s3-url?userId=${this.data.userId}&documentTag=ITR_SUMMARY`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.ITRSummaryDocDetails = result?.data;
+    })
+  }
+
 
   close() {
     this.dialogRef.close();
