@@ -367,6 +367,8 @@ export class ZeroCouponBondsComponent
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    this.bondsForm.enable();
+    this.deductionForm.enable();
     if (this.bondsForm.valid || this.deductionForm.valid) {
       if (!this.Copy_ITR_JSON.capitalGain) {
         this.Copy_ITR_JSON.capitalGain = [];
@@ -527,6 +529,6 @@ export class ZeroCouponBondsComponent
   }
 
   saveAll() {
-    this.save();
+    this.save('bonds');
   }
 }

@@ -125,13 +125,14 @@ export class ScheduleCallReportComponent implements OnInit {
     }
     if(this.ownerId && pageChange){
       userFilter += `&ownerUserId=${this.ownerId}`;
+    }
 
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
       this.searchParam.page = 0;
       this.config.currentPage = 1
     }
-    }
+
     if(this.filerId && pageChange){
       userFilter += `&filerUserId=${this.filerId}`;
     }
