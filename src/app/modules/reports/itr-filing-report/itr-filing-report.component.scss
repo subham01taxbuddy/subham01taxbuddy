@@ -1,0 +1,9 @@
+.checkbox-group {
+  display: flex;
+  gap: 30px;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

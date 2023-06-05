@@ -1,6 +1,6 @@
 <div>
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-6" *ngIf="!showOwnerList">
       <mat-label> Search By Leader </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" />
@@ -12,7 +12,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" *ngIf="!showOwnerList">
       <mat-label> Search By Owner </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto1" />
@@ -25,5 +25,17 @@
       </mat-form-field>
     </div>
   </div>
+    <div class="col-sm-12" *ngIf="showOwnerList">
+      <mat-label> Search By Leader </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto>
+          <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
+            (click)="getLeaderNameId(option);">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
 </div>
 
