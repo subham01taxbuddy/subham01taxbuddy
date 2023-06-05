@@ -313,6 +313,113 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.mvRthEdt {
+  float: right;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+.mv{
+  margin-right:20px!important;
+  }
+
+.titTx1 {
+  font-size: 17px;
+  color: #04A4BC;
+  font-weight: 600;
+}
+.titTxB {
+  font-size: 18px;
+  color: #04A4BC;
+  font-weight: 600;
+  text-align:center;
+  padding-top:15px;
+  padding-bottom:15px;
+}
+.tpBtn1 {
+  margin-top: 20px!important;
+}
+.tpBtn2 {
+  margin-top: 25px!important;
+}
+
+.chkSpc {
+  margin-top: 10px;
+}
+.ediTp {
+  float: left!important;
+  margin-top: 25px!important;
+}
+.pLSpc {
+  border-top: 1px solid #f2f0f0;
+  margin-top: 20px!important;
+  border-bottom: 1px solid #f2f0f0;
+  margin-bottom: 10px;
+  padding: 15px 20px 15px 20px;
+}
+
+.arnd {
+  padding: 15px 0px 15px 0px;
+}
+.blsArnd {
+  padding: 10px 30px 10px 30px;
+}
+
+.blsArnd1 {
+  padding: 10px 30px 10px 30px;
+  background-color:#fbfbfb;
+  margin-bottom:20px;
+}
+.expBk{
+    background-color: #f9f9f9;
+    border-radius:8px;
+    margin:15px 0px 0px 20px!important;
+    padding:15px!important;
+}
+.specBk{
+  background-color: #f9f9f9;
+  border-radius:8px;
+  padding:15px!important;
+  margin-top: -30px!important;
+  margin-bottom:40px!important;
+}
+
+
+.expAr {
+  padding: 0px 40px 0px 0px;
+}
+
+.spcArnd2 {
+  padding: 0px 55px 0px 30px!important;
+  display: block!important;
+}
+.add-btn1 {
+  color: #00aeca!important;
+  background-color: #f5f5f5!important;
+  width: 95px!important;
+  height:40px!important;
+  border-radius: 8px!important;
+  border: 1px solid #cccccc!important;
+  margin-bottom: 10px!important;
+  margin-left: -96px
+}
+.add-btn1:hover{
+  background-color: #e4dddd!important;
+}
+
+.add-btn {
+  color: #00aeca!important;
+  background-color: #f5f5f5!important;
+  width: 95px!important;
+  border-radius: 8px!important;
+  border: 1px solid #cccccc!important;
+  margin-bottom: 10px!important;
+  margin-right: -90px!important;
+}
+
+.add-btn:hover{
+  background-color: #e4dddd!important;
+}
 .mvRthB {
   margin-left: 30px!important;
   font-size: 16px!important;
@@ -865,8 +972,8 @@ width:60px;
 }
 
 pagination-controls {
-  float: right!important;
-  margin-right: 180px!important;
+  float: right;
+  margin-right: 180px;
   margin-top: 10px;
 }
 
@@ -948,10 +1055,11 @@ pagination-controls {
   border: 1px solid #cccccc;
   border-radius: 10px;
   padding: 20px;
+  margin-bottom: 10px;
 }
 
 .add_btn {
-  background-color: #EEFFE4 !important;
+  background-color: #E5F2F7 !important;
   color: #797979 !important;
   display: flex;
   flex-direction: row;
@@ -963,6 +1071,10 @@ pagination-controls {
   height: 32.21px;
   margin-right: 10px;
   border-radius: 6.86273px;
+  border: 1px solid #797979;
+}
+.add_btn:hover {
+  background-color: #cde5ef !important;
 }
 
 .clrLnk {
@@ -983,6 +1095,20 @@ pagination-controls {
 
 .ngx-pagination {
   margin-left: -35px !important;
+}
+
+.delete-btn1 {
+  background: #FFE1E1;
+  border: 1px solid #E20000;
+  border-radius: 6px;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 6px;
+  text-align: center;
+  color: #E20000;
+  margin: 10px 0px 0px 0px;
 }
 
 .delete-btn {

@@ -4,7 +4,7 @@
 ></ngx-loading>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
-    <div class="head-title mb-5">
+    <div class="head-title mb-4">
       Please enter the amount of advance tax or self assessment tax paid
     </div>
     <div
@@ -20,11 +20,11 @@
         color="primary"
         name="hasEdit[i]"
         formControlName="hasEdit"
-        class="ml30"
+        class="mv"
       >
       </mat-checkbox>
-      <div class="card__col-xs-12 card__col-sm-12">
-        <div class="card__col-xs-12 card__col-sm-3">
+      <div class="row">
+        <div class="col-sm-3">
           <mat-label>BSR Code*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -58,7 +58,7 @@
             >
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-3">
+        <div class="col-sm-3">
           <mat-label>Date of Deposit*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -94,7 +94,7 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-3">
+        <div class="col-sm-3">
           <mat-label>Serial No of Challan*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -119,7 +119,7 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-3">
+        <div class="col-sm-3">
           <mat-label>Total Tax Paid*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -151,18 +151,17 @@
         </button>
       </div>
     </div>
-    <div class="display-flex">
-      <div class="card__col-xs-12">
-        <div class="card__col-sm-3">
+    <div class="row spsTp bdrTp">  
+        <div class="col-sm-3">
           <button
             type="submit"
-            class="tbd-btn-secondary"
+            class="tbd-btn-secondary delBtn"
             (click)="deleteSalaryArray()"
           >
             <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
           </button>
         </div>
-        <div class="card__col-sm-6 txt-center">
+        <div class="col-sm-6">
           <table>
             <tr
               *ngFor="let item of getSalaryArray.controls | paginate : config"
@@ -172,12 +171,12 @@
             (pageChange)="pageChanged($event)"
           ></pagination-controls>
         </div>
-        <div class="card__col-sm-3" style="text-align: right">
-          <button type="submit" class="tbd-btn save-btn" (click)="save()">
+        <div class="col-sm-3">
+          <button type="submit" class="tbd-btn save-btn mvRth" (click)="save()">
             Save
           </button>
         </div>
-      </div>
+     
     </div>
   </div>
 </form>

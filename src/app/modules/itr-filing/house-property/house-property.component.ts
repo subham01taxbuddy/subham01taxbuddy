@@ -231,6 +231,7 @@ export class HousePropertyComponent implements OnInit {
           ]),
         ],
         grossAnnualRentReceived: [null],
+        grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
           null,
           [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
@@ -275,6 +276,7 @@ export class HousePropertyComponent implements OnInit {
           ]),
         ],
         grossAnnualRentReceived: [null],
+        grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
           null,
           [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
@@ -403,7 +405,7 @@ export class HousePropertyComponent implements OnInit {
     const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
     let sum = 0;
     coOwner.controls.forEach((controlName) => {
-      sum = sum + controlName.value.percentage;
+      sum = Number(sum) + Number(controlName.value.percentage);
     });
 
     if (sum > 99) {
@@ -488,10 +490,20 @@ export class HousePropertyComponent implements OnInit {
       // let ownerPercentage = 100 - totalCoOwnPercent;
       // let grossRent = this.ITR_JSON.houseProperties[index].grossAnnualRentReceived * 100/ownerPercentage;
       let grossRent =
-        this.ITR_JSON.houseProperties[index].grossAnnualRentReceived;
+        this.ITR_JSON.houseProperties[index].grossAnnualRentReceivedTotal;
       this.housePropertyForm.controls['annualRentReceived'].setValue(grossRent);
+
+      let rentPercentageValue =
+        this.ITR_JSON.houseProperties[index].grossAnnualRentReceived;
+      this.housePropertyForm.controls['rentPercentage'].setValue(
+        rentPercentageValue
+      );
     } else {
       this.housePropertyForm.controls['annualRentReceived'].setValue(
+        this.ITR_JSON.houseProperties[index].grossAnnualRentReceivedTotal
+      );
+
+      this.housePropertyForm.controls['rentPercentage'].setValue(
         this.ITR_JSON.houseProperties[index].grossAnnualRentReceived
       );
     }
@@ -671,7 +683,9 @@ export class HousePropertyComponent implements OnInit {
       }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
-      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
+        null
+      );
       this.annualValue = null;
       this.thirtyPctOfAnnualValue = null;
       this.housePropertyForm.controls['rentPercentage'].enable();
@@ -746,6 +760,7 @@ export class HousePropertyComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
+
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
@@ -763,6 +778,7 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EE = false;
         hp.isEligibleFor80EEA = false;
       }
+
       this.Copy_ITR_JSON.houseProperties = [];
       this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
@@ -1041,8 +1057,11 @@ export class HousePropertyComponent implements OnInit {
         ownerPercentage *
         0.01;
       //this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(rentPercent);
-      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(
+      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
         this.housePropertyForm.controls['annualRentReceived'].value
+      );
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(
+        rentPercent
       );
       this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
       // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
