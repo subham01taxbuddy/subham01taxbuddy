@@ -7,15 +7,12 @@
   <form [formGroup]="investmentDeductionForm">
     <div class="card__row display-flex">
       <div class="col-sm-6 cardBdr">
-        <div class="display-flex card__col-sm-12">
-          <div
-            class="card__title card__col-sm-9"
-            style="padding: 10px 0; font-size: 18px"
-          >
+        <div class="row">
+          <div class="col-sm-10">
           Investment/Deduction Details:
           </div>
-          <div class="edit clearfix invest-edit card__col-sm-3">
-            <button class="edit_btn invest" (click)="editForm('investment')">
+          <div class="col-sm-2">
+            <button class="edit-donation mvRthEdt" (click)="editForm('investment')">
               <mat-icon> edit_square </mat-icon>Edit
             </button>
           </div>
