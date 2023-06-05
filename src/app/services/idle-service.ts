@@ -34,7 +34,7 @@ export class IdleService {
       last = current.toString();
     }
     sessionStorage.setItem('lastInteraction', current.toString());
-    if(current-parseInt(last) > environment.idleTimeMins*1000){
+    if(current-parseInt(last) > this.idleAfterSeconds * 1000){
       //console.log('this was idle****');
       this.isIdle = true;
       this.idle$.next(true);

@@ -142,7 +142,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-code',
       active: true,
       url: '/payouts',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: [],
       submenu: []
     },
     {
