@@ -6,12 +6,10 @@
         let donation of getDonationArray.controls | paginate : config;
         let i = index
       " [formGroupName]="fieldGlobalIndex(i)">
-      <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
-      </mat-checkbox>
-      <div>
-        <div>
-          <div class="card__col-xs-12 card__col-sm-6">
-            <div class="card__col-xs-12 card__col-sm-6">
+      <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="mv">
+      </mat-checkbox>      
+          <div class="row">
+            <div class="col-sm-3">
               <mat-label>Donation Type*</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select (selectionChange)="displayTooltip(i); changed()" matTooltip="{{ donationToolTip }}"
@@ -25,7 +23,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-6">
+            <div class="col-sm-3">
               <mat-label>Transaction (Cash)</mat-label>
               <mat-form-field appearance="outline">
                 <input formControlName="amountInCash" name="amountInCash[i]" matInput placeholder="Amount in Cash"
@@ -42,9 +40,8 @@
                   Enter positive amount without decimal.</mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="card__col-xs-12 card__col-sm-6">
-            <div class="card__col-xs-12 card__col-sm-6">
+          
+          <div class="col-sm-3">
               <mat-label>Transaction (Online)</mat-label>
               <mat-form-field appearance="outline">
                 <input formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
@@ -57,8 +54,7 @@
                   Enter positive amount without decimal.</mat-error>
               </mat-form-field>
             </div>
-
-            <div class="card__col-xs-12 card__col-sm-6">
+            <div class="col-sm-3">
               <mat-label>Name of donee*</mat-label>
               <mat-form-field appearance="outline">
                 <input formControlName="name" matInput placeholder="Name of donee" name="name[i]" class="input-field"
@@ -70,11 +66,9 @@
                   ">
                   Name should be character only</mat-error>
               </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="card__col-xs-12 card__col-sm-6">
-          <div class="card__col-xs-12 card__col-sm-6">
+            </div>        
+        
+          <div class="col-sm-3 spsTp">
             <mat-label>PAN No of Donee*</mat-label>
             <mat-form-field appearance="outline">
               <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
@@ -103,7 +97,7 @@
                 Donee PAN can't be same as user PAN.</mat-error>
             </mat-form-field>
           </div>
-          <div class="card__col-xs-12 card__col-sm-6">
+          <div class="col-sm-3 spsTp">
             <mat-label>PIN Code of Donee*</mat-label>
             <mat-form-field appearance="outline">
               <input formControlName="pinCode" matInput currencyMask placeholder="PIN" name="pinCode[i]"
@@ -126,7 +120,7 @@
                 PIN should have 6 digits.</mat-error>
             </mat-form-field>
           </div>
-          <div class="card__col-xs-12 card__col-sm-6" style="margin-top: 20px;">
+          <div class="col-sm-3 spsTp">
             <mat-label>City of Donee*</mat-label>
             <mat-form-field appearance="outline">
               <input formControlName="city" matInput placeholder="City/Taluka/District" name="city[i]"
@@ -139,7 +133,7 @@
                 Enter valid city name.</mat-error>
             </mat-form-field>
           </div>
-          <div class="card__col-xs-12 card__col-sm-6" style="margin-top: 20px;">
+          <div class="col-sm-3 spsTp">
             <mat-label>State of Donee*</mat-label>
             <mat-form-field appearance="outline">
               <mat-select placeholder="State" formControlName="state" name="state[i]" required>
@@ -149,45 +143,43 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-          </div>
-        </div>
+          </div>       
 
-        <div class="card__col-xs-12 card__col-sm-6">
-          <div class="card__col-xs-12 address">
+        <div class="col-sm-9 spsTp">         
             <mat-label>Address*</mat-label>
             <mat-form-field appearance="outline">
               <textarea formControlName="address" name="address[i]" matInput currencyMask placeholder="Address"
                 class="input-field" required type="text" trim></textarea>
-            </mat-form-field>
-          </div>
+            </mat-form-field>      
         </div>
-      </div>
-
-      <div class="edit-head">
-        <button type="button" class="edit-donation" (click)="editDonationForm(i)">
+        <div class="col-sm-3 edit-head">
+        <button type="button" class="edit-donation edtRthBtn" (click)="editDonationForm(i)">
           <mat-icon> edit_square </mat-icon>Edit
         </button>
       </div>
-    </div>
-    <div class="display-flex">
-      <div class="card__col-xs-12">
-        <div class="card__col-sm-3">
-          <button type="submit" mat-stroked-button color="warn" (click)="deleteDonationArray()">
+
+    </div> <!-- Row Ends -->
+  </div>
+
+      <div class="row spsTp bdrTp">
+        <div class="col-sm-3">
+          <button type="submit" class="tbd-btn-secondary delBtn" (click)="deleteDonationArray()">
             <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
           </button>
         </div>
-        <div class="card__col-sm-6 txt-center">
+        <div class="col-sm-6">
           <table>
             <tr *ngFor="let item of getDonationArray.controls | paginate : config"></tr>
           </table>
           <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
         </div>
-        <div class="card__col-sm-3" style="text-align: right">
-          <button class="tbd-btn save-btn" (click)="saveGeneralDonation()">
+        <div class="col-sm-3">
+          <button class="tbd-btn save-btn mvRth" (click)="saveGeneralDonation()">
             Save
           </button>
         </div>
       </div>
-    </div>
+    
+    
   </div>
 </form>
