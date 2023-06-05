@@ -72,7 +72,7 @@ export class ItrFilingReportComponent implements OnInit {
 
     this.itrFillingReportGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.reportsCodeColumnDef(),
+      columnDefs: this.reportsCodeColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -172,6 +172,7 @@ export class ItrFilingReportComponent implements OnInit {
         this.config.totalItems = response?.data?.totalElements;
         this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
 
+
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
@@ -205,11 +206,15 @@ export class ItrFilingReportComponent implements OnInit {
   }
 
 
-  reportsCodeColumnDef() {
+  reportsCodeColumnDef(view) {
     return [
       {
-        headerName: 'Filer Name',
-        field: 'filerName',
+        // headerName: (view == 'leader' ? 'Leader Name' : (view == 'owner' ? 'Owner Name And Team' : 'Filer Name')),
+        // headerName: (view === 'leader' ? 'Leader Name ' : 'Filer Name') || (view === 'owner' ? 'Owner Name And Team':'Filer Name'),
+        // field: (view === 'leader' ? 'leaderName' : (view === 'owner' ? 'ownerName' : 'filerName')),
+
+        headerName: (view === 'leader' ? 'Leader Name' : (view === 'owner' ? 'Owner Name And Team' : 'Filer Name')),
+        field: (view === 'leader' ? 'leaderName' : (view === 'owner' ? 'ownerName' : 'filerName')),
         sortable: true,
         width: 150,
         pinned: 'left',
@@ -219,7 +224,7 @@ export class ItrFilingReportComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
       },
       {
         headerName: 'Total ITR Filed',
@@ -315,6 +320,7 @@ export class ItrFilingReportComponent implements OnInit {
       {
         headerName: 'Owner Name',
         field: 'ownerName',
+        hide: view === 'leader' ? true : false,
         sortable: true,
         width: 140,
         pinned: 'right',
@@ -330,7 +336,7 @@ export class ItrFilingReportComponent implements OnInit {
         headerName: 'Leader Name',
         field: 'leaderName',
         sortable: true,
-        width: 140,
+        width: view === 'leader' ?  200 : 140,
         pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -361,7 +367,15 @@ export class ItrFilingReportComponent implements OnInit {
       userFilter += `&leaderUserId=${loggedInId}`
     }
 
-    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&page=0&pageSize=100000${userFilter}`;
+    let viewFilter = '';
+    if(this.ownerView.value === true){
+      viewFilter += `&ownerView=${this.ownerView.value}`
+    }
+    if(this.leaderView.value === true){
+      viewFilter += `&leaderView=${this.leaderView.value}`
+    }
+
+    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&page=0&pageSize=100000${userFilter}${viewFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -396,6 +410,8 @@ export class ItrFilingReportComponent implements OnInit {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports();
+    this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+    this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
   }
 
   pageChanged(event) {
@@ -421,9 +437,14 @@ export class ItrFilingReportComponent implements OnInit {
     if (this.leaderView.value) {
       this.ownerView.disable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef('leader'))
+      // this.reportsCodeColumnDef('leader');
     } else {
       this.ownerView.enable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
     }
   }
 
@@ -431,9 +452,14 @@ export class ItrFilingReportComponent implements OnInit {
     if (this.ownerView.value) {
       this.leaderView.disable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef('owner'))
+      // this.reportsCodeColumnDef('owner')
     } else {
       this.leaderView.enable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
     }
   }
 

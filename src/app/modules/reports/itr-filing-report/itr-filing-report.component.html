@@ -3,60 +3,8 @@
   <div class="col-sm-6">
     <h4>ITR Filing Report:</h4>
   </div>
-  <div class="col-sm-6">
-    <section class="example-section">
-      <div class="checkbox-group">
-        <mat-checkbox [formControl]="leaderView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
-        <mat-checkbox [formControl]="ownerView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
-      </div>
-    </section>
-  </div>
 </div>
-<div class="rowClr">
-  <div class="surround">
-    <div class="row">
-      <div class="col-sm-3">
-        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)" [showOwnerList]=true>
-        </app-leader-list-dropdown>
-      </div>
-      <div class="col-sm-5">
-        <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-          (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-      </div>
-      <div class="col-sm-2 spsTp">
-        <mat-form-field appearance="outline">
-          <mat-label>From Date</mat-label>
-          <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
-            autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
-          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-          <mat-datepicker #picker1></mat-datepicker>
-          <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-sm-2 spsTp">
-        <mat-form-field appearance="outline">
-          <mat-label>To Date</mat-label>
-          <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
-            autocomplete="off" />
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
-          <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-          <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-sm-12 spsTp bdrTp">
-        <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
-          <i class="fa fa-download" aria-hidden="true"></i> Download File
-        </button>
-        <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-          Clear form
-        </button>
-        <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
-          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-        </button>
-      </div>
-    </div>
-  </div>
+
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog2">
   <mat-accordion class="headers-align">
@@ -70,7 +18,21 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12 bckClr">
+            <div class="col-sm-6">
+              <section class="example-section">
+                <div class="checkbox-group">
+                  <mat-checkbox [formControl]="leaderView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
+                  <mat-checkbox [formControl]="ownerView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}" *ngIf="roles.includes('ROLE_ADMIN')">
+              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)" [showOwnerList]=true>
+              </app-leader-list-dropdown>
+            </div>
+            <div class="col-sm-8 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
