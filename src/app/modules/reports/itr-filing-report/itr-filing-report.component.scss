@@ -7,3 +7,12 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+.checkbox-right {
+  float: right;
+  margin-bottom: 8px;
+}
+
+.checkbox-group.checkbox-right {
+  text-align: right;
+}
