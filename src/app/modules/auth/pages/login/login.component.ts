@@ -175,8 +175,6 @@ export class LoginComponent implements OnInit {
       data: {}
     });
     dialogRef.afterClosed().subscribe((result) => {
-      debugger
-
       if (result.status) {
         const param = `/sme-affiliateId`;
         const request = {
