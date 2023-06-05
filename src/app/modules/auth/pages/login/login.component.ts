@@ -340,7 +340,7 @@ export class LoginComponent implements OnInit {
         }, 2000);
         //register sme login
         this.registerLogin(userId);
-        // this.fetchAffiliateId(userId);
+        this.fetchAffiliateId(userId);
         this.utilsService.getStoredSmeList();
         this.getAgentList();
 
