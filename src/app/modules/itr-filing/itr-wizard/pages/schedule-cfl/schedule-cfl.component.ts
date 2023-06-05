@@ -195,7 +195,6 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     const cflArray = <FormArray>this.cflForm.get('cflArray');
     this.Copy_ITR_JSON.pastYearLosses = [];
     this.Copy_ITR_JSON.pastYearLosses = cflArray.getRawValue();
-    debugger
     this.loading = true;
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
