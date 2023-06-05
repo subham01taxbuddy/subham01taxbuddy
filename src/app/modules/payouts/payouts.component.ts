@@ -13,6 +13,7 @@ import {UserNotesComponent} from "../shared/components/user-notes/user-notes.com
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 import {environment} from "../../../environments/environment";
+import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
 
 @Component({
   selector: 'app-payouts',
@@ -52,11 +53,13 @@ export class PayoutsComponent implements OnInit {
               private http: HttpClient,
               private dialog: MatDialog,
               private itrMsService: ItrMsService,
+              private roleBaseAuthGuardService: RoleBaseAuthGuardService,
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
-
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    this.isEditAllowed = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_LEADER']);
     this.getLeaders();
     this.usersGridOptions = <GridOptions>{
       rowData: [],
@@ -66,9 +69,9 @@ export class PayoutsComponent implements OnInit {
       enableCellTextSelection: true,
       paginateChildRows:true,
       paginationPageSize: 15,
-      rowSelection:'multiple',
+      rowSelection: this.isEditAllowed ? 'multiple' : 'none',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
+        return rowNode.data ? this.isEditAllowed && rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
       },
       onGridReady: params => {
       },
@@ -85,6 +88,7 @@ export class PayoutsComponent implements OnInit {
   }
 
   loggedInUserId: number;
+  isEditAllowed: boolean;
   ngOnInit() {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.selectedStatus = this.statusList[2].value;
@@ -552,9 +556,10 @@ export class PayoutsComponent implements OnInit {
       {
         // headerName: "Approve",
         field: "commissionPaymentApprovalStatus",
-        headerCheckboxSelection: true,
+        headerCheckboxSelection: this.isEditAllowed,
         width: 50,
         pinned: 'right',
+        hide: !this.isEditAllowed,
         checkboxSelection: (params)=>{
           return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
         },
