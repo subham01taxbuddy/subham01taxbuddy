@@ -1,6 +1,6 @@
 import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import {Component, OnInit, Optional} from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -14,11 +14,12 @@ import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { environment } from 'src/environments/environment';
-import {AngularFireMessagingModule} from "@angular/fire/compat/messaging";
-import {getMessaging, getToken, Messaging, onMessage} from "@angular/fire/messaging";
-import {initializeApp} from "@angular/fire/app";
-import {EMPTY, from, Observable} from "rxjs";
+import { AngularFireMessagingModule } from "@angular/fire/compat/messaging";
+import { getMessaging, getToken, Messaging, onMessage } from "@angular/fire/messaging";
+import { initializeApp } from "@angular/fire/app";
+import { EMPTY, from, Observable } from "rxjs";
 import { share, tap } from 'rxjs/operators';
+import { AddAffiliateIdComponent } from './add-affiliate-id/add-affiliate-id.component';
 
 declare let $: any;
 
@@ -34,8 +35,8 @@ export class LoginComponent implements OnInit {
   public form!: FormGroup;
   public loading: boolean = false;
   public showPassword: boolean;
-  userId:any;
-  serviceType:any;
+  userId: any;
+  serviceType: any;
 
   constructor(
     private fb: FormBuilder,
@@ -83,7 +84,7 @@ export class LoginComponent implements OnInit {
         //     this._toastMessageService.alert("error", "Access Denied.");
         // }
       }
-      if(userData){
+      if (userData) {
         this.gotoCloud();
       }
 
@@ -94,31 +95,31 @@ export class LoginComponent implements OnInit {
     //check route params
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log(params);
-      if(params['action'] === 'set_password'){
+      if (params['action'] === 'set_password') {
         //go to password page
         this.changeMode('FORGOT_PASSWORD', params['mobile']);
       }
     });
 
   }
-  gotoCloud(){
-        this.activatedRoute.queryParams.subscribe((params) => {
-          console.log('99999999999999999:', params);
-          this.userId = params['userId'];
-          this.serviceType = params['serviceType'];
-          if (this.userId && this.serviceType) {
-            const url = this.router
-              .createUrlTree(['itr-filing/docs/user-docs/'], {
-                queryParams: {
-                  userId: this.userId,
-                  serviceType: this.serviceType,
-                },
-              })
-              .toString();
-            window.open(url);
-          }
-        });
+  gotoCloud() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      console.log('99999999999999999:', params);
+      this.userId = params['userId'];
+      this.serviceType = params['serviceType'];
+      if (this.userId && this.serviceType) {
+        const url = this.router
+          .createUrlTree(['itr-filing/docs/user-docs/'], {
+            queryParams: {
+              userId: this.userId,
+              serviceType: this.serviceType,
+            },
+          })
+          .toString();
+        window.open(url);
       }
+    });
+  }
 
   public onSubmit() {
     this.form.controls['passphrase'].setValidators([Validators.required, Validators.minLength(6)]);
@@ -145,6 +146,54 @@ export class LoginComponent implements OnInit {
     } else {
       $('input.ng-invalid').first().focus();
     }
+  }
+
+  fetchAffiliateId(userId) {
+    // 'http://uat-api.taxbuddy.com/user/sme-affiliate?smeUserId=12345'
+    let param = `/sme-affiliate?smeUserId=${userId}`
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        if (response.data.affiliateId) {
+          return;
+        } else {
+          this.addAffiliateId(userId);
+        }
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Failed to get affiliate Id");
+    })
+  }
+
+  addAffiliateId(userId) {
+    const dialogRef = this.dialog.open(AddAffiliateIdComponent, {
+      width: "60%",
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.status) {
+        const param = `/sme-affiliateId`;
+        const request = {
+          "smeUserId": userId,
+          "affiliateId": result.affiliateId
+        };
+        this.userMsService.postMethod(param, request).subscribe((res: any) => {
+          this.loading = false;
+          if (res.success) {
+            this._toastMessageService.alert("success", 'AffiliateId added successfully.');
+          } else {
+            this._toastMessageService.alert("error", res.message);
+          }
+        }, error => {
+          this.loading = false;
+          this._toastMessageService.alert("error", 'failed to add affiliateId.');
+        });
+      }
+    });
   }
 
   apiCallCounter = 0;
@@ -258,25 +307,25 @@ export class LoginComponent implements OnInit {
     await this.utilsService.getStoredFyList();
   }
 
-  registerLogin(userId){
+  registerLogin(userId) {
     //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
     let token = sessionStorage.getItem('webToken');
     let query = ''
-    if(token){
+    if (token) {
       query = `&firebaseWebToken=${token}`;
     }
     const param = `/sme-login?smeUserId=${userId}${query}`;
-    this.userMsService.postMethod(param).subscribe((res:any)=>{
-      if(res.success){
+    this.userMsService.postMethod(param).subscribe((res: any) => {
+      if (res.success) {
         console.log('sme login registered successfully');
-      }else {
+      } else {
         console.log('login', res);
       }
     });
   }
 
   getSmeInfoDetails(userId) {
-    if(!userId) {
+    if (!userId) {
       return;
     }
     this.loading = true;
@@ -289,10 +338,9 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.InitChat();
         }, 2000);
-
         //register sme login
         this.registerLogin(userId);
-
+        this.fetchAffiliateId(userId);
         this.utilsService.getStoredSmeList();
         this.getAgentList();
 
@@ -403,7 +451,7 @@ export class LoginComponent implements OnInit {
 
   mode: string = 'SIGN_IN';
   username: string = '';
-  changeMode(view: any, mobile?:string) {
+  changeMode(view: any, mobile?: string) {
     this.mode = view;
   }
 

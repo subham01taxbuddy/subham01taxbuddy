@@ -1,12 +1,12 @@
 
-import {Component, Optional} from '@angular/core';
-import { Router} from '@angular/router';
+import {Component, HostListener, Optional} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import {MatDialog, MatDialogState} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
 import {EMPTY, from, Observable} from "rxjs";
 import { Messaging, onMessage , getToken } from "@angular/fire/messaging";
-import {share, tap} from "rxjs/operators";
+import {filter, share, tap} from "rxjs/operators";
 import {IdleService} from "./services/idle-service";
 import {NavbarService} from "./services/navbar.service";
 import {HttpClient} from "@angular/common/http";
@@ -27,6 +27,7 @@ export class AppComponent {
   message$: Observable<any> = EMPTY;
   dialogRef:any;
   loading=false;
+  timedOut = false;
 
   constructor(
     private router: Router,
@@ -38,14 +39,19 @@ export class AppComponent {
     private userMsService: UserMsService,
     @Optional() messaging: Messaging
   ) {
-    // router.events.subscribe((val) => {
-    //   console.log(val);
-    //   if (val instanceof NavigationEnd) {
-    //     if (val.urlAfterRedirects != '/login') {
-    //       // this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');
-    //     }
-    //   }
-    // });
+    this.router.events
+      .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
+      .subscribe(event => {
+        if (
+          event.id === 1 &&
+          event.url === event.urlAfterRedirects
+        ) {
+          if(this.timedOut){
+            this.logout();
+            this.smeLogout();
+          }
+        }
+      });
 
     (function (d, m) {
       var kommunicateSettings =
@@ -115,10 +121,22 @@ export class AppComponent {
     }
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
+        this.timedOut = true;
         this.handleIdleTimeout();
       }
     });
-    idleService.wake$.subscribe(s => console.log('im awake!'));
+    idleService.wake$.subscribe(s => {
+      this.timedOut = false;
+      console.log('im awake!')
+    });
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    console.log('in page unload');
+    this.logout();
+    this.smeLogout();
+    return false;
   }
 
   handleIdleTimeout(){
