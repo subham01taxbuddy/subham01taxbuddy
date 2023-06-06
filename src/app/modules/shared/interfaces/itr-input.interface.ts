@@ -89,8 +89,16 @@ export interface ITR_JSON {
   optionForCurrentAY: CurrentNewRegime;
 
   section89: any;
+  acknowledgement89: any;
+  acknowledgementDate89: any;
+
   section90: any;
+  acknowledgement90: any;
+  acknowledgementDate90: any;
+
   section91: any;
+  acknowledgement91: any;
+  acknowledgementDate91: any;
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
