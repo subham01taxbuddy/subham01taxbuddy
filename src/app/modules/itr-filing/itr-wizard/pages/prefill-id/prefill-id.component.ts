@@ -1186,17 +1186,17 @@ export class PrefillIdComponent implements OnInit {
       }
 
       if (assessmentYear === '2023') {
-        this.ITR_Obj.assessmentYear = '2023-24';
-        this.ITR_Obj.financialYear = '2022-23';
+        this.ITR_Obj.assessmentYear = '2023-2024';
+        this.ITR_Obj.financialYear = '2022-2023';
       } else if (assessmentYear === '2022') {
-        this.ITR_Obj.assessmentYear = '2022-23';
-        this.ITR_Obj.financialYear = '2021-22';
+        this.ITR_Obj.assessmentYear = '2022-2023';
+        this.ITR_Obj.financialYear = '2021-2022';
       } else if (assessmentYear === '2021') {
-        this.ITR_Obj.assessmentYear = '2021-22';
-        this.ITR_Obj.financialYear = '2020-21';
+        this.ITR_Obj.assessmentYear = '2021-2022';
+        this.ITR_Obj.financialYear = '2020-2021';
       } else if (assessmentYear === '2020') {
-        this.ITR_Obj.assessmentYear = '2020-21';
-        this.ITR_Obj.financialYear = '2019-20';
+        this.ITR_Obj.assessmentYear = '2020-2021';
+        this.ITR_Obj.financialYear = '2019-2020';
       }
     }
 
@@ -3820,7 +3820,6 @@ export class PrefillIdComponent implements OnInit {
                 ],
                 deductionAmount: null,
               };
-
               this.ITR_Obj.capitalGain.push(SaleofAssetNADetail);
               this.ITR_Obj.systemFlags.hasCapitalGain = true;
             }
@@ -4160,12 +4159,11 @@ export class PrefillIdComponent implements OnInit {
                 }
               });
               this.ITR_Obj.systemFlags.hasCapitalGain = true;
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
             }
-
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
           }
 
           // LAND & BUILDING
