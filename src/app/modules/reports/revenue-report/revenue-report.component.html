@@ -1,0 +1,60 @@
+<h3>
+  Work in Progress!!!!!!
+</h3>
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="row" *ngIf="false">
+  <div class="col-sm-6">
+    <h4>Revenue Report:</h4>
+  </div>
+</div>
+
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog2" >
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Revenue Report:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+            <div class="col-sm-12">
+              <section class="example-section checkbox-right">
+                <div class="checkbox-group ">
+                  <mat-checkbox  [formControl]="leaderView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
+                  <mat-checkbox  [formControl]="ownerView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="row">
+            <!-- <div class="col-sm-4 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}" *ngIf="roles.includes('ROLE_ADMIN')">
+              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)" [showOwnerList]=true>
+              </app-leader-list-dropdown>
+            </div> -->
+            <div class="col-sm-8 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div class="col-sm-12 spsTp bdrTp">
+              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+              </button>
+              <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+                Clear form
+              </button>
+              <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+              </button>
+            </div>
+          </div>
+</div>
+</div>
+
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>

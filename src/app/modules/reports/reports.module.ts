@@ -13,6 +13,7 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { JsonToCsvService } from '../shared/services/json-to-csv.service';
 import { ItrFilingReportComponent } from './itr-filing-report/itr-filing-report.component';
 import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
+import { RevenueReportComponent } from './revenue-report/revenue-report.component';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { MissedChatReportComponent } from './missed-chat-report/missed-chat-repo
     ScheduleCallReportComponent,
     ItrFilingReportComponent,
     MissedChatReportComponent,
+    RevenueReportComponent
   ],
   entryComponents: [
     ReportsComponent,
