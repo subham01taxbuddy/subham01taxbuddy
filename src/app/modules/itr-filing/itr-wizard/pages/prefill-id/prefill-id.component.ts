@@ -2554,8 +2554,14 @@ export class PrefillIdComponent implements OnInit {
 
           // Updating employer details based on the key that we get from json in our itr obj employer category
           {
-            let jsonEmployerCategory =
-              ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]?.NatureOfEmployment;
+            let jsonEmployerCategory: any;
+            if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
+              jsonEmployerCategory =
+                ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]
+                  ?.NatureOfEmployment;
+            } else {
+              jsonEmployerCategory = 'OTH';
+            }
 
             if (jsonEmployerCategory === 'CGOV') {
               this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
@@ -3566,7 +3572,15 @@ export class PrefillIdComponent implements OnInit {
 
             if (Proviso112Applicabledtls) {
               Proviso112Applicabledtls.forEach((zcb) => {
-                if (zcb === Proviso112Applicabledtls[0]) {
+                if (
+                  zcb === Proviso112Applicabledtls[0] &&
+                  Proviso112Applicabledtls[0] &&
+                  Proviso112Applicabledtls[0].Proviso112Applicabledtls
+                    ?.BalanceCG !== 0 &&
+                  Proviso112Applicabledtls[0] &&
+                  Proviso112Applicabledtls[0].Proviso112Applicabledtls
+                    ?.FullConsideration !== 0
+                ) {
                   const zcbDetail = {
                     assessmentYear: '',
                     assesseeType: '',
@@ -3639,14 +3653,13 @@ export class PrefillIdComponent implements OnInit {
                   };
 
                   this.ITR_Obj.capitalGain.push(zcbDetail);
+                  sessionStorage.setItem(
+                    AppConstants.ITR_JSON,
+                    JSON.stringify(this.ITR_Obj)
+                  );
                   this.ITR_Obj.systemFlags.hasCapitalGain = true;
                 }
               });
-
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
             }
           }
 
@@ -3656,7 +3669,13 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.LongTermCapGain23?.SaleofBondsDebntr;
 
-            if (SaleofBondsDebntr) {
+            if (
+              SaleofBondsDebntr &&
+              SaleofBondsDebntr?.BalanceCG &&
+              SaleofBondsDebntr?.BalanceCG !== 0 &&
+              SaleofBondsDebntr?.FullConsideration &&
+              SaleofBondsDebntr?.FullConsideration !== 0
+            ) {
               const SaleofBondsDebntrDetails = {
                 assessmentYear: '',
                 assesseeType: '',
@@ -3732,7 +3751,13 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.LongTermCapGain23?.SaleofAssetNA;
 
-            if (SaleofAssetNA) {
+            if (
+              SaleofAssetNA &&
+              SaleofAssetNA?.BalanceCG &&
+              SaleofAssetNA?.BalanceCG !== 0 &&
+              SaleofAssetNA?.FullConsideration &&
+              SaleofAssetNA?.FullConsideration !== 0
+            ) {
               const SaleofAssetNADetail = {
                 assessmentYear: '',
                 assesseeType: '',
@@ -3809,112 +3834,119 @@ export class PrefillIdComponent implements OnInit {
 
             if (SaleofLandBuildDtls) {
               SaleofLandBuildDtls?.forEach((landAndBuilding) => {
-                const SaleofLandBuildDetails = {
-                  assessmentYear: '',
-                  assesseeType: '',
-                  residentialStatus: '',
-                  assetType: 'PLOT_OF_LAND',
-                  deduction:
-                    landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
-                      ({ ExemptionSecCode, ExemptionAmount }, index) => ({
-                        srn: index,
-                        underSection: ExemptionSecCode,
-                        orgAssestTransferDate: null,
-                        purchaseDate: null,
-                        panOfEligibleCompany: null,
-                        purchaseDatePlantMachine: null,
-                        costOfNewAssets: null,
-                        investmentInCGAccount: null,
-                        totalDeductionClaimed: ExemptionAmount,
-                        costOfPlantMachinary: null,
-                        usedDeduction: null,
-                      })
-                    ),
-                  improvement: [
-                    {
-                      id: null,
-                      srn: null,
-                      financialYearOfImprovement: null,
-                      dateOfImprovement: null,
-                      costOfImprovement: landAndBuilding?.ImproveCost,
-                      indexCostOfImprovement: null,
-                    },
-                  ],
-                  buyersDetails:
-                    landAndBuilding?.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
-                      (
-                        {
-                          NameOfBuyer,
-                          PANofBuyer,
-                          PercentageShare,
-                          Amount,
-                          AddressOfProperty,
-                          StateCode,
-                          CountryCode,
-                          PinCode,
-                        },
-                        index
-                      ) => ({
-                        aadhaarNumber: null,
-                        address: AddressOfProperty,
-                        amount: Amount,
-                        country: CountryCode,
-                        name: NameOfBuyer,
-                        pan: PANofBuyer,
-                        pin: PinCode,
-                        share: PercentageShare,
-                        srn: index,
-                        state: StateCode,
-                      })
-                    ),
-                  assetDetails: [
-                    {
-                      id: null,
-                      hasIndexation: null,
-                      isUploaded: null,
-                      srn: null,
-                      description: null,
-                      gainType: 'LONG',
-                      sellDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofSale
-                          ? landAndBuilding?.DateofSale
-                          : '2023-03-15'
+                if (
+                  landAndBuilding.FullConsideration &&
+                  landAndBuilding.FullConsideration !== 0 &&
+                  landAndBuilding.Balance &&
+                  landAndBuilding.Balance !== 0
+                ) {
+                  const SaleofLandBuildDetails = {
+                    assessmentYear: '',
+                    assesseeType: '',
+                    residentialStatus: '',
+                    assetType: 'PLOT_OF_LAND',
+                    deduction:
+                      landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
+                        ({ ExemptionSecCode, ExemptionAmount }, index) => ({
+                          srn: index,
+                          underSection: ExemptionSecCode,
+                          orgAssestTransferDate: null,
+                          purchaseDate: null,
+                          panOfEligibleCompany: null,
+                          purchaseDatePlantMachine: null,
+                          costOfNewAssets: null,
+                          investmentInCGAccount: null,
+                          totalDeductionClaimed: ExemptionAmount,
+                          costOfPlantMachinary: null,
+                          usedDeduction: null,
+                        })
                       ),
-                      sellValue: null,
-                      stampDutyValue: null,
-                      valueInConsideration:
-                        landAndBuilding?.FullConsideration50C,
-                      sellExpense: landAndBuilding?.ExpOnTrans,
-                      purchaseDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofPurchase
-                          ? landAndBuilding?.DateofPurchase
-                          : '2021-03-13'
+                    improvement: [
+                      {
+                        id: null,
+                        srn: null,
+                        financialYearOfImprovement: null,
+                        dateOfImprovement: null,
+                        costOfImprovement: landAndBuilding?.ImproveCost,
+                        indexCostOfImprovement: null,
+                      },
+                    ],
+                    buyersDetails:
+                      landAndBuilding?.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
+                        (
+                          {
+                            NameOfBuyer,
+                            PANofBuyer,
+                            PercentageShare,
+                            Amount,
+                            AddressOfProperty,
+                            StateCode,
+                            CountryCode,
+                            PinCode,
+                          },
+                          index
+                        ) => ({
+                          aadhaarNumber: null,
+                          address: AddressOfProperty,
+                          amount: Amount,
+                          country: CountryCode,
+                          name: NameOfBuyer,
+                          pan: PANofBuyer,
+                          pin: PinCode,
+                          share: PercentageShare,
+                          srn: index,
+                          state: StateCode,
+                        })
                       ),
-                      purchaseCost: landAndBuilding?.AquisitCost,
-                      isinCode: null,
-                      nameOfTheUnits: null,
-                      sellOrBuyQuantity: 1,
-                      sellValuePerUnit: null,
-                      purchaseValuePerUnit: null,
-                      algorithm: 'cgProperty',
-                      fmvAsOn31Jan2018: null,
-                      capitalGain: landAndBuilding?.Balance,
-                      indexCostOfAcquisition: landAndBuilding?.AquisitCostIndex,
-                      totalFairMarketValueOfCapitalAsset: null,
-                      grandFatheredValue: null,
-                      brokerName: null,
-                    },
-                  ],
-                  deductionAmount: null,
-                };
-                this.ITR_Obj.capitalGain.push(SaleofLandBuildDetails);
+                    assetDetails: [
+                      {
+                        id: null,
+                        hasIndexation: null,
+                        isUploaded: null,
+                        srn: null,
+                        description: null,
+                        gainType: 'LONG',
+                        sellDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofSale
+                            ? landAndBuilding?.DateofSale
+                            : '2023-03-15'
+                        ),
+                        sellValue: null,
+                        stampDutyValue: null,
+                        valueInConsideration:
+                          landAndBuilding?.FullConsideration50C,
+                        sellExpense: landAndBuilding?.ExpOnTrans,
+                        purchaseDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofPurchase
+                            ? landAndBuilding?.DateofPurchase
+                            : '2021-03-13'
+                        ),
+                        purchaseCost: landAndBuilding?.AquisitCost,
+                        isinCode: null,
+                        nameOfTheUnits: null,
+                        sellOrBuyQuantity: 1,
+                        sellValuePerUnit: null,
+                        purchaseValuePerUnit: null,
+                        algorithm: 'cgProperty',
+                        fmvAsOn31Jan2018: null,
+                        capitalGain: landAndBuilding?.Balance,
+                        indexCostOfAcquisition:
+                          landAndBuilding?.AquisitCostIndex,
+                        totalFairMarketValueOfCapitalAsset: null,
+                        grandFatheredValue: null,
+                        brokerName: null,
+                      },
+                    ],
+                    deductionAmount: null,
+                  };
+                  this.ITR_Obj.capitalGain.push(SaleofLandBuildDetails);
+                  this.ITR_Obj.systemFlags.hasCapitalGain = true;
+                  sessionStorage.setItem(
+                    AppConstants.ITR_JSON,
+                    JSON.stringify(this.ITR_Obj)
+                  );
+                }
               });
-
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
             }
           }
 
@@ -3950,11 +3982,20 @@ export class PrefillIdComponent implements OnInit {
                       purchaseCost: equityLtcg?.AcquisitionCost,
                       isinCode: equityLtcg?.ISINCode,
                       nameOfTheUnits: equityLtcg?.ShareUnitName,
-                      sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
-                      sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
+                      sellOrBuyQuantity:
+                        equityLtcg?.NumSharesUnits === 0
+                          ? 1
+                          : equityLtcg?.NumSharesUnits,
+                      sellValuePerUnit:
+                        equityLtcg?.NumSharesUnits === 0
+                          ? equityLtcg?.TotSaleValue
+                          : equityLtcg?.TotSaleValue /
+                            equityLtcg?.NumSharesUnits,
                       purchaseValuePerUnit:
-                        equityLtcg?.AcquisitionCost /
-                        equityLtcg?.NumSharesUnits,
+                        equityLtcg?.NumSharesUnits === 0
+                          ? equityLtcg?.AcquisitionCost
+                          : equityLtcg?.AcquisitionCost /
+                            equityLtcg?.NumSharesUnits,
                       algorithm: 'cgSharesMF',
                       fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
                       capitalGain: equityLtcg?.Balance,
@@ -4135,92 +4176,100 @@ export class PrefillIdComponent implements OnInit {
 
             if (SaleofLandBuildDtlsStcg) {
               SaleofLandBuildDtlsStcg?.forEach((landAndBuilding) => {
-                const SaleofLandBuildStcgDetails = {
-                  assessmentYear: '',
-                  assesseeType: '',
-                  residentialStatus: '',
-                  assetType: 'PLOT_OF_LAND',
-                  deduction: [],
-                  improvement: [
-                    {
-                      id: null,
-                      srn: null,
-                      financialYearOfImprovement: null,
-                      dateOfImprovement: null,
-                      costOfImprovement: landAndBuilding?.ImproveCost,
-                      indexCostOfImprovement: null,
-                    },
-                  ],
-                  buyersDetails:
-                    landAndBuilding.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
-                      (
-                        {
-                          NameOfBuyer,
-                          PANofBuyer,
-                          PercentageShare,
-                          Amount,
-                          AddressOfProperty,
-                          StateCode,
-                          CountryCode,
-                          PinCode,
-                        },
-                        index
-                      ) => ({
-                        aadhaarNumber: null,
-                        address: AddressOfProperty,
-                        amount: Amount,
-                        country: CountryCode,
-                        name: NameOfBuyer,
-                        pan: PANofBuyer,
-                        pin: PinCode,
-                        share: PercentageShare,
-                        srn: index,
-                        state: StateCode,
-                      })
-                    ),
-                  assetDetails: [
-                    {
-                      id: null,
-                      hasIndexation: null,
-                      isUploaded: null,
-                      srn: null,
-                      description: null,
-                      gainType: 'SHORT',
-                      sellDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofSale
-                          ? landAndBuilding?.DateofSale
-                          : '2023-03-15'
+                if (
+                  landAndBuilding.FullConsideration &&
+                  landAndBuilding.FullConsideration !== 0 &&
+                  landAndBuilding.Balance &&
+                  landAndBuilding.Balance !== 0
+                ) {
+                  const SaleofLandBuildStcgDetails = {
+                    assessmentYear: '',
+                    assesseeType: '',
+                    residentialStatus: '',
+                    assetType: 'PLOT_OF_LAND',
+                    deduction: [],
+                    improvement: [
+                      {
+                        id: null,
+                        srn: null,
+                        financialYearOfImprovement: null,
+                        dateOfImprovement: null,
+                        costOfImprovement: landAndBuilding?.ImproveCost,
+                        indexCostOfImprovement: null,
+                      },
+                    ],
+                    buyersDetails:
+                      landAndBuilding.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
+                        (
+                          {
+                            NameOfBuyer,
+                            PANofBuyer,
+                            PercentageShare,
+                            Amount,
+                            AddressOfProperty,
+                            StateCode,
+                            CountryCode,
+                            PinCode,
+                          },
+                          index
+                        ) => ({
+                          aadhaarNumber: null,
+                          address: AddressOfProperty,
+                          amount: Amount,
+                          country: CountryCode,
+                          name: NameOfBuyer,
+                          pan: PANofBuyer,
+                          pin: PinCode,
+                          share: PercentageShare,
+                          srn: index,
+                          state: StateCode,
+                        })
                       ),
-                      sellValue: null,
-                      stampDutyValue: null,
-                      valueInConsideration:
-                        landAndBuilding?.FullConsideration50C,
-                      sellExpense: landAndBuilding?.ExpOnTrans,
-                      purchaseDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofPurchase
-                          ? landAndBuilding?.DateofPurchase
-                          : '2022-04-15'
-                      ),
-                      purchaseCost: landAndBuilding?.AquisitCost,
-                      isinCode: null,
-                      nameOfTheUnits: null,
-                      sellOrBuyQuantity: 1,
-                      sellValuePerUnit: null,
-                      purchaseValuePerUnit: null,
-                      algorithm: 'cgProperty',
-                      fmvAsOn31Jan2018: null,
-                      capitalGain: landAndBuilding?.Balance,
-                      indexCostOfAcquisition: landAndBuilding?.AquisitCostIndex,
-                      totalFairMarketValueOfCapitalAsset: null,
-                      grandFatheredValue: null,
-                      brokerName: null,
-                    },
-                  ],
-                  deductionAmount: null,
-                };
-                this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+                    assetDetails: [
+                      {
+                        id: null,
+                        hasIndexation: null,
+                        isUploaded: null,
+                        srn: null,
+                        description: null,
+                        gainType: 'SHORT',
+                        sellDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofSale
+                            ? landAndBuilding?.DateofSale
+                            : '2023-03-15'
+                        ),
+                        sellValue: null,
+                        stampDutyValue: null,
+                        valueInConsideration:
+                          landAndBuilding?.FullConsideration50C,
+                        sellExpense: landAndBuilding?.ExpOnTrans,
+                        purchaseDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofPurchase
+                            ? landAndBuilding?.DateofPurchase
+                            : '2022-04-15'
+                        ),
+                        purchaseCost: landAndBuilding?.AquisitCost,
+                        isinCode: null,
+                        nameOfTheUnits: null,
+                        sellOrBuyQuantity: 1,
+                        sellValuePerUnit: null,
+                        purchaseValuePerUnit: null,
+                        algorithm: 'cgProperty',
+                        fmvAsOn31Jan2018: null,
+                        capitalGain: landAndBuilding?.Balance,
+                        indexCostOfAcquisition:
+                          landAndBuilding?.AquisitCostIndex,
+                        totalFairMarketValueOfCapitalAsset: null,
+                        grandFatheredValue: null,
+                        brokerName: null,
+                      },
+                    ],
+                    deductionAmount: null,
+                  };
+                  this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+                  this.ITR_Obj.systemFlags.hasCapitalGain = true;
+                }
               });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
             }
 
             sessionStorage.setItem(
