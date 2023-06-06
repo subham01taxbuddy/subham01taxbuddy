@@ -768,6 +768,10 @@ export class ScheduledCallComponent implements OnInit {
       this.searchParam.email = null;
     }
 
+    if(this.searchParam.email){
+      this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
+    }
+
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
 

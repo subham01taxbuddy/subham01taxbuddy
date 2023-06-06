@@ -189,7 +189,11 @@ export class PotentialUserComponent implements OnInit {
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
-     this.loading = true;
+    this.loading = true;
+
+    if(this.searchParam.email){
+      this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20&active=false

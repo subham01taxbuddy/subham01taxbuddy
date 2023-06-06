@@ -98,7 +98,15 @@ export class AssignedSmeComponent implements OnInit {
   getSmeSearchList(key: any, searchValue: any) {
     //https://uat-api.taxbuddy.com/report/sme-details-new/7521?page=0&pageSize=30&assigned=true
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    if(searchValue){
+      searchValue = searchValue.toLocaleLowerCase();
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
