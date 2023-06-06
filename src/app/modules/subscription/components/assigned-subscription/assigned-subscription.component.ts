@@ -267,7 +267,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.itrService.getMethod(param).subscribe((response: any) => {
         this.loading = false;
         console.log('Get user  by mobile number responce: ', response);
-        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
         if (response.data instanceof Array && response.data.length > 0) {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data)
@@ -488,13 +488,13 @@ export class AssignedSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           if (params.data.cancellationStatus === 'PENDING') {
             return `<button type="button" disabled class="action_icon add_button"
-          style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#04a4bc;">
-            <i class="fas fa-edit" aria-hidden="true"></i> Edit
+            style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#04a4bc;">
+            <i class="fas fa-edit" aria-hidden="true"> Edit</i>
            </button>`;
           } else {
-            return `<button type="button" class="action_icon add_button" title="Click to edit sme"
+            return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
-              <i class="fas fa-edit" aria-hidden="true" data-action-type="edit"></i> Edit
+              <i class="fas fa-edit" aria-hidden="true" data-action-type="edit"> Edit</i>
              </button>`;
           }
         },

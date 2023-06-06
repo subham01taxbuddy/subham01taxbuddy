@@ -35,7 +35,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
   templateUrl: './filings.component.html',
   styleUrls: ['./filings.component.scss'],
 })
-export class FilingsComponent implements OnInit, AfterContentChecked {
+export class FilingsComponent implements OnInit {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
@@ -121,9 +121,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
     })
   }
-  ngAfterContentChecked() {
-    this.cdRef.detectChanges();
-  }
+
+  // ngAfterContentChecked() {
+  //   this.cdRef.detectChanges();
+  // }
 
   async getMasterStatusList() {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
@@ -209,6 +210,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           this.searchParams.filerUserId = loggedInId;
           }
 
+        if(loggedInUserRoles.includes('ROLE_OWNER')){
+          this.searchParams.ownerUserId = loggedInId;
+          }
+
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
@@ -237,6 +242,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.email)) {
+
+        this.searchParams.email = this.searchParams.email.toLocaleLowerCase();
         param = param + `&email=${this.searchParams.email}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
@@ -268,7 +275,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData(this.itrDataList)
+              this?.createOnSalaryRowData(this?.itrDataList)
             );
           } else {
             this.itrDataList = [];

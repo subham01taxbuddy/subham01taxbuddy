@@ -142,7 +142,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-code',
       active: true,
       url: '/payouts',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: [],
       submenu: []
     },
     {
@@ -188,6 +188,7 @@ export class SidebarComponent{
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
+        { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
       ]
     }
   ];

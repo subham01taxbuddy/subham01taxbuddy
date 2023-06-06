@@ -1,3 +1,4 @@
+
 <!--<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>-->
 
 <div class="main clearfix">
@@ -15,7 +16,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <div class="radius">
+    <div class="radiusMain">
       <div class="row align-items-end">
         <div class="col-sm-4">
           <!-- <form class="form-inline"> -->
@@ -34,8 +35,8 @@
              [min]="minDate" [max]="maxDate">
           </div>
         </div>
-        <div class="col-sm-4 text-center">
-          <button class="proceed" [disabled]="loading" (click)="search('all')"><i class="fa fa-search" aria-hidden="true" ></i> Search </button>
+        <div class="col-sm-4">
+          <button class="srch-btn" [disabled]="loading" (click)="search('all')"><i class="fa fa-search" aria-hidden="true" ></i> Search </button>
         </div>
         <!-- </form> -->
       </div>
@@ -86,35 +87,7 @@
   </div>
   <div class="row rowClr">
 
-    <div class="col-sm-6">
-
-    </div>
-
-    <div class="col-sm-6" *ngIf="!hideCommission">
-      <div class="radius">
-        <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission Earned</span>&nbsp;
-        <span class="numTxBg">{{commissionData?.totalCommissionEarned || 'NA'}}</span>
-
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="radius1 grBk">
-            <span class="numTxSm grTx">{{commissionData?.totalCommissionReceived || 'NA'}} </span><br>
-            <span class="TxSm">Received</span><br>
-            <span class="grytx">Amount Approved</span>
-          </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="radius1 OrgBk">
-            <span class="numTxSm OrgTx">{{commissionData?.totalCommissionReceivable || 'NA'}}</span><br>
-            <span class="TxSm">Receivable</span><br>
-            <span class="grytx">Approval in Progress</span>
-          </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 mvup-custom1 ">
+    <div class="col-sm-12">
       <div class="radius">
       <!-- Internal Row Starts -->
       <div class="row" >
@@ -168,8 +141,34 @@
       </div>
     </div>
 
+    <div class="col-sm-6" *ngIf="!hideCommission">
+      <div class="radius">
+        <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission Earned</span>&nbsp;
+        <span class="numTxBg">{{commissionData?.totalCommissionEarned || 'NA'}}</span>
 
-  <div class="col-sm-6 mvup-custom">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="radius1 grBk">
+            <span class="numTxSm grTx">{{commissionData?.totalCommissionReceived || 'NA'}} </span><br>
+            <span class="TxSm">Received</span><br>
+            <span class="grytx">Amount Approved</span>
+          </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1 OrgBk">
+            <span class="numTxSm OrgTx">{{commissionData?.totalCommissionReceivable || 'NA'}}</span><br>
+            <span class="TxSm">Receivable</span><br>
+            <span class="grytx">Approval in Progress</span>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+
+
+  <div class="col-sm-6">
   <div class="radius">
     <span class="TxSm"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
     <span class="numTxBg">{{commissionData?.totalITRFiled || 'NA'}}</span>
