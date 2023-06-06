@@ -18,11 +18,11 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-6">
-              <section class="example-section">
-                <div class="checkbox-group">
-                  <mat-checkbox [formControl]="leaderView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
-                  <mat-checkbox [formControl]="ownerView" *ngIf="roles.includes('ROLE_LEADER')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
+            <div class="col-sm-12">
+              <section class="example-section checkbox-right">
+                <div class="checkbox-group ">
+                  <mat-checkbox  [formControl]="leaderView" [disabled]="disableCheckboxes" *ngIf="roles.includes('ROLE_ADMIN')"  (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
+                  <mat-checkbox  [formControl]="ownerView" [disabled]="disableCheckboxes" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
                 </div>
               </section>
             </div>

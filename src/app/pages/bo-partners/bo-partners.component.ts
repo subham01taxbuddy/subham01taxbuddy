@@ -493,13 +493,14 @@ export class BoPartnersComponent implements OnInit {
   }
 
   sendEmail(partnerData) {
-    this.loading = true;
-    let partnerName = partnerData.name;
-    let mobile = partnerData.mobileNumber;
-    var data = new FormData();
-    data.append('from', 'support@taxbuddy.com');
-    data.append('subject', 'Partner Onboarding in Taxbuddy BO');
-    data.append('body', `<!DOCTYPE html>
+    if(this.utileService.isNonEmpty(partnerData.emailAddress)) {
+      this.loading = true;
+      let partnerName = partnerData.name;
+      let mobile = partnerData.mobileNumber;
+      var data = new FormData();
+      data.append('from', 'support@taxbuddy.com');
+      data.append('subject', 'Partner Onboarding in Taxbuddy BO');
+      data.append('body', `<!DOCTYPE html>
 <html>
 
 <head>
@@ -555,18 +556,21 @@ export class BoPartnersComponent implements OnInit {
 </body>
 
 </html>`);
-    data.append('cc', 'partnerleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
-    data.append('isHtml', 'true');
-    data.append('to', partnerData.emailAddress);
+      data.append('cc', 'partnerleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
+      data.append('isHtml', 'true');
+      data.append('to', partnerData.emailAddress);
 
-    let param = '/send-mail';
-    this.userMsService.postMethod(param, data).subscribe((res: any) => {
-      console.log(res);
-      this.loading = false;
-    }, error => {
-      this.loading = false;
-      this.utileService.showSnackBar(error.error.text);
-    });
+      let param = '/send-mail';
+      this.userMsService.postMethod(param, data).subscribe((res: any) => {
+        console.log(res);
+        this.loading = false;
+      }, error => {
+        this.loading = false;
+        this.utileService.showSnackBar(error.error.text);
+      });
+    } else {
+      this.utileService.showSnackBar('Partner email address is not available. Please check with support team.');
+    }
   }
 
   viewDocuments(partner) {

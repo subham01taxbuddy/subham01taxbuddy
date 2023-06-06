@@ -94,119 +94,245 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     });
 
     this.summaryToolReliefsForm = this.fb.group({
-      section89: null,
-      section90: null,
-      section91: null,
+      section89: [],
+      acknowledgement89: [],
+      acknowledgementDate89: [],
+
+      section90: [],
+      acknowledgement90: [],
+      acknowledgementDate90: [],
+
+      section91: [],
+      acknowledgement91: [],
+      acknowledgementDate91: [],
     });
   }
 
   onChanges() {
-    const everOptedNewRegime =
-      this.regimeSelectionForm.get('everOptedNewRegime');
+    {
+      const everOptedNewRegime =
+        this.regimeSelectionForm.get('everOptedNewRegime');
 
-    const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
-      'everOptedOutOfNewRegime'
-    );
+      const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
+        'everOptedOutOfNewRegime'
+      );
 
-    if (this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4') {
-      everOptedNewRegime.setValidators(Validators.required);
-      everOptedNewRegime.updateValueAndValidity();
+      if (this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4') {
+        everOptedNewRegime.setValidators(Validators.required);
+        everOptedNewRegime.updateValueAndValidity();
 
-      everOptedOutOfNewRegime.setValidators(Validators.required);
-      everOptedOutOfNewRegime.updateValueAndValidity();
-    } else {
-      everOptedNewRegime.setValidators(null);
-      everOptedNewRegime.updateValueAndValidity();
+        everOptedOutOfNewRegime.setValidators(Validators.required);
+        everOptedOutOfNewRegime.updateValueAndValidity();
+      } else {
+        everOptedNewRegime.setValidators(null);
+        everOptedNewRegime.updateValueAndValidity();
 
-      everOptedOutOfNewRegime.setValidators(null);
-      everOptedOutOfNewRegime.updateValueAndValidity();
+        everOptedOutOfNewRegime.setValidators(null);
+        everOptedOutOfNewRegime.updateValueAndValidity();
+      }
+
+      everOptedNewRegime
+        .get('everOptedNewRegime')
+        .valueChanges.subscribe((val) => {
+          if (val) {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedNewRegime
+              .get('assessmentYear')
+              .setValidators(Validators.required);
+            everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedNewRegime
+              .get('acknowledgementNumber')
+              .setValidators(Validators.required);
+            everOptedNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedNewRegime.get('date').setValidators(Validators.required);
+            everOptedNewRegime.get('date').updateValueAndValidity();
+          } else {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedNewRegime.get('assessmentYear').setValidators(null);
+            everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
+            everOptedNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedNewRegime.get('date').setValidators(null);
+            everOptedNewRegime.get('date').updateValueAndValidity();
+          }
+        });
+
+      everOptedOutOfNewRegime
+        .get('everOptedOutOfNewRegime')
+        .valueChanges.subscribe((val) => {
+          if (val) {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedOutOfNewRegime
+              .get('assessmentYear')
+              .setValidators(Validators.required);
+            everOptedOutOfNewRegime
+              .get('assessmentYear')
+              .updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .setValidators(Validators.required);
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedOutOfNewRegime
+              .get('date')
+              .setValidators(Validators.required);
+            everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          } else {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
+            everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .setValidators(null);
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedOutOfNewRegime.get('date').setValidators(null);
+            everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          }
+        });
     }
 
-    everOptedNewRegime
-      .get('everOptedNewRegime')
-      .valueChanges.subscribe((val) => {
-        if (val) {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedNewRegime
-            .get('assessmentYear')
-            .setValidators(Validators.required);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+    {
+      const section89 = this.summaryToolReliefsForm.controls['section89'];
 
-          // acknowledgementNumber
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+      section89.valueChanges.subscribe((value) => {
+        if (Number(value) > 0) {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].setValidators(Validators.required);
 
-          // date
-          everOptedNewRegime.get('date').setValidators(Validators.required);
-          everOptedNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].updateValueAndValidity();
         } else {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedNewRegime.get('assessmentYear').setValidators(null);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].setValidators(null);
 
-          // acknowledgementNumber
-          everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].updateValueAndValidity();
 
-          // date
-          everOptedNewRegime.get('date').setValidators(null);
-          everOptedNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].updateValueAndValidity();
         }
       });
 
-    everOptedOutOfNewRegime
-      .get('everOptedOutOfNewRegime')
-      .valueChanges.subscribe((val) => {
-        if (val) {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedOutOfNewRegime
-            .get('assessmentYear')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime
-            .get('assessmentYear')
-            .updateValueAndValidity();
+      const section90 = this.summaryToolReliefsForm.controls['section90'];
 
-          // acknowledgementNumber
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+      section90.valueChanges.subscribe((value) => {
+        if (Number(value) > 0) {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].setValidators(Validators.required);
 
-          // date
-          everOptedOutOfNewRegime
-            .get('date')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].updateValueAndValidity();
         } else {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].setValidators(null);
 
-          // acknowledgementNumber
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(null);
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].updateValueAndValidity();
 
-          // date
-          everOptedOutOfNewRegime.get('date').setValidators(null);
-          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].updateValueAndValidity();
         }
       });
+
+      const section91 = this.summaryToolReliefsForm.controls['section91'];
+
+      section91.valueChanges.subscribe((value) => {
+        if (Number(value) > 0) {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].updateValueAndValidity();
+        } else {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].updateValueAndValidity();
+        }
+      });
+    }
   }
 
   updateCurrentAYOptions() {
@@ -640,17 +766,43 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     // Relief selection
     {
-      this.summaryToolReliefsForm.controls['section89'].setValue(
+      this.summaryToolReliefsForm.controls['section89']?.setValue(
         this.ITR_JSON.section89
       );
 
-      this.summaryToolReliefsForm.controls['section90'].setValue(
+      if (this.ITR_JSON.section89 && this.ITR_JSON.section89 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement89']?.setValue(
+          this.ITR_JSON.acknowledgement89
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate89']?.setValue(
+          this.ITR_JSON.acknowledgementDate89
+        );
+      } else {
+      }
+
+      this.summaryToolReliefsForm.controls['section90']?.setValue(
         this.ITR_JSON.section90
       );
+      if (this.ITR_JSON.section90 && this.ITR_JSON.section90 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
+          this.ITR_JSON.acknowledgement90
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
+          this.ITR_JSON.acknowledgementDate90
+        );
+      }
 
-      this.summaryToolReliefsForm.controls['section91'].setValue(
+      this.summaryToolReliefsForm.controls['section91']?.setValue(
         this.ITR_JSON.section91
       );
+      if (this.ITR_JSON.section91 && this.ITR_JSON.section91 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
+          this.ITR_JSON.acknowledgement91
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate91']?.setValue(
+          this.ITR_JSON.acknowledgementDate91
+        );
+      }
     }
   }
 
@@ -677,11 +829,49 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON.regime =
       this.regimeSelectionForm.value.optionForCurrentAY.currentYearRegime;
 
-    this.ITR_JSON.section89 = this.summaryToolReliefsForm.value.section89;
-    this.ITR_JSON.section90 = this.summaryToolReliefsForm.value.section90;
-    this.ITR_JSON.section91 = this.summaryToolReliefsForm.value.section91;
+    this.ITR_JSON.section89 = Number(
+      this.summaryToolReliefsForm?.value?.section89
+    );
+    if (this.ITR_JSON.section89 && this.ITR_JSON.section89 > 0) {
+      this.ITR_JSON.acknowledgement89 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement89
+      );
+      this.ITR_JSON.acknowledgementDate89 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate89;
+    } else {
+      this.ITR_JSON.acknowledgement89 = null;
+      this.ITR_JSON.acknowledgementDate89 = null;
+    }
 
-    if (this.regimeSelectionForm.valid) {
+    this.ITR_JSON.section90 = Number(
+      this.summaryToolReliefsForm?.value?.section90
+    );
+    if (this.ITR_JSON.section90 && this.ITR_JSON.section90 > 0) {
+      this.ITR_JSON.acknowledgement90 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement90
+      );
+      this.ITR_JSON.acknowledgementDate90 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate90;
+    } else {
+      this.ITR_JSON.acknowledgement90 = null;
+      this.ITR_JSON.acknowledgementDate90 = null;
+    }
+
+    this.ITR_JSON.section91 = Number(
+      this.summaryToolReliefsForm?.value?.section91
+    );
+    if (this.ITR_JSON.section91 && this.ITR_JSON.section91 > 0) {
+      this.ITR_JSON.acknowledgement91 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement91
+      );
+      this.ITR_JSON.acknowledgementDate91 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate91;
+    } else {
+      this.ITR_JSON.acknowledgement91 = null;
+      this.ITR_JSON.acknowledgementDate91 = null;
+    }
+
+    if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
       //save ITR object
       this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
@@ -705,7 +895,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     } else {
       this.submitted = true;
       this.utilsService.showSnackBar(
-        'Please fill all required Tax Regime details to continue'
+        'Please fill all required details to continue'
       );
       Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
         const control = this.regimeSelectionForm.get(key);

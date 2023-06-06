@@ -257,7 +257,7 @@
           <td>{{ i+1 }}</td>
           <td>{{ item.userName }}</td>
           <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
-          <td>{{ item.docUploadDate | date:'short' }}</td>
+          <td>{{ item.docUploadDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
           <td [ngClass]="{'text-danger': item.paymentStatus === 'Unpaid'}">{{ item.paymentStatus }}</td>
         </tr>
         <tr *ngIf="docUploadedData?.content?.length === 0">
@@ -347,7 +347,7 @@
           <td>{{ i+1 }}</td>
           <td>{{ item.userName }}</td>
           <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
-          <td>{{ item.summarySentDate | date:'short' }}</td>
+          <td>{{ item.summarySentDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
           <td>{{ item.userConfirmationStatus }}</td>
         </tr>
         <tr *ngIf="summaryConfirmationData?.content?.length === 0">
@@ -435,7 +435,7 @@
             <td>{{ i+1 }}</td>
             <td>{{ item.userName }}</td>
             <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
-            <td>{{ item.itrFiledDate | date:'short' }}</td>
+            <td>{{ item.itrFiledDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
           </tr>
           <tr *ngIf="eVerificationPendingData?.content?.length === 0">
             <td colspan="4" class="text-center">
@@ -520,7 +520,7 @@
               <td>{{ item.userName }}</td>
               <td><a [routerLink]="['/tasks/schedule-call']" [queryParams]="{mobileNumber: item.userMobile}">{{ item.userMobile }}</a></td>
               <!-- <td>{{ item.userMobile }}</td> -->
-              <td>{{ item.scheduleCallTime | date:'short' }}</td>
+              <td>{{ item.scheduleCallTime | date:'d/M/yy,  h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="scheduleCallData?.content?.length === 0">
               <td colspan="4" class="text-center">

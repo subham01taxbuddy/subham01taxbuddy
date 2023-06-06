@@ -6,13 +6,13 @@
     <div class="col-offset-1 col-10 id-input">
         <mat-form-field appearance="outline">
             <input matInput trim type="text" [formControl]="affiliateId" maxlength="100"
-                placeholder="Enter your email id registered with affiliate system">
+                placeholder="Enter your valid email id registered as affiliate">
             <mat-error class="error-msg" *ngIf="affiliateId?.invalid && (affiliateId?.dirty || affiliateId?.touched)">
                 <div *ngIf="affiliateId.errors?.['required']">
-                    Please enter the affiliate Id.
+                    Enter your valid email id registered as affiliate.
                 </div>
                 <div *ngIf="affiliateId.errors?.['email']">
-                    Enter the valid affiliateId.</div>
+                    Enter your valid email id registered as affiliate.</div>
             </mat-error>
         </mat-form-field>
     </div>

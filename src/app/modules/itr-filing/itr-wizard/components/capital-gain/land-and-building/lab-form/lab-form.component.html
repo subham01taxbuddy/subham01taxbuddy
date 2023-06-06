@@ -1,8 +1,5 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-<div>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
   <mat-accordion class="headers-align">
     <mat-expansion-panel class="hide-close" hideToggle [expanded]="true">
       <mat-expansion-panel-header>
@@ -14,36 +11,31 @@
 
       <div class="card" style="background: #ffffff">
         <form [formGroup]="immovableForm">
-          <div style="padding-top: 25px">
-            <span class="sectionTitle"
-              >Add details of capital gain from Land / Building /
-              Property?</span
-            >
+          <div class="row">
+            <div class="col-sm-9">
+            <span class="sectionTitle">Add details of capital gain from Land/Building/Property?</span>
+            </div>
+            <div class="col-sm-3">
             <span style="float: right">
-              <b> Capital Gain: </b
-              >{{
+              <b> Capital Gain:</b>{{
                 cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain
                   ? cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain
                   : "NA"
               }}
-              <b>Type: </b>
+              <b>Type:</b>
               {{
                 cgArrayElement?.assetDetails[currentCgIndex]?.gainType
                   ? cgArrayElement?.assetDetails[currentCgIndex]?.gainType
                   : "NA"
-              }}</span
-            >
+              }}
+            </span>
           </div>
+        </div>
 
-          <div class="card" formArrayName="assetDetails" class="inpSp">
-            <div
-              *ngFor="
-                let asset of getAssetDetailsArrayForImmovable.controls;
-                let i = index
-              "
-              [formGroupName]="i"
-            >
-              <div class="card__col-lg-4">
+          <div class="card" formArrayName="assetDetails">
+            <div *ngFor="let asset of getAssetDetailsArrayForImmovable.controls; let i = index" [formGroupName]="i">
+              <div class="row">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Date of Acquisition</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -97,7 +89,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="card__col-lg-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Date of Sale</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -153,7 +145,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="card__col-lg-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Full Value of Sale Consideration</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <input
@@ -176,7 +168,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="card__col-lg-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Cost of Acquisition</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
@@ -205,7 +197,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="card__col-lg-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Cost of acquisition with indexation</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <input
@@ -223,7 +215,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="card__col-lg-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Transfer Expenses</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
@@ -253,9 +245,12 @@
                   </mat-error>
                 </mat-form-field>
               </div>
+
             </div>
           </div>
-
+        </div>
+        
+        <hr />
           <div>
             <div style="padding-top: 25px">
               <span class="sectionTitle"
@@ -610,24 +605,25 @@
           </div>
           <hr />
 
-          <div>
-            <div>
-              <span>
+              <div class="row">
+              <div class="col-sm-9">
                 <span class="sectionTitle">Buyers details </span>
                 <i>(At least one Buyer detail is mandatory)</i>
-              </span>
+              </div>
+              <div class="col-sm-3">
               <button
                 mat-button
-                class="save-btn"
-                style="float: right"
+                class="addLandBtn mvRth"              
                 (click)="addMoreBuyersDetails()"
               >
                 + Add Buyer
               </button>
+              </div>
+            </div>
+
               <div formArrayName="buyersDetails">
-                <div
-                  style="padding: 25px"
-                  class="card cardYes"
+                <div               
+                  class="card cardYes spcBox"
                   *ngFor="
                     let buyer of getBuyersDetailsArrayForImmovable.controls;
                     let i = index
@@ -635,11 +631,11 @@
                   (click)="active = i"
                   [formGroupName]="i"
                 >
-                  <div class="card__row">
-                    <div class="card__col-xs-12 card__col-sm-3">
+                  <div class="row">
+                    <div class="col-sm-3">
                       <mat-label
                         ><mat-checkbox
-                          style="margin-right: 5px"
+                          class="mvChk"
                           name="buyer[i]"
                           formControlName="selected"
                         ></mat-checkbox
@@ -675,7 +671,7 @@
                       </mat-form-field>
                     </div>
 
-                    <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="col-sm-3">
                       <mat-label>Name</mat-label>
                       <mat-form-field appearance="outline">
                         <input
@@ -699,7 +695,7 @@
                       </mat-form-field>
                     </div>
 
-                    <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="col-sm-3">
                       <mat-label>Aadhar</mat-label>
                       <mat-form-field appearance="outline">
                         <input
@@ -715,7 +711,7 @@
                         />
                       </mat-form-field>
                     </div>
-                    <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="col-sm-3">
                       <mat-label>Shares (%)</mat-label>
                       <mat-form-field appearance="outline">
                         <input
@@ -747,11 +743,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                  </div>
-                  <div class="card__row">
-                    <div class="card__col-xs-12 card__col-sm-6">
-                      <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="col-sm-3">
                           <mat-label>Amount</mat-label>
                           <mat-form-field appearance="outline">
                             <input
@@ -777,7 +769,7 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="card__col-xs-12 card__col-sm-6">
+                        <div class="col-sm-3">
                           <mat-label>Pin</mat-label>
                           <mat-form-field appearance="outline">
                             <input
@@ -802,9 +794,7 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
-                      </div>
-                      <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-6">
+                       <div class="col-sm-3">
                           <mat-label>City</mat-label>
                           <mat-form-field appearance="outline">
                             <input
@@ -816,7 +806,7 @@
                             />
                           </mat-form-field>
                         </div>
-                        <div class="card__col-xs-12 card__col-sm-6">
+                        <div class="col-sm-3">
                           <mat-label>State</mat-label>
                           <mat-form-field appearance="outline">
                             <mat-select
@@ -832,11 +822,9 @@
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
+                        </div>                   
 
-                    <div class="card__col-xs-12 card__col-sm-6">
+                    <div class="col-sm-12">
                       <mat-label>Address</mat-label>
                       <mat-form-field appearance="outline">
                         <textarea
@@ -849,24 +837,24 @@
                         ></textarea>
                       </mat-form-field>
                     </div>
-                  </div>
-                </div>
-                <!--              [disabled]="!isEmployerSelected()"-->
 
-                <div>
-                  <button
-                    class="delete-btn"
-                    (click)="removeBuyersDetails(active)"
-                    [disabled]="!buyerSelected()"
-                  >
-                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
-                  </button>
+                  </div> <!-- Row Ends -->
                 </div>
               </div>
-            </div>
-          </div>
+                <!--              [disabled]="!isEmployerSelected()"-->
 
-          <br />
+                <div class="row spsTp bdrTp">
+                  <div class="col-sm-3">
+                  <button class="delete-btn" (click)="removeBuyersDetails(active)" [disabled]="!buyerSelected()">
+                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
+                  </button>
+                  </div>
+                </div>
+
+             
+         
+
+       
           <!--  <div class="row dialog-button">
                 <div class="sub_btn top-space">
                     <button type="submit" class="btn save" (click)="saveImmovableCG(this.immovableForm)"
@@ -883,4 +871,4 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-</div>
+
