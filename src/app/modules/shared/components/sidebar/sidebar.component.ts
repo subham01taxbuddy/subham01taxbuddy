@@ -181,7 +181,7 @@ export class SidebarComponent{
     {
       name: 'Reports',
       // iconClass: 'fa fa-code',
-      active: true,
+      active: false,
       url: null,
       roles: [],
       submenu: [
