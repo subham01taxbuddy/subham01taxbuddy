@@ -149,7 +149,6 @@ export class LoginComponent implements OnInit {
   }
 
   fetchAffiliateId(userId) {
-    // 'http://uat-api.taxbuddy.com/user/sme-affiliate?smeUserId=12345'
     let param = `/sme-affiliate?smeUserId=${userId}`
     this.userMsService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -337,10 +336,10 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
         setTimeout(() => {
           this.InitChat();
+          this.fetchAffiliateId(userId);
         }, 2000);
         //register sme login
         this.registerLogin(userId);
-        this.fetchAffiliateId(userId);
         this.utilsService.getStoredSmeList();
         this.getAgentList();
 

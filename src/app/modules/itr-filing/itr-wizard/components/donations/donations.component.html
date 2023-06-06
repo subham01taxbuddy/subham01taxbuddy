@@ -1,54 +1,29 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <form [formGroup]="generalDonationForm">
   <div formArrayName="donationArray">
-    <div
-      class="display-flex"
-      *ngFor="
+    <div class="display-flex" *ngFor="
         let donation of getDonationArray.controls | paginate : config;
         let i = index
-      "
-      [formGroupName]="fieldGlobalIndex(i)"
-    >
-      <mat-checkbox
-        color="primary"
-        name="hasEdit[i]"
-        formControlName="hasEdit"
-        class="ml30"
-      >
+      " [formGroupName]="fieldGlobalIndex(i)">
+      <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="mv">
       </mat-checkbox>
-      <div>
-        <div>
-          <div class="card__col-xs-12 card__col-sm-6">
-            <div class="card__col-xs-12 card__col-sm-6">
+          <div class="row">
+            <div class="col-sm-3">
               <mat-label>Donation Type*</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select
-                  (selectionChange)="displayTooltip(i); changed()"
-                  matTooltip="{{ donationToolTip }}"
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  placeholder="Type of donee"
-                  formControlName="schemeCode"
-                  name="schemeCode[i]"
-                  required
-                >
-                  <mat-option
-                    *ngFor="let dropdown of otherDonationToDropdown"
-                    [value]="dropdown.value"
-                    matTooltip="{{ dropdown.label }}"
-                    matTooltipClass="tab-tooltip"
-                    matTooltipPosition="above"
-                  >
+                <mat-select (selectionChange)="displayTooltip(i); changed()" matTooltip="{{ donationToolTip }}"
+                  matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder="Type of donee"
+                  formControlName="schemeCode" name="schemeCode[i]" required>
+                  <mat-option *ngFor="let dropdown of otherDonationToDropdown" [value]="dropdown.value"
+                    matTooltip="{{ dropdown.label }}" matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                    [disabled]="!dropdown.active">
                     {{ dropdown.label }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-6">
+            <div class="col-sm-3">
               <mat-label>Transaction (Cash)</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -77,250 +52,146 @@
                 >
               </mat-form-field>
             </div>
-          </div>
-          <div class="card__col-xs-12 card__col-sm-6">
-            <div class="card__col-xs-12 card__col-sm-6">
+
+          <div class="col-sm-3">
               <mat-label>Transaction (Online)</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  formControlName="amountOtherThanCash"
-                  matInput
-                  placeholder="Amount Other Than Cash"
-                  name="amountOtherThanCash[i]"
-                  required
-                  class="input-field"
-                  maxlength="14"
-                  digitsOnly
-                />
-                <mat-error
-                  *ngIf="
+                <input formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
+                  name="amountOtherThanCash[i]" required class="input-field" maxlength="14" digitsOnly />
+                <mat-error *ngIf="
                     generalDonationForm.controls['donationArray'].controls[
                       i
                     ].controls['amountOtherThanCash'].hasError('pattern')
-                  "
-                >
-                  Enter positive amount without decimal.</mat-error
-                >
+                  ">
+                  Enter positive amount without decimal.</mat-error>
               </mat-form-field>
             </div>
-
-            <div class="card__col-xs-12 card__col-sm-6">
+            <div class="col-sm-3">
               <mat-label>Name of donee*</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  formControlName="name"
-                  matInput
-                  placeholder="Name of donee"
-                  name="name[i]"
-                  class="input-field"
-                  maxlength="125"
-                  required
-                  type="text"
-                  trim
-                />
-                <mat-error
-                  *ngIf="
+                <input formControlName="name" matInput placeholder="Name of donee" name="name[i]" class="input-field"
+                  maxlength="125" required type="text" trim />
+                <mat-error *ngIf="
                     generalDonationForm.controls['donationArray'].controls[
                       i
                     ].controls['name'].hasError('pattern')
-                  "
-                >
-                  Name should be character only</mat-error
-                >
+                  ">
+                  Name should be character only</mat-error>
               </mat-form-field>
             </div>
-          </div>
-        </div>
-        <div class="card__col-xs-12 card__col-sm-6">
-          <div class="card__col-xs-12 card__col-sm-6">
+
+          <div class="col-sm-3 spsTp">
             <mat-label>PAN No of Donee*</mat-label>
             <mat-form-field appearance="outline">
-              <input
-                matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
-                matTooltipClass="tab-tooltip"
-                matTooltipPosition="above"
-                formControlName="panNumber"
-                matInput
-                currencyMask
-                placeholder="PAN of donee"
-                name="panNumber[i]"
-                class="input-field"
-                (blur)="checkDoneePAN(i, donation)"
-                maxlength="10"
-                minlength="10"
-                required
-                type="text"
-                trim
-                upperCase
-              />
-              <mat-hint style="margin-top: 10px"
-                >PAN unavailable? Use GGGGG0000G</mat-hint
-              >
-              <mat-error
-                *ngIf="
-                  generalDonationForm.controls['donationArray'].controls[
-                    i
-                  ].controls['panNumber'].hasError('pattern')
-                "
-              >
-                Enter valid PAN (e.g XXXXX1234X)</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  generalDonationForm.controls['donationArray'].controls[
-                    i
-                  ].controls['panNumber'].hasError('incorrect')
-                "
-              >
-                Donee PAN can't be same as user PAN.</mat-error
-              >
+              <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
+                matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="panNumber" matInput
+                currencyMask placeholder="PAN of donee" name="panNumber[i]" class="input-field"
+                (blur)="checkDoneePAN(i,donation)" maxlength="10" minlength="10" required type="text" trim upperCase />
+              <mat-hint *ngIf="
+                  generalDonationForm.controls['donationArray'].controls[i]
+                    .controls['donationType'] !== null &&
+                  generalDonationForm.controls['donationArray'].controls[i]
+                    .controls['donationType'] !== '' &&
+                  generalDonationForm.controls['donationArray'].controls[i]
+                    .controls['donationType'] !== undefined &&
+                  generalDonationForm.controls['donationArray'].controls[i]
+                    .controls['donationType'] === 'OTHER'
+                ">
+                In case of funds set by govt as described in section 80G(2),
+                please Use PAN as 'GGGGG0000G'</mat-hint>
+              <mat-error *ngIf="
+                  generalDonationForm.controls['donationArray'].controls[i].
+                  controls['panNumber'].hasError('pattern')
+                ">
+                Enter valid PAN (e.g XXXXX1234X)</mat-error>
+              <mat-error *ngIf="generalDonationForm.controls['donationArray'].controls[i].
+                  controls['panNumber'].hasError('incorrect')">
+                Donee PAN can't be same as user PAN.</mat-error>
             </mat-form-field>
           </div>
-          <div class="card__col-xs-12 card__col-sm-6">
+          <div class="col-sm-3 spsTp">
             <mat-label>PIN Code of Donee*</mat-label>
             <mat-form-field appearance="outline">
-              <input
-                formControlName="pinCode"
-                matInput
-                currencyMask
-                placeholder="PIN"
-                name="pinCode[i]"
-                class="input-field"
-                maxlength="6"
-                minlength="6"
-                required
-                type="text"
-                trim
-                digitsOnly
-                (blur)="
+              <input formControlName="pinCode" matInput currencyMask placeholder="PIN" name="pinCode[i]"
+                class="input-field" maxlength="6" minlength="6" required type="text" trim digitsOnly (blur)="
                   getData(
                     fieldGlobalIndex(i),
                     generalDonationForm.controls['donationArray'].controls[i]
                       .controls['pinCode'].value
                   )
-                "
-              />
-              <mat-error
-                *ngIf="
-                  generalDonationForm.controls['donationArray'].controls[
-                    i
-                  ].controls['pinCode'].hasError('pattern') ||
+                " />
+              <mat-error *ngIf="
+                  generalDonationForm.controls['donationArray'].controls[i].controls['pinCode'].hasError('pattern') ||
                   generalDonationForm.controls['donationArray'].controls[
                     i
                   ].controls['pinCode'].hasError('minlength') ||
                   generalDonationForm.controls['donationArray'].controls[
                     i
                   ].controls['pinCode'].hasError('maxlength')
-                "
-              >
-                PIN should have 6 digits.</mat-error
-              >
+                ">
+                PIN should have 6 digits.</mat-error>
             </mat-form-field>
           </div>
-          <div class="card__col-xs-12 card__col-sm-6" style="margin-top: 20px">
+          <div class="col-sm-3 spsTp">
             <mat-label>City of Donee*</mat-label>
             <mat-form-field appearance="outline">
-              <input
-                formControlName="city"
-                matInput
-                placeholder="City/Taluka/District"
-                name="city[i]"
-                class="input-field"
-                maxlength="50"
-                required
-                type="text"
-                trim
-              />
-              <mat-error
-                *ngIf="
+              <input formControlName="city" matInput placeholder="City/Taluka/District" name="city[i]"
+                class="input-field" maxlength="50" required type="text" trim />
+              <mat-error *ngIf="
                   generalDonationForm.controls['donationArray'].controls[
                     i
                   ].controls['city'].hasError('pattern')
-                "
-              >
-                Enter valid city name.</mat-error
-              >
+                ">
+                Enter valid city name.</mat-error>
             </mat-form-field>
           </div>
-          <div class="card__col-xs-12 card__col-sm-6" style="margin-top: 20px">
+          <div class="col-sm-3 spsTp">
             <mat-label>State of Donee*</mat-label>
             <mat-form-field appearance="outline">
-              <mat-select
-                placeholder="State"
-                formControlName="state"
-                name="state[i]"
-                required
-              >
+              <mat-select placeholder="State" formControlName="state" name="state[i]" required>
                 <mat-option>Select One</mat-option>
-                <mat-option
-                  *ngFor="let state of stateDropdown; let i = index"
-                  [value]="state.stateCode"
-                >
+                <mat-option *ngFor="let state of stateDropdown; let i = index" [value]="state.stateCode">
                   {{ state.stateName }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-        </div>
 
-        <div class="card__col-xs-12 card__col-sm-6">
-          <div class="card__col-xs-12 address">
+        <div class="col-sm-9 spsTp">
             <mat-label>Address*</mat-label>
             <mat-form-field appearance="outline">
-              <textarea
-                formControlName="address"
-                name="address[i]"
-                matInput
-                currencyMask
-                placeholder="Address"
-                class="input-field"
-                required
-                type="text"
-                trim
-              ></textarea>
+              <textarea formControlName="address" name="address[i]" matInput currencyMask placeholder="Address"
+                class="input-field" required type="text" trim></textarea>
             </mat-form-field>
-          </div>
         </div>
-      </div>
-
-      <div class="edit-head">
-        <button
-          type="button"
-          class="edit-donation"
-          (click)="editDonationForm(i)"
-        >
+        <div class="col-sm-3 edit-head">
+        <button type="button" class="edit-donation edtRthBtn" (click)="editDonationForm(i)">
           <mat-icon> edit_square </mat-icon>Edit
         </button>
       </div>
-    </div>
-    <div class="display-flex">
-      <div class="card__col-xs-12">
-        <div class="card__col-sm-3">
-          <button
-            type="submit"
-            mat-stroked-button
-            color="warn"
-            (click)="deleteDonationArray()"
-          >
+
+    </div> <!-- Row Ends -->
+  </div>
+
+      <div class="row spsTp bdrTp">
+        <div class="col-sm-3">
+          <button type="submit" class="tbd-btn-secondary delBtn" (click)="deleteDonationArray()">
             <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
           </button>
         </div>
-        <div class="card__col-sm-6 txt-center">
+        <div class="col-sm-6">
           <table>
-            <tr
-              *ngFor="let item of getDonationArray.controls | paginate : config"
-            ></tr>
+            <tr *ngFor="let item of getDonationArray.controls | paginate : config"></tr>
           </table>
-          <pagination-controls
-            (pageChange)="pageChanged($event)"
-          ></pagination-controls>
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
         </div>
-        <div class="card__col-sm-3" style="text-align: right">
-          <button class="tbd-btn save-btn" (click)="saveGeneralDonation()">
+        <div class="col-sm-3">
+          <button class="tbd-btn save-btn mvRth" (click)="saveGeneralDonation()">
             Save
           </button>
         </div>
       </div>
-    </div>
+
+
   </div>
 </form>
