@@ -2,6 +2,8 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
+
+<div class="mrgArd">
 <mat-accordion class="headers-align">
   <mat-expansion-panel
     [expanded]="step === 1"
@@ -23,10 +25,7 @@
     <div class="card">
       <form [formGroup]="bondsForm">
         <div formArrayName="bondsArray">
-          <div
-            class="tds-on"
-            *ngFor="
-              let bonds of getBondsArray.controls | paginate : config;
+          <div class="mvTp" *ngFor="let bonds of getBondsArray.controls | paginate : config;
               let i = index
             "
             [formGroupName]="fieldGlobalIndex(i)"
@@ -35,11 +34,11 @@
               color="primary"
               name="hasEdit[i]"
               formControlName="hasEdit"
-              class="ml30"
+              class=""
             >
             </mat-checkbox>
-            <div class="card__col-xs-12 card__col-sm-12">
-              <div class="card__col-xs-12 card__col-sm-3">
+            <div class="row cardClr">
+              <div class="col-sm-4">
                 <mat-label>Sale Date*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -80,7 +79,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4">
                 <mat-label>Cost of Acquisition*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -106,7 +105,7 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4">
                 <mat-label>Cost of improvement</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -131,7 +130,7 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Buy Date*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -161,7 +160,7 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Sale value*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -188,7 +187,7 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Expenses</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -211,7 +210,7 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Type of Capital Gain*</mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select
@@ -229,7 +228,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-3">
+              <div class="col-sm-4 spsTp">
                 <mat-label>Total Capital Gain*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -252,32 +251,33 @@
                   >
                 </mat-form-field>
               </div>
+              
+              <div class="col-sm-4 spsTp">
+                <button
+                  type="button"
+                  class="edit-donation"
+                  (click)="editBondsForm(i)"
+                >
+                  <mat-icon> edit_square </mat-icon>Edit
+                </button>
+              </div>
+
             </div>
 
-            <div class="edit-head">
-              <button
-                type="button"
-                class="edit-donation"
-                (click)="editBondsForm(i)"
-              >
-                <mat-icon> edit_square </mat-icon>Edit
-              </button>
-            </div>
+          
           </div>
-          <div class="display-flex">
-            <div class="card__col-xs-12">
-              <div class="card__col-sm-3">
+          <div class="row spsTp bdrTp">         
+            <div class="col-sm-3">
                 <button
                   type="submit"
-                  mat-stroked-button
-                  color="warn"
-                  class=""
+                  mat-stroked-button                
+                  class="delete-btn btnGry"
                   (click)="deleteBondsArray()"
                 >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
               </div>
-              <div class="card__col-sm-6 txt-center">
+              <div class="col-sm-6">
                 <table>
                   <tr
                     *ngFor="
@@ -289,11 +289,11 @@
                   (pageChange)="pageChanged($event)"
                 ></pagination-controls>
               </div>
-              <div class="card__col-sm-3" style="text-align: right">
+              <div class="col-sm-3">
                 <button
                   type="submit"
                   mat-stroked-button
-                  class=""
+                  class="tbd-btn save-btn mvRth"
                   [disabled]="bondsForm.invalid"
                   (click)="save('bonds')"
                 >
@@ -301,16 +301,19 @@
                 </button>
               </div>
             </div>
-          </div>
+
+          
         </div>
       </form>
     </div>
   </mat-expansion-panel>
 </mat-accordion>
+</div>
 
-<div class="card mt-5 mb-5 spBlw">
-  <div class="display-flex mt-3 mb-3">
-    <div class="card__col-xs-12 card__col-sm-8 isDeduction">
+<div class="mrgArd">
+  <div class="card bdrArnd">
+    <div class="row">
+    <div class="col-sm-9 isDeduction">
       Add deduction under section 54F?
       <i
         class="fa fa-info-circle"
@@ -321,13 +324,10 @@
         data-action-type="redirectUrl"
       ></i>
     </div>
-    <div
-      class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 mt-2 text-right"
-    >
-      <mat-radio-group [(ngModel)]="deduction" [disabled]="isDisable">
+    <div class="col-sm-3">
+      <mat-radio-group [(ngModel)]="deduction" [disabled]="isDisable" class="mvRth">
         <mat-radio-button
           [value]="true"
-          style="margin-left: 0px; margin-right: 2px"
           labelPosition="before"
           >Yes
         </mat-radio-button>
@@ -347,11 +347,11 @@
         color="primary"
         name="hasEdit[i]"
         formControlName="hasEdit"
-        class="ml30"
+        class="mvTp1"
       >
       </mat-checkbox>
-      <div class="card__col-xs-12 card__col-sm-12">
-        <div class="card__col-xs-12 card__col-sm-4">
+      <div class="row cardClr1">
+        <div class="col-sm-4">
           <mat-label>Type of Deduction*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -371,7 +371,7 @@
             >
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4">
           <mat-label>Purchase Date of New Asset*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -396,7 +396,7 @@
             >
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4">
           <mat-label>Cost of New Asset*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -417,7 +417,7 @@
             >
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4 spsTp">
           <mat-label>Amount deposited on CGAS*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -444,7 +444,7 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4 spsTp">
           <mat-label>Amount of Deduction Claimed*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -465,30 +465,27 @@
             >
           </mat-form-field>
         </div>
+       
+        <div class="col-sm-4 spsTp">
+          <button
+            type="button"
+            class="edit-donation"
+            (click)="deductionForm.enable()"
+          >
+            <mat-icon> edit_square </mat-icon>Edit
+          </button>
+        </div>
+
+
       </div>
 
-      <div class="edit-head">
-        <button
-          type="button"
-          class="edit-donation"
-          (click)="deductionForm.enable()"
-        >
-          <mat-icon> edit_square </mat-icon>Edit
-        </button>
-      </div>
+      
     </div>
   </form>
-  <div
-    class="card__col-xs-12 card__col-sm-12"
-    style="text-align: right"
-    *ngIf="deduction"
-  >
-    <button
-      type="submit"
-      class="tbd-btn save-btn"
-      [disabled]="deductionForm.invalid"
-      (click)="save()"
-    >
+  <div class="row spsTp bdrTp" *ngIf="deduction">
+    <div class="col-sm-9"></div>
+    <div class="col-sm-3">
+    <button type="submit" class="tbd-btn save-btn mvRth" [disabled]="deductionForm.invalid" (click)="save()">
       Save
     </button>
   </div>
