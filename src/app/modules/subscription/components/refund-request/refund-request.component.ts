@@ -162,7 +162,7 @@ export class RefundRequestComponent implements OnInit {
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
     let invoiceFilter = '';
     if (

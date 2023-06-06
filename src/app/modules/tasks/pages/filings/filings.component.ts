@@ -242,6 +242,8 @@ export class FilingsComponent implements OnInit {
         param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.email)) {
+
+        this.searchParams.email = this.searchParams.email.toLocaleLowerCase();
         param = param + `&email=${this.searchParams.email}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {

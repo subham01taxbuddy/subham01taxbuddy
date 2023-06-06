@@ -456,7 +456,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
     let emailFilter = '';
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid){
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
     let invoiceFilter = '';
     if(this.utilService.isNonEmpty(this.invoiceFormGroup.controls['invoiceNo'].value)){

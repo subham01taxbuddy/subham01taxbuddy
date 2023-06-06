@@ -91,9 +91,17 @@ export class UnassignedSmeComponent implements OnInit {
 
   getSmeSearchList(key: any, searchValue: any) {
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
-    // let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/${loggedInSmeUserId}?page=0&pageSize=30&assigned=false&${key}=${searchValue}`
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    if(searchValue){
+      searchValue = searchValue.toLocaleLowerCase();
+    }
+
+    //let data = this.utilsService.createUrlParams(this.searchParam);
+    let param = `page=0&pageSize=30&assigned=false&${key}=${searchValue}`
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
@@ -118,7 +126,10 @@ export class UnassignedSmeComponent implements OnInit {
 
   getSmeList() {
     // ${this.config.currentPage - 1}
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
     this.userMsService.getMethodNew(param).subscribe((result: any) => {

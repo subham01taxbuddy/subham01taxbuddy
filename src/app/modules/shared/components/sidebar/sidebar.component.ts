@@ -181,13 +181,14 @@ export class SidebarComponent{
     {
       name: 'Reports',
       // iconClass: 'fa fa-code',
-      active: true,
+      active: false,
       url: null,
       roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
+        { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
       ]
     }
   ];

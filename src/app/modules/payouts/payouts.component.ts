@@ -286,7 +286,7 @@ export class PayoutsComponent implements OnInit {
       {
         headerName: 'Ack No',
         field: 'ackNumber',
-        width: 100,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -323,7 +323,7 @@ export class PayoutsComponent implements OnInit {
       {
         headerName: 'Invoice List',
         field: 'invoiceNo',
-        width: 120,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
