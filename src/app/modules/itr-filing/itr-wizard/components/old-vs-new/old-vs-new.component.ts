@@ -766,16 +766,34 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     // Relief selection
     {
-      this.summaryToolReliefsForm.controls['section89'].setValue(
+      this.summaryToolReliefsForm.controls['section89']?.setValue(
         this.ITR_JSON.section89
       );
-
-      this.summaryToolReliefsForm.controls['section90'].setValue(
-        this.ITR_JSON.section90
+      this.summaryToolReliefsForm.controls['acknowledgement89']?.setValue(
+        this.ITR_JSON.acknowledgement89
+      );
+      this.summaryToolReliefsForm.controls['acknowledgementDate89']?.setValue(
+        this.ITR_JSON.acknowledgementDate89
       );
 
-      this.summaryToolReliefsForm.controls['section91'].setValue(
+      this.summaryToolReliefsForm.controls['section90']?.setValue(
+        this.ITR_JSON.section90
+      );
+      this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
+        this.ITR_JSON.acknowledgement90
+      );
+      this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
+        this.ITR_JSON.acknowledgementDate90
+      );
+
+      this.summaryToolReliefsForm.controls['section91']?.setValue(
         this.ITR_JSON.section91
+      );
+      this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
+        this.ITR_JSON.acknowledgement91
+      );
+      this.summaryToolReliefsForm.controls['acknowledgement91Date']?.setValue(
+        this.ITR_JSON.acknowledgementDate91
       );
     }
   }
@@ -803,9 +821,23 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON.regime =
       this.regimeSelectionForm.value.optionForCurrentAY.currentYearRegime;
 
-    this.ITR_JSON.section89 = this.summaryToolReliefsForm.value.section89;
-    this.ITR_JSON.section90 = this.summaryToolReliefsForm.value.section90;
-    this.ITR_JSON.section91 = this.summaryToolReliefsForm.value.section91;
+    this.ITR_JSON.section89 = this.summaryToolReliefsForm?.value?.section89;
+    this.ITR_JSON.acknowledgement89 =
+      this.summaryToolReliefsForm?.value?.acknowledgement89;
+    this.ITR_JSON.acknowledgementDate89 =
+      this.summaryToolReliefsForm?.value?.acknowledgementDate89;
+
+    this.ITR_JSON.section90 = this.summaryToolReliefsForm?.value?.section90;
+    this.ITR_JSON.acknowledgement90 =
+      this.summaryToolReliefsForm?.value?.acknowledgement90;
+    this.ITR_JSON.acknowledgementDate90 =
+      this.summaryToolReliefsForm?.value?.acknowledgementDate90;
+
+    this.ITR_JSON.section91 = this.summaryToolReliefsForm?.value?.section91;
+    this.ITR_JSON.acknowledgement91 =
+      this.summaryToolReliefsForm?.value?.acknowledgement91;
+    this.ITR_JSON.acknowledgementDate91 =
+      this.summaryToolReliefsForm?.value?.acknowledgementDate91;
 
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;

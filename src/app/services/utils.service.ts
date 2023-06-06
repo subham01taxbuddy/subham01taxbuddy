@@ -850,9 +850,18 @@ export class UtilsService {
         date: '',
         currentYearRegime: '',
       },
-      section89: 0,
-      section90: 0,
-      section91: 0,
+      section89: null,
+      acknowledgement89: null,
+      acknowledgementDate89: null,
+
+      section90: null,
+      acknowledgement90: null,
+      acknowledgementDate90: null,
+
+      section91: null,
+      acknowledgement91: null,
+      acknowledgementDate91: null,
+
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
     };
