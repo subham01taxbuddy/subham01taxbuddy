@@ -62,14 +62,14 @@ export class UtilsService {
       if (
         key === 'profitLossACIncomes' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          const profitLossACIncomes = obj[key][i].incomes;
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const profitLossACIncomes = obj[key][i]?.incomes;
           if (
-            (obj[key][i].netProfitfromNonSpeculativeIncome === 0 ||
-              obj[key][i].netProfitfromNonSpeculativeIncome === null) &&
-            obj[key][i].incomes.length === 0
+            (obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
+              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) &&
+            obj[key][i]?.incomes.length === 0
           ) {
             delete obj[key][i];
           }
@@ -80,11 +80,11 @@ export class UtilsService {
       if (
         key === 'employers' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
         //allowances
-        for (let i = 0; i < obj[key].length; i++) {
-          const salaryAllowance = obj[key][i].allowance;
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const salaryAllowance = obj[key][i]?.allowance;
           if (
             salaryAllowance &&
             Array.isArray(salaryAllowance) &&
@@ -93,8 +93,8 @@ export class UtilsService {
             for (let j = salaryAllowance.length - 1; j >= 0; j--) {
               if (
                 salaryAllowance[j] &&
-                (salaryAllowance[j].exemptAmount === 0 ||
-                  salaryAllowance[j].exemptAmount === null)
+                (salaryAllowance[j]?.exemptAmount === 0 ||
+                  salaryAllowance[j]?.exemptAmount === null)
               ) {
                 salaryAllowance.splice(j, 1);
               }
@@ -103,18 +103,18 @@ export class UtilsService {
         }
 
         //deductions
-        for (let i = 0; i < obj[key].length; i++) {
-          const salaryDeductions = obj[key][i].deductions;
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const salaryDeductions = obj[key][i]?.deductions;
           if (
             salaryDeductions &&
             Array.isArray(salaryDeductions) &&
-            salaryDeductions.length > 0
+            salaryDeductions?.length > 0
           ) {
-            for (let j = salaryDeductions.length - 1; j >= 0; j--) {
+            for (let j = salaryDeductions?.length - 1; j >= 0; j--) {
               if (
                 salaryDeductions[j] &&
-                (salaryDeductions[j].exemptAmount === 0 ||
-                  salaryDeductions[j].exemptAmount === null)
+                (salaryDeductions[j]?.exemptAmount === 0 ||
+                  salaryDeductions[j]?.exemptAmount === null)
               ) {
                 salaryDeductions.splice(j, 1);
               }
@@ -124,14 +124,14 @@ export class UtilsService {
       }
 
       //LOANS
-      if (key === 'loans' && Array.isArray(obj[key]) && obj[key].length > 0) {
-        for (let i = 0; i < obj[key].length; i++) {
+      if (key === 'loans' && Array.isArray(obj[key]) && obj[key]?.length > 0) {
+        for (let i = 0; i < obj[key]?.length; i++) {
           if (
-            (obj[key][i].interestPaidPerAnum === 0 ||
-              obj[key][i].interestPaidPerAnum === null) &&
-            (obj[key][i].principalPaidPerAnum === 0 ||
-              obj[key][i].principalPaidPerAnum === null) &&
-            (obj[key][i].loanAmount === 0 || obj[key][i].loanAmount === null)
+            (obj[key][i]?.interestPaidPerAnum === 0 ||
+              obj[key][i]?.interestPaidPerAnum === null) &&
+            (obj[key][i]?.principalPaidPerAnum === 0 ||
+              obj[key][i]?.principalPaidPerAnum === null) &&
+            (obj[key][i]?.loanAmount === 0 || obj[key][i]?.loanAmount === null)
           ) {
             delete obj[key][i];
           }
@@ -142,10 +142,10 @@ export class UtilsService {
       if (
         key === 'expenses' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -155,15 +155,15 @@ export class UtilsService {
       if (
         key === 'insurances' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
+        for (let i = 0; i < obj[key]?.length; i++) {
           if (
-            (obj[key][i].medicalExpenditure === 0 ||
-              obj[key][i].medicalExpenditure === null) &&
-            (obj[key][i].premium === 0 || obj[key][i].premium === null) &&
-            (obj[key][i].preventiveCheckUp === 0 ||
-              obj[key][i].preventiveCheckUp === null)
+            (obj[key][i]?.medicalExpenditure === 0 ||
+              obj[key][i]?.medicalExpenditure === null) &&
+            (obj[key][i]?.premium === 0 || obj[key][i]?.premium === null) &&
+            (obj[key][i]?.preventiveCheckUp === 0 ||
+              obj[key][i]?.preventiveCheckUp === null)
           ) {
             delete obj[key][i];
           }
@@ -171,9 +171,13 @@ export class UtilsService {
       }
 
       //INCOMES
-      if (key === 'incomes' && Array.isArray(obj[key]) && obj[key].length > 0) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+      if (
+        key === 'incomes' &&
+        Array.isArray(obj[key]) &&
+        obj[key]?.length > 0
+      ) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -183,16 +187,16 @@ export class UtilsService {
       if (
         key === 'donations' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
+        for (let i = 0; i < obj[key]?.length; i++) {
           if (
-            (obj[key][i].schemeCode === '' ||
-              obj[key][i].schemeCode === null) &&
-            (obj[key][i].amountOtherThanCash === 0 ||
-              obj[key][i].amountOtherThanCash === null) &&
-            (obj[key][i].amountInCash === 0 ||
-              obj[key][i].amountInCash === null)
+            (obj[key][i]?.schemeCode === '' ||
+              obj[key][i]?.schemeCode === null) &&
+            (obj[key][i]?.amountOtherThanCash === 0 ||
+              obj[key][i]?.amountOtherThanCash === null) &&
+            (obj[key][i]?.amountInCash === 0 ||
+              obj[key][i]?.amountInCash === null)
           ) {
             delete obj[key][i];
           }
@@ -203,10 +207,10 @@ export class UtilsService {
       if (
         key === 'dividendIncomes' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
         for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].income === 0 || obj[key][i].income === null) {
+          if (obj[key][i]?.income === 0 || obj[key][i]?.income === null) {
             delete obj[key][i];
           }
         }
@@ -216,10 +220,10 @@ export class UtilsService {
       if (
         key === 'investments' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -229,10 +233,10 @@ export class UtilsService {
       if (
         key === 'disabilities' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -242,18 +246,18 @@ export class UtilsService {
       if (
         key === 'houseProperties' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          const HPloans = obj[key][i].loans;
-          if (HPloans && Array.isArray(HPloans) && HPloans.length > 0) {
-            for (let j = HPloans.length - 1; j >= 0; j--) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const HPloans = obj[key][i]?.loans;
+          if (HPloans && Array.isArray(HPloans) && HPloans?.length > 0) {
+            for (let j = HPloans?.length - 1; j >= 0; j--) {
               if (
                 HPloans[j] &&
-                (HPloans[j].interestAmount === 0 ||
-                  HPloans[j].interestAmount === null) &&
-                (HPloans[j].principalAmount === 0 ||
-                  HPloans[j].principalAmount === null)
+                (HPloans[j]?.interestAmount === 0 ||
+                  HPloans[j]?.interestAmount === null) &&
+                (HPloans[j]?.principalAmount === 0 ||
+                  HPloans[j]?.principalAmount === null)
               ) {
                 HPloans.splice(j, 1);
               }
@@ -267,7 +271,7 @@ export class UtilsService {
         delete obj[key];
       } else if (typeof obj[key] === 'object') {
         if (Array.isArray(obj[key])) {
-          obj[key] = obj[key].filter((item) => item !== null);
+          obj[key] = obj[key]?.filter((item) => item !== null);
         } else {
           this.removeNullProperties(obj[key]);
           if (Object.keys(obj[key]).length === 0) {

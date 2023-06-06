@@ -543,7 +543,10 @@
               </div>
             </div>
             <div
-              *ngIf="summaryToolReliefsForm.get('section89').value"
+              *ngIf="
+                summaryToolReliefsForm.get('section89').value &&
+                summaryToolReliefsForm.get('section89').value !== '0'
+              "
               class="flex"
               style="margin-left: auto"
             >
@@ -617,7 +620,10 @@
               </div>
             </div>
             <div
-              *ngIf="summaryToolReliefsForm.get('section90').value"
+              *ngIf="
+                summaryToolReliefsForm.get('section90').value &&
+                summaryToolReliefsForm.get('section90').value !== '0'
+              "
               class="flex"
               style="margin-left: auto"
             >
@@ -689,7 +695,10 @@
               </div>
             </div>
             <div
-              *ngIf="summaryToolReliefsForm.get('section91').value"
+              *ngIf="
+                summaryToolReliefsForm.get('section91').value &&
+                summaryToolReliefsForm.get('section91').value !== '0'
+              "
               class="flex"
               style="margin-left: auto"
             >

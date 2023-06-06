@@ -222,7 +222,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       const section89 = this.summaryToolReliefsForm.controls['section89'];
 
       section89.valueChanges.subscribe((value) => {
-        if (value) {
+        if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement89'
           ].setValidators(Validators.required);
@@ -260,7 +260,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       const section90 = this.summaryToolReliefsForm.controls['section90'];
 
       section90.valueChanges.subscribe((value) => {
-        if (value) {
+        if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement90'
           ].setValidators(Validators.required);
@@ -298,7 +298,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       const section91 = this.summaryToolReliefsForm.controls['section91'];
 
       section91.valueChanges.subscribe((value) => {
-        if (value) {
+        if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement91'
           ].setValidators(Validators.required);
@@ -769,32 +769,40 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.summaryToolReliefsForm.controls['section89']?.setValue(
         this.ITR_JSON.section89
       );
-      this.summaryToolReliefsForm.controls['acknowledgement89']?.setValue(
-        this.ITR_JSON.acknowledgement89
-      );
-      this.summaryToolReliefsForm.controls['acknowledgementDate89']?.setValue(
-        this.ITR_JSON.acknowledgementDate89
-      );
+
+      if (this.ITR_JSON.section89 && this.ITR_JSON.section89 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement89']?.setValue(
+          this.ITR_JSON.acknowledgement89
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate89']?.setValue(
+          this.ITR_JSON.acknowledgementDate89
+        );
+      } else {
+      }
 
       this.summaryToolReliefsForm.controls['section90']?.setValue(
         this.ITR_JSON.section90
       );
-      this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
-        this.ITR_JSON.acknowledgement90
-      );
-      this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
-        this.ITR_JSON.acknowledgementDate90
-      );
+      if (this.ITR_JSON.section90 && this.ITR_JSON.section90 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
+          this.ITR_JSON.acknowledgement90
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
+          this.ITR_JSON.acknowledgementDate90
+        );
+      }
 
       this.summaryToolReliefsForm.controls['section91']?.setValue(
         this.ITR_JSON.section91
       );
-      this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
-        this.ITR_JSON.acknowledgement91
-      );
-      this.summaryToolReliefsForm.controls['acknowledgement91Date']?.setValue(
-        this.ITR_JSON.acknowledgementDate91
-      );
+      if (this.ITR_JSON.section91 && this.ITR_JSON.section91 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
+          this.ITR_JSON.acknowledgement91
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate91']?.setValue(
+          this.ITR_JSON.acknowledgementDate91
+        );
+      }
     }
   }
 
@@ -821,23 +829,47 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON.regime =
       this.regimeSelectionForm.value.optionForCurrentAY.currentYearRegime;
 
-    this.ITR_JSON.section89 = this.summaryToolReliefsForm?.value?.section89;
-    this.ITR_JSON.acknowledgement89 =
-      this.summaryToolReliefsForm?.value?.acknowledgement89;
-    this.ITR_JSON.acknowledgementDate89 =
-      this.summaryToolReliefsForm?.value?.acknowledgementDate89;
+    this.ITR_JSON.section89 = Number(
+      this.summaryToolReliefsForm?.value?.section89
+    );
+    if (this.ITR_JSON.section89 && this.ITR_JSON.section89 > 0) {
+      this.ITR_JSON.acknowledgement89 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement89
+      );
+      this.ITR_JSON.acknowledgementDate89 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate89;
+    } else {
+      this.ITR_JSON.acknowledgement89 = null;
+      this.ITR_JSON.acknowledgementDate89 = null;
+    }
 
-    this.ITR_JSON.section90 = this.summaryToolReliefsForm?.value?.section90;
-    this.ITR_JSON.acknowledgement90 =
-      this.summaryToolReliefsForm?.value?.acknowledgement90;
-    this.ITR_JSON.acknowledgementDate90 =
-      this.summaryToolReliefsForm?.value?.acknowledgementDate90;
+    this.ITR_JSON.section90 = Number(
+      this.summaryToolReliefsForm?.value?.section90
+    );
+    if (this.ITR_JSON.section90 && this.ITR_JSON.section90 > 0) {
+      this.ITR_JSON.acknowledgement90 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement90
+      );
+      this.ITR_JSON.acknowledgementDate90 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate90;
+    } else {
+      this.ITR_JSON.acknowledgement90 = null;
+      this.ITR_JSON.acknowledgementDate90 = null;
+    }
 
-    this.ITR_JSON.section91 = this.summaryToolReliefsForm?.value?.section91;
-    this.ITR_JSON.acknowledgement91 =
-      this.summaryToolReliefsForm?.value?.acknowledgement91;
-    this.ITR_JSON.acknowledgementDate91 =
-      this.summaryToolReliefsForm?.value?.acknowledgementDate91;
+    this.ITR_JSON.section91 = Number(
+      this.summaryToolReliefsForm?.value?.section91
+    );
+    if (this.ITR_JSON.section91 && this.ITR_JSON.section91 > 0) {
+      this.ITR_JSON.acknowledgement91 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement91
+      );
+      this.ITR_JSON.acknowledgementDate91 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate91;
+    } else {
+      this.ITR_JSON.acknowledgement91 = null;
+      this.ITR_JSON.acknowledgementDate91 = null;
+    }
 
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
