@@ -149,24 +149,43 @@ export class ItrFilingReportComponent implements OnInit {
   }
  }
 
-  showReports() {
+  showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/calling-report/itr-filing-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&leaderUserId=9523'
     this.loading = true;
-    let data = this.utilsService.createUrlParams(this.searchParam);
     let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     let param = '';
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
+    if (this.ownerId && !this.filerId && !pageChange) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+    }
+
+    if(this.ownerId && pageChange){
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerId) {
+
+    if (this.filerId && !pageChange) {
       userFilter += `&filerUserId=${this.filerId}`;
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
     }
-    if (this.leaderId) {
-      userFilter += `&leaderUserId=${this.leaderId}`
+
+    if(this.filerId && pageChange){
+      userFilter += `&ownerUserId=${this.filerId}`;
+    }
+
+    if (this.leaderId && !pageChange) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
+    }
+
+    if (this.leaderId && pageChange) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
     let viewFilter = '';
@@ -176,6 +195,8 @@ export class ItrFilingReportComponent implements OnInit {
     if(this.leaderView.value === true){
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
+
+    let data = this.utilsService.createUrlParams(this.searchParam);
 
     param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${viewFilter}`;
 
@@ -429,9 +450,10 @@ export class ItrFilingReportComponent implements OnInit {
   }
 
   pageChanged(event) {
+    let pageChange =event
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
-    this.showReports();
+    this.showReports(pageChange);
   }
 
   setToDateValidation(FromDate) {
