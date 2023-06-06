@@ -21,36 +21,40 @@
           <mat-expansion-panel-header>
             <mat-panel-title (click)="editEmployerDetails(i)">
               <div class="container">
-              <div class="row">
-                <!-- checkbox & title  -->
-                <div class="col-sm-10">
-                  <div class="row">
-                  <div class="col-sm-1">
-                  <mat-checkbox class="chk" name="selected[i]" formControlName="selected" (click)="$event.stopPropagation()">
-                  </mat-checkbox>
+                <div class="row">
+                  <!-- checkbox & title  -->
+                  <div class="col-sm-10">
+                    <div class="row">
+                      <div class="col-sm-1">
+                        <mat-checkbox
+                          class="chk"
+                          name="selected[i]"
+                          formControlName="selected"
+                          (click)="$event.stopPropagation()"
+                        >
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-11">
+                        <div class="employerTitle lfTx">
+                          {{ employer.value.employerName }}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-sm-11">
-                  <div class="employerTitle lfTx">
-                    {{ employer.value.employerName }}
-                  </div>
-                  </div>
+
+                  <div class="col-sm-2 mv-rght">
+                    <div class="fig">
+                      {{ taxableIncomes[i] }}
+                    </div>
+
+                    <div class="btnArw">
+                      <mat-icon (click)="editEmployerDetails(i)">
+                        arrow_forward_ios
+                      </mat-icon>
+                    </div>
                   </div>
                 </div>
-
-                <div class="col-sm-2 mv-rght">                
-                  
-                <div class="fig">{{ this.ITR_JSON.employers[i].taxableIncome }} </div>  
-
-                <div class="btnArw">
-                  <mat-icon (click)="editEmployerDetails(i)" >
-                    arrow_forward_ios
-                  </mat-icon>                       
-                  </div>
-                
               </div>
-
-              </div>
-            </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
         </mat-expansion-panel>
@@ -71,7 +75,7 @@
   (deactivate)="unsubscribe()"
 ></router-outlet>
 <div *ngIf="showList" class="flex justify-between p-[30px] back-foot">
-  <button class="lgtBtn" (click)="goBack()">    
-    <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Main Page    
+  <button class="lgtBtn" (click)="goBack()">
+    <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Main Page
   </button>
 </div>

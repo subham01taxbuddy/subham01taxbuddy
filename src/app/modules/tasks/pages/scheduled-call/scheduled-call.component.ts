@@ -182,9 +182,9 @@ export class ScheduledCallComponent implements OnInit {
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
-    var param2 = `/schedule-call-details/${id}?&page=${this.config.currentPage - 1
+    var param2 = `/dashboard/schedule-call-details/${id}?&page=${this.config.currentPage - 1
       }&size=${this.searchParam.size}`;
-    this.userMsService.getMethod(param2).subscribe(
+    this.userMsService.getMethodNew(param2).subscribe(
       (result: any) => {
         if (result.success == false) {
           this.toastMsgService.alert(
@@ -454,10 +454,8 @@ export class ScheduledCallComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);">
-              <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
-             </button>`;
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;"> <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          </button>`;
         },
         width: 60,
         pinned: 'right',
@@ -770,24 +768,28 @@ export class ScheduledCallComponent implements OnInit {
       this.searchParam.email = null;
     }
 
+    if(this.searchParam.email){
+      this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
+    }
+
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     // https://uat-api.taxbuddy.com/user/schedule-call-details/7523?page=0&pageSize=30&searchAsCoOwner=true
 
-    var param = `/schedule-call-details/${this.agentId}?${data}`;
+    var param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
     if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-      param = `/schedule-call-details/${this.agentId}?${data}`;
+      param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
     }
     else {
       param;
     }
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
       if (result.success == false) {

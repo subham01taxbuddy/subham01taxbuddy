@@ -140,7 +140,12 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo.mobileNumber);
     if (!this.name.value) this.name.setValue(boPartnersInfo.name);
     if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo.emailAddress);
-    if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
+    if(typeof(boPartnersInfo.languageProficiency) === 'string'){
+      console.log('hurray', [boPartnersInfo.languageProficiency]);
+      this.languages.setValue([boPartnersInfo.languageProficiency]);
+    } else {
+      if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
+    }
     if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo.referredBy);
     if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo.incomeTaxBasic);
     if (!this.qualification.value) this.qualification.setValue(boPartnersInfo.qualification);
@@ -224,7 +229,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   getOwner() {
     const loggedInSmeUserId = this.loggedInSme[0].userId
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log("ownerlist", this.ownerList)
@@ -245,7 +250,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   getLeader() {
     const loggedInSmeUserId = this.loggedInSme[0].userId
     let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
 
       this.leaderList = result.data;
       console.log('leader list result -> ', result);

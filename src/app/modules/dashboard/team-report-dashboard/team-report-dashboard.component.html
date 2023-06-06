@@ -37,14 +37,14 @@
             </div>
           </div>
           <div class="col-sm-4">
-            <button class="srch-btn"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
         </div>
       </div>
 
       <div class="radiusMain">
         <div class="row">
-          <div class="col-sm-5">
+          <div class="col-sm-4">
             <!-- <form class="form-inline">
                       <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
                           aria-label="Search">
@@ -74,11 +74,11 @@
                   </form>
               </div> -->
 
-           <div class="col-sm-3 text-center">
-                  <button class="srch-btn" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+           <div class="col-sm-4">
+                  <button class="srch-btn" [disabled]="loading"  (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
-         
-            <button class="clrLnk mvRth" (click)="this.resetFilters()">
+
+            <button class="clrLnk1" [disabled]="loading"  (click)="this.resetFilters()">
                Clear form
             </button>
           </div>
@@ -156,7 +156,7 @@
             <div class="col-sm-4">
               <div class="radius1">
               <span class="numTxSm">{{operationTeamData?.partner || 'NA'}}</span><br>
-              <span class="TxSm">Partner</span><br>
+              <span class="TxSm">External SME's</span><br>
             </div>
             </div>
             <div class="col-sm-4">
@@ -335,7 +335,7 @@
             </div>
           </div>
           <div class="col-sm-3">
-            <button class="srch-btn"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
           </div>
         </div>
       </div>

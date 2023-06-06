@@ -131,7 +131,7 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         { name: 'Proforma Invoice', url: '/subscription/proforma-invoice', roles: [] },
-        { name: 'Refund Request', url: '/subscription/refund-request', roles: [] },
+        { name: 'Refund Request', url: '/subscription/refund-request', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
         { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
@@ -142,7 +142,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-code',
       active: true,
       url: '/payouts',
-      roles: ['ROLE_LEADER'],
+      roles: [],
       submenu: []
     },
     {
@@ -183,9 +183,11 @@ export class SidebarComponent{
       // iconClass: 'fa fa-code',
       active: true,
       url: null,
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
+        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
+        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
       ]
     }
   ];

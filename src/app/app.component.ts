@@ -1,12 +1,19 @@
 
-import {Component, Optional} from '@angular/core';
-import { Router} from '@angular/router';
+import {Component, HostListener, Optional} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogState} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
 import {EMPTY, from, Observable} from "rxjs";
 import { Messaging, onMessage , getToken } from "@angular/fire/messaging";
-import {share, tap} from "rxjs/operators";
+import {filter, share, tap} from "rxjs/operators";
+import {IdleService} from "./services/idle-service";
+import {NavbarService} from "./services/navbar.service";
+import {HttpClient} from "@angular/common/http";
+import Auth from '@aws-amplify/auth';
+import { environment } from 'src/environments/environment';
+import { UtilsService } from './services/utils.service';
+import { UserMsService } from './services/user-ms.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,21 +25,34 @@ export class AppComponent {
 
   token$: Observable<any> = EMPTY;
   message$: Observable<any> = EMPTY;
+  dialogRef:any;
+  loading=false;
+  timedOut = false;
 
   constructor(
     private router: Router,
     public swUpdate: SwUpdate,
     private dialog: MatDialog,
+    private idleService: IdleService,
+    private http: HttpClient,
+    private utilsService: UtilsService,
+    private userMsService: UserMsService,
     @Optional() messaging: Messaging
   ) {
-    // router.events.subscribe((val) => {
-    //   console.log(val);
-    //   if (val instanceof NavigationEnd) {
-    //     if (val.urlAfterRedirects != '/login') {
-    //       // this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');
-    //     }
-    //   }
-    // });
+    this.router.events
+      .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
+      .subscribe(event => {
+        if (
+          event.id === 1 &&
+          event.url === event.urlAfterRedirects
+        ) {
+          this.timedOut = sessionStorage.getItem('timedOut') === '1';
+          if(this.timedOut){
+            this.logout();
+            this.smeLogout();
+          }
+        }
+      });
 
     (function (d, m) {
       var kommunicateSettings =
@@ -87,7 +107,7 @@ export class AppComponent {
             // vapidKey: environment.vapidKey,
           }).then((value)=>{
             console.log('recvd token as=> ', value);
-            sessionStorage.setItem('webToken', value); 
+            sessionStorage.setItem('webToken', value);
           })
         )).pipe(
         tap(token => console.log('FCM', {token})),
@@ -100,7 +120,123 @@ export class AppComponent {
     } else {
       console.log('messaging not initialise');
     }
+    idleService.idle$.subscribe(s => {
+      if (this.router.url !== '/login') {
+        this.timedOut = true;
+        sessionStorage.setItem('timedOut', this.timedOut ? '1' : '0');
+        this.handleIdleTimeout();
+      }
+    });
+    idleService.wake$.subscribe(s => {
+      this.timedOut = false;
+      console.log('im awake!');
+    });
+  }
 
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    console.log('in page unload');
+    if(this.timedOut) {
+      this.logout();
+      this.smeLogout();
+    }
+    return false;
+  }
+
+  handleIdleTimeout(){
+    if (this.dialogRef && this.dialogRef.getState() === MatDialogState.OPEN) {
+      return;
+    }
+     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Idle Timeout!',
+        message: 'You have been logged out due to inactivity. Please login again.',
+        isHide: true,
+        showActions: false
+      },
+      disableClose: true,
+      panelClass: 'reloadWindowPopup'
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      console.log('logging out', this.router.url);
+      this.logout();
+      this.smeLogout();
+    });
+    this.dialogRef.backdropClick().subscribe(()=>{
+      console.log('logging out');
+      this.logout();
+      this.smeLogout();
+    })
+  }
+
+  logout() {
+    Auth.signOut()
+      .then(data => {
+        (window as any).Kommunicate.logout();
+        (function (d, m) {
+            var kommunicateSettings =
+              {
+                "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
+                "popupWidget": true,
+                "automaticChatOpenOnNavigation": true,
+                "preLeadCollection":
+                  [
+                    {
+                      "field": "Name", // Name of the field you want to add
+                      "required": true, // Set 'true' to make it a mandatory field
+                      "placeholder": "Enter your name" // add whatever text you want to show in the placeholder
+                    },
+                    {
+                      "field": "Email",
+                      "type": "email",
+                      "required": true,
+                      "placeholder": "Enter your email"
+                    },
+                    {
+                      "field": "Phone",
+                      "type": "number",
+                      "required": true,
+                      "element": "input", // Optional field (Possible values: textarea or input)
+                      "placeholder": "Enter your phone number"
+                    }
+                  ],
+
+              };
+
+            var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+            s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+            var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+            (window as any).kommunicate = m; m._globals = kommunicateSettings;
+          }
+        )(document,  (window as any).kommunicate || {});
+
+        sessionStorage.clear();
+        NavbarService.getInstance().clearAllSessionData();
+        this.router.navigate(['/login']);
+
+        //Ashwini:check if this is needed
+        NavbarService.getInstance(this.http).logout();
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+  }
+
+  smeLogout(){
+    // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
+    let inActivityTime = environment.idleTimeMins;
+    let smeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}`;
+
+    this.userMsService.postMethod(param, '').subscribe((response:any)=>{
+      this.loading = false;
+
+    }, (error) => {
+      this.loading = false;
+      console.log('error in sme Logout API',error)
+    })
   }
 
   reloadWindow() {
@@ -115,11 +251,13 @@ export class AppComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
-        // if(environment.production){
-        //   this.cmService.signOut();
-        // }
         window.location.reload();
+        navigator.serviceWorker.getRegistration('/').then(function(registration) {
+          registration.update();
+        });
       }
-    })
+
+    });
+
   }
 }

@@ -9,7 +9,11 @@ import { MatDialogRef, MAT_DIALOG_DATA,MatDialog } from '@angular/material/dialo
 export class ConfirmDialogComponent  {
 
   constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-  
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+
+    dialogRef.disableClose = data.disableClose;
+
+  }
+
 
 }

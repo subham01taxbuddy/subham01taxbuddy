@@ -20,9 +20,6 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   today: any;
   scheduleCflArray = [
     {
-      hasEdit: '', assessmentPastYear: '2014-15', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
-    },
-    {
       hasEdit: '', assessmentPastYear: '2015-16', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
     },
     {
@@ -39,6 +36,8 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       hasEdit: '', assessmentPastYear: '2020-21', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
     }, {
       hasEdit: '', assessmentPastYear: '2021-22', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+    }, {
+      hasEdit: '', assessmentPastYear: '2022-23', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
     }
   ]
   constructor(
@@ -77,7 +76,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   disableSILoss() {
     const cflArray = <FormArray>this.cflForm.get('cflArray');
     cflArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['assessmentPastYear'].value === '2014-15' || (element as FormGroup).controls['assessmentPastYear'].value === '2015-16' || (element as FormGroup).controls['assessmentPastYear'].value === '2016-17' || (element as FormGroup).controls['assessmentPastYear'].value === '2017-18') {
+      if ((element as FormGroup).controls['assessmentPastYear'].value === '2015-16' || (element as FormGroup).controls['assessmentPastYear'].value === '2016-17' || (element as FormGroup).controls['assessmentPastYear'].value === '2017-18') {
         (element as FormGroup).controls['speculativeBusinessLoss'].disable();
       }
     })
@@ -196,7 +195,6 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     const cflArray = <FormArray>this.cflForm.get('cflArray');
     this.Copy_ITR_JSON.pastYearLosses = [];
     this.Copy_ITR_JSON.pastYearLosses = cflArray.getRawValue();
-    debugger
     this.loading = true;
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;

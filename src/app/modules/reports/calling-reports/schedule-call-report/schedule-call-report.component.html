@@ -1,3 +1,61 @@
-<p>
-  schedule-call-report works!
-</p>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog2">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Schedule Call Report:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+            <div class="col-sm-12 bckClr">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div class="col-sm-12 spsTp bdrTp">
+              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+              </button>
+              <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()" *ngIf="!roles?.includes('ROLE_FILER')">
+                Clear form
+              </button>
+              <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()" *ngIf="!roles?.includes('ROLE_FILER')">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+              </button>
+            </div>
+          </div>
+</div>
+</div>
+
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
+
+
+<div class="tableSpc">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="txTit">
+        Schedule Call Reports Details:
+      </div>
+    </div>
+    <!-- <div class="col-sm-4">
+  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
+  </div> -->
+  </div>
+
+  <table>
+    <tr *ngFor="let item of scheduleCallingReport | paginate : config"></tr>
+  </table>
+
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="scheduleCallingReportGridOptions">
+    </ag-grid-angular>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+
+</div>

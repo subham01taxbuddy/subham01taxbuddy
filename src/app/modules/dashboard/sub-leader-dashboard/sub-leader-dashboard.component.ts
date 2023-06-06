@@ -164,7 +164,7 @@ export class SubLeaderDashboardComponent implements OnInit {
 
      param = `/dashboard/invoice-report?${userFilter}&fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR`
 
-    this.userMsService.getMethod(param).subscribe((response: any) => {
+     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
          this.invoiceData = response.data;

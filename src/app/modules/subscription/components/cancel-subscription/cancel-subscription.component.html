@@ -1,48 +1,56 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog1">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Cancel Subscription:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
+           </div>
 
-<div class="align-items-center row">
-    <div class="col-sm-4">
-      <b style="font-size: 20px">Cancel Subscription </b>
-    </div>
-    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-      <p>
-        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-      </p>
-    </div>
-  </div>
-
-<div class="rowClr">
-<div class="surround">
-<div class="row">
-  <div class="col-sm-12 bckClr">
-  <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
-  </div>
-
-   <div class="col-sm-6 spsTp">
-                        <mat-label> Mobile Number </mat-label>
-                        <mat-form-field appearance="outline">
-                            <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
-                        </mat-form-field>
-   </div>
-   <div class="col-sm-6 spsTp">
-                        <mat-label> Email Address </mat-label>
-                        <mat-form-field appearance="outline">
-                            <input type="text" matInput [formControl]="email" />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-12 spsTp bdrTp">
-                      <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
-                        Clear form
-                      </button>
-                        <button class="srch-btn mvRth" (click)="applyFilter()">
-                            <i class="fas fa-search" aria-hidden="true"></i> Search
-                        </button>
-
-
-                    </div>
+           <div class="col-sm-12 bckClr">
+            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
+            </div>
+          
+             <div class="col-sm-6 spsTp">
+                                  <mat-label> Mobile Number </mat-label>
+                                  <mat-form-field appearance="outline">
+                                      <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
+                                  </mat-form-field>
+             </div>
+             <div class="col-sm-6 spsTp">
+                                  <mat-label> Email Address </mat-label>
+                                  <mat-form-field appearance="outline">
+                                      <input type="text" matInput [formControl]="email" />
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-sm-12 spsTp bdrTp">
+                                <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
+                                  Clear form
+                                </button>
+                                  <button class="srch-btn mvRth" (click)="applyFilter()">
+                                      <i class="fas fa-search" aria-hidden="true"></i> Search
+                                  </button>
+          
+          
+                              </div>
+            </div>
 </div>
 </div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
 </div>
+<!-- New Open Close Filter Ends -->
+
 <!-- Table Below -->
 <div class="tableSpc">
     <div class="row">

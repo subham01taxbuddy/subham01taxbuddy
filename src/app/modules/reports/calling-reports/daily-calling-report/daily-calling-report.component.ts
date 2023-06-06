@@ -11,6 +11,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {AppConstants} from "../../../shared/constants";
 
 export const MY_FORMATS = {
   parse: {
@@ -53,6 +54,8 @@ export class DailyCallingReportComponent implements OnInit {
   };
   dailyCallingReportGridOptions: GridOptions;
 
+  loggedInSme: any;
+  roles: any;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -84,6 +87,14 @@ export class DailyCallingReportComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
+
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerId = this.loggedInSme[0].userId;
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerId = this.loggedInSme[0].userId;
+    }
     this.showReports();
   }
 
@@ -334,9 +345,17 @@ export class DailyCallingReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerId = this.loggedInSme[0].userId;
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerId = this.loggedInSme[0].userId;
+    }
     this.showReports();
   }
 

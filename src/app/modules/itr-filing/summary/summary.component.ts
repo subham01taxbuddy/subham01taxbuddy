@@ -274,15 +274,15 @@ export class SummaryComponent implements OnInit {
   summaryToolMapping() {
     // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
     {
-      if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR1')) {
+      if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR1')) {
         this.itrType = 'ITR1';
         this.ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
         this.taxComputation = 'ITR1_TaxComputation';
-      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR2')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR2')) {
         this.itrType = 'ITR2';
-      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR3')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR3')) {
         this.itrType = 'ITR3';
-      } else if (this.ITR_JSON.itrSummaryJson['ITR'].hasOwnProperty('ITR4')) {
+      } else if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR4')) {
         this.itrType = 'ITR4';
         this.ITR14IncomeDeductions = 'IncomeDeductions';
         this.taxComputation = 'TaxComputation';
@@ -692,8 +692,11 @@ export class SummaryComponent implements OnInit {
 
         // 12. ====================DEDUCTIONS==================
         TotalChapVIADeductions:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            ?.DeductionsUnderScheduleVIA,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.DeductionsUnderScheduleVIA
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA,
 
         Deductions: Object.entries(
           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleVIA
@@ -728,42 +731,57 @@ export class SummaryComponent implements OnInit {
         // 18. =====================TOTAL TAX=====================
         TaxPayableOnTotInc:
           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability.TaxPayableOnTI?.TaxPayableOnTotInc,
+            ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnTotInc,
         TaxAtNormalRatesOnAggrInc:
           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability.TaxPayableOnTI
+            ?.ComputationOfTaxLiability?.TaxPayableOnTI
             ?.TaxAtNormalRatesOnAggrInc,
         TaxAtSpecialRates:
           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability.TaxPayableOnTI?.TaxAtSpecialRates,
+            ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxAtSpecialRates,
         RebateOnAgriInc:
           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability.TaxPayableOnTI?.RebateOnAgriInc,
+            ?.ComputationOfTaxLiability?.TaxPayableOnTI?.RebateOnAgriInc,
 
         // 19. REBATE 87A
         Rebate87A:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability?.Rebate87A,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.Rebate87A
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.Rebate87A,
 
         // 20. TAX AFTER REBATE
         TaxPayableOnRebate:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability?.TaxPayableOnRebate,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnRebate
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
 
         // 21 TOTAL SURCHARGE
         TotalSurcharge:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability?.TotalSurcharge,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TotalSurcharge
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TotalSurcharge,
 
         // 22. HEALTH AND EDUCATION CESS
         EducationCess:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability?.EducationCess,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.EducationCess
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.EducationCess,
 
         // 23. GROSS TAX LIABILITY
         GrossTaxLiability:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            ?.ComputationOfTaxLiability?.GrossTaxLiability,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.GrossTaxLiability
+            : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.GrossTaxLiability,
 
         // 24. TAX RELIEF
         TotTaxRelief:
@@ -851,11 +869,15 @@ export class SummaryComponent implements OnInit {
 
         // 30. EXEMPT INCOME
         ExemptIncAgriOthUs10Total:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI
-            .TotalExemptInc,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI
+                .TotalExemptInc
+            : null,
         ExemptIncomeDetails:
-          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI.OthersInc
-            ?.OthersIncDtls,
+          this.itrType === 'ITR2'
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI
+                .OthersInc?.OthersIncDtls
+            : null,
       };
       console.log(this.keys, 'this.keys ITR2&3');
       return this.keys;
@@ -1259,9 +1281,24 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    if (confirm('Are you sure you want to file the ITR?')) {
-      this.fileITR();
-    }
+    const param = `/subscription-payment-status?userId=9630&serviceType=ITR`;
+    this.itrMsService.getMethod(param).subscribe(
+      (res: any) => {
+        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+          if (confirm('Are you sure you want to file the ITR?')) {
+            this.fileITR();
+          }
+          // console.log(res, 'Paid');
+        } else {
+          this.utilsService.showSnackBar(
+            'Please make sure that the payment has been made by the user to proceed ahead'
+          );
+        }
+      },
+      (error) => {
+        this.utilsService.showSnackBar(error);
+      }
+    );
   }
 
   fileITR() {

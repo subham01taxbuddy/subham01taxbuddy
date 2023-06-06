@@ -110,6 +110,7 @@ export class RefundRequestComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
+    this.resetFilters();
   }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
@@ -161,7 +162,7 @@ export class RefundRequestComponent implements OnInit {
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
     let invoiceFilter = '';
     if (

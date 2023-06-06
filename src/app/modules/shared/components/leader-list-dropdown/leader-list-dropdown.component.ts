@@ -15,6 +15,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   @Output() sendLeader = new EventEmitter<any>();
   @Output() sendOwner = new EventEmitter<any>();
   @Input() disabled: any;
+  @Input() showOwnerList =false;
 
   smeList: any[] = [];
   searchOwner = new FormControl('');
@@ -48,6 +49,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
       console.log('logged in sme user id ',this.loggedInSme[0].userId)
 
       this.getLeaders();
+      this.getOwners();
   }
 
   setLeader(leader: any){
@@ -73,10 +75,10 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
           : this.options.slice();
           if (!this.utilsService.isNonEmpty(value)) {
             this.setLeader({});
-            if (this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
-              this.leaderDetails.userId = this.loggedInSme[0]?.userId;
-              this.getOwners();
-            }
+            // if (this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
+            //   this.leaderDetails.userId = this.loggedInSme[0]?.userId;
+            //   this.getOwners();
+            // }
           }
         return result;
       })
@@ -116,7 +118,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?leader=true
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('leader list result -> ', result);
       this.leaderList = result.data;
       console.log('leaderlist', this.leaderList);
@@ -131,16 +133,16 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
 
   getOwners() {
     // API to get owners under leader-
-    // https://uat-api.taxbuddy.com/user/sme-details-new/3000?owner=true
+    //'http://uat-api.taxbuddy.com/report/sme-details-new/9362?ownersByLeader=true'
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
     if (this.leaderDetails?.userId) {
-      param = `/sme-details-new/${this.leaderDetails?.userId}?owner=true`;
+      param = `/sme-details-new/${this.leaderDetails?.userId}?ownersByLeader=true`;
     } else {
       param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
     }
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.ownerList = result.data;

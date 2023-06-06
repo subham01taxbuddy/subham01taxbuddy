@@ -31,9 +31,9 @@
     'NA'}}</span>
   <br>
   <div formArrayName="assetDetails">
-    <div class="card__row" *ngFor="let asset of getAssetDetailsArrayForImmovable.controls;let i=index"
+    <div class="row" *ngFor="let asset of getAssetDetailsArrayForImmovable.controls;let i=index"
       [formGroupName]="i">
-      <div class="card__col-lg-4">
+      <div class="col-lg-4">
         <mat-form-field>
           <input matInput [max]="maxPurchaseDate" formControlName="purchaseDate" name="asset[i]" readonly
             [matDatepicker]="purchaseDate" placeholder="Date of Acquisition"
@@ -48,7 +48,7 @@
             Invalid Date of Purchase</mat-error>
         </mat-form-field>
       </div>
-      <div class="card__col-lg-4">
+      <div class="col-lg-4">
         <mat-form-field>
           <input matInput [min]="minSellDate" [max]="maxSellDate" formControlName="sellDate" name="asset[i]" readonly
             [matDatepicker]="sellDate" placeholder="Date of Sale" (blur)="this.calculateIndexCost(i)"
@@ -63,7 +63,7 @@
             Invalid Date of Sale</mat-error>
         </mat-form-field>
       </div>
-      <div class="card__col-lg-4">
+      <div class="col-lg-4">
         <mat-form-field class="input-field-width">
           <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
           <input matInput currencyMask digitsOnly [pattern]="amountRegex" formControlName="purchaseCost"
@@ -115,7 +115,7 @@
             amount greater than 0.</mat-error>
         </mat-form-field>
       </div> -->
-      <div class="card__col-lg-4">
+      <div class="col-lg-4">
         <mat-form-field class="input-field-width">
           <input input matInput digitsOnly currencyMask placeholder="Full Value of Sale Consideration" name="asset[i]"
             formControlName="valueInConsideration" required>
@@ -128,14 +128,14 @@
         </mat-form-field>
       </div>
 
-      <div class="card__col-lg-4">
+      <div class="col-lg-4">
         <mat-form-field class="input-field-width">
           <input input matInput currencyMask digitsOnly placeholder="Cost of acquisition with indexation" name="asset[i]"
             formControlName="indexCostOfAcquisition" required [disabled]="true" style="cursor: not-allowed;">
         </mat-form-field>
       </div>
 
-      <div class="card__col-lg-4">
+      <div class="col-lg-4">
         <mat-form-field class="input-field-width">
           <!-- <mat-icon matPrefix> &#8377;</mat-icon> --><!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
           <input matInput currencyMask type="number" [pattern]="amountRegex" formControlName="sellExpense"
@@ -162,11 +162,11 @@
     </div>
   </div> -->
   <hr>
-  <div class="card__row">
-    <div class="card__col-lg-10 card__col-md-10 card__col-sm-10 card__col-xm-10">
+  <div class="row">
+    <div class="col-sm-10">
       <b>Add details of cost of improvements</b><!--  Do you made any improvements against this asset? -->
     </div>
-    <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+    <div class="col-sm-2 text-right">
       <mat-radio-group name="isImprovements" (change)="haveImprovements(this.immovableForm)"
         [formControl]="isImprovements">
         <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes

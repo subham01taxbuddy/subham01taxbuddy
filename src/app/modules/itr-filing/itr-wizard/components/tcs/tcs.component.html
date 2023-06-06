@@ -1,15 +1,14 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <form [formGroup]="salaryForm">
     <div formArrayName="salaryArray">
-        <div class="head-title mb-5">In case of some incomes the payer of income collects TCS from you. Enter the amount
+        <div class="head-title mb-4">In case of some incomes the payer of income collects TCS from you. Enter the amount
             from form 16A or 26AS</div>
         <div class="display-flex" *ngFor="let donation of getSalaryArray.controls | paginate:config ;let i=index"
             [formGroupName]="fieldGlobalIndex(i)">
-            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="mv">
             </mat-checkbox>
-            <div class="card__col-xs-12 card__col-sm-12">
-
-                <div class="card__col-xs-12 card__col-sm-3">
+            <div class="row">
+                <div class="col-sm-3">
                     <mat-label>TAN of Collector*</mat-label>
                     <mat-form-field appearance="outline">
                         <input
@@ -25,7 +24,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-xs-12 card__col-sm-3">
+                <div class="col-sm-3">
                     <mat-label>Collector Name*</mat-label>
                     <mat-form-field appearance="outline">
                         <input formControlName="collectorName" matInput placeholder="Collector Name"
@@ -36,7 +35,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-xs-12 card__col-sm-3">
+                <div class="col-sm-3">
                     <mat-label>Amount*</mat-label>
                     <mat-form-field appearance="outline">
                         <input formControlName="totalAmountPaid" matInput placeholder="Amount" name="totalAmountPaid[i]"
@@ -48,7 +47,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-xs-12 card__col-sm-3">
+                <div class="col-sm-3">
                     <mat-label>Total TCS Deposited*</mat-label>
                     <mat-form-field appearance="outline">
                         <input formControlName="totalTcsDeposited" matInput placeholder="Total TCS Deposited"
@@ -68,22 +67,21 @@
                     </mat-icon>Edit </button>
             </div>
         </div>
-        <div class="display-flex">
-            <div class="card__col-xs-12">
-                <div class="card__col-sm-3">
-                    <button type="submit" class="tbd-btn-secondary" (click)="deleteSalaryArray()"><i class="fa fa-trash"
+        <div class="row spsTp bdrTp">           
+                <div class="col-sm-3">
+                    <button type="submit" class="tbd-btn-secondary delBtn" (click)="deleteSalaryArray()"><i class="fa fa-trash"
                             aria-hidden="true">&nbsp;</i>Delete</button>
                 </div>
-                <div class="card__col-sm-6 txt-center">
+                <div class="col-sm-6">
                     <table>
                         <tr *ngFor="let item of getSalaryArray.controls | paginate:config"></tr>
                     </table>
                     <pagination-controls id="tcsPagination" (pageChange)="pageChanged($event)"></pagination-controls>
                 </div>
-                <div class="card__col-sm-3" style="text-align: right;">
-                    <button type="submit" class="tbd-btn save-btn" (click)="save()">Save</button>
+                <div class="col-sm-3">
+                    <button type="submit" class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
                 </div>
-            </div>
+          
         </div>
     </div>
 

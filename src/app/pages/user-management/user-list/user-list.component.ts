@@ -79,6 +79,9 @@ export class UserListComponent implements OnInit {
   advanceSearch(key: any) {
     this.user_data = [];
     if (this.searchVal !== "") {
+      if(key === 'emailAddress'){
+        this.searchVal = this.searchVal.toLocaleLowerCase();
+      }
       this.getUserSearchList(key, this.searchVal);
     }
   }

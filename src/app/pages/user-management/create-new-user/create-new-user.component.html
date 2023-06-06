@@ -3,7 +3,7 @@
 <div class="main clearfix">
   <div class="align-items-center row">
     <div class="col-sm-4">
-      <b style="font-size: 20px">Create User</b>
+      <b style="font-size: 20px">Filter - Create New User:</b>
     </div>
     <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
       <p>
@@ -13,8 +13,6 @@
   </div>
   <div class="rowClr">
     <div class="surround">
-
-
     <form [formGroup]="signUpForm">
       <div class="row">
 
@@ -27,19 +25,14 @@
         <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
          <app-co-owner-list-drop-down  (sendCoOwner)="fromSme1($event, true)"
            (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-         </div>
-         <div class="col-sm-2 bckClr" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
-           <mat-checkbox style="padding-top: 14px;" class="example-margin bldFnt" [(ngModel)]="assignedToMe"
-             [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
-             to me!</mat-checkbox>
-         </div>
+         </div>       
         <!-- search area ends -->
 
         <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline">
             <mat-label>PAN Number</mat-label>
             <input placeholder="PAN" formControlName="panNumber" autocomplete="off"
-              (blur)="getUserInfoByPan(signUpForm.controls['panNumber'])" type="text" maxlength="10" minlength="10"
+              (blur)="getUserInfoByPan(signUpForm.controls['panNumber'].value)" type="text" maxlength="10" minlength="10"
               upperCase matInput>
           </mat-form-field>
         </div>
@@ -87,11 +80,13 @@
           <mat-form-field appearance="outline">
             <mat-label>Mobile Number</mat-label>
             <input matInput  [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
-              pattern="[0-9]{10,20}"  required maxlength="20" />
+            pattern="[0-9]{10,20}" [maxlength]="maxNo" required />
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
               is required</mat-error>
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
               valid mobile no.</mat-error>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number cannot
+                exceed 10 characters.</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-3 spsTp">
@@ -117,6 +112,11 @@
             <mat-error *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
               Service type </mat-error>
           </mat-form-field>
+        </div>
+        <div class="col-sm-12" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
+          <mat-checkbox  class="example-margin bldFnt mvRth assign" [(ngModel)]="assignedToMe"
+            [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
+            to me!</mat-checkbox>
         </div>
 
 

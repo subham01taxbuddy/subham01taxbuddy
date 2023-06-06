@@ -267,7 +267,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.itrService.getMethod(param).subscribe((response: any) => {
         this.loading = false;
         console.log('Get user  by mobile number responce: ', response);
-        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
         if (response.data instanceof Array && response.data.length > 0) {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data)
@@ -623,7 +623,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       if (result.success) {
         this.filerList = result.data.content;

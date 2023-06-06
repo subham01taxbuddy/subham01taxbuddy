@@ -124,7 +124,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
 
-    this.userMsService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
          this.invoiceData = response.data;

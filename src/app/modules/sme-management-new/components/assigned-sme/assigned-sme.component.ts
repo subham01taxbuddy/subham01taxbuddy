@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -54,6 +55,7 @@ export class AssignedSmeComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private matDialog: MatDialog,
+    private reviewService:ReviewService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -94,12 +96,22 @@ export class AssignedSmeComponent implements OnInit {
   }
 
   getSmeSearchList(key: any, searchValue: any) {
+    //https://uat-api.taxbuddy.com/report/sme-details-new/7521?page=0&pageSize=30&assigned=true
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    if(searchValue){
+      searchValue = searchValue.toLocaleLowerCase();
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
+
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
         console.log("Search result:", result)
         if (Array.isArray(result.data.content) && result.data.content.length > 0
@@ -163,7 +175,7 @@ export class AssignedSmeComponent implements OnInit {
       param;
     }
 
-    this.userMsService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (result: any) => {
         console.log('sme list result -> ', result);
         if (
@@ -406,6 +418,23 @@ export class AssignedSmeComponent implements OnInit {
         },
       },
       {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Call to user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
+            <i class="fa fa-phone" aria-hidden="true" padding-top: 5px; data-action-type="call"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+
+      },
+      {
         headerName: 'Update',
         field: '',
         width: 100,
@@ -438,6 +467,10 @@ export class AssignedSmeComponent implements OnInit {
           this.editAddSme(params.data);
           break;
         }
+        case 'call': {
+          this.call(params.data);
+          break;
+        }
       }
     }
   }
@@ -449,6 +482,35 @@ export class AssignedSmeComponent implements OnInit {
     };
     sessionStorage.setItem('smeObject', JSON.stringify(smeData));
     this.router.navigate(['/sme-management-new/edit-assignedsme']);
+  }
+
+  async call(data) {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    console.log('agent number', agentNumber);
+    if (!agentNumber) {
+      this._toastMessageService.alert('error', "You don't have calling role.");
+      return;
+    }
+    this.loading = true;
+    const param = `tts/outbound-call`;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": data.mobileNumber
+    }
+
+    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+      this.loading = false;
+      if(result.success == false){
+        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
+      }
+      if (result.success == true) {
+            this._toastMessageService.alert("success", result.message)
+          }
+         }, error => {
+           this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+    })
   }
 
   pageChanged(event: any) {

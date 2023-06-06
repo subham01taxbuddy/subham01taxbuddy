@@ -32,15 +32,18 @@ export class AddEditPromoCodeComponent implements OnInit {
 
   loading!: boolean;
   discountData: any = [{ label: 'Amount', value: 'AMOUNT' }, { label: 'Percentage', value: 'PERCENTAGE' }];
-  statusList:any = [{label:'Active' , value:true},{label:'InActive',value:false}]
+  statusList: any = [{ label: 'Active', value: true }, { label: 'InActive', value: false }]
   promoCodeForm!: FormGroup;
   minEndDate: any = new Date();
+  maxEndDate: any = new Date('2024-03-31');
   allPlans: any[] = [];
-  promoCodeInfo:any;
+  promoCodeInfo: any;
+  today: Date;
+  endDate: Date;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPromoCodeComponent>,
-     private _toastMessageService: ToastMessageService,
+    private _toastMessageService: ToastMessageService,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private fb: FormBuilder,
     private itrService: ItrMsService,
@@ -50,7 +53,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('data from edit button',this.promoCodeInfo)
+    console.log('data from edit button', this.promoCodeInfo)
 
     this.promoCodeForm = this.fb.group({
       code: ['', Validators.required],
@@ -60,16 +63,16 @@ export class AddEditPromoCodeComponent implements OnInit {
       endDate: [new Date('2024-03-31'), Validators.required],
       discountType: ['', Validators.required],
       discountAmount: [''],
-      discountPercent: [''],
-      minOrderAmount: [''],
-      maxDiscountAmount: [''],
+      discountPercent: ['', [Validators.min(10), Validators.max(70)]],
+      minOrderAmount: ['', [Validators.min(0), Validators.max(5000)]],
+      maxDiscountAmount: ['', [Validators.min(0), Validators.max(5000)]],
       usedCount: [0],
       deactivationReason: [''],
-      active: [''],
+      active: ['true'],
       discountDetails: this.fb.array([])
     })
 
-    if(this.data.mode == 'edit'){
+    if (this.data.mode == 'edit') {
       //Title , Description , End Date , Status
       this.promoCodeForm.patchValue(this.promoCodeInfo);
       this.promoCodeForm?.controls['active'].setValue(this.promoCodeInfo?.active);
@@ -97,13 +100,16 @@ export class AddEditPromoCodeComponent implements OnInit {
       currentDate.setDate(currentDate.getDate() + 1);
       this.minEndDate = currentDate;
     }
+
+    this.today = new Date();
+    this.minEndDate = new Date(this.promoCodeForm?.controls['startDate'].value);
   }
 
   setValidation(typeVal: any) {
     console.log('selec val: ', typeVal.value);
     if (typeVal.value === 'PERCENTAGE') {
-      this.promoCodeForm.controls['discountPercent'].setValidators([Validators.required]);
-      this.promoCodeForm.controls['maxDiscountAmount'].setValidators([Validators.required]);
+      this.promoCodeForm.controls['discountPercent'].setValidators([Validators.required, Validators.min(10), Validators.max(70)]);
+      this.promoCodeForm.controls['maxDiscountAmount'].setValidators([Validators.required, Validators.min(0), Validators.max(5000)]);
       this.promoCodeForm.controls['discountPercent'].updateValueAndValidity();
       this.promoCodeForm.controls['maxDiscountAmount'].updateValueAndValidity();
 
@@ -115,7 +121,7 @@ export class AddEditPromoCodeComponent implements OnInit {
       this.promoCodeForm.controls['minOrderAmount'].updateValueAndValidity();
     } else if (typeVal.value === 'AMOUNT') {
       this.promoCodeForm.controls['discountAmount'].setValidators([Validators.required]);
-      this.promoCodeForm.controls['minOrderAmount'].setValidators([Validators.required]);
+      this.promoCodeForm.controls['minOrderAmount'].setValidators([Validators.required, Validators.min(0), Validators.max(5000)]);
       this.promoCodeForm.controls['discountAmount'].updateValueAndValidity();
       this.promoCodeForm.controls['minOrderAmount'].updateValueAndValidity();
 
@@ -125,7 +131,7 @@ export class AddEditPromoCodeComponent implements OnInit {
       this.promoCodeForm.controls['maxDiscountAmount'].setValidators(null);
       this.promoCodeForm.controls['discountPercent'].updateValueAndValidity();
       this.promoCodeForm.controls['maxDiscountAmount'].updateValueAndValidity();
-     }
+    }
     //  else if (typeVal.value === 'FIXED') {
     //   this.promoCodeForm.controls['discountAmount'].setValue('');
     //   this.promoCodeForm.controls['minOrderAmount'].setValue('');
@@ -197,15 +203,15 @@ export class AddEditPromoCodeComponent implements OnInit {
     return <FormArray>this.promoCodeForm.get('discountDetails');
   }
 
-  addEdit(){
-    if(this.data.mode == 'edit'){
+  addEdit() {
+    if (this.data.mode == 'edit') {
       this.editPromoCode();
-    }else{
+    } else {
       this.addPromoCode();
     }
-   }
+  }
 
-   editPromoCode(){
+  editPromoCode() {
     // http://localhost:9050/itr/promocodes/buddyday25
     if (this.promoCodeForm.valid) {
       let code = this.promoCodeInfo?.code;
@@ -215,7 +221,7 @@ export class AddEditPromoCodeComponent implements OnInit {
         "title": this.promoCodeForm.get('title').value,
         "description": this.promoCodeForm.get('description').value,
         "endDate": this.promoCodeForm.get('endDate').value,
-        "active":this.promoCodeForm.get('active').value,
+        "active": this.promoCodeForm.get('active').value,
 
       }
       this.itrService.putMethod(param, promoCodeRequest).subscribe((res: any) => {
@@ -227,7 +233,7 @@ export class AddEditPromoCodeComponent implements OnInit {
           this._toastMessageService.alert("error", res.message)
         }
         setTimeout(() => {
-          this.dialogRef.close({ event: 'close', data: 'promoUpdated', coupon:this.promoCodeInfo?.code, })
+          this.dialogRef.close({ event: 'close', data: 'promoUpdated', coupon: this.promoCodeInfo?.code, })
         }, 3000)
       },
         error => {
@@ -299,5 +305,5 @@ export interface ConfirmModel {
   submitBtn: string;
   callerObj: any;
   mode: any;
-  data:any;
+  data: any;
 }

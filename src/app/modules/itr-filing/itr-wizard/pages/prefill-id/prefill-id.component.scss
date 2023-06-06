@@ -1,30 +1,44 @@
 .roundCheck {
-    border-radius: 20px !important;
-    // margin-top: 60%;
-    width: 30px;
-    height: 30px;
+  border-radius: 20px !important;
+  // margin-top: 60%;
+  width: 30px;
+  height: 30px;
 }
-.txwdt{
-width:98%;
+.txwdt {
+  width: 98%;
 }
-.txBg{
-    font-size:20px;
+.txBg {
+  font-size: 20px;
 }
 .btn1 {
-    margin-left:2%!important;
-    width: 325px!important;
-    background-color:#ffffff;
-  }
-.btn1:hover{
-    color:#ffffff;
-    background-color:#00AECA;
+  margin-left: 2% !important;
+  width: 325px !important;
+  background-color: #ffffff;
 }
-  .btn2 {
-    margin-left: 2%!important;
-    width: 140px!important;
-    background-color:#ffffff;
-  }
-  .btn2:hover{
-    color:#ffffff;
-    background-color:#00AECA;
+.btn1:hover {
+  color: #ffffff;
+  background-color: #00aeca;
+}
+.btn2 {
+  margin-left: 2% !important;
+  width: 140px !important;
+  background-color: #ffffff;
+}
+.btn2:hover {
+  color: #ffffff;
+  background-color: #00aeca;
+}
+
+.delete-btn {
+  background: #ffe1e1;
+  border: 1px solid #e20000;
+  border-radius: 6px;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 350;
+  font-size: 12px;
+  line-height: 100%;
+  padding: 8px;
+  text-align: center;
+  color: #e20000;
 }

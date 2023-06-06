@@ -92,9 +92,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       map((value) => {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
-          this.setOwner(null);
+          this.setOwner({});
           if (this.roles?.includes('ROLE_OWNER')) {
-            this.ownerDetails.userId = this.loggedInSme[0].userId;
+            this.ownerDetails.userId = this?.loggedInSme[0]?.userId;
             this.getFilers();
           }
         }
@@ -146,7 +146,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   getOwners() {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log('ownerlist', this.ownerList);
@@ -170,7 +170,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
     }
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;

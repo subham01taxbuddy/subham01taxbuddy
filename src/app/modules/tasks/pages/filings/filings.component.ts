@@ -35,7 +35,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
   templateUrl: './filings.component.html',
   styleUrls: ['./filings.component.scss'],
 })
-export class FilingsComponent implements OnInit, AfterContentChecked {
+export class FilingsComponent implements OnInit {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
@@ -121,9 +121,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
     })
   }
-  ngAfterContentChecked() {
-    this.cdRef.detectChanges();
-  }
+
+  // ngAfterContentChecked() {
+  //   this.cdRef.detectChanges();
+  // }
 
   async getMasterStatusList() {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
@@ -199,6 +200,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   myItrsList(pageNo, filingTeamMemberId) {
     // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
     // &searchAsCoOwner=true&page=0
+    //https://uat-api.taxbuddy.com/report/itr-list?page=0&pageSize=20&ownerUserId=7521&financialYear=2022-2023&status=ALL
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -206,6 +208,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
         if(loggedInUserRoles.includes('ROLE_FILER')){
           this.searchParams.filerUserId = loggedInId;
+          }
+
+        if(loggedInUserRoles.includes('ROLE_OWNER')){
+          this.searchParams.ownerUserId = loggedInId;
           }
 
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
@@ -236,6 +242,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.email)) {
+
+        this.searchParams.email = this.searchParams.email.toLocaleLowerCase();
         param = param + `&email=${this.searchParams.email}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
@@ -254,7 +262,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
 
       console.log('My Params:', param);
-      this.itrMsService.getMethod(param).subscribe(
+      this.userMsService.getMethodNew(param).subscribe(
         (res: any) => {
           if(res.success == false){
             this.toastMsgService.alert("error",res.message);
@@ -267,7 +275,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData(this.itrDataList)
+              this?.createOnSalaryRowData(this?.itrDataList)
             );
           } else {
             this.itrDataList = [];
@@ -538,10 +546,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
-           </button>`;
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;"> <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          </button>`;
         },
         width: 58,
         pinned: 'right',

@@ -1,15 +1,17 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
-<div class="main clearfix">
-  <div class="align-items-center row">
-    <div class="col-sm-6">
-      <b style="font-size: 20px">Partners</b>
-    </div>
-  </div>
-  <div class="rowClr">
-    <div class="surround">
-          <form [formGroup]="boPartnerDateForm">
-    <div class="row">
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+        <mat-icon> arrow_forward_ios </mat-icon>
+        Filter - Partners:
+        </mat-panel-title>     
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">         
+          <div class="row">
             <div class="col-sm-3">
               <mat-label>From Date</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
@@ -67,11 +69,15 @@
               </button>
             </div>
           </div>
-
-          </form>
-      </div>
-      </div>
-      <!-- Table -->
+</div>
+</div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
+<div class="main clearfix">
+       <!-- Table -->
       <div class="tableSpc">
         <div class="row">
           <div class="col-sm-8">

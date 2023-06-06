@@ -26,10 +26,11 @@ export class SharesAndEquityComponent
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
   config: any;
-  deduction = true;
+  deduction = false;
 
   minDate: Date;
   maxDate: Date;
+  maxPurchaseDate: Date;
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -92,6 +93,23 @@ export class SharesAndEquityComponent
 
     this.securitiesForm.disable();
     this.deductionForm.disable();
+
+    // setting deduction
+    const equitySharesListed = this.ITR_JSON.capitalGain?.find(
+      (assetType) => assetType.assetType === 'EQUITY_SHARES_LISTED'
+    );
+
+    if (equitySharesListed?.deduction?.length > 0) {
+      this.deduction = true;
+    } else {
+      this.deduction = false;
+    }
+  }
+
+  calMaxPurchaseDate(sellDate, formGroupName, index) {
+    if (this.utilsService.isNonEmpty(sellDate)) {
+      this.maxPurchaseDate = sellDate;
+    }
   }
 
   initDetailedForm(itrObject: ITR_JSON) {
@@ -152,7 +170,6 @@ export class SharesAndEquityComponent
         'Please verify securities data and try again.'
       );
     }
-
   }
 
   initBrokerList(itrObject: ITR_JSON) {
@@ -552,9 +569,9 @@ export class SharesAndEquityComponent
         });
       }
       const securitiesImprovement = [];
-      if (assetDetails.length > 0) {
-        this.deductionForm.reset();
-      }
+      // if (assetDetails.length > 0) {
+      //   this.deductionForm.reset();
+      // }
       const securitiesData = {
         assessmentYear: '',
         assesseeType: '',
@@ -601,7 +618,10 @@ export class SharesAndEquityComponent
           this.utilsService.smoothScrollToTop();
         }
       );
-    } else if (this.securitiesForm.valid && ((this.deduction && this.deductionForm.valid) || !this.deduction)) {
+    } else if (
+      this.securitiesForm.valid &&
+      ((this.deduction && this.deductionForm.valid) || !this.deduction)
+    ) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {
         this.Copy_ITR_JSON.capitalGain = [];

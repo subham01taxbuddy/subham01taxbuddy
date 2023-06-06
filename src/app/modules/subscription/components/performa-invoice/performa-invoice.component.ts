@@ -370,7 +370,7 @@ export class PerformaInvoiceComponent implements OnInit {
   getOwner() {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log('ownerlist', this.ownerList);
@@ -401,7 +401,7 @@ export class PerformaInvoiceComponent implements OnInit {
       param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
     }
 
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;
@@ -455,6 +455,7 @@ export class PerformaInvoiceComponent implements OnInit {
     ///////////////////////////////////////////////////////////////////////////
 
     // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed&searchAsCoOwner=true&ownerUserId=7522
+    //https://uat-api.taxbuddy.com/report/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-30&page=0&pageSize=20&ownerUserId=7521&paymentStatus=Unpaid,Failed
 
     let data = this.utilService.createUrlParams(this.searchParam);
     let status = this.status.value;
@@ -504,7 +505,7 @@ export class PerformaInvoiceComponent implements OnInit {
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
     let invoiceFilter = '';
     if (
@@ -529,7 +530,7 @@ export class PerformaInvoiceComponent implements OnInit {
       param;
     }
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if(response.success == false){
         this. _toastMessageService.alert("error",response.message);

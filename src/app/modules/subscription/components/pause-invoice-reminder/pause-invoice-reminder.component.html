@@ -1,37 +1,40 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-
-<div class="align-items-center row">
-  <div class="col-sm-10">
-    <b style="font-size: 25px">Pause Invoice Reminder </b>
-  </div>
-  <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-    <p>
-      <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-    </p>
-  </div>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog1">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Pause Invoice Reminder
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+            <div class="col-sm-6">
+                          <label class="input__label" for="attr">Enter Invoice Number</label>
+                          <div class="input__select">
+                            <input maxlength="100" class="select__box ogp_select" style="background-image:none" [(ngModel)]="invoiceNo"
+                            type="text" pattern="^SSBA\/2021|2022\/([1-9]?[0-9]*)"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
+                          </div>
+                        </div>
+          
+                      <div class="col-sm-6 spsTp">
+                        <button class="srch-btn srchBtnSps" (click)="invoiceSearch(invoiceNo)"><i
+                            class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+                      </div>
+          
+          </div>
 </div>
-
-<div class="rowClr">
-<div class="surround">
-<div class="row">
-  <div class="col-sm-6">
-                <label class="input__label" for="attr">Enter Invoice Number</label>
-                <div class="input__select">
-                  <input maxlength="100" class="select__box ogp_select" style="background-image:none" [(ngModel)]="invoiceNo"
-                  type="text" pattern="^SSBA\/2021|2022\/([1-9]?[0-9]*)"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
-                </div>
-              </div>
-
-            <div class="col-sm-6 spsTp">
-              <button class="srch-btn srchBtnSps" (click)="invoiceSearch(invoiceNo)"><i
-                  class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
-            </div>
-
 </div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
 </div>
-</div>    
+<!-- New Open Close Filter Ends -->
 
 <!-- Table Below -->
 <div class="tableSpc">

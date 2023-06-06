@@ -20,7 +20,7 @@
     </mat-expansion-panel-header>
     <div class="card">
       <form [formGroup]="otherIncomeFormGroup">
-        <div class="card__col-xs-12 card__col-sm-12">
+        <div class="col-sm-12">
           <div>
             <table class="table table-bordered" style="width: 100%">
               <thead style="background: #eaeaea">
@@ -60,16 +60,23 @@
               </tbody>
             </table>
           </div>
-          <br />
+      
           <hr />
           <div style="padding-top: 20px" formGroupName="dividendIncomes">
+            <div class="row">
+            <div class="col-sm-6">
             <div class="subTitle">
-              Quartely Break-up of Dividend Income
-              <span style="float: right">Total: {{ getTotal() }}</span>
+              Quartely Break-up of Dividend Income:           
             </div>
+           </div>
+            <div class="col-sm-6">
+            <div class="count1"> Total Count: <span class="txClr1">{{ getTotal() }}</span>
+            </div>
+            </div>
+           </div>
 
-            <div class="card__row">
-              <div class="card__col-xs-12 card__col-sm-6">
+            <div class="row spsTp bdrTp">
+              <div class="col-sm-4">
                 <mat-label class="inputLabel">Upto 15 June 2022</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -85,7 +92,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-6">
+              <div class="col-sm-4">
                 <mat-label class="inputLabel"
                   >16 June 2022 - 15 Sep 2022</mat-label
                 >
@@ -103,7 +110,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-6">
+              <div class="col-sm-4">
                 <mat-label class="inputLabel"
                   >16 Sep 2022 - 15 Dec 2022</mat-label
                 >
@@ -121,7 +128,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-6">
+              <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel"
                   >16 Dec 2022 - 15 March 2022</mat-label
                 >
@@ -139,7 +146,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-6">
+              <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel"
                   >16 March 2022 - 31 March 2022</mat-label
                 >
@@ -161,13 +168,12 @@
           </div>
           <hr />
 
-          <div style="padding-top: 20px">
             <div class="subTitle">
-              Family Pension
+              Family Pension:
               <!-- <span style="float: right;">Total:{{getTotalExemptIncome()}}</span> -->
             </div>
-            <div class="card__row">
-              <div class="card__col-xs-12 card__col-sm-4">
+            <div class="row">
+              <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel">Family pension</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -184,7 +190,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel"
                   >(-) Deduction u/s 57(iia)</mat-label
                 >
@@ -201,7 +207,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="card__col-xs-12 card__col-sm-4">
+              <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel">Total Family Pension</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -217,19 +223,18 @@
                 </mat-form-field>
               </div>
             </div>
-          </div>
+        
         </div>
-        <div class="">
-          <div class="footer__buttons clearfix" style="margin-top: 40px">
-            <button
-              class="tbd-btn save-btn"
+      
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="tbd-btn save-btn mvRth"
               [disabled]="otherIncomeFormGroup.invalid"
               (click)="saveOtherIncome()"
             >
               Save
             </button>
           </div>
-        </div>
+     
       </form>
     </div>
   </mat-expansion-panel>
@@ -251,7 +256,7 @@
     </mat-expansion-panel-header>
     <div class="card__col-xs-12 card__col-sm-12">
       <div class="sectionTitle" style="padding: 10px; font-size: 20px">
-        <span style="float: right">Total:{{ getTotalExemptIncome() }}</span>
+        <div class="count1"> Total Count: <span class="txClr1">{{ getTotalExemptIncome() }}</span></div>        
       </div>
       <form [formGroup]="exemptIncomeFormGroup">
         <div>
@@ -298,19 +303,13 @@
           <br />
           Note: 2. Sec 10(26AAA) - Deduction is available only for certain
           Sikkimese assessees
-        </div>
-        <div class="">
-          <div class="footer__buttons clearfix" style="margin-top: 40px">
-            <button
-              class="tbd-btn save-btn"
-              [disabled]="exemptIncomeFormGroup.invalid"
-              (click)="saveExemptIncomes()"
-            >
+        </div>       
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="tbd-btn save-btn mvRth" [disabled]="exemptIncomeFormGroup.invalid" (click)="saveExemptIncomes()">
               Save
             </button>
           </div>
-        </div>
-      </form>
+       </form>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

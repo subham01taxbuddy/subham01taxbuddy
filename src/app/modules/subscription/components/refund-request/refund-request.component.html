@@ -1,60 +1,63 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="align-items-center row">
-    <div class="col-sm-4">
-      <b style="font-size: 25px">Refund Request</b>
-    </div>
-    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-      <p>
-        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-      </p>
-    </div>
-  </div>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog1">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Refund Request:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
 
-
-  <div class="rowClr">
-    <div class="surround">
-    <div class="row">
-
-    <div class="col-sm-12 bckClr">
-    <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
-     </div>
-
-    <div class="col-sm-4 spsTp">
-     <mat-label> Mobile Number </mat-label>
-      <mat-form-field appearance="outline">
-      <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
-      </mat-form-field>
-     </div>
-
-     <div class="col-sm-5 spsTp">
-     <mat-label> Email Address: </mat-label>
-     <mat-form-field appearance="outline">
-     <input type="text" matInput [formControl]="email" />
-     </mat-form-field>
-     </div>
-
-     <div class="col-sm-3 spsTp">
-     <mat-label> Invoice No: </mat-label>
-     <mat-form-field appearance="outline">
-     <input matInput [formControl]="invoiceNo" />
-     </mat-form-field>
-     </div>
-     <div class="col-sm-12 spsTp bdrTp">
-      <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
-        Clear form
-      </button>
-
-     <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
-     <i class="fas fa-search" aria-hidden="true"></i> Search
-     </button>
-
-
-     </div>
-
+            <div class="col-sm-12 bckClr">
+            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
+             </div>
+        
+            <div class="col-sm-4 spsTp">
+             <mat-label> Mobile Number </mat-label>
+              <mat-form-field appearance="outline">
+              <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
+              </mat-form-field>
+             </div>
+        
+             <div class="col-sm-5 spsTp">
+             <mat-label> Email Address: </mat-label>
+             <mat-form-field appearance="outline">
+             <input type="text" matInput [formControl]="email" />
+             </mat-form-field>
+             </div>
+        
+             <div class="col-sm-3 spsTp">
+             <mat-label> Invoice No: </mat-label>
+             <mat-form-field appearance="outline">
+             <input matInput [formControl]="invoiceNo" />
+             </mat-form-field>
+             </div>
+             <div class="col-sm-12 spsTp bdrTp">
+              <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
+                Clear form
+              </button>
+        
+             <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
+             <i class="fas fa-search" aria-hidden="true"></i> Search
+             </button>
+        
+        
+             </div>
+        
+        </div>
 </div>
 </div>
+     
+    </mat-expansion-panel>
+   </mat-accordion>
 </div>
+<!-- New Open Close Filter Ends -->
 
 <!-- Table Below -->
 <div class="tableSpc">

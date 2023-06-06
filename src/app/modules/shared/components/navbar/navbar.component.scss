@@ -30,6 +30,8 @@
     font-size: 18px;
     font-weight: 600;
     margin-right: 20px;
+    float: left;
+    margin-top: 15px;
 }
 
 .back{
@@ -59,7 +61,7 @@
 }
 
 .btn-call {
-    display: inline-block;
+    display:block;
     margin: 8px;
     padding: 12px 15px;
     text-align: center;
