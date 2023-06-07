@@ -24,6 +24,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
   userId: any;
   serviceType:any;
 
+  isDownloadAllowed = false;
+
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
     private datePipe: DatePipe, private toastMessageService: ToastMessageService,
               private gdriveService: GoogleDriveService) { }
@@ -54,6 +56,10 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
       this.getCloudFilePath(this.serviceType);
     });
+
+    let roles = this.utilsService.getUserRoles();
+    let filtered = roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
+    this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
   }
 
   gotoDrive(document){
@@ -200,10 +206,15 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
   }
 
-  downloadFile(fileName) {
+  downloadFile(document) {
     console.log('filePath: ', this.filePath)
-    console.log('Href path is: ', environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + fileName)
-    location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + fileName;
+    console.log('Href path is: ', environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName)
+    if (document.isPasswordProtected) {
+      location.href = document.passwordProtectedFileUrl;
+      return;
+    } else {
+      location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
+    }
   }
 
 
@@ -240,6 +251,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
     if (document.isPasswordProtected) {
       this.docUrl = document.passwordProtectedFileUrl;
+      this.loading = false;
       return;
     }
     const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;

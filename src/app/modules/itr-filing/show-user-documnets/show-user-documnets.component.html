@@ -77,9 +77,11 @@
                                 class="fa fa-pencil" aria-hidden="true"></i></button>
                               <button *ngIf="!folder.isDeleted && !isDocTypeSupported(folder)" (click)="gotoDrive(folder)" style="float: right;"><i
                                 class="fa fa-external-link" aria-hidden="true"></i></button>
-                                <!-- <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
-                                    (click)="downloadFile(folder.fileName)"
-                                    style="float: right; font-size: 18px; padding: inherit; cursor: pointer;"></i> -->
+                              <button *ngIf="isDownloadAllowed">
+                                <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
+                                   (click)="downloadFile(folder)"
+                                   style="float: right; font-size: 18px; padding: inherit; cursor: pointer;"></i>
+                              </button>
 
                             </div>
                         </div>
