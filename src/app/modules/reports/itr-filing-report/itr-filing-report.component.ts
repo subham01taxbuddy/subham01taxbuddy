@@ -395,11 +395,13 @@ export class ItrFilingReportComponent implements OnInit {
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
+
+    if(this.leaderId){
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
     let viewFilter = '';
