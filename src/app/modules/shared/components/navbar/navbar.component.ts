@@ -9,6 +9,9 @@ import { Location } from '@angular/common';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { environment } from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
+import {ToastMessageService} from "../../../../services/toast-message.service";
+import {UserMsService} from "../../../../services/user-ms.service";
+import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.component';
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -28,6 +31,8 @@ export class NavbarComponent implements DoCheck {
   component_link_2!: string;
   component_link_3!: string;
 
+  loggedInUserId: number;
+  showAffiliateBtn  = false;
 
   loading: boolean = false;
 
@@ -35,8 +40,13 @@ export class NavbarComponent implements DoCheck {
     private router: Router,
     public dialog: MatDialog,
     public location: Location,
-    private utilsService: UtilsService
-  ) { }
+    private utilsService: UtilsService,
+    private _toastMessageService: ToastMessageService,
+    private userMsService: UserMsService,
+  ) {
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
+    this.fetchAffiliateId();
+  }
 
 
 
@@ -73,7 +83,52 @@ export class NavbarComponent implements DoCheck {
     this.router.navigate(['/tasks/assigned-users-new']);
   }
 
+  fetchAffiliateId() {
+    let param = `/sme-affiliate?smeUserId=${this.loggedInUserId}`
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        if (response.data.affiliateId) {
+          return;
+        } else {
+          this.showAffiliateBtn = true;
+        }
+      } else {
+        this.loading = false;
+        console.log(response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      console.log("error", error);
+    })
+  }
 
+  addAffiliateId() {
+    const dialogRef = this.dialog.open(AddAffiliateIdComponent, {
+      width: "60%",
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.status) {
+        const param = `/sme-affiliateId`;
+        const request = {
+          "smeUserId": this.loggedInUserId,
+          "affiliateId": result.affiliateId
+        };
+        this.userMsService.postMethod(param, request).subscribe((res: any) => {
+          this.loading = false;
+          if (res.success) {
+            this._toastMessageService.alert("success", 'AffiliateId added successfully.');
+          } else {
+            this._toastMessageService.alert("error", res.message);
+          }
+        }, error => {
+          this.loading = false;
+          this._toastMessageService.alert("error", 'failed to add affiliateId.');
+        });
+      }
+    });
+  }
 
   openDialog() {
     const dialogRef = this.dialog.open(NeedHelpComponent, {

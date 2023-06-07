@@ -391,7 +391,12 @@ export class PotentialUserComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          if(data.value != '-'){
+            return formatDate(data?.value, 'dd/MM/yyyy', this.locale);
+          }else{
+            return '-'
+          }
+
         },
         filter: "agTextColumnFilter",
         filterParams: {
