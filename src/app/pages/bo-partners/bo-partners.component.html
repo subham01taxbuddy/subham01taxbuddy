@@ -7,39 +7,31 @@
         <mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
         Filter - Partners:
-        </mat-panel-title>     
+        </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="rowClr">
-        <div class="surround">         
+        <div class="surround">
           <div class="row">
             <div class="col-sm-3">
               <mat-label>From Date</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
-                <input matInput placeholder="DD/MM/YYYY" formControlName="fromDate" [matDatepicker]="picker1"
-                  [max]="maxDate" autocomplete="off" (dateChange)="
-                    setToDateValidation(
-                      boPartnerDateForm.controls['fromDate'].value
-                    )
-                  " />
+                <input matInput placeholder="DD/MM/YYYY" [formControl]="fromDateValue" [matDatepicker]="picker1"
+                  [max]="maxDate" autocomplete="off" (dateChange)="setToDateValidation(this.fromDateValue.value)" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
-                <mat-error *ngIf="
-                    boPartnerDateForm.controls['fromDate'].hasError('required')
-                  ">Select From date</mat-error>
+                <mat-error *ngIf="fromDateValue.hasError('required')">Select From date</mat-error>
               </mat-form-field>
             </div>
 
             <div class="col-sm-3">
               <mat-label>To Date</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput placeholder="DD/MM/YYYY" formControlName="toDate" [matDatepicker]="picker2"
+                <input matInput placeholder="DD/MM/YYYY" [formControl]="toDateValue" [matDatepicker]="picker2"
                   [max]="maxDate" [min]="minToDate" autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
-                <mat-error *ngIf="
-                    boPartnerDateForm.controls['toDate'].hasError('required')
-                  ">Select To date</mat-error>
-                <mat-error *ngIf="boPartnerDateForm.controls['toDate'].hasError('min')">To date always greater than from
+                <mat-error *ngIf="toDateValue.hasError('required')">Select To date</mat-error>
+                <mat-error *ngIf="toDateValue.hasError('min')">To date always greater than from
                   date</mat-error>
               </mat-form-field>
             </div>
@@ -71,7 +63,7 @@
           </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>
