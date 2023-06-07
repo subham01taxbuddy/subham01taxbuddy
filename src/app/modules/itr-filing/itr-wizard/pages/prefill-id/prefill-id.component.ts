@@ -1124,18 +1124,26 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
-        this.itrSummaryJson = JSONData;
-
-        this.uploadedJson = JSONData.ITR;
-        if (this.uploadedJson) {
-          this.utilsService.showSnackBar('JSON has been sucessfully uploaded');
-          this.utilsService.setUploadedJson(this.uploadedJson);
-          this.mapItrJson(this.uploadedJson);
-          this.jsonUpload();
+        if (
+          JSONData.hasOwnProperty('ITR1') &&
+          JSONData.hasOwnProperty('ITR4')
+        ) {
+          this.itrSummaryJson = JSONData;
+          this.uploadedJson = JSONData.ITR;
+          if (this.uploadedJson) {
+            this.utilsService.showSnackBar(
+              'JSON has been sucessfully uploaded'
+            );
+            this.utilsService.setUploadedJson(this.uploadedJson);
+            this.mapItrJson(this.uploadedJson);
+            this.jsonUpload();
+          } else {
+            this.utilsService.showSnackBar(
+              'There was some error while uploading the JSON'
+            );
+          }
         } else {
-          this.utilsService.showSnackBar(
-            'There was some error while uploading the JSON'
-          );
+          this.utilsService.showSnackBar('ITR2 & ITR3 parsing will be available soon')
         }
       };
       reader.readAsText(this.uploadDoc);
