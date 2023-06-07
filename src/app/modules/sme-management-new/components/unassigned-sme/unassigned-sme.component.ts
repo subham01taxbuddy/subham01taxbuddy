@@ -100,8 +100,8 @@ export class UnassignedSmeComponent implements OnInit {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
-    //let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `page=0&pageSize=30&assigned=false&${key}=${searchValue}`
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
