@@ -40,7 +40,9 @@ export class BoPartnersComponent implements OnInit {
   boPartnerDateForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
-  searchMobileNumber = new FormControl('')
+  searchMobileNumber = new FormControl('');
+  fromDateValue =new FormControl('2022-09-01', Validators.required);
+  toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -92,7 +94,7 @@ export class BoPartnersComponent implements OnInit {
   }
 
   setToDateValidation(fromDate) {
-    this.minToDate = fromDate;
+    this.minToDate = this.fromDateValue.value;
   }
   pageChanged(event: any) {
     this.config.currentPage = event;
@@ -398,14 +400,13 @@ export class BoPartnersComponent implements OnInit {
     // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
-      let fromDate = this.datePipe.transform(
-        this.boPartnerDateForm.value.fromDate,
-        'yyyy-MM-dd'
-      );
-      let toDate = this.datePipe.transform(
-        this.boPartnerDateForm.value.toDate,
-        'yyyy-MM-dd'
-      );
+
+      const fromDateValue = this.fromDateValue.value;
+      const toDateValue = this.toDateValue.value;
+
+      let fromDate = this.datePipe.transform(fromDateValue,'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(toDateValue,'yyyy-MM-dd');
+
       this.loading = true;
       let param
 
@@ -621,6 +622,8 @@ export class BoPartnersComponent implements OnInit {
 
   resetFilters() {
     this.searchMobileNumber.setValue(null);
+    this.fromDateValue.setValue('2022-09-01');
+    this.toDateValue.setValue(new Date());
     this.getBoPartners();
   }
 }

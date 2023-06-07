@@ -230,7 +230,7 @@ export class ItrFilingReportComponent implements OnInit {
         itr4: fillingData[i].itr4,
         otherItr: fillingData[i].otherItr,
         itrU: fillingData[i].itrU,
-        total: fillingData[i].total,
+        totalItrFiled: fillingData[i].totalItrFiled,
         ownerName: fillingData[i].ownerName,
         leaderName: fillingData[i].leaderName,
       })
@@ -263,7 +263,7 @@ export class ItrFilingReportComponent implements OnInit {
       },
       {
         headerName: 'Total ITR Filed',
-        field: 'total',
+        field: 'totalItrFiled',
         sortable: true,
         width: 110,
         suppressMovable: true,
