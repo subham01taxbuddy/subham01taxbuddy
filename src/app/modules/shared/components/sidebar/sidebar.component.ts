@@ -188,7 +188,7 @@ export class SidebarComponent{
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
-        { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
+        // { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
       ]
     }
   ];
