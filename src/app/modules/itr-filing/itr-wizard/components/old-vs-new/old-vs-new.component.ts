@@ -622,8 +622,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           },
           {
             label: 'Tax Payable / (Refund)',
-            old: this.oldSummaryIncome?.taxSummary.taxpayable,
-            new: this.newSummaryIncome?.taxSummary.taxpayable,
+            old:
+              this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
+                ? this.oldSummaryIncome?.taxSummary.taxpayable
+                : this.oldSummaryIncome?.taxSummary?.taxRefund,
+            new:
+              this.newSummaryIncome?.taxSummary?.taxpayable !== 0
+                ? this.newSummaryIncome?.taxSummary?.taxpayable
+                : this.newSummaryIncome?.taxSummary?.taxRefund,
           },
         ];
       },
