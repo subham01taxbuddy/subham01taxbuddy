@@ -326,7 +326,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to view documents"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-book" aria-hidden="true" data-action-type="viewDocuments"></i>
+          <i class="fa-regular fa-file-arrow-up" style="color:#49a30a;" aria-hidden="true" data-action-type="viewDocuments"></i>
          </button>`;
         },
         width: 100,
@@ -351,7 +351,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+        <i class="fa-regular fa-user-check"></i>
          </button>`;
         },
         cellStyle: function (params: any) {
@@ -376,7 +376,7 @@ export class BoPartnersComponent implements OnInit {
           if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
+          <i class="fa-regular fa-envelope-open-text" aria-hidden="true" data-action-type="sendEmail"></i>
          </button>`;
           } else {
             return '-'

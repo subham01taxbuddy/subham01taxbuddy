@@ -3,9 +3,9 @@
 <header class="header clearfix fixed">
 
     <!-- <mat-slide-toggle >Slide me!</mat-slide-toggle>&nbsp; -->
-    <div class="container-fluid">
+ 
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-lg-4 col-md-6 col-sm-6">
             <a class="header__logo" (click)="sideBar(); navigateToHome();">
                 <span class="header__logo-img1"></span>
                 <span class="header__logo-button" [class.header__logo-button-open]="sidebar_open"
@@ -20,13 +20,16 @@
                Back
             </button> -->
             <button class="btn-call" (click)="openCallDialog()">
-                 <i class="fa fa-phone fa-flip-horizontal" aria-hidden="true"></i>&nbsp;&nbsp;Dial Any Number
-            </button>
-            <div class="note1">*<b>Please note:</b> All access and activities are tracked as we are dealing with confidential customer information.
-            </div>    
+                <i class="fa-regular fa-phone-arrow-right"></i>&nbsp;&nbsp;Dial Any Number
+            </button>               
          </div>   
+         
+         <div class="col-lg-4 col-md-2 col-sm-2">
+         <div class="note1">*<b>Please note:</b> Access and activities monitored for customer confidentiality.
+         </div> 
+        </div> 
 
-         <div class="col-sm-4">
+         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="header__buttons logout-btn-wrapper" style="float:right">
                 <!-- <button class="btn-help" (click)="openDialog()">Need Help <i class="fa fa-question-circle"
                         aria-hidden="true"></i></button> -->
@@ -38,10 +41,9 @@
                 </div>
             </div>
          </div>
-    </div>
-    </div>
+   
 
-    
+        </div>
    
     <!-- <div class="header__container">
         <div class="header__buttons" *ngIf="showBtns === 'business-profile'">
