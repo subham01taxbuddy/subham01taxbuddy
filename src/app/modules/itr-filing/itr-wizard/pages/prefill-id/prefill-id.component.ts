@@ -1125,8 +1125,8 @@ export class PrefillIdComponent implements OnInit {
         // console.log('JSONData: ', JSONData);
 
         if (
-          JSONData.hasOwnProperty('ITR1') &&
-          JSONData.hasOwnProperty('ITR4')
+          JSONData.ITR.hasOwnProperty('ITR1') ||
+          JSONData.ITR.hasOwnProperty('ITR4')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
@@ -1143,7 +1143,9 @@ export class PrefillIdComponent implements OnInit {
             );
           }
         } else {
-          this.utilsService.showSnackBar('ITR2 & ITR3 parsing will be available soon')
+          this.utilsService.showSnackBar(
+            'ITR2 & ITR3 parsing will be available soon'
+          );
         }
       };
       reader.readAsText(this.uploadDoc);
