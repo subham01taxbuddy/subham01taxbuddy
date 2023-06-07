@@ -53,6 +53,7 @@ import { ServiceDropDownComponent } from './components/service-drop-down/service
 import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "./services/request-manager";
 import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
+import {AddAffiliateIdComponent} from "./components/add-affiliate-id/add-affiliate-id.component";
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -88,6 +89,7 @@ import { LeaderListDropdownComponent } from './components/leader-list-dropdown/l
     ServiceDropDownComponent,
     CoOwnerListDropDownComponent,
     LeaderListDropdownComponent,
+    AddAffiliateIdComponent,
   ],
   imports: [
     CommonModule,
