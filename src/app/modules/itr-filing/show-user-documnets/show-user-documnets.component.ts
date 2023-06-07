@@ -240,6 +240,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
     if (document.isPasswordProtected) {
       this.docUrl = document.passwordProtectedFileUrl;
+      this.loading = false;
       return;
     }
     const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
