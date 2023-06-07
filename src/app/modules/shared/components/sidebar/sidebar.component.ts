@@ -109,7 +109,7 @@ export class SidebarComponent{
       submenu: [
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
-        { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
+        { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] }
       ]
     },
     {
