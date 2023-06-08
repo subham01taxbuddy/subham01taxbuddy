@@ -71,7 +71,7 @@
               <mat-checkbox
                 name="hasEdit[i]"
                 formControlName="hasEdit"
-                class=""
+                class="ml30"
               >
               </mat-checkbox>
               <div class="row cardClr">
@@ -499,7 +499,8 @@
               <div class="col-sm-3">
                 <button
                   type="submit"
-                  class="delete-btn btnGry"
+                  class="delete-btn"
+                  [disabled]="!equitySelected()"
                   (click)="deleteArray()"
                 >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete

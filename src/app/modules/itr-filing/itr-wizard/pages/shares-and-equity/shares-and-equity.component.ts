@@ -368,7 +368,16 @@ export class SharesAndEquityComponent
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
-    securitiesArray.push(this.createForm(securitiesArray.length, item));
+    securitiesArray.insert(0, this.createForm(securitiesArray.length, item));
+  }
+
+  equitySelected() {
+    const securitiesArray = <FormArray>this.securitiesForm.controls['securitiesArray'];
+    return (
+      securitiesArray.controls.filter(
+        (item: FormGroup) => item.controls['hasEdit'].value === true
+      ).length > 0
+    );
   }
 
   deleteArray() {

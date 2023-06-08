@@ -118,6 +118,18 @@ export class OtherAssetImprovementComponent implements OnInit {
     ) as FormArray;
   }
 
+  assetSelected() {
+    const securitiesArray = ((this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
+      .controls[0] as FormGroup).controls['otherAssetsArray'] as FormArray;
+    const otherAssetDetailsArray = this.getOtherAssets;
+
+    return (
+      otherAssetDetailsArray.controls.filter(
+        (item: FormGroup) => ((item as FormGroup).controls['otherAssetsArray'] as FormGroup).controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
       if (this.isAddOtherAssetsImprovement) {
