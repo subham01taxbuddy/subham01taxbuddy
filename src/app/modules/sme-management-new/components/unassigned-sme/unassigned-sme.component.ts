@@ -91,7 +91,15 @@ export class UnassignedSmeComponent implements OnInit {
 
   getSmeSearchList(key: any, searchValue: any) {
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    if(searchValue){
+      searchValue = searchValue.toLocaleLowerCase();
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
 
@@ -118,7 +126,10 @@ export class UnassignedSmeComponent implements OnInit {
 
   getSmeList() {
     // ${this.config.currentPage - 1}
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
@@ -270,9 +281,9 @@ export class UnassignedSmeComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to edit sme"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="edit">Edit</i>
+          return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
+          style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-pen" data-action-type="edit"></i> Edit
            </button>`;
           },
 

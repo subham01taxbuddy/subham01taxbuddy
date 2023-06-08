@@ -71,7 +71,7 @@
       <div class="col-sm-9">
         <span class="txTit">Payout Details: </span>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-3" *ngIf="isEditAllowed" >
         <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>
         <span class="txblw">Select checkbox(below) then Approve the entries.</span>
       </div>

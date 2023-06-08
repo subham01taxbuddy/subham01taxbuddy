@@ -549,8 +549,8 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
            </button>`;
         },
         width: 60,
@@ -587,7 +587,7 @@ export class AssignedNewUsersComponent implements OnInit {
           }
           return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
           style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
+          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
         width:160,
@@ -609,7 +609,7 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color: #2dd35c; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -633,7 +633,7 @@ export class AssignedNewUsersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-            <i class="far fa-file-alt" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,
@@ -657,7 +657,7 @@ export class AssignedNewUsersComponent implements OnInit {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#04a4bc" data-action-type="startFiling">
+              background: transparent; font-size: 13px; cursor:pointer;color:#ffa704;" data-action-type="startFiling">
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i> Yet to Start
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
@@ -671,9 +671,9 @@ export class AssignedNewUsersComponent implements OnInit {
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
-              return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#2dd35c"font-weight:bold; data-action-type="startFiling">
-              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>In Progress
+              return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="text-align:left; border: none;
+              background: transparent; font-size: 13px;  font-weight:bold; cursor:pointer;color:#04a4bc;" data-action-type="startFiling">
+              <i class="fa-regular fa-money-check-pen" data-action-type="startFiling"></i> Resume Filing
             </button>`;
             }
           } else {
@@ -1141,6 +1141,9 @@ export class AssignedNewUsersComponent implements OnInit {
       this.searchParam.emailId = null
     } else if (form == 'agent') {
       this.searchParam.page = 0;
+    }
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);

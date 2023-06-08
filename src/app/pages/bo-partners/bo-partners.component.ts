@@ -40,7 +40,9 @@ export class BoPartnersComponent implements OnInit {
   boPartnerDateForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
-  searchMobileNumber = new FormControl('')
+  searchMobileNumber = new FormControl('');
+  fromDateValue =new FormControl('2022-09-01', Validators.required);
+  toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -92,7 +94,7 @@ export class BoPartnersComponent implements OnInit {
   }
 
   setToDateValidation(fromDate) {
-    this.minToDate = fromDate;
+    this.minToDate = this.fromDateValue.value;
   }
   pageChanged(event: any) {
     this.config.currentPage = event;
@@ -326,7 +328,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to view documents"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-book" aria-hidden="true" data-action-type="viewDocuments"></i>
+          <i class="fa-regular fa-file-arrow-up" style="color:#49a30a;" aria-hidden="true" data-action-type="viewDocuments"></i>
          </button>`;
         },
         width: 100,
@@ -351,7 +353,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+        <i class="fa-regular fa-user-check"></i>
          </button>`;
         },
         cellStyle: function (params: any) {
@@ -376,7 +378,7 @@ export class BoPartnersComponent implements OnInit {
           if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
+          <i class="fa-regular fa-envelope-open-text" aria-hidden="true" data-action-type="sendEmail"></i>
          </button>`;
           } else {
             return '-'
@@ -398,14 +400,13 @@ export class BoPartnersComponent implements OnInit {
     // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
-      let fromDate = this.datePipe.transform(
-        this.boPartnerDateForm.value.fromDate,
-        'yyyy-MM-dd'
-      );
-      let toDate = this.datePipe.transform(
-        this.boPartnerDateForm.value.toDate,
-        'yyyy-MM-dd'
-      );
+
+      const fromDateValue = this.fromDateValue.value;
+      const toDateValue = this.toDateValue.value;
+
+      let fromDate = this.datePipe.transform(fromDateValue,'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(toDateValue,'yyyy-MM-dd');
+
       this.loading = true;
       let param
 
@@ -493,13 +494,14 @@ export class BoPartnersComponent implements OnInit {
   }
 
   sendEmail(partnerData) {
-    this.loading = true;
-    let partnerName = partnerData.name;
-    let mobile = partnerData.mobileNumber;
-    var data = new FormData();
-    data.append('from', 'support@taxbuddy.com');
-    data.append('subject', 'Partner Onboarding in Taxbuddy BO');
-    data.append('body', `<!DOCTYPE html>
+    if(this.utileService.isNonEmpty(partnerData.emailAddress)) {
+      this.loading = true;
+      let partnerName = partnerData.name;
+      let mobile = partnerData.mobileNumber;
+      var data = new FormData();
+      data.append('from', 'support@taxbuddy.com');
+      data.append('subject', 'Partner Onboarding in Taxbuddy BO');
+      data.append('body', `<!DOCTYPE html>
 <html>
 
 <head>
@@ -555,18 +557,21 @@ export class BoPartnersComponent implements OnInit {
 </body>
 
 </html>`);
-    data.append('cc', 'partnerleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
-    data.append('isHtml', 'true');
-    data.append('to', partnerData.emailAddress);
+      data.append('cc', 'partnerleads@taxbuddy.com, divya@taxbuddy.com, amod@taxbuddy.com');
+      data.append('isHtml', 'true');
+      data.append('to', partnerData.emailAddress);
 
-    let param = '/send-mail';
-    this.userMsService.postMethod(param, data).subscribe((res: any) => {
-      console.log(res);
-      this.loading = false;
-    }, error => {
-      this.loading = false;
-      this.utileService.showSnackBar(error.error.text);
-    });
+      let param = '/send-mail';
+      this.userMsService.postMethod(param, data).subscribe((res: any) => {
+        console.log(res);
+        this.loading = false;
+      }, error => {
+        this.loading = false;
+        this.utileService.showSnackBar(error.error.text);
+      });
+    } else {
+      this.utileService.showSnackBar('Partner email address is not available. Please check with support team.');
+    }
   }
 
   viewDocuments(partner) {
@@ -617,6 +622,8 @@ export class BoPartnersComponent implements OnInit {
 
   resetFilters() {
     this.searchMobileNumber.setValue(null);
+    this.fromDateValue.setValue('2022-09-01');
+    this.toDateValue.setValue(new Date());
     this.getBoPartners();
   }
 }

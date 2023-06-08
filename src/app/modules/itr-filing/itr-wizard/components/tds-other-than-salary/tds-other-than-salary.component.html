@@ -4,7 +4,7 @@
 ></ngx-loading>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
-    <div class="head-title mb-5">
+    <div class="head-title mb-4">
       This is TDS on salary deducted by your employer. Enter the amount from
       form 16 or 26AS
     </div>
@@ -20,14 +20,11 @@
         color="primary"
         name="hasEdit[i]"
         formControlName="hasEdit"
-        class="ml30"
+        class="mv"
       >
       </mat-checkbox>
-      <div class="card__col-xs-12 card__col-sm-12">
-        <div
-          class="card__col-xs-12 card__col-sm-4"
-          *ngIf="showHeadOfIncome === 'TDTS'"
-        >
+      <div class="row">
+        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTS'">
           <mat-label>TAN of Deductor*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -59,10 +56,7 @@
             >
           </mat-form-field>
         </div>
-        <div
-          class="card__col-xs-12 card__col-sm-4"
-          *ngIf="showHeadOfIncome === 'TDTSP'"
-        >
+        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTSP'">
           <mat-label>PAN of Deductor*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -94,10 +88,7 @@
             >
           </mat-form-field>
         </div>
-        <div
-          class="card__col-xs-12 card__col-sm-4"
-          *ngIf="showHeadOfIncome === 'TDTS'"
-        >
+        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTS'">
           <mat-label>Select Head of Income*</mat-label>
           <mat-form-field appearance="outline">
             <mat-select
@@ -121,10 +112,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div
-          class="card__col-xs-12 card__col-sm-4"
-          *ngIf="showHeadOfIncome === 'TDTSP'"
-        >
+        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTSP'">
           <mat-label>Select Head of Income*</mat-label>
           <mat-form-field appearance="outline">
             <mat-select
@@ -150,7 +138,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4">
           <mat-label>Name of Deductor*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -176,7 +164,7 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4 spsTp">
           <mat-label>Total Amount credited*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -201,7 +189,7 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-4">
+        <div class="col-sm-4 spsTp">
           <mat-label>Total Tax Deducted*</mat-label>
           <mat-form-field appearance="outline">
             <input
@@ -233,18 +221,18 @@
         </button>
       </div>
     </div>
-    <div class="display-flex">
-      <div class="card__col-xs-12">
-        <div class="card__col-sm-3">
+    <div class="row spsTp bdrTp">
+   
+        <div class="col-sm-3">
           <button
             type="submit"
-            class="tbd-btn-secondary"
+            class="tbd-btn-secondary delBtn"
             (click)="deleteSalaryArray()"
           >
             <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
           </button>
         </div>
-        <div class="card__col-sm-6 txt-center">
+        <div class="col-sm-6">
           <table>
             <tr
               *ngFor="let item of getSalaryArray.controls | paginate : config"
@@ -255,10 +243,11 @@
             (pageChange)="pageChanged($event)"
           ></pagination-controls>
         </div>
-        <div class="card__col-sm-3" style="text-align: right">
-          <button class="tbd-btn save-btn" (click)="save()">Save</button>
+        <div class="col-sm-3">
+          <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
         </div>
-      </div>
+   
     </div>
+
   </div>
 </form>

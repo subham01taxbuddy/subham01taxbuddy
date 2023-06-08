@@ -189,7 +189,11 @@ export class PotentialUserComponent implements OnInit {
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
-     this.loading = true;
+    this.loading = true;
+
+    if(this.searchParam.email){
+      this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20&active=false
@@ -387,7 +391,12 @@ export class PotentialUserComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          if(data.value != '-'){
+            return formatDate(data?.value, 'dd/MM/yyyy', this.locale);
+          }else{
+            return '-'
+          }
+
         },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -459,8 +468,8 @@ export class PotentialUserComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-phone"  data-action-type="call"></i>
            </button>`;
         },
         width: 50,
@@ -504,7 +513,7 @@ export class PotentialUserComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 60,
@@ -526,7 +535,7 @@ export class PotentialUserComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Activate User"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-door-open" aria-hidden="true" data-action-type="active"></i>
+          <i class="fa-regular fa-user-check"></i>
            </button>`;
         },
         width: 65,

@@ -13,6 +13,7 @@ import {UserNotesComponent} from "../shared/components/user-notes/user-notes.com
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 import {environment} from "../../../environments/environment";
+import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
 
 @Component({
   selector: 'app-payouts',
@@ -52,11 +53,13 @@ export class PayoutsComponent implements OnInit {
               private http: HttpClient,
               private dialog: MatDialog,
               private itrMsService: ItrMsService,
+              private roleBaseAuthGuardService: RoleBaseAuthGuardService,
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
-
+    let loggedInUserRoles = this.utilsService.getUserRoles();
+    this.isEditAllowed = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_LEADER']);
     this.getLeaders();
     this.usersGridOptions = <GridOptions>{
       rowData: [],
@@ -66,9 +69,9 @@ export class PayoutsComponent implements OnInit {
       enableCellTextSelection: true,
       paginateChildRows:true,
       paginationPageSize: 15,
-      rowSelection:'multiple',
+      rowSelection: this.isEditAllowed ? 'multiple' : 'none',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
+        return rowNode.data ? this.isEditAllowed && rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
       },
       onGridReady: params => {
       },
@@ -85,6 +88,7 @@ export class PayoutsComponent implements OnInit {
   }
 
   loggedInUserId: number;
+  isEditAllowed: boolean;
   ngOnInit() {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.selectedStatus = this.statusList[2].value;
@@ -282,7 +286,7 @@ export class PayoutsComponent implements OnInit {
       {
         headerName: 'Ack No',
         field: 'ackNumber',
-        width: 100,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -319,7 +323,7 @@ export class PayoutsComponent implements OnInit {
       {
         headerName: 'Invoice List',
         field: 'invoiceNo',
-        width: 120,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -491,7 +495,7 @@ export class PayoutsComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 85,
@@ -512,7 +516,7 @@ export class PayoutsComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:#2dd35c;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -536,7 +540,7 @@ export class PayoutsComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Invoice" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
+            <i class="fa-regular fa-receipt" style="color: #ff9500;"></i>
            </button>`;
         },
         width: 85,
@@ -552,9 +556,10 @@ export class PayoutsComponent implements OnInit {
       {
         // headerName: "Approve",
         field: "commissionPaymentApprovalStatus",
-        headerCheckboxSelection: true,
+        headerCheckboxSelection: this.isEditAllowed,
         width: 50,
         pinned: 'right',
+        hide: !this.isEditAllowed,
         checkboxSelection: (params)=>{
           return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
         },

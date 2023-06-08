@@ -157,7 +157,7 @@ export class CancelSubscriptionComponent implements OnInit {
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
 
 

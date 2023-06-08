@@ -46,6 +46,7 @@ export class AppComponent {
           event.id === 1 &&
           event.url === event.urlAfterRedirects
         ) {
+          this.timedOut = sessionStorage.getItem('timedOut') === '1';
           if(this.timedOut){
             this.logout();
             this.smeLogout();
@@ -122,20 +123,23 @@ export class AppComponent {
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
         this.timedOut = true;
+        sessionStorage.setItem('timedOut', this.timedOut ? '1' : '0');
         this.handleIdleTimeout();
       }
     });
     idleService.wake$.subscribe(s => {
       this.timedOut = false;
-      console.log('im awake!')
+      console.log('im awake!');
     });
   }
 
   @HostListener('window:beforeunload')
   onBeforeUnload() {
     console.log('in page unload');
-    this.logout();
-    this.smeLogout();
+    if(this.timedOut) {
+      this.logout();
+      this.smeLogout();
+    }
     return false;
   }
 

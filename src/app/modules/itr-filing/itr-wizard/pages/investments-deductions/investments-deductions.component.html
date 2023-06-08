@@ -7,15 +7,12 @@
   <form [formGroup]="investmentDeductionForm">
     <div class="card__row display-flex">
       <div class="col-sm-6 cardBdr">
-        <div class="display-flex card__col-sm-12">
-          <div
-            class="card__title card__col-sm-9"
-            style="padding: 10px 0; font-size: 18px"
-          >
+        <div class="row">
+          <div class="col-sm-10">
           Investment/Deduction Details:
           </div>
-          <div class="edit clearfix invest-edit card__col-sm-3">
-            <button class="edit_btn invest" (click)="editForm('investment')">
+          <div class="col-sm-2">
+            <button class="edit-donation mvRthEdt" (click)="editForm('investment')">
               <mat-icon> edit_square </mat-icon>Edit
             </button>
           </div>
@@ -120,7 +117,7 @@
       
           <div class="row grup">
             <div class="col-lg-12">Other Deductions:</div>
-            <div class="col-lg-6">
+            <div class="col-lg-8">
               <mat-label>Under sec. 80GGC</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -131,10 +128,11 @@
                   autocomplete="off"
                   digitsOnly
                 />
-                <mat-hint>Donation is in other than cash mode</mat-hint>
+                <mat-hint></mat-hint>
               </mat-form-field>
+              <mat-label class="hinTx">Non-cash donations are accepted</mat-label>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
               <mat-label>Under sec. 80EEB</mat-label>
               <mat-form-field appearance="outline">
                 <input

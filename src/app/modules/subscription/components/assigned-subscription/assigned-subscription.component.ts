@@ -267,7 +267,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.itrService.getMethod(param).subscribe((response: any) => {
         this.loading = false;
         console.log('Get user  by mobile number responce: ', response);
-        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+        let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
         if (response.data instanceof Array && response.data.length > 0) {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData(response.data)
@@ -488,13 +488,13 @@ export class AssignedSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           if (params.data.cancellationStatus === 'PENDING') {
             return `<button type="button" disabled class="action_icon add_button"
-          style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#04a4bc;">
-            <i class="fas fa-edit" aria-hidden="true"></i> Edit
+          style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-pen"></i> Edit
            </button>`;
           } else {
-            return `<button type="button" class="action_icon add_button" title="Click to edit sme"
+            return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription" data-action-type="edit"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
-              <i class="fas fa-edit" aria-hidden="true" data-action-type="edit"></i> Edit
+            <i class="fa-sharp fa-solid fa-pen" data-action-type="edit"></i> Edit
              </button>`;
           }
         },
@@ -558,7 +558,12 @@ export class AssignedSubscriptionComponent implements OnInit {
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode)
           ? subscriptionData[i].promoCode
           : '-',
-        invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
+        invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ?
+          Math.round(Number(subscriptionData[i].smeSelectedPlan.totalAmount) - Number(subscriptionData[i].smeSelectedPlan.discountAmount)) :
+          this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ?
+            Math.round(Number(subscriptionData[i].userSelectedPlan.totalAmount) - Number(subscriptionData[i].userSelectedPlan.discountAmount))
+            : '-',
+        // invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus
         // invoiceDetails: invoiceDetails,

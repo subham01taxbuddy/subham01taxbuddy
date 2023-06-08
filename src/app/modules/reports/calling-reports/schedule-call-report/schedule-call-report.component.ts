@@ -43,7 +43,7 @@ export class ScheduleCallReportComponent implements OnInit {
   config: any;
   searchParam: any = {
     page: 0,
-    pageSize: 20,
+    pageSize: 8,
   };
   loggedInSme: any;
   roles: any;
@@ -118,16 +118,17 @@ export class ScheduleCallReportComponent implements OnInit {
     // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
+    if (this.ownerId && !this.filerId && !pageChange) {
       userFilter += `&ownerUserId=${this.ownerId}`;
       this.searchParam.page = 0;
       this.config.currentPage = 1
     }
+
     if(this.ownerId && pageChange){
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
 
-    if (this.filerId) {
+    if (this.filerId && !pageChange) {
       userFilter += `&filerUserId=${this.filerId}`;
       this.searchParam.page = 0;
       this.config.currentPage = 1
@@ -296,7 +297,7 @@ export class ScheduleCallReportComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.searchParam.page = 0;
-    this.searchParam.pageSize = 20;
+    this.searchParam.pageSize = 8;
     this.config.currentPage = 1
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {

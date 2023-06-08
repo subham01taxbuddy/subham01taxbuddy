@@ -319,13 +319,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     let salaryDetailsArray = this.createSalaryDetailsArray();
     if (type === 2 || type === 3) {
       return this.fb.group({
-        employerName: [
-          '',
-          Validators.compose([
-            Validators.required,
-            Validators.pattern(AppConstants.charSpecialRegex),
-          ]),
-        ],
+        employerName: ['', Validators.compose([Validators.required])],
         address: ['', Validators.required],
         city: [
           '',
@@ -352,13 +346,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       });
     } else {
       return this.fb.group({
-        employerName: [
-          '',
-          Validators.compose([
-            Validators.required,
-            Validators.pattern(AppConstants.charRegex),
-          ]),
-        ],
+        employerName: ['', Validators.compose([Validators.required])],
         address: [''],
         city: [
           '',

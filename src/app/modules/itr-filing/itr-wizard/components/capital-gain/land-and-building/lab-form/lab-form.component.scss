@@ -4,6 +4,16 @@
     text-align: right;
 }
 
+.addLandBtn {
+  background: #E5F2F7;
+  border: 1px solid #797979;
+  margin-bottom: 10px;  
+}
+
+.addLandBtn:hover {
+  background-color: #c4e1ed;
+  color:#000000!important;
+}
 
 .inpSp {
     margin-left: -12px;
@@ -16,8 +26,13 @@
 }
 
 
-.mat-checkbox {
-  margin: 0px 0px 15px 10px!important;
+.spcBox {
+  padding: 20px 20px 20px 40px;
+}
+
+.mvChk {
+  margin-left: -30px!important;
+  margin-right:10px!important;
 }
 
 .text-style {
@@ -72,12 +87,9 @@
 }
 
 .cardYes {
-  margin-top: 20px;
-  margin-bottom: 20px;
   background: #FBFBFD;
   border: 1px solid #F5F5FA!important;
   border-radius: 10px;
-  padding:20px;
 }
 
 .mat-radio-label {  

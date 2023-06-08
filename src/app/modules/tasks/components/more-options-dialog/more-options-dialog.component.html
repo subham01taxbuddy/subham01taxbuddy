@@ -1,7 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="tablejrn">
+  <div class="row back">
+  <div class="col-sm-11">
   <label class="more">More options for: <span style="color: rgb(106, 123, 237);">{{ data.name }}</span></label>
-
+  </div>
+  <div class="col-sm-1">
   <button
     mat-dialog-close
     tabindex="-1"
@@ -10,8 +13,9 @@
   >
     <i class="fa fa-times" aria-hidden="true"></i>
   </button>
-
-  <span style="margin-left:-10px;" *ngIf="((data.serviceType === 'ITR' && data.itrObjectStatus !== 'ITR_FILED')
+</div>
+</div>
+  <span *ngIf="((data.serviceType === 'ITR' && data.itrObjectStatus !== 'ITR_FILED')
               ||  data.serviceType !== 'ITR') &&  !loggedInUserRoles?.includes('ROLE_FILER')">
     <button type="button" class="tbd-btn-small" title="Re Assignment" (click)="reAssignUser()">
       Re Assign <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
@@ -34,7 +38,7 @@
     </button>
   </span>
  <span>
-   <button type="button" class="mt-5 tbd-btn-small" title="View Document cloud" (click)="goToCloud()">
+   <button type="button" class="tbd-btn-small" title="View Document cloud" (click)="goToCloud()">
      Cloud&nbsp;&nbsp; <i class="fa fa-cloud" aria-hidden="true"></i>
    </button>
  </span>

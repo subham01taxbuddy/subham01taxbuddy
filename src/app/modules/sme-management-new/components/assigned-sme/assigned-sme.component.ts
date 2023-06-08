@@ -98,7 +98,15 @@ export class AssignedSmeComponent implements OnInit {
   getSmeSearchList(key: any, searchValue: any) {
     //https://uat-api.taxbuddy.com/report/sme-details-new/7521?page=0&pageSize=30&assigned=true
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    if(searchValue){
+      searchValue = searchValue.toLocaleLowerCase();
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
@@ -435,9 +443,9 @@ export class AssignedSmeComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to edit sme"
-          style="background-color: #00AECA; color: #ffffff; padding: 3px 8px; border-radius:5px; font-size: 14px; cursor:pointer;margin-top:2px;">
-          <i class="material-icons" style="font-size: 15px; padding-top: 5px; padding-right: 5px;" data-action-type="edit">&#xe3c9;</i>Edit
+          return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
+          style="color:#2199e8; font-size: 14px;">
+          <i class="fa-sharp fa-solid fa-pen" data-action-type="edit" ></i> Edit
           </button>`;
         },
       },

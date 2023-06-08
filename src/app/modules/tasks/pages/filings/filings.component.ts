@@ -35,7 +35,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
   templateUrl: './filings.component.html',
   styleUrls: ['./filings.component.scss'],
 })
-export class FilingsComponent implements OnInit, AfterContentChecked {
+export class FilingsComponent implements OnInit {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
@@ -121,9 +121,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
     })
   }
-  ngAfterContentChecked() {
-    this.cdRef.detectChanges();
-  }
+
+  // ngAfterContentChecked() {
+  //   this.cdRef.detectChanges();
+  // }
 
   async getMasterStatusList() {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
@@ -209,6 +210,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           this.searchParams.filerUserId = loggedInId;
           }
 
+        if(loggedInUserRoles.includes('ROLE_OWNER')){
+          this.searchParams.ownerUserId = loggedInId;
+          }
+
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
@@ -237,6 +242,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.email)) {
+
+        this.searchParams.email = this.searchParams.email.toLocaleLowerCase();
         param = param + `&email=${this.searchParams.email}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
@@ -268,7 +275,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData(this.itrDataList)
+              this?.createOnSalaryRowData(this?.itrDataList)
             );
           } else {
             this.itrDataList = [];
@@ -484,8 +491,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>
+            background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa-regular fa-money-check-pen" aria-hidden="true" data-action-type="startFiling"></i>
            </button>`;
           }
         },
@@ -517,7 +524,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color:#2dd35c; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -539,7 +546,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;"> <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;"> 
+          <i class="fa-solid fa-phone"></i> 
           </button>`;
         },
         width: 58,
@@ -674,7 +682,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,

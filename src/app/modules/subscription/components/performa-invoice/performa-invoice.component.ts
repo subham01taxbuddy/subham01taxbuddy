@@ -505,7 +505,7 @@ export class PerformaInvoiceComponent implements OnInit {
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
     let invoiceFilter = '';
     if (
@@ -982,8 +982,8 @@ export class PerformaInvoiceComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
             style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer; transform: rotate(90deg); color: #04a4bc; text-align:center;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
+            background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;">
+            <i class="fa-solid fa-phone" data-action-type="place-call"></i>
            </button>`;
         },
         width: 60,
@@ -998,7 +998,7 @@ export class PerformaInvoiceComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 90,

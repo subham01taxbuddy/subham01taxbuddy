@@ -109,7 +109,7 @@ export class SidebarComponent{
       submenu: [
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
-        { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
+        { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] }
       ]
     },
     {
@@ -142,7 +142,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-code',
       active: true,
       url: '/payouts',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: [],
       submenu: []
     },
     {
@@ -181,13 +181,14 @@ export class SidebarComponent{
     {
       name: 'Reports',
       // iconClass: 'fa fa-code',
-      active: true,
+      active: false,
       url: null,
       roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
+        { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
       ]
     }
   ];
