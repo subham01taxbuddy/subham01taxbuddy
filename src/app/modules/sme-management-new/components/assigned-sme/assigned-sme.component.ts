@@ -443,9 +443,9 @@ export class AssignedSmeComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to edit sme"
+          return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
           style="color:#2199e8; font-size: 14px;">
-          <i class="fa-sharp fa-solid fa-pen"></i> Edit
+          <i class="fa-sharp fa-solid fa-pen" data-action-type="edit" ></i> Edit
           </button>`;
         },
       },

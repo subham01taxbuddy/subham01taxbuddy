@@ -469,7 +469,7 @@ export class PotentialUserComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa-solid fa-phone"></i>
+          <i class="fa-solid fa-phone"  data-action-type="call"></i>
            </button>`;
         },
         width: 50,
@@ -535,7 +535,7 @@ export class PotentialUserComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Activate User"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa-regular fa-user-check"></i>
+          <i class="fa-regular fa-user-check" data-action-type="active"></i>
            </button>`;
         },
         width: 65,
