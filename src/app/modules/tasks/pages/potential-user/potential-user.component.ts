@@ -469,10 +469,10 @@ export class PotentialUserComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa-solid fa-phone"></i>
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -516,7 +516,7 @@ export class PotentialUserComponent implements OnInit {
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -535,10 +535,10 @@ export class PotentialUserComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Activate User"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa-regular fa-user-check"></i>
+          <i class="fa-regular fa-user-check" data-action-type="active"></i>
            </button>`;
         },
-        width: 65,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

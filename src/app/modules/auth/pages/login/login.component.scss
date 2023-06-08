@@ -52,7 +52,7 @@
   gap: 30px;
 
   position: absolute;
-  width: 440px;
+  width: 480px;
   height:auto;
   // left: 516px;
   top: 140px;
@@ -64,6 +64,13 @@
 
   border: 1px solid #e8edf2;
   border-radius: 16px;
+}
+
+.txRes{
+  font-size:14px;
+  color: #000;
+  font-weight:600;
+  font-style: italic;
 }
 
 /*.main1 {

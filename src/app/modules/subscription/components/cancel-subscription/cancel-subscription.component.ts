@@ -345,7 +345,7 @@ export class CancelSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="updateStatus"></i>
+            <i class="fa-regular fa-user-check" data-action-type="updateStatus"></i>
            </button>`;
         },
         width: 80,
@@ -367,7 +367,7 @@ export class CancelSubscriptionComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -391,7 +391,7 @@ export class CancelSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+            <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,

@@ -240,7 +240,7 @@ export class ResignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme"
           style="border: none; background: transparent; font-size: 14px; cursor:pointer;color:#2199e8;">
-          <i class="fa-sharp fa-solid fa-pen"></i> Edit
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i> 
            </button>`;
         },
       },
@@ -255,7 +255,7 @@ export class ResignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to Lead Partner"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:#000000;">
-          <i class="fa-solid fa-person-walking-arrow-loop-left"></i>
+          <i class="fa-solid fa-person-walking-arrow-loop-left" data-action-type="ConvertToLeadPartner"></i>
            </button>`;
         },
       },
