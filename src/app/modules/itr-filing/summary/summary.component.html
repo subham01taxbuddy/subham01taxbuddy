@@ -148,13 +148,34 @@
 
         <div
           class="regime"
-          style="background-color: orange; padding: 10px; margin: bottom"
+          style="background-color: orange; padding: 10px; margin-bottom: 5px"
         >
           {{ ITR_JSON.regime === "NEW" ? "New Tax Regime" : "Old Tax Regime" }}
         </div>
 
         <div
+          class="regime"
+          *ngIf="ITR_JSON.itrSummaryJson"
+          style="background-color: orange; padding: 10px; margin-bottom: 5px"
+        >
+          {{
+            ITR_JSON.isItrSummaryJsonEdited === true
+              ? "Taxbuddy Calculations"
+              : "Calculations as per uploaded JSON"
+          }}
+        </div>
+
+        <div
+          class="regime"
+          *ngIf="!ITR_JSON.itrSummaryJson"
+          style="background-color: orange; padding: 10px; margin-bottom: 5px"
+        >
+          Taxbuddy Calculations
+        </div>
+
+        <div
           class="card__col-xs-12 card__col-sm-4 card__col-md-4"
+          style="margin-top: 25px"
           *ngIf="refund > 0"
         >
           <div class="incBx">
