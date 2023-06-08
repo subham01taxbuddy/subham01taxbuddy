@@ -141,7 +141,7 @@
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
-                          i
+                          fieldGlobalIndex(i)
                         ].controls['sellOrBuyQuantity'].hasError('pattern')
                       "
                       >Enter valid amount.</mat-error
@@ -165,7 +165,7 @@
                         calculateTotalCG(securities);
                         calMaxPurchaseDate(
                           this.securitiesForm.controls['securitiesArray']
-                            .controls[i].controls['sellDate'].value,
+                            .controls[fieldGlobalIndex(i)].controls['sellDate'].value,
                           this.securitiesForm,
                           i
                         )
@@ -179,7 +179,7 @@
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
-                          i
+                          fieldGlobalIndex(i)
                         ].controls['sellDate'].hasError('required')
                       "
                     >
@@ -188,7 +188,7 @@
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
-                          i
+                          fieldGlobalIndex(i)
                         ].controls['sellDate'].hasError('dateOrder')
                       "
                     >
