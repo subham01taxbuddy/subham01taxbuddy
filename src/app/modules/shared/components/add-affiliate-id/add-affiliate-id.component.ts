@@ -28,7 +28,7 @@ export class AddAffiliateIdComponent implements OnInit {
     emailStr = emailStr.replaceAll('.', 'dot');
     let data = {
       status: status,
-      affiliateId: this.affiliateId.value
+      affiliateId: emailStr
     }
     this.dialogRef.close(data);
   }
