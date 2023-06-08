@@ -206,18 +206,7 @@
                       name="sellValuePerUnit"
                       maxlength="14"
                       (change)="calculateTotalCG(securities)"
-                      (blur)="
-                        securitiesForm.controls['securitiesArray'].controls[
-                          fieldGlobalIndex(i)
-                        ].controls['sellValue'].setValue(
-                          securitiesForm.controls['securitiesArray'].controls[
-                            fieldGlobalIndex(i)
-                          ].controls['sellValuePerUnit'].value *
-                            securitiesForm.controls['securitiesArray'].controls[
-                              fieldGlobalIndex(i)
-                            ].controls['sellOrBuyQuantity'].value
-                        )
-                      "
+                      (blur)="getSaleValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                     <mat-error
