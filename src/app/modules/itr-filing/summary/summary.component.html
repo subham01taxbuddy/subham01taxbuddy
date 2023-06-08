@@ -148,13 +148,34 @@
 
         <div
           class="regime"
-          style="background-color: orange; padding: 10px; margin: bottom"
+          style="background-color: orange; padding: 10px; margin-bottom: 5px"
         >
           {{ ITR_JSON.regime === "NEW" ? "New Tax Regime" : "Old Tax Regime" }}
         </div>
 
         <div
+          class="regime"
+          *ngIf="ITR_JSON.itrSummaryJson"
+          style="background-color: orange; padding: 10px; margin-bottom: 5px"
+        >
+          {{
+            ITR_JSON.isItrSummaryJsonEdited === true
+              ? "Taxbuddy Calculations"
+              : "Calculations as per uploaded JSON"
+          }}
+        </div>
+
+        <div
+          class="regime"
+          *ngIf="!ITR_JSON.itrSummaryJson"
+          style="background-color: orange; padding: 10px; margin-bottom: 5px"
+        >
+          Taxbuddy Calculations
+        </div>
+
+        <div
           class="card__col-xs-12 card__col-sm-4 card__col-md-4"
+          style="margin-top: 25px"
           *ngIf="refund > 0"
         >
           <div class="incBx">
@@ -310,7 +331,7 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeFromSal">
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeFromSal && !ITR_JSON.isItrSummaryJsonEdited">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -576,7 +597,7 @@
                       </table>
                     </div> -->
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson || (ITR_JSON.itrSummaryJson && ITR_JSON.isItrSummaryJsonEdited)">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -586,7 +607,7 @@
                             <th>Particulars</th>
                             <th
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of summaryIncome.summarySalaryIncome.employers;
                                 let i = index
                               "
                             >
@@ -750,7 +771,7 @@
                     </mat-expansion-panel-header>
 
                     <div
-                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalIncomeOfHP"
+                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalIncomeOfHP && !ITR_JSON.isItrSummaryJsonEdited"
                     >
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -818,7 +839,7 @@
                           <tr>
                             <td>4. Standard Deduction @30%</td>
                             <td>
-                              Rs
+                               Rs
                               {{
                                 utilsService.currencyFormatter(
                                   keys.StandardDeduction
@@ -852,7 +873,7 @@
                       </table>
                     </div>
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson || (ITR_JSON.itrSummaryJson && ITR_JSON.isItrSummaryJsonEdited)">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"

@@ -353,7 +353,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-        <i class="fa-regular fa-user-check"></i>
+        <i class="fa-regular fa-user-check" data-action-type="updateStatus"></i>
          </button>`;
         },
         cellStyle: function (params: any) {
