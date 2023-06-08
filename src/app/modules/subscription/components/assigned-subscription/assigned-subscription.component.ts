@@ -492,9 +492,9 @@ export class AssignedSubscriptionComponent implements OnInit {
           <i class="fa-sharp fa-solid fa-pen"></i> Edit
            </button>`;
           } else {
-            return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription"
+            return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription" data-action-type="edit"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
-            <i class="fa-sharp fa-solid fa-pen"></i> Edit
+            <i class="fa-sharp fa-solid fa-pen" data-action-type="edit"></i> Edit
              </button>`;
           }
         },
