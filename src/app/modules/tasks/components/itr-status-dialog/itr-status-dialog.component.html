@@ -21,28 +21,25 @@
 
   <mat-progress-bar [value]="progressPerCentage"></mat-progress-bar>
   <mat-stepper orientation="vertical" #stepper [selectedIndex]="activeIndex"
-        [ngClass]="showTPANavigation?'container formBase-height-tpa':'container formBase-height'">
+        [ngClass]="showTPANavigation?'container itr-stepper formBase-height-tpa':'container itr-stepper formBase-height'">
+        <ng-template matStepperIcon="edit">
+          <mat-icon>done</mat-icon>
+      </ng-template>
         <div *ngFor="let itrFlow of itrLifeCycleSummaryList; let i=index">
-          <mat-step *ngIf="itrFlow.showTaskGroupOnUI">
+          <mat-step *ngIf="itrFlow.showTaskGroupOnUI"
+          [aria-labelledby]="itrFlow.completed ? 'step-complete':'step-not-complete'">
             <ng-template matStepLabel>{{itrFlow.taskGroupTitle}}</ng-template>
             <ng-template matStepContent>
               <div *ngFor="let subItrFlow of itrFlow?.data" class="mt-2">
                 <div *ngIf="subItrFlow.showTaskGroupOnUI">
-                  <div *ngIf="subItrFlow.uiAction !='NotRequired'">
-                    <mat-icon *ngIf="subItrFlow.taskStatus==='Completed'"
-                                    class="schedule-done">done</mat-icon>
-                    <mat-icon *ngIf="subItrFlow.taskStatus==='InProgress' || subItrFlow.taskStatus==='Pending'"
-                      [ngClass]="(subItrFlow.taskStatus==='InProgress')? 'schedule-inProgress':'schedule-todo' ">schedule
-                    </mat-icon>
+                  <div *ngIf="subItrFlow.uiAction !=='NotRequired'">
                     <div class="disFlex" style="position: relative;">
+                      <mat-icon style="margin-top: 7px;" *ngIf="subItrFlow.taskStatus==='Completed'" class="schedule-done">done</mat-icon>
+                      <mat-icon style="margin-top: 7px;" *ngIf="subItrFlow.taskStatus==='InProgress' || subItrFlow.taskStatus==='Pending'"
+                                [ngClass]="(subItrFlow.taskStatus==='InProgress')? 'schedule-inProgress':'schedule-todo' ">schedule
+                      </mat-icon>
                       <span class="sub-title mt-1">{{subItrFlow.taskTitleDescription}}</span>
-                      <mat-icon class="edit-pan"
-                          *ngIf="subItrFlow.taskStatus==='Completed' && !isEditPan && subItrFlow.taskTitle==='ADD_PAN'"
-                          (click)="subItrFlow.uiAction='Editable'">edit</mat-icon>
-                      <mat-icon class="edit-pan"
-                          *ngIf="subItrFlow.taskStatus==='Completed' && !isEditIncomeSources && subItrFlow.taskTitle==='ADD_INCOME_SOURCES'"
-                          (click)="subItrFlow.uiAction='Editable'">edit</mat-icon>
-                  </div>
+                    </div>
                   </div>
                 </div>
               </div>

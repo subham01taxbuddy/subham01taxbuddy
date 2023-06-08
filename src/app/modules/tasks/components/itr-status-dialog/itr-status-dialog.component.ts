@@ -50,6 +50,26 @@ export class ItrStatusDialogComponent implements OnInit {
   draftSummaryDocDetails: any;
   invoiceDetails: any;
   ITRSummaryDocDetails: any;
+  addClients = 0;
+  fetchPrefill = 0;
+  dateOfBirth: any;
+  eligiblePlan: any;
+  subscriptionAssigneeId: any;
+  options: { key: string; currency: string; email: any; contact: any; name: string; order_id: any; prefill: { name: string; email: any; contact: any; }; handler: (response: any) => void; modal: { ondismiss: () => void; }; };
+  uploadDoc: File;
+  transactionId: any;
+  viewer = 'DOC';
+  docUrl = '';
+  validateAcOtp: FormControl;
+  validateFpOtp: FormControl;
+  adharOtp: FormControl;
+  bankEvc: FormControl;
+  dematEvc: FormControl;
+  counter = 15;
+  showNextOpt: any;
+  showAdharEriOtp: boolean;
+  showBankEvcEriOtp: boolean;
+  showDematEvcEriOtp: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<ItrStatusDialogComponent>,
@@ -180,50 +200,6 @@ export class ItrStatusDialogComponent implements OnInit {
       this.fetchITRSummary();
     }
 
-
-    // response.data.itrFiledStatus = {
-    //   "taskGroupName": "COMPLETE_ITR_FILING",
-    //   "showTaskGroupOnUI": true,
-    //   "uiAction": "ReadOnly",
-    //   "taskTitleDescription": "ITR Filed Status",
-    //   "isTaskRepeatable": false,
-    //   "uiPrompt": null,
-    //   "taskKeyName": "itrFiledStatus",
-    //   "allowAddAnother": false,
-    //   "taskGroupTitle": "Complete ITR Filing",
-    //   "taskGroupSequence": 3,
-    //   "successorTaskKeyName": "eVerificationStatus",
-    //   "taskCompletionDateTime": null,
-    //   "predecessorTaskKeyName": "paymentCompletion",
-    //   "taskNumber": 14,
-    //   "taskTitle": "ITR_FILED_STATUS",
-    //   "taskStatus": "Completed",
-    //   "customAttributes": {
-    //     "panNumber": "AZEPD6779J",
-    //     "acknowledgmentNumber": "149629500150523",
-    //     "itrType": "ITR-4"
-    //   }
-    // };
-
-    // response.data.eVerificationStatus = {
-    //   "taskGroupName": "COMPLETE_ITR_FILING",
-    //   "showTaskGroupOnUI": true,
-    //   "uiAction": "ReadOnly",
-    //   "taskTitleDescription": "Everification Status",
-    //   "isTaskRepeatable": false,
-    //   "uiPrompt": 'Complete this with in 30 days from filing ',
-    //   "taskKeyName": "eVerificationStatus",
-    //   "allowAddAnother": false,
-    //   "taskGroupTitle": "Complete ITR Filing",
-    //   "taskGroupSequence": 3,
-    //   "successorTaskKeyName": "itrProcessedSuccessfully",
-    //   "taskCompletionDateTime": null,
-    //   "predecessorTaskKeyName": "itrSummaryGenerated",
-    //   "taskNumber": 15,
-    //   "taskTitle": "EVERIFICATION_STATUS",
-    //   "taskStatus": "InProgress",
-    //   "customAttributes": null
-    // };
     if (response.data.itrFiledStatus.taskStatus === 'Completed') {
       this.itrFiledStatusData = response?.data?.itrFiledStatus?.customAttributes;
       this.showTPANavigation = true;
@@ -259,18 +235,18 @@ export class ItrStatusDialogComponent implements OnInit {
     this.calculateProgress(this.itrLifeCycleSummaryList);
     sessionStorage.setItem('ITR_LIFECYCLE_SUMMARY_LIST', JSON.stringify(this.itrLifeCycleSummaryList));
     setTimeout(() => {
-      this.itrLifeCycleSummaryList.some((element, index) => {
+      this?.itrLifeCycleSummaryList?.some((element, index) => {
+        element.completed = true;
         this.activeIndex = index;
         this.stepper.selectedIndex = this.activeIndex;
-        this.stepper.selected.completed = true;
-        this.stepper.selected.editable = false;
+        // this.stepper.selected.completed = true;
         let lastStepObj = element.data[element.data.length - 1];
 
         if ((lastStepObj.taskStatus === 'Pending' && lastStepObj.uiAction === 'ReadOnly') ||
           (lastStepObj.taskStatus === 'InProgress' && lastStepObj.uiAction === 'Editable'))
           return true
       });
-
+      this.itrLifeCycleSummaryList[this.activeIndex].completed = false;
       this.stepper.selectedIndex = this.activeIndex;
       this.stepper.selected.editable = true;
 
