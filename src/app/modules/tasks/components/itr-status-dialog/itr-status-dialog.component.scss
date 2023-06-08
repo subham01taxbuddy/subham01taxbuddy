@@ -1,0 +1,245 @@
+::ng-deep .mat-stepper-vertical-line::before {
+  border-left-style: dashed !important;
+}
+
+.container {
+  background: #F5FEFF;
+}
+
+.input-header {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #979797;
+}
+
+.mat-vertical-content {
+  padding: 0 0 14px 15px !important;
+}
+
+
+.mat-vertical-content-container {
+  margin-left: 14px !important;
+}
+
+
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl {
+  padding-left: 0 !important;
+}
+
+.activity-clock {
+  color: #E77817 !important;
+}
+
+.downloadPdf {
+  padding: 12px 8px;
+  width: 170px;
+  height: 64px;
+  background: #D4F3F8;
+  border-radius: 8px;
+  display: flex;
+  cursor: pointer;
+
+  &.black {
+      background: #e5e3e3;
+  }
+}
+
+.disFlex {
+  display: flex !important;
+}
+
+// .txt-right {
+//     text-align: center;
+// }
+.lftTx {
+  padding: 10px 0px 10px 20px;
+  font-size: 15px;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.active-clock {
+  font-size: 17px;
+  vertical-align: middle;
+  padding-top: 3px;
+  padding-left: 3px;
+}
+
+.header-btn {
+  padding: 4px;
+  background: #7ADCEC;
+  border-radius: 4px;
+  line-height: 15px;
+  min-width: auto !important;
+  padding: 2px;
+  font-size: 12px !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  // margin-right: 5px;
+}
+
+.itr-progress {
+  background-color: #D4F3F8;
+  // height: auto;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.input-field {
+  font-size: 14px !important;
+}
+
+@media only screen and (max-width: 400px) and (min-width: 0px) {
+  .input-field {
+      font-size: 11px !important;
+  }
+}
+
+.km-img {
+  float: right;
+  position: absolute;
+  right: 0;
+  top: -13px;
+}
+
+.boxImg1 {
+  width: 102px;
+  // margin-top: -20px;
+}
+
+.formBase-height {
+  overflow-y: auto !important;
+  height: 415px !important;
+}
+
+.formBase-height-tpa {
+  overflow-y: auto !important;
+  height: 310px !important;
+}
+
+@media only screen and (max-width: 1023px) and (min-width: 0px) {
+  .formBase-height {
+      height: 60vh !important;
+  }
+
+  .formBase-height-tpa {
+      height: 60vh !important;
+  }
+}
+
+// @media only screen and (max-width: 1023px) and (min-width: 0px) {
+//     .itr-progress {
+//         height: auto;
+//     }
+// }
+
+.errorMessage {
+  color: red;
+  font-size: 12px;
+}
+
+.upload-doc {
+  position: absolute;
+  right: -19px;
+  top: -14px;
+}
+
+.doc-options {
+  position: absolute;
+  right: -8px;
+  top: 15px;
+}
+
+.docTitle {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #292929;
+  margin-top: 10px;
+}
+
+hr {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 0;
+  border-top: 2px solid #03A3BD;
+}
+
+.discount {
+  text-decoration: line-through;
+  margin-right: 5px;
+}
+
+.ft-6 {
+  font-weight: 600;
+}
+
+.count {
+  color: #000000;
+  font-weight: 600;
+}
+
+.refund {
+  margin-left: 30px;
+  position: relative;
+}
+
+.mat {
+  align-items: center !important;
+}
+
+.refund-icon {
+  color: #84C225;
+}
+
+.refund-desc {
+  padding-left: 0 !important;
+}
+
+.name {
+  color: #979797;
+}
+
+.test {
+  height: 26px;
+  width: 0px;
+  position: absolute;
+  border-left: 1px dashed lightgray;
+  bottom: -18px;
+  left: 11px;
+}
+
+::ng-deep .mat-step:last-child .mat-vertical-content-container {
+  // border-left: 1px dashed lightgray !important;
+  padding-bottom: 24px;
+}
+
+::ng-deep .mat-step:last-child .mat-vertical-content {
+  border-left: 1px dashed lightgray !important;
+  padding: 0 24px 0px 24px !important;
+}
+
+.future-plan {
+  position: relative;
+  background-color: #D4F8D5;
+  padding: 10px 15px;
+}
+
+.uploadDoc {
+  height: auto !important;
+  align-items: center;
+  width: 210px !important;
+
+  .fileName {
+      font-size: 12px !important;
+      padding: 3px !important;
+      line-break: anywhere !important;
+  }
+}
