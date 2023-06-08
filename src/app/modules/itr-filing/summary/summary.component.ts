@@ -165,7 +165,28 @@ export class SummaryComponent implements OnInit {
   taxComputation: any;
   keys: any = {};
   finalSummary: any;
-  finalCalculations: any;
+  finalCalculations: {
+    salary: {
+      employers: [
+        {
+          employerNo: Number;
+          employerName: String;
+          grossSalary: Number;
+          exemptAllowance: Number;
+          deduction: Number;
+        }
+      ];
+      salaryTotal: Number;
+    };
+    houseProperties: [
+      {
+        hpNo: Number;
+        hpIncome: Number;
+        hpDeduction: Number;
+      }
+    ];
+    hpTotalIncome: Number;
+  };
 
   constructor(
     private itrMsService: ItrMsService,
@@ -277,6 +298,7 @@ export class SummaryComponent implements OnInit {
 
   calculations() {
     this.loading = true;
+
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
         this.show = true;
