@@ -331,7 +331,7 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeFromSal">
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeFromSal && !ITR_JSON.isItrSummaryJsonEdited">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -597,7 +597,7 @@
                       </table>
                     </div> -->
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson || (ITR_JSON.itrSummaryJson && ITR_JSON.isItrSummaryJsonEdited)">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -607,7 +607,7 @@
                             <th>Particulars</th>
                             <th
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of summaryIncome.summarySalaryIncome.employers;
                                 let i = index
                               "
                             >
@@ -771,7 +771,7 @@
                     </mat-expansion-panel-header>
 
                     <div
-                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalIncomeOfHP"
+                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalIncomeOfHP && !ITR_JSON.isItrSummaryJsonEdited"
                     >
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -839,7 +839,7 @@
                           <tr>
                             <td>4. Standard Deduction @30%</td>
                             <td>
-                              Rs
+                               Rs
                               {{
                                 utilsService.currencyFormatter(
                                   keys.StandardDeduction
@@ -873,7 +873,7 @@
                       </table>
                     </div>
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                    <div *ngIf="!ITR_JSON.itrSummaryJson || (ITR_JSON.itrSummaryJson && ITR_JSON.isItrSummaryJsonEdited)">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
