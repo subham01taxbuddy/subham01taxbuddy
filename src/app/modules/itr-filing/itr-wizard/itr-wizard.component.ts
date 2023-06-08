@@ -112,8 +112,10 @@ export class ItrWizardComponent implements OnInit {
     ) {
       this.ITR_JSON.family.filter((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
+          let fName = item.fName ? item.fName : '';
           let mName = item.mName ? item.mName : '';
-          this.customerName = item.fName + ' ' + mName + ' ' + item.lName;
+          let lName = item.lName ? item.lName : '';
+          this.customerName = fName + ' ' + mName + ' ' + lName;
         }
       });
     }
