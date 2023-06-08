@@ -301,6 +301,15 @@ export class PrefillIdComponent implements OnInit {
         }
       }
 
+      const allAllowance = this.ITR_Obj.employers[0].allowance.find(
+        (itrObjSalaryOtherAllowances) =>
+          itrObjSalaryOtherAllowances.allowanceType === 'ALL_ALLOWANCES'
+      );
+
+      allAllowance.exemptAmount =
+        this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].AllwncExemptUs10?.TotalAllwncExemptUs10;
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
