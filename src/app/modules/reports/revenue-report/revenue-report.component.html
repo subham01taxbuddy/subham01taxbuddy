@@ -32,10 +32,6 @@
             </div>
           </div>
           <div class="row">
-            <!-- <div class="col-sm-4 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}" *ngIf="roles.includes('ROLE_ADMIN')">
-              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)" [showOwnerList]=true>
-              </app-leader-list-dropdown>
-            </div> -->
             <div class="col-sm-8 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
@@ -57,4 +53,27 @@
 
     </mat-expansion-panel>
    </mat-accordion>
+</div>
+
+<div class="tableSpc" *ngIf="false">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="txTit">
+        Revenue Reports Details:
+      </div>
+    </div>
+    <!-- <div class="col-sm-4">
+  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
+  </div> -->
+  </div>
+
+  <table>
+    <tr *ngFor="let item of revenueReport | paginate : config"></tr>
+  </table>
+
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="revenueReportGridOptions">
+  </ag-grid-angular>
+
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
 </div>

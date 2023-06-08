@@ -305,8 +305,8 @@ export class PromoCodesComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Click to Edit Promo"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="editPromo">Edit</i>
+          style="border: none; background: transparent; font-size: 14px; cursor:pointer;color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-pen"></i> Edit
            </button>`;
         },
         pinned: 'right',
