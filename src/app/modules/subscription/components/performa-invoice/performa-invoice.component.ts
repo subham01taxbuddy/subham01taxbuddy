@@ -983,7 +983,7 @@ export class PerformaInvoiceComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;">
-            <i class="fa-solid fa-phone"></i>
+            <i class="fa-solid fa-phone" data-action-type="place-call"></i>
            </button>`;
         },
         width: 60,

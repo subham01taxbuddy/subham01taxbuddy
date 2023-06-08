@@ -291,7 +291,7 @@ export class ReviewListComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa-regular fa-file-plus"></i>
+          <i class="fa-regular fa-file-plus" data-action-type="update-sme-notes"></i>
            </button>`;
         },
         width: 80,

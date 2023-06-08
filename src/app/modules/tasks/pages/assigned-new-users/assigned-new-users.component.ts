@@ -526,7 +526,7 @@ export class AssignedNewUsersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa-solid fa-phone"></i>
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
            </button>`;
         },
         width: 60,
@@ -563,7 +563,7 @@ export class AssignedNewUsersComponent implements OnInit {
           }
           return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
           style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-          <i class="fa-sharp fa-regular fa-triangle-exclamation"></i> ${statusText}
+          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
         width:160,
@@ -649,7 +649,7 @@ export class AssignedNewUsersComponent implements OnInit {
             } else {
               return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="text-align:left; border: none;
               background: transparent; font-size: 13px;  font-weight:bold; cursor:pointer;color:#04a4bc;" data-action-type="startFiling">
-              <i class="fa-regular fa-money-check-pen"></i> Resume Filing
+              <i class="fa-regular fa-money-check-pen" data-action-type="startFiling"></i> Resume Filing
             </button>`;
             }
           } else {
