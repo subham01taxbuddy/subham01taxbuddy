@@ -879,6 +879,139 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           }
         );
       }
+    } else {
+      const param = '/tax/old-vs-new';
+      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+        (result: any) => {
+          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+          this.loading = false;
+          console.log('result is=====', result);
+          this.newSummaryIncome = result.data.newRegime;
+          this.oldSummaryIncome = result.data.oldRegime;
+
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
+                .totalSalaryTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
+                .totalSalaryTaxableIncome,
+            },
+            {
+              label: 'Income from House Property',
+              old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old:
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalSpecialRateIncome +
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalNormalRateIncome,
+              new:
+                this.newSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalSpecialRateIncome +
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalNormalRateIncome,
+            },
+            {
+              label: 'Income from Other Sources',
+              old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome,
+            },
+            {
+              label: 'Total Headwise Income',
+              old: this.oldSummaryIncome?.taxSummary.totalIncome,
+              new: this.newSummaryIncome?.taxSummary.totalIncome,
+            },
+            {
+              label: 'CYLA',
+              old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
+              new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+            },
+            {
+              label: 'BFLA',
+              old: this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+              new: this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+            },
+            {
+              label: 'Gross Total Income',
+              old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+              new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+            },
+            {
+              label: 'Deduction',
+              old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+              new: this.newSummaryIncome?.taxSummary.totalDeduction,
+            },
+            {
+              label: 'Total Income',
+              old: this.oldSummaryIncome?.taxSummary
+                .totalIncomeAfterDeductionIncludeSR,
+              new: this.newSummaryIncome?.taxSummary
+                .totalIncomeAfterDeductionIncludeSR,
+            },
+            {
+              label: 'CFL',
+              old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+              new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+              new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+              new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+            },
+            {
+              label: 'Aggregate Liability',
+              old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+              new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+            },
+            {
+              label: 'Tax Paid',
+              old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+              new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
+                  ? this.oldSummaryIncome?.taxSummary.taxpayable
+                  : this.oldSummaryIncome?.taxSummary?.taxRefund,
+              new:
+                this.newSummaryIncome?.taxSummary?.taxpayable !== 0
+                  ? this.newSummaryIncome?.taxSummary?.taxpayable
+                  : this.newSummaryIncome?.taxSummary?.taxRefund,
+            },
+          ];
+        },
+        (error) => {
+          this.loading = false;
+          this.errorMessage =
+            'We are processing your request, Please wait......';
+          if (error) {
+            this.errorMessage =
+              'We are unable to display your summary,Please try again later.';
+          }
+          console.log('In error method===', error);
+        }
+      );
     }
   }
 

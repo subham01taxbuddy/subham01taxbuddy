@@ -573,17 +573,14 @@ export class SharesAndEquityComponent
       //   this.deductionForm.reset();
       // }
       const securitiesData = {
-        assessmentYear: '',
-        assesseeType: '',
-        residentialStatus: '',
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
         assetType:
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction:
-          this.deductionForm.invalid || this.getSecuritiesCg() <= 0
-            ? []
-            : [this.deductionForm.getRawValue()],
+        deduction: [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: assetDetails,
@@ -654,17 +651,14 @@ export class SharesAndEquityComponent
         this.deductionForm.reset();
       }
       const securitiesData = {
-        assessmentYear: '',
-        assesseeType: '',
-        residentialStatus: '',
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
         assetType:
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction:
-          this.deductionForm.invalid || this.getSecuritiesCg() <= 0
-            ? []
-            : [this.deductionForm.getRawValue()],
+        deduction: [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: securitiesArray.getRawValue(),

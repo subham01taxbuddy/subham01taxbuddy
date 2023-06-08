@@ -7,6 +7,10 @@
   border-radius: 4px;
 }
 
+.hinTx{
+  margin-top: 5px;
+}
+
 .table-responsive {
   overflow-x: auto;
 }
