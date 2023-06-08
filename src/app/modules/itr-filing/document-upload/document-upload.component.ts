@@ -2548,7 +2548,7 @@ export class DocumentUploadComponent implements OnInit {
     this.uploadDoc = null;
     this.filePassword = '';
     this.isPassProtected = false;
-    this.selectedFileType = null;
+    // this.selectedFileType = null;
   }
 
   uploadFile(file: FileList) {
