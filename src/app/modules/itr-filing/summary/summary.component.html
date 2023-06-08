@@ -290,7 +290,12 @@
                   <!-- *************** Income from Salary ********************-->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="summaryDetail.salary === 0 ? true : false"
+                    [disabled]="
+                      TaxbuddyCalculations.summaryIncome.summarySalaryIncome
+                        .taxSummary.salary === 0
+                        ? true
+                        : false
+                    "
                     #salary
                   >
                     <mat-expansion-panel-header>
@@ -320,9 +325,8 @@
                               <i class="material-icons icRup">&#8377;</i>&nbsp;
                               {{
                                 utilsService.currencyFormatter(
-                                  keys.IncomeFromSal
-                                    ? keys.IncomeFromSal
-                                    : summaryDetail.salary
+                                  TaxbuddyCalculations.summaryIncome
+                                    .summarySalaryIncome.taxSummary.salary
                                 )
                               }}
                             </label>
@@ -331,7 +335,13 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeFromSal && !ITR_JSON.isItrSummaryJsonEdited">
+                    <div
+                      *ngIf="
+                        ITR_JSON.itrSummaryJson &&
+                        keys.IncomeFromSal &&
+                        !ITR_JSON.isItrSummaryJsonEdited
+                      "
+                    >
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -597,7 +607,13 @@
                       </table>
                     </div> -->
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson || (ITR_JSON.itrSummaryJson && ITR_JSON.isItrSummaryJsonEdited)">
+                    <div
+                      *ngIf="
+                        !ITR_JSON.itrSummaryJson ||
+                        (ITR_JSON.itrSummaryJson &&
+                          ITR_JSON.isItrSummaryJsonEdited)
+                      "
+                    >
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -607,7 +623,8 @@
                             <th>Particulars</th>
                             <th
                               *ngFor="
-                                let salary of summaryIncome.summarySalaryIncome.employers;
+                                let salary of summaryIncome.summarySalaryIncome
+                                  .employers;
                                 let i = index
                               "
                             >
@@ -771,7 +788,11 @@
                     </mat-expansion-panel-header>
 
                     <div
-                      *ngIf="ITR_JSON.itrSummaryJson && keys.TotalIncomeOfHP && !ITR_JSON.isItrSummaryJsonEdited"
+                      *ngIf="
+                        ITR_JSON.itrSummaryJson &&
+                        keys.TotalIncomeOfHP &&
+                        !ITR_JSON.isItrSummaryJsonEdited
+                      "
                     >
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -839,7 +860,7 @@
                           <tr>
                             <td>4. Standard Deduction @30%</td>
                             <td>
-                               Rs
+                              Rs
                               {{
                                 utilsService.currencyFormatter(
                                   keys.StandardDeduction
@@ -873,7 +894,13 @@
                       </table>
                     </div>
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson || (ITR_JSON.itrSummaryJson && ITR_JSON.isItrSummaryJsonEdited)">
+                    <div
+                      *ngIf="
+                        !ITR_JSON.itrSummaryJson ||
+                        (ITR_JSON.itrSummaryJson &&
+                          ITR_JSON.isItrSummaryJsonEdited)
+                      "
+                    >
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
