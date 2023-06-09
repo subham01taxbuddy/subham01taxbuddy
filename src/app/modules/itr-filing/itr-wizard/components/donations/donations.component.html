@@ -16,8 +16,7 @@
                   matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder="Type of donee"
                   formControlName="schemeCode" name="schemeCode[i]" required>
                   <mat-option *ngFor="let dropdown of otherDonationToDropdown" [value]="dropdown.value"
-                    matTooltip="{{ dropdown.label }}" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                    [disabled]="!dropdown.active">
+                    matTooltip="{{ dropdown.label }}" matTooltipClass="tab-tooltip" matTooltipPosition="above">
                     {{ dropdown.label }}
                   </mat-option>
                 </mat-select>
