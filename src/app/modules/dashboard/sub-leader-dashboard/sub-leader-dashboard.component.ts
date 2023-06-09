@@ -43,7 +43,7 @@ export class SubLeaderDashboardComponent implements OnInit {
   roles: any;
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  toDateMin: any;
+  minEndDate:string ='2023-04-01';
   startDate = new FormControl('');
   endDate = new FormControl('');
   searchFiler = new FormControl('');
@@ -225,4 +225,10 @@ export class SubLeaderDashboardComponent implements OnInit {
     this?.smeDropDown?.resetDropdown();
     this.search();
   }
+
+  setEndDateValidate(startDateVal: any) {
+    console.log('startDateVal: ', startDateVal);
+    this.minEndDate = startDateVal.value;
+  }
+
 }

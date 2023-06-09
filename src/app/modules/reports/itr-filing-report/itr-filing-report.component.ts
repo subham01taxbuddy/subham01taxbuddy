@@ -45,7 +45,7 @@ export class ItrFilingReportComponent implements OnInit {
   endDate = new FormControl('');
   leaderView =new FormControl('');
   ownerView = new FormControl('');
-  toDateMin: any;
+  minEndDate = new Date(2023, 3, 1);
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   itrFillingReport: any;
@@ -460,7 +460,7 @@ export class ItrFilingReportComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+    this.minEndDate = FromDate;
   }
 
   // disableCheckbox(checkboxToDisable: FormControl, checkboxToEnable: FormControl) {
