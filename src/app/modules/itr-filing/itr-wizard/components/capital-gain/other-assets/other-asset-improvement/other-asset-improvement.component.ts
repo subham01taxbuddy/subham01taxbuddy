@@ -72,11 +72,21 @@ export class OtherAssetImprovementComponent implements OnInit {
   ngOnInit() {
     console.log('On Inti');
     this.initForm();
-    this.isAddMoreOtherAssets();
+    // this.isAddMoreOtherAssets();
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
     };
+
+    let data = this.goldCg.assetDetails;
+
+    // console.log(data);
+
+    if (data.length > 0) {
+      data.forEach((obj: any) => {
+        this.addMoreOtherAssetsForm(obj);
+      });
+    }
 
     this.OtherAsssetImprovementForm.disable();
 
@@ -141,19 +151,11 @@ export class OtherAssetImprovementComponent implements OnInit {
     // let assetDetails;
     // let data;
 
-    let data = this.goldCg.assetDetails;
 
-    // console.log(data);
-
-    if (data.length > 0) {
-      data.forEach((obj: any) => {
-        this.addMoreOtherAssetsForm(obj);
-      });
-    }
 
     const otherAssetDetailsArray = this.getOtherAssets;
     // condition for adding more other assets
-    if (otherAssetDetailsArray.valid) {
+    if (otherAssetDetailsArray.valid || otherAssetDetailsArray.disabled) {
       this.addMoreOtherAssetsForm();
       // console.log(otherAssetsAray.controls);
     } else {
