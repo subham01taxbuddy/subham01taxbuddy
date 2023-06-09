@@ -1568,7 +1568,9 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.otherIncome === 0 ? true : false
+                      finalCalculations.otherIncome.otherIncomeTotal === 0
+                        ? true
+                        : false
                     ]"
                     #otherIncome
                   >
@@ -1596,9 +1598,7 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.IncomeOthSrc
-                                    ? keys.IncomeOthSrc
-                                    : summaryDetail.otherIncome
+                                  finalCalculations.otherIncome.otherIncomeTotal
                                 )
                               }}</label
                             >
@@ -1607,7 +1607,7 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeOthSrc">
+                    <!-- <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeOthSrc">
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -1656,11 +1656,11 @@
                                 )
                               }}
                             </td>
-                          </tr>
+                          </tr> -->
 
-                          <tr *ngIf="keys.DIV || keys.FAP">
-                            <!--  *ngIf="isOtherIncome()" -->
-                            <th colspan="2">Other Income</th>
+                    <!-- <tr *ngIf="keys.DIV || keys.FAP"> -->
+                    <!--  *ngIf="isOtherIncome()" -->
+                    <!-- <th colspan="2">Other Income</th>
                           </tr>
                           <tr *ngIf="keys.DIV">
                             <td>Dividend Income</td>
@@ -1677,9 +1677,9 @@
                           </tr>
                         </tbody>
                       </table>
-                    </div>
+                    </div> -->
 
-                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                    <div>
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -1691,13 +1691,16 @@
                           </tr>
                           <tr
                             *ngIf="
-                              getOtherIncome('SAVING_INTEREST') ||
-                              getOtherIncome('FD_RD_INTEREST') ||
-                              getOtherIncome('TAX_REFUND_INTEREST') ||
-                              getOtherIncome('OTHER_INTEREST')
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.saving ||
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.intFromDeposit ||
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.taxRefund ||
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherInterest
                             "
                           >
-                            <!--  *ngIf="isInterestIncome()" -->
                             <th colspan="2">Interest Income</th>
                           </tr>
                           <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
