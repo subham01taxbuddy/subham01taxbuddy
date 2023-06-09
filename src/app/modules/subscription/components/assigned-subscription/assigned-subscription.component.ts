@@ -285,6 +285,14 @@ export class AssignedSubscriptionComponent implements OnInit {
               "Please create user before creating subscription.");
             this.isAllowed = false;
             return;
+          } else {
+            this._toastMessageService.alert('error', response.data.error);
+            this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
           }
 
           this.subscriptionListGridOptions.api?.setRowData(
