@@ -43,7 +43,7 @@ export class OwnerDashboardComponent implements OnInit {
   roles:any;
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  toDateMin: any;
+  minEndDate:string ='2023-04-01';
   startDate = new FormControl('');
   endDate = new FormControl('');
   searchFiler = new FormControl('');
@@ -457,11 +457,6 @@ export class OwnerDashboardComponent implements OnInit {
 
   }
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
-  }
-
   resetFilters(){
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
@@ -471,5 +466,9 @@ export class OwnerDashboardComponent implements OnInit {
     this.search('all');
   }
 
+  setEndDateValidate(startDateVal: any) {
+    console.log('startDateVal: ', startDateVal);
+    this.minEndDate = startDateVal.value;
+  }
 
 }

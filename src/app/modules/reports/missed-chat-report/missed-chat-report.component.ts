@@ -43,7 +43,7 @@ export class MissedChatReportComponent implements OnInit {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  toDateMin: any;
+  minEndDate = new Date(2023, 3, 1);
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   missedChatReport: any;
@@ -240,6 +240,6 @@ export class MissedChatReportComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+    this.minEndDate = FromDate;
   }
 }
