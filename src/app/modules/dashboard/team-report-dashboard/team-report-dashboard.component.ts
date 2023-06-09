@@ -64,7 +64,7 @@ export class TeamReportDashboardComponent implements OnInit {
     private router: Router,
     public datePipe: DatePipe,
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
   }

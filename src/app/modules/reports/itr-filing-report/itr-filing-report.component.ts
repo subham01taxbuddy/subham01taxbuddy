@@ -68,7 +68,7 @@ export class ItrFilingReportComponent implements OnInit {
     private itrService: ItrMsService,
     private jsonToCsvService: JsonToCsvService
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
 
     this.itrFillingReportGridOptions = <GridOptions>{
