@@ -119,8 +119,6 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   assetSelected() {
-    const securitiesArray = ((this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
-      .controls[0] as FormGroup).controls['otherAssetsArray'] as FormArray;
     const otherAssetDetailsArray = this.getOtherAssets;
 
     return (
@@ -472,11 +470,20 @@ export class OtherAssetImprovementComponent implements OnInit {
     console.log('Remove Index', index);
     const deleteOtherAsset = this.getOtherAssets;
 
-    deleteOtherAsset.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        deleteOtherAsset.removeAt(index);
-      }
-    });
+
+
+      deleteOtherAsset.controls.forEach((item, index) => {
+          if(((item as FormGroup).controls['otherAssetsArray'] as FormGroup).controls['hasEdit'].value){
+            deleteOtherAsset.removeAt(index);
+          }
+        }
+      );
+
+    // deleteOtherAsset.controls.forEach((element, index) => {
+    //   if ((element as FormGroup).controls['hasEdit'].value) {
+    //     deleteOtherAsset.removeAt(index);
+    //   }
+    // });
   }
 
   //  IMPROVEMENTS --------------------------------------------
