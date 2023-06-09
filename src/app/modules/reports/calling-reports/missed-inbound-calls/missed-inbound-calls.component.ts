@@ -44,7 +44,7 @@ export class MissedInboundCallsComponent implements OnInit {
   startDate = new FormControl('');
   endDate = new FormControl('');
   status = new FormControl('');
-  toDateMin: any;
+  minEndDate = new Date(2023, 3, 1);
   maxDate = new Date(2024,2,31);
   minDate = new Date(2023, 3, 1);
   missedInboundCallingReport:any;
@@ -70,7 +70,7 @@ export class MissedInboundCallsComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string,
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
 
     this.missedInboundCallGridOptions = <GridOptions>{
@@ -367,6 +367,6 @@ export class MissedInboundCallsComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+    this.minEndDate = FromDate;
   }
 }
