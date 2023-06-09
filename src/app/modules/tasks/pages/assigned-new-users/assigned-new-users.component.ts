@@ -525,10 +525,14 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
-           </button>`;
+          if(params.data.serviceType === 'ITR') {
+            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
         },
         width: 80,
         pinned: 'right',
