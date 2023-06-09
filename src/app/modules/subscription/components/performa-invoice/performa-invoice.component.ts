@@ -24,6 +24,7 @@ import { ServiceDropDownComponent } from '../../../shared/components/service-dro
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import {ActivatedRoute} from "@angular/router";
 
 export const MY_FORMATS = {
   parse: {
@@ -125,7 +126,8 @@ export class PerformaInvoiceComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string,
-    private toastMsgService: ToastMessageService
+    private toastMsgService: ToastMessageService,
+    private activatedRoute: ActivatedRoute,
   ) {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
@@ -213,6 +215,13 @@ export class PerformaInvoiceComponent implements OnInit {
     console.log('filteroptions', this.filteredOwners);
 
 
+    this.activatedRoute.queryParams.subscribe(params => {
+      let mobileNo = params['mobile'];
+      if(mobileNo) {
+        this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        this.getInvoice();
+      }
+    });
 
     this.getInvoice();
   }
@@ -449,7 +458,7 @@ export class PerformaInvoiceComponent implements OnInit {
 
   }
 
-  getInvoice(isCoOwner?,agentId?) {
+    getInvoice(isCoOwner?,agentId?) {
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
