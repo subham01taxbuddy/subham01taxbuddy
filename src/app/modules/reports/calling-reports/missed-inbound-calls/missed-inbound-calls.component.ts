@@ -70,7 +70,7 @@ export class MissedInboundCallsComponent implements OnInit {
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string,
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
 
     this.missedInboundCallGridOptions = <GridOptions>{
