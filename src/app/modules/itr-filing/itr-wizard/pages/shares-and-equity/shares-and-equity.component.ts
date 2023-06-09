@@ -292,46 +292,38 @@ export class SharesAndEquityComponent
   }
 
   createForm(srn, item?): FormGroup {
+    let validators = this.bondType === 'listed' ? [
+      Validators.required,
+      // Validators.pattern(AppConstants.amountWithDecimal),
+    ] : [
+      Validators.required,
+      Validators.pattern(AppConstants.amountWithoutDecimal),
+    ];
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       brokerName: [item ? item.brokerName : ''],
       srn: [item ? item.srn : srn],
       sellOrBuyQuantity: [
         item ? item.sellOrBuyQuantity : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithoutDecimal),
-        ],
+        validators,
       ],
       sellDate: [item ? item.sellDate : null, [Validators.required]],
       sellValuePerUnit: [
         item ? item.sellValuePerUnit : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ],
+        validators,
       ],
       sellValue: [
         item ? item.sellValue : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ],
+        validators,
       ],
       purchaseDate: [item ? item.purchaseDate : null, [Validators.required]],
       purchaseValuePerUnit: [
         item ? item.purchaseValuePerUnit : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ],
+        validators,
       ],
       purchaseCost: [
         item ? item.purchaseCost : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ],
+        validators,
       ],
       sellExpense: [item ? item.sellExpense : null],
       isinCode: [item ? item.isinCode : ''],
@@ -370,7 +362,16 @@ export class SharesAndEquityComponent
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
-    securitiesArray.push(this.createForm(securitiesArray.length, item));
+    securitiesArray.insert(0, this.createForm(securitiesArray.length, item));
+  }
+
+  equitySelected() {
+    const securitiesArray = <FormArray>this.securitiesForm.controls['securitiesArray'];
+    return (
+      securitiesArray.controls.filter(
+        (item: FormGroup) => item.controls['hasEdit'].value === true
+      ).length > 0
+    );
   }
 
   deleteArray() {
@@ -523,6 +524,22 @@ export class SharesAndEquityComponent
     });
 
     return totalCg;
+  }
+
+  getSaleValue(index){
+    const securitiesArray = <FormArray>(
+      this.securitiesForm.get('securitiesArray')
+    );
+    const i = this.fieldGlobalIndex(index);
+    const fg = securitiesArray.controls[i] as FormGroup;
+    let saleValue = parseFloat(fg.controls['sellValuePerUnit'].value) *
+      parseFloat(fg.controls['sellOrBuyQuantity'].value);
+    fg.controls['sellValue'].setValue(saleValue);
+    // if(this.bondType === 'listed') {
+    //   fg.controls['sellValue'].setValue(saleValue.toFixed(2));
+    // } else {
+    //   fg.controls['sellValue'].setValue(saleValue.toFixed());
+    // }
   }
 
   save(type?) {

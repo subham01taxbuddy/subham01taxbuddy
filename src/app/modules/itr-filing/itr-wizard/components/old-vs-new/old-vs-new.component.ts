@@ -514,10 +514,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
-        this.utilsService.showSnackBar(
-          'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
-        );
-
         console.log(this.ITR_JSON, 'ITRJSON');
         let ITR14IncomeDeductions = '';
         let taxComputation = '';
@@ -741,10 +737,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           ];
           this.loading = false;
           console.log(this.particularsArray, 'this.particularsArray');
+          this.utilsService.showSnackBar(
+            'Calculations are as of the uploaded JSON'
+          );
         }
       } else {
         const param = '/tax/old-vs-new';
-
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
           (result: any) => {
             // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
@@ -866,6 +864,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                     : this.newSummaryIncome?.taxSummary?.taxRefund,
               },
             ];
+
+            this.utilsService.showSnackBar(
+              'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
+            );
           },
           (error) => {
             this.loading = false;
@@ -1000,6 +1002,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : this.newSummaryIncome?.taxSummary?.taxRefund,
             },
           ];
+
+          this.utilsService.showSnackBar(
+            'The below displayed calculations are as of Taxbuddys calculation'
+          );
         },
         (error) => {
           this.loading = false;
@@ -1250,7 +1256,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
       //save ITR object
-      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+      this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
         (result) => {
           sessionStorage.setItem(
             AppConstants.ITR_JSON,

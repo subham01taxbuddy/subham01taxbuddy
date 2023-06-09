@@ -1,11 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="docBox">
-  <div class="row"> 
-    <div class="col-sm-12">  
-        <div class="txtMn">Upload Document here:</div> 
-    </div> 
-      <div class="col-sm-8">  
-       <mat-label> Select Path:</mat-label>    
+  <div class="row">
+    <div class="col-sm-12">
+        <div class="txtMn">Upload Document here:</div>
+    </div>
+      <div class="col-sm-8">
+       <mat-label> Select Path:</mat-label>
               <form class="example-form">
                   <mat-form-field appearance="outline">
                       <input type="text" placeholder="{{getSelectedItems()}}" aria-label="Number" matInput
@@ -33,11 +33,11 @@
                           </mat-tree>
                       </mat-autocomplete>
                   </mat-form-field>
-              </form>         
+              </form>
       </div>
       <div class="col-sm-4">
           <!-- <form class="example-form"> -->
-            <mat-label> Which Document?:</mat-label>   
+            <mat-label> Which Document?:</mat-label>
           <mat-form-field appearance="outline">
               <mat-label>Select option</mat-label>
               <mat-select placeholder="Select option" (selectionChange)="clearDocVal()" [(ngModel)]="selectedFileType"
@@ -66,7 +66,7 @@
 
   <!-- <button [disabled]="!uploadDoc"
       (click)="checkDocPassProtected(selectedFileType, uploadDoc, filePassword)">Upload</button> -->
-  <button class="upldBtn mvRth2" [disabled]="!uploadDoc" title="Click to upload selected file"
+  <button class="upldBtn mvRth2" [disabled]="!getSelectedItems() || !selectedFileType || !uploadDoc" title="Click to upload selected file"
           (click)="checkDocPassProtected(selectedFileType, uploadDoc, filePassword)">
     <mat-icon>upload</mat-icon> Upload
   </button>

@@ -21,6 +21,7 @@ import { ItrLifecycleDialogComponent } from './components/itr-lifecycle-dialog/i
 import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new-users.component";
 import { PotentialUserComponent } from './pages/potential-user/potential-user.component';
 import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
+import { ItrStatusDialogComponent } from './components/itr-status-dialog/itr-status-dialog.component';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/
         EVerificationDialogComponent,
         ItrLifecycleDialogComponent,
         PotentialUserComponent,
-        BulkReAssignDialogComponent
+        BulkReAssignDialogComponent,
+        ItrStatusDialogComponent,
     ],
     entryComponents: [
         ReAssignDialogComponent,

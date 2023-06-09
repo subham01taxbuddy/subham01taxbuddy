@@ -158,6 +158,15 @@ export class ZeroCouponBondsComponent
   //   }
   // }
 
+  bondSelected() {
+    const securitiesArray = <FormArray>this.bondsForm.controls['bondsArray'];
+    return (
+      securitiesArray.controls.filter(
+        (item: FormGroup) => item.controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
   calMaxPurchaseDate(sellDate, formGroupName, index) {
     if (this.utilsService.isNonEmpty(sellDate)) {
       this.maxPurchaseDate = sellDate;

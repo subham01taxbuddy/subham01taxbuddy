@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
         // }
       }
       if (userData) {
-        this.gotoCloud();
+        this.gotoCloud(userData);
       }
 
     }).catch(e => {
@@ -95,12 +95,30 @@ export class LoginComponent implements OnInit {
     });
 
   }
-  gotoCloud() {
+  gotoCloud(userData?) {
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('99999999999999999:', params);
-      this.userId = params['userId'];
-      this.serviceType = params['serviceType'];
+      if(params) {
+        this.userId = params['userId'];
+        this.serviceType = params['serviceType'];
+      } else {
+        this.userId = userData?.userId;
+      }
       if (this.userId && this.serviceType) {
+        const url = this.router
+          .createUrlTree(['itr-filing/docs/user-docs/'], {
+            queryParams: {
+              userId: this.userId,
+              serviceType: this.serviceType,
+            },
+          })
+          .toString();
+        window.open(url);
+      } else if(params['currentPath']){
+        let str = params['currentPath'];
+        this.userId = str.substring(0, str.indexOf('/'));
+        console.log('userId', this.userId);
+        this.serviceType = 'ITR';
         const url = this.router
           .createUrlTree(['itr-filing/docs/user-docs/'], {
             queryParams: {
