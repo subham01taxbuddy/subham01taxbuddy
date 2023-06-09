@@ -268,7 +268,7 @@ export class ReviewListComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="view"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-eye" aria-hidden="true" data-action-type="view"></i>
+            <i class="fa-light fa-eye" aria-hidden="true" data-action-type="view"></i>
            </button>`;
         },
         width: 80,
