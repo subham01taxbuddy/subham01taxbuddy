@@ -279,7 +279,7 @@ export class ItrStatusDialogComponent implements OnInit {
     }
 
     // this.showSubmitButton();
-    // this.getPlanDetails();
+     this.getPlanDetails();
   }
 
   fetchDraftSummary() {
@@ -303,6 +303,40 @@ export class ItrStatusDialogComponent implements OnInit {
     })
   }
 
+  getPlanDetails() {
+    let userSelectedIncomeSources = [];
+    this.allIncomeSources.forEach(type => {
+      if (type.selected == true) {
+        userSelectedIncomeSources.push(type.value);
+      }
+    });
+    this.loading=true;
+    let param ='/plans-master?serviceType=ITR&eligilities=' + userSelectedIncomeSources.toString() + '&userId=' + this.data.userId;
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.eligiblePlan = response;
+      if (sessionStorage.getItem('DATALAYEROBJ')) {
+        let datalayerObj = JSON.parse(sessionStorage.getItem('DATALAYEROBJ'));
+        if (!window['dataLayer']) {
+          window['dataLayer'] = [];
+        }
+        window['dataLayer'].push({
+          'event': 'form_submit_enhance',
+          'enhanced_conversion_data': {
+            "email": datalayerObj['email'],
+            "phone_number": datalayerObj['phone_number'],
+            'planId': this.eligiblePlan['planId'],
+            'planAmount': this.eligiblePlan['totalAmount'],
+          }
+        })
+      }
+      console.log('Datalayer: ', window['dataLayer']);
+      this.loading=false;
+    },
+      error => {
+        this.loading=false;
+        this.utilsService.showSnackBar('Failed to get selected plan details');
+      });
+  }
 
   close() {
     this.dialogRef.close();

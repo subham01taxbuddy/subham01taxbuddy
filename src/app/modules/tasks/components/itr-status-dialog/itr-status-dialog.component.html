@@ -38,8 +38,31 @@
                       <mat-icon style="margin-top: 7px;" *ngIf="subItrFlow.taskStatus==='InProgress' || subItrFlow.taskStatus==='Pending'"
                                 [ngClass]="(subItrFlow.taskStatus==='InProgress')? 'schedule-inProgress':'schedule-todo' ">schedule
                       </mat-icon>
-                      <span class="sub-title mt-1">{{subItrFlow.taskTitleDescription}}</span>
+                        <span class="sub-title mt-1">{{ subItrFlow.taskTitleDescription}}</span>
                     </div>
+
+                    <div *ngIf="subItrFlow.taskTitle==='ADD_INCOME_SOURCES'">
+                    <div *ngFor="let uploadSection of subItrFlow.customAttributes?.userSelectedIncomeSources; let i=index">
+                        <div class="disFlex" style="position: relative;">
+                        <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i> {{uploadSection}}</span>
+                        </div>
+                    </div>
+                    </div>
+                    <div *ngIf="subItrFlow.taskTitle==='PLAN_SELECTION'">
+                      <div *ngIf="eligiblePlan?.name">
+                        <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i> {{eligiblePlan?.name}}</span>
+                        <!-- <span class="input-header margine-left:10px">{{subItrFlow.uiPrompt}}</span> -->
+                      </div>
+                    </div>
+
+                    <div *ngIf="subItrFlow.taskTitle==='DOCUMENTS_UPLOADED'">
+                      <div *ngFor="let uploadSection of subItrFlow.customAttributes?.documents; let i=index">
+                          <div class="disFlex" style="position: relative;" *ngIf="uploadSection.isDocumentUploaded">
+                          <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i> {{uploadSection.documentTitle}}</span>
+                          </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>
