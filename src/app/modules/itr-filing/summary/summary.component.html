@@ -291,8 +291,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="
-                      TaxbuddyCalculations.summaryIncome.summarySalaryIncome
-                        .taxSummary.salary === 0
+                      finalCalculations?.salary?.salaryTotalIncome === 0
                         ? true
                         : false
                     "
@@ -325,8 +324,7 @@
                               <i class="material-icons icRup">&#8377;</i>&nbsp;
                               {{
                                 utilsService.currencyFormatter(
-                                  TaxbuddyCalculations.summaryIncome
-                                    .summarySalaryIncome.taxSummary.salary
+                                  finalCalculations?.salary?.salaryTotalIncome
                                 )
                               }}
                             </label>
@@ -335,30 +333,30 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div
+                    <!-- <div
                       *ngIf="
                         ITR_JSON.itrSummaryJson &&
                         keys.IncomeFromSal &&
                         !ITR_JSON.isItrSummaryJsonEdited
                       "
-                    >
-                      <table
+                    > -->
+                    <!-- <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
                       >
                         <tbody>
                           <tr>
                             <th>Particulars</th>
-                            <th>Employer 1</th>
-                            <!-- <th>Employer2</th>
+                            <th>Employer 1</th> -->
+                    <!-- <th>Employer2</th>
                             <th>Employer3</th> -->
-                          </tr>
+                    <!-- </tr>
                           <tr>
                             <td>1. Employer's Name</td>
-                            <td>Employer 1</td>
-                            <!-- <td>ABC Company</td>
+                            <td>Employer 1</td> -->
+                    <!-- <td>ABC Company</td>
                             <td>XYZ Company</td> -->
-                          </tr>
+                    <!-- </tr>
                           <tr>
                             <td>2. Gross Salary</td>
                             <td>
@@ -366,10 +364,10 @@
                               {{
                                 utilsService.currencyFormatter(keys.GrossSalary)
                               }}
-                            </td>
-                            <!-- <td>Rs 10,30,000</td>
+                            </td> -->
+                    <!-- <td>Rs 10,30,000</td>
                             <td>Rs 9,15,000</td> -->
-                          </tr>
+                    <!-- </tr>
                           <tr>
                             <td>3. Less: Exempt Allowance</td>
                             <td>
@@ -379,10 +377,10 @@
                                   keys.TotalAllwncExemptUs10
                                 )
                               }}
-                            </td>
-                            <!--  <td>Rs 1,350</td>
+                            </td> -->
+                    <!--  <td>Rs 1,350</td>
                             <td>Rs 1,050</td> -->
-                          </tr>
+                    <!-- </tr>
                           <tr>
                             <td>4. Less: Professional Tax</td>
                             <td>
@@ -392,10 +390,10 @@
                                   keys.ProfessionalTaxUs16iii
                                 )
                               }}
-                            </td>
-                            <!-- <td>(Rs 1,050)</td>
+                            </td> -->
+                    <!-- <td>(Rs 1,050)</td>
                             <td>(Rs 2,050)</td> -->
-                          </tr>
+                    <!-- </tr>
                           <tr>
                             <td>5. Less: Entertainment Allowance</td>
                             <td>
@@ -405,10 +403,10 @@
                                   keys.EntertainmentAlw16ii
                                 )
                               }}
-                            </td>
-                            <!-- <td>(Rs 4,000)</td>
+                            </td> -->
+                    <!-- <td>(Rs 4,000)</td>
                             <td>(Rs 3,000)</td> -->
-                          </tr>
+                    <!-- </tr>
                           <tr>
                             <td>6. Less: Standard Deduction</td>
                             <td>
@@ -418,10 +416,10 @@
                                   keys.StandardDeduction
                                 )
                               }}
-                            </td>
-                            <!-- <td>(Rs 30,000)</td>
+                            </td> -->
+                    <!-- <td>(Rs 30,000)</td>
                             <td>(Rs 20,000)</td> -->
-                          </tr>
+                    <!-- </tr>
 
                           <tr>
                             <th>7. Taxable Salary</th>
@@ -432,13 +430,13 @@
                                   keys.IncomeFromSal
                                 )
                               }}
-                            </td>
-                            <!-- <th>Rs 10,23,600</th>
+                            </td> -->
+                    <!-- <th>Rs 10,23,600</th>
                             <th>Rs 9,08,900</th> -->
-                          </tr>
+                    <!-- </tr>
                         </tbody>
                       </table>
-                    </div>
+                    </div> -->
 
                     <!-- FOR ITR2  -->
                     <!-- <div
@@ -607,13 +605,7 @@
                       </table>
                     </div> -->
 
-                    <div
-                      *ngIf="
-                        !ITR_JSON.itrSummaryJson ||
-                        (ITR_JSON.itrSummaryJson &&
-                          ITR_JSON.isItrSummaryJsonEdited)
-                      "
-                    >
+                    <div>
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -623,90 +615,104 @@
                             <th>Particulars</th>
                             <th
                               *ngFor="
-                                let salary of summaryIncome.summarySalaryIncome
-                                  .employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
                               Employer {{ i + 1 }}
                             </th>
-                            <!-- <th>Employer2</th>
-                              <th>Employer3</th> -->
                           </tr>
                           <tr>
                             <td>1. Employer's Name</td>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
                               {{
                                 utilsService.isNonEmpty(salary.employerName)
-                                  ? salary.employerName
+                                  ? salary?.employerName
                                   : "Employer " + (i + 1)
                               }}
                             </td>
-                            <!-- <td>ABC Company</td>
-                              <td>XYZ Company</td> -->
                           </tr>
                           <tr>
                             <td>2. Gross Salary</td>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
-                              Rs {{ totalGross(salary) }}
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.grossSalary
+                                )
+                              }}
                             </td>
-                            <!-- <td>Rs 10,30,000</td>
-                              <td>Rs 9,15,000</td> -->
                           </tr>
                           <tr>
                             <td>3. Less: Exempt Allowance</td>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
-                              Rs {{ totalExpAllow(salary.allowance) }}
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.exemptAllowance
+                                )
+                              }}
                             </td>
-                            <!--  <td>Rs 1,350</td>
-                              <td>Rs 1,050</td> -->
                           </tr>
                           <tr>
                             <td>4. Less: Professional Tax</td>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
-                              Rs {{ totalPT(salary.deductions) }}
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.professionalTax
+                                )
+                              }}
                             </td>
-                            <!-- <td>(Rs 1,050)</td>
-                              <td>(Rs 2,050)</td> -->
                           </tr>
                           <tr>
                             <td>5. Less: Entertainment Allowance</td>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
-                              Rs {{ totalEA(salary.deductions) }}
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.entAllowance
+                                )
+                              }}
                             </td>
-                            <!-- <td>(Rs 4,000)</td>
-                              <td>(Rs 3,000)</td> -->
                           </tr>
                           <tr>
                             <td>6. Less: Standard Deduction</td>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
@@ -717,27 +723,24 @@
                                 )
                               }}
                             </td>
-                            <!-- <td>(Rs 30,000)</td>
-                              <td>(Rs 20,000)</td> -->
                           </tr>
 
                           <tr>
                             <th>7. Taxable Salary</th>
                             <td
                               *ngFor="
-                                let salary of ITR_JSON.employers;
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
                                 let i = index
                               "
                             >
                               Rs
                               {{
                                 utilsService.currencyFormatter(
-                                  salary.taxableIncome
+                                  salary.taxableSalary
                                 )
                               }}
                             </td>
-                            <!-- <th>Rs 10,23,600</th>
-                              <th>Rs 9,08,900</th> -->
                           </tr>
                         </tbody>
                       </table>
@@ -748,7 +751,9 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.housePropertyIncome === 0 ? true : false
+                      finalCalculations?.houseProperties?.hpTotalIncome === 0
+                        ? true
+                        : false
                     ]"
                     #HP
                   >
@@ -776,9 +781,8 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalIncomeOfHP
-                                    ? keys.TotalIncomeOfHP
-                                    : summaryDetail.housePropertyIncome
+                                  finalCalculations?.houseProperties
+                                    ?.hpTotalIncome
                                 )
                               }}</label
                             >
@@ -787,120 +791,7 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div
-                      *ngIf="
-                        ITR_JSON.itrSummaryJson &&
-                        keys.TotalIncomeOfHP &&
-                        !ITR_JSON.isItrSummaryJsonEdited
-                      "
-                    >
-                      <table
-                        class="table table-bordered table-striped table-hover"
-                        style="margin-top: 20px"
-                      >
-                        <tbody>
-                          <tr>
-                            <th>Particulars</th>
-                            <th>
-                              {{
-                                keys.TypeOfHP === "L"
-                                  ? "LOP"
-                                  : "SOP" || keys.TypeOfHP === "S"
-                                  ? "SOP"
-                                  : "LOP" || keys.TypeOfHP === "D"
-                                  ? "DLOP"
-                                  : "SOP"
-                              }}
-                            </th>
-                          </tr>
-                          <!-- <tr>
-                                                    <td>1. Property Address</td>
-                                                    <th
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
-                                                        {{hp.flatNo}}, {{hp.building}},
-                                                        {{hp.city}}</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>2. Ownership</td>
-                                                    <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
-                                                        {{hp.ownerOfProperty}}</td>
-                                                </tr> -->
-                          <tr>
-                            <td>1. Gross Rent Received</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.GrossRentReceived
-                                )
-                              }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>2. Taxes Paid</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.TaxPaidlocalAuth
-                                )
-                              }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>3. Annual Value (1-2)</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(keys.AnnualValue)
-                              }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>4. Standard Deduction @30%</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.StandardDeduction
-                                )
-                              }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>5. Interest On Home Loan</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.InterestPayable
-                                )
-                              }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>6. Net Income (3-4-5)</th>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.TotalIncomeOfHP
-                                )
-                              }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <div
-                      *ngIf="
-                        !ITR_JSON.itrSummaryJson ||
-                        (ITR_JSON.itrSummaryJson &&
-                          ITR_JSON.isItrSummaryJsonEdited)
-                      "
-                    >
+                    <div>
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -910,40 +801,27 @@
                             <th>Particulars</th>
                             <th
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
-                              {{ hp.propertyType }}
+                              {{ hp.typeOfHp }}
                             </th>
                           </tr>
-                          <!-- <tr>
-                                                      <td>1. Property Address</td>
-                                                      <th
-                                                          *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
-                                                          {{hp.flatNo}}, {{hp.building}},
-                                                          {{hp.city}}</th>
-                                                  </tr>
-                                                  <tr>
-                                                      <td>2. Ownership</td>
-                                                      <td
-                                                          *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
-                                                          {{hp.ownerOfProperty}}</td>
-                                                  </tr> -->
                           <tr>
                             <td>1. Gross Rent Received</td>
                             <td
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
                               Rs
                               {{
                                 utilsService.currencyFormatter(
-                                  hp.grossAnnualRentReceived
+                                  hp.grossRentReceived
                                 )
                               }}
                             </td>
@@ -952,23 +830,21 @@
                             <td>2. Taxes Paid</td>
                             <td
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
                               Rs
-                              {{
-                                utilsService.currencyFormatter(hp.propertyTax)
-                              }}
+                              {{ utilsService.currencyFormatter(hp.taxesPaid) }}
                             </td>
                           </tr>
                           <tr>
                             <td>3. Annual Value (1-2)</td>
                             <td
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
@@ -982,14 +858,16 @@
                             <td>4. Standard Deduction @30%</td>
                             <td
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
                               Rs
                               {{
-                                utilsService.currencyFormatter(hp.exemptIncome)
+                                utilsService.currencyFormatter(
+                                  hp.hpStandardDeduction
+                                )
                               }}
                             </td>
                           </tr>
@@ -997,26 +875,29 @@
                             <td>5. Interest On Home Loan</td>
                             <td
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
-                              Rs {{ getHomeLoan(hp.loans) }}
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(hp.hpinterest)
+                              }}
                             </td>
                           </tr>
                           <tr>
                             <th>6. Net Income (3-4-5)</th>
                             <td
                               *ngFor="
-                                let hp of losses?.summaryIncome?.summaryHpIncome
-                                  ?.houseProperties;
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
                                 let i = index
                               "
                             >
                               Rs
                               {{
-                                utilsService.currencyFormatter(hp.taxableIncome)
+                                utilsService.currencyFormatter(hp.hpNetIncome)
                               }}
                             </td>
                           </tr>

@@ -165,6 +165,7 @@ export class SummaryComponent implements OnInit {
   taxComputation: any;
   keys: any = {};
   finalSummary: any;
+
   finalCalculations: {
     salary: {
       employers: [
@@ -173,19 +174,30 @@ export class SummaryComponent implements OnInit {
           employerName: String;
           grossSalary: Number;
           exemptAllowance: Number;
-          deduction: Number;
+          professionalTax: Number;
+          entAllowance: Number;
+          standardDeduction: Number;
+          taxableSalary: Number;
         }
       ];
-      salaryTotal: Number;
+      salaryTotalIncome: Number;
     };
-    houseProperties: [
-      {
-        hpNo: Number;
-        hpIncome: Number;
-        hpDeduction: Number;
-      }
-    ];
-    hpTotalIncome: Number;
+    houseProperties: {
+      houseProps: [
+        {
+          hpNo: Number;
+          typeOfHp;
+          grossRentReceived;
+          taxesPaid: Number;
+          annualValue: Number;
+          hpStandardDeduction: Number;
+          hpinterest: Number;
+          hpNetIncome: Number;
+          hpIncome: Number;
+        }
+      ];
+      hpTotalIncome: Number;
+    };
   };
 
   constructor(
@@ -302,12 +314,16 @@ export class SummaryComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
         this.show = true;
+        let entAllowance;
+        let hpStandardDeduction;
         // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
         {
           if (this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR1')) {
             this.itrType = 'ITR1';
             this.ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
             this.taxComputation = 'ITR1_TaxComputation';
+            entAllowance = 'EntertainmntalwncUs16ii';
+            hpStandardDeduction = 'StandardDeduction';
           } else if (
             this.ITR_JSON.itrSummaryJson['ITR']?.hasOwnProperty('ITR2')
           ) {
@@ -322,92 +338,159 @@ export class SummaryComponent implements OnInit {
             this.itrType = 'ITR4';
             this.ITR14IncomeDeductions = 'IncomeDeductions';
             this.taxComputation = 'TaxComputation';
+            entAllowance = 'EntertainmntalwncUs16ii';
+            hpStandardDeduction = 'AnnualValue30Percent';
           }
         }
 
         if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
           console.log(this.finalSummary, 'this.finalSummary');
-          const salary =
-            this.finalSummary.summaryIncome.summarySalaryIncome.taxSummary
-              .salary;
-          // this.finalCalculations = {
 
-          // }
-          // this.TaxbuddyCalculations = {
-          //   summaryIncome: {
-          //     summarySalaryIncome: {
-          //       taxSummary: {
-          //         salary:
-          //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-          //             this.ITR14IncomeDeductions
-          //           ]?.IncomeFromSal,
-          //       },
-          //     },
-          //   },
-          // };
+          this.finalCalculations = {
+            salary: {
+              employers: [
+                {
+                  employerNo: 0,
+                  employerName: 'Employer 1',
+                  grossSalary:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.GrossSalary,
+                  exemptAllowance:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ].AllwncExemptUs10?.TotalAllwncExemptUs10,
+                  professionalTax:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.ProfessionalTaxUs16iii,
+                  entAllowance:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ][entAllowance],
+                  standardDeduction:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.DeductionUs16ia,
+                  taxableSalary:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.IncomeFromSal,
+                },
+              ],
+              salaryTotalIncome:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ]?.IncomeFromSal,
+            },
+            houseProperties: {
+              houseProps: [
+                {
+                  hpNo: 0,
+                  typeOfHp:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TypeOfHP,
+                  grossRentReceived:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.GrossRentReceived,
+                  taxesPaid:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TaxPaidlocalAuth,
+                  annualValue:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.AnnualValue,
+                  hpStandardDeduction:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ][hpStandardDeduction],
+                  hpinterest:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.InterestPayable,
+                  hpNetIncome:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP,
+                  hpIncome:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP,
+                },
+              ],
+              hpTotalIncome:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ]?.TotalIncomeOfHP,
+            },
+          };
+          console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
             //SALARY INCOME
-            IncomeFromSal:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.IncomeFromSal,
+            // IncomeFromSal:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.IncomeFromSal,
 
-            GrossSalary:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossSalary,
+            // GrossSalary:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.GrossSalary,
 
-            TotalAllwncExemptUs10:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ].AllwncExemptUs10?.TotalAllwncExemptUs10,
+            // TotalAllwncExemptUs10:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ].AllwncExemptUs10?.TotalAllwncExemptUs10,
 
-            ProfessionalTaxUs16iii:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.ProfessionalTaxUs16iii,
+            // ProfessionalTaxUs16iii:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.ProfessionalTaxUs16iii,
 
-            EntertainmentAlw16ii:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.EntertainmentAlw16ii,
+            // EntertainmentAlw16ii:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.EntertainmentAlw16ii,
 
-            DeductionUs16ia:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.DeductionUs16ia,
+            // DeductionUs16ia:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.DeductionUs16ia,
 
-            //HOUSE PROPERTY
+            // //HOUSE PROPERTY
 
-            TotalIncomeOfHP:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TotalIncomeOfHP,
-            TypeOfHP:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TypeOfHP,
-            GrossRentReceived:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossRentReceived,
-            TaxPaidlocalAuth:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TaxPaidlocalAuth,
-            AnnualValue:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.AnnualValue,
-            StandardDeduction:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.StandardDeduction,
-            InterestPayable:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.InterestPayable,
+            // TotalIncomeOfHP:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.TotalIncomeOfHP,
+            // TypeOfHP:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.TypeOfHP,
+            // GrossRentReceived:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.GrossRentReceived,
+            // TaxPaidlocalAuth:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.TaxPaidlocalAuth,
+            // AnnualValue:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.AnnualValue,
+            // StandardDeduction:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.StandardDeduction,
+            // InterestPayable:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.InterestPayable,
 
             //OTHER SOURCES
             IncomeOthSrc:
@@ -1003,6 +1086,78 @@ export class SummaryComponent implements OnInit {
                   this.ltLoss =
                     this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
                 });
+
+                this.finalCalculations = {
+                  salary: {
+                    employers:
+                      this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
+                        (
+                          {
+                            totalPTDuctionsExemptIncome,
+                            totalAllowanceExemptIncome,
+                            totalETDuctionsExemptIncome,
+                            taxableIncome,
+                            standardDeduction,
+                            employerName,
+                            salary,
+                            profitsInLieuOfSalaryType,
+                            perquisites,
+                          },
+                          index
+                        ) => {
+                          return {
+                            employerNo: index,
+                            employersName: employerName,
+                            grossSalary:
+                              salary[0].taxableAmount +
+                              profitsInLieuOfSalaryType[0].taxableAmount +
+                              perquisites[0].taxableAmount,
+                            exemptAllowance: totalAllowanceExemptIncome,
+                            professionalTax: totalPTDuctionsExemptIncome,
+                            entAllowance: totalETDuctionsExemptIncome,
+                            standardDeduction: standardDeduction,
+                            taxableSalary: taxableIncome,
+                          };
+                        }
+                      ),
+
+                    salaryTotalIncome:
+                      this.finalSummary.assessment.taxSummary.salary,
+                  },
+                  houseProperties: {
+                    houseProps:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                        (
+                          {
+                            propertyType,
+                            grossAnnualRentReceived,
+                            propertyTax,
+                            annualValue,
+                            exemptIncome,
+                            loans,
+                            taxableIncome,
+                          },
+                          index
+                        ) => {
+                          return {
+                            hpNo: index,
+                            typeOfHp: propertyType,
+                            grossRentReceived: grossAnnualRentReceived,
+                            taxesPaid: propertyTax,
+                            annualValue: annualValue,
+                            hpStandardDeduction: exemptIncome,
+                            hpinterest: loans[0]?.interestAmount,
+                            hpNetIncome: taxableIncome,
+                            hpIncome: taxableIncome,
+                          };
+                        }
+                      ),
+                    hpTotalIncome:
+                      this.finalSummary.assessment.taxSummary
+                        .housePropertyIncome,
+                  },
+                };
+                console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
               } else {
                 this.loading = false;
@@ -1076,6 +1231,76 @@ export class SummaryComponent implements OnInit {
                   this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
               });
               this.loading = false;
+              this.finalCalculations = {
+                salary: {
+                  employers:
+                    this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
+                      (
+                        {
+                          totalPTDuctionsExemptIncome,
+                          totalAllowanceExemptIncome,
+                          totalETDuctionsExemptIncome,
+                          taxableIncome,
+                          standardDeduction,
+                          employerName,
+                          salary,
+                          profitsInLieuOfSalaryType,
+                          perquisites,
+                        },
+                        index
+                      ) => {
+                        return {
+                          employerNo: index,
+                          employersName: employerName,
+                          grossSalary:
+                            salary[0].taxableAmount +
+                            profitsInLieuOfSalaryType[0].taxableAmount +
+                            perquisites[0].taxableAmount,
+                          exemptAllowance: totalAllowanceExemptIncome,
+                          professionalTax: totalPTDuctionsExemptIncome,
+                          entAllowance: totalETDuctionsExemptIncome,
+                          standardDeduction: standardDeduction,
+                          taxableSalary: taxableIncome,
+                        };
+                      }
+                    ),
+
+                  salaryTotalIncome:
+                    this.finalSummary?.assessment?.taxSummary?.salary,
+                },
+                houseProperties: {
+                  houseProps:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                      (
+                        {
+                          propertyType,
+                          grossAnnualRentReceived,
+                          propertyTax,
+                          annualValue,
+                          exemptIncome,
+                          loans,
+                          taxableIncome,
+                        },
+                        index
+                      ) => {
+                        return {
+                          hpNo: index,
+                          typeOfHp: propertyType,
+                          grossRentReceived: grossAnnualRentReceived,
+                          taxesPaid: propertyTax,
+                          annualValue: annualValue,
+                          hpStandardDeduction: exemptIncome,
+                          hpinterest: loans[0]?.interestAmount,
+                          hpNetIncome: taxableIncome,
+                          hpIncome: taxableIncome,
+                        };
+                      }
+                    ),
+                  hpTotalIncome:
+                    this.finalSummary.assessment.taxSummary.housePropertyIncome,
+                },
+              };
+              console.log(this.finalCalculations, 'finalCalculations');
             } else {
               this.loading = false;
               this.errorMessage =
