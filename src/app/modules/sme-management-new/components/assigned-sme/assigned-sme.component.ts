@@ -426,7 +426,7 @@ export class AssignedSmeComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
             <i class="fa fa-phone" aria-hidden="true" padding-top: 5px; data-action-type="call"></i>
            </button>`;
         },
@@ -445,7 +445,7 @@ export class AssignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
           style="color:#2199e8; font-size: 14px;">
-          <i class="fa-sharp fa-solid fa-pen" data-action-type="edit" ></i> Edit
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit" ></i> Edit
           </button>`;
         },
       },
