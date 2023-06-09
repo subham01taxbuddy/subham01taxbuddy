@@ -356,6 +356,7 @@ export class FilingsComponent implements OnInit {
         headerName: 'Client Name',
         // field: "fName",
         sortable: true,
+        cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         pinned: 'left',
         filterParams: {
@@ -379,6 +380,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Mobile',
         field: 'contactNumber',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -389,6 +391,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'ITR Type',
         field: 'itrType',
+        cellStyle: { textAlign: 'center' },
         width: 90,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -400,6 +403,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Filing Date',
         field: 'eFillingDate',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 100,
         valueFormatter: (data) =>
@@ -408,6 +412,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Return Type',
         field: 'isRevised',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -424,6 +429,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'PAN Number',
         field: 'panNumber',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -434,6 +440,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Email Address',
         field: 'email',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -444,6 +451,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Owner',
         field: 'ownerName',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -454,6 +462,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Filer',
         field: 'filerName',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -465,6 +474,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'ITR ID',
         field: 'itrId',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 70,
       },
@@ -546,8 +556,8 @@ export class FilingsComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;"> 
-          <i class="fa-solid fa-phone" data-action-type="call"></i> 
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
           </button>`;
         },
         width: 58,
