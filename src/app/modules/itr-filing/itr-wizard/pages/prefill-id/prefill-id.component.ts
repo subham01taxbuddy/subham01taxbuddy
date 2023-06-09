@@ -4989,6 +4989,14 @@ export class PrefillIdComponent implements OnInit {
       if (result === 'YES') {
         this.ITR_JSON.itrSummaryJson = null;
         this.uploadedJson = false;
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id
+        );
         this.utilsService.showSnackBar(
           'The uploaded JSON has been deleted. You can now proceed ahead.'
         );
