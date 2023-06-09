@@ -314,7 +314,7 @@ export class AssignedNewUsersComponent implements OnInit {
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
-        headerName: 'Name',
+        headerName: 'Client Name',
         field: 'name',
         width: 160,
         suppressMovable: true,
@@ -339,7 +339,7 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Email',
+        headerName: 'Email Address',
         field: 'email',
         width: 200,
         suppressMovable: true,
