@@ -565,13 +565,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Business and Profession',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].ScheduleBP
-                      .PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                      .PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
                   : 0,
             },
             {

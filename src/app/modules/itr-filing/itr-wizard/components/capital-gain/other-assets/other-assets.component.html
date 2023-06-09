@@ -18,13 +18,13 @@
           <mat-icon> arrow_forward_ios </mat-icon>
           Other Assets
         </mat-panel-title>
-        <div class="">
+        <div class="edit clearfix isShow">
           <button
-            class="new-add mvRth"           
+            class="new-add mvRth"
             (click)="$event.stopPropagation(); addOtherAssets('otherAssets')"
           >
-          <i class="fa fa-plus" aria-hidden="true"></i>
-              <span>  Add Other Assets</span>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span>  Add Other Assets</span>
           </button>
         </div>
       </mat-expansion-panel-header>
@@ -73,7 +73,7 @@
                 </div>
 
                 <!-- inputs  -->
-                
+
                   <!-- type-of-deduction  -->
                   <div class="col-sm-3">
                     <mat-label>Type of Deduction</mat-label>
@@ -208,16 +208,16 @@
               </div>
 
               <!-- edit Other Assets deduction -->
-            
+
             </div>
 
       </form>
-   
+
 
     <!-- footer  -->
     <div class="row spsTp bdrTp">
       <div class="col-sm-9">
-        <button type="submit" class="delete-btn btnGry" (click)="deleteDeduction(index)">
+        <button type="submit" class="delete-btn" (click)="deleteDeduction(index)">
           <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
         </button>
       </div>
@@ -242,14 +242,14 @@
 
   <!-- page-navigation-buttons  -->
   <div class="flex justify-between p-[30px] back-foot">
-   
+
       <button class="lgtBtn" (click)="goBack()">
         Back to Capital Gain Topics
-      </button> 
+      </button>
 
-   
+
       <button class="saveBtnIn">Save All</button>
-   
+
   </div>
 </div>
 

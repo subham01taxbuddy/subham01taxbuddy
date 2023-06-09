@@ -236,7 +236,7 @@
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                     <mat-error
-                      *ngIf="
+                      *ngIf="bondType !== 'listed' &&
                         securitiesForm.controls['securitiesArray'].controls[
                           i
                         ].controls['sellValue'].hasError('pattern')
