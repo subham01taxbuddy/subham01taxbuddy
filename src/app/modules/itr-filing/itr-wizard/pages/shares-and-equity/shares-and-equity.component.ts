@@ -294,7 +294,7 @@ export class SharesAndEquityComponent
   createForm(srn, item?): FormGroup {
     let validators = this.bondType === 'listed' ? [
       Validators.required,
-      Validators.pattern(AppConstants.amountWithDecimal),
+      // Validators.pattern(AppConstants.amountWithDecimal),
     ] : [
       Validators.required,
       Validators.pattern(AppConstants.amountWithoutDecimal),
@@ -314,10 +314,7 @@ export class SharesAndEquityComponent
       ],
       sellValue: [
         item ? item.sellValue : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ],
+        validators,
       ],
       purchaseDate: [item ? item.purchaseDate : null, [Validators.required]],
       purchaseValuePerUnit: [
@@ -326,10 +323,7 @@ export class SharesAndEquityComponent
       ],
       purchaseCost: [
         item ? item.purchaseCost : null,
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ],
+        validators,
       ],
       sellExpense: [item ? item.sellExpense : null],
       isinCode: [item ? item.isinCode : ''],
