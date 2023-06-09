@@ -606,7 +606,9 @@ export class SharesAndEquityComponent
 
       if (securitiesIndex >= 0) {
         if (securitiesData.assetDetails.length > 0) {
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = securitiesData;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = securitiesData.deduction;
+          // this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement.concat(securitiesData.improvement);
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
         }
@@ -683,7 +685,9 @@ export class SharesAndEquityComponent
 
       if (securitiesIndex >= 0) {
         if (securitiesData.assetDetails.length > 0) {
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = securitiesData;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = securitiesData.deduction;
+          // this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement.concat(securitiesData.improvement);
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
         }
