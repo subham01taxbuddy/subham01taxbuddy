@@ -749,7 +749,7 @@ export class TaxInvoiceComponent implements OnInit {
           debounceMs: 0,
         },
         cellRenderer: function(params) {
-          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {
