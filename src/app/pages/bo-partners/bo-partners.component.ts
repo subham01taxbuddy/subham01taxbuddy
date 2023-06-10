@@ -156,7 +156,11 @@ export class BoPartnersComponent implements OnInit {
           debounceMs: 0,
         },
         cellRenderer: function(params) {
-          return `<a href="mailto:${params.value}">${params.value}</a>`
+          if(params.value) {
+            return `<a href="mailto:${params.value}">${params.value}</a>`
+          } else {
+            return 'NA';
+          }
         }
       },
       {

@@ -285,7 +285,11 @@ export class RefundRequestComponent implements OnInit {
           debounceMs: 0,
         },
         cellRenderer: function(params) {
-          return `<a href="mailto:${params.value}">${params.value}</a>`
+          if(params.value) {
+            return `<a href="mailto:${params.value}">${params.value}</a>`
+          } else {
+            return 'NA';
+          }
         }
       },
       {
@@ -461,7 +465,7 @@ export class RefundRequestComponent implements OnInit {
         userId: this.utilsService.isNonEmpty(subscriptionData[i].userId) ? subscriptionData[i].userId : '-',
         name: this.utilsService.isNonEmpty(subscriptionData[i].name) ? subscriptionData[i].name : '-',
         mobile: this.utilsService.isNonEmpty(subscriptionData[i].mobile) ? subscriptionData[i].mobile : '-',
-        email: this.utilsService.isNonEmpty(subscriptionData[i].email) ? subscriptionData[i].email : '-',
+        email: this.utilsService.isNonEmpty(subscriptionData[i].email) ? subscriptionData[i].email : null,
         refundRequestType: this.utilsService.isNonEmpty(subscriptionData[i].refundRequestType) ? subscriptionData[i].refundRequestType : '-',
         requestCreatedDate: subscriptionData[i].requestCreatedDate,
         serviceDetail: this.utilsService.isNonEmpty(subscriptionData[i].serviceDetail) ? subscriptionData[i].serviceDetail : '-',
