@@ -18,6 +18,8 @@ import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
 import { parse } from '@typescript-eslint/parser';
+import {AppSetting} from "../modules/shared/app.setting";
+import {StorageService} from "../modules/shared/services/storage.service";
 
 @Injectable()
 export class UtilsService {
@@ -31,7 +33,8 @@ export class UtilsService {
     private router: Router,
     private dialog: MatDialog,
     private serializer: UrlSerializer,
-    private userMsService: UserMsService
+    private userMsService: UserMsService,
+    private storageService: StorageService
   ) {}
   /**
    * @function isNonEmpty()
@@ -1458,16 +1461,38 @@ export class UtilsService {
   }
 
   getLoggedInUserID() {
-    const loggedInSmeInfo = JSON.parse(
-      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
-    );
-    if (
-      this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].userId)
-    ) {
-      return loggedInSmeInfo[0].userId;
+    let smeInfoStr = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    if(smeInfoStr) {
+      const loggedInSmeInfo = JSON.parse(
+        smeInfoStr ?? ''
+      );
+      if (
+        this.isNonEmpty(loggedInSmeInfo) &&
+        this.isNonEmpty(loggedInSmeInfo[0].userId)
+      ) {
+        return loggedInSmeInfo[0].userId;
+      }
+    } else {
+      //send id from local storage, but fetch data in session storage..
+      // probably the case is for sharing the login between tabs
+      const userData = this.storageService.getLocalStorage(AppSetting.UMD_KEY);
+      this.fetchSmeInfo(userData.USER_UNIQUE_ID);
+      return userData.USER_UNIQUE_ID;
     }
   }
+
+  fetchSmeInfo(userId) {
+    const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
+    // this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
+    this.userMsService.getMethodNew(param).subscribe((res: any) => {
+      if (res.success) {
+        sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+      }
+    }, error => {
+      console.log('error in fetching sme info', error);
+    })
+  }
+
 
   getIdToken() {
     let userData = JSON.parse(localStorage.getItem('UMD'));
