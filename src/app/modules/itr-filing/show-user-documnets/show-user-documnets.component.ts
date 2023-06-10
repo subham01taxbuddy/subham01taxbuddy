@@ -169,6 +169,9 @@ export class ShowUserDocumnetsComponent implements OnInit {
         if (error.status === 403) {
           this.toastMessageService.alert('error', error.error.detail)
         }
+        if (error.status === 401) {
+          this.toastMessageService.alert('error', error.error.detail)
+        }
         // this.utilsService.disposable.unsubscribe();
         // this.errorHandler(error);
       }
