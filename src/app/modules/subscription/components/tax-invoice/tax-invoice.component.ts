@@ -489,6 +489,11 @@ export class TaxInvoiceComponent implements OnInit {
         this.gridApi?.setRowData(this.createRowData(this.invoiceData));
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
+        if(this.invoiceData.length == 0){
+          this.gridApi?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+          this._toastMessageService.alert("error",'No Data Found');
+        }
       }else{
         this. _toastMessageService.alert("error",response.message);
         this.gridApi?.setRowData(this.createRowData([]));
@@ -743,6 +748,9 @@ export class TaxInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'Status',

@@ -114,6 +114,10 @@ export class PromoCodesComponent implements OnInit {
       this.totalCount = result?.totalElements;
       this.config.totalItems = result?.totalElements;
       this.promoCodeGridOptions.api?.setRowData(this.createRowData(result.content));
+      if(result?.content.length == 0){
+        this.promoCodeGridOptions.api?.setRowData(this.createRowData([]));
+        this._toastMessageService.alert("error",'No Data Found');
+      }
 
     }, error => {
       this.loading = false;

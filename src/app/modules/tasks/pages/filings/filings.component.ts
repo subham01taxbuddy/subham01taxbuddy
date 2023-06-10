@@ -271,7 +271,7 @@ export class FilingsComponent implements OnInit {
           }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
-          if (res?.data?.content instanceof Array) {
+          if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
@@ -280,16 +280,17 @@ export class FilingsComponent implements OnInit {
           } else {
             this.itrDataList = [];
             this.config.totalItems = 0;
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
+            this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+            if (res.message) {this.toastMsgService.alert('error', res.message);}
+            else{this.toastMsgService.alert('error', 'No Data Found'); }
           }
           this.loading = false;
           return resolve(true);
         },
         (error) => {
           this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
-              this.config.totalItems = 0;
+          this.config.totalItems = 0;
+          this.toastMsgService.alert("error",'No Data Found ');
           this.loading = false;
           return resolve(false);
         }
@@ -447,6 +448,9 @@ export class FilingsComponent implements OnInit {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'Owner',

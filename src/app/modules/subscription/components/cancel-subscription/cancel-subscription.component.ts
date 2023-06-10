@@ -38,7 +38,6 @@ export class CancelSubscriptionComponent implements OnInit {
   loggedInUserRoles: any;
   isOwner: boolean;
   invoiceFormGroup: FormGroup = this.fb.group({
-
     mobile: new FormControl(''),
     email: new FormControl(''),
   });
@@ -106,15 +105,21 @@ export class CancelSubscriptionComponent implements OnInit {
     this.loggedInUserRoles = this.utilService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
   }
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  rowMultiSelectWithClick: true;
+
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
-
   resetFilters() {
+    this.invoiceFormGroup.controls['mobile'].setValue(null);
+    this.invoiceFormGroup.controls['email'].setValue(null);
     this.smeDropDown?.resetDropdown();
     const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
+
     this.filerId=null;
     this.ownerId=null;
     if (this.isOwner) {
@@ -184,12 +189,14 @@ export class CancelSubscriptionComponent implements OnInit {
         this.cancelSubscriptionData = response;
         this.loading = false;
         if (response.success) {
-          if (response.data.content instanceof Array && response.data.content.length > 0) {
+          if (response?.data?.content instanceof Array && response?.data?.content?.length > 0) {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData(response.data.content));
             this.config.totalItems = response.data.totalElements;
           } else {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
+            if (response.message !==null) {this._toastMessageService.alert('error', response.message);}
+            else{this._toastMessageService.alert('error', 'No Data Found'); }
           }
         } else {
           this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
@@ -199,6 +206,7 @@ export class CancelSubscriptionComponent implements OnInit {
       (error) => {
         this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
+        this._toastMessageService.alert("error","Error while fetching subscription cancellation requests: Not_found: data not found");
       }
     );
   }

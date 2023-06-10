@@ -155,6 +155,9 @@ export class ResignedSmeComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'Komm ID',

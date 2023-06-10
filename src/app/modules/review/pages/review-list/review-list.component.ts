@@ -120,7 +120,7 @@ export class ReviewListComponent implements OnInit {
         },
         cellRenderer: (data: any) => {
           if (data.value) {
-            return data.value;
+            return `<a href="mailto:${data.value}" target="_blank">${data.value}</a>`
           } else {
             return '-';
           }

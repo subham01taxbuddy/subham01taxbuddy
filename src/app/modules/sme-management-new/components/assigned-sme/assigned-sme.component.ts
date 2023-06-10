@@ -114,7 +114,7 @@ export class AssignedSmeComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
         console.log("Search result:", result)
-        if (Array.isArray(result.data.content) && result.data.content.length > 0
+        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0
         ) {
           this.loading = false;
           this.smeInfo = result.data.content;
@@ -123,11 +123,15 @@ export class AssignedSmeComponent implements OnInit {
         }else{
           this.loading = false;
           this._toastMessageService.alert('error','No Lead Data Found .');
+          this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
           // this.getSmeList();
         }
      },(error) => {
       this.loading = false;
       this._toastMessageService.alert('error','No Lead Data Found .');
+      this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
     });
 
   }
@@ -270,6 +274,9 @@ export class AssignedSmeComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'Komm ID',
@@ -445,7 +452,7 @@ export class AssignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
           style="color:#2199e8; font-size: 14px;">
-          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit" >Edit</i>
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
           </button>`;
         },
       },
@@ -532,6 +539,17 @@ export class AssignedSmeComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.getSmeList(true);
+  }
+
+  resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1;
+    this.key = null;
+    this.searchVal = null;
+
+    this.getSmeList();
+
   }
 
 }

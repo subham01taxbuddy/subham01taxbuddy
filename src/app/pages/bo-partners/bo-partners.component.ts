@@ -16,6 +16,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-bo-partners',
@@ -54,7 +55,8 @@ export class BoPartnersComponent implements OnInit {
     private userMsService: UserMsService,
     private utileService: UtilsService,
     @Inject(LOCALE_ID) private locale: string,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _toastMessageService: ToastMessageService,
   ) {
 
     this.partnersGridOptions = <GridOptions>{
@@ -153,6 +155,9 @@ export class BoPartnersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'City',
@@ -420,7 +425,7 @@ export class BoPartnersComponent implements OnInit {
         (response: any) => {
           this.loading = false;
           console.log('bo-partners list: ', response);
-          if (Array.isArray(response.content)) {
+          if (Array.isArray(response.content) && response.content.length !== 0) {
             this.loading = false;
             this.boPartnersInfo = response.content;
             this.config.totalItems = response.totalElements;
@@ -431,6 +436,7 @@ export class BoPartnersComponent implements OnInit {
             this.loading = false;
             this.config.totalItems = 0;
             this.partnersGridOptions.api?.setRowData(this.createRowData([]));
+            this._toastMessageService.alert("error",'No Data Found');
           }
         },
         (error) => {

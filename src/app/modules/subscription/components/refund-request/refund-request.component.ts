@@ -116,6 +116,9 @@ export class RefundRequestComponent implements OnInit {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
 
   resetFilters() {
+    this.invoiceFormGroup.controls['email'].setValue(null);
+    this.invoiceFormGroup.controls['mobile'].setValue(null);
+    this.invoiceFormGroup.controls['invoiceNo'].setValue(null);
     this.smeDropDown?.resetDropdown();
     const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     const loginSMEInfo = data[0];
@@ -199,16 +202,19 @@ export class RefundRequestComponent implements OnInit {
             this.refundListGridOptions.api?.setRowData(this.createRowData(response.data.content));
             this.config.totalItems = response.data.totalElements;
           } else {
+            this._toastMessageService.alert("error","No Data Found");
             this.refundListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
           }
         } else {
           this.refundListGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
           this._toastMessageService.alert("error", response.message);
         }
       },
       (error) => {
         this.refundListGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
         this.loading = false;
       }
     );
@@ -278,6 +284,9 @@ export class RefundRequestComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'Request Type',

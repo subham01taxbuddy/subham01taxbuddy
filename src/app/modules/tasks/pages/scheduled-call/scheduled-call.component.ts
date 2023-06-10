@@ -187,21 +187,21 @@ export class ScheduledCallComponent implements OnInit {
     this.userMsService.getMethodNew(param2).subscribe(
       (result: any) => {
         if (result.success == false) {
-          this.toastMsgService.alert(
-            'error', result.message)
+          this.toastMsgService.alert('error', result.message);
           this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
         }
-        if (result.data.content instanceof Array && result.data.content.length > 0) {
+        if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
           this.scheduleCallsData = result.data.content;
           this.config.totalItems = result.data.totalElements;
           this.config.pageCount = result.data.totalPages;
           this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content));
         } else {
           // this.scheduleCallsData = [];
-          this.scheduleCallGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
+          this.loading = false;
+          this.toastMsgService.alert('error', 'No Data Found');
+          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
         }
         this.loading = false;
       },
@@ -307,6 +307,9 @@ export class ScheduledCallComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}" target="_blank">${params.value}</a>`
+        }
       },
       {
         headerName: 'Schedule Call Date',
@@ -799,7 +802,7 @@ export class ScheduledCallComponent implements OnInit {
         this.config.totalItems = 0;
       }
 
-      if (result.data.content instanceof Array && result.data.content.length > 0) {
+      if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
         this.scheduleCallsData = result.data.content;
         this.scheduleCallGridOptions.api?.setRowData(
           this.createRowData(result.data.content));
@@ -809,9 +812,8 @@ export class ScheduledCallComponent implements OnInit {
         this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        if (result.message) {
-          this.toastMsgService.alert('error', result.message);
-        }
+        if (result.message) {this.toastMsgService.alert('error', result.message);}
+        else{this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
     });
