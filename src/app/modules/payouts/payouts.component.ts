@@ -540,7 +540,7 @@ export class PayoutsComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Invoice" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa-regular fa-receipt" style="color: #ff9500;"></i>
+            <i class="fa-regular fa-receipt" style="color: #ff9500;" data-action-type="invoice"></i>
            </button>`;
         },
         width: 85,

@@ -271,7 +271,7 @@ export class FilingsComponent implements OnInit {
           }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
-          if (res?.data?.content instanceof Array) {
+          if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
@@ -280,16 +280,17 @@ export class FilingsComponent implements OnInit {
           } else {
             this.itrDataList = [];
             this.config.totalItems = 0;
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
+            this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+            if (res.message) {this.toastMsgService.alert('error', res.message);}
+            else{this.toastMsgService.alert('error', 'No Data Found'); }
           }
           this.loading = false;
           return resolve(true);
         },
         (error) => {
           this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
-              this.config.totalItems = 0;
+          this.config.totalItems = 0;
+          this.toastMsgService.alert("error",'No Data Found ');
           this.loading = false;
           return resolve(false);
         }
@@ -356,6 +357,7 @@ export class FilingsComponent implements OnInit {
         headerName: 'Client Name',
         // field: "fName",
         sortable: true,
+        cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         pinned: 'left',
         filterParams: {
@@ -379,6 +381,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Mobile',
         field: 'contactNumber',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -389,6 +392,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'ITR Type',
         field: 'itrType',
+        cellStyle: { textAlign: 'center' },
         width: 90,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -400,6 +404,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Filing Date',
         field: 'eFillingDate',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 100,
         valueFormatter: (data) =>
@@ -408,6 +413,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Return Type',
         field: 'isRevised',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -424,6 +430,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'PAN Number',
         field: 'panNumber',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -434,16 +441,21 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Email Address',
         field: 'email',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
       {
         headerName: 'Owner',
         field: 'ownerName',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -454,6 +466,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'Filer',
         field: 'filerName',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -465,6 +478,7 @@ export class FilingsComponent implements OnInit {
       {
         headerName: 'ITR ID',
         field: 'itrId',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 70,
       },
@@ -546,8 +560,8 @@ export class FilingsComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;"> 
-          <i class="fa-solid fa-phone"></i> 
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
           </button>`;
         },
         width: 58,

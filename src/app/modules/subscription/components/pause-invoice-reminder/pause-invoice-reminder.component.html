@@ -21,16 +21,16 @@
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
                           </div>
                         </div>
-          
+
                       <div class="col-sm-6 spsTp">
-                        <button class="srch-btn srchBtnSps" (click)="invoiceSearch(invoiceNo)"><i
+                        <button class="srch-btn srchBtnSps" [disabled]="loading" (click)="invoiceSearch(invoiceNo)"><i
                             class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
                       </div>
-          
+
           </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

@@ -87,6 +87,9 @@ export class PauseInvoiceReminderComponent implements OnInit {
       if(result) {
         this.invoiceDetails = result.data?.content[0];
         this.invoiceGridOptions.api?.setRowData(this.createRowData(this.invoiceDetails));
+        if(result?.data?.content.length == 0){
+          this.toastMsgService.alert("error", "No Invoice Data Found.")
+        }
         if(this.invoiceDetails.paymentStatus === 'Paid') {
           this.toastMsgService.alert("error", "Paid invoices can not be paused.")
         }
@@ -304,6 +307,9 @@ export class PauseInvoiceReminderComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {

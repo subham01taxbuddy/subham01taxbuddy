@@ -314,7 +314,7 @@ export class AssignedNewUsersComponent implements OnInit {
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
-        headerName: 'Name',
+        headerName: 'Client Name',
         field: 'name',
         width: 160,
         suppressMovable: true,
@@ -339,7 +339,7 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Email',
+        headerName: 'Email Address',
         field: 'email',
         width: 200,
         suppressMovable: true,
@@ -349,6 +349,9 @@ export class AssignedNewUsersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
       // {
       //   headerName: 'Status',
@@ -525,10 +528,14 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
-           </button>`;
+          if(params.data.serviceType === 'ITR') {
+            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
         },
         width: 80,
         pinned: 'right',
