@@ -209,6 +209,29 @@ export class SummaryComponent implements OnInit {
       };
       otherIncomeTotal: Number;
     };
+    businessIncome: {
+      businessIncomeDetails: {
+        business44AD: [
+          {
+            businessSection: String;
+            natureOfBusinessCode: any;
+            tradeName: String;
+            grossTurnover: Number;
+            TaxableIncome: Number;
+          }
+        ];
+        business44ADA: [
+          {
+            businessSection: String;
+            natureOfBusinessCode: any;
+            tradeName: String;
+            grossTurnover: Number;
+            TaxableIncome: Number;
+          }
+        ];
+      };
+      businessIncomeTotal: Number;
+    };
   };
 
   constructor(
@@ -444,84 +467,180 @@ export class SummaryComponent implements OnInit {
                 ]?.TotalIncomeOfHP,
             },
             otherIncome: {
-              otherIncomes: [
-                {
-                  saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+              otherIncomes: {
+                saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ].OthersInc.OthersIncDtlsOthSrc.find(
+                  (val) => val.OthSrcNatureDesc === 'SAV'
+                )?.OthSrcOthAmount,
+
+                intFromDeposit: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ].OthersInc.OthersIncDtlsOthSrc.find(
+                  (val) => val.OthSrcNatureDesc === 'IFD'
+                )?.OthSrcOthAmount,
+
+                taxRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ].OthersInc.OthersIncDtlsOthSrc.find(
+                  (val) => val.OthSrcNatureDesc === 'TAX'
+                )?.OthSrcOthAmount,
+
+                anyOtherInterest:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                    this.ITR14IncomeDeductions
+                  ]?.IncomeOthSrc -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ].OthersInc.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'SAV'
-                  )?.OthSrcOthAmount,
-
-                  intFromDeposit: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ][
+                  )?.OthSrcOthAmount -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ].OthersInc.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'IFD'
-                  )?.OthSrcOthAmount,
-
-                  taxRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ].OthersInc.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'TAX'
-                  )?.OthSrcOthAmount,
-
-                  anyOtherInterest:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.IncomeOthSrc -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ].OthersInc.OthersIncDtlsOthSrc.find(
-                      (val) => val.OthSrcNatureDesc === 'SAV'
-                    )?.OthSrcOthAmount -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ].OthersInc.OthersIncDtlsOthSrc.find(
-                      (val) => val.OthSrcNatureDesc === 'IFD'
-                    )?.OthSrcOthAmount -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ].OthersInc.OthersIncDtlsOthSrc.find(
-                      (val) => val.OthSrcNatureDesc === 'TAX'
-                    )?.OthSrcOthAmount -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ].OthersInc.OthersIncDtlsOthSrc.find(
-                      (val) => val.OthSrcNatureDesc === 'FAP'
-                    )?.OthSrcOthAmount -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ].OthersInc.OthersIncDtlsOthSrc.find(
-                      (val) => val.OthSrcNatureDesc === 'DIV'
-                    )?.OthSrcOthAmount,
-
-                  dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ][
+                  )?.OthSrcOthAmount -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                    this.ITR14IncomeDeductions
+                  ].OthersInc.OthersIncDtlsOthSrc.find(
+                    (val) => val.OthSrcNatureDesc === 'FAP'
+                  )?.OthSrcOthAmount -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ].OthersInc.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'DIV'
                   )?.OthSrcOthAmount,
 
-                  familyPension: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ][
-                    this.ITR14IncomeDeductions
-                  ].OthersInc.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'FAP'
-                  )?.OthSrcOthAmount,
-                },
-              ],
+                dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ].OthersInc.OthersIncDtlsOthSrc.find(
+                  (val) => val.OthSrcNatureDesc === 'DIV'
+                )?.OthSrcOthAmount,
+
+                familyPension: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ].OthersInc.OthersIncDtlsOthSrc.find(
+                  (val) => val.OthSrcNatureDesc === 'FAP'
+                )?.OthSrcOthAmount,
+              },
+
               otherIncomeTotal:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.IncomeOthSrc,
             },
+            businessIncome: {
+              businessIncomeDetails: {
+                business44AD: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ].ScheduleBP?.NatOfBus44AD.map((element) => {
+                  return {
+                    businessSection: 'Section 44AD',
+                    natureOfBusinessCode: element.CodeAD,
+                    tradeName: element.NameOfBusiness,
+                    grossTurnover: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.GrsTrnOverAnyOthMode /
+                          this.ITR_JSON.itrSummaryJson['ITR'][
+                            this.itrType
+                          ].ScheduleBP?.NatOfBus44AD?.length
+                    ),
+                    TaxableIncome: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44AD
+                        ?.PersumptiveInc44AD6Per +
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.PersumptiveInc44AD8Per /
+                          this.ITR_JSON.itrSummaryJson['ITR'][
+                            this.itrType
+                          ].ScheduleBP?.NatOfBus44AD?.length
+                    ),
+                  };
+                }),
+                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ].ScheduleBP?.NatOfBus44ADA.map((element) => {
+                  return {
+                    businessSection: 'Section 44ADA',
+                    natureOfBusinessCode: element.CodeADA,
+                    tradeName: element.NameOfBusiness,
+                    grossTurnover: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+                        this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ].ScheduleBP?.NatOfBus44ADA?.length
+                    ),
+                    TaxableIncome: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44ADA
+                        ?.TotPersumptiveInc44ADA / this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ].ScheduleBP?.NatOfBus44ADA?.length
+                    ),
+                  };
+                }),
+              },
+              businessIncomeTotal:
+                this.itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+            },
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
+            // ====================
+            // IncChargeableUnderBus:
+            //   this.itrType === 'ITR4'
+            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //         ?.PersumptiveInc44AE?.IncChargeableUnderBus
+            //     : 0,
+
+            // =============================
+            // NatOfBus44AD:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.NatOfBus44AD,
+
+            // PersumptiveInc44ADGrossIncome:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.PersumptiveInc44AD?.GrsTrnOverBank +
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.PersumptiveInc44AD?.GrsTrnOverAnyOthMode,
+
+            // TotPersumptiveInc44AD:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.PersumptiveInc44AD?.TotPersumptiveInc44AD,
+
+            // -----------------
+            // NatOfBus44ADA:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.NatOfBus44ADA,
+
+            // GrsReceipt44ADA:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.PersumptiveInc44ADA?.GrsReceipt,
+
+            // TotPersumptiveInc44ADA:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //     ?.PersumptiveInc44ADA?.TotPersumptiveInc44ADA,
+
             //SALARY INCOME
             // IncomeFromSal:
             //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -783,38 +902,6 @@ export class SummaryComponent implements OnInit {
                   ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
                 : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                     .TaxExmpIntIncDtls.OthersInc?.OthersIncDtls,
-
-            IncChargeableUnderBus:
-              this.itrType === 'ITR4'
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                    .PersumptiveInc44AE?.IncChargeableUnderBus
-                : 0,
-
-            NatOfBus44AD:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.NatOfBus44AD,
-
-            PersumptiveInc44ADGrossIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.PersumptiveInc44AD?.GrsTrnOverBank +
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.PersumptiveInc44AD?.GrsTrnOverAnyOthMode,
-
-            TotPersumptiveInc44AD:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.PersumptiveInc44AD?.TotPersumptiveInc44AD,
-
-            NatOfBus44ADA:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.NatOfBus44ADA,
-
-            GrsReceipt44ADA:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.PersumptiveInc44ADA?.GrsReceipt,
-
-            TotPersumptiveInc44ADA:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                ?.PersumptiveInc44ADA?.TotPersumptiveInc44ADA,
           };
           console.log(this.keys, 'this.keys ITR1&4');
           this.loading = false;
@@ -1249,45 +1336,76 @@ export class SummaryComponent implements OnInit {
                         ?.housePropertyIncome,
                   },
                   otherIncome: {
-                    otherIncomes: [
-                      {
-                        saving:
-                          this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                            (val) => val.incomeType === 'SAVING_INTEREST'
-                          )?.amount,
+                    otherIncomes: {
+                      saving:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                          (val) => val.incomeType === 'SAVING_INTEREST'
+                        )?.amount,
 
-                        intFromDeposit:
-                          this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                            (val) => val.incomeType === 'FD_RD_INTEREST'
-                          )?.amount,
+                      intFromDeposit:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                          (val) => val.incomeType === 'FD_RD_INTEREST'
+                        )?.amount,
 
-                        taxRefund:
-                          this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                            (val) => val.incomeType === 'TAX_REFUND_INTEREST'
-                          )?.amount,
+                      taxRefund:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                          (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                        )?.amount,
 
-                        anyOtherInterest:
-                          this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                            (val) => val.incomeType === 'ANY_OTHER'
-                          )?.amount,
+                      anyOtherInterest:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                          (val) => val.incomeType === 'ANY_OTHER'
+                        )?.amount,
 
-                        familyPension:
-                          this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                            (val) => val.incomeType === 'FAMILY_PENSION'
-                          )?.amount,
+                      familyPension:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                          (val) => val.incomeType === 'FAMILY_PENSION'
+                        )?.amount,
 
-                        dividendIncome:
-                          this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                            (val) => val.incomeType === 'DIVIDEND'
-                          )?.amount,
-                      },
-                    ],
+                      dividendIncome:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                          (val) => val.incomeType === 'DIVIDEND'
+                        )?.amount,
+                    },
 
                     otherIncomeTotal:
                       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.reduce(
                         (sum, obj) => sum + obj.amount,
                         0
                       ),
+                  },
+                  businessIncome: {
+                    businessIncomeDetails: {
+                      business44AD:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          .filter(
+                            (element) => element.businessType === 'BUSINESS'
+                          )
+                          .map((element) => ({
+                            businessSection: element.businessType,
+                            natureOfBusinessCode: 0,
+                            tradeName: '',
+                            grossTurnover: element.receipts,
+                            TaxableIncome: element.presumptiveIncome,
+                          })),
+
+                      business44ADA:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          .filter(
+                            (element) => element.businessType === 'PROFESSIONAL'
+                          )
+                          .map((element) => ({
+                            businessSection: element.businessType,
+                            natureOfBusinessCode: 0,
+                            tradeName: '',
+                            grossTurnover: element.receipts,
+                            TaxableIncome: element.presumptiveIncome,
+                          })),
+                    },
+
+                    businessIncomeTotal:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.presumptiveIncome,
                   },
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
@@ -1399,7 +1517,7 @@ export class SummaryComponent implements OnInit {
                     ),
 
                   salaryTotalIncome:
-                    this.finalSummary?.assessment?.taxSummary?.salary,
+                    this.finalSummary.assessment.taxSummary.salary,
                 },
                 houseProperties: {
                   houseProps:
@@ -1430,48 +1548,80 @@ export class SummaryComponent implements OnInit {
                       }
                     ),
                   hpTotalIncome:
-                    this.finalSummary.assessment.taxSummary.housePropertyIncome,
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.housePropertyIncome,
                 },
                 otherIncome: {
-                  otherIncomes: [
-                    {
-                      saving:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                          (val) => val.incomeType === 'SAVING_INTEREST'
-                        )?.amount,
+                  otherIncomes: {
+                    saving:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        (val) => val.incomeType === 'SAVING_INTEREST'
+                      )?.amount,
 
-                      intFromDeposit:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                          (val) => val.incomeType === 'FD_RD_INTEREST'
-                        )?.amount,
+                    intFromDeposit:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        (val) => val.incomeType === 'FD_RD_INTEREST'
+                      )?.amount,
 
-                      taxRefund:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                          (val) => val.incomeType === 'TAX_REFUND_INTEREST'
-                        )?.amount,
+                    taxRefund:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                      )?.amount,
 
-                      anyOtherInterest:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                          (val) => val.incomeType === 'ANY_OTHER'
-                        )?.amount,
+                    anyOtherInterest:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        (val) => val.incomeType === 'ANY_OTHER'
+                      )?.amount,
 
-                      familyPension:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                          (val) => val.incomeType === 'FAMILY_PENSION'
-                        )?.amount,
+                    familyPension:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        (val) => val.incomeType === 'FAMILY_PENSION'
+                      )?.amount,
 
-                      dividendIncome:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
-                          (val) => val.incomeType === 'DIVIDEND'
-                        )?.amount,
-                    },
-                  ],
+                    dividendIncome:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        (val) => val.incomeType === 'DIVIDEND'
+                      )?.amount,
+                  },
 
                   otherIncomeTotal:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.reduce(
                       (sum, obj) => sum + obj.amount,
                       0
                     ),
+                },
+                businessIncome: {
+                  businessIncomeDetails: {
+                    business44AD:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                        .filter(
+                          (element) => element.businessType === 'BUSINESS'
+                        )
+                        .map((element) => ({
+                          businessSection: element.businessType,
+                          natureOfBusinessCode: 0,
+                          tradeName: '',
+                          grossTurnover: element.receipts,
+                          TaxableIncome: element.presumptiveIncome,
+                        })),
+
+                    business44ADA:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                        .filter(
+                          (element) => element.businessType === 'PROFESSIONAL'
+                        )
+                        .map((element) => ({
+                          businessSection: element.businessType,
+                          natureOfBusinessCode: 0,
+                          tradeName: '',
+                          grossTurnover: element.receipts,
+                          TaxableIncome: element.presumptiveIncome,
+                        })),
+                  },
+
+                  businessIncomeTotal:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.presumptiveIncome,
                 },
               };
               console.log(this.finalCalculations, 'finalCalculations');
@@ -1644,16 +1794,16 @@ export class SummaryComponent implements OnInit {
   slab(rate, input) {
     let slabs = [];
     if (input === 'INPUT') {
-      let inputSlabs = this.summaryIncome.cgIncomeN.capitalGain?.filter(
-        (item: any) => item.cgIncome && item.taxRate === rate
+      let inputSlabs = this.summaryIncome?.cgIncomeN?.capitalGain?.filter(
+        (item: any) => item?.cgIncome && item?.taxRate === rate
       );
       if (inputSlabs) {
         slabs = inputSlabs;
       }
     } else {
       if (
-        this.utilsService.isNonEmpty(this.losses.summaryIncome) &&
-        this.utilsService.isNonEmpty(this.losses.summaryIncome.cgIncomeN) &&
+        this.utilsService.isNonEmpty(this.losses?.summaryIncome) &&
+        this.utilsService.isNonEmpty(this.losses?.summaryIncome?.cgIncomeN) &&
         this.losses.summaryIncome.cgIncomeN.capitalGain instanceof Array
       ) {
         let lossSlabs = this.losses.summaryIncome.cgIncomeN.capitalGain.filter(

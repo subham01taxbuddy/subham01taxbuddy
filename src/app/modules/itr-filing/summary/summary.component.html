@@ -996,7 +996,10 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.presumptiveIncome === 0 ? true : false
+                      finalCalculations?.businessIncome?.businessIncomeTotal ===
+                      0
+                        ? true
+                        : false
                     ]"
                     #business
                   >
@@ -1024,9 +1027,8 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.IncChargeableUnderBus
-                                    ? keys.IncChargeableUnderBus
-                                    : summaryDetail.presumptiveIncome
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeTotal
                                 )
                               }}</label
                             >
@@ -1035,9 +1037,9 @@
                       </div>
                     </mat-expansion-panel-header>
 
-                    <div
+                    <!-- <div
                       *ngIf="
-                        ITR_JSON.itrSummaryJson && keys.IncChargeableUnderBus
+                        ITR_JSON.itrSummaryJson && keys?.IncChargeableUnderBus
                       "
                     >
                       <table
@@ -1053,61 +1055,61 @@
                             <th>Taxable Income</th>
                           </tr>
 
-                          <tr *ngFor="let business of keys.NatOfBus44AD">
+                          <tr *ngFor="let business of keys?.NatOfBus44AD">
                             <td>
                               {{ "Section 44AD" }}
                             </td>
                             <td>
-                              {{ business.CodeAD }}
+                              {{ business?.CodeAD }}
                             </td>
-                            <td>{{ business.NameOfBusiness }}</td>
+                            <td>{{ business?.NameOfBusiness }}</td>
                             <td>
                               Rs
                               {{
                                 utilsService.currencyFormatter(
-                                  keys.PersumptiveInc44ADGrossIncome /
-                                    keys.NatOfBus44AD.length
+                                  keys?.PersumptiveInc44ADGrossIncome /
+                                    keys?.NatOfBus44AD.length
                                 )
                               }}
                             </td>
                             <td>
                               Rs
                               {{
-                                keys.TotPersumptiveInc44AD /
-                                  keys.NatOfBus44AD.length
+                                keys?.TotPersumptiveInc44AD /
+                                  keys?.NatOfBus44AD.length
                               }}
                             </td>
                           </tr>
 
-                          <tr *ngFor="let business of keys.NatOfBus44ADA">
+                          <tr *ngFor="let business of keys?.NatOfBus44ADA">
                             <td>
                               {{ "Section 44ADA" }}
                             </td>
                             <td>
-                              {{ business.CodeADA }}
+                              {{ business?.CodeADA }}
                             </td>
-                            <td>{{ business.NameOfBusiness }}</td>
+                            <td>{{ business?.NameOfBusiness }}</td>
                             <td>
                               Rs
                               {{
                                 utilsService.currencyFormatter(
-                                  keys.GrsReceipt44ADA /
-                                    keys.NatOfBus44ADA.length
+                                  keys?.GrsReceipt44ADA /
+                                    keys?.NatOfBus44ADA.length
                                 )
                               }}
                             </td>
                             <td>
                               Rs
                               {{
-                                keys.TotPersumptiveInc44ADA /
-                                  keys.NatOfBus44ADA.length
+                                keys?.TotPersumptiveInc44ADA /
+                                  keys?.NatOfBus44ADA.length
                               }}
                             </td>
                           </tr>
                         </tbody>
                       </table>
-                    </div>
-                    <div *ngIf="!ITR_JSON.itrSummaryJson">
+                    </div> -->
+                    <div>
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
@@ -1129,11 +1131,11 @@
                           >
                             <td>
                               {{
-                                business.businessType === "TRANSPORT"
+                                business?.businessType === "TRANSPORT"
                                   ? "Section 44AE"
-                                  : business.businessType === "BUSINESS"
+                                  : business?.businessType === "BUSINESS"
                                   ? "Section 44AD"
-                                  : business.businessType === "PROFESSIONAL"
+                                  : business?.businessType === "PROFESSIONAL"
                                   ? "Section 44ADA"
                                   : ""
                               }}
@@ -1141,14 +1143,14 @@
                             <td>
                               {{
                                 natureOfBusinessFromCode(
-                                  business.natureOfBusiness
+                                  business?.natureOfBusiness
                                 )
                               }}
                             </td>
-                            <td>{{ business.tradeName }}</td>
-                            <td>Rs {{ calReceipts(business.incomes) }}</td>
+                            <td>{{ business?.tradeName }}</td>
+                            <td>Rs {{ calReceipts(business?.incomes) }}</td>
                             <td>
-                              Rs {{ calPresumptiveIncome(business.incomes) }}
+                              Rs {{ calPresumptiveIncome(business?.incomes) }}
                             </td>
                           </tr>
                           <tr
@@ -1159,9 +1161,9 @@
                           >
                             <td>
                               {{
-                                business.businessType === "SPECULATIVEINCOME"
+                                business?.businessType === "SPECULATIVEINCOME"
                                   ? "Income from Speculative"
-                                  : business.businessType ===
+                                  : business?.businessType ===
                                     "NONSPECULATIVEINCOME"
                                   ? "Income from Non speculative"
                                   : ""
@@ -1249,9 +1251,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalCapGains
-                                    ? keys.TotalCapGains
-                                    : summaryDetail.capitalGain
+                                  keys?.TotalCapGains
+                                    ? keys?.TotalCapGains
+                                    : summaryDetail?.capitalGain
                                 )
                               }}</label
                             >
@@ -1264,8 +1266,8 @@
                     <div class="bxHed" *ngIf="slab(-1, 'INPUT').length > 0">
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
-                        keys.ShortTermAppRate
-                          ? keys.ShortTermAppRate
+                        keys?.ShortTermAppRate
+                          ? keys?.ShortTermAppRate
                           : getSlabWiseTotal(-1)
                       }}</span>
                     </div>
@@ -1293,12 +1295,12 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate.assetType) }}</td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
                           <!-- <td>{{slabRate.description}}</td> -->
                           <td>
                             Rs
                             {{
-                              utilsService.currencyFormatter(slabRate.cgIncome)
+                              utilsService.currencyFormatter(slabRate?.cgIncome)
                             }}
                           </td>
                           <td>
@@ -1313,7 +1315,7 @@
                             Rs
                             {{
                               utilsService.currencyFormatter(
-                                slabRate.cgIncome -
+                                slabRate?.cgIncome -
                                   getTotalInvestments(slabRate)
                               )
                             }}
@@ -1325,8 +1327,8 @@
                     <div class="bxHed" *ngIf="slab(15, 'INPUT').length > 0">
                       Short term capital gain @ 15%
                       <span style="float: right">{{
-                        keys.ShortTerm15Per
-                          ? keys.ShortTerm15Per
+                        keys?.ShortTerm15Per
+                          ? keys?.ShortTerm15Per
                           : getSlabWiseTotal(15)
                       }}</span>
                     </div>
@@ -1354,12 +1356,12 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate.assetType) }}</td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
                           <!-- <td>{{slabRate.description}}</td> -->
                           <td>
                             Rs
                             {{
-                              utilsService.currencyFormatter(slabRate.cgIncome)
+                              utilsService.currencyFormatter(slabRate?.cgIncome)
                             }}
                           </td>
                           <td>
@@ -1374,7 +1376,7 @@
                             Rs
                             {{
                               utilsService.currencyFormatter(
-                                slabRate.cgIncome -
+                                slabRate?.cgIncome -
                                   getTotalInvestments(slabRate)
                               )
                             }}
@@ -1386,8 +1388,8 @@
                     <div class="bxHed" *ngIf="slab(10, 'INPUT').length > 0">
                       Long term capital gain @ 10%
                       <span style="float: right">{{
-                        keys.LongTerm10Per
-                          ? keys.LongTerm10Per
+                        keys?.LongTerm10Per
+                          ? keys?.LongTerm10Per
                           : getSlabWiseTotal(10)
                       }}</span>
                     </div>
@@ -1415,12 +1417,12 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate.assetType) }}</td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
                           <!-- <td>{{slabRate.description}}</td> -->
                           <td>
                             Rs
                             {{
-                              utilsService.currencyFormatter(slabRate.cgIncome)
+                              utilsService.currencyFormatter(slabRate?.cgIncome)
                             }}
                           </td>
                           <td>
@@ -1435,7 +1437,7 @@
                             Rs
                             {{
                               utilsService.currencyFormatter(
-                                slabRate.cgIncome -
+                                slabRate?.cgIncome -
                                   getTotalInvestments(slabRate)
                               )
                             }}
@@ -1447,8 +1449,8 @@
                     <div class="bxHed" *ngIf="slab(20, 'INPUT').length > 0">
                       Long term capital gain @ 20%
                       <span style="float: right">{{
-                        keys.LongTerm20Per
-                          ? keys.LongTerm20Per
+                        keys?.LongTerm20Per
+                          ? keys?.LongTerm20Per
                           : getSlabWiseTotal(20)
                       }}</span>
                     </div>
@@ -1476,12 +1478,12 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate.assetType) }}</td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
                           <!-- <td>{{slabRate.description}}</td> -->
                           <td>
                             Rs
                             {{
-                              utilsService.currencyFormatter(slabRate.cgIncome)
+                              utilsService.currencyFormatter(slabRate?.cgIncome)
                             }}
                           </td>
                           <td>
@@ -1496,7 +1498,7 @@
                             Rs
                             {{
                               utilsService.currencyFormatter(
-                                slabRate.cgIncome -
+                                slabRate?.cgIncome -
                                   getTotalInvestments(slabRate)
                               )
                             }}
@@ -1568,7 +1570,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      finalCalculations.otherIncome.otherIncomeTotal === 0
+                      finalCalculations?.otherIncome?.otherIncomeTotal === 0
                         ? true
                         : false
                     ]"
@@ -1598,7 +1600,8 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  finalCalculations.otherIncome.otherIncomeTotal
+                                  finalCalculations?.otherIncome
+                                    ?.otherIncomeTotal
                                 )
                               }}</label
                             >
@@ -1606,78 +1609,6 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-
-                    <!-- <div *ngIf="ITR_JSON.itrSummaryJson && keys.IncomeOthSrc">
-                      <table
-                        class="table table-bordered table-striped table-hover"
-                        style="margin-top: 20px"
-                      >
-                        <tbody>
-                          <tr>
-                            <th>Particulars</th>
-                            <th>Amount</th>
-                          </tr>
-                          <tr *ngIf="keys.SAV || keys.IFD || keys.TAX">
-                            <th colspan="2">Interest Income</th>
-                          </tr>
-
-                          <tr *ngIf="keys.SAV">
-                            <td>Saving Bank Accounts</td>
-                            <td>
-                              Rs {{ utilsService.currencyFormatter(keys.SAV) }}
-                            </td>
-                          </tr>
-
-                          <tr *ngIf="keys.IFD">
-                            <td>Fixed/Recurring Deposits</td>
-                            <td>
-                              Rs {{ utilsService.currencyFormatter(keys.IFD) }}
-                            </td>
-                          </tr>
-
-                          <tr *ngIf="keys.TAX">
-                            <td>Income Tax Refund</td>
-                            <td>
-                              Rs {{ utilsService.currencyFormatter(keys.TAX) }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Any Other Interest Income</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.IncomeOthSrc -
-                                    keys.SAV -
-                                    keys.IFD -
-                                    keys.TAX -
-                                    keys.DIV -
-                                    keys.FAP
-                                )
-                              }}
-                            </td>
-                          </tr> -->
-
-                    <!-- <tr *ngIf="keys.DIV || keys.FAP"> -->
-                    <!--  *ngIf="isOtherIncome()" -->
-                    <!-- <th colspan="2">Other Income</th>
-                          </tr>
-                          <tr *ngIf="keys.DIV">
-                            <td>Dividend Income</td>
-                            <td>
-                              Rs {{ utilsService.currencyFormatter(keys.DIV) }}
-                            </td>
-                          </tr>
-                          <tr *ngIf="keys.FAP">
-                            <td>Family Pension</td>
-
-                            <td>
-                              Rs {{ utilsService.currencyFormatter(keys.FAP) }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div> -->
 
                     <div>
                       <table
@@ -1703,125 +1634,126 @@
                           >
                             <th colspan="2">Interest Income</th>
                           </tr>
-                          <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.saving
+                            "
+                          >
                             <td>Saving Bank Accounts</td>
-                            <td>Rs {{ getOtherIncome("SAVING_INTEREST") }}</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.saving
+                                )
+                              }}
+                            </td>
                           </tr>
-                          <tr *ngIf="getOtherIncome('FD_RD_INTEREST')">
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.intFromDeposit
+                            "
+                          >
                             <td>Fixed/Recurring Deposits</td>
-                            <td>Rs {{ getOtherIncome("FD_RD_INTEREST") }}</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.intFromDeposit
+                                )
+                              }}
+                            </td>
                           </tr>
                           <!--  <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
                               <td>Recurring Deposit
                               </td>
                               <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
                             </tr> -->
-                          <tr *ngIf="getOtherIncome('TAX_REFUND_INTEREST')">
-                            <td>Income Tax Refund</td>
-                            <td>
-                              Rs {{ getOtherIncome("TAX_REFUND_INTEREST") }}
-                            </td>
-                          </tr>
-                          <tr *ngIf="getOtherIncome('OTHER_INTEREST')">
-                            <td>Any Other Interest Income</td>
-                            <td>Rs {{ getOtherIncome("OTHER_INTEREST") }}</td>
-                          </tr>
-                          <tr *ngIf="getOtherIncome('GIFT_TAXABLE')">
-                            <th colspan="2">Gifts</th>
-                          </tr>
-                          <tr *ngIf="getOtherIncome('GIFT_TAXABLE')">
-                            <td>Taxable</td>
-                            <td>Rs {{ getOtherIncome("GIFT_TAXABLE") }}</td>
-                          </tr>
-                          <!-- <tr *ngIf="getOtherIncome('GIFT_NONTAXABLE')">
-                              <td>Exempt
-                              </td>
-                              <td>Rs {{getOtherIncome('GIFT_NONTAXABLE')}}</td>
-                            </tr> -->
                           <tr
                             *ngIf="
-                              getOtherIncome('DIVIDEND') ||
-                              getOtherIncome('MINORCHILD') ||
-                              getOtherIncome('COMMISION') ||
-                              getOtherIncome('KEYMAN_INSURANCE_POLICY') ||
-                              getOtherIncome(
-                                'REMUNARATION_NON_EMPLOYER_ORGANISATION'
-                              ) ||
-                              getOtherIncome('GAS') ||
-                              getOtherIncome('ANY_OTHER')
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.taxRefund
+                            "
+                          >
+                            <td>Income Tax Refund</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.taxRefund
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherInterest
+                            "
+                          >
+                            <td>Any Other Interest Income</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.anyOtherInterest
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.dividendIncome ||
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.familyPension
                             "
                           >
                             <!--  *ngIf="isOtherIncome()" -->
                             <th colspan="2">Other Income</th>
                           </tr>
-                          <tr *ngIf="getOtherIncome('DIVIDEND')">
-                            <!-- <td>Dividend on share & mutual fund/UTI
-                                                      </td> -->
-                            <td>Dividend Income</td>
-
-                            <td>Rs {{ getOtherIncome("DIVIDEND") }}</td>
-                          </tr>
-                          <tr *ngIf="getOtherIncome('FAMILY_PENSION')">
-                            <td>Family Pension</td>
-
-                            <td>Rs {{ getOtherIncome("FAMILY_PENSION") }}</td>
-                          </tr>
-                          <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                              <td>UTI Divided : 890
-                              </td>
-                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                            </tr> -->
-                          <tr *ngIf="getOtherIncome('MINORCHILD')">
-                            <td>Income from minor child</td>
-                            <td>Rs {{ getOtherIncome("MINORCHILD") }}</td>
-                          </tr>
-                          <tr *ngIf="getOtherIncome('COMMISION')">
-                            <td>Commission/Brokerage</td>
-                            <td>Rs {{ getOtherIncome("COMMISION") }}</td>
-                          </tr>
-                          <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                              <td>Exempt
-                              </td>
-                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                            </tr> -->
-                          <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                              <td>Brokerage
-                              </td>
-                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                            </tr> -->
-                          <tr *ngIf="getOtherIncome('KEYMAN_INSURANCE_POLICY')">
-                            <td>Amount from keyman insurance policy</td>
-                            <td>
-                              Rs {{ getOtherIncome("KEYMAN_INSURANCE_POLICY") }}
-                            </td>
-                          </tr>
                           <tr
                             *ngIf="
-                              getOtherIncome(
-                                'REMUNARATION_NON_EMPLOYER_ORGANISATION'
-                              )
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.dividendIncome
                             "
                           >
-                            <td>
-                              Fees received as professor/ teacher from
-                              non-employer organisation
-                            </td>
+                            <td>Dividend Income</td>
+
                             <td>
                               Rs
                               {{
-                                getOtherIncome(
-                                  "REMUNARATION_NON_EMPLOYER_ORGANISATION"
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.dividendIncome
                                 )
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="getOtherIncome('GAS')">
-                            <td>Gas subsidy</td>
-                            <td>Rs {{ getOtherIncome("GAS") }}</td>
-                          </tr>
-                          <tr *ngIf="getOtherIncome('ANY_OTHER')">
-                            <td>Other Income</td>
-                            <td>Rs {{ getOtherIncome("ANY_OTHER") }}</td>
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.familyPension
+                            "
+                          >
+                            <td>Family Pension</td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.familyPension
+                                )
+                              }}
+                            </td>
                           </tr>
                           <tr>
                             <th>Total</th>
@@ -1829,7 +1761,8 @@
                               Rs
                               {{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.otherIncome
+                                  finalCalculations?.otherIncome
+                                    ?.otherIncomeTotal
                                 )
                               }}
                             </th>
@@ -1860,9 +1793,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.GrossTotIncome
-                                    ? keys.GrossTotIncome
-                                    : summaryDetail.totalIncome
+                                  keys?.GrossTotIncome
+                                    ? keys?.GrossTotIncome
+                                    : summaryDetail?.totalIncome
                                 )
                               }}</label
                             >
@@ -1876,7 +1809,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.currentYearIFHPSetOff === 0 &&
+                      summaryDetail?.currentYearIFHPSetOff === 0 &&
                       !ITR_JSON.itrSummaryJson
                         ? true
                         : false
@@ -1908,9 +1841,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.CurrentYearLoss
-                                    ? keys.CurrentYearLoss
-                                    : summaryDetail.currentYearIFHPSetOff
+                                  keys?.CurrentYearLoss
+                                    ? keys?.CurrentYearLoss
+                                    : summaryDetail?.currentYearIFHPSetOff
                                 )
                               }}
                             </label>
@@ -1933,9 +1866,9 @@
                             Rs
                             {{
                               utilsService.currencyFormatter(
-                                keys.CurrentYearLoss
-                                  ? keys.CurrentYearLoss
-                                  : summaryDetail.currentYearIFHPSetOff
+                                keys?.CurrentYearLoss
+                                  ? keys?.CurrentYearLoss
+                                  : summaryDetail?.currentYearIFHPSetOff
                               )
                             }}
                           </td>
@@ -1980,9 +1913,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.GrossTotIncome
-                                    ? keys.GrossTotIncome
-                                    : summaryDetail.balanceAfterSetOffCurrentYearLosses
+                                  keys?.GrossTotIncome
+                                    ? keys?.GrossTotIncome
+                                    : summaryDetail?.balanceAfterSetOffCurrentYearLosses
                                 )
                               }}</label
                             >
@@ -1997,9 +1930,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.BalanceAfterSetoffLosses
-                                    ? keys.BalanceAfterSetoffLosses
-                                    : summaryDetail.balanceAfterSetOffCurrentYearLosses
+                                  keys?.BalanceAfterSetoffLosses
+                                    ? keys?.BalanceAfterSetoffLosses
+                                    : summaryDetail?.balanceAfterSetOffCurrentYearLosses
                                 )
                               }}</label
                             >
@@ -2013,7 +1946,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.totalBroughtForwordSetOff === 0
+                      summaryDetail?.totalBroughtForwordSetOff === 0
                         ? true
                         : false
                     ]"
@@ -2045,9 +1978,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 convertToPositive(
-                                  keys.BroughtFwdLossesSetoff
-                                    ? keys.BroughtFwdLossesSetoff
-                                    : summaryDetail.totalBroughtForwordSetOff
+                                  keys?.BroughtFwdLossesSetoff
+                                    ? keys?.BroughtFwdLossesSetoff
+                                    : summaryDetail?.totalBroughtForwordSetOff
                                 )
                               }}</label
                             >
@@ -2126,9 +2059,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.GrossTotIncome
-                                    ? keys.GrossTotIncome
-                                    : summaryDetail.grossTotalIncome
+                                  keys?.GrossTotIncome
+                                    ? keys?.GrossTotIncome
+                                    : summaryDetail?.grossTotalIncome
                                 )
                               }}</label
                             >
@@ -2143,9 +2076,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.GrossTotalIncome
-                                    ? keys.GrossTotalIncome
-                                    : summaryDetail.grossTotalIncome
+                                  keys?.GrossTotalIncome
+                                    ? keys?.GrossTotalIncome
+                                    : summaryDetail?.grossTotalIncome
                                 )
                               }}</label
                             >
@@ -2177,9 +2110,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.IncChargeTaxSplRate111A112
-                                    ? keys.IncChargeTaxSplRate111A112
-                                    : summaryDetail.totalSpecialRateIncome
+                                  keys?.IncChargeTaxSplRate111A112
+                                    ? keys?.IncChargeTaxSplRate111A112
+                                    : summaryDetail?.totalSpecialRateIncome
                                 )
                               }}</label
                             >
@@ -2220,9 +2153,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalChapVIADeductions
-                                    ? keys.TotalChapVIADeductions
-                                    : summaryDetail.totalDeduction
+                                  keys?.TotalChapVIADeductions
+                                    ? keys?.TotalChapVIADeductions
+                                    : summaryDetail?.totalDeduction
                                 )
                               }}</label
                             >
@@ -2233,7 +2166,7 @@
 
                     <div
                       *ngIf="
-                        ITR_JSON.itrSummaryJson && keys.TotalChapVIADeductions
+                        ITR_JSON.itrSummaryJson && keys?.TotalChapVIADeductions
                       "
                     >
                       <table
@@ -2247,17 +2180,19 @@
                           </tr>
                           <tr
                             *ngFor="
-                              let deduction of keys.Deductions;
+                              let deduction of keys?.Deductions;
                               let i = index
                             "
                           >
-                            <td *ngIf="deduction.amount > 0">
-                              {{ deduction.name }}
+                            <td *ngIf="deduction?.amount > 0">
+                              {{ deduction?.name }}
                             </td>
-                            <td *ngIf="deduction.amount > 0">
+                            <td *ngIf="deduction?.amount > 0">
                               Rs
                               {{
-                                utilsService.currencyFormatter(deduction.amount)
+                                utilsService.currencyFormatter(
+                                  deduction?.amount
+                                )
                               }}
                             </td>
                           </tr>
@@ -2400,9 +2335,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalIncome
-                                    ? keys.TotalIncome
-                                    : summaryDetail.totalIncomeAfterDeductionIncludeSR
+                                  keys?.TotalIncome
+                                    ? keys?.TotalIncome
+                                    : summaryDetail?.totalIncomeAfterDeductionIncludeSR
                                 )
                               }}</label
                             >
@@ -2434,9 +2369,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.IncChargeableTaxSplRates
-                                    ? keys.IncChargeableTaxSplRates
-                                    : summaryDetail.specialIncomeAfterAdjBaseLimit
+                                  keys?.IncChargeableTaxSplRates
+                                    ? keys?.IncChargeableTaxSplRates
+                                    : summaryDetail?.specialIncomeAfterAdjBaseLimit
                                 )
                               }}</label
                             >
@@ -2509,9 +2444,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.NetAgricultureIncomeOrOtherIncomeForRate
-                                    ? keys.NetAgricultureIncomeOrOtherIncomeForRate
-                                    : summaryDetail.agricultureIncome
+                                  keys?.NetAgricultureIncomeOrOtherIncomeForRate
+                                    ? keys?.NetAgricultureIncomeOrOtherIncomeForRate
+                                    : summaryDetail?.agricultureIncome
                                 )
                               }}
                             </label>
@@ -2547,9 +2482,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalIncome
-                                    ? keys.TotalIncome
-                                    : summaryDetail.aggregateIncomeXml
+                                  keys?.TotalIncome
+                                    ? keys?.TotalIncome
+                                    : summaryDetail?.aggregateIncomeXml
                                 )
                               }}</label
                             >
@@ -2565,8 +2500,8 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   keys.AggregateIncome
-                                    ? keys.AggregateIncome
-                                    : summaryDetail.aggregateIncomeXml
+                                    ? keys?.AggregateIncome
+                                    : summaryDetail?.aggregateIncomeXml
                                 )
                               }}</label
                             >
@@ -2581,7 +2516,7 @@
                     class="color-panel accordion-border"
                     [disabled]="[
                       totalCarryForword === 0 ||
-                      keys.LossesOfCurrentYearCarriedFwd === 0
+                      keys?.LossesOfCurrentYearCarriedFwd === 0
                         ? true
                         : false
                     ]"
@@ -2633,8 +2568,8 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.LossesOfCurrentYearCarriedFwd
-                                    ? keys.LossesOfCurrentYearCarriedFwd
+                                  keys?.LossesOfCurrentYearCarriedFwd
+                                    ? keys?.LossesOfCurrentYearCarriedFwd
                                     : 0
                                 )
                               }}</label
@@ -2667,28 +2602,28 @@
                           <td>
                             {{
                               utilsService.currencyFormatter(
-                                losses.housePropertyLoss
+                                losses?.housePropertyLoss
                               )
                             }}
                           </td>
                           <td>
                             {{
-                              utilsService.currencyFormatter(losses.STCGLoss)
+                              utilsService.currencyFormatter(losses?.STCGLoss)
                             }}
                           </td>
                           <td>
                             {{
-                              utilsService.currencyFormatter(losses.LTCGLoss)
+                              utilsService.currencyFormatter(losses?.LTCGLoss)
                             }}
                           </td>
                           <td>
                             {{
-                              utilsService.currencyFormatter(losses.pastYear)
+                              utilsService.currencyFormatter(losses?.pastYear)
                             }}
                           </td>
                           <td>
                             {{
-                              utilsService.currencyFormatter(losses.totalLoss)
+                              utilsService.currencyFormatter(losses?.totalLoss)
                             }}
                           </td>
                           <!-- <td>0</td>
@@ -2711,7 +2646,7 @@
                   <!-- *********************** Total Tax (A+B-C) ********************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[summaryDetail.totalTax === 0 ? true : false]"
+                    [disabled]="[summaryDetail?.totalTax === 0 ? true : false]"
                     #totalTax
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -2744,9 +2679,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalTaxPayable
-                                    ? keys.TotalTaxPayable
-                                    : summaryDetail.totalTax
+                                  keys?.TotalTaxPayable
+                                    ? keys?.TotalTaxPayable
+                                    : summaryDetail?.totalTax
                                 )
                               }}
                             </label>
@@ -2760,9 +2695,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TaxPayableOnTotInc
-                                    ? keys.TaxPayableOnTotInc
-                                    : summaryDetail.totalTax
+                                  keys?.TaxPayableOnTotInc
+                                    ? keys?.TaxPayableOnTotInc
+                                    : summaryDetail?.totalTax
                                 )
                               }}
                             </label>
@@ -2774,7 +2709,7 @@
                     <div
                       *ngIf="
                         ITR_JSON.itrSummaryJson &&
-                        (keys.TotalTaxPayable || keys.TaxPayableOnTotInc)
+                        (keys?.TotalTaxPayable || keys?.TaxPayableOnTotInc)
                       "
                     >
                       <table
@@ -2793,9 +2728,9 @@
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TaxAtNormalRatesOnAggrInc
-                                    ? keys.TaxAtNormalRatesOnAggrInc
-                                    : keys.TotalTaxPayable
+                                  keys?.TaxAtNormalRatesOnAggrInc
+                                    ? keys?.TaxAtNormalRatesOnAggrInc
+                                    : keys?.TotalTaxPayable
                                 )
                               }}
                             </td>
@@ -2807,8 +2742,8 @@
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TaxAtSpecialRates
-                                    ? keys.TaxAtSpecialRates
+                                  keys?.TaxAtSpecialRates
+                                    ? keys?.TaxAtSpecialRates
                                     : 0
                                 )
                               }}
@@ -2821,8 +2756,8 @@
                                 >₹</i
                               >&nbsp;-{{
                                 utilsService.currencyFormatter(
-                                  keys.RebateOnAgriInc
-                                    ? keys.RebateOnAgriInc
+                                  keys?.RebateOnAgriInc
+                                    ? keys?.RebateOnAgriInc
                                     : 0
                                 )
                               }}
@@ -2849,7 +2784,7 @@
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.taxAtNormalRate
+                                  summaryDetail?.taxAtNormalRate
                                 )
                               }}
                             </td>
@@ -2861,7 +2796,7 @@
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.taxAtSpecialRate
+                                  summaryDetail?.taxAtSpecialRate
                                 )
                               }}
                             </td>
@@ -2873,7 +2808,7 @@
                                 >₹</i
                               >&nbsp;-{{
                                 utilsService.currencyFormatter(
-                                  summaryDetail.rebateOnAgricultureIncome
+                                  summaryDetail?.rebateOnAgricultureIncome
                                 )
                               }}
                             </td>
@@ -2904,9 +2839,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.Rebate87A
-                                    ? keys.Rebate87A
-                                    : summaryDetail.rebateUnderSection87A
+                                  keys?.Rebate87A
+                                    ? keys?.Rebate87A
+                                    : summaryDetail?.rebateUnderSection87A
                                 )
                               }}</label
                             >
@@ -2937,9 +2872,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TaxPayableOnRebate
-                                    ? keys.TaxPayableOnRebate
-                                    : summaryDetail.taxAfterRebate
+                                  keys?.TaxPayableOnRebate
+                                    ? keys?.TaxPayableOnRebate
+                                    : summaryDetail?.taxAfterRebate
                                 )
                               }}
                             </label>
@@ -2970,9 +2905,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalSurcharge
-                                    ? keys.TotalSurcharge
-                                    : summaryDetail.surcharge
+                                  keys?.TotalSurcharge
+                                    ? keys?.TotalSurcharge
+                                    : summaryDetail?.surcharge
                                 )
                               }}</label
                             >
@@ -3003,9 +2938,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.EducationCess
-                                    ? keys.EducationCess
-                                    : summaryDetail.cessAmount
+                                  keys?.EducationCess
+                                    ? keys?.EducationCess
+                                    : summaryDetail?.cessAmount
                                 )
                               }}
                             </label>
@@ -3036,9 +2971,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.GrossTaxLiability
-                                    ? keys.GrossTaxLiability
-                                    : summaryDetail.grossTaxLiability
+                                  keys?.GrossTaxLiability
+                                    ? keys?.GrossTaxLiability
+                                    : summaryDetail?.grossTaxLiability
                                 )
                               }}
                             </label>
@@ -3052,9 +2987,9 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.taxReliefUnder89 +
-                        summaryDetail.taxReliefUnder90_90A +
-                        summaryDetail.taxReliefUnder91 ===
+                      summaryDetail?.taxReliefUnder89 +
+                        summaryDetail?.taxReliefUnder90_90A +
+                        summaryDetail?.taxReliefUnder91 ===
                         0 && !ITR_JSON.itrSummaryJson
                         ? true
                         : false
@@ -3093,9 +3028,9 @@
                                 utilsService.currencyFormatter(
                                   keys.Section89
                                     ? keys.Section89
-                                    : summaryDetail.taxReliefUnder89 +
-                                        summaryDetail.taxReliefUnder90_90A +
-                                        summaryDetail.taxReliefUnder91
+                                    : summaryDetail?.taxReliefUnder89 +
+                                        summaryDetail?.taxReliefUnder90_90A +
+                                        summaryDetail?.taxReliefUnder91
                                 )
                               }}</label
                             >
@@ -3109,7 +3044,7 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotTaxRelief
+                                  keys?.TotTaxRelief
                                 )
                               }}</label
                             >
@@ -3130,9 +3065,9 @@
                           <td class="">
                             <i class="material-icons icRup">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.Section89
-                                  ? keys.Section89
-                                  : summaryDetail.taxReliefUnder89
+                                keys?.Section89
+                                  ? keys?.Section89
+                                  : summaryDetail?.taxReliefUnder89
                               )
                             }}
                           </td>
@@ -3142,9 +3077,9 @@
                           <td class="">
                             <i class="material-icons icRup">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.Section90
-                                  ? keys.Section90
-                                  : summaryDetail.taxReliefUnder90_90A
+                                keys?.Section90
+                                  ? keys?.Section90
+                                  : summaryDetail?.taxReliefUnder90_90A
                               )
                             }}
                           </td>
@@ -3154,9 +3089,9 @@
                           <td class="">
                             <i class="material-icons">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.Section91
-                                  ? keys.Section91
-                                  : summaryDetail.taxReliefUnder91
+                                keys?.Section91
+                                  ? keys?.Section91
+                                  : summaryDetail?.taxReliefUnder91
                               )
                             }}
                           </td>
@@ -3186,9 +3121,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.NetTaxLiability
-                                    ? keys.NetTaxLiability
-                                    : summaryDetail.netTaxLiability
+                                  keys?.NetTaxLiability
+                                    ? keys?.NetTaxLiability
+                                    : summaryDetail?.netTaxLiability
                                 )
                               }}
                             </label>
@@ -3202,7 +3137,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.interestAndFeesPayable === 0 ? true : false
+                      summaryDetail?.interestAndFeesPayable === 0 ? true : false
                     ]"
                     #interestFee
                   >
@@ -3230,9 +3165,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalIntrstPay
-                                    ? keys.TotalIntrstPay
-                                    : summaryDetail.interestAndFeesPayable
+                                  keys?.TotalIntrstPay
+                                    ? keys?.TotalIntrstPay
+                                    : summaryDetail?.interestAndFeesPayable
                                 )
                               }}</label
                             >
@@ -3255,9 +3190,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.IntrstPayUs234A
-                                  ? keys.IntrstPayUs234A
-                                  : summaryDetail.s234A
+                                keys?.IntrstPayUs234A
+                                  ? keys?.IntrstPayUs234A
+                                  : summaryDetail?.s234A
                               )
                             }}
                           </td>
@@ -3271,9 +3206,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.IntrstPayUs234B
-                                  ? keys.IntrstPayUs234B
-                                  : summaryDetail.s234B
+                                keys?.IntrstPayUs234B
+                                  ? keys?.IntrstPayUs234B
+                                  : summaryDetail?.s234B
                               )
                             }}
                           </td>
@@ -3288,9 +3223,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.IntrstPayUs234C
-                                  ? keys.IntrstPayUs234C
-                                  : summaryDetail.s234C
+                                keys?.IntrstPayUs234C
+                                  ? keys?.IntrstPayUs234C
+                                  : summaryDetail?.s234C
                               )
                             }}
                           </td>
@@ -3302,9 +3237,9 @@
                               >₹</i
                             >&nbsp;{{
                               utilsService.currencyFormatter(
-                                keys.LateFilingFee234F
-                                  ? keys.LateFilingFee234F
-                                  : summaryDetail.s234F
+                                keys?.LateFilingFee234F
+                                  ? keys?.LateFilingFee234F
+                                  : summaryDetail?.s234F
                               )
                             }}
                           </td>
@@ -3340,9 +3275,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotTaxPlusIntrstPay
-                                    ? keys.TotTaxPlusIntrstPay
-                                    : summaryDetail.agrigateLiability
+                                  keys?.TotTaxPlusIntrstPay
+                                    ? keys?.TotTaxPlusIntrstPay
+                                    : summaryDetail?.agrigateLiability
                                 )
                               }}
                             </label>
@@ -3356,9 +3291,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.AggregateTaxInterestLiability
-                                    ? keys.AggregateTaxInterestLiability
-                                    : summaryDetail.agrigateLiability
+                                  keys?.AggregateTaxInterestLiability
+                                    ? keys?.AggregateTaxInterestLiability
+                                    : summaryDetail?.agrigateLiability
                                 )
                               }}
                             </label>
@@ -3372,10 +3307,10 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      summaryDetail.taxPaidAdvancedTax +
-                        summaryDetail.taxPaidTDS +
-                        summaryDetail.taxPaidTCS +
-                        summaryDetail.selfassessmentTax ===
+                      summaryDetail?.taxPaidAdvancedTax +
+                        summaryDetail?.taxPaidTDS +
+                        summaryDetail?.taxPaidTCS +
+                        summaryDetail?.selfassessmentTax ===
                       0
                         ? true
                         : false
@@ -3406,12 +3341,12 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys.TotalTaxesPaid
-                                    ? keys.TotalTaxesPaid
-                                    : summaryDetail.taxPaidAdvancedTax +
-                                        summaryDetail.taxPaidTDS +
-                                        summaryDetail.taxPaidTCS +
-                                        summaryDetail.selfassessmentTax
+                                  keys?.TotalTaxesPaid
+                                    ? keys?.TotalTaxesPaid
+                                    : summaryDetail?.taxPaidAdvancedTax +
+                                        summaryDetail?.taxPaidTDS +
+                                        summaryDetail?.taxPaidTCS +
+                                        summaryDetail?.selfassessmentTax
                                 )
                               }}</label
                             >
@@ -3420,16 +3355,20 @@
                       </div>
                     </mat-expansion-panel-header>
                     <!-- SALARY TDS -->
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.TDSonSalary">
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys?.TDSonSalary">
                       <div
                         class="bxHed"
-                        *ngIf="keys.TDSonSalary && keys.TDSonSalary?.length > 0"
+                        *ngIf="
+                          keys?.TDSonSalary && keys?.TDSonSalary?.length > 0
+                        "
                       >
                         TDS (On Salary)
                       </div>
                       <table
                         class="table table-bordered table-striped table-hover"
-                        *ngIf="keys.TDSonSalary && keys.TDSonSalary?.length > 0"
+                        *ngIf="
+                          keys?.TDSonSalary && keys?.TDSonSalary?.length > 0
+                        "
                       >
                         <thead>
                           <tr>
@@ -3450,24 +3389,26 @@
                         <tbody>
                           <tr
                             *ngFor="
-                              let onSalary of keys.TDSonSalary;
+                              let onSalary of keys?.TDSonSalary;
                               let i = index
                             "
                           >
                             <td>
                               {{
-                                onSalary.EmployerOrDeductorOrCollectDetl
-                                  .EmployerOrDeductorOrCollecterName
+                                onSalary?.EmployerOrDeductorOrCollectDetl
+                                  ?.EmployerOrDeductorOrCollecterName
                               }}
                             </td>
                             <td>
-                              {{ onSalary.EmployerOrDeductorOrCollectDetl.TAN }}
+                              {{
+                                onSalary?.EmployerOrDeductorOrCollectDetl?.TAN
+                              }}
                             </td>
                             <td>
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  onSalary.IncChrgSal
+                                  onSalary?.IncChrgSal
                                 )
                               }}
                             </td>
@@ -3475,7 +3416,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  onSalary.TotalTDSSal
+                                  onSalary?.TotalTDSSal
                                 )
                               }}
                             </td>
@@ -3492,7 +3433,7 @@
                             <th></th>
                             <th>
                               Rs.
-                              {{ keys.TotalTDSonSalaries }}
+                              {{ keys?.TotalTDSonSalaries }}
                             </th>
                           </tr>
                         </tbody>
@@ -3535,13 +3476,13 @@
                           <tr
                             *ngFor="let onSalary of ITR_JSON?.taxPaid?.onSalary"
                           >
-                            <td>{{ onSalary.deductorName }}</td>
-                            <td>{{ onSalary.deductorTAN }}</td>
+                            <td>{{ onSalary?.deductorName }}</td>
+                            <td>{{ onSalary?.deductorTAN }}</td>
                             <td>
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  onSalary.totalAmountCredited
+                                  onSalary?.totalAmountCredited
                                 )
                               }}
                             </td>
@@ -3549,7 +3490,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  onSalary.totalTdsDeposited
+                                  onSalary?.totalTdsDeposited
                                 )
                               }}
                             </td>
@@ -3568,7 +3509,7 @@
                               Rs.
                               {{
                                 getTaxPaidTotal(
-                                  ITR_JSON.taxPaid.onSalary,
+                                  ITR_JSON.taxPaid?.onSalary,
                                   "totalTdsDeposited"
                                 )
                               }}
@@ -3580,13 +3521,13 @@
 
                     <!-- OTHER THAN SALARY -->
                     <div
-                      *ngIf="ITR_JSON.itrSummaryJson && keys.TDSonOthThanSal"
+                      *ngIf="ITR_JSON.itrSummaryJson && keys?.TDSonOthThanSal"
                     >
                       <div
                         class="bxHed"
                         *ngIf="
-                          keys.TDSonOthThanSal &&
-                          keys.TDSonOthThanSal?.length > 0
+                          keys?.TDSonOthThanSal &&
+                          keys?.TDSonOthThanSal?.length > 0
                         "
                       >
                         TDS (Other Than Salary)
@@ -3594,8 +3535,8 @@
                       <table
                         class="table table-bordered table-striped table-hover"
                         *ngIf="
-                          keys.TDSonOthThanSal &&
-                          keys.TDSonOthThanSal?.length > 0
+                          keys?.TDSonOthThanSal &&
+                          keys?.TDSonOthThanSal?.length > 0
                         "
                       >
                         <thead>
@@ -3622,27 +3563,27 @@
                           >
                             <tr
                               *ngFor="
-                                let otherThanSalary16A of keys.TDSonOthThanSal
+                                let otherThanSalary16A of keys?.TDSonOthThanSal
                               "
                             >
                               <td>
                                 {{
                                   otherThanSalary16A
-                                    .EmployerOrDeductorOrCollectDetl
-                                    .EmployerOrDeductorOrCollecterName
+                                    ?.EmployerOrDeductorOrCollectDetl
+                                    ?.EmployerOrDeductorOrCollecterName
                                 }}
                               </td>
                               <td>
                                 {{
                                   otherThanSalary16A
-                                    .EmployerOrDeductorOrCollectDetl.TAN
+                                    ?.EmployerOrDeductorOrCollectDetl.TAN
                                 }}
                               </td>
                               <td>
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary16A.AmtForTaxDeduct
+                                    otherThanSalary16A?.AmtForTaxDeduct
                                   )
                                 }}
                               </td>
@@ -3650,7 +3591,7 @@
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary16A.ClaimOutOfTotTDSOnAmtPaid
+                                    otherThanSalary16A?.ClaimOutOfTotTDSOnAmtPaid
                                   )
                                 }}
                               </td>
@@ -3667,16 +3608,16 @@
                               "
                             >
                               <td>
-                                {{ otherThanSalary16A.TDSCreditName }}
+                                {{ otherThanSalary16A?.TDSCreditName }}
                               </td>
                               <td>
-                                {{ otherThanSalary16A.TANOfDeductor }}
+                                {{ otherThanSalary16A?.TANOfDeductor }}
                               </td>
                               <td>
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary16A.GrossAmount
+                                    otherThanSalary16A?.GrossAmount
                                   )
                                 }}
                               </td>
@@ -3684,7 +3625,7 @@
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary16A.TaxDeductCreditDtls
+                                    otherThanSalary16A?.TaxDeductCreditDtls
                                       ?.TaxClaimedOwnHands
                                   )
                                 }}
@@ -3699,7 +3640,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  keys.TotalTDSonOthThanSals
+                                  keys?.TotalTDSonOthThanSals
                                 )
                               }}
                             </th>
@@ -3747,13 +3688,13 @@
                                 ?.otherThanSalary16A
                             "
                           >
-                            <td>{{ otherThanSalary16A.deductorName }}</td>
-                            <td>{{ otherThanSalary16A.deductorTAN }}</td>
+                            <td>{{ otherThanSalary16A?.deductorName }}</td>
+                            <td>{{ otherThanSalary16A?.deductorTAN }}</td>
                             <td>
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  otherThanSalary16A.totalAmountCredited
+                                  otherThanSalary16A?.totalAmountCredited
                                 )
                               }}
                             </td>
@@ -3761,7 +3702,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  otherThanSalary16A.totalTdsDeposited
+                                  otherThanSalary16A?.totalTdsDeposited
                                 )
                               }}
                             </td>
@@ -3774,7 +3715,7 @@
                               Rs.
                               {{
                                 getTaxPaidTotal(
-                                  ITR_JSON.taxPaid.otherThanSalary16A,
+                                  ITR_JSON.taxPaid?.otherThanSalary16A,
                                   "totalTdsDeposited"
                                 )
                               }}
@@ -3785,16 +3726,20 @@
                     </div>
 
                     <!-- 26QB -->
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.TDS3Details">
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys?.TDS3Details">
                       <div
                         class="bxHed"
-                        *ngIf="keys.TDS3Details && keys.TDS3Details.length > 0"
+                        *ngIf="
+                          keys?.TDS3Details && keys?.TDS3Details?.length > 0
+                        "
                       >
                         TDS (Other Than Salary 26QB)
                       </div>
                       <table
                         class="table table-bordered table-striped table-hover"
-                        *ngIf="keys.TDS3Details && keys.TDS3Details?.length > 0"
+                        *ngIf="
+                          keys?.TDS3Details && keys?.TDS3Details?.length > 0
+                        "
                       >
                         <thead>
                           <tr>
@@ -3823,13 +3768,13 @@
                                 let otherThanSalary26QB of keys.TDS3Details
                               "
                             >
-                              <td>{{ otherThanSalary26QB.NameOfTenant }}</td>
-                              <td>{{ otherThanSalary26QB.PANofTenant }}</td>
+                              <td>{{ otherThanSalary26QB?.NameOfTenant }}</td>
+                              <td>{{ otherThanSalary26QB?.PANofTenant }}</td>
                               <td>
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary26QB.GrsRcptToTaxDeduct
+                                    otherThanSalary26QB?.GrsRcptToTaxDeduct
                                   )
                                 }}
                               </td>
@@ -3837,7 +3782,7 @@
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary26QB.TDSClaimed
+                                    otherThanSalary26QB?.TDSClaimed
                                   )
                                 }}
                               </td>
@@ -3850,18 +3795,18 @@
                           >
                             <tr
                               *ngFor="
-                                let otherThanSalary26QB of keys.TDS3Details
+                                let otherThanSalary26QB of keys?.TDS3Details
                               "
                             >
-                              <td>{{ otherThanSalary26QB.TDSCreditName }}</td>
+                              <td>{{ otherThanSalary26QB?.TDSCreditName }}</td>
                               <td>
-                                {{ otherThanSalary26QB.PANOfBuyerTenant }}
+                                {{ otherThanSalary26QB?.PANOfBuyerTenant }}
                               </td>
                               <td>
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary26QB.GrossAmount
+                                    otherThanSalary26QB?.GrossAmount
                                   )
                                 }}
                               </td>
@@ -3869,7 +3814,7 @@
                                 Rs.
                                 {{
                                   utilsService.currencyFormatter(
-                                    otherThanSalary26QB.TaxDeductCreditDtls
+                                    otherThanSalary26QB?.TaxDeductCreditDtls
                                       ?.TaxClaimedOwnHands
                                   )
                                 }}
@@ -3883,7 +3828,7 @@
                             <th></th>
                             <th>
                               Rs.
-                              {{ keys.TotalTDS3Details }}
+                              {{ keys?.TotalTDS3Details }}
                             </th>
                           </tr>
                         </tbody>
@@ -3929,13 +3874,13 @@
                                 ?.otherThanSalary26QB
                             "
                           >
-                            <td>{{ otherThanSalary26QB.deductorName }}</td>
-                            <td>{{ otherThanSalary26QB.deductorPAN }}</td>
+                            <td>{{ otherThanSalary26QB?.deductorName }}</td>
+                            <td>{{ otherThanSalary26QB?.deductorPAN }}</td>
                             <td>
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  otherThanSalary26QB.totalAmountCredited
+                                  otherThanSalary26QB?.totalAmountCredited
                                 )
                               }}
                             </td>
@@ -3943,7 +3888,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  otherThanSalary26QB.totalTdsDeposited
+                                  otherThanSalary26QB?.totalTdsDeposited
                                 )
                               }}
                             </td>
@@ -3956,7 +3901,7 @@
                               Rs.
                               {{
                                 getTaxPaidTotal(
-                                  ITR_JSON.taxPaid.otherThanSalary26QB,
+                                  ITR_JSON.taxPaid?.otherThanSalary26QB,
                                   "totalTdsDeposited"
                                 )
                               }}
@@ -3967,16 +3912,16 @@
                     </div>
 
                     <!-- tcs -->
-                    <div *ngIf="ITR_JSON.itrSummaryJson && keys.TCS">
+                    <div *ngIf="ITR_JSON.itrSummaryJson && keys?.TCS">
                       <div
                         class="bxHed"
-                        *ngIf="keys.TCS && keys.TCS.length > 0"
+                        *ngIf="keys?.TCS && keys?.TCS?.length > 0"
                       >
                         TCS
                       </div>
                       <table
                         class="table table-bordered table-striped table-hover"
-                        *ngIf="keys.TCS && keys.TCS.length > 0"
+                        *ngIf="keys?.TCS && keys?.TCS?.length > 0"
                       >
                         <thead>
                           <tr>
@@ -3995,23 +3940,23 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let tcs of keys.TCS">
+                          <tr *ngFor="let tcs of keys?.TCS">
                             <td>
                               {{
-                                tcs.EmployerOrDeductorOrCollectDetl
-                                  .EmployerOrDeductorOrCollecterName
+                                tcs?.EmployerOrDeductorOrCollectDetl
+                                  ?.EmployerOrDeductorOrCollecterName
                               }}
                             </td>
                             <td>
-                              {{ tcs.EmployerOrDeductorOrCollectDetl.TAN }}
+                              {{ tcs?.EmployerOrDeductorOrCollectDetl?.TAN }}
                             </td>
                             <td>
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  tcs.TotalTCS
-                                    ? tcs.TotalTCS
-                                    : tcs.AmtTaxCollected
+                                  tcs?.TotalTCS
+                                    ? tcs?.TotalTCS
+                                    : tcs?.AmtTaxCollected
                                 )
                               }}
                             </td>
@@ -4019,7 +3964,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  tcs.AmtTCSClaimedThisYear
+                                  tcs?.AmtTCSClaimedThisYear
                                 )
                               }}
                             </td>
@@ -4030,7 +3975,7 @@
                             <th></th>
                             <th>
                               Rs.
-                              {{ keys.TotalSchTCS }}
+                              {{ keys?.TotalSchTCS }}
                             </th>
                           </tr>
                         </tbody>
@@ -4071,13 +4016,13 @@
                         </thead>
                         <tbody>
                           <tr *ngFor="let tcs of ITR_JSON?.taxPaid?.tcs">
-                            <td>{{ tcs.collectorName }}</td>
-                            <td>{{ tcs.collectorTAN }}</td>
+                            <td>{{ tcs?.collectorName }}</td>
+                            <td>{{ tcs?.collectorTAN }}</td>
                             <td>
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  tcs.totalAmountPaid
+                                  tcs?.totalAmountPaid
                                 )
                               }}
                             </td>
@@ -4085,7 +4030,7 @@
                               Rs.
                               {{
                                 utilsService.currencyFormatter(
-                                  tcs.totalTcsDeposited
+                                  tcs?.totalTcsDeposited
                                 )
                               }}
                             </td>
@@ -4104,7 +4049,7 @@
                               Rs.
                               {{
                                 getTaxPaidTotal(
-                                  ITR_JSON.taxPaid.tcs,
+                                  ITR_JSON.taxPaid?.tcs,
                                   "totalTcsDeposited"
                                 )
                               }}
@@ -4150,13 +4095,13 @@
                     <div *ngIf="ITR_JSON.itrSummaryJson && keys.TaxPayment">
                       <div
                         class="bxHed"
-                        *ngIf="keys.TaxPayment && keys.TaxPayment?.length > 0"
+                        *ngIf="keys?.TaxPayment && keys?.TaxPayment?.length > 0"
                       >
                         Advance / Self Assessment Tax Paid
                       </div>
                       <table
                         class="table table-bordered table-striped table-hover"
-                        *ngIf="keys.TaxPayment && keys.TaxPayment?.length > 0"
+                        *ngIf="keys?.TaxPayment && keys?.TaxPayment?.length > 0"
                       >
                         <thead>
                           <tr>
@@ -4173,7 +4118,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let advance of keys.TaxPayment">
+                          <tr *ngFor="let advance of keys?.TaxPayment">
                             <td>{{ advance.BSRCode }}</td>
                             <td>
                               {{ advance.DateDep | date : "dd MMM yyyy" }}
