@@ -98,6 +98,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.nonspecIncomeForm = this.formBuilder.group({
       nonspecIncomesArray: this.nonspecIncomeFormArray
     });
+    (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.forEach((element, index)=>{
+      this.calculateIncome(index);
+    });
+
   }
 
   get getIncomeArray() {
@@ -256,6 +260,18 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
   ngDoCheck() {
     this.cdRef.detectChanges();
+  }
+
+  nonspecSelected(){
+    return (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.filter((element) =>
+       (element as FormGroup).controls['hasEdit'].value === true
+    ).length > 0;
+  }
+
+  expenseSelected(){
+    return this.expenses.controls.filter((element:FormGroup) =>
+       element.controls['hasExpense'].value === true
+    ).length > 0;
   }
 
   deleteArray() {
