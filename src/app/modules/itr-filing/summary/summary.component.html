@@ -3023,35 +3023,11 @@
                             27. Aggregate Liability (25+26)
                           </div>
                           <div class="col-lg-4 col-md-4 col-sm-4">
-                            <label
-                              class="rtNumb"
-                              *ngIf="
-                                this.itrType === 'ITR1' ||
-                                this.itrType === 'ITR4'
-                              "
-                            >
+                            <label class="rtNumb">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys?.TotTaxPlusIntrstPay
-                                    ? keys?.TotTaxPlusIntrstPay
-                                    : summaryDetail?.agrigateLiability
-                                )
-                              }}
-                            </label>
-                            <label
-                              class="rtNumb"
-                              *ngIf="
-                                this.itrType === 'ITR2' ||
-                                this.itrType === 'ITR3'
-                              "
-                            >
-                              <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  keys?.AggregateTaxInterestLiability
-                                    ? keys?.AggregateTaxInterestLiability
-                                    : summaryDetail?.agrigateLiability
+                                  finalCalculations?.aggregateLiability
                                 )
                               }}
                             </label>
@@ -3179,12 +3155,6 @@
                               }}
                             </td>
                           </tr>
-                          <!--  <tr>
-                            <td>Barkha</td>
-                            <td>AECEFG1590D</td>
-                            <td>Rs.8,00,000</td>
-                            <td>Rs.2,00,000</td>
-                          </tr> -->
                           <tr>
                             <th>Total Amount</th>
                             <th></th>
