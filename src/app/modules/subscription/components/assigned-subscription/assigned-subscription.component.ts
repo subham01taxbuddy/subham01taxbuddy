@@ -284,10 +284,15 @@ export class AssignedSubscriptionComponent implements OnInit {
             this._toastMessageService.alert("error", "No user with this mobile number found. " +
               "Please create user before creating subscription.");
             this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
             return;
           } else {
             this._toastMessageService.alert('error', response.data.error);
-            this.isAllowed = false;
+            let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
             this.config.totalItems = 0;
             this.subscriptionListGridOptions.api?.setRowData(
               this.createRowData([])
@@ -331,7 +336,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     } else {
       this.getAssignedSubscription(0);
     }
-
+    this.isAllowed = false;
   }
 
   subscriptionCreateColumnDef(List) {
