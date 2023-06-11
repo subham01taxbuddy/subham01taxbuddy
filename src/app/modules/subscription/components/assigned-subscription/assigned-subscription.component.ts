@@ -289,10 +289,18 @@ export class AssignedSubscriptionComponent implements OnInit {
               this.createRowData([])
             );
             return;
+          } else if(response.data.error === 'Subscription not found'){
+            this._toastMessageService.alert('error', response.data.error);
+            let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
           } else {
             this._toastMessageService.alert('error', response.data.error);
-            let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
-            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+            this.isAllowed = false;
             this.config.totalItems = 0;
             this.subscriptionListGridOptions.api?.setRowData(
               this.createRowData([])
@@ -304,7 +312,8 @@ export class AssignedSubscriptionComponent implements OnInit {
             this.createRowData([])
           );
           this.config.totalItems = 0;
-          this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          // this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          this.isAllowed = false;
         }
 
       },

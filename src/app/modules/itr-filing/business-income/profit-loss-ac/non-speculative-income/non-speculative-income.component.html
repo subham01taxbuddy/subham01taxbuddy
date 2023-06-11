@@ -2,7 +2,7 @@
 <form [formGroup]="nonspecIncomeForm">
         <div class="row bdrBtm">
           <div class="col-sm-6">
-            <div class="titTx1">Trading Account </div>            
+            <div class="titTx1">Trading Account </div>
           </div>
           <div class="col-sm-6">
           <button type="button" class="new-add btnRt" (click)="addNonSpecIncomeForm()">+ Add More </button>
@@ -16,7 +16,7 @@
                 <div class="col-sm-1">
                   <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
                   </mat-checkbox>
-                
+
                   <mat-form-field appearance="none">
                     <input formControlName="brokerName" matInput disabled
                            name="brokerName[i]" class="input-field">
@@ -35,7 +35,7 @@
                       <input
                         formControlName="tradingExpense"
                         matInput name="tradingExpense[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(i)">
+                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
                     </mat-form-field>
                   </div>
                   <div class="col-sm-3">
@@ -44,7 +44,7 @@
                       <input
                         formControlName="finishedGoodsOpeningStock"
                         matInput name="finishedGoodsOpeningStock[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(i)">
+                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
                     </mat-form-field>
                   </div>
                   <div class="col-sm-3">
@@ -53,7 +53,7 @@
                       <input
                         formControlName="purchase"
                         matInput  name="purchase[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(i)">
+                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
                     </mat-form-field>
                   </div>
                   <div class="col-sm-1"></div>
@@ -63,23 +63,23 @@
                       <input
                         formControlName="finishedGoodsClosingStock"
                         matInput name="finishedGoodsClosingStock[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(i)">
+                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
                     </mat-form-field>
                   </div>
                   <div class="col-sm-2 spsTp">
                     <div class="edit-head">
-                      <button type="button" class="edit-donation ediTp" (click)="editNonSpecIncomeForm(i)"><mat-icon>
+                      <button type="button" class="edit-donation ediTp" (click)="editNonSpecIncomeForm(fieldGlobalIndex(i))"><mat-icon>
                         edit_square
                       </mat-icon>Edit </button>
                     </div>
                   </div>
-              
-               
+
+
               </div>
               <div class="row pLSpc">
               <div class="col-sm-12">
                 <div class="titTx1">Profit and Loss Account </div>
-              </div>              
+              </div>
                 <div class="col-sm-4 spsTp">
                   <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
                   <mat-form-field appearance="outline">
@@ -107,19 +107,19 @@
                 </div>
 
                 <div class="col-sm-12">
-                  <button type="submit" class="delete-btn1" (click)="deleteArray()" disabled>
+                  <button type="submit" class="delete-btn" (click)="deleteArray()" [disabled]="!nonspecSelected()">
                     <i class="fa fa-trash" aria-hidden="true"></i> Delete Income
                   </button>
-                </div> 
+                </div>
 
               </div>
 
             </div>
-          </div>        
+          </div>
       </form>
 
     <div class="row expAr">
-        <div class="col-sm-12 expBk">          
+        <div class="col-sm-12 expBk">
                 <form [formGroup]="profitLossForm">
                     <div class="row bdrBtm">
                       <div class="col-sm-9">
@@ -174,11 +174,11 @@
                             </div>
 
                         </div>
-                        
+
                     </div>
 
                 </form>
-           
+
         </div>
     </div>
 
@@ -188,7 +188,7 @@
 <div class="col-sm-12 spsTp bdrTp">
     <div class="row">
     <div class="col-sm-6">
-      <button class="delete-btn" (click)="deleteExpenseForm()" disabled><i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
+      <button class="delete-btn" (click)="deleteExpenseForm()" [disabled]="!expenseSelected()"><i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
     </div>
     <div class="col-sm-6">
     <button class="tbd-btn save-btn mvRth" (click)="onContinue()">&nbsp;&nbsp;Save </button>

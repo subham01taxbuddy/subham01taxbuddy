@@ -384,6 +384,27 @@ export class AssignedNewUsersComponent implements OnInit {
       //   },
       // },
       {
+        headerName: 'Action With',
+        field: 'conversationWithFiler',
+        width: 110,
+        suppressMovable: true,
+        hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {{
+          if(params.data.conversationWithFiler === true){
+            return params.data.filerName;
+          } else {
+            return params.data.ownerName;
+          }
+        }
+        }
+      },
+      {
         headerName: 'Owner Name',
         field: 'ownerName',
         width: 110,
@@ -745,7 +766,8 @@ export class AssignedNewUsersComponent implements OnInit {
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
-        lastFiledItrId: userData[i].lastFiledItrId
+        lastFiledItrId: userData[i].lastFiledItrId,
+        conversationWithFiler: userData[i].conversationWithFiler
       })
       userArray.push(userInfo);
     }

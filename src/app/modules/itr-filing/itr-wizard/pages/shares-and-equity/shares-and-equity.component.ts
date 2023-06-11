@@ -45,6 +45,7 @@ export class SharesAndEquityComponent
   brokerList = [];
   allSecurities = [];
   compactView = true;
+  isAdd = false;
 
   constructor(
     private fb: FormBuilder,
@@ -236,6 +237,7 @@ export class SharesAndEquityComponent
   showBroker(brokerName) {
     this.selectedBroker = brokerName;
     this.compactView = false;
+    this.isAdd = false;
     this.initDetailedForm(this.Copy_ITR_JSON);
   }
 
@@ -265,6 +267,7 @@ export class SharesAndEquityComponent
     //   this.securitiesForm.enable();
     // }
     this.compactView = false;
+    this.isAdd = true;
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
@@ -534,12 +537,28 @@ export class SharesAndEquityComponent
     const fg = securitiesArray.controls[i] as FormGroup;
     let saleValue = parseFloat(fg.controls['sellValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
-    fg.controls['sellValue'].setValue(saleValue);
-    // if(this.bondType === 'listed') {
-    //   fg.controls['sellValue'].setValue(saleValue.toFixed(2));
-    // } else {
-    //   fg.controls['sellValue'].setValue(saleValue.toFixed());
-    // }
+    // fg.controls['sellValue'].setValue(saleValue);
+    if(this.bondType === 'listed') {
+      fg.controls['sellValue'].setValue(saleValue.toFixed(2));
+    } else {
+      fg.controls['sellValue'].setValue(saleValue.toFixed());
+    }
+  }
+
+  getPurchaseValue(index){
+    const securitiesArray = <FormArray>(
+      this.securitiesForm.get('securitiesArray')
+    );
+    const i = this.fieldGlobalIndex(index);
+    const fg = securitiesArray.controls[i] as FormGroup;
+    let purchaseValue = parseFloat(fg.controls['purchaseValuePerUnit'].value) *
+      parseFloat(fg.controls['sellOrBuyQuantity'].value);
+    // fg.controls['purchaseCost'].setValue(purchaseValue);
+    if(this.bondType === 'listed') {
+      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
+    } else {
+      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    }
   }
 
   save(type?) {
@@ -608,7 +627,7 @@ export class SharesAndEquityComponent
         if (securitiesData.assetDetails.length > 0) {
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = securitiesData.deduction;
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement.concat(securitiesData.improvement);
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = securitiesData.assetDetails;
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
         }
@@ -688,7 +707,21 @@ export class SharesAndEquityComponent
         if (securitiesData.assetDetails.length > 0) {
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = securitiesData.deduction;
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement.concat(securitiesData.improvement);
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
+
+          //single broker edit view is displayed here
+          //get all other brokers from existing list, append current broker list and then save
+          let otherData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName !== this.selectedBroker);
+          let sameData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName === this.selectedBroker);
+          if(!sameData){
+            sameData = [];
+          }
+          if(this.isAdd) {
+            sameData = sameData.concat(securitiesData.assetDetails);
+          } else {
+            sameData = securitiesData.assetDetails;
+          }
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData.concat(sameData);
+          // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
         }

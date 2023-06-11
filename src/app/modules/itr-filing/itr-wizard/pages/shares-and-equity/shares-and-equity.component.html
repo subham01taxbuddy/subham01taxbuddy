@@ -20,7 +20,7 @@
           {{ title }}
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button
+          <button *ngIf="compactView"
             class="edit_btn"
             (click)="$event.stopPropagation(); addMore()"
           >
@@ -288,18 +288,7 @@
                       maxlength="14"
                       digitsOnly
                       (change)="calculateTotalCG(securities)"
-                      (blur)="
-                        securitiesForm.controls['securitiesArray'].controls[
-                          fieldGlobalIndex(i)
-                        ].controls['purchaseCost'].setValue(
-                          securitiesForm.controls['securitiesArray'].controls[
-                            fieldGlobalIndex(i)
-                          ].controls['purchaseValuePerUnit'].value *
-                            securitiesForm.controls['securitiesArray'].controls[
-                              fieldGlobalIndex(i)
-                            ].controls['sellOrBuyQuantity'].value
-                        )
-                      "
+                      (blur)="getPurchaseValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                     <mat-error
