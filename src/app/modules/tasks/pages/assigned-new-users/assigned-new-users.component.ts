@@ -396,7 +396,7 @@ export class AssignedNewUsersComponent implements OnInit {
           debounceMs: 0,
         },
         valueGetter: function nameFromCode(params) {{
-          if(params.data.conversationWithFiler){
+          if(params.data.conversationWithFiler === true){
             return params.data.filerName;
           } else {
             return params.data.ownerName;
@@ -766,7 +766,8 @@ export class AssignedNewUsersComponent implements OnInit {
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
-        lastFiledItrId: userData[i].lastFiledItrId
+        lastFiledItrId: userData[i].lastFiledItrId,
+        conversationWithFiler: userData[i].conversationWithFiler
       })
       userArray.push(userInfo);
     }
