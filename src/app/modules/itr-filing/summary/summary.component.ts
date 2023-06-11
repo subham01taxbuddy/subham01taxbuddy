@@ -243,6 +243,29 @@ export class SummaryComponent implements OnInit {
       };
       businessIncomeTotal: Number;
     };
+    totalHeadWiseIncome: Number;
+    currentYearLosses: {
+      currentYearLossesSetOff: [{ houseProperty: Number }];
+      totalCurrentYearSetOff: Number;
+    };
+    balanceAfterSetOffCurrentYearLosses: Number;
+    BroughtFwdLossesSetoff: {
+      BroughtFwdLossesSetoffDtls: {
+        hpLoss: Number;
+        stLoss: Number;
+        ltLoss: Number;
+      };
+      BroughtFwdLossesSetoffTotal: Number;
+    };
+    grossTotalIncome: Number;
+    totalSpecialRateIncome: Number;
+    deductions: {
+      deductionDtls: {
+        name: String;
+        amount: Number;
+      }[];
+      deductionTotal: Number;
+    };
   };
 
   constructor(
@@ -623,159 +646,58 @@ export class SummaryComponent implements OnInit {
                       ?.PersumptiveInc44AE?.IncChargeableUnderBus
                   : 0,
             },
+            totalHeadWiseIncome:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.GrossTotIncome,
+            // Need to set losses for uploadedJson
+            currentYearLosses: {
+              currentYearLossesSetOff: [
+                {
+                  houseProperty: 0,
+                },
+              ],
+              totalCurrentYearSetOff: 0,
+            },
+            balanceAfterSetOffCurrentYearLosses: 0,
+            BroughtFwdLossesSetoff: {
+              BroughtFwdLossesSetoffDtls: {
+                hpLoss: 0,
+                stLoss: 0,
+                ltLoss: 0,
+              },
+              BroughtFwdLossesSetoffTotal: 0,
+            },
+            grossTotalIncome:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.GrossTotIncome,
+            totalSpecialRateIncome: 0,
+            deductions: {
+              deductionDtls: Object.entries(
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ]?.DeductUndChapVIA
+              ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
+                name: String;
+                amount: Number;
+              }[],
+              deductionTotal:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ].DeductUndChapVIA?.TotalChapVIADeductions,
+            },
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
-            // ====================
-            // IncChargeableUnderBus:
-            //   this.itrType === 'ITR4'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //         ?.PersumptiveInc44AE?.IncChargeableUnderBus
-            //     : 0,
-
-            // =============================
-            // NatOfBus44AD:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.NatOfBus44AD,
-
-            // PersumptiveInc44ADGrossIncome:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.PersumptiveInc44AD?.GrsTrnOverBank +
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.PersumptiveInc44AD?.GrsTrnOverAnyOthMode,
-
-            // TotPersumptiveInc44AD:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.PersumptiveInc44AD?.TotPersumptiveInc44AD,
-
-            // -----------------
-            // NatOfBus44ADA:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.NatOfBus44ADA,
-
-            // GrsReceipt44ADA:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.PersumptiveInc44ADA?.GrsReceipt,
-
-            // TotPersumptiveInc44ADA:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //     ?.PersumptiveInc44ADA?.TotPersumptiveInc44ADA,
-
-            //SALARY INCOME
-            // IncomeFromSal:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.IncomeFromSal,
-
-            // GrossSalary:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.GrossSalary,
-
-            // TotalAllwncExemptUs10:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ].AllwncExemptUs10?.TotalAllwncExemptUs10,
-
-            // ProfessionalTaxUs16iii:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.ProfessionalTaxUs16iii,
-
-            // EntertainmentAlw16ii:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.EntertainmentAlw16ii,
-
-            // DeductionUs16ia:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.DeductionUs16ia,
-
-            // //HOUSE PROPERTY
-
-            // TotalIncomeOfHP:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.TotalIncomeOfHP,
-            // TypeOfHP:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.TypeOfHP,
-            // GrossRentReceived:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.GrossRentReceived,
-            // TaxPaidlocalAuth:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.TaxPaidlocalAuth,
-            // AnnualValue:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.AnnualValue,
-            // StandardDeduction:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.StandardDeduction,
-            // InterestPayable:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.InterestPayable,
-
-            //OTHER SOURCES
-            // IncomeOthSrc:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.IncomeOthSrc,
-
-            // SAV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //   this.ITR14IncomeDeductions
-            // ].OthersInc.OthersIncDtlsOthSrc.find(
-            //   (val) => val.OthSrcNatureDesc === 'SAV'
-            // )?.OthSrcOthAmount,
-
-            // IFD: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //   this.ITR14IncomeDeductions
-            // ].OthersInc.OthersIncDtlsOthSrc.find(
-            //   (val) => val.OthSrcNatureDesc === 'IFD'
-            // )?.OthSrcOthAmount,
-
-            // TAX: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //   this.ITR14IncomeDeductions
-            // ].OthersInc.OthersIncDtlsOthSrc.find(
-            //   (val) => val.OthSrcNatureDesc === 'TAX'
-            // )?.OthSrcOthAmount,
-
-            // FAP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //   this.ITR14IncomeDeductions
-            // ].OthersInc.OthersIncDtlsOthSrc.find(
-            //   (val) => val.OthSrcNatureDesc === 'FAP'
-            // )?.OthSrcOthAmount,
-
-            // DIV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //   this.ITR14IncomeDeductions
-            // ].OthersInc.OthersIncDtlsOthSrc.find(
-            //   (val) => val.OthSrcNatureDesc === 'DIV'
-            // )?.OthSrcOthAmount,
-
-            GrossTotIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossTotIncome,
-
             //DEDUCTIONS
-            TotalChapVIADeductions:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ].DeductUndChapVIA?.TotalChapVIADeductions,
 
-            Deductions: Object.entries(
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.DeductUndChapVIA
-            ).map(([key, item]) => ({ name: key, amount: item })),
+            // Deductions: Object.entries(
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.DeductUndChapVIA
+            // ).map(([key, item]) => ({ name: key, amount: item })),
 
             TotalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -1309,9 +1231,9 @@ export class SummaryComponent implements OnInit {
                             employerNo: index,
                             employersName: employerName,
                             grossSalary:
-                              salary[0].taxableAmount +
-                              profitsInLieuOfSalaryType[0].taxableAmount +
-                              perquisites[0].taxableAmount,
+                              salary[0]?.taxableAmount +
+                              profitsInLieuOfSalaryType[0]?.taxableAmount +
+                              perquisites[0]?.taxableAmount,
                             exemptAllowance: totalAllowanceExemptIncome,
                             professionalTax: totalPTDuctionsExemptIncome,
                             entAllowance: totalETDuctionsExemptIncome,
@@ -1465,6 +1387,79 @@ export class SummaryComponent implements OnInit {
                       this.finalSummary?.assessment?.taxSummary
                         ?.presumptiveIncome,
                   },
+                  totalHeadWiseIncome:
+                    this.finalSummary?.assessment?.taxSummary?.totalIncome,
+
+                  currentYearLosses: {
+                    currentYearLossesSetOff: [
+                      {
+                        houseProperty:
+                          this.finalSummary?.assessment?.taxSummary
+                            ?.currentYearIFHPSetOff,
+                      },
+                    ],
+                    totalCurrentYearSetOff:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.currentYearIFHPSetOff,
+                  },
+                  balanceAfterSetOffCurrentYearLosses:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.balanceAfterSetOffCurrentYearLosses,
+
+                  BroughtFwdLossesSetoff: {
+                    BroughtFwdLossesSetoffDtls: {
+                      hpLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) =>
+                          total + item.setOffWithCurrentYearHPIncome,
+                        0
+                      ),
+                      stLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) =>
+                          total + item.setOffWithCurrentYearSTCGIncome,
+                        0
+                      ),
+                      ltLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) =>
+                          total + item.setOffWithCurrentYearLTCGIncome,
+                        0
+                      ),
+                    },
+                    BroughtFwdLossesSetoffTotal: Number(
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.totalBroughtForwordSetOff
+                    ),
+                  },
+                  grossTotalIncome:
+                    this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
+                  totalSpecialRateIncome:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.totalSpecialRateIncome,
+
+                  deductions: {
+                    deductionDtls: Object.entries(
+                      this.finalSummary?.assessment?.summaryDeductions
+                    )
+                      ?.filter(
+                        (item: any) =>
+                          item[1].sectionType !== '80C' &&
+                          item[1].sectionType !== '80CCC' &&
+                          item[1].sectionType !== '80CCD1' &&
+                          item[1].sectionType !== '80GAGTI'
+                      )
+                      .map(([key, item]) => ({
+                        name: (
+                          item as { notes: string; eligibleAmount: number }
+                        ).notes,
+                        amount: (
+                          item as { notes: string; eligibleAmount: number }
+                        ).eligibleAmount,
+                      })) as {
+                      name: String;
+                      amount: Number;
+                    }[],
+                    deductionTotal:
+                      this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                  },
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -1540,6 +1535,7 @@ export class SummaryComponent implements OnInit {
                   this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
               });
               this.loading = false;
+
               this.finalCalculations = {
                 salary: {
                   employers:
@@ -1562,9 +1558,9 @@ export class SummaryComponent implements OnInit {
                           employerNo: index,
                           employersName: employerName,
                           grossSalary:
-                            salary[0].taxableAmount +
-                            profitsInLieuOfSalaryType[0].taxableAmount +
-                            perquisites[0].taxableAmount,
+                            salary[0]?.taxableAmount +
+                            profitsInLieuOfSalaryType[0]?.taxableAmount +
+                            perquisites[0]?.taxableAmount,
                           exemptAllowance: totalAllowanceExemptIncome,
                           professionalTax: totalPTDuctionsExemptIncome,
                           entAllowance: totalETDuctionsExemptIncome,
@@ -1717,6 +1713,79 @@ export class SummaryComponent implements OnInit {
                   businessIncomeTotal:
                     this.finalSummary?.assessment?.taxSummary
                       ?.presumptiveIncome,
+                },
+                totalHeadWiseIncome:
+                  this.finalSummary?.assessment?.taxSummary?.totalIncome,
+
+                currentYearLosses: {
+                  currentYearLossesSetOff: [
+                    {
+                      houseProperty:
+                        this.finalSummary?.assessment?.taxSummary
+                          ?.currentYearIFHPSetOff,
+                    },
+                  ],
+                  totalCurrentYearSetOff:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.currentYearIFHPSetOff,
+                },
+                balanceAfterSetOffCurrentYearLosses:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.balanceAfterSetOffCurrentYearLosses,
+
+                BroughtFwdLossesSetoff: {
+                  BroughtFwdLossesSetoffDtls: {
+                    hpLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) =>
+                        total + item.setOffWithCurrentYearHPIncome,
+                      0
+                    ),
+                    stLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) =>
+                        total + item.setOffWithCurrentYearSTCGIncome,
+                      0
+                    ),
+                    ltLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) =>
+                        total + item.setOffWithCurrentYearLTCGIncome,
+                      0
+                    ),
+                  },
+                  BroughtFwdLossesSetoffTotal: Number(
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.totalBroughtForwordSetOff
+                  ),
+                },
+                grossTotalIncome:
+                  this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
+                totalSpecialRateIncome:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.totalSpecialRateIncome,
+
+                deductions: {
+                  deductionDtls: Object.entries(
+                    this.finalSummary?.assessment?.summaryDeductions
+                  )
+                    ?.filter(
+                      (item: any) =>
+                        item[1].sectionType !== '80C' &&
+                        item[1].sectionType !== '80CCC' &&
+                        item[1].sectionType !== '80CCD1' &&
+                        item[1].sectionType !== '80GAGTI'
+                    )
+                    .map(([key, item]) => ({
+                      name: (
+                        item as { notes: string; eligibleAmount: number }
+                      ).notes,
+                      amount: (
+                        item as { notes: string; eligibleAmount: number }
+                      ).eligibleAmount,
+                    })) as {
+                    name: String;
+                    amount: Number;
+                  }[],
+                  deductionTotal:
+                    this.finalSummary?.assessment?.taxSummary?.totalDeduction,
                 },
               };
 
