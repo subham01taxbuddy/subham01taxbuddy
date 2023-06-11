@@ -534,12 +534,28 @@ export class SharesAndEquityComponent
     const fg = securitiesArray.controls[i] as FormGroup;
     let saleValue = parseFloat(fg.controls['sellValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
-    fg.controls['sellValue'].setValue(saleValue);
-    // if(this.bondType === 'listed') {
-    //   fg.controls['sellValue'].setValue(saleValue.toFixed(2));
-    // } else {
-    //   fg.controls['sellValue'].setValue(saleValue.toFixed());
-    // }
+    // fg.controls['sellValue'].setValue(saleValue);
+    if(this.bondType === 'listed') {
+      fg.controls['sellValue'].setValue(saleValue.toFixed(2));
+    } else {
+      fg.controls['sellValue'].setValue(saleValue.toFixed());
+    }
+  }
+
+  getPurchaseValue(index){
+    const securitiesArray = <FormArray>(
+      this.securitiesForm.get('securitiesArray')
+    );
+    const i = this.fieldGlobalIndex(index);
+    const fg = securitiesArray.controls[i] as FormGroup;
+    let purchaseValue = parseFloat(fg.controls['purchaseValuePerUnit'].value) *
+      parseFloat(fg.controls['sellOrBuyQuantity'].value);
+    // fg.controls['purchaseCost'].setValue(purchaseValue);
+    if(this.bondType === 'listed') {
+      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
+    } else {
+      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    }
   }
 
   save(type?) {
