@@ -383,27 +383,27 @@ export class AssignedNewUsersComponent implements OnInit {
       //     }
       //   },
       // },
-      {
-        headerName: 'Action With',
-        field: 'conversationWithFiler',
-        width: 110,
-        suppressMovable: true,
-        hide: !showOwnerCols,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {{
-          if(params.data.conversationWithFiler === true){
-            return params.data.filerName;
-          } else {
-            return params.data.ownerName;
-          }
-        }
-        }
-      },
+      // {
+      //   headerName: 'Action With',
+      //   field: 'conversationWithFiler',
+      //   width: 110,
+      //   suppressMovable: true,
+      //   hide: !showOwnerCols,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      //   valueGetter: function nameFromCode(params) {{
+      //     if(params.data.conversationWithFiler === true){
+      //       return params.data.filerName;
+      //     } else {
+      //       return params.data.ownerName;
+      //     }
+      //   }
+      //   }
+      // },
       {
         headerName: 'Owner Name',
         field: 'ownerName',
