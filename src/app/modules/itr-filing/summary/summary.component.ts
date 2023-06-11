@@ -266,6 +266,21 @@ export class SummaryComponent implements OnInit {
       }[];
       deductionTotal: Number;
     };
+    totalIncome: Number;
+    specialRateChargeable: Number;
+    netAgricultureIncome: Number;
+    aggregateIncome: Number;
+    lossesToBeCarriedForward: {
+      cflDtls: {
+        assessmentPastYear: any;
+        housePropertyLoss: Number;
+        STCGLoss: Number;
+        LTCGLoss: Number;
+        pastYear: Number;
+        totalLoss: Number;
+      }[];
+      cflTotal: Number;
+    };
   };
 
   constructor(
@@ -687,23 +702,34 @@ export class SummaryComponent implements OnInit {
                   this.ITR14IncomeDeductions
                 ].DeductUndChapVIA?.TotalChapVIADeductions,
             },
+            totalIncome:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.TotalIncome,
+            specialRateChargeable: 0,
+            // Need to set this for all itr types
+            netAgricultureIncome: 0,
+            aggregateIncome:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.TotalIncome,
+            lossesToBeCarriedForward: {
+              cflDtls: [
+                {
+                  assessmentPastYear: 0,
+                  housePropertyLoss: 0,
+                  STCGLoss: 0,
+                  LTCGLoss: 0,
+                  pastYear: 0,
+                  totalLoss: 0,
+                },
+              ],
+              cflTotal: 0,
+            },
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
-            //DEDUCTIONS
-
-            // Deductions: Object.entries(
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //     this.ITR14IncomeDeductions
-            //   ]?.DeductUndChapVIA
-            // ).map(([key, item]) => ({ name: key, amount: item })),
-
-            TotalIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TotalIncome,
-
             //TAXES PAID
             TotalTaxPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -1434,7 +1460,6 @@ export class SummaryComponent implements OnInit {
                   totalSpecialRateIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.totalSpecialRateIncome,
-
                   deductions: {
                     deductionDtls: Object.entries(
                       this.finalSummary?.assessment?.summaryDeductions
@@ -1459,6 +1484,96 @@ export class SummaryComponent implements OnInit {
                     }[],
                     deductionTotal:
                       this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                  },
+                  totalIncome:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.totalIncomeAfterDeductionIncludeSR,
+                  specialRateChargeable:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.specialIncomeAfterAdjBaseLimit,
+                  netAgricultureIncome:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.agricultureIncome,
+                  aggregateIncome:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.aggregateIncomeXml,
+                  lossesToBeCarriedForward: {
+                    cflDtls: Object.entries(
+                      this.finalSummary?.assessment?.carryForwordLosses
+                    ).map(([key, item]) => ({
+                      assessmentPastYear: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).assessmentPastYear,
+                      housePropertyLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).housePropertyLoss,
+                      STCGLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).STCGLoss,
+                      LTCGLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).LTCGLoss,
+                      pastYear: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).pastYear,
+                      totalLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).totalLoss,
+                    })) as {
+                      assessmentPastYear: any;
+                      housePropertyLoss: Number;
+                      STCGLoss: Number;
+                      LTCGLoss: Number;
+                      pastYear: Number;
+                      totalLoss: Number;
+                    }[],
+                    cflTotal:
+                      this.finalSummary?.assessment?.carryForwordLosses?.reduce(
+                        (total, item) => total + item.totalLoss,
+                        0
+                      ),
                   },
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
@@ -1774,9 +1889,8 @@ export class SummaryComponent implements OnInit {
                         item[1].sectionType !== '80GAGTI'
                     )
                     .map(([key, item]) => ({
-                      name: (
-                        item as { notes: string; eligibleAmount: number }
-                      ).notes,
+                      name: (item as { notes: string; eligibleAmount: number })
+                        .notes,
                       amount: (
                         item as { notes: string; eligibleAmount: number }
                       ).eligibleAmount,
@@ -1786,6 +1900,32 @@ export class SummaryComponent implements OnInit {
                   }[],
                   deductionTotal:
                     this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                },
+                totalIncome:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.totalIncomeAfterDeductionIncludeSR,
+                specialRateChargeable:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.specialIncomeAfterAdjBaseLimit,
+                netAgricultureIncome:
+                  this.finalSummary?.assessment?.taxSummary?.agricultureIncome,
+                aggregateIncome:
+                  this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
+                lossesToBeCarriedForward: {
+                  cflDtls: this.finalSummary?.carryForwordLosses?.map(
+                    ([key, item]) => ({
+                      assessmentPastYear: item?.assessmentPastYear,
+                      housePropertyLoss: item?.housePropertyLoss,
+                      STCGLoss: item.STCGLoss,
+                      LTCGLoss: item.LTCGLoss,
+                      pastYear: item.pastYear,
+                      totalLoss: item.totalLoss,
+                    })
+                  ),
+                  cflTotal: this.finalSummary?.carryForwordLosses?.reduce(
+                    (total, item) => total + item.totalLoss,
+                    0
+                  ),
                 },
               };
 

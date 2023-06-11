@@ -2191,7 +2191,9 @@
                             <td *ngIf="deduction.amount > 0">
                               Rs
                               {{
-                                utilsService.currencyFormatter(deduction?.amount)
+                                utilsService.currencyFormatter(
+                                  deduction?.amount
+                                )
                               }}
                             </td>
                           </tr>
@@ -2221,9 +2223,7 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys?.TotalIncome
-                                    ? keys?.TotalIncome
-                                    : summaryDetail?.totalIncomeAfterDeductionIncludeSR
+                                  finalCalculations?.totalIncome
                                 )
                               }}</label
                             >
@@ -2255,9 +2255,7 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys?.IncChargeableTaxSplRates
-                                    ? keys?.IncChargeableTaxSplRates
-                                    : summaryDetail?.specialIncomeAfterAdjBaseLimit
+                                  finalCalculations?.specialRateChargeable
                                 )
                               }}</label
                             >
@@ -2265,48 +2263,6 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-
-                    <!--   <label *ngIf="losses.carryForwordLosses.length !==0">Carry forward losses</label>
-                      <table class="table table-bordered" style="width:100%">
-                        <tbody *ngFor="let loss of losses.carryForwordLosses;let i=index">
-                          <tr style="background: #a9a7a7;">
-                            <td>Year of loss</td>
-                            <td class="tbl-lbl-right">
-                              {{loss.assessmentPastYear}}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <label>Head of loss</label>
-                            </td>
-                            <td class="tbl-lbl-right">
-                          </tr>
-                          <tr>
-                            <td style="padding-left: 30px;">Long term loss</td>
-                            <td class="tbl-lbl-right">
-                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{loss.LTCGLoss}}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="padding-left: 30px;">Short term loss</td>
-                            <td class="tbl-lbl-right">
-                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{loss.STCGLoss}}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="padding-left: 30px;">House property loss</td>
-                            <td class="tbl-lbl-right">
-                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{loss.housePropertyLoss}}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Amount
-                            </td>
-                            <td class="tbl-lbl-right">
-                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{loss.totalLoss}}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table> -->
                   </mat-expansion-panel>
 
                   <!-- ************************* Net Agriculture Income ************************* -->
@@ -2330,9 +2286,7 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys?.NetAgricultureIncomeOrOtherIncomeForRate
-                                    ? keys?.NetAgricultureIncomeOrOtherIncomeForRate
-                                    : summaryDetail?.agricultureIncome
+                                  finalCalculations?.netAgricultureIncome
                                 )
                               }}
                             </label>
@@ -2358,36 +2312,12 @@
                           <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
                             <b>16. Aggregate Income (13-14+15)</b>
                           </div>
-                          <div
-                            class="col-lg-4 col-md-4 col-sm-4"
-                            *ngIf="
-                              this.itrType === 'ITR1' || this.itrType === 'ITR4'
-                            "
-                          >
+                          <div class="col-lg-4 col-md-4 col-sm-4">
                             <label class="rtNumb">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  keys?.TotalIncome
-                                    ? keys?.TotalIncome
-                                    : summaryDetail?.aggregateIncomeXml
-                                )
-                              }}</label
-                            >
-                          </div>
-                          <div
-                            class="col-lg-4 col-md-4 col-sm-4"
-                            *ngIf="
-                              this.itrType === 'ITR2' || this.itrType === 'ITR3'
-                            "
-                          >
-                            <label class="rtNumb">
-                              <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  keys.AggregateIncome
-                                    ? keys?.AggregateIncome
-                                    : summaryDetail?.aggregateIncomeXml
+                                  finalCalculations?.aggregateIncome
                                 )
                               }}</label
                             >
@@ -2401,8 +2331,8 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
-                      totalCarryForword === 0 ||
-                      keys?.LossesOfCurrentYearCarriedFwd === 0
+                      finalCalculations?.lossesToBeCarriedForward?.cflTotal ===
+                      0
                         ? true
                         : false
                     ]"
@@ -2430,32 +2360,14 @@
                             </div>
                             <!-- <label class="rtNumb1"
                                 [ngClass]="summaryDetail.totalDeduction === 0 ? 'lbl-right rtNumb' : 'expand-lbl-right '"> -->
-                            <label
-                              class="rtNumb1"
-                              *ngIf="
-                                this.itrType === 'ITR1 ' ||
-                                this.itrType === 'ITR4'
-                              "
-                            >
+                            <label class="rtNumb1">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  totalCarryForword ? totalCarryForword : 0
-                                )
-                              }}</label
-                            >
-                            <label
-                              class="rtNumb1"
-                              *ngIf="
-                                this.itrType === 'ITR2 ' ||
-                                this.itrType === 'ITR3'
-                              "
-                            >
-                              <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  keys?.LossesOfCurrentYearCarriedFwd
-                                    ? keys?.LossesOfCurrentYearCarriedFwd
+                                  finalCalculations?.lossesToBeCarriedForward
+                                    ?.cflTotal
+                                    ? finalCalculations
+                                        ?.lossesToBeCarriedForward?.cflTotal
                                     : 0
                                 )
                               }}</label
@@ -2480,7 +2392,8 @@
                         </tr>
                         <tr
                           *ngFor="
-                            let losses of losses?.carryForwordLosses;
+                            let losses of finalCalculations
+                              ?.lossesToBeCarriedForward?.cflDtls;
                             let i = index
                           "
                         >
@@ -2512,19 +2425,7 @@
                               utilsService.currencyFormatter(losses?.totalLoss)
                             }}
                           </td>
-                          <!-- <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>2,00,000</td> -->
                         </tr>
-                        <!--  <tr>
-                            <td>2015-16</td>
-                            <td>0</td>
-                            <td>1,50,000</td>
-                            <td>45,000</td>
-                            <td>1,50,000-STCG</td>
-                            <td>45,000</td>
-                          </tr> -->
                       </tbody>
                     </table>
                   </mat-expansion-panel>
