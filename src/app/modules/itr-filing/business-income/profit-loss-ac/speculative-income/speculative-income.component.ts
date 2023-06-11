@@ -85,7 +85,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       turnOver: [income?.turnOver],
       grossProfit: [income?.grossProfit],
       expenditure: [income?.expenditure],
-      netIncome: [0]
+      netIncome: [income?.grossProfit - income?.expenditure]
     });
   }
 
@@ -120,7 +120,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(acIncome => (acIncome.businessType === 'SPECULATIVEINCOME'));
-    if(this.specIncomeForm.valid) {
+    if(this.specIncomeForm.valid || this.specIncomeForm.disabled) {
       let specBusinessIncome = {
         id: null,
         businessType: 'SPECULATIVEINCOME',
@@ -163,6 +163,15 @@ export class SpeculativeIncomeComponent implements OnInit {
     } else{
       //show errors
     }
+  }
+
+  specSelected(){
+    const specIncomesArray = <FormArray>(
+      this.specIncomeForm.get('specIncomesArray')
+    );
+    return specIncomesArray.controls.filter((element) =>
+       (element as FormGroup).controls['hasEdit'].value === true
+    ).length > 0;
   }
 
   deleteArray() {
