@@ -196,8 +196,7 @@ export class NavbarComponent implements DoCheck {
         }
         )(document,  (window as any).kommunicate || {});
 
-
-
+        this.smeLogout();
         this.loading = false;
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();
@@ -207,6 +206,21 @@ export class NavbarComponent implements DoCheck {
         this.loading = false;
       });
 
+  }
+
+  smeLogout(){
+    // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
+    let inActivityTime = environment.idleTimeMins;
+    let smeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}`;
+
+    this.userMsService.postMethod(param, '').subscribe((response:any)=>{
+      this.loading = false;
+
+    }, (error) => {
+      this.loading = false;
+      console.log('error in sme Logout API',error)
+    })
   }
 
   onClickSalesIQ() {
