@@ -281,6 +281,38 @@ export class SummaryComponent implements OnInit {
       }[];
       cflTotal: Number;
     };
+    totalTax: {
+      taxAtNormalRate: Number;
+      taxAtSpecialRate: Number;
+      rebateOnAgricultureIncome: Number;
+      totalTax: Number;
+    };
+    rebateUnderSection87A: Number;
+    taxAfterRebate: Number;
+    surcharge: Number;
+    eductionCess: Number;
+    grossTaxLiability: Number;
+    taxRelief: {
+      taxReliefUnder89: Number;
+      taxReliefUnder90_90A: Number;
+      taxReliefUnder91: Number;
+      totalRelief: Number;
+    };
+    netTaxLiability: Number;
+    interestAndFee: {
+      interest234C: {
+        q1: Number;
+        q2: Number;
+        q3: Number;
+        q4: Number;
+        q5: Number;
+      };
+      total234A: Number;
+      total234B: Number;
+      total234C: Number;
+      total234F: Number;
+      totalInterestAndFee: Number;
+    };
   };
 
   constructor(
@@ -726,15 +758,101 @@ export class SummaryComponent implements OnInit {
               ],
               cflTotal: 0,
             },
+            totalTax: {
+              taxAtNormalRate:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.TotalTaxPayable,
+              taxAtSpecialRate: 0,
+              rebateOnAgricultureIncome: 0,
+              totalTax:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.TotalTaxPayable,
+            },
+            rebateUnderSection87A:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.Rebate87A,
+            taxAfterRebate:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
+            surcharge: 0,
+            eductionCess:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.EducationCess,
+            grossTaxLiability:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.GrossTaxLiability,
+            taxRelief: {
+              taxReliefUnder89:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.Section89,
+              taxReliefUnder90_90A: 0,
+              taxReliefUnder91: 0,
+              totalRelief:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.Section89,
+            },
+            netTaxLiability:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.taxComputation
+              ]?.NetTaxLiability,
+
+            interestAndFee: {
+              interest234C: {
+                q1: 0,
+                q2: 0,
+                q3: 0,
+                q4: 0,
+                q5: 0,
+              },
+              total234A:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.IntrstPay.IntrstPayUs234A,
+              total234B:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.IntrstPay.IntrstPayUs234B,
+              total234C:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.IntrstPay.IntrstPayUs234C,
+              total234F:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.IntrstPay.LateFilingFee234F,
+              totalInterestAndFee:
+                this.itrType === 'ITR1'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.taxComputation
+                    ]?.TotalIntrstPay
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.taxComputation
+                    ]?.IntrstPay.LateFilingFee234F +
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.taxComputation
+                    ]?.IntrstPay.IntrstPayUs234C +
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.taxComputation
+                    ]?.IntrstPay.IntrstPayUs234B +
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.taxComputation
+                    ]?.IntrstPay.IntrstPayUs234A,
+            },
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
-            //TAXES PAID
-            TotalTaxPayable:
+            TotTaxPlusIntrstPay:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.taxComputation
-              ]?.TotalTaxPayable,
+              ].TotTaxPlusIntrstPay,
 
             TDSonSalary:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
@@ -774,78 +892,10 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
                 ?.TotalTaxPayments,
 
-            Rebate87A:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.Rebate87A,
-
             TaxPayableOnRebate:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.taxComputation
               ]?.TaxPayableOnRebate,
-
-            EducationCess:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.EducationCess,
-
-            GrossTaxLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.GrossTaxLiability,
-
-            Section89:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.Section89,
-
-            NetTaxLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.NetTaxLiability,
-
-            IntrstPayUs234A:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.IntrstPay.IntrstPayUs234A,
-
-            IntrstPayUs234B:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.IntrstPay.IntrstPayUs234B,
-
-            IntrstPayUs234C:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.IntrstPay.IntrstPayUs234C,
-
-            LateFilingFee234F:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.IntrstPay.LateFilingFee234F,
-
-            TotalIntrstPay:
-              this.itrType === 'ITR1'
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.taxComputation
-                  ]?.TotalIntrstPay
-                : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.taxComputation
-                  ]?.IntrstPay.LateFilingFee234F +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.taxComputation
-                  ]?.IntrstPay.IntrstPayUs234C +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.taxComputation
-                  ]?.IntrstPay.IntrstPayUs234B +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.taxComputation
-                  ]?.IntrstPay.IntrstPayUs234A,
-
-            TotTaxPlusIntrstPay:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ].TotTaxPlusIntrstPay,
 
             TotalTaxesPaid:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
@@ -1575,6 +1625,72 @@ export class SummaryComponent implements OnInit {
                         0
                       ),
                   },
+                  totalTax: {
+                    taxAtNormalRate:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxAtNormalRate,
+                    taxAtSpecialRate:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxAtSpecialRate,
+                    rebateOnAgricultureIncome:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.rebateOnAgricultureIncome,
+                    totalTax:
+                      this.finalSummary?.assessment?.taxSummary?.totalTax,
+                  },
+                  rebateUnderSection87A:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.rebateUnderSection87A,
+                  taxAfterRebate:
+                    this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
+                  surcharge:
+                    this.finalSummary?.assessment?.taxSummary?.surcharge,
+                  eductionCess:
+                    this.finalSummary?.assessment?.taxSummary?.cessAmount,
+                  grossTaxLiability:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.grossTaxLiability,
+                  taxRelief: {
+                    taxReliefUnder89:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder89,
+                    taxReliefUnder90_90A:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder90_90A,
+                    taxReliefUnder91:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder91,
+                    totalRelief:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder89 +
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder90_90A +
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder91,
+                  },
+                  netTaxLiability:
+                    this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
+                  interestAndFee: {
+                    interest234C: {
+                      q1: this.finalSummary?.assessment?.summaryQuarter234c
+                        ?.quarterDitailsQ1?.intrest,
+                      q2: this.finalSummary?.assessment?.summaryQuarter234c
+                        ?.quarterDitailsQ2?.intrest,
+                      q3: this.finalSummary?.assessment?.summaryQuarter234c
+                        ?.quarterDitailsQ3?.intrest,
+                      q4: this.finalSummary?.assessment?.summaryQuarter234c
+                        ?.quarterDitailsQ4?.intrest,
+                      q5: this.finalSummary?.assessment?.summaryQuarter234c
+                        ?.quarterDitailsQ5?.intrest,
+                    },
+                    total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
+                    total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
+                    total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
+                    total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
+                    totalInterestAndFee:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.interestAndFeesPayable,
+                  },
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -1926,6 +2042,64 @@ export class SummaryComponent implements OnInit {
                     (total, item) => total + item.totalLoss,
                     0
                   ),
+                },
+                totalTax: {
+                  taxAtNormalRate:
+                    this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
+                  taxAtSpecialRate:
+                    this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
+                  rebateOnAgricultureIncome:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.rebateOnAgricultureIncome,
+                  totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
+                },
+                rebateUnderSection87A:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.rebateUnderSection87A,
+                taxAfterRebate:
+                  this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
+                surcharge: this.finalSummary?.assessment?.taxSummary?.surcharge,
+                eductionCess:
+                  this.finalSummary?.assessment?.taxSummary?.cessAmount,
+                grossTaxLiability:
+                  this.finalSummary?.assessment?.taxSummary?.grossTaxLiability,
+                taxRelief: {
+                  taxReliefUnder89:
+                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder89,
+                  taxReliefUnder90_90A:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.taxReliefUnder90_90A,
+                  taxReliefUnder91:
+                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
+                  totalRelief:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.taxReliefUnder89 +
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.taxReliefUnder90_90A +
+                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
+                },
+                netTaxLiability:
+                  this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
+                interestAndFee: {
+                  interest234C: {
+                    q1: this.finalSummary?.assessment?.summaryQuarter234c
+                      ?.quarterDitailsQ1?.intrest,
+                    q2: this.finalSummary?.assessment?.summaryQuarter234c
+                      ?.quarterDitailsQ2?.intrest,
+                    q3: this.finalSummary?.assessment?.summaryQuarter234c
+                      ?.quarterDitailsQ3?.intrest,
+                    q4: this.finalSummary?.assessment?.summaryQuarter234c
+                      ?.quarterDitailsQ4?.intrest,
+                    q5: this.finalSummary?.assessment?.summaryQuarter234c
+                      ?.quarterDitailsQ5?.intrest,
+                  },
+                  total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
+                  total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
+                  total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
+                  total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
+                  totalInterestAndFee:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.interestAndFeesPayable,
                 },
               };
 
