@@ -211,15 +211,26 @@ export class SummaryComponent implements OnInit {
     };
     businessIncome: {
       businessIncomeDetails: {
-        business44AD: [
-          {
-            businessSection: String;
-            natureOfBusinessCode: any;
-            tradeName: String;
-            grossTurnover: Number;
-            TaxableIncome: Number;
-          }
-        ];
+        business44AD: {
+          bank: [
+            {
+              businessSection: String;
+              natureOfBusinessCode: any;
+              tradeName: String;
+              grossTurnover: Number;
+              TaxableIncome: Number;
+            }
+          ];
+          cash: [
+            {
+              businessSection: String;
+              natureOfBusinessCode: any;
+              tradeName: String;
+              grossTurnover: Number;
+              TaxableIncome: Number;
+            }
+          ];
+        };
         business44ADA: [
           {
             businessSection: String;
@@ -542,36 +553,47 @@ export class SummaryComponent implements OnInit {
             },
             businessIncome: {
               businessIncomeDetails: {
-                business44AD: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ].ScheduleBP?.NatOfBus44AD.map((element) => {
-                  return {
-                    businessSection: 'Section 44AD',
-                    natureOfBusinessCode: element.CodeAD,
-                    tradeName: element.NameOfBusiness,
-                    grossTurnover: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+                business44AD: {
+                  bank: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleBP?.NatOfBus44AD.map((element) => {
+                    return {
+                      businessSection: 'Section 44AD',
+                      natureOfBusinessCode: element.CodeAD,
+                      tradeName: element.NameOfBusiness,
+                      grossTurnover: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.GrsTrnOverAnyOthMode /
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.NatOfBus44AD?.length
+                      ),
+                      TaxableIncome: Number(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.PersumptiveInc44AD
-                          ?.GrsTrnOverAnyOthMode /
-                          this.ITR_JSON.itrSummaryJson['ITR'][
-                            this.itrType
-                          ].ScheduleBP?.NatOfBus44AD?.length
-                    ),
-                    TaxableIncome: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44AD
-                        ?.PersumptiveInc44AD6Per +
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44AD
-                          ?.PersumptiveInc44AD8Per /
-                          this.ITR_JSON.itrSummaryJson['ITR'][
-                            this.itrType
-                          ].ScheduleBP?.NatOfBus44AD?.length
-                    ),
-                  };
-                }),
+                          ?.PersumptiveInc44AD6Per +
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.PersumptiveInc44AD8Per /
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.NatOfBus44AD?.length
+                      ),
+                    };
+                  }),
+
+                  cash: [
+                    {
+                      businessSection: null,
+                      natureOfBusinessCode: null,
+                      tradeName: null,
+                      grossTurnover: null,
+                      TaxableIncome: null,
+                    },
+                  ],
+                },
+
                 business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
                 ].ScheduleBP?.NatOfBus44ADA.map((element) => {
@@ -582,16 +604,15 @@ export class SummaryComponent implements OnInit {
                     grossTurnover: Number(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
-                        this.ITR_JSON.itrSummaryJson['ITR'][
-                          this.itrType
-                        ].ScheduleBP?.NatOfBus44ADA?.length
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44ADA?.length
                     ),
                     TaxableIncome: Number(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         .ScheduleBP?.PersumptiveInc44ADA
-                        ?.TotPersumptiveInc44ADA / this.ITR_JSON.itrSummaryJson['ITR'][
-                          this.itrType
-                        ].ScheduleBP?.NatOfBus44ADA?.length
+                        ?.TotPersumptiveInc44ADA /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44ADA?.length
                     ),
                   };
                 }),
@@ -1376,18 +1397,55 @@ export class SummaryComponent implements OnInit {
                   },
                   businessIncome: {
                     businessIncomeDetails: {
-                      business44AD:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          .filter(
-                            (element) => element.businessType === 'BUSINESS'
-                          )
-                          .map((element) => ({
-                            businessSection: element.businessType,
-                            natureOfBusinessCode: 0,
-                            tradeName: '',
-                            grossTurnover: element.receipts,
-                            TaxableIncome: element.presumptiveIncome,
-                          })),
+                      business44AD: {
+                        bank: [
+                          this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                            .filter(
+                              (element) =>
+                                element.businessType === 'BUSINESS' &&
+                                element.incomeType === 'BANK'
+                            )
+                            .reduce(
+                              (accumulated, element) => {
+                                accumulated.grossTurnover += element.receipts;
+                                accumulated.TaxableIncome +=
+                                  element.presumptiveIncome;
+                                return accumulated;
+                              },
+                              {
+                                businessSection: 'BUSINESS',
+                                natureOfBusinessCode: 0,
+                                tradeName: '',
+                                grossTurnover: 0,
+                                TaxableIncome: 0,
+                              }
+                            ),
+                        ],
+
+                        cash: [
+                          this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                            .filter(
+                              (element) =>
+                                element.businessType === 'BUSINESS' &&
+                                element.incomeType === 'CASH'
+                            )
+                            .reduce(
+                              (accumulated, element) => {
+                                accumulated.grossTurnover += element.receipts;
+                                accumulated.TaxableIncome +=
+                                  element.presumptiveIncome;
+                                return accumulated;
+                              },
+                              {
+                                businessSection: 'BUSINESS',
+                                natureOfBusinessCode: 0,
+                                tradeName: '',
+                                grossTurnover: 0,
+                                TaxableIncome: 0,
+                              }
+                            ),
+                        ],
+                      },
 
                       business44ADA:
                         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
@@ -1592,18 +1650,55 @@ export class SummaryComponent implements OnInit {
                 },
                 businessIncome: {
                   businessIncomeDetails: {
-                    business44AD:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                        .filter(
-                          (element) => element.businessType === 'BUSINESS'
-                        )
-                        .map((element) => ({
-                          businessSection: element.businessType,
-                          natureOfBusinessCode: 0,
-                          tradeName: '',
-                          grossTurnover: element.receipts,
-                          TaxableIncome: element.presumptiveIncome,
-                        })),
+                    business44AD: {
+                      bank: [
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          .filter(
+                            (element) =>
+                              element.businessType === 'BUSINESS' &&
+                              element.incomeType === 'BANK'
+                          )
+                          .reduce(
+                            (accumulated, element) => {
+                              accumulated.grossTurnover += element.receipts;
+                              accumulated.TaxableIncome +=
+                                element.presumptiveIncome;
+                              return accumulated;
+                            },
+                            {
+                              businessSection: 'BUSINESS',
+                              natureOfBusinessCode: 0,
+                              tradeName: '',
+                              grossTurnover: 0,
+                              TaxableIncome: 0,
+                            }
+                          ),
+                      ],
+
+                      cash: [
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          .filter(
+                            (element) =>
+                              element.businessType === 'BUSINESS' &&
+                              element.incomeType === 'CASH'
+                          )
+                          .reduce(
+                            (accumulated, element) => {
+                              accumulated.grossTurnover += element.receipts;
+                              accumulated.TaxableIncome +=
+                                element.presumptiveIncome;
+                              return accumulated;
+                            },
+                            {
+                              businessSection: 'BUSINESS',
+                              natureOfBusinessCode: 0,
+                              tradeName: '',
+                              grossTurnover: 0,
+                              TaxableIncome: 0,
+                            }
+                          ),
+                      ],
+                    },
 
                     business44ADA:
                       this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
@@ -1624,6 +1719,7 @@ export class SummaryComponent implements OnInit {
                       ?.presumptiveIncome,
                 },
               };
+
               console.log(this.finalCalculations, 'finalCalculations');
             } else {
               this.loading = false;
