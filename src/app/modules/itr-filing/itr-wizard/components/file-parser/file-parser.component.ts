@@ -1,9 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
-  AssetDetails,
   ITR_JSON,
-  NewCapitalGain,
-  ProfitLossACIncomes,
 } from '../../../../shared/interfaces/itr-input.interface';
 import { AppConstants } from '../../../../shared/constants';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
@@ -101,6 +98,10 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
       },
     ];
+  }
+
+  downloadTemplate(){
+    window.open('./assets/files/TaxBuddy Cg Template.xlsx');
   }
 
   uploadFile(file: FileList) {
