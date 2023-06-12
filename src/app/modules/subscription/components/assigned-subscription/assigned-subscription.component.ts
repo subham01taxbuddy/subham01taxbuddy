@@ -289,7 +289,7 @@ export class AssignedSubscriptionComponent implements OnInit {
               this.createRowData([])
             );
             return;
-          } else if(response.data.error === 'Subscription not found'){
+          } else if (response.data.error === 'Subscription not found') {
             this._toastMessageService.alert('error', response.data.error);
             let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
             this.isAllowed = filtered && filtered.length > 0 ? true : false;
@@ -580,11 +580,11 @@ export class AssignedSubscriptionComponent implements OnInit {
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode)
           ? subscriptionData[i].promoCode
           : '-',
-        invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ?
-          Math.round(Number(subscriptionData[i].smeSelectedPlan.totalAmount) - Number(subscriptionData[i].smeSelectedPlan.discountAmount)) :
-          this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ?
-            Math.round(Number(subscriptionData[i].userSelectedPlan.totalAmount) - Number(subscriptionData[i].userSelectedPlan.discountAmount))
-            : '-',
+        invoiceAmount: (subscriptionData[i].promoApplied) ?
+          (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount - subscriptionData[i].promoApplied.discountedAmount :
+            this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount - subscriptionData[i].promoApplied.discountedAmount : '-') :
+          (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount :
+            this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '-'),
         // invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus
