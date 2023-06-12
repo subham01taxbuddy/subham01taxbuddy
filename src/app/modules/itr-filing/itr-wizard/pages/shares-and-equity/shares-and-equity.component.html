@@ -30,30 +30,40 @@
       </mat-expansion-panel-header>
       <div *ngIf="compactView">
         <mat-accordion class="headers-align">
-          <mat-expansion-panel
-            *ngFor="let securities of brokerList"
-            (click)="showBroker(securities.brokerName)"
-          >
-            <mat-expansion-panel-header
-              class="card__row drop"
+          <div *ngFor="let securities of brokerList">
+            <div class="card__col-xs-12 card__col-sm-1 delete-icon">
+              <button><i class="fa fa-trash" aria-hidden="true"
+                         (click)="$event.stopPropagation();deleteBroker(securities.brokerName)"
+                         style="font-size: 18px; cursor: pointer; margin-right: 10px;"></i></button>
+            </div>
+            <mat-expansion-panel
+
               (click)="showBroker(securities.brokerName)"
             >
-              <div class="card__col-xs-12">
-                <div class="card__col-xs-12 card__col-sm-3">
-                  <div class="title">Broker Name</div>
-                  <div class="value">{{ securities.brokerName }}</div>
+
+              <mat-expansion-panel-header
+                class="card__row drop"
+                (click)="showBroker(securities.brokerName)"
+              >
+                <div class="card__col-xs-12">
+
+                  <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="title">Broker Name</div>
+                    <div class="value">{{ securities.brokerName }}</div>
+                  </div>
+                  <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="title">LTCG</div>
+                    <div class="value">{{ securities.LTCG }}</div>
+                  </div>
+                  <div class="card__col-xs-12 card__col-sm-3">
+                    <div class="title">STCG</div>
+                    <div class="value">{{ securities.STCG }}</div>
+                  </div>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-3">
-                  <div class="title">LTCG</div>
-                  <div class="value">{{ securities.LTCG }}</div>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-3">
-                  <div class="title">STCG</div>
-                  <div class="value">{{ securities.STCG }}</div>
-                </div>
-              </div>
-            </mat-expansion-panel-header>
-          </mat-expansion-panel>
+              </mat-expansion-panel-header>
+            </mat-expansion-panel>
+          </div>
+
         </mat-accordion>
       </div>
       <div class="card" *ngIf="!compactView">

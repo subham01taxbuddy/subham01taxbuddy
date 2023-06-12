@@ -377,6 +377,28 @@ export class SharesAndEquityComponent
     );
   }
 
+  deleteBroker(brokerName){
+    this.brokerList = this.brokerList.filter(item => item.brokerName !== brokerName);
+    let itrObject = this.Copy_ITR_JSON;
+    let data;
+    if (this.bondType === 'listed') {
+      data = itrObject.capitalGain.filter(
+        (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+      );
+    } else if (this.bondType === 'unlisted') {
+      data = itrObject.capitalGain.filter(
+        (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
+      );
+    }
+    if (data.length > 0) {
+      data.forEach((obj) => {
+        let assetDetails = obj.assetDetails.filter((security: any) => security.brokerName !== brokerName);
+        obj.assetDetails = assetDetails;
+      });
+    }
+    console.log('ITR json', this.Copy_ITR_JSON);
+  }
+
   deleteArray() {
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
@@ -577,8 +599,8 @@ export class SharesAndEquityComponent
       }
     }
 
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.compactView) {
       this.loading = true;
@@ -646,7 +668,7 @@ export class SharesAndEquityComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Securities data added successfully');
+          this.utilsService.showSnackBar('Securities data updated successfully');
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
@@ -740,7 +762,7 @@ export class SharesAndEquityComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Securities data added successfully');
+          this.utilsService.showSnackBar('Securities data updated successfully');
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
