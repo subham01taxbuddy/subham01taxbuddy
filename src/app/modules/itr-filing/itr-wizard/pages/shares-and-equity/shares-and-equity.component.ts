@@ -297,7 +297,7 @@ export class SharesAndEquityComponent
   createForm(srn, item?): FormGroup {
     let validators = this.bondType === 'listed' ? [
       Validators.required,
-      // Validators.pattern(AppConstants.amountWithDecimal),
+      Validators.pattern(AppConstants.amountWithDecimal),
     ] : [
       Validators.required,
       Validators.pattern(AppConstants.amountWithoutDecimal),
