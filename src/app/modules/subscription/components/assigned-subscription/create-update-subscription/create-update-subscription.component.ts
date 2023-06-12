@@ -82,6 +82,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   };
   subscriptionObjType: any;
   isButtonDisable: boolean;
+  AssessmentYear:string;
 
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
@@ -150,8 +151,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     if (this.subscriptionObj != null) {
       this.personalInfoForm.patchValue(this.subscriptionObj);
       // this.otherInfoForm.patchValue(this.subscriptionObj);
-      if (this.subscriptionObj.subscriptionId) {
+      if (this.subscriptionObj.subscriptionId !== 0) {
         this.getUserPlanInfo(this.subscriptionObj?.subscriptionId);
+      }else {
+        this.getFy();
       }
     }
     // if(this.createSubscriptionObj !=null){
@@ -478,6 +481,28 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     )[0];
     console.log('promoCodeInfo: ', this.promoCodeInfo);
   }
+
+  async getFy(){
+    const fyList = await this.utilsService.getStoredFyList();
+    console.log('fylist',fyList)
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    this.AssessmentYear = currentFyDetails[0].assessmentYear
+    console.log("ay",this.AssessmentYear)
+    this.getOwnerFiler();
+  }
+
+  getOwnerFiler(){
+    // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
+    this.loading = true;
+    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${this.serviceType}`;
+    this.userService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('get Owner and filer name for new create sub ',result)
+      this.filerName.setValue(result.data?.name);
+      this.ownerName.setValue(result.data?.ownerName);
+    })
+  }
+
 
   getUserPlanInfo(id) {
     this.loading = true;
