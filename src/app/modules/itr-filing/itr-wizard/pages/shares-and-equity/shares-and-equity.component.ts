@@ -381,11 +381,16 @@ export class SharesAndEquityComponent
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
-    securitiesArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        securitiesArray.removeAt(index);
-      }
-    });
+
+    securitiesArray.controls = securitiesArray.controls.filter(
+      (item: FormGroup) => item.controls['hasEdit'].value !== true
+    );
+    // securitiesArray.controls.forEach((element, index) => {
+    //   if ((element as FormGroup).controls['hasEdit'].value) {
+    //     console.log('deleting', index);
+    //     securitiesArray.removeAt(index);
+    //   }
+    // });
   }
 
   pageChanged(event) {
@@ -537,12 +542,12 @@ export class SharesAndEquityComponent
     const fg = securitiesArray.controls[i] as FormGroup;
     let saleValue = parseFloat(fg.controls['sellValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
-    // fg.controls['sellValue'].setValue(saleValue);
-    if(this.bondType === 'listed') {
-      fg.controls['sellValue'].setValue(saleValue.toFixed(2));
-    } else {
-      fg.controls['sellValue'].setValue(saleValue.toFixed());
-    }
+    fg.controls['sellValue'].setValue(saleValue.toFixed());
+    // if(this.bondType === 'listed') {
+    //   fg.controls['sellValue'].setValue(saleValue.toFixed(2));
+    // } else {
+    //   fg.controls['sellValue'].setValue(saleValue.toFixed());
+    // }
   }
 
   getPurchaseValue(index){
@@ -553,12 +558,12 @@ export class SharesAndEquityComponent
     const fg = securitiesArray.controls[i] as FormGroup;
     let purchaseValue = parseFloat(fg.controls['purchaseValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
-    // fg.controls['purchaseCost'].setValue(purchaseValue);
-    if(this.bondType === 'listed') {
-      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
-    } else {
-      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
-    }
+    fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    // if(this.bondType === 'listed') {
+    //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
+    // } else {
+    //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    // }
   }
 
   save(type?) {
@@ -722,7 +727,8 @@ export class SharesAndEquityComponent
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData.concat(sameData);
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
-          this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
+          let otherData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName !== this.selectedBroker);
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData;
         }
       } else {
         if (securitiesData.assetDetails.length > 0) {
