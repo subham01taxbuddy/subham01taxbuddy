@@ -20,11 +20,6 @@
             <span class="txLf">Name:</span>
             <span class="txMuLf">{{ getUserName("personal") }}</span>
           </div>
-          <!-- Gender -->
-          <!--  <div class="txBt">
-              <span class="txLf">Gender:</span> <span class="txMuLf">{{selfObj.gender | titlecase}}</span>
-            </div> -->
-          <!-- Aadhar -->
           <div
             class="txBt"
             *ngIf="
@@ -120,7 +115,7 @@
         </div>
 
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-          <div>
+          <div *ngIf="finalCalculations?.amountPayableRefund > 0">
             <div class="incBx">
               <span class="inTex">Income Tax Payable:</span><br /><br />
               <span class="inNo"
@@ -332,278 +327,6 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
-
-                    <!-- <div
-                      *ngIf="
-                        ITR_JSON.itrSummaryJson &&
-                        keys.IncomeFromSal &&
-                        !ITR_JSON.isItrSummaryJsonEdited
-                      "
-                    > -->
-                    <!-- <table
-                        class="table table-bordered table-striped table-hover"
-                        style="margin-top: 20px"
-                      >
-                        <tbody>
-                          <tr>
-                            <th>Particulars</th>
-                            <th>Employer 1</th> -->
-                    <!-- <th>Employer2</th>
-                            <th>Employer3</th> -->
-                    <!-- </tr>
-                          <tr>
-                            <td>1. Employer's Name</td>
-                            <td>Employer 1</td> -->
-                    <!-- <td>ABC Company</td>
-                            <td>XYZ Company</td> -->
-                    <!-- </tr>
-                          <tr>
-                            <td>2. Gross Salary</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(keys.GrossSalary)
-                              }}
-                            </td> -->
-                    <!-- <td>Rs 10,30,000</td>
-                            <td>Rs 9,15,000</td> -->
-                    <!-- </tr>
-                          <tr>
-                            <td>3. Less: Exempt Allowance</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.TotalAllwncExemptUs10
-                                )
-                              }}
-                            </td> -->
-                    <!--  <td>Rs 1,350</td>
-                            <td>Rs 1,050</td> -->
-                    <!-- </tr>
-                          <tr>
-                            <td>4. Less: Professional Tax</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.ProfessionalTaxUs16iii
-                                )
-                              }}
-                            </td> -->
-                    <!-- <td>(Rs 1,050)</td>
-                            <td>(Rs 2,050)</td> -->
-                    <!-- </tr>
-                          <tr>
-                            <td>5. Less: Entertainment Allowance</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.EntertainmentAlw16ii
-                                )
-                              }}
-                            </td> -->
-                    <!-- <td>(Rs 4,000)</td>
-                            <td>(Rs 3,000)</td> -->
-                    <!-- </tr>
-                          <tr>
-                            <td>6. Less: Standard Deduction</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.StandardDeduction
-                                )
-                              }}
-                            </td> -->
-                    <!-- <td>(Rs 30,000)</td>
-                            <td>(Rs 20,000)</td> -->
-                    <!-- </tr>
-
-                          <tr>
-                            <th>7. Taxable Salary</th>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  keys.IncomeFromSal
-                                )
-                              }}
-                            </td> -->
-                    <!-- <th>Rs 10,23,600</th>
-                            <th>Rs 9,08,900</th> -->
-                    <!-- </tr>
-                        </tbody>
-                      </table>
-                    </div> -->
-
-                    <!-- FOR ITR2  -->
-                    <!-- <div
-                      *ngIf="
-                        ITR_JSON.itrSummaryJson &&
-                        keys.IncomeFromSal &&
-                        this.itrType === 'ITR2'
-                      "
-                    >
-                      <table
-                        class="table table-bordered table-striped table-hover"
-                        style="margin-top: 20px"
-                      >
-                        <tbody>
-                          <tr>
-                            <th>Particulars</th>
-                            <th
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].ScheduleS?.Salaries;
-                                let i = index
-                              "
-                            >
-                              Employer {{ i + 1 }}
-                            </th>
-
-                          </tr>
-                          <tr>
-                            <td>1. Employer's Name</td>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].ScheduleS?.Salaries;
-                                let i = index
-                              "
-                            >
-                              {{
-                                utilsService.isNonEmpty(salary.NameOfEmployer)
-                                  ? salary.NameOfEmployer
-                                  : "Employer " + (i + 1)
-                              }}
-                            </td>
-
-                          </tr>
-                          <tr>
-                            <td>2. Gross Salary</td>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].ScheduleS?.Salaries;
-                                let i = index
-                              "
-                            >
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  salary.Salarys.GrossSalary
-                                )
-                              }}
-                            </td>
-
-                          </tr>
-                          <tr>
-                            <td>3. Less: Exempt Allowance</td>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].AllwncExemptUs10.AllwncExemptUs10Dtls;
-                                let i = index
-                              "
-                            >
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  salary.SalOthAmount /
-                                    ITR_JSON.itrSummaryJson[this.itrType]
-                                      .ScheduleS?.Salaries.length
-                                )
-                              }}
-                            </td>
-
-                          </tr>
-                          <tr>
-                            <td>4. Less: Professional Tax</td>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].ScheduleS;
-                                let i = index
-                              "
-                            >
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  salary.ProfessionalTaxUs16iii /
-                                    ITR_JSON.itrSummaryJson[this.itrType]
-                                      .ScheduleS?.Salaries.length
-                                )
-                              }}
-                            </td>
-
-                          </tr>
-                          <tr>
-                            <td>5. Less: Entertainment Allowance</td>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].ScheduleS;
-                                let i = index
-                              "
-                            >
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  salary.EntertainmntalwncUs16ii /
-                                    ITR_JSON.itrSummaryJson[this.itrType]
-                                      .ScheduleS?.Salaries.length
-                                )
-                              }}
-                            </td>
-
-                          </tr>
-                          <tr>
-                            <td>6. Less: Standard Deduction</td>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.itrSummaryJson[
-                                  this.itrType
-                                ].ScheduleS;
-                                let i = index
-                              "
-                            >
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  salary.DeductionUS16
-                                )
-                              }}
-                            </td>
-
-                          </tr>
-
-                          <tr>
-                            <th>7. Taxable Salary</th>
-                            <td
-                              *ngFor="
-                                let salary of ITR_JSON.employers;
-                                let i = index
-                              "
-                            >
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  salary.taxableIncome
-                                )
-                              }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div> -->
 
                     <div>
                       <table
@@ -904,92 +627,6 @@
                         </tbody>
                       </table>
                     </div>
-
-                    <!--  <div class="bxHed">SOP</div>
-                      <table class="table table-bordered table-striped table-hover">
-                        <tbody>
-                          <tr>
-                            <td style="width:39%;">Net Asset Value (1)</td>
-                            <td style="width:39%;">Interest On Home Loan (2)</td>
-                            <th style="width:22%;">Net Income (3 = 1 - 2)</th>
-                          </tr>
-                          <tr>
-                            <td>Rs 0</td>
-                            <td>Rs {{getInterestOnHome()}}</td>
-                            <th>Rs 567</th>
-                          </tr>
-                        </tbody>
-                      </table>
-                      <div class="bxHed">LOP</div>
-                      <table class="table table-bordered table-striped table-hover">
-                        <tbody>
-                          <tr>
-                            <td>Net Rent Received (1)</td>
-                            <td>30% Standard Deduction On Rent (2)</td>
-                            <td>Interest On Home Loan (3)</td>
-                            <th>Net Income (4 = 1 - 2 - 3)</th>
-                          </tr>
-                          <tr>
-                            <td>Rs 57</td>
-                            <td>Rs 2000</td>
-                            <td>Rs 1000</td>
-                            <th>Rs 3000</th>
-                          </tr>
-                        </tbody>
-                      </table>
-                      <div class="bxHed">LOP1</div>
-                      <table class="table table-bordered table-striped table-hover">
-                        <tbody>
-                          <tr>
-                            <td>Net Rent Received (1)</td>
-                            <td>30% Standard Deduction On Rent (2)</td>
-                            <td>Interest On Home Loan (3)</td>
-                            <th>Net Income (4 = 1 - 2 - 3)</th>
-                          </tr>
-                          <tr>
-                            <td>Rs 7000</td>
-                            <td>Rs 2000</td>
-                            <td>Rs 1000</td>
-                            <th>Rs 4000</th>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <div class="bxHed">DLOP</div>
-                      <table class="table table-bordered table-striped table-hover">
-                        <tbody>
-                          <tr>
-                            <td>Net Rent Received (1)</td>
-                            <td>30% Standard Deduction On Rent (2)</td>
-                            <td>Interest On Home Loan (3)</td>
-                            <th>Net Income (4 = 1 - 2 - 3)</th>
-                          </tr>
-                          <tr>
-                            <td>Rs 6000</td>
-                            <td>Rs 2000</td>
-                            <td>Rs 1000</td>
-                            <th>Rs 3000</th>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <div class="bxHed">DLOP1</div>
-                      <table class="table table-bordered table-striped table-hover">
-                        <tbody>
-                          <tr>
-                            <td>Net Rent Received (1)</td>
-                            <td>30% Standard Deduction On Rent (2)</td>
-                            <td>Interest On Home Loan (3)</td>
-                            <th>Net Income (4 = 1 - 2 - 3)</th>
-                          </tr>
-                          <tr>
-                            <td>Rs 7000</td>
-                            <td>Rs 2000</td>
-                            <td>Rs 1000</td>
-                            <th>Rs 4000</th>
-                          </tr>
-                        </tbody>
-                      </table> -->
                   </mat-expansion-panel>
 
                   <!-- ************************** Income from Business ****************************** -->
@@ -1117,16 +754,7 @@
                                 "
                               >
                                 <td>
-                                  {{
-                                    business?.businessSection === "TRANSPORT"
-                                      ? "Section 44AE"
-                                      : business?.businessSection === "BUSINESS"
-                                      ? "Section 44AD"
-                                      : business?.businessSection ===
-                                        "PROFESSIONAL"
-                                      ? "Section 44ADA"
-                                      : ""
-                                  }}
+                                  {{ business?.businessSection }}
                                 </td>
                                 <td>
                                   {{ business?.natureOfBusinessCode }}
@@ -1165,16 +793,7 @@
                                 "
                               >
                                 <td>
-                                  {{
-                                    business?.businessSection === "TRANSPORT"
-                                      ? "Section 44AE"
-                                      : business?.businessSection === "BUSINESS"
-                                      ? "Section 44AD"
-                                      : business?.businessSection ===
-                                        "PROFESSIONAL"
-                                      ? "Section 44ADA"
-                                      : ""
-                                  }}
+                                  {{ business?.businessSection }}
                                 </td>
                                 <td>
                                   {{ business?.natureOfBusinessCode }}
@@ -1190,7 +809,7 @@
                           </ng-container>
 
                           <!-- PROFIT AND LOSS INCOMES  -->
-                          <!-- <tr
+                          <tr
                             *ngFor="
                               let business of ITR_JSON.business
                                 ?.profitLossACIncomes
@@ -1229,7 +848,7 @@
                                 )
                               }}
                             </td>
-                          </tr> -->
+                          </tr>
 
                           <!--  <tr>
                             <td>Section 44ADA</td>
@@ -1705,11 +1324,6 @@
                               }}
                             </td>
                           </tr>
-                          <!--  <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
-                              <td>Recurring Deposit
-                              </td>
-                              <td>Rs {{getOtherIncome('SAVING_INTEREST')}}</td>
-                            </tr> -->
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
@@ -2047,15 +1661,6 @@
                         </tr>
                       </tbody>
                     </table>
-
-                    <!-- <table class="table" style="width:100%">
-                          <tbody>
-                            <tr *ngFor="let deduction of deductionDetail;let i=index">
-                              <td *ngIf="deduction.eligibleAmount > 0">{{deduction.notes}}</td>
-                              <td *ngIf="deduction.eligibleAmount > 0" class="tbl-lbl-right">
-                                <i class="material-icons icRup">&#8377;</i>&nbsp;{{deduction.eligibleAmount}}</td>
-                            </tr>
-                        </table> -->
                   </mat-expansion-panel>
 
                   <!-- ********************** Gross Total Income (8-9) ********************** -->
@@ -2397,7 +2002,7 @@
                             let i = index
                           "
                         >
-                          <td>{{ losses.assessmentPastYear }}</td>
+                          <td>{{ losses?.assessmentPastYear }}</td>
                           <td>
                             {{
                               utilsService.currencyFormatter(
@@ -3145,7 +2750,6 @@
                     </div>
 
                     <!-- OTHER THAN SALARY -->
-
                     <div>
                       <div class="bxHed">TDS (Other Than Salary)</div>
                       <table
@@ -3334,7 +2938,6 @@
                     </div>
 
                     <!-- othertanTDSTCS -->
-
                     <div>
                       <div class="bxHed">
                         Advance / Self Assessment Tax Paid

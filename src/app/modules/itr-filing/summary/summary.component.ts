@@ -345,7 +345,7 @@ export class SummaryComponent implements OnInit {
       totalTcs: Number;
       otherThanTDSTCS: {
         bsrCode: String;
-        date: String;
+        date: Date;
         challanNo: Number;
         amount: Number;
       }[];
@@ -382,13 +382,8 @@ export class SummaryComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
-    // const param = '/tax';
 
     this.calculations();
-
-    // if (this.ITR_JSON.itrSummaryJson) {
-    //   this.summaryToolMapping();
-    // }
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type
     if (this.ITR_JSON.itrType === '1') {
@@ -400,72 +395,10 @@ export class SummaryComponent implements OnInit {
     } else if (this.ITR_JSON.itrType === '4') {
       this.itrType = 'ITR4';
     }
-
-    // this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-    //   (result: any) => {
-    //     // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-    //     console.log('result is=====', result);
-    //     this.summaryIncome = result.summaryIncome;
-    //     const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
-    //     this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
-    //       console.log('SUMMARY Result=> ', summary);
-    //       if (summary) {
-    //         this.losses = summary.assessment;
-    //         for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
-    //           this.totalCarryForword =
-    //             this.totalCarryForword +
-    //             this.losses.carryForwordLosses[i].totalLoss;
-    //         }
-    //         this.summaryDetail = summary.assessment.taxSummary;
-    //         this.taxable = this.summaryDetail.taxpayable;
-
-    //         this.refund = this.summaryDetail.taxRefund;
-    //         this.deductionDetail = summary.assessment.summaryDeductions?.filter(
-    //           (item: any) =>
-    //             item.sectionType !== '80C' &&
-    //             item.sectionType !== '80CCC' &&
-    //             item.sectionType !== '80CCD1' &&
-    //             item.sectionType !== '80GAGTI'
-    //         );
-    //         this.capitalGain =
-    //           summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
-    //         this.totalLoss = summary.assessment.currentYearLosses;
-    //         this.show = true;
-    //         sessionStorage.setItem(
-    //           'ITR_SUMMARY_JSON',
-    //           JSON.stringify(this.summaryDetail)
-    //         );
-
-    //         this.losses?.pastYearLosses?.forEach((item: any) => {
-    //           this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-    //           this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-    //           this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-    //         });
-    //         this.loading = false;
-    //       } else {
-    //         this.loading = false;
-    //         this.errorMessage =
-    //           'We are unable to display your summary,Please try again later.';
-    //         this.utilsService.showErrorMsg(this.errorMessage);
-    //       }
-    //     });
-    //   },
-    //   (error) => {
-    //     this.loading = false;
-    //     this.show = false;
-    //     this.errorMessage = 'We are processing your request, Please wait......';
-    //     if (error) {
-    //       this.errorMessage =
-    //         'We are unable to display your summary,Please try again later.';
-    //     }
-    //     console.log('In error method===', error);
-    //   }
-    // );
   }
 
   calculations() {
     this.loading = true;
-
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
         this.show = true;
@@ -499,8 +432,7 @@ export class SummaryComponent implements OnInit {
         }
 
         if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
-          console.log(this.finalSummary, 'this.finalSummary');
-
+          // console.log(this.finalSummary, 'this.finalSummary');
           this.finalCalculations = {
             salary: {
               employers: [
@@ -514,7 +446,7 @@ export class SummaryComponent implements OnInit {
                   exemptAllowance:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
-                    ].AllwncExemptUs10?.TotalAllwncExemptUs10,
+                    ]?.AllwncExemptUs10?.TotalAllwncExemptUs10,
                   professionalTax:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
@@ -522,7 +454,7 @@ export class SummaryComponent implements OnInit {
                   entAllowance:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
-                    ][entAllowance],
+                    ]?.[entAllowance],
                   standardDeduction:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
@@ -567,7 +499,7 @@ export class SummaryComponent implements OnInit {
                   hpStandardDeduction:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
-                    ][hpStandardDeduction],
+                    ]?.[hpStandardDeduction],
                   hpinterest:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
@@ -615,27 +547,27 @@ export class SummaryComponent implements OnInit {
                   ]?.IncomeOthSrc -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].OthersInc.OthersIncDtlsOthSrc.find(
+                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'SAV'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].OthersInc.OthersIncDtlsOthSrc.find(
+                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'IFD'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].OthersInc.OthersIncDtlsOthSrc.find(
+                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'TAX'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].OthersInc.OthersIncDtlsOthSrc.find(
+                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'FAP'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].OthersInc.OthersIncDtlsOthSrc.find(
+                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                     (val) => val.OthSrcNatureDesc === 'DIV'
                   )?.OthSrcOthAmount,
 
@@ -643,7 +575,7 @@ export class SummaryComponent implements OnInit {
                   this.itrType
                 ][
                   this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                   (val) => val.OthSrcNatureDesc === 'DIV'
                 )?.OthSrcOthAmount,
 
@@ -651,7 +583,7 @@ export class SummaryComponent implements OnInit {
                   this.itrType
                 ][
                   this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc.find(
                   (val) => val.OthSrcNatureDesc === 'FAP'
                 )?.OthSrcOthAmount,
               },
@@ -666,11 +598,11 @@ export class SummaryComponent implements OnInit {
                 business44AD: {
                   bank: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
-                  ].ScheduleBP?.NatOfBus44AD.map((element) => {
+                  ].ScheduleBP?.NatOfBus44AD?.map((element) => {
                     return {
                       businessSection: 'Section 44AD',
-                      natureOfBusinessCode: element.CodeAD,
-                      tradeName: element.NameOfBusiness,
+                      natureOfBusinessCode: element?.CodeAD,
+                      tradeName: element?.NameOfBusiness,
                       grossTurnover: Number(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
@@ -706,11 +638,11 @@ export class SummaryComponent implements OnInit {
 
                 business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
-                ].ScheduleBP?.NatOfBus44ADA.map((element) => {
+                ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
                   return {
                     businessSection: 'Section 44ADA',
-                    natureOfBusinessCode: element.CodeADA,
-                    tradeName: element.NameOfBusiness,
+                    natureOfBusinessCode: element?.CodeADA,
+                    tradeName: element?.NameOfBusiness,
                     grossTurnover: Number(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
@@ -854,19 +786,19 @@ export class SummaryComponent implements OnInit {
               total234A:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
-                ]?.IntrstPay.IntrstPayUs234A,
+                ]?.IntrstPay?.IntrstPayUs234A,
               total234B:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
-                ]?.IntrstPay.IntrstPayUs234B,
+                ]?.IntrstPay?.IntrstPayUs234B,
               total234C:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
-                ]?.IntrstPay.IntrstPayUs234C,
+                ]?.IntrstPay?.IntrstPayUs234C,
               total234F:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
-                ]?.IntrstPay.LateFilingFee234F,
+                ]?.IntrstPay?.LateFilingFee234F,
               totalInterestAndFee:
                 this.itrType === 'ITR1'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -874,21 +806,21 @@ export class SummaryComponent implements OnInit {
                     ]?.TotalIntrstPay
                   : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.taxComputation
-                    ]?.IntrstPay.LateFilingFee234F +
+                    ]?.IntrstPay?.LateFilingFee234F +
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.taxComputation
-                    ]?.IntrstPay.IntrstPayUs234C +
+                    ]?.IntrstPay?.IntrstPayUs234C +
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.taxComputation
-                    ]?.IntrstPay.IntrstPayUs234B +
+                    ]?.IntrstPay?.IntrstPayUs234B +
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.taxComputation
-                    ]?.IntrstPay.IntrstPayUs234A,
+                    ]?.IntrstPay?.IntrstPayUs234A,
             },
             aggregateLiability:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.taxComputation
-              ].TotTaxPlusIntrstPay,
+              ]?.TotTaxPlusIntrstPay,
 
             taxPaid: {
               onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -946,7 +878,7 @@ export class SummaryComponent implements OnInit {
                   }[])
                 : null,
               totalOnSalary:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
                   ?.TotalTDSonSalaries,
 
               otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -1014,7 +946,7 @@ export class SummaryComponent implements OnInit {
                     }[])
                   : (Object.entries(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .TDSonOthThanSals?.TDSonOthThanSalDtls
+                        ?.TDSonOthThanSals?.TDSonOthThanSalDtls
                     ).map(([key, item]) => ({
                       deductorName: (
                         item as {
@@ -1069,7 +1001,7 @@ export class SummaryComponent implements OnInit {
                 : null,
               totalOtherThanSalary16A:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                  .TDSonOthThanSals?.TotalTDSonOthThanSals,
+                  ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
 
               otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
@@ -1077,7 +1009,7 @@ export class SummaryComponent implements OnInit {
                 ? this.itrType === 'ITR1'
                   ? (Object.entries(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleTDS3Dtls?.TDS3Details
+                        ?.ScheduleTDS3Dtls?.TDS3Details
                     ).map(([key, item]) => ({
                       deductorName: (
                         item as {
@@ -1131,7 +1063,7 @@ export class SummaryComponent implements OnInit {
                     }[])
                   : (Object.entries(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleTDS3Dtls?.TDS3Details
+                        ?.ScheduleTDS3Dtls?.TDS3Details
                     ).map(([key, item]) => ({
                       deductorName: (
                         item as {
@@ -1186,13 +1118,13 @@ export class SummaryComponent implements OnInit {
                 : null,
               totalOtherThanSalary26QB:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                  .ScheduleTDS3Dtls?.TDS3Details,
+                  ?.ScheduleTDS3Dtls?.TDS3Details,
 
               tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
                 ?.TCS
                 ? (Object.entries(
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      .ScheduleTCS?.TCS
+                      ?.ScheduleTCS?.TCS
                   ).map(([key, item]) => ({
                     deductorName: (
                       item as {
@@ -1255,19 +1187,19 @@ export class SummaryComponent implements OnInit {
                   ?.TotalSchTCS,
 
               otherThanTDSTCS:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
                   ?.TotalTaxPayments ||
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
                   ?.TotalTaxPayments
                   ? this.itrType === 'ITR1'
                     ? (Object.entries(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .TaxPayments?.TaxPayment
+                          ?.TaxPayments?.TaxPayment
                       ).map(([key, item]) => ({
                         bsrCode: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
@@ -1275,7 +1207,7 @@ export class SummaryComponent implements OnInit {
                         date: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
@@ -1283,7 +1215,7 @@ export class SummaryComponent implements OnInit {
                         challanNo: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
@@ -1291,25 +1223,25 @@ export class SummaryComponent implements OnInit {
                         amount: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
                         ).Amt,
                       })) as {
                         bsrCode: String;
-                        date: String;
+                        date: Date;
                         challanNo: Number;
                         amount: Number;
                       }[])
                     : (Object.entries(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleIT?.TaxPayment
+                          ?.ScheduleIT?.TaxPayment
                       ).map(([key, item]) => ({
                         bsrCode: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
@@ -1317,7 +1249,7 @@ export class SummaryComponent implements OnInit {
                         date: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
@@ -1325,7 +1257,7 @@ export class SummaryComponent implements OnInit {
                         challanNo: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
@@ -1333,14 +1265,14 @@ export class SummaryComponent implements OnInit {
                         amount: (
                           item as {
                             BSRCode: String;
-                            DateDep: any;
+                            DateDep: Date;
                             SrlNoOfChaln: Number;
                             Amt: Number;
                           }
                         ).Amt,
                       })) as {
                         bsrCode: String;
-                        date: String;
+                        date: Date;
                         challanNo: Number;
                         amount: Number;
                       }[])
@@ -1349,16 +1281,16 @@ export class SummaryComponent implements OnInit {
               totalOtherThanTDSTCS:
                 this.itrType === 'ITR1'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      .TaxPayments?.TotalTaxPayments
-                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
-                      ?.TotalTaxPayments,
+                      ?.TaxPayments?.TotalTaxPayments
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleIT?.TotalTaxPayments,
 
               totalTaxesPaid:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
-                  .TaxesPaid?.TotalTaxesPaid,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
+                  ?.TaxesPaid?.TotalTaxesPaid,
             },
             amountPayableRefund:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
           };
           console.log(this.finalCalculations, 'finalCalculations');
@@ -1369,17 +1301,17 @@ export class SummaryComponent implements OnInit {
               this.itrType === 'ITR1'
                 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Total
+                  ]?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Total
                 : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    .TaxExmpIntIncDtls.OthersInc?.OthersTotalTaxExe,
+                    ?.TaxExmpIntIncDtls?.OthersInc?.OthersTotalTaxExe,
 
             ExemptIncomeDetails:
               this.itrType === 'ITR1'
                 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ].ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
+                  ]?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
                 : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    .TaxExmpIntIncDtls.OthersInc?.OthersIncDtls,
+                    ?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls,
           };
           console.log(this.keys, 'this.keys ITR1&4');
           this.loading = false;
@@ -1782,7 +1714,7 @@ export class SummaryComponent implements OnInit {
                       ),
 
                     salaryTotalIncome:
-                      this.finalSummary.assessment.taxSummary.salary,
+                      this.finalSummary?.assessment?.taxSummary?.salary,
                   },
                   houseProperties: {
                     houseProps:
@@ -1819,38 +1751,38 @@ export class SummaryComponent implements OnInit {
                   otherIncome: {
                     otherIncomes: {
                       saving:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'SAVING_INTEREST'
                         )?.amount,
 
                       intFromDeposit:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'FD_RD_INTEREST'
                         )?.amount,
 
                       taxRefund:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'TAX_REFUND_INTEREST'
                         )?.amount,
 
                       anyOtherInterest:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'ANY_OTHER'
                         )?.amount,
 
                       familyPension:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'FAMILY_PENSION'
                         )?.amount,
 
                       dividendIncome:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'DIVIDEND'
                         )?.amount,
                     },
 
                     otherIncomeTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.reduce(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
                         (sum, obj) => sum + obj.amount,
                         0
                       ),
@@ -1862,14 +1794,14 @@ export class SummaryComponent implements OnInit {
                           this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
                             .filter(
                               (element) =>
-                                element.businessType === 'BUSINESS' &&
-                                element.incomeType === 'BANK'
+                                element?.businessType === 'BUSINESS' &&
+                                element?.incomeType === 'BANK'
                             )
                             .reduce(
                               (accumulated, element) => {
-                                accumulated.grossTurnover += element.receipts;
+                                accumulated.grossTurnover += element?.receipts;
                                 accumulated.TaxableIncome +=
-                                  element.presumptiveIncome;
+                                  element?.presumptiveIncome;
                                 return accumulated;
                               },
                               {
@@ -1884,16 +1816,16 @@ export class SummaryComponent implements OnInit {
 
                         cash: [
                           this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                            .filter(
+                            ?.filter(
                               (element) =>
-                                element.businessType === 'BUSINESS' &&
-                                element.incomeType === 'CASH'
+                                element?.businessType === 'BUSINESS' &&
+                                element?.incomeType === 'CASH'
                             )
                             .reduce(
                               (accumulated, element) => {
-                                accumulated.grossTurnover += element.receipts;
+                                accumulated.grossTurnover += element?.receipts;
                                 accumulated.TaxableIncome +=
-                                  element.presumptiveIncome;
+                                  element?.presumptiveIncome;
                                 return accumulated;
                               },
                               {
@@ -1909,15 +1841,16 @@ export class SummaryComponent implements OnInit {
 
                       business44ADA:
                         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          .filter(
-                            (element) => element.businessType === 'PROFESSIONAL'
+                          ?.filter(
+                            (element) =>
+                              element?.businessType === 'PROFESSIONAL'
                           )
                           .map((element) => ({
-                            businessSection: element.businessType,
+                            businessSection: element?.businessType,
                             natureOfBusinessCode: 0,
                             tradeName: '',
-                            grossTurnover: element.receipts,
-                            TaxableIncome: element.presumptiveIncome,
+                            grossTurnover: element?.receipts,
+                            TaxableIncome: element?.presumptiveIncome,
                           })),
                     },
 
@@ -1948,17 +1881,17 @@ export class SummaryComponent implements OnInit {
                     BroughtFwdLossesSetoffDtls: {
                       hpLoss: this.losses?.pastYearLosses?.reduce(
                         (total, item) =>
-                          total + item.setOffWithCurrentYearHPIncome,
+                          total + item?.setOffWithCurrentYearHPIncome,
                         0
                       ),
                       stLoss: this.losses?.pastYearLosses?.reduce(
                         (total, item) =>
-                          total + item.setOffWithCurrentYearSTCGIncome,
+                          total + item?.setOffWithCurrentYearSTCGIncome,
                         0
                       ),
                       ltLoss: this.losses?.pastYearLosses?.reduce(
                         (total, item) =>
-                          total + item.setOffWithCurrentYearLTCGIncome,
+                          total + item?.setOffWithCurrentYearLTCGIncome,
                         0
                       ),
                     },
@@ -2012,7 +1945,7 @@ export class SummaryComponent implements OnInit {
                   lossesToBeCarriedForward: {
                     cflDtls: Object.entries(
                       this.finalSummary?.assessment?.carryForwordLosses
-                    ).map(([key, item]) => ({
+                    )?.map(([key, item]) => ({
                       assessmentPastYear: (
                         item as {
                           assessmentPastYear: any;
@@ -2122,13 +2055,21 @@ export class SummaryComponent implements OnInit {
                     taxReliefUnder91:
                       this.finalSummary?.assessment?.taxSummary
                         ?.taxReliefUnder91,
-                    totalRelief:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder89 +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91,
+                    totalRelief: this.finalSummary?.assessment?.taxSummary
+                      ?.taxReliefUnder89
+                      ? this.finalSummary?.assessment?.taxSummary
+                          ?.taxReliefUnder89
+                      : 0 +
+                        this.finalSummary?.assessment?.taxSummary
+                          ?.taxReliefUnder90_90A
+                      ? this.finalSummary?.assessment?.taxSummary
+                          ?.taxReliefUnder90_90A
+                      : 0 +
+                        this.finalSummary?.assessment?.taxSummary
+                          ?.taxReliefUnder91
+                      ? this.finalSummary?.assessment?.taxSummary
+                          ?.taxReliefUnder91
+                      : 0,
                   },
                   netTaxLiability:
                     this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
@@ -2160,7 +2101,7 @@ export class SummaryComponent implements OnInit {
                     onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
                       ? (Object.entries(
                           this.finalSummary?.itr?.taxPaid?.onSalary
-                        ).map(([key, item]) => ({
+                        )?.map(([key, item]) => ({
                           deductorName: (
                             item as {
                               deductorName: String;
@@ -2222,7 +2163,7 @@ export class SummaryComponent implements OnInit {
                       ?.otherThanSalary16A
                       ? (Object.entries(
                           this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                        ).map(([key, item]) => ({
+                        )?.map(([key, item]) => ({
                           deductorName: (
                             item as {
                               deductorName: String;
@@ -2293,7 +2234,7 @@ export class SummaryComponent implements OnInit {
                       ?.otherThanSalary26QB
                       ? (Object.entries(
                           this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                        ).map(([key, item]) => ({
+                        )?.map(([key, item]) => ({
                           deductorName: (
                             item as {
                               deductorName: String;
@@ -2355,7 +2296,7 @@ export class SummaryComponent implements OnInit {
                       : null,
 
                     totalOtherThanSalary26QB:
-                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB.reduce(
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
                         (total, item) => total + item?.totalTdsDeposited,
                         0
                       ),
@@ -2363,7 +2304,7 @@ export class SummaryComponent implements OnInit {
                     tcs: this.finalSummary?.itr?.taxPaid?.tcs
                       ? (Object.entries(
                           this.finalSummary?.itr?.taxPaid?.tcs
-                        ).map(([key, item]) => ({
+                        )?.map(([key, item]) => ({
                           deductorName: (
                             item as {
                               collectorName: String;
@@ -2433,7 +2374,7 @@ export class SummaryComponent implements OnInit {
                             item as {
                               bsrCode: String;
                               challanNumber: Number;
-                              dateOfDeposit: any;
+                              dateOfDeposit: Date;
                               educationCess: any;
                               id: any;
                               majorHead: any;
@@ -2449,7 +2390,7 @@ export class SummaryComponent implements OnInit {
                             item as {
                               bsrCode: String;
                               challanNumber: Number;
-                              dateOfDeposit: any;
+                              dateOfDeposit: Date;
                               educationCess: any;
                               id: any;
                               majorHead: any;
@@ -2465,7 +2406,7 @@ export class SummaryComponent implements OnInit {
                             item as {
                               bsrCode: String;
                               challanNumber: Number;
-                              dateOfDeposit: any;
+                              dateOfDeposit: Date;
                               educationCess: any;
                               id: any;
                               majorHead: any;
@@ -2481,7 +2422,7 @@ export class SummaryComponent implements OnInit {
                             item as {
                               bsrCode: String;
                               challanNumber: Number;
-                              dateOfDeposit: any;
+                              dateOfDeposit: Date;
                               educationCess: any;
                               id: any;
                               majorHead: any;
@@ -2495,7 +2436,7 @@ export class SummaryComponent implements OnInit {
                           ).totalTax,
                         })) as {
                           bsrCode: String;
-                          date: String;
+                          date: Date;
                           challanNo: Number;
                           amount: Number;
                         }[])
@@ -2628,7 +2569,7 @@ export class SummaryComponent implements OnInit {
                     ),
 
                   salaryTotalIncome:
-                    this.finalSummary.assessment.taxSummary.salary,
+                    this.finalSummary?.assessment?.taxSummary?.salary,
                 },
                 houseProperties: {
                   houseProps:
@@ -2665,38 +2606,38 @@ export class SummaryComponent implements OnInit {
                 otherIncome: {
                   otherIncomes: {
                     saving:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'SAVING_INTEREST'
                       )?.amount,
 
                     intFromDeposit:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'FD_RD_INTEREST'
                       )?.amount,
 
                     taxRefund:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'TAX_REFUND_INTEREST'
                       )?.amount,
 
                     anyOtherInterest:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'ANY_OTHER'
                       )?.amount,
 
                     familyPension:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'FAMILY_PENSION'
                       )?.amount,
 
                     dividendIncome:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.find(
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'DIVIDEND'
                       )?.amount,
                   },
 
                   otherIncomeTotal:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes.reduce(
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
                       (sum, obj) => sum + obj.amount,
                       0
                     ),
@@ -2708,14 +2649,14 @@ export class SummaryComponent implements OnInit {
                         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
                           .filter(
                             (element) =>
-                              element.businessType === 'BUSINESS' &&
-                              element.incomeType === 'BANK'
+                              element?.businessType === 'BUSINESS' &&
+                              element?.incomeType === 'BANK'
                           )
                           .reduce(
                             (accumulated, element) => {
-                              accumulated.grossTurnover += element.receipts;
+                              accumulated.grossTurnover += element?.receipts;
                               accumulated.TaxableIncome +=
-                                element.presumptiveIncome;
+                                element?.presumptiveIncome;
                               return accumulated;
                             },
                             {
@@ -2730,16 +2671,16 @@ export class SummaryComponent implements OnInit {
 
                       cash: [
                         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          .filter(
+                          ?.filter(
                             (element) =>
-                              element.businessType === 'BUSINESS' &&
-                              element.incomeType === 'CASH'
+                              element?.businessType === 'BUSINESS' &&
+                              element?.incomeType === 'CASH'
                           )
                           .reduce(
                             (accumulated, element) => {
-                              accumulated.grossTurnover += element.receipts;
+                              accumulated.grossTurnover += element?.receipts;
                               accumulated.TaxableIncome +=
-                                element.presumptiveIncome;
+                                element?.presumptiveIncome;
                               return accumulated;
                             },
                             {
@@ -2755,15 +2696,15 @@ export class SummaryComponent implements OnInit {
 
                     business44ADA:
                       this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                        .filter(
-                          (element) => element.businessType === 'PROFESSIONAL'
+                        ?.filter(
+                          (element) => element?.businessType === 'PROFESSIONAL'
                         )
                         .map((element) => ({
-                          businessSection: element.businessType,
+                          businessSection: element?.businessType,
                           natureOfBusinessCode: 0,
                           tradeName: '',
-                          grossTurnover: element.receipts,
-                          TaxableIncome: element.presumptiveIncome,
+                          grossTurnover: element?.receipts,
+                          TaxableIncome: element?.presumptiveIncome,
                         })),
                   },
 
@@ -2794,17 +2735,17 @@ export class SummaryComponent implements OnInit {
                   BroughtFwdLossesSetoffDtls: {
                     hpLoss: this.losses?.pastYearLosses?.reduce(
                       (total, item) =>
-                        total + item.setOffWithCurrentYearHPIncome,
+                        total + item?.setOffWithCurrentYearHPIncome,
                       0
                     ),
                     stLoss: this.losses?.pastYearLosses?.reduce(
                       (total, item) =>
-                        total + item.setOffWithCurrentYearSTCGIncome,
+                        total + item?.setOffWithCurrentYearSTCGIncome,
                       0
                     ),
                     ltLoss: this.losses?.pastYearLosses?.reduce(
                       (total, item) =>
-                        total + item.setOffWithCurrentYearLTCGIncome,
+                        total + item?.setOffWithCurrentYearLTCGIncome,
                       0
                     ),
                   },
@@ -2818,7 +2759,6 @@ export class SummaryComponent implements OnInit {
                 totalSpecialRateIncome:
                   this.finalSummary?.assessment?.taxSummary
                     ?.totalSpecialRateIncome,
-
                 deductions: {
                   deductionDtls: Object.entries(
                     this.finalSummary?.assessment?.summaryDeductions
@@ -2854,20 +2794,82 @@ export class SummaryComponent implements OnInit {
                 aggregateIncome:
                   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
                 lossesToBeCarriedForward: {
-                  cflDtls: this.finalSummary?.carryForwordLosses?.map(
-                    ([key, item]) => ({
-                      assessmentPastYear: item?.assessmentPastYear,
-                      housePropertyLoss: item?.housePropertyLoss,
-                      STCGLoss: item.STCGLoss,
-                      LTCGLoss: item.LTCGLoss,
-                      pastYear: item.pastYear,
-                      totalLoss: item.totalLoss,
-                    })
-                  ),
-                  cflTotal: this.finalSummary?.carryForwordLosses?.reduce(
-                    (total, item) => total + item.totalLoss,
-                    0
-                  ),
+                  cflDtls: Object.entries(
+                    this.finalSummary?.assessment?.carryForwordLosses
+                  )?.map(([key, item]) => ({
+                    assessmentPastYear: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).assessmentPastYear,
+                    housePropertyLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).housePropertyLoss,
+                    STCGLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).STCGLoss,
+                    LTCGLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).LTCGLoss,
+                    pastYear: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).pastYear,
+                    totalLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).totalLoss,
+                  })) as {
+                    assessmentPastYear: any;
+                    housePropertyLoss: Number;
+                    STCGLoss: Number;
+                    LTCGLoss: Number;
+                    pastYear: Number;
+                    totalLoss: Number;
+                  }[],
+                  cflTotal:
+                    this.finalSummary?.assessment?.carryForwordLosses?.reduce(
+                      (total, item) => total + item.totalLoss,
+                      0
+                    ),
                 },
                 totalTax: {
                   taxAtNormalRate:
@@ -2897,12 +2899,21 @@ export class SummaryComponent implements OnInit {
                       ?.taxReliefUnder90_90A,
                   taxReliefUnder91:
                     this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
-                  totalRelief:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.taxReliefUnder89 +
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.taxReliefUnder90_90A +
-                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
+                  totalRelief: this.finalSummary?.assessment?.taxSummary
+                    ?.taxReliefUnder89
+                    ? this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder89
+                    : 0 +
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder90_90A
+                    ? this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder90_90A
+                    : 0 +
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder91
+                    ? this.finalSummary?.assessment?.taxSummary
+                        ?.taxReliefUnder91
+                    : 0,
                 },
                 netTaxLiability:
                   this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
@@ -2933,7 +2944,7 @@ export class SummaryComponent implements OnInit {
                   onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
                     ? (Object.entries(
                         this.finalSummary?.itr?.taxPaid?.onSalary
-                      ).map(([key, item]) => ({
+                      )?.map(([key, item]) => ({
                         deductorName: (
                           item as {
                             deductorName: String;
@@ -2995,7 +3006,7 @@ export class SummaryComponent implements OnInit {
                     ?.otherThanSalary16A
                     ? (Object.entries(
                         this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                      ).map(([key, item]) => ({
+                      )?.map(([key, item]) => ({
                         deductorName: (
                           item as {
                             deductorName: String;
@@ -3066,7 +3077,7 @@ export class SummaryComponent implements OnInit {
                     ?.otherThanSalary26QB
                     ? (Object.entries(
                         this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                      ).map(([key, item]) => ({
+                      )?.map(([key, item]) => ({
                         deductorName: (
                           item as {
                             deductorName: String;
@@ -3128,64 +3139,64 @@ export class SummaryComponent implements OnInit {
                     : null,
 
                   totalOtherThanSalary26QB:
-                    this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB.reduce(
+                    this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
                       (total, item) => total + item?.totalTdsDeposited,
                       0
                     ),
 
                   tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                    ? (Object.entries(this.finalSummary?.itr?.taxPaid?.tcs).map(
-                        ([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).collectorName,
-                          deductorTAN: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).collectorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).totalAmountPaid,
-                          totalTdsDeposited: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).totalTcsDeposited,
-                        })
-                      ) as {
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.tcs
+                      )?.map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).collectorName,
+                        deductorTAN: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).collectorTAN,
+                        totalAmountCredited: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).totalAmountPaid,
+                        totalTdsDeposited: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).totalTcsDeposited,
+                      })) as {
                         deductorName: String;
                         deductorTAN: String;
                         totalAmountCredited: Number;
@@ -3206,7 +3217,7 @@ export class SummaryComponent implements OnInit {
                           item as {
                             bsrCode: String;
                             challanNumber: Number;
-                            dateOfDeposit: any;
+                            dateOfDeposit: Date;
                             educationCess: any;
                             id: any;
                             majorHead: any;
@@ -3222,7 +3233,7 @@ export class SummaryComponent implements OnInit {
                           item as {
                             bsrCode: String;
                             challanNumber: Number;
-                            dateOfDeposit: any;
+                            dateOfDeposit: Date;
                             educationCess: any;
                             id: any;
                             majorHead: any;
@@ -3238,7 +3249,7 @@ export class SummaryComponent implements OnInit {
                           item as {
                             bsrCode: String;
                             challanNumber: Number;
-                            dateOfDeposit: any;
+                            dateOfDeposit: Date;
                             educationCess: any;
                             id: any;
                             majorHead: any;
@@ -3254,7 +3265,7 @@ export class SummaryComponent implements OnInit {
                           item as {
                             bsrCode: String;
                             challanNumber: Number;
-                            dateOfDeposit: any;
+                            dateOfDeposit: Date;
                             educationCess: any;
                             id: any;
                             majorHead: any;
@@ -3268,7 +3279,7 @@ export class SummaryComponent implements OnInit {
                         ).totalTax,
                       })) as {
                         bsrCode: String;
-                        date: String;
+                        date: Date;
                         challanNo: Number;
                         amount: Number;
                       }[])
@@ -3284,10 +3295,10 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                 },
                 amountPayableRefund:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
-                    ?.BalTaxPayable,
+                  this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
+                    ? this.finalSummary?.assessment?.taxSummary?.taxpayable
+                    : this.finalSummary?.assessment?.taxSummary?.taxRefund,
               };
-
               console.log(this.finalCalculations, 'finalCalculations');
             } else {
               this.loading = false;
@@ -3311,8 +3322,6 @@ export class SummaryComponent implements OnInit {
       );
     }
   }
-
-  summaryToolMapping() {}
 
   getUserName(type) {
     const self = this.ITR_JSON.family?.filter(
