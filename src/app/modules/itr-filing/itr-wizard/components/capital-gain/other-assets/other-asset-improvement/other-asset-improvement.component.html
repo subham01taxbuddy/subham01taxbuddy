@@ -13,21 +13,22 @@
       "
       [formGroupName]="fieldGlobalIndex(i)"
     >
- 
+
               <!-- otherAssets  -->
               <div formGroupName="otherAssetsArray">
-                
+
                   <div>
                     <mat-checkbox
                       color="primary"
                       name="hasEdit[i]"
                       formControlName="hasEdit"
+                      class="ml130"
                       (click)="index = i"
                     >
                     </mat-checkbox>
                   </div>
 
-               
+
                     <div class="row cardClr">
                       <div class="col-sm-4">
                       <mat-label>Sale Date/Date of Transfer</mat-label>
@@ -310,22 +311,23 @@
 
                   </div> <!-- cost-of-improvement Ends -->
                   </div> <!-- Row Ends -->
-                
-              
+
+
 
               </div>
-          
 
-            
+
+
           </div>
-   
+
 
       <div class="row spsTp bdrTp">
         <div class="col-sm-3">
           <button
             type="submit"
-            class="delete-btn btnGry"
+            class="delete-btn"
             (click)="deleteOtherAsset(index)"
+            [disabled]="!assetSelected()"
           >
             <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
           </button>
@@ -344,6 +346,6 @@
           <button class="tbd-btn save-btn mvRth" (click)="saveCg()">Save</button>
         </div>
       </div>
-    
+
   </div>
 </form>

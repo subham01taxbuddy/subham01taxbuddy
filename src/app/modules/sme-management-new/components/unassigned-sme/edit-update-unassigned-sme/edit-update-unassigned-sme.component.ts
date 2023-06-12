@@ -146,20 +146,20 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
   setPartnerDetails(boPartnersInfo) {
-    if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo.mobileNumber);
-    if (!this.name.value) this.name.setValue(boPartnersInfo.name);
-    if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo.emailAddress);
-    if(typeof(boPartnersInfo.languageProficiency) === 'string'){
-      console.log('hurray', [boPartnersInfo.languageProficiency]);
-      this.languages.setValue([boPartnersInfo.languageProficiency]);
+    if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo?.mobileNumber);
+    if (!this.name.value) this.name.setValue(boPartnersInfo?.name);
+    if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo?.emailAddress);
+    if(typeof(boPartnersInfo?.languageProficiency) === 'string'){
+      console.log('hurray', [boPartnersInfo?.languageProficiency]);
+      this.languages.setValue([boPartnersInfo?.languageProficiency]);
     } else {
-      if (!this.languages.value) this.languages.setValue(boPartnersInfo.languageProficiency);
+      if (!this.languages.value) this.languages.setValue(boPartnersInfo?.languageProficiency);
     }
-    if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo.referredBy);
-    if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo.incomeTaxBasic);
-    if (!this.qualification.value) this.qualification.setValue(boPartnersInfo.qualification);
-    if (!this.state.value) this.state.setValue(boPartnersInfo.state);
-    if (!this.special.value) this.special.setValue(boPartnersInfo.incomeTaxSpecial);
+    if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo?.referredBy);
+    if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo?.incomeTaxBasic);
+    if (!this.qualification.value) this.qualification.setValue(boPartnersInfo?.qualification);
+    if (!this.state.value) this.state.setValue(boPartnersInfo?.state);
+    if (!this.special.value) this.special.setValue(boPartnersInfo?.incomeTaxSpecial);
   }
 
   smeFormGroup: FormGroup = this.fb.group({

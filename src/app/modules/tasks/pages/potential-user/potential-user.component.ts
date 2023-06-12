@@ -307,6 +307,9 @@ export class PotentialUserComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {
@@ -472,7 +475,7 @@ export class PotentialUserComponent implements OnInit {
           <i class="fa-solid fa-phone"  data-action-type="call"></i>
            </button>`;
         },
-        width: 50,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -516,7 +519,7 @@ export class PotentialUserComponent implements OnInit {
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 60,
+        width: 80,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -538,7 +541,7 @@ export class PotentialUserComponent implements OnInit {
           <i class="fa-regular fa-user-check" data-action-type="active"></i>
            </button>`;
         },
-        width: 65,
+        width: 85,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

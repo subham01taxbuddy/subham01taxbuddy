@@ -576,12 +576,12 @@ color:#2199e8;
   padding: 5px 0px 5px 10px;
   /* width: 350px; */
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-style: italic;
 border: 1px solid #efefef;
   color: #b60000;
-  max-width: 300px;
-  min-width: 250px;
+  max-width: 250px;
+  min-width: 180px;
   margin:0 auto;
   margin-top:10px;
 }
@@ -1185,7 +1185,7 @@ pagination-controls {
 .delete-btn {
   background: #FFE1E1;
   border: 1px solid #E20000;
-  border-radius: 6px;
+  border-radius: 5px;
   font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
@@ -1194,13 +1194,17 @@ pagination-controls {
   padding: 10px;
   text-align: center;
   color: #E20000;
+  margin-left: -15px;
+  width: 95px;
 }
 
 .delete-btn:disabled {
-  background: #F5F5F5;
-  border: 1px solid #BDBDBD;
-  color: #BDBDBD;
+  border: 1px solid #cccccc;
   padding: 10px;
+  color: #cccccc;
+  width: 95px;
+  border-radius: 5px;
+  margin-left: -15px;
 }
 
 .btnGry {

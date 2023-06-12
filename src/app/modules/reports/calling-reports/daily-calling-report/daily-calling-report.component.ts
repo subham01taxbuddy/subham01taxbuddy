@@ -43,7 +43,7 @@ export class DailyCallingReportComponent implements OnInit {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  toDateMin: any;
+  minEndDate = new Date(2023, 3, 1);
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   dailyCallingReport: any;
@@ -65,7 +65,7 @@ export class DailyCallingReportComponent implements OnInit {
     private itrService: ItrMsService,
     private jsonToCsvService: JsonToCsvService
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
 
     this.dailyCallingReportGridOptions = <GridOptions>{
@@ -367,7 +367,7 @@ export class DailyCallingReportComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+    this.minEndDate = FromDate;
   }
 
 }

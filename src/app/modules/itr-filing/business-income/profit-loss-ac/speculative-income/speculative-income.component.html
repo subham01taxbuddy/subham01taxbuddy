@@ -2,7 +2,7 @@
     <form [formGroup]="specIncomeForm">
         <div class="row bdrBtm">
             <div class="col-sm-6">
-                <div class="titTx1">Speculative Activity </div>              
+                <div class="titTx1">Speculative Activity </div>
             </div>
             <div class="col-sm-6">
               <button type="button" class="new-add btnRt" (click)="addSpecIncomeForm()">+ Add More </button>
@@ -10,7 +10,7 @@
 
         </div>
 
-       
+
           <div formArrayName="specIncomesArray" style="height: 100%; padding-top: 5px; box-sizing: border-box;">
             <div *ngFor="let income of getIncomeArray.controls | paginate:config ;let i=index"
                  [formGroupName]="fieldGlobalIndex(i)">
@@ -29,11 +29,11 @@
                     <mat-label>Gross Profit - Expenditure</mat-label>
                     <!--                    <mat-label>10000</mat-label>-->
                     <mat-form-field appearance="outline">
-                      <input formControlName="netIncome" matInput disabled
+                      <input formControlName="netIncome" matInput readonly
                              name="netIncome[i]" required class="input-field" maxlength="14" digitsOnly>
                     </mat-form-field>
                   </div>
-                            
+
 
                 <div class="col-sm-3 spsTp">
                   <mat-label>Turnover from speculative activity</mat-label>
@@ -41,7 +41,7 @@
                     <input
                       formControlName="turnOver"
                       matInput name="turnOver[i]" class="input-field"
-                      required type="number" trim (blur)="calculateNetIncome(i)">
+                      required type="number" trim (blur)="calculateNetIncome(fieldGlobalIndex(i))">
                   </mat-form-field>
                 </div>
                 <div class="col-sm-2 spsTp">
@@ -50,7 +50,7 @@
                     <input
                       formControlName="grossProfit"
                       matInput  name="grossProfit[i]" class="input-field"
-                      required type="number" trim (blur)="calculateNetIncome(i)">
+                      required type="number" trim (blur)="calculateNetIncome(fieldGlobalIndex(i))">
 
                   </mat-form-field>
                 </div>
@@ -60,14 +60,14 @@
                     <input
                       formControlName="expenditure"
                       matInput name="expenditure[i]" class="input-field"
-                      required type="number" trim (blur)="calculateNetIncome(i)">
+                      required type="number" trim (blur)="calculateNetIncome(fieldGlobalIndex(i))">
                   </mat-form-field>
                 </div>
-                <div class="col-sm-1 spsTp">                 
-                    <button type="button" class="edit-donation tpBtn2" (click)="editSpecIncomeForm(i)"><mat-icon>
+                <div class="col-sm-1 spsTp">
+                    <button type="button" class="edit-donation" (click)="editSpecIncomeForm(fieldGlobalIndex(i))"><mat-icon>
                       edit_square
-                    </mat-icon>Edit </button>        
-                </div>   
+                    </mat-icon>Edit </button>
+                </div>
 
               </div>
               </div>
@@ -77,7 +77,7 @@
 
     <div class="row spsTp bdrTp">
       <div class="col-sm-3">
-        <button type="submit" class="delete-btn" (click)="deleteArray()" disabled>
+        <button type="submit" class="delete-btn" (click)="deleteArray()" [disabled]="!specSelected()">
           <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
         </button>
       </div>

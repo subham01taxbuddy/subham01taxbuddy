@@ -147,6 +147,7 @@ export class OldInvoicesComponent implements OnInit {
 
     },error => {
       this.loading = false;
+      this.gridApi?.setRowData(this.createRowData([]));
     })
     }else{
       this.loading = false;
@@ -256,6 +257,9 @@ export class OldInvoicesComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
       {
         headerName: 'Status',

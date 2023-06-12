@@ -20,7 +20,7 @@
           {{ title }}
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button
+          <button *ngIf="compactView"
             class="edit_btn"
             (click)="$event.stopPropagation(); addMore()"
           >
@@ -71,7 +71,7 @@
               <mat-checkbox
                 name="hasEdit[i]"
                 formControlName="hasEdit"
-                class=""
+                class="ml30"
               >
               </mat-checkbox>
               <div class="row cardClr">
@@ -141,7 +141,7 @@
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
-                          i
+                          fieldGlobalIndex(i)
                         ].controls['sellOrBuyQuantity'].hasError('pattern')
                       "
                       >Enter valid amount.</mat-error
@@ -165,7 +165,7 @@
                         calculateTotalCG(securities);
                         calMaxPurchaseDate(
                           this.securitiesForm.controls['securitiesArray']
-                            .controls[i].controls['sellDate'].value,
+                            .controls[fieldGlobalIndex(i)].controls['sellDate'].value,
                           this.securitiesForm,
                           i
                         )
@@ -179,7 +179,7 @@
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
-                          i
+                          fieldGlobalIndex(i)
                         ].controls['sellDate'].hasError('required')
                       "
                     >
@@ -188,7 +188,7 @@
                     <mat-error
                       *ngIf="
                         securitiesForm.controls['securitiesArray'].controls[
-                          i
+                          fieldGlobalIndex(i)
                         ].controls['sellDate'].hasError('dateOrder')
                       "
                     >
@@ -206,18 +206,7 @@
                       name="sellValuePerUnit"
                       maxlength="14"
                       (change)="calculateTotalCG(securities)"
-                      (blur)="
-                        securitiesForm.controls['securitiesArray'].controls[
-                          fieldGlobalIndex(i)
-                        ].controls['sellValue'].setValue(
-                          securitiesForm.controls['securitiesArray'].controls[
-                            fieldGlobalIndex(i)
-                          ].controls['sellValuePerUnit'].value *
-                            securitiesForm.controls['securitiesArray'].controls[
-                              fieldGlobalIndex(i)
-                            ].controls['sellOrBuyQuantity'].value
-                        )
-                      "
+                      (blur)="getSaleValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                     <mat-error
@@ -247,7 +236,7 @@
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                     <mat-error
-                      *ngIf="
+                      *ngIf="bondType !== 'listed' &&
                         securitiesForm.controls['securitiesArray'].controls[
                           i
                         ].controls['sellValue'].hasError('pattern')
@@ -299,18 +288,7 @@
                       maxlength="14"
                       digitsOnly
                       (change)="calculateTotalCG(securities)"
-                      (blur)="
-                        securitiesForm.controls['securitiesArray'].controls[
-                          fieldGlobalIndex(i)
-                        ].controls['purchaseCost'].setValue(
-                          securitiesForm.controls['securitiesArray'].controls[
-                            fieldGlobalIndex(i)
-                          ].controls['purchaseValuePerUnit'].value *
-                            securitiesForm.controls['securitiesArray'].controls[
-                              fieldGlobalIndex(i)
-                            ].controls['sellOrBuyQuantity'].value
-                        )
-                      "
+                      (blur)="getPurchaseValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                     <mat-error
@@ -510,7 +488,8 @@
               <div class="col-sm-3">
                 <button
                   type="submit"
-                  class="delete-btn btnGry"
+                  class="delete-btn"
+                  [disabled]="!equitySelected()"
                   (click)="deleteArray()"
                 >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
@@ -530,13 +509,13 @@
                 ></pagination-controls>
               </div>
               <div class="col-sm-3">
-                <!-- <button
+                <button
                   type="submit"
-                  class="tbd-btn save-btn mvRth"
+                  class="cancel"
                   (click)="showCompactView()"
                 >
-                  Back
-                </button> -->
+                   Back to Brokers
+                </button>
                 <button
                   type="submit"
                   class="tbd-btn save-btn mvRth"

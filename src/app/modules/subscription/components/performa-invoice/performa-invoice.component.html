@@ -19,7 +19,7 @@
            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
             <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
           </div>
-    
+
         <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
           <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
         </div>
@@ -130,19 +130,19 @@
 
 
 
-            <button class="srch-btn mvRth" (click)="getInvoice('isAgent','agentId')">
+            <button class="srch-btn mvRth" [disabled]="loading" (click)="getInvoice('isAgent','agentId')">
               <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
             </button>
          </div>
             </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
-  
+
 <!-- Table Below -->
 <div class="tableSpc">
   <div class="row">

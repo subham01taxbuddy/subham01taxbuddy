@@ -28,7 +28,7 @@
                 {{drop.name}}</option>
             </select>
         </div>
-    
+
         <div class="col-sm-6 spsTp">
             <label class="input__label" for="attr">Enter value</label>
             <div class="input__select">
@@ -36,16 +36,20 @@
                 [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
             </div>
         </div>
-    
-        <div class="col-sm-12 spsTp bdrTp">     
-            <button class="srch-btn mvRth" [disabled]="loading"  (click)="advanceSearch(advanceSearchKey.value)">
-              <i class="fa fa-search" aria-hidden="true"></i> Search
-            </button>
+
+        <div class="col-sm-12 spsTp bdrTp">
+          <button class="spsTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+            Clear form
+          </button>
+          <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
+            <i class="fa fa-search" aria-hidden="true"></i> Search
+          </button>
+
         </div>
-            </div>
+      </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

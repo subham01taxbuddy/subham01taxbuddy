@@ -27,6 +27,7 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import {RequestManager} from "../../../shared/services/request-manager";
 import {Subscription} from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -313,7 +314,7 @@ export class AssignedNewUsersComponent implements OnInit {
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
-        headerName: 'Name',
+        headerName: 'Client Name',
         field: 'name',
         width: 160,
         suppressMovable: true,
@@ -338,7 +339,7 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Email',
+        headerName: 'Email Address',
         field: 'email',
         width: 200,
         suppressMovable: true,
@@ -348,6 +349,9 @@ export class AssignedNewUsersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
       // {
       //   headerName: 'Status',
@@ -379,6 +383,27 @@ export class AssignedNewUsersComponent implements OnInit {
       //     }
       //   },
       // },
+      {
+        headerName: 'Action With',
+        field: 'conversationWithFiler',
+        width: 110,
+        suppressMovable: true,
+        hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {{
+          if(params.data.conversationWithFiler === true){
+            return params.data.filerName;
+          } else {
+            return params.data.ownerName;
+          }
+        }
+        }
+      },
       {
         headerName: 'Owner Name',
         field: 'ownerName',
@@ -467,7 +492,11 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          if(data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
         },
         // filter: "agTextColumnFilter",
         // filterParams: {
@@ -517,6 +546,33 @@ export class AssignedNewUsersComponent implements OnInit {
       //     debounceMs: 0
       //   }
       // },
+      {
+        headerName: 'ITR Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if(params.data.serviceType === 'ITR') {
+            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Call',
         editable: false,
@@ -696,7 +752,7 @@ export class AssignedNewUsersComponent implements OnInit {
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
-        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
+        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : null,
         name: userData[i].name,
         mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
@@ -709,12 +765,13 @@ export class AssignedNewUsersComponent implements OnInit {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
-        lastFiledItrId: userData[i].lastFiledItrId
+        lastFiledItrId: userData[i].lastFiledItrId,
+        conversationWithFiler: userData[i].conversationWithFiler
       })
       userArray.push(userInfo);
     }
@@ -775,8 +832,28 @@ export class AssignedNewUsersComponent implements OnInit {
           this.openReviseReturnDialog(params.data);
           break;
         }
+        case 'getItrStatus': {
+          this.getItrStatus(params.data);
+          break;
+        }
       }
     }
+  }
+
+  getItrStatus(data){
+    let disposable = this.dialog.open(ItrStatusDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: data.userId,
+        clientName: data.name,
+        serviceType: data.serviceType
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+
   }
 
   rowData: any;

@@ -114,7 +114,7 @@ export class AssignedSmeComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
         console.log("Search result:", result)
-        if (Array.isArray(result.data.content) && result.data.content.length > 0
+        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0
         ) {
           this.loading = false;
           this.smeInfo = result.data.content;
@@ -123,11 +123,15 @@ export class AssignedSmeComponent implements OnInit {
         }else{
           this.loading = false;
           this._toastMessageService.alert('error','No Lead Data Found .');
+          this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
           // this.getSmeList();
         }
      },(error) => {
       this.loading = false;
       this._toastMessageService.alert('error','No Lead Data Found .');
+      this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
     });
 
   }
@@ -270,6 +274,13 @@ export class AssignedSmeComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          if(params.value) {
+            return `<a href="mailto:${params.value}">${params.value}</a>`
+          } else {
+            return 'NA';
+          }
+        }
       },
       {
         headerName: 'Komm ID',
@@ -426,7 +437,7 @@ export class AssignedSmeComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
             <i class="fa fa-phone" aria-hidden="true" padding-top: 5px; data-action-type="call"></i>
            </button>`;
         },
@@ -445,7 +456,7 @@ export class AssignedSmeComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
           style="color:#2199e8; font-size: 14px;">
-          <i class="fa-sharp fa-solid fa-pen" data-action-type="edit" ></i> Edit
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
           </button>`;
         },
       },
@@ -532,6 +543,17 @@ export class AssignedSmeComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.getSmeList(true);
+  }
+
+  resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1;
+    this.key = null;
+    this.searchVal = null;
+
+    this.getSmeList();
+
   }
 
 }
