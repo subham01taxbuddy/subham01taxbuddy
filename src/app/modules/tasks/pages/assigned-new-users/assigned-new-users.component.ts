@@ -492,7 +492,11 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          if(data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
         },
         // filter: "agTextColumnFilter",
         // filterParams: {
@@ -748,7 +752,7 @@ export class AssignedNewUsersComponent implements OnInit {
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
-        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
+        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : null,
         name: userData[i].name,
         mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
