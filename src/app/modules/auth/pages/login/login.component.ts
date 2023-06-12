@@ -14,6 +14,7 @@ import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import {RequestManager} from "../../../shared/services/request-manager";
+import {SpeedTestService} from 'ng-speed-test';
 
 declare let $: any;
 
@@ -44,7 +45,8 @@ export class LoginComponent implements OnInit {
     public utilsService: UtilsService,
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
-    private requestManager: RequestManager
+    private requestManager: RequestManager,
+    private speedTestService:SpeedTestService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -152,8 +154,27 @@ export class LoginComponent implements OnInit {
         this.changeMode('FORGOT_PASSWORD', params['mobile']);
       }
     });
-
+    this.speedTest()
   }
+  internetSpeed:any = 10;
+  speedTest(){
+    this.speedTestService.getMbps(
+      {
+        iterations: 5,
+        // retryDelay: 1500,
+      }
+    ).subscribe(
+      (speed) => {
+        console.log('Your speed is ' + Number(speed));
+        this.internetSpeed = Number(speed).toFixed(2);
+      }
+    );
+  }
+
+  isMobileBrowser() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
   gotoCloud(userData?) {
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('99999999999999999:', params);
