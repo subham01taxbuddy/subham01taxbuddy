@@ -2284,7 +2284,7 @@ export class SummaryComponent implements OnInit {
                       : null,
 
                     totalOtherThanSalary16A:
-                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A.reduce(
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
                         (total, item) => total + item?.totalTdsDeposited,
                         0
                       ),
@@ -3057,7 +3057,7 @@ export class SummaryComponent implements OnInit {
                     : null,
 
                   totalOtherThanSalary16A:
-                    this.finalSummary?.itr?.taxPaid?.otherThanSalary16A.reduce(
+                    this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
                       (total, item) => total + item?.totalTdsDeposited,
                       0
                     ),
