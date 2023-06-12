@@ -321,31 +321,38 @@ export class SummaryComponent implements OnInit {
         totalAmountCredited: Number;
         totalTdsDeposited: Number;
       }[];
+      totalOnSalary: Number;
       otherThanSalary16A: {
         deductorName: String;
         deductorTAN: String;
         totalAmountCredited: Number;
         totalTdsDeposited: Number;
       }[];
-      // otherThanSalary26QB: {
-      //   deductorName: String;
-      //   deductorTAN: String;
-      //   totalAmountCredited: Number;
-      //   totalTdsDeposited: Number;
-      // }[];
-      // tcs: {
-      //   deductorName: String;
-      //   deductorTAN: String;
-      //   totalAmountCredited: Number;
-      //   totalTdsDeposited: Number;
-      // }[];
-      // otherThanTDSTCS: {
-      //   deductorName: String;
-      //   deductorTAN: String;
-      //   totalAmountCredited: Number;
-      //   totalTdsDeposited: Number;
-      // }[];
+      totalOtherThanSalary16A: Number;
+      otherThanSalary26QB: {
+        deductorName: String;
+        deductorTAN: String;
+        totalAmountCredited: Number;
+        totalTdsDeposited: Number;
+      }[];
+      totalOtherThanSalary26QB: number;
+      tcs: {
+        deductorName: String;
+        deductorTAN: String;
+        totalAmountCredited: Number;
+        totalTdsDeposited: Number;
+      }[];
+      totalTcs: Number;
+      otherThanTDSTCS: {
+        bsrCode: String;
+        date: String;
+        challanNo: Number;
+        amount: Number;
+      }[];
+      totalOtherThanTDSTCS: Number;
+      totalTaxesPaid: Number;
     };
+    amountPayableRefund: Number;
   };
 
   constructor(
@@ -884,59 +891,68 @@ export class SummaryComponent implements OnInit {
               ].TotTaxPlusIntrstPay,
 
             taxPaid: {
-              onSalary: Object.entries(
+              onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                .TDSonSalaries?.TDSonSalary
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      .TDSonSalaries?.TDSonSalary
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl
+                      ?.EmployerOrDeductorOrCollecterName,
+                    deductorTAN: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl?.TAN,
+                    totalAmountCredited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).IncChrgSal,
+                    totalTdsDeposited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).TotalTDSSal,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalOnSalary:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
-                  ?.TDSonSalary
-              ).map(([key, item]) => ({
-                deductorName: (
-                  item as {
-                    EmployerOrDeductorOrCollectDetl: {
-                      TAN: String;
-                      EmployerOrDeductorOrCollecterName: String;
-                    };
-                    IncChrgSal: Number;
-                    TotalTDSSal: Number;
-                  }
-                ).EmployerOrDeductorOrCollectDetl
-                  ?.EmployerOrDeductorOrCollecterName,
-                deductorTAN: (
-                  item as {
-                    EmployerOrDeductorOrCollectDetl: {
-                      TAN: String;
-                      EmployerOrDeductorOrCollecterName: String;
-                    };
-                    IncChrgSal: Number;
-                    TotalTDSSal: Number;
-                  }
-                ).EmployerOrDeductorOrCollectDetl?.TAN,
-                totalAmountCredited: (
-                  item as {
-                    EmployerOrDeductorOrCollectDetl: {
-                      TAN: String;
-                      EmployerOrDeductorOrCollecterName: String;
-                    };
-                    IncChrgSal: Number;
-                    TotalTDSSal: Number;
-                  }
-                ).IncChrgSal,
-                totalTdsDeposited: (
-                  item as {
-                    EmployerOrDeductorOrCollectDetl: {
-                      TAN: String;
-                      EmployerOrDeductorOrCollecterName: String;
-                    };
-                    IncChrgSal: Number;
-                    TotalTDSSal: Number;
-                  }
-                ).TotalTDSSal,
-              })) as {
-                deductorName: String;
-                deductorTAN: String;
-                totalAmountCredited: Number;
-                totalTdsDeposited: Number;
-              }[],
-              otherThanSalary16A:
-                this.itrType === 'ITR1'
+                  ?.TotalTDSonSalaries,
+
+              otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ].TDSonOthThanSals?.TDSonOthThanSal
+                ? this.itrType === 'ITR1'
                   ? (Object.entries(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         .TDSonOthThanSals?.TDSonOthThanSal
@@ -1049,81 +1065,305 @@ export class SummaryComponent implements OnInit {
                       deductorTAN: String;
                       totalAmountCredited: Number;
                       totalTdsDeposited: Number;
-                    }[]),
-              // otherThanSalary26QB: {
-              //   deductorName: '',
-              //   deductorTAN: '',
-              //   totalAmountCredited: 0,
-              //   totalTdsDeposited: 0,
-              // }[],
-              // tcs: {
-              //   deductorName: '',
-              //   deductorTAN: '',
-              //   totalAmountCredited: 0,
-              //   totalTdsDeposited: 0
-              // }[],
-              // otherThanTDSTCS: {
-              //   deductorName: '',
-              //   deductorTAN: '',
-              //   totalAmountCredited: 0,
-              //   totalTdsDeposited: 0
-              // }[],
+                    }[])
+                : null,
+              totalOtherThanSalary16A:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  .TDSonOthThanSals?.TotalTDSonOthThanSals,
+
+              otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ].ScheduleTDS3Dtls?.TDS3Details
+                ? this.itrType === 'ITR1'
+                  ? (Object.entries(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleTDS3Dtls?.TDS3Details
+                    ).map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).NameOfTenant,
+                      deductorTAN: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).PANofTenant,
+                      totalAmountCredited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).GrsRcptToTaxDeduct,
+                      totalTdsDeposited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).TDSClaimed,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : (Object.entries(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleTDS3Dtls?.TDS3Details
+                    ).map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).HeadOfIncome,
+                      deductorTAN: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).PANofTenant,
+                      totalAmountCredited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).GrossAmount,
+                      totalTdsDeposited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).TDSDeducted,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                : null,
+              totalOtherThanSalary26QB:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  .ScheduleTDS3Dtls?.TDS3Details,
+
+              tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
+                ?.TCS
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      .ScheduleTCS?.TCS
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl
+                      ?.EmployerOrDeductorOrCollecterName,
+                    deductorTAN: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl?.TAN,
+                    totalAmountCredited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).AmtTaxCollected,
+                    totalTdsDeposited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).AmtTCSClaimedThisYear,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalTcs:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
+                  ?.TotalSchTCS,
+
+              otherThanTDSTCS:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
+                  ?.TotalTaxPayments ||
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
+                  ?.TotalTaxPayments
+                  ? this.itrType === 'ITR1'
+                    ? (Object.entries(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .TaxPayments?.TaxPayment
+                      ).map(([key, item]) => ({
+                        bsrCode: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).BSRCode,
+                        date: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).DateDep,
+                        challanNo: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).SrlNoOfChaln,
+                        amount: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).Amt,
+                      })) as {
+                        bsrCode: String;
+                        date: String;
+                        challanNo: Number;
+                        amount: Number;
+                      }[])
+                    : (Object.entries(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleIT?.TaxPayment
+                      ).map(([key, item]) => ({
+                        bsrCode: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).BSRCode,
+                        date: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).DateDep,
+                        challanNo: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).SrlNoOfChaln,
+                        amount: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: any;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).Amt,
+                      })) as {
+                        bsrCode: String;
+                        date: String;
+                        challanNo: Number;
+                        amount: Number;
+                      }[])
+                  : null,
+
+              totalOtherThanTDSTCS:
+                this.itrType === 'ITR1'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      .TaxPayments?.TotalTaxPayments
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
+                      ?.TotalTaxPayments,
+
+              totalTaxesPaid:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
+                  .TaxesPaid?.TotalTaxesPaid,
             },
+            amountPayableRefund:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
+                ?.BalTaxPayable,
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
-            TDSonSalary:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
-                ?.TDSonSalary,
-
-            TotalTDSonSalaries:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonSalaries
-                ?.TotalTDSonSalaries,
-
-            TDSonOthThanSal:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonOthThanSals
-                ?.TDSonOthThanSal,
-
-            TotalTDSonOthThanSals:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TDSonOthThanSals
-                ?.TotalTDSonOthThanSals,
-
-            TDS3Details:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3Dtls
-                ?.TDS3Details,
-
-            TotalTDS3Details:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3Dtls
-                ?.TotalTDS3Details,
-
-            TCS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
-              ?.TCS,
-
-            TotalSchTCS:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TotalSchTCS,
-
-            TaxPayment:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
-                ?.TaxPayment,
-
-            TotalTaxPayments:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPayments
-                ?.TotalTaxPayments,
-
-            TaxPayableOnRebate:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.TaxPayableOnRebate,
-
-            TotalTaxesPaid:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
-                .TaxesPaid?.TotalTaxesPaid,
-
-            BalTaxPayable:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
-                ?.BalTaxPayable,
-
             // EXEMPT INCOME
             ExemptIncAgriOthUs10Total:
               this.itrType === 'ITR1'
@@ -1917,173 +2157,363 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.taxSummary
                       ?.agrigateLiability,
                   taxPaid: {
-                    onSalary: Object.entries(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .TDSonSalaries?.TDSonSalary
-                    ).map(([key, item]) => ({
-                      deductorName: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          IncChrgSal: Number;
-                          TotalTDSSal: Number;
-                        }
-                      ).EmployerOrDeductorOrCollectDetl
-                        ?.EmployerOrDeductorOrCollecterName,
-                      deductorTAN: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          IncChrgSal: Number;
-                          TotalTDSSal: Number;
-                        }
-                      ).EmployerOrDeductorOrCollectDetl?.TAN,
-                      totalAmountCredited: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          IncChrgSal: Number;
-                          TotalTDSSal: Number;
-                        }
-                      ).IncChrgSal,
-                      totalTdsDeposited: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          IncChrgSal: Number;
-                          TotalTDSSal: Number;
-                        }
-                      ).TotalTDSSal,
-                    })) as {
-                      deductorName: String;
-                      deductorTAN: String;
-                      totalAmountCredited: Number;
-                      totalTdsDeposited: Number;
-                    }[],
-                    otherThanSalary16A:
-                      this.itrType === 'ITR1'
-                        ? (Object.entries(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .TDSonOthThanSals?.TDSonOthThanSal
-                          ).map(([key, item]) => ({
-                            deductorName: (
-                              item as {
-                                EmployerOrDeductorOrCollectDetl: {
-                                  TAN: String;
-                                  EmployerOrDeductorOrCollecterName: String;
-                                };
-                                AmtForTaxDeduct: Number;
-                                DeductedYr: String;
-                                TotTDSOnAmtPaid: Number;
-                                ClaimOutOfTotTDSOnAmtPaid: Number;
-                              }
-                            ).EmployerOrDeductorOrCollectDetl
-                              ?.EmployerOrDeductorOrCollecterName,
-                            deductorTAN: (
-                              item as {
-                                EmployerOrDeductorOrCollectDetl: {
-                                  TAN: String;
-                                  EmployerOrDeductorOrCollecterName: String;
-                                };
-                                AmtForTaxDeduct: Number;
-                                DeductedYr: String;
-                                TotTDSOnAmtPaid: Number;
-                                ClaimOutOfTotTDSOnAmtPaid: Number;
-                              }
-                            ).EmployerOrDeductorOrCollectDetl?.TAN,
-                            totalAmountCredited: (
-                              item as {
-                                EmployerOrDeductorOrCollectDetl: {
-                                  TAN: String;
-                                  EmployerOrDeductorOrCollecterName: String;
-                                };
-                                AmtForTaxDeduct: Number;
-                                DeductedYr: String;
-                                TotTDSOnAmtPaid: Number;
-                                ClaimOutOfTotTDSOnAmtPaid: Number;
-                              }
-                            ).AmtForTaxDeduct,
-                            totalTdsDeposited: (
-                              item as {
-                                EmployerOrDeductorOrCollectDetl: {
-                                  TAN: String;
-                                  EmployerOrDeductorOrCollecterName: String;
-                                };
-                                AmtForTaxDeduct: Number;
-                                DeductedYr: String;
-                                TotTDSOnAmtPaid: Number;
-                                ClaimOutOfTotTDSOnAmtPaid: Number;
-                              }
-                            ).ClaimOutOfTotTDSOnAmtPaid,
-                          })) as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }[])
-                        : (Object.entries(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .TDSonOthThanSals?.TDSonOthThanSalDtls
-                          ).map(([key, item]) => ({
-                            deductorName: (
-                              item as {
-                                TANOfDeductor: String;
-                                BroughtFwdTDSAmt: Number;
-                                TDSDeducted: Number;
-                                TDSClaimed: Number;
-                                GrossAmount: Number;
-                                HeadOfIncome: String;
-                                TDSCreditCarriedFwd: Number;
-                              }
-                            ).TANOfDeductor,
-                            deductorTAN: (
-                              item as {
-                                TANOfDeductor: String;
-                                BroughtFwdTDSAmt: Number;
-                                TDSDeducted: Number;
-                                TDSClaimed: Number;
-                                GrossAmount: Number;
-                                HeadOfIncome: String;
-                                TDSCreditCarriedFwd: Number;
-                              }
-                            ).TANOfDeductor,
-                            totalAmountCredited: (
-                              item as {
-                                TANOfDeductor: String;
-                                BroughtFwdTDSAmt: Number;
-                                TDSDeducted: Number;
-                                TDSClaimed: Number;
-                                GrossAmount: Number;
-                                HeadOfIncome: String;
-                                TDSCreditCarriedFwd: Number;
-                              }
-                            ).GrossAmount,
-                            totalTdsDeposited: (
-                              item as {
-                                TANOfDeductor: String;
-                                BroughtFwdTDSAmt: Number;
-                                TDSDeducted: Number;
-                                TDSClaimed: Number;
-                                GrossAmount: Number;
-                                HeadOfIncome: String;
-                                TDSCreditCarriedFwd: Number;
-                              }
-                            ).TDSDeducted,
-                          })) as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }[]),
+                    onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.onSalary
+                        ).map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).deductorName,
+                          deductorTAN: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).deductorTAN,
+                          totalAmountCredited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).totalAmountCredited,
+                          totalTdsDeposited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).totalTdsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
+                    totalOnSalary:
+                      this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                        (total, item) => total + item?.totalTdsDeposited,
+                        0
+                      ),
+
+                    otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                      ?.otherThanSalary16A
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                        ).map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).deductorName,
+                          deductorTAN: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).deductorTAN,
+                          totalAmountCredited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).totalAmountCredited,
+                          totalTdsDeposited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).totalTdsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
+
+                    totalOtherThanSalary16A:
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A.reduce(
+                        (total, item) => total + item?.totalTdsDeposited,
+                        0
+                      ),
+
+                    otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                      ?.otherThanSalary26QB
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                        ).map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).deductorName,
+                          deductorTAN: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).deductorPAN,
+                          totalAmountCredited: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).totalAmountCredited,
+                          totalTdsDeposited: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).totalTdsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
+
+                    totalOtherThanSalary26QB:
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB.reduce(
+                        (total, item) => total + item?.totalTdsDeposited,
+                        0
+                      ),
+
+                    tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.tcs
+                        ).map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).collectorName,
+                          deductorTAN: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).collectorTAN,
+                          totalAmountCredited: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).totalAmountPaid,
+                          totalTdsDeposited: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).totalTcsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
+                    totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                      (total, item) => total + item?.totalTcsDeposited,
+                      0
+                    ),
+
+                    otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                      ?.otherThanTDSTCS
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                        )?.map(([key, item]) => ({
+                          bsrCode: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: any;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).bsrCode,
+                          date: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: any;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).dateOfDeposit,
+                          challanNo: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: any;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).challanNumber,
+                          amount: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: any;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).totalTax,
+                        })) as {
+                          bsrCode: String;
+                          date: String;
+                          challanNo: Number;
+                          amount: Number;
+                        }[])
+                      : null,
+
+                    totalOtherThanTDSTCS:
+                      this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                        (total, item) => total + item?.totalTax,
+                        0
+                      ),
+
+                    totalTaxesPaid:
+                      this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                   },
+                  amountPayableRefund:
+                    this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
+                      ? this.finalSummary?.assessment?.taxSummary?.taxpayable
+                      : this.finalSummary?.assessment?.taxSummary?.taxRefund,
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -2500,173 +2930,362 @@ export class SummaryComponent implements OnInit {
                 aggregateLiability:
                   this.finalSummary?.assessment?.taxSummary?.agrigateLiability,
                 taxPaid: {
-                  onSalary: Object.entries(
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      .TDSonSalaries?.TDSonSalary
-                  ).map(([key, item]) => ({
-                    deductorName: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl
-                      ?.EmployerOrDeductorOrCollecterName,
-                    deductorTAN: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl?.TAN,
-                    totalAmountCredited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).IncChrgSal,
-                    totalTdsDeposited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).TotalTDSSal,
-                  })) as {
-                    deductorName: String;
-                    deductorTAN: String;
-                    totalAmountCredited: Number;
-                    totalTdsDeposited: Number;
-                  }[],
-                  otherThanSalary16A:
-                    this.itrType === 'ITR1'
-                      ? (Object.entries(
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .TDSonOthThanSals?.TDSonOthThanSal
-                        ).map(([key, item]) => ({
+                  onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.onSalary
+                      ).map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).deductorName,
+                        deductorTAN: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).deductorTAN,
+                        totalAmountCredited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).totalAmountCredited,
+                        totalTdsDeposited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).totalTdsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
+                  totalOnSalary:
+                    this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                      (total, item) => total + item?.totalTdsDeposited,
+                      0
+                    ),
+
+                  otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                    ?.otherThanSalary16A
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                      ).map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).deductorName,
+                        deductorTAN: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).deductorTAN,
+                        totalAmountCredited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).totalAmountCredited,
+                        totalTdsDeposited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).totalTdsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
+
+                  totalOtherThanSalary16A:
+                    this.finalSummary?.itr?.taxPaid?.otherThanSalary16A.reduce(
+                      (total, item) => total + item?.totalTdsDeposited,
+                      0
+                    ),
+
+                  otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                    ?.otherThanSalary26QB
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                      ).map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).deductorName,
+                        deductorTAN: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).deductorPAN,
+                        totalAmountCredited: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).totalAmountCredited,
+                        totalTdsDeposited: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).totalTdsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
+
+                  totalOtherThanSalary26QB:
+                    this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB.reduce(
+                      (total, item) => total + item?.totalTdsDeposited,
+                      0
+                    ),
+
+                  tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                    ? (Object.entries(this.finalSummary?.itr?.taxPaid?.tcs).map(
+                        ([key, item]) => ({
                           deductorName: (
                             item as {
-                              EmployerOrDeductorOrCollectDetl: {
-                                TAN: String;
-                                EmployerOrDeductorOrCollecterName: String;
-                              };
-                              AmtForTaxDeduct: Number;
-                              DeductedYr: String;
-                              TotTDSOnAmtPaid: Number;
-                              ClaimOutOfTotTDSOnAmtPaid: Number;
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
                             }
-                          ).EmployerOrDeductorOrCollectDetl
-                            ?.EmployerOrDeductorOrCollecterName,
+                          ).collectorName,
                           deductorTAN: (
                             item as {
-                              EmployerOrDeductorOrCollectDetl: {
-                                TAN: String;
-                                EmployerOrDeductorOrCollecterName: String;
-                              };
-                              AmtForTaxDeduct: Number;
-                              DeductedYr: String;
-                              TotTDSOnAmtPaid: Number;
-                              ClaimOutOfTotTDSOnAmtPaid: Number;
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
                             }
-                          ).EmployerOrDeductorOrCollectDetl?.TAN,
+                          ).collectorTAN,
                           totalAmountCredited: (
                             item as {
-                              EmployerOrDeductorOrCollectDetl: {
-                                TAN: String;
-                                EmployerOrDeductorOrCollecterName: String;
-                              };
-                              AmtForTaxDeduct: Number;
-                              DeductedYr: String;
-                              TotTDSOnAmtPaid: Number;
-                              ClaimOutOfTotTDSOnAmtPaid: Number;
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
                             }
-                          ).AmtForTaxDeduct,
+                          ).totalAmountPaid,
                           totalTdsDeposited: (
                             item as {
-                              EmployerOrDeductorOrCollectDetl: {
-                                TAN: String;
-                                EmployerOrDeductorOrCollecterName: String;
-                              };
-                              AmtForTaxDeduct: Number;
-                              DeductedYr: String;
-                              TotTDSOnAmtPaid: Number;
-                              ClaimOutOfTotTDSOnAmtPaid: Number;
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
                             }
-                          ).ClaimOutOfTotTDSOnAmtPaid,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : (Object.entries(
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .TDSonOthThanSals?.TDSonOthThanSalDtls
-                        ).map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              TANOfDeductor: String;
-                              BroughtFwdTDSAmt: Number;
-                              TDSDeducted: Number;
-                              TDSClaimed: Number;
-                              GrossAmount: Number;
-                              HeadOfIncome: String;
-                              TDSCreditCarriedFwd: Number;
-                            }
-                          ).TANOfDeductor,
-                          deductorTAN: (
-                            item as {
-                              TANOfDeductor: String;
-                              BroughtFwdTDSAmt: Number;
-                              TDSDeducted: Number;
-                              TDSClaimed: Number;
-                              GrossAmount: Number;
-                              HeadOfIncome: String;
-                              TDSCreditCarriedFwd: Number;
-                            }
-                          ).TANOfDeductor,
-                          totalAmountCredited: (
-                            item as {
-                              TANOfDeductor: String;
-                              BroughtFwdTDSAmt: Number;
-                              TDSDeducted: Number;
-                              TDSClaimed: Number;
-                              GrossAmount: Number;
-                              HeadOfIncome: String;
-                              TDSCreditCarriedFwd: Number;
-                            }
-                          ).GrossAmount,
-                          totalTdsDeposited: (
-                            item as {
-                              TANOfDeductor: String;
-                              BroughtFwdTDSAmt: Number;
-                              TDSDeducted: Number;
-                              TDSClaimed: Number;
-                              GrossAmount: Number;
-                              HeadOfIncome: String;
-                              TDSCreditCarriedFwd: Number;
-                            }
-                          ).TDSDeducted,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[]),
+                          ).totalTcsDeposited,
+                        })
+                      ) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
+                  totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                    (total, item) => total + item?.totalTcsDeposited,
+                    0
+                  ),
+
+                  otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                    ?.otherThanTDSTCS
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                      )?.map(([key, item]) => ({
+                        bsrCode: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: any;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).bsrCode,
+                        date: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: any;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).dateOfDeposit,
+                        challanNo: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: any;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).challanNumber,
+                        amount: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: any;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).totalTax,
+                      })) as {
+                        bsrCode: String;
+                        date: String;
+                        challanNo: Number;
+                        amount: Number;
+                      }[])
+                    : null,
+
+                  totalOtherThanTDSTCS:
+                    this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                      (total, item) => total + item?.totalTax,
+                      0
+                    ),
+
+                  totalTaxesPaid:
+                    this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                 },
+                amountPayableRefund:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].TaxPaid
+                    ?.BalTaxPayable,
               };
 
               console.log(this.finalCalculations, 'finalCalculations');
