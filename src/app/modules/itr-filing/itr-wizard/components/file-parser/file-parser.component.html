@@ -28,32 +28,36 @@
 <!--          <button class="tbd-btn" *ngIf="broker.name === 'Taxbuddy'" (click)="downloadTemplate()">Download Template</button>-->
         </div>
         <div class="card__col-sm-9">
-          <div class="card__col-sm-4">
-            <button class="upload" (click)="upload(broker.name)">
-              <i class="fa fa-upload"></i>
-              Upload
-            </button>
-          </div>
-          <div class="card__col-sm-1">
-            <mat-progress-spinner
-              *ngIf="broker.loading"
-              color="primary"
-              diameter="20"
-              mode="indeterminate"
-            >
-            </mat-progress-spinner>
-          </div>
-          <div class="card__col-sm-7">
-            <label *ngFor="let file of broker.filesUploaded" class="filename">
-              <i
-                class="fa fa-check-circle"
-                style="color: green"
-                aria-hidden="true"
-                >&nbsp;</i
-              >{{ file }}</label
-            ><br />
+          <div class="row">
+            <div class="col-sm-4">
+              <button class="upload m-0" (click)="upload(broker.name)">
+                <i class="fa fa-upload"></i>
+                Upload
+              </button>
+            </div>
+            <div class="col-sm-5">
+              <button class="upload m-0" (click)="cloudUpload(broker.name)">
+                <i class="fa fa-upload"></i>
+                Cloud Upload
+              </button>
+            </div>
+            <div class="col-sm-1">
+              <mat-progress-spinner
+                *ngIf="broker.loading"
+                color="primary"
+                diameter="20"
+                mode="indeterminate"
+              ></mat-progress-spinner>
+            </div>
+            <div class="col-sm-9">
+              <label *ngFor="let file of broker.filesUploaded" class="filename">
+                <i class="fa fa-check-circle" style="color: green" aria-hidden="true"></i>&nbsp;{{ file }}
+              </label>
+              <br />
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
