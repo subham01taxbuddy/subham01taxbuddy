@@ -43,6 +43,7 @@
     "lodash": "^4.17.21",
     "mammoth": "^1.4.21",
     "moment": "^2.29.1",
+    "ng-speed-test": "^2.3.2",
     "ng2-pdf-viewer": "^8.0.1",
     "ngx-bootstrap": "^8.0.0",
     "ngx-doc-viewer": "2.1.2",

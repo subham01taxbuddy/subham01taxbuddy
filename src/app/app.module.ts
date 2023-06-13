@@ -28,6 +28,7 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {environment} from "../environments/environment";
 import {AngularFireMessagingModule, SERVICE_WORKER} from "@angular/fire/compat/messaging";
 import {ServiceWorkerModule} from "@angular/service-worker";
+import { SpeedTestModule } from 'ng-speed-test';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {ServiceWorkerModule} from "@angular/service-worker";
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
+    SpeedTestModule
   ],
   providers: [
     NavbarService,
