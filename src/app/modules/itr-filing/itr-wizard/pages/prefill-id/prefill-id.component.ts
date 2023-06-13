@@ -152,8 +152,10 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
 
         //check if uploaded json is not summary json
-        if(JSONData.hasOwnProperty('ITR')){
-          this.utilsService.showSnackBar('You are trying to upload summary json instead of prefill');
+        if (JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'You are trying to upload summary json instead of prefill'
+          );
           return;
         }
 
@@ -1139,13 +1141,16 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
-        if(!JSONData.hasOwnProperty('ITR')){
-          this.utilsService.showSnackBar('The uploaded json is not a summary json. Please check file again');
+        if (!JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'The uploaded json is not a summary json. Please check file again'
+          );
           return;
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4')
+          JSONData.ITR.hasOwnProperty('ITR4') ||
+          JSONData.ITR.hasOwnProperty('ITR2')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
@@ -4026,14 +4031,14 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].Schedule112A?.Schedule112ADtls;
 
             if (EquityMF112A) {
-              EquityMF112A.forEach((equityLtcg) => {
-                let itrObjEquity112a = this.ITR_Obj.capitalGain.find(
+              EquityMF112A?.forEach((equityLtcg) => {
+                let itrObjEquity112a = this.ITR_Obj?.capitalGain?.find(
                   (equity112a) =>
-                    equity112a.assetType === 'EQUITY_SHARES_LISTED'
+                    equity112a?.assetType === 'EQUITY_SHARES_LISTED'
                 );
 
                 if (itrObjEquity112a) {
-                  itrObjEquity112a.assetDetails.push({
+                  itrObjEquity112a?.assetDetails.push({
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
@@ -4062,12 +4067,35 @@ export class PrefillIdComponent implements OnInit {
                   });
                 } else {
                   const equityLtcgDetail = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'EQUITY_SHARES_LISTED',
-                    deduction: [],
-                    improvement: [],
+                    deduction: [
+                      {
+                        srn: 0,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
+                    improvement: [{
+                      id: null,
+                      srn: null,
+                      financialYearOfImprovement: null,
+                      dateOfImprovement: null,
+                      costOfImprovement:
+                      equityLtcg.EquityMFonSTTDtls?.DeductSec48
+                          ?.ImproveCost,
+                      indexCostOfImprovement: null,
+                    }],
                     buyersDetails: [],
                     assetDetails: [
                       {
@@ -4208,13 +4236,13 @@ export class PrefillIdComponent implements OnInit {
 
             EquityMFonSTT.forEach((equityStcg) => {
               if (equityStcg === EquityMFonSTT[0]) {
-                let itrObjEquity111a = this.ITR_Obj.capitalGain.find(
+                let itrObjEquity111a = this.ITR_Obj.capitalGain?.find(
                   (equity111a) =>
-                    equity111a.assetType === 'EQUITY_SHARES_LISTED'
+                    equity111a?.assetType === 'EQUITY_SHARES_LISTED'
                 );
 
                 if (itrObjEquity111a) {
-                  itrObjEquity111a.assetDetails.push({
+                  itrObjEquity111a?.assetDetails?.push({
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
@@ -4246,11 +4274,25 @@ export class PrefillIdComponent implements OnInit {
                   });
                 } else {
                   const equityStcgDetail = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'EQUITY_SHARES_LISTED',
-                    deduction: [],
+                    deduction: [
+                      {
+                        srn: 0,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
                     improvement: [
                       {
                         id: null,
