@@ -182,177 +182,177 @@ export class SummaryComponent implements OnInit {
       ];
       salaryTotalIncome: Number;
     };
-    houseProperties: {
-      houseProps: [
-        {
-          hpNo: Number;
-          typeOfHp;
-          grossRentReceived;
-          taxesPaid: Number;
-          annualValue: Number;
-          hpStandardDeduction: Number;
-          hpinterest: Number;
-          hpNetIncome: Number;
-          hpIncome: Number;
-        }
-      ];
-      hpTotalIncome: Number;
-    };
-    otherIncome: {
-      otherIncomes: {
-        saving: Number;
-        intFromDeposit: Number;
-        taxRefund: Number;
-        anyOtherInterest: Number;
-        familyPension: Number;
-        dividendIncome: Number;
-      };
-      otherIncomeTotal: Number;
-    };
-    businessIncome: {
-      businessIncomeDetails: {
-        business44AD: {
-          bank: [
-            {
-              businessSection: String;
-              natureOfBusinessCode: any;
-              tradeName: String;
-              grossTurnover: Number;
-              TaxableIncome: Number;
-            }
-          ];
-          cash: [
-            {
-              businessSection: String;
-              natureOfBusinessCode: any;
-              tradeName: String;
-              grossTurnover: Number;
-              TaxableIncome: Number;
-            }
-          ];
-        };
-        business44ADA: [
-          {
-            businessSection: String;
-            natureOfBusinessCode: any;
-            tradeName: String;
-            grossTurnover: Number;
-            TaxableIncome: Number;
-          }
-        ];
-      };
-      businessIncomeTotal: Number;
-    };
-    totalHeadWiseIncome: Number;
-    currentYearLosses: {
-      currentYearLossesSetOff: [{ houseProperty: Number }];
-      totalCurrentYearSetOff: Number;
-    };
-    balanceAfterSetOffCurrentYearLosses: Number;
-    BroughtFwdLossesSetoff: {
-      BroughtFwdLossesSetoffDtls: {
-        hpLoss: Number;
-        stLoss: Number;
-        ltLoss: Number;
-      };
-      BroughtFwdLossesSetoffTotal: Number;
-    };
-    grossTotalIncome: Number;
-    totalSpecialRateIncome: Number;
-    deductions: {
-      deductionDtls: {
-        name: String;
-        amount: Number;
-      }[];
-      deductionTotal: Number;
-    };
-    totalIncome: Number;
-    specialRateChargeable: Number;
-    netAgricultureIncome: Number;
-    aggregateIncome: Number;
-    lossesToBeCarriedForward: {
-      cflDtls: {
-        assessmentPastYear: any;
-        housePropertyLoss: Number;
-        STCGLoss: Number;
-        LTCGLoss: Number;
-        pastYear: Number;
-        totalLoss: Number;
-      }[];
-      cflTotal: Number;
-    };
-    totalTax: {
-      taxAtNormalRate: Number;
-      taxAtSpecialRate: Number;
-      rebateOnAgricultureIncome: Number;
-      totalTax: Number;
-    };
-    rebateUnderSection87A: Number;
-    taxAfterRebate: Number;
-    surcharge: Number;
-    eductionCess: Number;
-    grossTaxLiability: Number;
-    taxRelief: {
-      taxReliefUnder89: Number;
-      taxReliefUnder90_90A: Number;
-      taxReliefUnder91: Number;
-      totalRelief: Number;
-    };
-    netTaxLiability: Number;
-    interestAndFee: {
-      interest234C: {
-        q1: Number;
-        q2: Number;
-        q3: Number;
-        q4: Number;
-        q5: Number;
-      };
-      total234A: Number;
-      total234B: Number;
-      total234C: Number;
-      total234F: Number;
-      totalInterestAndFee: Number;
-    };
-    aggregateLiability: Number;
-    taxPaid: {
-      onSalary: {
-        deductorName: String;
-        deductorTAN: String;
-        totalAmountCredited: Number;
-        totalTdsDeposited: Number;
-      }[];
-      totalOnSalary: Number;
-      otherThanSalary16A: {
-        deductorName: String;
-        deductorTAN: String;
-        totalAmountCredited: Number;
-        totalTdsDeposited: Number;
-      }[];
-      totalOtherThanSalary16A: Number;
-      otherThanSalary26QB: {
-        deductorName: String;
-        deductorTAN: String;
-        totalAmountCredited: Number;
-        totalTdsDeposited: Number;
-      }[];
-      totalOtherThanSalary26QB: number;
-      tcs: {
-        deductorName: String;
-        deductorTAN: String;
-        totalAmountCredited: Number;
-        totalTdsDeposited: Number;
-      }[];
-      totalTcs: Number;
-      otherThanTDSTCS: {
-        bsrCode: String;
-        date: Date;
-        challanNo: Number;
-        amount: Number;
-      }[];
-      totalOtherThanTDSTCS: Number;
-      totalTaxesPaid: Number;
-    };
-    amountPayableRefund: Number;
+    // houseProperties: {
+    //   houseProps: [
+    //     {
+    //       hpNo: Number;
+    //       typeOfHp;
+    //       grossRentReceived;
+    //       taxesPaid: Number;
+    //       annualValue: Number;
+    //       hpStandardDeduction: Number;
+    //       hpinterest: Number;
+    //       hpNetIncome: Number;
+    //       hpIncome: Number;
+    //     }
+    //   ];
+    //   hpTotalIncome: Number;
+    // };
+    // otherIncome: {
+    //   otherIncomes: {
+    //     saving: Number;
+    //     intFromDeposit: Number;
+    //     taxRefund: Number;
+    //     anyOtherInterest: Number;
+    //     familyPension: Number;
+    //     dividendIncome: Number;
+    //   };
+    //   otherIncomeTotal: Number;
+    // };
+    // businessIncome: {
+    //   businessIncomeDetails: {
+    //     business44AD: {
+    //       bank: [
+    //         {
+    //           businessSection: String;
+    //           natureOfBusinessCode: any;
+    //           tradeName: String;
+    //           grossTurnover: Number;
+    //           TaxableIncome: Number;
+    //         }
+    //       ];
+    //       cash: [
+    //         {
+    //           businessSection: String;
+    //           natureOfBusinessCode: any;
+    //           tradeName: String;
+    //           grossTurnover: Number;
+    //           TaxableIncome: Number;
+    //         }
+    //       ];
+    //     };
+    //     business44ADA: [
+    //       {
+    //         businessSection: String;
+    //         natureOfBusinessCode: any;
+    //         tradeName: String;
+    //         grossTurnover: Number;
+    //         TaxableIncome: Number;
+    //       }
+    //     ];
+    //   };
+    //   businessIncomeTotal: Number;
+    // };
+    // totalHeadWiseIncome: Number;
+    // currentYearLosses: {
+    //   currentYearLossesSetOff: [{ houseProperty: Number }];
+    //   totalCurrentYearSetOff: Number;
+    // };
+    // balanceAfterSetOffCurrentYearLosses: Number;
+    // BroughtFwdLossesSetoff: {
+    //   BroughtFwdLossesSetoffDtls: {
+    //     hpLoss: Number;
+    //     stLoss: Number;
+    //     ltLoss: Number;
+    //   };
+    //   BroughtFwdLossesSetoffTotal: Number;
+    // };
+    // grossTotalIncome: Number;
+    // totalSpecialRateIncome: Number;
+    // deductions: {
+    //   deductionDtls: {
+    //     name: String;
+    //     amount: Number;
+    //   }[];
+    //   deductionTotal: Number;
+    // };
+    // totalIncome: Number;
+    // specialRateChargeable: Number;
+    // netAgricultureIncome: Number;
+    // aggregateIncome: Number;
+    // lossesToBeCarriedForward: {
+    //   cflDtls: {
+    //     assessmentPastYear: any;
+    //     housePropertyLoss: Number;
+    //     STCGLoss: Number;
+    //     LTCGLoss: Number;
+    //     pastYear: Number;
+    //     totalLoss: Number;
+    //   }[];
+    //   cflTotal: Number;
+    // };
+    // totalTax: {
+    //   taxAtNormalRate: Number;
+    //   taxAtSpecialRate: Number;
+    //   rebateOnAgricultureIncome: Number;
+    //   totalTax: Number;
+    // };
+    // rebateUnderSection87A: Number;
+    // taxAfterRebate: Number;
+    // surcharge: Number;
+    // eductionCess: Number;
+    // grossTaxLiability: Number;
+    // taxRelief: {
+    //   taxReliefUnder89: Number;
+    //   taxReliefUnder90_90A: Number;
+    //   taxReliefUnder91: Number;
+    //   totalRelief: Number;
+    // };
+    // netTaxLiability: Number;
+    // interestAndFee: {
+    //   interest234C: {
+    //     q1: Number;
+    //     q2: Number;
+    //     q3: Number;
+    //     q4: Number;
+    //     q5: Number;
+    //   };
+    //   total234A: Number;
+    //   total234B: Number;
+    //   total234C: Number;
+    //   total234F: Number;
+    //   totalInterestAndFee: Number;
+    // };
+    // aggregateLiability: Number;
+    // taxPaid: {
+    //   onSalary: {
+    //     deductorName: String;
+    //     deductorTAN: String;
+    //     totalAmountCredited: Number;
+    //     totalTdsDeposited: Number;
+    //   }[];
+    //   totalOnSalary: Number;
+    //   otherThanSalary16A: {
+    //     deductorName: String;
+    //     deductorTAN: String;
+    //     totalAmountCredited: Number;
+    //     totalTdsDeposited: Number;
+    //   }[];
+    //   totalOtherThanSalary16A: Number;
+    //   otherThanSalary26QB: {
+    //     deductorName: String;
+    //     deductorTAN: String;
+    //     totalAmountCredited: Number;
+    //     totalTdsDeposited: Number;
+    //   }[];
+    //   totalOtherThanSalary26QB: number;
+    //   tcs: {
+    //     deductorName: String;
+    //     deductorTAN: String;
+    //     totalAmountCredited: Number;
+    //     totalTdsDeposited: Number;
+    //   }[];
+    //   totalTcs: Number;
+    //   otherThanTDSTCS: {
+    //     bsrCode: String;
+    //     date: Date;
+    //     challanNo: Number;
+    //     amount: Number;
+    //   }[];
+    //   totalOtherThanTDSTCS: Number;
+    //   totalTaxesPaid: Number;
+    // };
+    // amountPayableRefund: Number;
   };
 
   constructor(
@@ -470,830 +470,830 @@ export class SummaryComponent implements OnInit {
                   this.ITR14IncomeDeductions
                 ]?.IncomeFromSal,
             },
-            houseProperties: {
-              houseProps: [
-                {
-                  hpNo: 0,
-                  typeOfHp:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.TypeOfHP === 'L'
-                      ? 'LOP'
-                      : 'S'
-                      ? 'SOP'
-                      : 'D'
-                      ? 'DLOP'
-                      : 'PropertyType not present in JSON',
-                  grossRentReceived:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.GrossRentReceived,
-                  taxesPaid:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.TaxPaidlocalAuth,
-                  annualValue:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.AnnualValue,
-                  hpStandardDeduction:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.[hpStandardDeduction],
-                  hpinterest:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.InterestPayable,
-                  hpNetIncome:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.TotalIncomeOfHP,
-                  hpIncome:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.TotalIncomeOfHP,
-                },
-              ],
-              hpTotalIncome:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ]?.TotalIncomeOfHP,
-            },
-            otherIncome: {
-              otherIncomes: {
-                saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'SAV'
-                )?.OthSrcOthAmount,
+            //   houseProperties: {
+            //     houseProps: [
+            //       {
+            //         hpNo: 0,
+            //         typeOfHp:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.TypeOfHP === 'L'
+            //             ? 'LOP'
+            //             : 'S'
+            //             ? 'SOP'
+            //             : 'D'
+            //             ? 'DLOP'
+            //             : 'PropertyType not present in JSON',
+            //         grossRentReceived:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.GrossRentReceived,
+            //         taxesPaid:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.TaxPaidlocalAuth,
+            //         annualValue:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.AnnualValue,
+            //         hpStandardDeduction:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.[hpStandardDeduction],
+            //         hpinterest:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.InterestPayable,
+            //         hpNetIncome:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.TotalIncomeOfHP,
+            //         hpIncome:
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.ITR14IncomeDeductions
+            //           ]?.TotalIncomeOfHP,
+            //       },
+            //     ],
+            //     hpTotalIncome:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.TotalIncomeOfHP,
+            //   },
+            //   otherIncome: {
+            //     otherIncomes: {
+            //       saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ].OthersInc.OthersIncDtlsOthSrc.find(
+            //         (val) => val.OthSrcNatureDesc === 'SAV'
+            //       )?.OthSrcOthAmount,
 
-                intFromDeposit: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
-                  this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'IFD'
-                )?.OthSrcOthAmount,
+            //       intFromDeposit: this.ITR_JSON.itrSummaryJson['ITR'][
+            //         this.itrType
+            //       ][
+            //         this.ITR14IncomeDeductions
+            //       ].OthersInc.OthersIncDtlsOthSrc.find(
+            //         (val) => val.OthSrcNatureDesc === 'IFD'
+            //       )?.OthSrcOthAmount,
 
-                taxRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'TAX'
-                )?.OthSrcOthAmount,
+            //       taxRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ].OthersInc.OthersIncDtlsOthSrc.find(
+            //         (val) => val.OthSrcNatureDesc === 'TAX'
+            //       )?.OthSrcOthAmount,
 
-                anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.ITR14IncomeDeductions
-                  ]?.IncomeOthSrc -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'SAV'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'IFD'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'TAX'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'FAP'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                    this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'DIV'
-                  )?.OthSrcOthAmount,
+            //       anyOtherInterest:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.IncomeOthSrc -
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //           (val) => val.OthSrcNatureDesc === 'SAV'
+            //         )?.OthSrcOthAmount -
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //           (val) => val.OthSrcNatureDesc === 'IFD'
+            //         )?.OthSrcOthAmount -
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //           (val) => val.OthSrcNatureDesc === 'TAX'
+            //         )?.OthSrcOthAmount -
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //           (val) => val.OthSrcNatureDesc === 'FAP'
+            //         )?.OthSrcOthAmount -
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //           (val) => val.OthSrcNatureDesc === 'DIV'
+            //         )?.OthSrcOthAmount,
 
-                dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
-                  this.ITR14IncomeDeductions
-                ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'DIV'
-                )?.OthSrcOthAmount,
+            //       dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+            //         this.itrType
+            //       ][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //         (val) => val.OthSrcNatureDesc === 'DIV'
+            //       )?.OthSrcOthAmount,
 
-                familyPension: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
-                  this.ITR14IncomeDeductions
-                ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'FAP'
-                )?.OthSrcOthAmount,
-              },
+            //       familyPension: this.ITR_JSON.itrSummaryJson['ITR'][
+            //         this.itrType
+            //       ][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //         (val) => val.OthSrcNatureDesc === 'FAP'
+            //       )?.OthSrcOthAmount,
+            //     },
 
-              otherIncomeTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ]?.IncomeOthSrc,
-            },
-            businessIncome: {
-              businessIncomeDetails: {
-                business44AD: {
-                  bank: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ].ScheduleBP?.NatOfBus44AD?.map((element) => {
-                    return {
-                      businessSection: 'Section 44AD',
-                      natureOfBusinessCode: element?.CodeAD,
-                      tradeName: element?.NameOfBusiness,
-                      grossTurnover: Number(
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.GrsTrnOverAnyOthMode /
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.NatOfBus44AD?.length
-                      ),
-                      TaxableIncome: Number(
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44AD
-                          ?.PersumptiveInc44AD6Per +
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.PersumptiveInc44AD8Per /
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.NatOfBus44AD?.length
-                      ),
-                    };
-                  }),
+            //     otherIncomeTotal:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.IncomeOthSrc,
+            //   },
+            //   businessIncome: {
+            //     businessIncomeDetails: {
+            //       business44AD: {
+            //         bank: this.ITR_JSON.itrSummaryJson['ITR'][
+            //           this.itrType
+            //         ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+            //           return {
+            //             businessSection: 'Section 44AD',
+            //             natureOfBusinessCode: element?.CodeAD,
+            //             tradeName: element?.NameOfBusiness,
+            //             grossTurnover: Number(
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                   .ScheduleBP?.PersumptiveInc44AD
+            //                   ?.GrsTrnOverAnyOthMode /
+            //                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                     .ScheduleBP?.NatOfBus44AD?.length
+            //             ),
+            //             TaxableIncome: Number(
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 .ScheduleBP?.PersumptiveInc44AD
+            //                 ?.PersumptiveInc44AD6Per +
+            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                   .ScheduleBP?.PersumptiveInc44AD
+            //                   ?.PersumptiveInc44AD8Per /
+            //                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                     .ScheduleBP?.NatOfBus44AD?.length
+            //             ),
+            //           };
+            //         }),
 
-                  cash: [
-                    {
-                      businessSection: null,
-                      natureOfBusinessCode: null,
-                      tradeName: null,
-                      grossTurnover: null,
-                      TaxableIncome: null,
-                    },
-                  ],
-                },
+            //         cash: [
+            //           {
+            //             businessSection: null,
+            //             natureOfBusinessCode: null,
+            //             tradeName: null,
+            //             grossTurnover: null,
+            //             TaxableIncome: null,
+            //           },
+            //         ],
+            //       },
 
-                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
-                  return {
-                    businessSection: 'Section 44ADA',
-                    natureOfBusinessCode: element?.CodeADA,
-                    tradeName: element?.NameOfBusiness,
-                    grossTurnover: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.NatOfBus44ADA?.length
-                    ),
-                    TaxableIncome: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44ADA
-                        ?.TotPersumptiveInc44ADA /
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.NatOfBus44ADA?.length
-                    ),
-                  };
-                }),
-              },
-              businessIncomeTotal:
-                this.itrType === 'ITR4'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
-                  : 0,
-            },
-            totalHeadWiseIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossTotIncome,
-            // Need to set losses for uploadedJson
-            currentYearLosses: {
-              currentYearLossesSetOff: [
-                {
-                  houseProperty: 0,
-                },
-              ],
-              totalCurrentYearSetOff: 0,
-            },
-            balanceAfterSetOffCurrentYearLosses: 0,
-            BroughtFwdLossesSetoff: {
-              BroughtFwdLossesSetoffDtls: {
-                hpLoss: 0,
-                stLoss: 0,
-                ltLoss: 0,
-              },
-              BroughtFwdLossesSetoffTotal: 0,
-            },
-            grossTotalIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossTotIncome,
-            totalSpecialRateIncome: 0,
-            deductions: {
-              deductionDtls: Object.entries(
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ]?.DeductUndChapVIA
-              ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
-                name: String;
-                amount: Number;
-              }[],
-              deductionTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ].DeductUndChapVIA?.TotalChapVIADeductions,
-            },
-            totalIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TotalIncome,
-            specialRateChargeable: 0,
-            // Need to set this for all itr types
-            netAgricultureIncome: 0,
-            aggregateIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TotalIncome,
-            lossesToBeCarriedForward: {
-              cflDtls: [
-                {
-                  assessmentPastYear: 0,
-                  housePropertyLoss: 0,
-                  STCGLoss: 0,
-                  LTCGLoss: 0,
-                  pastYear: 0,
-                  totalLoss: 0,
-                },
-              ],
-              cflTotal: 0,
-            },
-            totalTax: {
-              taxAtNormalRate:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.TotalTaxPayable,
-              taxAtSpecialRate: 0,
-              rebateOnAgricultureIncome: 0,
-              totalTax:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.TotalTaxPayable,
-            },
-            rebateUnderSection87A:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.Rebate87A,
-            taxAfterRebate:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
-            surcharge: 0,
-            eductionCess:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.EducationCess,
-            grossTaxLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.GrossTaxLiability,
-            taxRelief: {
-              taxReliefUnder89:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.Section89,
-              taxReliefUnder90_90A: 0,
-              taxReliefUnder91: 0,
-              totalRelief:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.Section89,
-            },
-            netTaxLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.NetTaxLiability,
+            //       business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+            //         this.itrType
+            //       ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+            //         return {
+            //           businessSection: 'Section 44ADA',
+            //           natureOfBusinessCode: element?.CodeADA,
+            //           tradeName: element?.NameOfBusiness,
+            //           grossTurnover: Number(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 .ScheduleBP?.NatOfBus44ADA?.length
+            //           ),
+            //           TaxableIncome: Number(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .ScheduleBP?.PersumptiveInc44ADA
+            //               ?.TotPersumptiveInc44ADA /
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 .ScheduleBP?.NatOfBus44ADA?.length
+            //           ),
+            //         };
+            //       }),
+            //     },
+            //     businessIncomeTotal:
+            //       this.itrType === 'ITR4'
+            //         ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //             ?.PersumptiveInc44AE?.IncChargeableUnderBus
+            //         : 0,
+            //   },
+            //   totalHeadWiseIncome:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.GrossTotIncome,
+            //   // Need to set losses for uploadedJson
+            //   currentYearLosses: {
+            //     currentYearLossesSetOff: [
+            //       {
+            //         houseProperty: 0,
+            //       },
+            //     ],
+            //     totalCurrentYearSetOff: 0,
+            //   },
+            //   balanceAfterSetOffCurrentYearLosses: 0,
+            //   BroughtFwdLossesSetoff: {
+            //     BroughtFwdLossesSetoffDtls: {
+            //       hpLoss: 0,
+            //       stLoss: 0,
+            //       ltLoss: 0,
+            //     },
+            //     BroughtFwdLossesSetoffTotal: 0,
+            //   },
+            //   grossTotalIncome:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.GrossTotIncome,
+            //   totalSpecialRateIncome: 0,
+            //   deductions: {
+            //     deductionDtls: Object.entries(
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.DeductUndChapVIA
+            //     ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
+            //       name: String;
+            //       amount: Number;
+            //     }[],
+            //     deductionTotal:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ].DeductUndChapVIA?.TotalChapVIADeductions,
+            //   },
+            //   totalIncome:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.TotalIncome,
+            //   specialRateChargeable: 0,
+            //   // Need to set this for all itr types
+            //   netAgricultureIncome: 0,
+            //   aggregateIncome:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.TotalIncome,
+            //   lossesToBeCarriedForward: {
+            //     cflDtls: [
+            //       {
+            //         assessmentPastYear: 0,
+            //         housePropertyLoss: 0,
+            //         STCGLoss: 0,
+            //         LTCGLoss: 0,
+            //         pastYear: 0,
+            //         totalLoss: 0,
+            //       },
+            //     ],
+            //     cflTotal: 0,
+            //   },
+            //   totalTax: {
+            //     taxAtNormalRate:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.TotalTaxPayable,
+            //     taxAtSpecialRate: 0,
+            //     rebateOnAgricultureIncome: 0,
+            //     totalTax:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.TotalTaxPayable,
+            //   },
+            //   rebateUnderSection87A:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.Rebate87A,
+            //   taxAfterRebate:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+            //       ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
+            //   surcharge: 0,
+            //   eductionCess:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.EducationCess,
+            //   grossTaxLiability:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.GrossTaxLiability,
+            //   taxRelief: {
+            //     taxReliefUnder89:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.Section89,
+            //     taxReliefUnder90_90A: 0,
+            //     taxReliefUnder91: 0,
+            //     totalRelief:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.Section89,
+            //   },
+            //   netTaxLiability:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.NetTaxLiability,
 
-            interestAndFee: {
-              interest234C: {
-                q1: 0,
-                q2: 0,
-                q3: 0,
-                q4: 0,
-                q5: 0,
-              },
-              total234A:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.IntrstPayUs234A,
-              total234B:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.IntrstPayUs234B,
-              total234C:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.IntrstPayUs234C,
-              total234F:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.LateFilingFee234F,
-              totalInterestAndFee:
-                this.itrType === 'ITR1'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.TotalIntrstPay
-                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.LateFilingFee234F +
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.IntrstPayUs234C +
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.IntrstPayUs234B +
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.IntrstPayUs234A,
-            },
-            aggregateLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.TotTaxPlusIntrstPay,
+            //   interestAndFee: {
+            //     interest234C: {
+            //       q1: 0,
+            //       q2: 0,
+            //       q3: 0,
+            //       q4: 0,
+            //       q5: 0,
+            //     },
+            //     total234A:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.IntrstPay?.IntrstPayUs234A,
+            //     total234B:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.IntrstPay?.IntrstPayUs234B,
+            //     total234C:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.IntrstPay?.IntrstPayUs234C,
+            //     total234F:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.taxComputation
+            //       ]?.IntrstPay?.LateFilingFee234F,
+            //     totalInterestAndFee:
+            //       this.itrType === 'ITR1'
+            //         ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.taxComputation
+            //           ]?.TotalIntrstPay
+            //         : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.taxComputation
+            //           ]?.IntrstPay?.LateFilingFee234F +
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.taxComputation
+            //           ]?.IntrstPay?.IntrstPayUs234C +
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.taxComputation
+            //           ]?.IntrstPay?.IntrstPayUs234B +
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //             this.taxComputation
+            //           ]?.IntrstPay?.IntrstPayUs234A,
+            //   },
+            //   aggregateLiability:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.TotTaxPlusIntrstPay,
 
-            taxPaid: {
-              onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                .TDSonSalaries?.TDSonSalary
-                ? (Object.entries(
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      .TDSonSalaries?.TDSonSalary
-                  ).map(([key, item]) => ({
-                    deductorName: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl
-                      ?.EmployerOrDeductorOrCollecterName,
-                    deductorTAN: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl?.TAN,
-                    totalAmountCredited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).IncChrgSal,
-                    totalTdsDeposited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        IncChrgSal: Number;
-                        TotalTDSSal: Number;
-                      }
-                    ).TotalTDSSal,
-                  })) as {
-                    deductorName: String;
-                    deductorTAN: String;
-                    totalAmountCredited: Number;
-                    totalTdsDeposited: Number;
-                  }[])
-                : null,
-              totalOnSalary:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
-                  ?.TotalTDSonSalaries,
+            //   taxPaid: {
+            //     onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //       .TDSonSalaries?.TDSonSalary
+            //       ? (Object.entries(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             .TDSonSalaries?.TDSonSalary
+            //         ).map(([key, item]) => ({
+            //           deductorName: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               IncChrgSal: Number;
+            //               TotalTDSSal: Number;
+            //             }
+            //           ).EmployerOrDeductorOrCollectDetl
+            //             ?.EmployerOrDeductorOrCollecterName,
+            //           deductorTAN: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               IncChrgSal: Number;
+            //               TotalTDSSal: Number;
+            //             }
+            //           ).EmployerOrDeductorOrCollectDetl?.TAN,
+            //           totalAmountCredited: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               IncChrgSal: Number;
+            //               TotalTDSSal: Number;
+            //             }
+            //           ).IncChrgSal,
+            //           totalTdsDeposited: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               IncChrgSal: Number;
+            //               TotalTDSSal: Number;
+            //             }
+            //           ).TotalTDSSal,
+            //         })) as {
+            //           deductorName: String;
+            //           deductorTAN: String;
+            //           totalAmountCredited: Number;
+            //           totalTdsDeposited: Number;
+            //         }[])
+            //       : null,
+            //     totalOnSalary:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
+            //         ?.TotalTDSonSalaries,
 
-              otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
-                this.itrType
-              ].TDSonOthThanSals?.TDSonOthThanSal
-                ? this.itrType === 'ITR1'
-                  ? (Object.entries(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .TDSonOthThanSals?.TDSonOthThanSal
-                    ).map(([key, item]) => ({
-                      deductorName: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          AmtForTaxDeduct: Number;
-                          DeductedYr: String;
-                          TotTDSOnAmtPaid: Number;
-                          ClaimOutOfTotTDSOnAmtPaid: Number;
-                        }
-                      ).EmployerOrDeductorOrCollectDetl
-                        ?.EmployerOrDeductorOrCollecterName,
-                      deductorTAN: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          AmtForTaxDeduct: Number;
-                          DeductedYr: String;
-                          TotTDSOnAmtPaid: Number;
-                          ClaimOutOfTotTDSOnAmtPaid: Number;
-                        }
-                      ).EmployerOrDeductorOrCollectDetl?.TAN,
-                      totalAmountCredited: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          AmtForTaxDeduct: Number;
-                          DeductedYr: String;
-                          TotTDSOnAmtPaid: Number;
-                          ClaimOutOfTotTDSOnAmtPaid: Number;
-                        }
-                      ).AmtForTaxDeduct,
-                      totalTdsDeposited: (
-                        item as {
-                          EmployerOrDeductorOrCollectDetl: {
-                            TAN: String;
-                            EmployerOrDeductorOrCollecterName: String;
-                          };
-                          AmtForTaxDeduct: Number;
-                          DeductedYr: String;
-                          TotTDSOnAmtPaid: Number;
-                          ClaimOutOfTotTDSOnAmtPaid: Number;
-                        }
-                      ).ClaimOutOfTotTDSOnAmtPaid,
-                    })) as {
-                      deductorName: String;
-                      deductorTAN: String;
-                      totalAmountCredited: Number;
-                      totalTdsDeposited: Number;
-                    }[])
-                  : (Object.entries(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.TDSonOthThanSals?.TDSonOthThanSalDtls
-                    ).map(([key, item]) => ({
-                      deductorName: (
-                        item as {
-                          TANOfDeductor: String;
-                          BroughtFwdTDSAmt: Number;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).TANOfDeductor,
-                      deductorTAN: (
-                        item as {
-                          TANOfDeductor: String;
-                          BroughtFwdTDSAmt: Number;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).TANOfDeductor,
-                      totalAmountCredited: (
-                        item as {
-                          TANOfDeductor: String;
-                          BroughtFwdTDSAmt: Number;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).GrossAmount,
-                      totalTdsDeposited: (
-                        item as {
-                          TANOfDeductor: String;
-                          BroughtFwdTDSAmt: Number;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).TDSDeducted,
-                    })) as {
-                      deductorName: String;
-                      deductorTAN: String;
-                      totalAmountCredited: Number;
-                      totalTdsDeposited: Number;
-                    }[])
-                : null,
-              totalOtherThanSalary16A:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                  ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
+            //     otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
+            //       this.itrType
+            //     ].TDSonOthThanSals?.TDSonOthThanSal
+            //       ? this.itrType === 'ITR1'
+            //         ? (Object.entries(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .TDSonOthThanSals?.TDSonOthThanSal
+            //           ).map(([key, item]) => ({
+            //             deductorName: (
+            //               item as {
+            //                 EmployerOrDeductorOrCollectDetl: {
+            //                   TAN: String;
+            //                   EmployerOrDeductorOrCollecterName: String;
+            //                 };
+            //                 AmtForTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TotTDSOnAmtPaid: Number;
+            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
+            //               }
+            //             ).EmployerOrDeductorOrCollectDetl
+            //               ?.EmployerOrDeductorOrCollecterName,
+            //             deductorTAN: (
+            //               item as {
+            //                 EmployerOrDeductorOrCollectDetl: {
+            //                   TAN: String;
+            //                   EmployerOrDeductorOrCollecterName: String;
+            //                 };
+            //                 AmtForTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TotTDSOnAmtPaid: Number;
+            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
+            //               }
+            //             ).EmployerOrDeductorOrCollectDetl?.TAN,
+            //             totalAmountCredited: (
+            //               item as {
+            //                 EmployerOrDeductorOrCollectDetl: {
+            //                   TAN: String;
+            //                   EmployerOrDeductorOrCollecterName: String;
+            //                 };
+            //                 AmtForTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TotTDSOnAmtPaid: Number;
+            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
+            //               }
+            //             ).AmtForTaxDeduct,
+            //             totalTdsDeposited: (
+            //               item as {
+            //                 EmployerOrDeductorOrCollectDetl: {
+            //                   TAN: String;
+            //                   EmployerOrDeductorOrCollecterName: String;
+            //                 };
+            //                 AmtForTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TotTDSOnAmtPaid: Number;
+            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
+            //               }
+            //             ).ClaimOutOfTotTDSOnAmtPaid,
+            //           })) as {
+            //             deductorName: String;
+            //             deductorTAN: String;
+            //             totalAmountCredited: Number;
+            //             totalTdsDeposited: Number;
+            //           }[])
+            //         : (Object.entries(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               ?.TDSonOthThanSals?.TDSonOthThanSalDtls
+            //           ).map(([key, item]) => ({
+            //             deductorName: (
+            //               item as {
+            //                 TANOfDeductor: String;
+            //                 BroughtFwdTDSAmt: Number;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).TANOfDeductor,
+            //             deductorTAN: (
+            //               item as {
+            //                 TANOfDeductor: String;
+            //                 BroughtFwdTDSAmt: Number;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).TANOfDeductor,
+            //             totalAmountCredited: (
+            //               item as {
+            //                 TANOfDeductor: String;
+            //                 BroughtFwdTDSAmt: Number;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).GrossAmount,
+            //             totalTdsDeposited: (
+            //               item as {
+            //                 TANOfDeductor: String;
+            //                 BroughtFwdTDSAmt: Number;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).TDSDeducted,
+            //           })) as {
+            //             deductorName: String;
+            //             deductorTAN: String;
+            //             totalAmountCredited: Number;
+            //             totalTdsDeposited: Number;
+            //           }[])
+            //       : null,
+            //     totalOtherThanSalary16A:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //         ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
 
-              otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
-                this.itrType
-              ].ScheduleTDS3Dtls?.TDS3Details
-                ? this.itrType === 'ITR1'
-                  ? (Object.entries(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleTDS3Dtls?.TDS3Details
-                    ).map(([key, item]) => ({
-                      deductorName: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          NameOfTenant: String;
-                          GrsRcptToTaxDeduct: Number;
-                          DeductedYr: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                        }
-                      ).NameOfTenant,
-                      deductorTAN: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          NameOfTenant: String;
-                          GrsRcptToTaxDeduct: Number;
-                          DeductedYr: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                        }
-                      ).PANofTenant,
-                      totalAmountCredited: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          NameOfTenant: String;
-                          GrsRcptToTaxDeduct: Number;
-                          DeductedYr: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                        }
-                      ).GrsRcptToTaxDeduct,
-                      totalTdsDeposited: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          NameOfTenant: String;
-                          GrsRcptToTaxDeduct: Number;
-                          DeductedYr: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                        }
-                      ).TDSClaimed,
-                    })) as {
-                      deductorName: String;
-                      deductorTAN: String;
-                      totalAmountCredited: Number;
-                      totalTdsDeposited: Number;
-                    }[])
-                  : (Object.entries(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleTDS3Dtls?.TDS3Details
-                    ).map(([key, item]) => ({
-                      deductorName: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).HeadOfIncome,
-                      deductorTAN: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).PANofTenant,
-                      totalAmountCredited: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).GrossAmount,
-                      totalTdsDeposited: (
-                        item as {
-                          PANofTenant: String;
-                          AadhaarofTenant: String;
-                          TDSDeducted: Number;
-                          TDSClaimed: Number;
-                          GrossAmount: Number;
-                          HeadOfIncome: String;
-                          TDSCreditCarriedFwd: Number;
-                        }
-                      ).TDSDeducted,
-                    })) as {
-                      deductorName: String;
-                      deductorTAN: String;
-                      totalAmountCredited: Number;
-                      totalTdsDeposited: Number;
-                    }[])
-                : null,
-              totalOtherThanSalary26QB:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                  ?.ScheduleTDS3Dtls?.TDS3Details,
+            //     otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
+            //       this.itrType
+            //     ].ScheduleTDS3Dtls?.TDS3Details
+            //       ? this.itrType === 'ITR1'
+            //         ? (Object.entries(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               ?.ScheduleTDS3Dtls?.TDS3Details
+            //           ).map(([key, item]) => ({
+            //             deductorName: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 NameOfTenant: String;
+            //                 GrsRcptToTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //               }
+            //             ).NameOfTenant,
+            //             deductorTAN: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 NameOfTenant: String;
+            //                 GrsRcptToTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //               }
+            //             ).PANofTenant,
+            //             totalAmountCredited: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 NameOfTenant: String;
+            //                 GrsRcptToTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //               }
+            //             ).GrsRcptToTaxDeduct,
+            //             totalTdsDeposited: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 NameOfTenant: String;
+            //                 GrsRcptToTaxDeduct: Number;
+            //                 DeductedYr: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //               }
+            //             ).TDSClaimed,
+            //           })) as {
+            //             deductorName: String;
+            //             deductorTAN: String;
+            //             totalAmountCredited: Number;
+            //             totalTdsDeposited: Number;
+            //           }[])
+            //         : (Object.entries(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               ?.ScheduleTDS3Dtls?.TDS3Details
+            //           ).map(([key, item]) => ({
+            //             deductorName: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).HeadOfIncome,
+            //             deductorTAN: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).PANofTenant,
+            //             totalAmountCredited: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).GrossAmount,
+            //             totalTdsDeposited: (
+            //               item as {
+            //                 PANofTenant: String;
+            //                 AadhaarofTenant: String;
+            //                 TDSDeducted: Number;
+            //                 TDSClaimed: Number;
+            //                 GrossAmount: Number;
+            //                 HeadOfIncome: String;
+            //                 TDSCreditCarriedFwd: Number;
+            //               }
+            //             ).TDSDeducted,
+            //           })) as {
+            //             deductorName: String;
+            //             deductorTAN: String;
+            //             totalAmountCredited: Number;
+            //             totalTdsDeposited: Number;
+            //           }[])
+            //       : null,
+            //     totalOtherThanSalary26QB:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //         ?.ScheduleTDS3Dtls?.TDS3Details,
 
-              tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
-                ?.TCS
-                ? (Object.entries(
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleTCS?.TCS
-                  ).map(([key, item]) => ({
-                    deductorName: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl
-                      ?.EmployerOrDeductorOrCollecterName,
-                    deductorTAN: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl?.TAN,
-                    totalAmountCredited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).AmtTaxCollected,
-                    totalTdsDeposited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).AmtTCSClaimedThisYear,
-                  })) as {
-                    deductorName: String;
-                    deductorTAN: String;
-                    totalAmountCredited: Number;
-                    totalTdsDeposited: Number;
-                  }[])
-                : null,
-              totalTcs:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
-                  ?.TotalSchTCS,
+            //     tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
+            //       ?.TCS
+            //       ? (Object.entries(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             ?.ScheduleTCS?.TCS
+            //         ).map(([key, item]) => ({
+            //           deductorName: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtTaxCollected: Number;
+            //               CollectedYr: String;
+            //               TotalTCS: Number;
+            //               AmtTCSClaimedThisYear: Number;
+            //             }
+            //           ).EmployerOrDeductorOrCollectDetl
+            //             ?.EmployerOrDeductorOrCollecterName,
+            //           deductorTAN: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtTaxCollected: Number;
+            //               CollectedYr: String;
+            //               TotalTCS: Number;
+            //               AmtTCSClaimedThisYear: Number;
+            //             }
+            //           ).EmployerOrDeductorOrCollectDetl?.TAN,
+            //           totalAmountCredited: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtTaxCollected: Number;
+            //               CollectedYr: String;
+            //               TotalTCS: Number;
+            //               AmtTCSClaimedThisYear: Number;
+            //             }
+            //           ).AmtTaxCollected,
+            //           totalTdsDeposited: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtTaxCollected: Number;
+            //               CollectedYr: String;
+            //               TotalTCS: Number;
+            //               AmtTCSClaimedThisYear: Number;
+            //             }
+            //           ).AmtTCSClaimedThisYear,
+            //         })) as {
+            //           deductorName: String;
+            //           deductorTAN: String;
+            //           totalAmountCredited: Number;
+            //           totalTdsDeposited: Number;
+            //         }[])
+            //       : null,
+            //     totalTcs:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
+            //         ?.TotalSchTCS,
 
-              otherThanTDSTCS:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
-                  ?.TotalTaxPayments ||
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
-                  ?.TotalTaxPayments
-                  ? this.itrType === 'ITR1'
-                    ? (Object.entries(
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.TaxPayments?.TaxPayment
-                      ).map(([key, item]) => ({
-                        bsrCode: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).BSRCode,
-                        date: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).DateDep,
-                        challanNo: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).SrlNoOfChaln,
-                        amount: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).Amt,
-                      })) as {
-                        bsrCode: String;
-                        date: Date;
-                        challanNo: Number;
-                        amount: Number;
-                      }[])
-                    : (Object.entries(
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleIT?.TaxPayment
-                      ).map(([key, item]) => ({
-                        bsrCode: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).BSRCode,
-                        date: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).DateDep,
-                        challanNo: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).SrlNoOfChaln,
-                        amount: (
-                          item as {
-                            BSRCode: String;
-                            DateDep: Date;
-                            SrlNoOfChaln: Number;
-                            Amt: Number;
-                          }
-                        ).Amt,
-                      })) as {
-                        bsrCode: String;
-                        date: Date;
-                        challanNo: Number;
-                        amount: Number;
-                      }[])
-                  : null,
+            //     otherThanTDSTCS:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
+            //         ?.TotalTaxPayments ||
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
+            //         ?.TotalTaxPayments
+            //         ? this.itrType === 'ITR1'
+            //           ? (Object.entries(
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 ?.TaxPayments?.TaxPayment
+            //             ).map(([key, item]) => ({
+            //               bsrCode: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).BSRCode,
+            //               date: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).DateDep,
+            //               challanNo: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).SrlNoOfChaln,
+            //               amount: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).Amt,
+            //             })) as {
+            //               bsrCode: String;
+            //               date: Date;
+            //               challanNo: Number;
+            //               amount: Number;
+            //             }[])
+            //           : (Object.entries(
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 ?.ScheduleIT?.TaxPayment
+            //             ).map(([key, item]) => ({
+            //               bsrCode: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).BSRCode,
+            //               date: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).DateDep,
+            //               challanNo: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).SrlNoOfChaln,
+            //               amount: (
+            //                 item as {
+            //                   BSRCode: String;
+            //                   DateDep: Date;
+            //                   SrlNoOfChaln: Number;
+            //                   Amt: Number;
+            //                 }
+            //               ).Amt,
+            //             })) as {
+            //               bsrCode: String;
+            //               date: Date;
+            //               challanNo: Number;
+            //               amount: Number;
+            //             }[])
+            //         : null,
 
-              totalOtherThanTDSTCS:
-                this.itrType === 'ITR1'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.TaxPayments?.TotalTaxPayments
-                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleIT?.TotalTaxPayments,
+            //     totalOtherThanTDSTCS:
+            //       this.itrType === 'ITR1'
+            //         ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             ?.TaxPayments?.TotalTaxPayments
+            //         : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             ?.ScheduleIT?.TotalTaxPayments,
 
-              totalTaxesPaid:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
-                  ?.TaxesPaid?.TotalTaxesPaid,
-            },
-            amountPayableRefund:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
-                ?.BalTaxPayable,
+            //     totalTaxesPaid:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
+            //         ?.TaxesPaid?.TotalTaxesPaid,
+            //   },
+            //   amountPayableRefund:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
+            //       ?.BalTaxPayable,
           };
-          console.log(this.finalCalculations, 'finalCalculations');
+          // console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
             // EXEMPT INCOME
@@ -1316,6 +1316,899 @@ export class SummaryComponent implements OnInit {
           console.log(this.keys, 'this.keys ITR1&4');
           this.loading = false;
         } else if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
+          this.finalCalculations = {
+            salary: {
+              employers: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleS?.Salaries?.map((element, index) => {
+                let employersLength = this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleS?.Salaries
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleS
+                      ?.Salaries?.length
+                  : 1;
+
+                let higherEmployerIndex = 0;
+                let higherEmployer = element?.Salarys?.GrossSalary;
+
+                for (let i = 0; i < employersLength; i++) {
+                  const currentEmployer =
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleS
+                      ?.Salaries[i]?.Salarys?.GrossSalary;
+                  if (currentEmployer > higherEmployer) {
+                    higherEmployer = currentEmployer;
+                    higherEmployerIndex = i;
+                  }
+                }
+
+                let exemptAllowance =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.AllwncExtentExemptUs10
+                    : 0;
+                let professionalTax =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.ProfessionalTaxUs16iii
+                    : 0;
+
+                let entAllowance =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.EntertainmntalwncUs16ii
+                    : 0;
+
+                let standardDeduction =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.DeductionUnderSection16ia
+                    : 0;
+
+                return {
+                  employerNo: index,
+                  employerName: element?.NameOfEmployer,
+                  grossSalary: element?.Salarys?.GrossSalary,
+                  exemptAllowance: exemptAllowance,
+                  professionalTax: professionalTax,
+                  entAllowance: entAllowance,
+                  standardDeduction: standardDeduction,
+                  taxableSalary:
+                    element?.Salarys?.GrossSalary -
+                    exemptAllowance -
+                    professionalTax -
+                    entAllowance -
+                    standardDeduction,
+                };
+              }),
+              salaryTotalIncome:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleS
+                  ?.TotIncUnderHeadSalaries,
+            },
+            // houseProperties: {
+            //   houseProps: [
+            //     {
+            //       hpNo: 0,
+            //       typeOfHp:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.TypeOfHP === 'L'
+            //           ? 'LOP'
+            //           : 'S'
+            //           ? 'SOP'
+            //           : 'D'
+            //           ? 'DLOP'
+            //           : 'PropertyType not present in JSON',
+            //       grossRentReceived:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.GrossRentReceived,
+            //       taxesPaid:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.TaxPaidlocalAuth,
+            //       annualValue:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.AnnualValue,
+            //       hpStandardDeduction:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.[hpStandardDeduction],
+            //       hpinterest:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.InterestPayable,
+            //       hpNetIncome:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.TotalIncomeOfHP,
+            //       hpIncome:
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.ITR14IncomeDeductions
+            //         ]?.TotalIncomeOfHP,
+            //     },
+            //   ],
+            //   hpTotalIncome:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.TotalIncomeOfHP,
+            // },
+            // otherIncome: {
+            //   otherIncomes: {
+            //     saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //       (val) => val.OthSrcNatureDesc === 'SAV'
+            //     )?.OthSrcOthAmount,
+
+            //     intFromDeposit: this.ITR_JSON.itrSummaryJson['ITR'][
+            //       this.itrType
+            //     ][
+            //       this.ITR14IncomeDeductions
+            //     ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //       (val) => val.OthSrcNatureDesc === 'IFD'
+            //     )?.OthSrcOthAmount,
+
+            //     taxRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //       (val) => val.OthSrcNatureDesc === 'TAX'
+            //     )?.OthSrcOthAmount,
+
+            //     anyOtherInterest:
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.IncomeOthSrc -
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //         (val) => val.OthSrcNatureDesc === 'SAV'
+            //       )?.OthSrcOthAmount -
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //         (val) => val?.OthSrcNatureDesc === 'IFD'
+            //       )?.OthSrcOthAmount -
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //         (val) => val?.OthSrcNatureDesc === 'TAX'
+            //       )?.OthSrcOthAmount -
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //         (val) => val.OthSrcNatureDesc === 'FAP'
+            //       )?.OthSrcOthAmount -
+            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //         this.ITR14IncomeDeductions
+            //       ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //         (val) => val.OthSrcNatureDesc === 'DIV'
+            //       )?.OthSrcOthAmount,
+
+            //     dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+            //       this.itrType
+            //     ][
+            //       this.ITR14IncomeDeductions
+            //     ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+            //       (val) => val?.OthSrcNatureDesc === 'DIV'
+            //     )?.OthSrcOthAmount,
+
+            //     familyPension: this.ITR_JSON.itrSummaryJson['ITR'][
+            //       this.itrType
+            //     ][
+            //       this.ITR14IncomeDeductions
+            //     ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+            //       (val) => val?.OthSrcNatureDesc === 'FAP'
+            //     )?.OthSrcOthAmount,
+            //   },
+
+            //   otherIncomeTotal:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.IncomeOthSrc,
+            // },
+            // businessIncome: {
+            //   businessIncomeDetails: {
+            //     business44AD: {
+            //       bank: this.ITR_JSON.itrSummaryJson['ITR'][
+            //         this.itrType
+            //       ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+            //         return {
+            //           businessSection: 'Section 44AD',
+            //           natureOfBusinessCode: element?.CodeAD,
+            //           tradeName: element?.NameOfBusiness,
+            //           grossTurnover: Number(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 .ScheduleBP?.PersumptiveInc44AD
+            //                 ?.GrsTrnOverAnyOthMode /
+            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                   .ScheduleBP?.NatOfBus44AD?.length
+            //           ),
+            //           TaxableIncome: Number(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .ScheduleBP?.PersumptiveInc44AD
+            //               ?.PersumptiveInc44AD6Per +
+            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                 .ScheduleBP?.PersumptiveInc44AD
+            //                 ?.PersumptiveInc44AD8Per /
+            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //                   ?.ScheduleBP?.NatOfBus44AD?.length
+            //           ),
+            //         };
+            //       }),
+
+            //       cash: [
+            //         {
+            //           businessSection: null,
+            //           natureOfBusinessCode: null,
+            //           tradeName: null,
+            //           grossTurnover: null,
+            //           TaxableIncome: null,
+            //         },
+            //       ],
+            //     },
+
+            //     business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+            //       this.itrType
+            //     ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+            //       return {
+            //         businessSection: 'Section 44ADA',
+            //         natureOfBusinessCode: element?.CodeADA,
+            //         tradeName: element?.NameOfBusiness,
+            //         grossTurnover: Number(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .ScheduleBP?.NatOfBus44ADA?.length
+            //         ),
+            //         TaxableIncome: Number(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             .ScheduleBP?.PersumptiveInc44ADA
+            //             ?.TotPersumptiveInc44ADA /
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               .ScheduleBP?.NatOfBus44ADA?.length
+            //         ),
+            //       };
+            //     }),
+            //   },
+            //   businessIncomeTotal:
+            //     this.itrType === 'ITR4'
+            //       ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+            //           ?.PersumptiveInc44AE?.IncChargeableUnderBus
+            //       : 0,
+            // },
+            // totalHeadWiseIncome:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.GrossTotIncome,
+            // // Need to set losses for uploadedJson
+            // currentYearLosses: {
+            //   currentYearLossesSetOff: [
+            //     {
+            //       houseProperty: 0,
+            //     },
+            //   ],
+            //   totalCurrentYearSetOff: 0,
+            // },
+            // balanceAfterSetOffCurrentYearLosses: 0,
+            // BroughtFwdLossesSetoff: {
+            //   BroughtFwdLossesSetoffDtls: {
+            //     hpLoss: 0,
+            //     stLoss: 0,
+            //     ltLoss: 0,
+            //   },
+            //   BroughtFwdLossesSetoffTotal: 0,
+            // },
+            // grossTotalIncome:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.GrossTotIncome,
+            // totalSpecialRateIncome: 0,
+            // deductions: {
+            //   deductionDtls: Object.entries(
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ]?.DeductUndChapVIA
+            //   ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
+            //     name: String;
+            //     amount: Number;
+            //   }[],
+            //   deductionTotal:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.ITR14IncomeDeductions
+            //     ].DeductUndChapVIA?.TotalChapVIADeductions,
+            // },
+            // totalIncome:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.TotalIncome,
+            // specialRateChargeable: 0,
+            // // Need to set this for all itr types
+            // netAgricultureIncome: 0,
+            // aggregateIncome:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.ITR14IncomeDeductions
+            //   ]?.TotalIncome,
+            // lossesToBeCarriedForward: {
+            //   cflDtls: [
+            //     {
+            //       assessmentPastYear: 0,
+            //       housePropertyLoss: 0,
+            //       STCGLoss: 0,
+            //       LTCGLoss: 0,
+            //       pastYear: 0,
+            //       totalLoss: 0,
+            //     },
+            //   ],
+            //   cflTotal: 0,
+            // },
+            // totalTax: {
+            //   taxAtNormalRate:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.TotalTaxPayable,
+            //   taxAtSpecialRate: 0,
+            //   rebateOnAgricultureIncome: 0,
+            //   totalTax:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.TotalTaxPayable,
+            // },
+            // rebateUnderSection87A:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.taxComputation
+            //   ]?.Rebate87A,
+            // taxAfterRebate:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+            //     ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
+            // surcharge: 0,
+            // eductionCess:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.taxComputation
+            //   ]?.EducationCess,
+            // grossTaxLiability:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.taxComputation
+            //   ]?.GrossTaxLiability,
+            // taxRelief: {
+            //   taxReliefUnder89:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.Section89,
+            //   taxReliefUnder90_90A: 0,
+            //   taxReliefUnder91: 0,
+            //   totalRelief:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.Section89,
+            // },
+            // netTaxLiability:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.taxComputation
+            //   ]?.NetTaxLiability,
+
+            // interestAndFee: {
+            //   interest234C: {
+            //     q1: 0,
+            //     q2: 0,
+            //     q3: 0,
+            //     q4: 0,
+            //     q5: 0,
+            //   },
+            //   total234A:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.IntrstPay?.IntrstPayUs234A,
+            //   total234B:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.IntrstPay?.IntrstPayUs234B,
+            //   total234C:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.IntrstPay?.IntrstPayUs234C,
+            //   total234F:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //       this.taxComputation
+            //     ]?.IntrstPay?.LateFilingFee234F,
+            //   totalInterestAndFee:
+            //     this.itrType === 'ITR1'
+            //       ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.taxComputation
+            //         ]?.TotalIntrstPay
+            //       : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.taxComputation
+            //         ]?.IntrstPay?.LateFilingFee234F +
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.taxComputation
+            //         ]?.IntrstPay?.IntrstPayUs234C +
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.taxComputation
+            //         ]?.IntrstPay?.IntrstPayUs234B +
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //           this.taxComputation
+            //         ]?.IntrstPay?.IntrstPayUs234A,
+            // },
+            // aggregateLiability:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+            //     this.taxComputation
+            //   ]?.TotTaxPlusIntrstPay,
+
+            // taxPaid: {
+            //   onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //     .TDSonSalaries?.TDSonSalary
+            //     ? (Object.entries(
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //           .TDSonSalaries?.TDSonSalary
+            //       ).map(([key, item]) => ({
+            //         deductorName: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             IncChrgSal: Number;
+            //             TotalTDSSal: Number;
+            //           }
+            //         ).EmployerOrDeductorOrCollectDetl
+            //           ?.EmployerOrDeductorOrCollecterName,
+            //         deductorTAN: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             IncChrgSal: Number;
+            //             TotalTDSSal: Number;
+            //           }
+            //         ).EmployerOrDeductorOrCollectDetl?.TAN,
+            //         totalAmountCredited: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             IncChrgSal: Number;
+            //             TotalTDSSal: Number;
+            //           }
+            //         ).IncChrgSal,
+            //         totalTdsDeposited: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             IncChrgSal: Number;
+            //             TotalTDSSal: Number;
+            //           }
+            //         ).TotalTDSSal,
+            //       })) as {
+            //         deductorName: String;
+            //         deductorTAN: String;
+            //         totalAmountCredited: Number;
+            //         totalTdsDeposited: Number;
+            //       }[])
+            //     : null,
+            //   totalOnSalary:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
+            //       ?.TotalTDSonSalaries,
+
+            //   otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
+            //     this.itrType
+            //   ].TDSonOthThanSals?.TDSonOthThanSal
+            //     ? this.itrType === 'ITR1'
+            //       ? (Object.entries(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             .TDSonOthThanSals?.TDSonOthThanSal
+            //         ).map(([key, item]) => ({
+            //           deductorName: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtForTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TotTDSOnAmtPaid: Number;
+            //               ClaimOutOfTotTDSOnAmtPaid: Number;
+            //             }
+            //           ).EmployerOrDeductorOrCollectDetl
+            //             ?.EmployerOrDeductorOrCollecterName,
+            //           deductorTAN: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtForTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TotTDSOnAmtPaid: Number;
+            //               ClaimOutOfTotTDSOnAmtPaid: Number;
+            //             }
+            //           ).EmployerOrDeductorOrCollectDetl?.TAN,
+            //           totalAmountCredited: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtForTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TotTDSOnAmtPaid: Number;
+            //               ClaimOutOfTotTDSOnAmtPaid: Number;
+            //             }
+            //           ).AmtForTaxDeduct,
+            //           totalTdsDeposited: (
+            //             item as {
+            //               EmployerOrDeductorOrCollectDetl: {
+            //                 TAN: String;
+            //                 EmployerOrDeductorOrCollecterName: String;
+            //               };
+            //               AmtForTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TotTDSOnAmtPaid: Number;
+            //               ClaimOutOfTotTDSOnAmtPaid: Number;
+            //             }
+            //           ).ClaimOutOfTotTDSOnAmtPaid,
+            //         })) as {
+            //           deductorName: String;
+            //           deductorTAN: String;
+            //           totalAmountCredited: Number;
+            //           totalTdsDeposited: Number;
+            //         }[])
+            //       : (Object.entries(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             ?.TDSonOthThanSals?.TDSonOthThanSalDtls
+            //         ).map(([key, item]) => ({
+            //           deductorName: (
+            //             item as {
+            //               TANOfDeductor: String;
+            //               BroughtFwdTDSAmt: Number;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).TANOfDeductor,
+            //           deductorTAN: (
+            //             item as {
+            //               TANOfDeductor: String;
+            //               BroughtFwdTDSAmt: Number;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).TANOfDeductor,
+            //           totalAmountCredited: (
+            //             item as {
+            //               TANOfDeductor: String;
+            //               BroughtFwdTDSAmt: Number;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).GrossAmount,
+            //           totalTdsDeposited: (
+            //             item as {
+            //               TANOfDeductor: String;
+            //               BroughtFwdTDSAmt: Number;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).TDSDeducted,
+            //         })) as {
+            //           deductorName: String;
+            //           deductorTAN: String;
+            //           totalAmountCredited: Number;
+            //           totalTdsDeposited: Number;
+            //         }[])
+            //     : null,
+            //   totalOtherThanSalary16A:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //       ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
+
+            //   otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
+            //     this.itrType
+            //   ].ScheduleTDS3Dtls?.TDS3Details
+            //     ? this.itrType === 'ITR1'
+            //       ? (Object.entries(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             ?.ScheduleTDS3Dtls?.TDS3Details
+            //         ).map(([key, item]) => ({
+            //           deductorName: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               NameOfTenant: String;
+            //               GrsRcptToTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //             }
+            //           ).NameOfTenant,
+            //           deductorTAN: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               NameOfTenant: String;
+            //               GrsRcptToTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //             }
+            //           ).PANofTenant,
+            //           totalAmountCredited: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               NameOfTenant: String;
+            //               GrsRcptToTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //             }
+            //           ).GrsRcptToTaxDeduct,
+            //           totalTdsDeposited: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               NameOfTenant: String;
+            //               GrsRcptToTaxDeduct: Number;
+            //               DeductedYr: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //             }
+            //           ).TDSClaimed,
+            //         })) as {
+            //           deductorName: String;
+            //           deductorTAN: String;
+            //           totalAmountCredited: Number;
+            //           totalTdsDeposited: Number;
+            //         }[])
+            //       : (Object.entries(
+            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //             ?.ScheduleTDS3Dtls?.TDS3Details
+            //         ).map(([key, item]) => ({
+            //           deductorName: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).HeadOfIncome,
+            //           deductorTAN: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).PANofTenant,
+            //           totalAmountCredited: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).GrossAmount,
+            //           totalTdsDeposited: (
+            //             item as {
+            //               PANofTenant: String;
+            //               AadhaarofTenant: String;
+            //               TDSDeducted: Number;
+            //               TDSClaimed: Number;
+            //               GrossAmount: Number;
+            //               HeadOfIncome: String;
+            //               TDSCreditCarriedFwd: Number;
+            //             }
+            //           ).TDSDeducted,
+            //         })) as {
+            //           deductorName: String;
+            //           deductorTAN: String;
+            //           totalAmountCredited: Number;
+            //           totalTdsDeposited: Number;
+            //         }[])
+            //     : null,
+            //   totalOtherThanSalary26QB:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //       ?.ScheduleTDS3Dtls?.TDS3Details,
+
+            //   tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
+            //     ?.TCS
+            //     ? (Object.entries(
+            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //           ?.ScheduleTCS?.TCS
+            //       ).map(([key, item]) => ({
+            //         deductorName: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             AmtTaxCollected: Number;
+            //             CollectedYr: String;
+            //             TotalTCS: Number;
+            //             AmtTCSClaimedThisYear: Number;
+            //           }
+            //         ).EmployerOrDeductorOrCollectDetl
+            //           ?.EmployerOrDeductorOrCollecterName,
+            //         deductorTAN: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             AmtTaxCollected: Number;
+            //             CollectedYr: String;
+            //             TotalTCS: Number;
+            //             AmtTCSClaimedThisYear: Number;
+            //           }
+            //         ).EmployerOrDeductorOrCollectDetl?.TAN,
+            //         totalAmountCredited: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             AmtTaxCollected: Number;
+            //             CollectedYr: String;
+            //             TotalTCS: Number;
+            //             AmtTCSClaimedThisYear: Number;
+            //           }
+            //         ).AmtTaxCollected,
+            //         totalTdsDeposited: (
+            //           item as {
+            //             EmployerOrDeductorOrCollectDetl: {
+            //               TAN: String;
+            //               EmployerOrDeductorOrCollecterName: String;
+            //             };
+            //             AmtTaxCollected: Number;
+            //             CollectedYr: String;
+            //             TotalTCS: Number;
+            //             AmtTCSClaimedThisYear: Number;
+            //           }
+            //         ).AmtTCSClaimedThisYear,
+            //       })) as {
+            //         deductorName: String;
+            //         deductorTAN: String;
+            //         totalAmountCredited: Number;
+            //         totalTdsDeposited: Number;
+            //       }[])
+            //     : null,
+            //   totalTcs:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
+            //       ?.TotalSchTCS,
+
+            //   otherThanTDSTCS:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
+            //       ?.TotalTaxPayments ||
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
+            //       ?.TotalTaxPayments
+            //       ? this.itrType === 'ITR1'
+            //         ? (Object.entries(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               ?.TaxPayments?.TaxPayment
+            //           ).map(([key, item]) => ({
+            //             bsrCode: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).BSRCode,
+            //             date: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).DateDep,
+            //             challanNo: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).SrlNoOfChaln,
+            //             amount: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).Amt,
+            //           })) as {
+            //             bsrCode: String;
+            //             date: Date;
+            //             challanNo: Number;
+            //             amount: Number;
+            //           }[])
+            //         : (Object.entries(
+            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //               ?.ScheduleIT?.TaxPayment
+            //           ).map(([key, item]) => ({
+            //             bsrCode: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).BSRCode,
+            //             date: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).DateDep,
+            //             challanNo: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).SrlNoOfChaln,
+            //             amount: (
+            //               item as {
+            //                 BSRCode: String;
+            //                 DateDep: Date;
+            //                 SrlNoOfChaln: Number;
+            //                 Amt: Number;
+            //               }
+            //             ).Amt,
+            //           })) as {
+            //             bsrCode: String;
+            //             date: Date;
+            //             challanNo: Number;
+            //             amount: Number;
+            //           }[])
+            //       : null,
+
+            //   totalOtherThanTDSTCS:
+            //     this.itrType === 'ITR1'
+            //       ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //           ?.TaxPayments?.TotalTaxPayments
+            //       : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            //           ?.ScheduleIT?.TotalTaxPayments,
+
+            //   totalTaxesPaid:
+            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
+            //       ?.TaxesPaid?.TotalTaxesPaid,
+            // },
+            // amountPayableRefund:
+            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
+            //     ?.BalTaxPayable,
+          };
+          console.log(this.finalCalculations, 'finalCalculations');
+
           this.keys = {
             // 1. SALARY INCOME
             IncomeFromSal:
@@ -1716,745 +2609,745 @@ export class SummaryComponent implements OnInit {
                     salaryTotalIncome:
                       this.finalSummary?.assessment?.taxSummary?.salary,
                   },
-                  houseProperties: {
-                    houseProps:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
-                        (
-                          {
-                            propertyType,
-                            grossAnnualRentReceived,
-                            propertyTax,
-                            annualValue,
-                            exemptIncome,
-                            loans,
-                            taxableIncome,
-                          },
-                          index
-                        ) => {
-                          return {
-                            hpNo: index,
-                            typeOfHp: propertyType,
-                            grossRentReceived: grossAnnualRentReceived,
-                            taxesPaid: propertyTax,
-                            annualValue: annualValue,
-                            hpStandardDeduction: exemptIncome,
-                            hpinterest: loans[0]?.interestAmount,
-                            hpNetIncome: taxableIncome,
-                            hpIncome: taxableIncome,
-                          };
-                        }
-                      ),
-                    hpTotalIncome:
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryHpIncome?.totalHPTaxableIncome,
-                  },
-                  otherIncome: {
-                    otherIncomes: {
-                      saving:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'SAVING_INTEREST'
-                        )?.amount,
+                  // houseProperties: {
+                  //   houseProps:
+                  //     this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                  //       (
+                  //         {
+                  //           propertyType,
+                  //           grossAnnualRentReceived,
+                  //           propertyTax,
+                  //           annualValue,
+                  //           exemptIncome,
+                  //           loans,
+                  //           taxableIncome,
+                  //         },
+                  //         index
+                  //       ) => {
+                  //         return {
+                  //           hpNo: index,
+                  //           typeOfHp: propertyType,
+                  //           grossRentReceived: grossAnnualRentReceived,
+                  //           taxesPaid: propertyTax,
+                  //           annualValue: annualValue,
+                  //           hpStandardDeduction: exemptIncome,
+                  //           hpinterest: loans[0]?.interestAmount,
+                  //           hpNetIncome: taxableIncome,
+                  //           hpIncome: taxableIncome,
+                  //         };
+                  //       }
+                  //     ),
+                  //   hpTotalIncome:
+                  //     this.finalSummary?.assessment?.summaryIncome
+                  //       ?.summaryHpIncome?.totalHPTaxableIncome,
+                  // },
+                  // otherIncome: {
+                  //   otherIncomes: {
+                  //     saving:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                  //         (val) => val.incomeType === 'SAVING_INTEREST'
+                  //       )?.amount,
 
-                      intFromDeposit:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'FD_RD_INTEREST'
-                        )?.amount,
+                  //     intFromDeposit:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                  //         (val) => val.incomeType === 'FD_RD_INTEREST'
+                  //       )?.amount,
 
-                      taxRefund:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'TAX_REFUND_INTEREST'
-                        )?.amount,
+                  //     taxRefund:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                  //         (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                  //       )?.amount,
 
-                      anyOtherInterest:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'ANY_OTHER'
-                        )?.amount,
+                  //     anyOtherInterest:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                  //         (val) => val.incomeType === 'ANY_OTHER'
+                  //       )?.amount,
 
-                      familyPension:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'FAMILY_PENSION'
-                        )?.amount,
+                  //     familyPension:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                  //         (val) => val.incomeType === 'FAMILY_PENSION'
+                  //       )?.amount,
 
-                      dividendIncome:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'DIVIDEND'
-                        )?.amount,
-                    },
+                  //     dividendIncome:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                  //         (val) => val.incomeType === 'DIVIDEND'
+                  //       )?.amount,
+                  //   },
 
-                    otherIncomeTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
-                        (sum, obj) => sum + obj.amount,
-                        0
-                      ),
-                  },
-                  businessIncome: {
-                    businessIncomeDetails: {
-                      business44AD: {
-                        bank: [
-                          this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                            .filter(
-                              (element) =>
-                                element?.businessType === 'BUSINESS' &&
-                                element?.incomeType === 'BANK'
-                            )
-                            .reduce(
-                              (accumulated, element) => {
-                                accumulated.grossTurnover += element?.receipts;
-                                accumulated.TaxableIncome +=
-                                  element?.presumptiveIncome;
-                                return accumulated;
-                              },
-                              {
-                                businessSection: 'BUSINESS',
-                                natureOfBusinessCode: 0,
-                                tradeName: '',
-                                grossTurnover: 0,
-                                TaxableIncome: 0,
-                              }
-                            ),
-                        ],
+                  //   otherIncomeTotal:
+                  //     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
+                  //       (sum, obj) => sum + obj.amount,
+                  //       0
+                  //     ),
+                  // },
+                  // businessIncome: {
+                  //   businessIncomeDetails: {
+                  //     business44AD: {
+                  //       bank: [
+                  //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                  //           .filter(
+                  //             (element) =>
+                  //               element?.businessType === 'BUSINESS' &&
+                  //               element?.incomeType === 'BANK'
+                  //           )
+                  //           .reduce(
+                  //             (accumulated, element) => {
+                  //               accumulated.grossTurnover += element?.receipts;
+                  //               accumulated.TaxableIncome +=
+                  //                 element?.presumptiveIncome;
+                  //               return accumulated;
+                  //             },
+                  //             {
+                  //               businessSection: 'BUSINESS',
+                  //               natureOfBusinessCode: 0,
+                  //               tradeName: '',
+                  //               grossTurnover: 0,
+                  //               TaxableIncome: 0,
+                  //             }
+                  //           ),
+                  //       ],
 
-                        cash: [
-                          this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                            ?.filter(
-                              (element) =>
-                                element?.businessType === 'BUSINESS' &&
-                                element?.incomeType === 'CASH'
-                            )
-                            .reduce(
-                              (accumulated, element) => {
-                                accumulated.grossTurnover += element?.receipts;
-                                accumulated.TaxableIncome +=
-                                  element?.presumptiveIncome;
-                                return accumulated;
-                              },
-                              {
-                                businessSection: 'BUSINESS',
-                                natureOfBusinessCode: 0,
-                                tradeName: '',
-                                grossTurnover: 0,
-                                TaxableIncome: 0,
-                              }
-                            ),
-                        ],
-                      },
+                  //       cash: [
+                  //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                  //           ?.filter(
+                  //             (element) =>
+                  //               element?.businessType === 'BUSINESS' &&
+                  //               element?.incomeType === 'CASH'
+                  //           )
+                  //           .reduce(
+                  //             (accumulated, element) => {
+                  //               accumulated.grossTurnover += element?.receipts;
+                  //               accumulated.TaxableIncome +=
+                  //                 element?.presumptiveIncome;
+                  //               return accumulated;
+                  //             },
+                  //             {
+                  //               businessSection: 'BUSINESS',
+                  //               natureOfBusinessCode: 0,
+                  //               tradeName: '',
+                  //               grossTurnover: 0,
+                  //               TaxableIncome: 0,
+                  //             }
+                  //           ),
+                  //       ],
+                  //     },
 
-                      business44ADA:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          ?.filter(
-                            (element) =>
-                              element?.businessType === 'PROFESSIONAL'
-                          )
-                          .map((element) => ({
-                            businessSection: element?.businessType,
-                            natureOfBusinessCode: 0,
-                            tradeName: '',
-                            grossTurnover: element?.receipts,
-                            TaxableIncome: element?.presumptiveIncome,
-                          })),
-                    },
+                  //     business44ADA:
+                  //       this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                  //         ?.filter(
+                  //           (element) =>
+                  //             element?.businessType === 'PROFESSIONAL'
+                  //         )
+                  //         .map((element) => ({
+                  //           businessSection: element?.businessType,
+                  //           natureOfBusinessCode: 0,
+                  //           tradeName: '',
+                  //           grossTurnover: element?.receipts,
+                  //           TaxableIncome: element?.presumptiveIncome,
+                  //         })),
+                  //   },
 
-                    businessIncomeTotal:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.presumptiveIncome,
-                  },
-                  totalHeadWiseIncome:
-                    this.finalSummary?.assessment?.taxSummary?.totalIncome,
+                  //   businessIncomeTotal:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.presumptiveIncome,
+                  // },
+                  // totalHeadWiseIncome:
+                  //   this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
-                  currentYearLosses: {
-                    currentYearLossesSetOff: [
-                      {
-                        houseProperty:
-                          this.finalSummary?.assessment?.taxSummary
-                            ?.currentYearIFHPSetOff,
-                      },
-                    ],
-                    totalCurrentYearSetOff:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.currentYearIFHPSetOff,
-                  },
-                  balanceAfterSetOffCurrentYearLosses:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.balanceAfterSetOffCurrentYearLosses,
+                  // currentYearLosses: {
+                  //   currentYearLossesSetOff: [
+                  //     {
+                  //       houseProperty:
+                  //         this.finalSummary?.assessment?.taxSummary
+                  //           ?.currentYearIFHPSetOff,
+                  //     },
+                  //   ],
+                  //   totalCurrentYearSetOff:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.currentYearIFHPSetOff,
+                  // },
+                  // balanceAfterSetOffCurrentYearLosses:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.balanceAfterSetOffCurrentYearLosses,
 
-                  BroughtFwdLossesSetoff: {
-                    BroughtFwdLossesSetoffDtls: {
-                      hpLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearHPIncome,
-                        0
-                      ),
-                      stLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearSTCGIncome,
-                        0
-                      ),
-                      ltLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearLTCGIncome,
-                        0
-                      ),
-                    },
-                    BroughtFwdLossesSetoffTotal: Number(
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.totalBroughtForwordSetOff
-                    ),
-                  },
-                  grossTotalIncome:
-                    this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
-                  totalSpecialRateIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.totalSpecialRateIncome,
-                  deductions: {
-                    deductionDtls: Object.entries(
-                      this.finalSummary?.assessment?.summaryDeductions
-                    )
-                      ?.filter(
-                        (item: any) =>
-                          item[1].sectionType !== '80C' &&
-                          item[1].sectionType !== '80CCC' &&
-                          item[1].sectionType !== '80CCD1' &&
-                          item[1].sectionType !== '80GAGTI'
-                      )
-                      .map(([key, item]) => ({
-                        name: (
-                          item as { notes: string; eligibleAmount: number }
-                        ).notes,
-                        amount: (
-                          item as { notes: string; eligibleAmount: number }
-                        ).eligibleAmount,
-                      })) as {
-                      name: String;
-                      amount: Number;
-                    }[],
-                    deductionTotal:
-                      this.finalSummary?.assessment?.taxSummary?.totalDeduction,
-                  },
-                  totalIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.totalIncomeAfterDeductionIncludeSR,
-                  specialRateChargeable:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.specialIncomeAfterAdjBaseLimit,
-                  netAgricultureIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.agricultureIncome,
-                  aggregateIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.aggregateIncomeXml,
-                  lossesToBeCarriedForward: {
-                    cflDtls: Object.entries(
-                      this.finalSummary?.assessment?.carryForwordLosses
-                    )?.map(([key, item]) => ({
-                      assessmentPastYear: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).assessmentPastYear,
-                      housePropertyLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).housePropertyLoss,
-                      STCGLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).STCGLoss,
-                      LTCGLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).LTCGLoss,
-                      pastYear: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).pastYear,
-                      totalLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).totalLoss,
-                    })) as {
-                      assessmentPastYear: any;
-                      housePropertyLoss: Number;
-                      STCGLoss: Number;
-                      LTCGLoss: Number;
-                      pastYear: Number;
-                      totalLoss: Number;
-                    }[],
-                    cflTotal:
-                      this.finalSummary?.assessment?.carryForwordLosses?.reduce(
-                        (total, item) => total + item.totalLoss,
-                        0
-                      ),
-                  },
-                  totalTax: {
-                    taxAtNormalRate:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxAtNormalRate,
-                    taxAtSpecialRate:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxAtSpecialRate,
-                    rebateOnAgricultureIncome:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.rebateOnAgricultureIncome,
-                    totalTax:
-                      this.finalSummary?.assessment?.taxSummary?.totalTax,
-                  },
-                  rebateUnderSection87A:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.rebateUnderSection87A,
-                  taxAfterRebate:
-                    this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
-                  surcharge:
-                    this.finalSummary?.assessment?.taxSummary?.surcharge,
-                  eductionCess:
-                    this.finalSummary?.assessment?.taxSummary?.cessAmount,
-                  grossTaxLiability:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.grossTaxLiability,
-                  taxRelief: {
-                    taxReliefUnder89:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder89,
-                    taxReliefUnder90_90A:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A,
-                    taxReliefUnder91:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91,
-                    totalRelief: this.finalSummary?.assessment?.taxSummary
-                      ?.taxReliefUnder89
-                      ? this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder89
-                      : 0 +
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder90_90A
-                      ? this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder90_90A
-                      : 0 +
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder91
-                      ? this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder91
-                      : 0,
-                  },
-                  netTaxLiability:
-                    this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
-                  interestAndFee: {
-                    interest234C: {
-                      q1: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ1?.intrest,
-                      q2: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ2?.intrest,
-                      q3: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ3?.intrest,
-                      q4: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ4?.intrest,
-                      q5: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ5?.intrest,
-                    },
-                    total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
-                    total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
-                    total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
-                    total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
-                    totalInterestAndFee:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.interestAndFeesPayable,
-                  },
-                  aggregateLiability:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.agrigateLiability,
-                  taxPaid: {
-                    onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.onSalary
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).deductorName,
-                          deductorTAN: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).deductorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).totalAmountCredited,
-                          totalTdsDeposited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).totalTdsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
-                    totalOnSalary:
-                      this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
-                        (total, item) => total + item?.totalTdsDeposited,
-                        0
-                      ),
+                  // BroughtFwdLossesSetoff: {
+                  //   BroughtFwdLossesSetoffDtls: {
+                  //     hpLoss: this.losses?.pastYearLosses?.reduce(
+                  //       (total, item) =>
+                  //         total + item?.setOffWithCurrentYearHPIncome,
+                  //       0
+                  //     ),
+                  //     stLoss: this.losses?.pastYearLosses?.reduce(
+                  //       (total, item) =>
+                  //         total + item?.setOffWithCurrentYearSTCGIncome,
+                  //       0
+                  //     ),
+                  //     ltLoss: this.losses?.pastYearLosses?.reduce(
+                  //       (total, item) =>
+                  //         total + item?.setOffWithCurrentYearLTCGIncome,
+                  //       0
+                  //     ),
+                  //   },
+                  //   BroughtFwdLossesSetoffTotal: Number(
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.totalBroughtForwordSetOff
+                  //   ),
+                  // },
+                  // grossTotalIncome:
+                  //   this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
+                  // totalSpecialRateIncome:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.totalSpecialRateIncome,
+                  // deductions: {
+                  //   deductionDtls: Object.entries(
+                  //     this.finalSummary?.assessment?.summaryDeductions
+                  //   )
+                  //     ?.filter(
+                  //       (item: any) =>
+                  //         item[1].sectionType !== '80C' &&
+                  //         item[1].sectionType !== '80CCC' &&
+                  //         item[1].sectionType !== '80CCD1' &&
+                  //         item[1].sectionType !== '80GAGTI'
+                  //     )
+                  //     .map(([key, item]) => ({
+                  //       name: (
+                  //         item as { notes: string; eligibleAmount: number }
+                  //       ).notes,
+                  //       amount: (
+                  //         item as { notes: string; eligibleAmount: number }
+                  //       ).eligibleAmount,
+                  //     })) as {
+                  //     name: String;
+                  //     amount: Number;
+                  //   }[],
+                  //   deductionTotal:
+                  //     this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                  // },
+                  // totalIncome:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.totalIncomeAfterDeductionIncludeSR,
+                  // specialRateChargeable:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.specialIncomeAfterAdjBaseLimit,
+                  // netAgricultureIncome:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.agricultureIncome,
+                  // aggregateIncome:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.aggregateIncomeXml,
+                  // lossesToBeCarriedForward: {
+                  //   cflDtls: Object.entries(
+                  //     this.finalSummary?.assessment?.carryForwordLosses
+                  //   )?.map(([key, item]) => ({
+                  //     assessmentPastYear: (
+                  //       item as {
+                  //         assessmentPastYear: any;
+                  //         housePropertyLoss: Number;
+                  //         STCGLoss: Number;
+                  //         LTCGLoss: Number;
+                  //         pastYear: Number;
+                  //         totalLoss: Number;
+                  //       }
+                  //     ).assessmentPastYear,
+                  //     housePropertyLoss: (
+                  //       item as {
+                  //         assessmentPastYear: any;
+                  //         housePropertyLoss: Number;
+                  //         STCGLoss: Number;
+                  //         LTCGLoss: Number;
+                  //         pastYear: Number;
+                  //         totalLoss: Number;
+                  //       }
+                  //     ).housePropertyLoss,
+                  //     STCGLoss: (
+                  //       item as {
+                  //         assessmentPastYear: any;
+                  //         housePropertyLoss: Number;
+                  //         STCGLoss: Number;
+                  //         LTCGLoss: Number;
+                  //         pastYear: Number;
+                  //         totalLoss: Number;
+                  //       }
+                  //     ).STCGLoss,
+                  //     LTCGLoss: (
+                  //       item as {
+                  //         assessmentPastYear: any;
+                  //         housePropertyLoss: Number;
+                  //         STCGLoss: Number;
+                  //         LTCGLoss: Number;
+                  //         pastYear: Number;
+                  //         totalLoss: Number;
+                  //       }
+                  //     ).LTCGLoss,
+                  //     pastYear: (
+                  //       item as {
+                  //         assessmentPastYear: any;
+                  //         housePropertyLoss: Number;
+                  //         STCGLoss: Number;
+                  //         LTCGLoss: Number;
+                  //         pastYear: Number;
+                  //         totalLoss: Number;
+                  //       }
+                  //     ).pastYear,
+                  //     totalLoss: (
+                  //       item as {
+                  //         assessmentPastYear: any;
+                  //         housePropertyLoss: Number;
+                  //         STCGLoss: Number;
+                  //         LTCGLoss: Number;
+                  //         pastYear: Number;
+                  //         totalLoss: Number;
+                  //       }
+                  //     ).totalLoss,
+                  //   })) as {
+                  //     assessmentPastYear: any;
+                  //     housePropertyLoss: Number;
+                  //     STCGLoss: Number;
+                  //     LTCGLoss: Number;
+                  //     pastYear: Number;
+                  //     totalLoss: Number;
+                  //   }[],
+                  //   cflTotal:
+                  //     this.finalSummary?.assessment?.carryForwordLosses?.reduce(
+                  //       (total, item) => total + item.totalLoss,
+                  //       0
+                  //     ),
+                  // },
+                  // totalTax: {
+                  //   taxAtNormalRate:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.taxAtNormalRate,
+                  //   taxAtSpecialRate:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.taxAtSpecialRate,
+                  //   rebateOnAgricultureIncome:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.rebateOnAgricultureIncome,
+                  //   totalTax:
+                  //     this.finalSummary?.assessment?.taxSummary?.totalTax,
+                  // },
+                  // rebateUnderSection87A:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.rebateUnderSection87A,
+                  // taxAfterRebate:
+                  //   this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
+                  // surcharge:
+                  //   this.finalSummary?.assessment?.taxSummary?.surcharge,
+                  // eductionCess:
+                  //   this.finalSummary?.assessment?.taxSummary?.cessAmount,
+                  // grossTaxLiability:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.grossTaxLiability,
+                  // taxRelief: {
+                  //   taxReliefUnder89:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.taxReliefUnder89,
+                  //   taxReliefUnder90_90A:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.taxReliefUnder90_90A,
+                  //   taxReliefUnder91:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.taxReliefUnder91,
+                  //   totalRelief: this.finalSummary?.assessment?.taxSummary
+                  //     ?.taxReliefUnder89
+                  //     ? this.finalSummary?.assessment?.taxSummary
+                  //         ?.taxReliefUnder89
+                  //     : 0 +
+                  //       this.finalSummary?.assessment?.taxSummary
+                  //         ?.taxReliefUnder90_90A
+                  //     ? this.finalSummary?.assessment?.taxSummary
+                  //         ?.taxReliefUnder90_90A
+                  //     : 0 +
+                  //       this.finalSummary?.assessment?.taxSummary
+                  //         ?.taxReliefUnder91
+                  //     ? this.finalSummary?.assessment?.taxSummary
+                  //         ?.taxReliefUnder91
+                  //     : 0,
+                  // },
+                  // netTaxLiability:
+                  //   this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
+                  // interestAndFee: {
+                  //   interest234C: {
+                  //     q1: this.finalSummary?.assessment?.summaryQuarter234c
+                  //       ?.quarterDitailsQ1?.intrest,
+                  //     q2: this.finalSummary?.assessment?.summaryQuarter234c
+                  //       ?.quarterDitailsQ2?.intrest,
+                  //     q3: this.finalSummary?.assessment?.summaryQuarter234c
+                  //       ?.quarterDitailsQ3?.intrest,
+                  //     q4: this.finalSummary?.assessment?.summaryQuarter234c
+                  //       ?.quarterDitailsQ4?.intrest,
+                  //     q5: this.finalSummary?.assessment?.summaryQuarter234c
+                  //       ?.quarterDitailsQ5?.intrest,
+                  //   },
+                  //   total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
+                  //   total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
+                  //   total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
+                  //   total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
+                  //   totalInterestAndFee:
+                  //     this.finalSummary?.assessment?.taxSummary
+                  //       ?.interestAndFeesPayable,
+                  // },
+                  // aggregateLiability:
+                  //   this.finalSummary?.assessment?.taxSummary
+                  //     ?.agrigateLiability,
+                  // taxPaid: {
+                  //   onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                  //     ? (Object.entries(
+                  //         this.finalSummary?.itr?.taxPaid?.onSalary
+                  //       )?.map(([key, item]) => ({
+                  //         deductorName: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //           }
+                  //         ).deductorName,
+                  //         deductorTAN: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //           }
+                  //         ).deductorTAN,
+                  //         totalAmountCredited: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //           }
+                  //         ).totalAmountCredited,
+                  //         totalTdsDeposited: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //           }
+                  //         ).totalTdsDeposited,
+                  //       })) as {
+                  //         deductorName: String;
+                  //         deductorTAN: String;
+                  //         totalAmountCredited: Number;
+                  //         totalTdsDeposited: Number;
+                  //       }[])
+                  //     : null,
+                  //   totalOnSalary:
+                  //     this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                  //       (total, item) => total + item?.totalTdsDeposited,
+                  //       0
+                  //     ),
 
-                    otherThanSalary16A: this.finalSummary?.itr?.taxPaid
-                      ?.otherThanSalary16A
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).deductorName,
-                          deductorTAN: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).deductorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).totalAmountCredited,
-                          totalTdsDeposited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).totalTdsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
+                  //   otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                  //     ?.otherThanSalary16A
+                  //     ? (Object.entries(
+                  //         this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                  //       )?.map(([key, item]) => ({
+                  //         deductorName: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             headOfIncome: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: any;
+                  //           }
+                  //         ).deductorName,
+                  //         deductorTAN: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             headOfIncome: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: any;
+                  //           }
+                  //         ).deductorTAN,
+                  //         totalAmountCredited: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             headOfIncome: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: any;
+                  //           }
+                  //         ).totalAmountCredited,
+                  //         totalTdsDeposited: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorTAN: String;
+                  //             headOfIncome: String;
+                  //             id: any;
+                  //             srNo: any;
+                  //             taxDeduction: any;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: any;
+                  //           }
+                  //         ).totalTdsDeposited,
+                  //       })) as {
+                  //         deductorName: String;
+                  //         deductorTAN: String;
+                  //         totalAmountCredited: Number;
+                  //         totalTdsDeposited: Number;
+                  //       }[])
+                  //     : null,
 
-                    totalOtherThanSalary16A:
-                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
-                        (total, item) => total + item?.totalTdsDeposited,
-                        0
-                      ),
+                  //   totalOtherThanSalary16A:
+                  //     this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
+                  //       (total, item) => total + item?.totalTdsDeposited,
+                  //       0
+                  //     ),
 
-                    otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
-                      ?.otherThanSalary26QB
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).deductorName,
-                          deductorTAN: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).deductorPAN,
-                          totalAmountCredited: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).totalAmountCredited,
-                          totalTdsDeposited: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).totalTdsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
+                  //   otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                  //     ?.otherThanSalary26QB
+                  //     ? (Object.entries(
+                  //         this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                  //       )?.map(([key, item]) => ({
+                  //         deductorName: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorPAN: String;
+                  //             headOfIncome: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: null;
+                  //           }
+                  //         ).deductorName,
+                  //         deductorTAN: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorPAN: String;
+                  //             headOfIncome: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: null;
+                  //           }
+                  //         ).deductorPAN,
+                  //         totalAmountCredited: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorPAN: String;
+                  //             headOfIncome: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: null;
+                  //           }
+                  //         ).totalAmountCredited,
+                  //         totalTdsDeposited: (
+                  //           item as {
+                  //             deductorName: String;
+                  //             deductorPAN: String;
+                  //             headOfIncome: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountCredited: Number;
+                  //             totalTdsDeposited: Number;
+                  //             uniqueTDSCerNo: null;
+                  //           }
+                  //         ).totalTdsDeposited,
+                  //       })) as {
+                  //         deductorName: String;
+                  //         deductorTAN: String;
+                  //         totalAmountCredited: Number;
+                  //         totalTdsDeposited: Number;
+                  //       }[])
+                  //     : null,
 
-                    totalOtherThanSalary26QB:
-                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
-                        (total, item) => total + item?.totalTdsDeposited,
-                        0
-                      ),
+                  //   totalOtherThanSalary26QB:
+                  //     this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
+                  //       (total, item) => total + item?.totalTdsDeposited,
+                  //       0
+                  //     ),
 
-                    tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.tcs
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).collectorName,
-                          deductorTAN: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).collectorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).totalAmountPaid,
-                          totalTdsDeposited: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).totalTcsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
-                    totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
-                      (total, item) => total + item?.totalTcsDeposited,
-                      0
-                    ),
+                  //   tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                  //     ? (Object.entries(
+                  //         this.finalSummary?.itr?.taxPaid?.tcs
+                  //       )?.map(([key, item]) => ({
+                  //         deductorName: (
+                  //           item as {
+                  //             collectorName: String;
+                  //             collectorTAN: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountPaid: Number;
+                  //             totalTaxCollected: Number;
+                  //             totalTcsDeposited: Number;
+                  //           }
+                  //         ).collectorName,
+                  //         deductorTAN: (
+                  //           item as {
+                  //             collectorName: String;
+                  //             collectorTAN: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountPaid: Number;
+                  //             totalTaxCollected: Number;
+                  //             totalTcsDeposited: Number;
+                  //           }
+                  //         ).collectorTAN,
+                  //         totalAmountCredited: (
+                  //           item as {
+                  //             collectorName: String;
+                  //             collectorTAN: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountPaid: Number;
+                  //             totalTaxCollected: Number;
+                  //             totalTcsDeposited: Number;
+                  //           }
+                  //         ).totalAmountPaid,
+                  //         totalTdsDeposited: (
+                  //           item as {
+                  //             collectorName: String;
+                  //             collectorTAN: String;
+                  //             id: null;
+                  //             srNo: null;
+                  //             taxDeduction: null;
+                  //             totalAmountPaid: Number;
+                  //             totalTaxCollected: Number;
+                  //             totalTcsDeposited: Number;
+                  //           }
+                  //         ).totalTcsDeposited,
+                  //       })) as {
+                  //         deductorName: String;
+                  //         deductorTAN: String;
+                  //         totalAmountCredited: Number;
+                  //         totalTdsDeposited: Number;
+                  //       }[])
+                  //     : null,
+                  //   totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                  //     (total, item) => total + item?.totalTcsDeposited,
+                  //     0
+                  //   ),
 
-                    otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
-                      ?.otherThanTDSTCS
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
-                        )?.map(([key, item]) => ({
-                          bsrCode: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).bsrCode,
-                          date: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).dateOfDeposit,
-                          challanNo: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).challanNumber,
-                          amount: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).totalTax,
-                        })) as {
-                          bsrCode: String;
-                          date: Date;
-                          challanNo: Number;
-                          amount: Number;
-                        }[])
-                      : null,
+                  //   otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                  //     ?.otherThanTDSTCS
+                  //     ? (Object.entries(
+                  //         this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                  //       )?.map(([key, item]) => ({
+                  //         bsrCode: (
+                  //           item as {
+                  //             bsrCode: String;
+                  //             challanNumber: Number;
+                  //             dateOfDeposit: Date;
+                  //             educationCess: any;
+                  //             id: any;
+                  //             majorHead: any;
+                  //             minorHead: any;
+                  //             other: any;
+                  //             srNo: any;
+                  //             surcharge: any;
+                  //             tax: any;
+                  //             totalTax: Number;
+                  //           }
+                  //         ).bsrCode,
+                  //         date: (
+                  //           item as {
+                  //             bsrCode: String;
+                  //             challanNumber: Number;
+                  //             dateOfDeposit: Date;
+                  //             educationCess: any;
+                  //             id: any;
+                  //             majorHead: any;
+                  //             minorHead: any;
+                  //             other: any;
+                  //             srNo: any;
+                  //             surcharge: any;
+                  //             tax: any;
+                  //             totalTax: Number;
+                  //           }
+                  //         ).dateOfDeposit,
+                  //         challanNo: (
+                  //           item as {
+                  //             bsrCode: String;
+                  //             challanNumber: Number;
+                  //             dateOfDeposit: Date;
+                  //             educationCess: any;
+                  //             id: any;
+                  //             majorHead: any;
+                  //             minorHead: any;
+                  //             other: any;
+                  //             srNo: any;
+                  //             surcharge: any;
+                  //             tax: any;
+                  //             totalTax: Number;
+                  //           }
+                  //         ).challanNumber,
+                  //         amount: (
+                  //           item as {
+                  //             bsrCode: String;
+                  //             challanNumber: Number;
+                  //             dateOfDeposit: Date;
+                  //             educationCess: any;
+                  //             id: any;
+                  //             majorHead: any;
+                  //             minorHead: any;
+                  //             other: any;
+                  //             srNo: any;
+                  //             surcharge: any;
+                  //             tax: any;
+                  //             totalTax: Number;
+                  //           }
+                  //         ).totalTax,
+                  //       })) as {
+                  //         bsrCode: String;
+                  //         date: Date;
+                  //         challanNo: Number;
+                  //         amount: Number;
+                  //       }[])
+                  //     : null,
 
-                    totalOtherThanTDSTCS:
-                      this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
-                        (total, item) => total + item?.totalTax,
-                        0
-                      ),
+                  //   totalOtherThanTDSTCS:
+                  //     this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                  //       (total, item) => total + item?.totalTax,
+                  //       0
+                  //     ),
 
-                    totalTaxesPaid:
-                      this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
-                  },
-                  amountPayableRefund:
-                    this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
-                      ? this.finalSummary?.assessment?.taxSummary?.taxpayable
-                      : this.finalSummary?.assessment?.taxSummary?.taxRefund,
+                  //   totalTaxesPaid:
+                  //     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
+                  // },
+                  // amountPayableRefund:
+                  //   this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
+                  //     ? this.finalSummary?.assessment?.taxSummary?.taxpayable
+                  //     : this.finalSummary?.assessment?.taxSummary?.taxRefund,
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -2571,733 +3464,733 @@ export class SummaryComponent implements OnInit {
                   salaryTotalIncome:
                     this.finalSummary?.assessment?.taxSummary?.salary,
                 },
-                houseProperties: {
-                  houseProps:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
-                      (
-                        {
-                          propertyType,
-                          grossAnnualRentReceived,
-                          propertyTax,
-                          annualValue,
-                          exemptIncome,
-                          loans,
-                          taxableIncome,
-                        },
-                        index
-                      ) => {
-                        return {
-                          hpNo: index,
-                          typeOfHp: propertyType,
-                          grossRentReceived: grossAnnualRentReceived,
-                          taxesPaid: propertyTax,
-                          annualValue: annualValue,
-                          hpStandardDeduction: exemptIncome,
-                          hpinterest: loans[0]?.interestAmount,
-                          hpNetIncome: taxableIncome,
-                          hpIncome: taxableIncome,
-                        };
-                      }
-                    ),
-                  hpTotalIncome:
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryHpIncome?.totalHPTaxableIncome,
-                },
-                otherIncome: {
-                  otherIncomes: {
-                    saving:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'SAVING_INTEREST'
-                      )?.amount,
+                // houseProperties: {
+                //   houseProps:
+                //     this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                //       (
+                //         {
+                //           propertyType,
+                //           grossAnnualRentReceived,
+                //           propertyTax,
+                //           annualValue,
+                //           exemptIncome,
+                //           loans,
+                //           taxableIncome,
+                //         },
+                //         index
+                //       ) => {
+                //         return {
+                //           hpNo: index,
+                //           typeOfHp: propertyType,
+                //           grossRentReceived: grossAnnualRentReceived,
+                //           taxesPaid: propertyTax,
+                //           annualValue: annualValue,
+                //           hpStandardDeduction: exemptIncome,
+                //           hpinterest: loans[0]?.interestAmount,
+                //           hpNetIncome: taxableIncome,
+                //           hpIncome: taxableIncome,
+                //         };
+                //       }
+                //     ),
+                //   hpTotalIncome:
+                //     this.finalSummary?.assessment?.summaryIncome
+                //       ?.summaryHpIncome?.totalHPTaxableIncome,
+                // },
+                // otherIncome: {
+                //   otherIncomes: {
+                //     saving:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                //         (val) => val.incomeType === 'SAVING_INTEREST'
+                //       )?.amount,
 
-                    intFromDeposit:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'FD_RD_INTEREST'
-                      )?.amount,
+                //     intFromDeposit:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                //         (val) => val.incomeType === 'FD_RD_INTEREST'
+                //       )?.amount,
 
-                    taxRefund:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'TAX_REFUND_INTEREST'
-                      )?.amount,
+                //     taxRefund:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                //         (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                //       )?.amount,
 
-                    anyOtherInterest:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'ANY_OTHER'
-                      )?.amount,
+                //     anyOtherInterest:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                //         (val) => val.incomeType === 'ANY_OTHER'
+                //       )?.amount,
 
-                    familyPension:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'FAMILY_PENSION'
-                      )?.amount,
+                //     familyPension:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                //         (val) => val.incomeType === 'FAMILY_PENSION'
+                //       )?.amount,
 
-                    dividendIncome:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'DIVIDEND'
-                      )?.amount,
-                  },
+                //     dividendIncome:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                //         (val) => val.incomeType === 'DIVIDEND'
+                //       )?.amount,
+                //   },
 
-                  otherIncomeTotal:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
-                      (sum, obj) => sum + obj.amount,
-                      0
-                    ),
-                },
-                businessIncome: {
-                  businessIncomeDetails: {
-                    business44AD: {
-                      bank: [
-                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          .filter(
-                            (element) =>
-                              element?.businessType === 'BUSINESS' &&
-                              element?.incomeType === 'BANK'
-                          )
-                          .reduce(
-                            (accumulated, element) => {
-                              accumulated.grossTurnover += element?.receipts;
-                              accumulated.TaxableIncome +=
-                                element?.presumptiveIncome;
-                              return accumulated;
-                            },
-                            {
-                              businessSection: 'BUSINESS',
-                              natureOfBusinessCode: 0,
-                              tradeName: '',
-                              grossTurnover: 0,
-                              TaxableIncome: 0,
-                            }
-                          ),
-                      ],
+                //   otherIncomeTotal:
+                //     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
+                //       (sum, obj) => sum + obj.amount,
+                //       0
+                //     ),
+                // },
+                // businessIncome: {
+                //   businessIncomeDetails: {
+                //     business44AD: {
+                //       bank: [
+                //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                //           .filter(
+                //             (element) =>
+                //               element?.businessType === 'BUSINESS' &&
+                //               element?.incomeType === 'BANK'
+                //           )
+                //           .reduce(
+                //             (accumulated, element) => {
+                //               accumulated.grossTurnover += element?.receipts;
+                //               accumulated.TaxableIncome +=
+                //                 element?.presumptiveIncome;
+                //               return accumulated;
+                //             },
+                //             {
+                //               businessSection: 'BUSINESS',
+                //               natureOfBusinessCode: 0,
+                //               tradeName: '',
+                //               grossTurnover: 0,
+                //               TaxableIncome: 0,
+                //             }
+                //           ),
+                //       ],
 
-                      cash: [
-                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          ?.filter(
-                            (element) =>
-                              element?.businessType === 'BUSINESS' &&
-                              element?.incomeType === 'CASH'
-                          )
-                          .reduce(
-                            (accumulated, element) => {
-                              accumulated.grossTurnover += element?.receipts;
-                              accumulated.TaxableIncome +=
-                                element?.presumptiveIncome;
-                              return accumulated;
-                            },
-                            {
-                              businessSection: 'BUSINESS',
-                              natureOfBusinessCode: 0,
-                              tradeName: '',
-                              grossTurnover: 0,
-                              TaxableIncome: 0,
-                            }
-                          ),
-                      ],
-                    },
+                //       cash: [
+                //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                //           ?.filter(
+                //             (element) =>
+                //               element?.businessType === 'BUSINESS' &&
+                //               element?.incomeType === 'CASH'
+                //           )
+                //           .reduce(
+                //             (accumulated, element) => {
+                //               accumulated.grossTurnover += element?.receipts;
+                //               accumulated.TaxableIncome +=
+                //                 element?.presumptiveIncome;
+                //               return accumulated;
+                //             },
+                //             {
+                //               businessSection: 'BUSINESS',
+                //               natureOfBusinessCode: 0,
+                //               tradeName: '',
+                //               grossTurnover: 0,
+                //               TaxableIncome: 0,
+                //             }
+                //           ),
+                //       ],
+                //     },
 
-                    business44ADA:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                        ?.filter(
-                          (element) => element?.businessType === 'PROFESSIONAL'
-                        )
-                        .map((element) => ({
-                          businessSection: element?.businessType,
-                          natureOfBusinessCode: 0,
-                          tradeName: '',
-                          grossTurnover: element?.receipts,
-                          TaxableIncome: element?.presumptiveIncome,
-                        })),
-                  },
+                //     business44ADA:
+                //       this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                //         ?.filter(
+                //           (element) => element?.businessType === 'PROFESSIONAL'
+                //         )
+                //         .map((element) => ({
+                //           businessSection: element?.businessType,
+                //           natureOfBusinessCode: 0,
+                //           tradeName: '',
+                //           grossTurnover: element?.receipts,
+                //           TaxableIncome: element?.presumptiveIncome,
+                //         })),
+                //   },
 
-                  businessIncomeTotal:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.presumptiveIncome,
-                },
-                totalHeadWiseIncome:
-                  this.finalSummary?.assessment?.taxSummary?.totalIncome,
+                //   businessIncomeTotal:
+                //     this.finalSummary?.assessment?.taxSummary
+                //       ?.presumptiveIncome,
+                // },
+                // totalHeadWiseIncome:
+                //   this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
-                currentYearLosses: {
-                  currentYearLossesSetOff: [
-                    {
-                      houseProperty:
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.currentYearIFHPSetOff,
-                    },
-                  ],
-                  totalCurrentYearSetOff:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.currentYearIFHPSetOff,
-                },
-                balanceAfterSetOffCurrentYearLosses:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.balanceAfterSetOffCurrentYearLosses,
+                // currentYearLosses: {
+                //   currentYearLossesSetOff: [
+                //     {
+                //       houseProperty:
+                //         this.finalSummary?.assessment?.taxSummary
+                //           ?.currentYearIFHPSetOff,
+                //     },
+                //   ],
+                //   totalCurrentYearSetOff:
+                //     this.finalSummary?.assessment?.taxSummary
+                //       ?.currentYearIFHPSetOff,
+                // },
+                // balanceAfterSetOffCurrentYearLosses:
+                //   this.finalSummary?.assessment?.taxSummary
+                //     ?.balanceAfterSetOffCurrentYearLosses,
 
-                BroughtFwdLossesSetoff: {
-                  BroughtFwdLossesSetoffDtls: {
-                    hpLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total + item?.setOffWithCurrentYearHPIncome,
-                      0
-                    ),
-                    stLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total + item?.setOffWithCurrentYearSTCGIncome,
-                      0
-                    ),
-                    ltLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total + item?.setOffWithCurrentYearLTCGIncome,
-                      0
-                    ),
-                  },
-                  BroughtFwdLossesSetoffTotal: Number(
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.totalBroughtForwordSetOff
-                  ),
-                },
-                grossTotalIncome:
-                  this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
-                totalSpecialRateIncome:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.totalSpecialRateIncome,
-                deductions: {
-                  deductionDtls: Object.entries(
-                    this.finalSummary?.assessment?.summaryDeductions
-                  )
-                    ?.filter(
-                      (item: any) =>
-                        item[1].sectionType !== '80C' &&
-                        item[1].sectionType !== '80CCC' &&
-                        item[1].sectionType !== '80CCD1' &&
-                        item[1].sectionType !== '80GAGTI'
-                    )
-                    .map(([key, item]) => ({
-                      name: (item as { notes: string; eligibleAmount: number })
-                        .notes,
-                      amount: (
-                        item as { notes: string; eligibleAmount: number }
-                      ).eligibleAmount,
-                    })) as {
-                    name: String;
-                    amount: Number;
-                  }[],
-                  deductionTotal:
-                    this.finalSummary?.assessment?.taxSummary?.totalDeduction,
-                },
-                totalIncome:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.totalIncomeAfterDeductionIncludeSR,
-                specialRateChargeable:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.specialIncomeAfterAdjBaseLimit,
-                netAgricultureIncome:
-                  this.finalSummary?.assessment?.taxSummary?.agricultureIncome,
-                aggregateIncome:
-                  this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
-                lossesToBeCarriedForward: {
-                  cflDtls: Object.entries(
-                    this.finalSummary?.assessment?.carryForwordLosses
-                  )?.map(([key, item]) => ({
-                    assessmentPastYear: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).assessmentPastYear,
-                    housePropertyLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).housePropertyLoss,
-                    STCGLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).STCGLoss,
-                    LTCGLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).LTCGLoss,
-                    pastYear: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).pastYear,
-                    totalLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).totalLoss,
-                  })) as {
-                    assessmentPastYear: any;
-                    housePropertyLoss: Number;
-                    STCGLoss: Number;
-                    LTCGLoss: Number;
-                    pastYear: Number;
-                    totalLoss: Number;
-                  }[],
-                  cflTotal:
-                    this.finalSummary?.assessment?.carryForwordLosses?.reduce(
-                      (total, item) => total + item.totalLoss,
-                      0
-                    ),
-                },
-                totalTax: {
-                  taxAtNormalRate:
-                    this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
-                  taxAtSpecialRate:
-                    this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
-                  rebateOnAgricultureIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.rebateOnAgricultureIncome,
-                  totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
-                },
-                rebateUnderSection87A:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.rebateUnderSection87A,
-                taxAfterRebate:
-                  this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
-                surcharge: this.finalSummary?.assessment?.taxSummary?.surcharge,
-                eductionCess:
-                  this.finalSummary?.assessment?.taxSummary?.cessAmount,
-                grossTaxLiability:
-                  this.finalSummary?.assessment?.taxSummary?.grossTaxLiability,
-                taxRelief: {
-                  taxReliefUnder89:
-                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder89,
-                  taxReliefUnder90_90A:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.taxReliefUnder90_90A,
-                  taxReliefUnder91:
-                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
-                  totalRelief: this.finalSummary?.assessment?.taxSummary
-                    ?.taxReliefUnder89
-                    ? this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder89
-                    : 0 +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A
-                    ? this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A
-                    : 0 +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91
-                    ? this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91
-                    : 0,
-                },
-                netTaxLiability:
-                  this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
-                interestAndFee: {
-                  interest234C: {
-                    q1: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ1?.intrest,
-                    q2: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ2?.intrest,
-                    q3: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ3?.intrest,
-                    q4: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ4?.intrest,
-                    q5: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ5?.intrest,
-                  },
-                  total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
-                  total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
-                  total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
-                  total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
-                  totalInterestAndFee:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.interestAndFeesPayable,
-                },
-                aggregateLiability:
-                  this.finalSummary?.assessment?.taxSummary?.agrigateLiability,
-                taxPaid: {
-                  onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.onSalary
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).deductorName,
-                        deductorTAN: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).deductorTAN,
-                        totalAmountCredited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).totalAmountCredited,
-                        totalTdsDeposited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).totalTdsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
-                  totalOnSalary:
-                    this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
-                      (total, item) => total + item?.totalTdsDeposited,
-                      0
-                    ),
+                // BroughtFwdLossesSetoff: {
+                //   BroughtFwdLossesSetoffDtls: {
+                //     hpLoss: this.losses?.pastYearLosses?.reduce(
+                //       (total, item) =>
+                //         total + item?.setOffWithCurrentYearHPIncome,
+                //       0
+                //     ),
+                //     stLoss: this.losses?.pastYearLosses?.reduce(
+                //       (total, item) =>
+                //         total + item?.setOffWithCurrentYearSTCGIncome,
+                //       0
+                //     ),
+                //     ltLoss: this.losses?.pastYearLosses?.reduce(
+                //       (total, item) =>
+                //         total + item?.setOffWithCurrentYearLTCGIncome,
+                //       0
+                //     ),
+                //   },
+                //   BroughtFwdLossesSetoffTotal: Number(
+                //     this.finalSummary?.assessment?.taxSummary
+                //       ?.totalBroughtForwordSetOff
+                //   ),
+                // },
+                // grossTotalIncome:
+                //   this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
+                // totalSpecialRateIncome:
+                //   this.finalSummary?.assessment?.taxSummary
+                //     ?.totalSpecialRateIncome,
+                // deductions: {
+                //   deductionDtls: Object.entries(
+                //     this.finalSummary?.assessment?.summaryDeductions
+                //   )
+                //     ?.filter(
+                //       (item: any) =>
+                //         item[1].sectionType !== '80C' &&
+                //         item[1].sectionType !== '80CCC' &&
+                //         item[1].sectionType !== '80CCD1' &&
+                //         item[1].sectionType !== '80GAGTI'
+                //     )
+                //     .map(([key, item]) => ({
+                //       name: (item as { notes: string; eligibleAmount: number })
+                //         .notes,
+                //       amount: (
+                //         item as { notes: string; eligibleAmount: number }
+                //       ).eligibleAmount,
+                //     })) as {
+                //     name: String;
+                //     amount: Number;
+                //   }[],
+                //   deductionTotal:
+                //     this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                // },
+                // totalIncome:
+                //   this.finalSummary?.assessment?.taxSummary
+                //     ?.totalIncomeAfterDeductionIncludeSR,
+                // specialRateChargeable:
+                //   this.finalSummary?.assessment?.taxSummary
+                //     ?.specialIncomeAfterAdjBaseLimit,
+                // netAgricultureIncome:
+                //   this.finalSummary?.assessment?.taxSummary?.agricultureIncome,
+                // aggregateIncome:
+                //   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
+                // lossesToBeCarriedForward: {
+                //   cflDtls: Object.entries(
+                //     this.finalSummary?.assessment?.carryForwordLosses
+                //   )?.map(([key, item]) => ({
+                //     assessmentPastYear: (
+                //       item as {
+                //         assessmentPastYear: any;
+                //         housePropertyLoss: Number;
+                //         STCGLoss: Number;
+                //         LTCGLoss: Number;
+                //         pastYear: Number;
+                //         totalLoss: Number;
+                //       }
+                //     ).assessmentPastYear,
+                //     housePropertyLoss: (
+                //       item as {
+                //         assessmentPastYear: any;
+                //         housePropertyLoss: Number;
+                //         STCGLoss: Number;
+                //         LTCGLoss: Number;
+                //         pastYear: Number;
+                //         totalLoss: Number;
+                //       }
+                //     ).housePropertyLoss,
+                //     STCGLoss: (
+                //       item as {
+                //         assessmentPastYear: any;
+                //         housePropertyLoss: Number;
+                //         STCGLoss: Number;
+                //         LTCGLoss: Number;
+                //         pastYear: Number;
+                //         totalLoss: Number;
+                //       }
+                //     ).STCGLoss,
+                //     LTCGLoss: (
+                //       item as {
+                //         assessmentPastYear: any;
+                //         housePropertyLoss: Number;
+                //         STCGLoss: Number;
+                //         LTCGLoss: Number;
+                //         pastYear: Number;
+                //         totalLoss: Number;
+                //       }
+                //     ).LTCGLoss,
+                //     pastYear: (
+                //       item as {
+                //         assessmentPastYear: any;
+                //         housePropertyLoss: Number;
+                //         STCGLoss: Number;
+                //         LTCGLoss: Number;
+                //         pastYear: Number;
+                //         totalLoss: Number;
+                //       }
+                //     ).pastYear,
+                //     totalLoss: (
+                //       item as {
+                //         assessmentPastYear: any;
+                //         housePropertyLoss: Number;
+                //         STCGLoss: Number;
+                //         LTCGLoss: Number;
+                //         pastYear: Number;
+                //         totalLoss: Number;
+                //       }
+                //     ).totalLoss,
+                //   })) as {
+                //     assessmentPastYear: any;
+                //     housePropertyLoss: Number;
+                //     STCGLoss: Number;
+                //     LTCGLoss: Number;
+                //     pastYear: Number;
+                //     totalLoss: Number;
+                //   }[],
+                //   cflTotal:
+                //     this.finalSummary?.assessment?.carryForwordLosses?.reduce(
+                //       (total, item) => total + item.totalLoss,
+                //       0
+                //     ),
+                // },
+                // totalTax: {
+                //   taxAtNormalRate:
+                //     this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
+                //   taxAtSpecialRate:
+                //     this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
+                //   rebateOnAgricultureIncome:
+                //     this.finalSummary?.assessment?.taxSummary
+                //       ?.rebateOnAgricultureIncome,
+                //   totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
+                // },
+                // rebateUnderSection87A:
+                //   this.finalSummary?.assessment?.taxSummary
+                //     ?.rebateUnderSection87A,
+                // taxAfterRebate:
+                //   this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
+                // surcharge: this.finalSummary?.assessment?.taxSummary?.surcharge,
+                // eductionCess:
+                //   this.finalSummary?.assessment?.taxSummary?.cessAmount,
+                // grossTaxLiability:
+                //   this.finalSummary?.assessment?.taxSummary?.grossTaxLiability,
+                // taxRelief: {
+                //   taxReliefUnder89:
+                //     this.finalSummary?.assessment?.taxSummary?.taxReliefUnder89,
+                //   taxReliefUnder90_90A:
+                //     this.finalSummary?.assessment?.taxSummary
+                //       ?.taxReliefUnder90_90A,
+                //   taxReliefUnder91:
+                //     this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
+                //   totalRelief: this.finalSummary?.assessment?.taxSummary
+                //     ?.taxReliefUnder89
+                //     ? this.finalSummary?.assessment?.taxSummary
+                //         ?.taxReliefUnder89
+                //     : 0 +
+                //       this.finalSummary?.assessment?.taxSummary
+                //         ?.taxReliefUnder90_90A
+                //     ? this.finalSummary?.assessment?.taxSummary
+                //         ?.taxReliefUnder90_90A
+                //     : 0 +
+                //       this.finalSummary?.assessment?.taxSummary
+                //         ?.taxReliefUnder91
+                //     ? this.finalSummary?.assessment?.taxSummary
+                //         ?.taxReliefUnder91
+                //     : 0,
+                // },
+                // netTaxLiability:
+                //   this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
+                // interestAndFee: {
+                //   interest234C: {
+                //     q1: this.finalSummary?.assessment?.summaryQuarter234c
+                //       ?.quarterDitailsQ1?.intrest,
+                //     q2: this.finalSummary?.assessment?.summaryQuarter234c
+                //       ?.quarterDitailsQ2?.intrest,
+                //     q3: this.finalSummary?.assessment?.summaryQuarter234c
+                //       ?.quarterDitailsQ3?.intrest,
+                //     q4: this.finalSummary?.assessment?.summaryQuarter234c
+                //       ?.quarterDitailsQ4?.intrest,
+                //     q5: this.finalSummary?.assessment?.summaryQuarter234c
+                //       ?.quarterDitailsQ5?.intrest,
+                //   },
+                //   total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
+                //   total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
+                //   total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
+                //   total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
+                //   totalInterestAndFee:
+                //     this.finalSummary?.assessment?.taxSummary
+                //       ?.interestAndFeesPayable,
+                // },
+                // aggregateLiability:
+                //   this.finalSummary?.assessment?.taxSummary?.agrigateLiability,
+                // taxPaid: {
+                //   onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                //     ? (Object.entries(
+                //         this.finalSummary?.itr?.taxPaid?.onSalary
+                //       )?.map(([key, item]) => ({
+                //         deductorName: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //           }
+                //         ).deductorName,
+                //         deductorTAN: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //           }
+                //         ).deductorTAN,
+                //         totalAmountCredited: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //           }
+                //         ).totalAmountCredited,
+                //         totalTdsDeposited: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //           }
+                //         ).totalTdsDeposited,
+                //       })) as {
+                //         deductorName: String;
+                //         deductorTAN: String;
+                //         totalAmountCredited: Number;
+                //         totalTdsDeposited: Number;
+                //       }[])
+                //     : null,
+                //   totalOnSalary:
+                //     this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                //       (total, item) => total + item?.totalTdsDeposited,
+                //       0
+                //     ),
 
-                  otherThanSalary16A: this.finalSummary?.itr?.taxPaid
-                    ?.otherThanSalary16A
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).deductorName,
-                        deductorTAN: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).deductorTAN,
-                        totalAmountCredited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).totalAmountCredited,
-                        totalTdsDeposited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).totalTdsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
+                //   otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                //     ?.otherThanSalary16A
+                //     ? (Object.entries(
+                //         this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                //       )?.map(([key, item]) => ({
+                //         deductorName: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             headOfIncome: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: any;
+                //           }
+                //         ).deductorName,
+                //         deductorTAN: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             headOfIncome: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: any;
+                //           }
+                //         ).deductorTAN,
+                //         totalAmountCredited: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             headOfIncome: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: any;
+                //           }
+                //         ).totalAmountCredited,
+                //         totalTdsDeposited: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorTAN: String;
+                //             headOfIncome: String;
+                //             id: any;
+                //             srNo: any;
+                //             taxDeduction: any;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: any;
+                //           }
+                //         ).totalTdsDeposited,
+                //       })) as {
+                //         deductorName: String;
+                //         deductorTAN: String;
+                //         totalAmountCredited: Number;
+                //         totalTdsDeposited: Number;
+                //       }[])
+                //     : null,
 
-                  totalOtherThanSalary16A:
-                    this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
-                      (total, item) => total + item?.totalTdsDeposited,
-                      0
-                    ),
+                //   totalOtherThanSalary16A:
+                //     this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
+                //       (total, item) => total + item?.totalTdsDeposited,
+                //       0
+                //     ),
 
-                  otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
-                    ?.otherThanSalary26QB
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).deductorName,
-                        deductorTAN: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).deductorPAN,
-                        totalAmountCredited: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).totalAmountCredited,
-                        totalTdsDeposited: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).totalTdsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
+                //   otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                //     ?.otherThanSalary26QB
+                //     ? (Object.entries(
+                //         this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                //       )?.map(([key, item]) => ({
+                //         deductorName: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorPAN: String;
+                //             headOfIncome: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: null;
+                //           }
+                //         ).deductorName,
+                //         deductorTAN: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorPAN: String;
+                //             headOfIncome: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: null;
+                //           }
+                //         ).deductorPAN,
+                //         totalAmountCredited: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorPAN: String;
+                //             headOfIncome: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: null;
+                //           }
+                //         ).totalAmountCredited,
+                //         totalTdsDeposited: (
+                //           item as {
+                //             deductorName: String;
+                //             deductorPAN: String;
+                //             headOfIncome: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountCredited: Number;
+                //             totalTdsDeposited: Number;
+                //             uniqueTDSCerNo: null;
+                //           }
+                //         ).totalTdsDeposited,
+                //       })) as {
+                //         deductorName: String;
+                //         deductorTAN: String;
+                //         totalAmountCredited: Number;
+                //         totalTdsDeposited: Number;
+                //       }[])
+                //     : null,
 
-                  totalOtherThanSalary26QB:
-                    this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
-                      (total, item) => total + item?.totalTdsDeposited,
-                      0
-                    ),
+                //   totalOtherThanSalary26QB:
+                //     this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
+                //       (total, item) => total + item?.totalTdsDeposited,
+                //       0
+                //     ),
 
-                  tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.tcs
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            collectorName: String;
-                            collectorTAN: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountPaid: Number;
-                            totalTaxCollected: Number;
-                            totalTcsDeposited: Number;
-                          }
-                        ).collectorName,
-                        deductorTAN: (
-                          item as {
-                            collectorName: String;
-                            collectorTAN: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountPaid: Number;
-                            totalTaxCollected: Number;
-                            totalTcsDeposited: Number;
-                          }
-                        ).collectorTAN,
-                        totalAmountCredited: (
-                          item as {
-                            collectorName: String;
-                            collectorTAN: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountPaid: Number;
-                            totalTaxCollected: Number;
-                            totalTcsDeposited: Number;
-                          }
-                        ).totalAmountPaid,
-                        totalTdsDeposited: (
-                          item as {
-                            collectorName: String;
-                            collectorTAN: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountPaid: Number;
-                            totalTaxCollected: Number;
-                            totalTcsDeposited: Number;
-                          }
-                        ).totalTcsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
-                  totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
-                    (total, item) => total + item?.totalTcsDeposited,
-                    0
-                  ),
+                //   tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                //     ? (Object.entries(
+                //         this.finalSummary?.itr?.taxPaid?.tcs
+                //       )?.map(([key, item]) => ({
+                //         deductorName: (
+                //           item as {
+                //             collectorName: String;
+                //             collectorTAN: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountPaid: Number;
+                //             totalTaxCollected: Number;
+                //             totalTcsDeposited: Number;
+                //           }
+                //         ).collectorName,
+                //         deductorTAN: (
+                //           item as {
+                //             collectorName: String;
+                //             collectorTAN: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountPaid: Number;
+                //             totalTaxCollected: Number;
+                //             totalTcsDeposited: Number;
+                //           }
+                //         ).collectorTAN,
+                //         totalAmountCredited: (
+                //           item as {
+                //             collectorName: String;
+                //             collectorTAN: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountPaid: Number;
+                //             totalTaxCollected: Number;
+                //             totalTcsDeposited: Number;
+                //           }
+                //         ).totalAmountPaid,
+                //         totalTdsDeposited: (
+                //           item as {
+                //             collectorName: String;
+                //             collectorTAN: String;
+                //             id: null;
+                //             srNo: null;
+                //             taxDeduction: null;
+                //             totalAmountPaid: Number;
+                //             totalTaxCollected: Number;
+                //             totalTcsDeposited: Number;
+                //           }
+                //         ).totalTcsDeposited,
+                //       })) as {
+                //         deductorName: String;
+                //         deductorTAN: String;
+                //         totalAmountCredited: Number;
+                //         totalTdsDeposited: Number;
+                //       }[])
+                //     : null,
+                //   totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                //     (total, item) => total + item?.totalTcsDeposited,
+                //     0
+                //   ),
 
-                  otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
-                    ?.otherThanTDSTCS
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
-                      )?.map(([key, item]) => ({
-                        bsrCode: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).bsrCode,
-                        date: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).dateOfDeposit,
-                        challanNo: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).challanNumber,
-                        amount: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).totalTax,
-                      })) as {
-                        bsrCode: String;
-                        date: Date;
-                        challanNo: Number;
-                        amount: Number;
-                      }[])
-                    : null,
+                //   otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                //     ?.otherThanTDSTCS
+                //     ? (Object.entries(
+                //         this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                //       )?.map(([key, item]) => ({
+                //         bsrCode: (
+                //           item as {
+                //             bsrCode: String;
+                //             challanNumber: Number;
+                //             dateOfDeposit: Date;
+                //             educationCess: any;
+                //             id: any;
+                //             majorHead: any;
+                //             minorHead: any;
+                //             other: any;
+                //             srNo: any;
+                //             surcharge: any;
+                //             tax: any;
+                //             totalTax: Number;
+                //           }
+                //         ).bsrCode,
+                //         date: (
+                //           item as {
+                //             bsrCode: String;
+                //             challanNumber: Number;
+                //             dateOfDeposit: Date;
+                //             educationCess: any;
+                //             id: any;
+                //             majorHead: any;
+                //             minorHead: any;
+                //             other: any;
+                //             srNo: any;
+                //             surcharge: any;
+                //             tax: any;
+                //             totalTax: Number;
+                //           }
+                //         ).dateOfDeposit,
+                //         challanNo: (
+                //           item as {
+                //             bsrCode: String;
+                //             challanNumber: Number;
+                //             dateOfDeposit: Date;
+                //             educationCess: any;
+                //             id: any;
+                //             majorHead: any;
+                //             minorHead: any;
+                //             other: any;
+                //             srNo: any;
+                //             surcharge: any;
+                //             tax: any;
+                //             totalTax: Number;
+                //           }
+                //         ).challanNumber,
+                //         amount: (
+                //           item as {
+                //             bsrCode: String;
+                //             challanNumber: Number;
+                //             dateOfDeposit: Date;
+                //             educationCess: any;
+                //             id: any;
+                //             majorHead: any;
+                //             minorHead: any;
+                //             other: any;
+                //             srNo: any;
+                //             surcharge: any;
+                //             tax: any;
+                //             totalTax: Number;
+                //           }
+                //         ).totalTax,
+                //       })) as {
+                //         bsrCode: String;
+                //         date: Date;
+                //         challanNo: Number;
+                //         amount: Number;
+                //       }[])
+                //     : null,
 
-                  totalOtherThanTDSTCS:
-                    this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
-                      (total, item) => total + item?.totalTax,
-                      0
-                    ),
+                //   totalOtherThanTDSTCS:
+                //     this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                //       (total, item) => total + item?.totalTax,
+                //       0
+                //     ),
 
-                  totalTaxesPaid:
-                    this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
-                },
-                amountPayableRefund:
-                  this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
-                    ? this.finalSummary?.assessment?.taxSummary?.taxpayable
-                    : this.finalSummary?.assessment?.taxSummary?.taxRefund,
+                //   totalTaxesPaid:
+                //     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
+                // },
+                // amountPayableRefund:
+                //   this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
+                //     ? this.finalSummary?.assessment?.taxSummary?.taxpayable
+                //     : this.finalSummary?.assessment?.taxSummary?.taxRefund,
               };
               console.log(this.finalCalculations, 'finalCalculations');
             } else {
