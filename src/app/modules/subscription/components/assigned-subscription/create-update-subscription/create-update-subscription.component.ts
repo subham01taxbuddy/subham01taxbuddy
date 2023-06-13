@@ -870,7 +870,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.serviceDetails = serviceArray.filter(
         (item: any) => item.service === this.service
       );
-      let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === this.userSubscription.userSelectedPlan.name.toLowerCase());
+      let planName = ''
+      if(this.userSubscription.userSelectedPlan){
+        planName = this.userSubscription.userSelectedPlan.name;
+      }else{
+        planName = this.userSubscription.smeSelectedPlan.name;
+      }
+      let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === planName.toLowerCase());
       if (filtered.length === 1) {
         this.serviceDetail = filtered[0].details;
       }
