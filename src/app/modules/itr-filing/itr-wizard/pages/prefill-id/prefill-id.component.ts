@@ -46,12 +46,13 @@ export class PrefillIdComponent implements OnInit {
   userProfile: any;
   userItrId: any;
   itrSummaryJson: any;
+  taxComputation: any;
 
   constructor(
     private router: Router,
     private toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
+    public utilsService: UtilsService,
     private dialog: MatDialog
   ) {}
 
@@ -150,6 +151,14 @@ export class PrefillIdComponent implements OnInit {
       reader.onload = (e: any) => {
         let jsonRes = e.target.result;
         let JSONData = JSON.parse(jsonRes);
+
+        //check if uploaded json is not summary json
+        if (JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'You are trying to upload summary json instead of prefill'
+          );
+          return;
+        }
 
         let panNo = JSONData.personalInfo?.pan;
         let mobileNo = JSONData.personalInfo?.address?.mobileNo;
@@ -326,7 +335,7 @@ export class PrefillIdComponent implements OnInit {
         if (this.ITR_Type === 'ITR1') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
+          ].ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         } else if (this.ITR_Type === 'ITR4') {
@@ -1133,6 +1142,12 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
+        if (!JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'The uploaded json is not a summary json. Please check file again'
+          );
+          return;
+        }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
           JSONData.ITR.hasOwnProperty('ITR4')
@@ -1178,6 +1193,7 @@ export class PrefillIdComponent implements OnInit {
         this.ITR_Obj.itrType = '1';
         this.ITR_Type = 'ITR1';
         this.ITR14_IncomeDeductions = 'ITR1_IncomeDeductions';
+        this.taxComputation = 'ITR1_TaxComputation';
       } else if (ItrJSON.hasOwnProperty('ITR2')) {
         this.ITR_Obj.itrType = '2';
         this.ITR_Type = 'ITR2';
@@ -1188,6 +1204,7 @@ export class PrefillIdComponent implements OnInit {
         this.ITR_Obj.itrType = '4';
         this.ITR_Type = 'ITR4';
         this.ITR14_IncomeDeductions = 'IncomeDeductions';
+        this.taxComputation = 'TaxComputation';
       }
     }
 
@@ -1791,14 +1808,14 @@ export class PrefillIdComponent implements OnInit {
         {
           if (this.ITR_Type === 'ITR1') {
             if (
-              this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
-                .ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls
+              this.uploadedJson[this.ITR_Type]?.ITR1_IncomeDeductions
+                ?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
             ) {
               if (this.ITR_Obj.exemptIncomes) {
                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                 const availableExemptIncomes = this.uploadedJson[
                   this.ITR_Type
-                ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+                ]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.map(
                   (value) => value.NatureDesc
                 );
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
@@ -2182,8 +2199,8 @@ export class PrefillIdComponent implements OnInit {
             // Profession44ADA
             {
               const NatOfBus44ADA =
-                ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44ADA;
-              const NatOfBus44ADALength = NatOfBus44ADA.length;
+                ItrJSON[this.ITR_Type]?.ScheduleBP?.NatOfBus44ADA;
+              const NatOfBus44ADALength = NatOfBus44ADA?.length;
 
               const PersumptiveInc44ADA =
                 ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
@@ -2208,7 +2225,7 @@ export class PrefillIdComponent implements OnInit {
                       id: null,
                       incomeType: 'PROFESSIONAL',
                       receipts:
-                        PersumptiveInc44ADA.GrsReceipt / NatOfBus44ADALength,
+                        PersumptiveInc44ADA?.GrsReceipt / NatOfBus44ADALength,
                       presumptiveIncome:
                         PersumptiveInc44ADA.TotPersumptiveInc44ADA /
                         NatOfBus44ADALength,
@@ -2314,6 +2331,20 @@ export class PrefillIdComponent implements OnInit {
               );
             }
           }
+        }
+
+        //setting relief
+        {
+          //section89
+          if (ItrJSON[this.ITR_Type][this.taxComputation]?.Section89) {
+            this.ITR_Obj.section89 =
+              ItrJSON[this.ITR_Type][this.taxComputation]?.Section89;
+          }
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
         }
 
         // DECLARATION
@@ -5014,6 +5045,7 @@ export class PrefillIdComponent implements OnInit {
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_JSON)
         );
+        this.jsonUploaded.emit(null);
       }
     });
   }
