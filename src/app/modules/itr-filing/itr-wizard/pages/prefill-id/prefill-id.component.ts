@@ -2424,12 +2424,14 @@ export class PrefillIdComponent implements OnInit {
             ) {
               this.regime = 'OLD';
               this.ITR_Obj.regime = this.regime;
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
             } else if (
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus.NewTaxRegime ===
               'Y'
             ) {
               this.regime = 'NEW';
               this.ITR_Obj.regime = this.regime;
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
             } else {
               this.utilsService.showSnackBar(
                 'Type of regime is not present in the uploaded JSON'
@@ -4089,16 +4091,16 @@ export class PrefillIdComponent implements OnInit {
                         usedDeduction: null,
                       },
                     ],
-                    improvement: [{
-                      id: null,
-                      srn: null,
-                      financialYearOfImprovement: null,
-                      dateOfImprovement: null,
-                      costOfImprovement:
-                      equityLtcg.EquityMFonSTTDtls?.DeductSec48
-                          ?.ImproveCost,
-                      indexCostOfImprovement: null,
-                    }],
+                    improvement: [
+                      {
+                        id: null,
+                        srn: null,
+                        financialYearOfImprovement: null,
+                        dateOfImprovement: null,
+                        costOfImprovement: null,
+                        indexCostOfImprovement: null,
+                      },
+                    ],
                     buyersDetails: [],
                     assetDetails: [
                       {

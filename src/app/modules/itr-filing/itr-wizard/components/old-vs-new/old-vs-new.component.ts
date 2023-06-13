@@ -527,6 +527,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           itrType = 'ITR4';
           ITR14IncomeDeductions = 'IncomeDeductions';
           taxComputation = 'TaxComputation';
+        } else if (this.ITR_JSON.itrType === '2') {
+          itrType = 'ITR2';
         }
 
         if (itrType === 'ITR1' || itrType === 'ITR4') {
@@ -570,8 +572,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW' && itrType === 'ITR4'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBP
-                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
                   : 0,
             },
             {
@@ -732,6 +734,237 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                       ?.BalTaxPayable
+                  : 0,
+            },
+          ];
+          this.loading = false;
+          console.log(this.particularsArray, 'this.particularsArray');
+          this.utilsService.showSnackBar(
+            'Calculations are as of the uploaded JSON'
+          );
+        }
+
+        if (itrType === 'ITR2' || itrType === 'ITR3') {
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.Salaries
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.Salaries
+                  : 0,
+            },
+            {
+              label: 'Income from House Property',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].ScheduleHP
+                      ?.TotalIncomeChargeableUnHP
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].ScheduleHP
+                      ?.TotalIncomeChargeableUnHP
+                  : 0,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old:
+                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CapGain?.TotalCapGains
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CapGain?.TotalCapGains
+                  : 0,
+            },
+            {
+              label: 'Income from Other Sources',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.IncFromOS?.TotIncFromOS
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.IncFromOS?.TotIncFromOS
+                  : 0,
+            },
+            {
+              label: 'Total Headwise Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalTI
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalTI
+                  : 0,
+            },
+            {
+              label: 'CYLA',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CurrentYearLoss
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CurrentYearLoss
+                  : 0,
+            },
+            {
+              label: 'BFLA',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.BroughtFwdLossesSetoff
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.BroughtFwdLossesSetoff
+                  : 0,
+            },
+            {
+              label: 'Gross Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.GrossTotalIncome
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.GrossTotalIncome
+                  : 0,
+            },
+            {
+              label: 'Deduction',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.DeductionsUnderScheduleVIA
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.DeductionsUnderScheduleVIA
+                  : 0,
+            },
+            {
+              label: 'Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalIncome
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalIncome
+                  : 0,
+            },
+            {
+              label: 'CFL',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.LossesOfCurrentYearCarriedFwd
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.LossesOfCurrentYearCarriedFwd
+                  : 0,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.GrossTaxLiability
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.GrossTaxLiability
+                  : 0,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                  : 0,
+            },
+            {
+              label: 'Aggregate Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability
+                  : 0,
+            },
+            {
+              label: 'Tax Paid',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                  : 0,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable
                   : 0,
             },
           ];
