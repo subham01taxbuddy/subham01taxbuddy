@@ -655,13 +655,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
-                    ]?.GrossTotIncome
+                    ]?.TotalIncome
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
-                    ]?.GrossTotIncome
+                    ]?.TotalIncome
                   : 0,
             },
             {

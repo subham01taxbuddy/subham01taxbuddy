@@ -1745,8 +1745,8 @@ export class SummaryComponent implements OnInit {
                         }
                       ),
                     hpTotalIncome:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.housePropertyIncome,
+                      this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryHpIncome?.totalHPTaxableIncome,
                   },
                   otherIncome: {
                     otherIncomes: {
@@ -2600,8 +2600,8 @@ export class SummaryComponent implements OnInit {
                       }
                     ),
                   hpTotalIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.housePropertyIncome,
+                    this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryHpIncome?.totalHPTaxableIncome,
                 },
                 otherIncome: {
                   otherIncomes: {
