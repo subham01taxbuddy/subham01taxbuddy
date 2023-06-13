@@ -549,7 +549,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             {
               label: 'Income from House Property',
               old:
-                this.ITR_JSON.regime === 'OLD '
+                this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.TotalIncomeOfHP

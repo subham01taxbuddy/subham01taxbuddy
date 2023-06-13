@@ -222,7 +222,11 @@
                         <i class="material-icons-outlined adIc">cloud_upload</i>
                         Upload JSON &nbsp;
 
-                        <div *ngIf="ITR_JSON.itrSummaryJson !== null">
+                        <div
+                          *ngIf="
+                            utilsService.isNonEmpty(ITR_JSON.itrSummaryJson)
+                          "
+                        >
                           <button
                             type="button"
                             class="delete-btn"
