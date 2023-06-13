@@ -2163,8 +2163,8 @@ export class PrefillIdComponent implements OnInit {
             // Profession44ADA
             {
               const NatOfBus44ADA =
-                ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44ADA;
-              const NatOfBus44ADALength = NatOfBus44ADA.length;
+                ItrJSON[this.ITR_Type]?.ScheduleBP?.NatOfBus44ADA;
+              const NatOfBus44ADALength = NatOfBus44ADA?.length;
 
               const PersumptiveInc44ADA =
                 ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
@@ -2189,7 +2189,7 @@ export class PrefillIdComponent implements OnInit {
                       id: null,
                       incomeType: 'PROFESSIONAL',
                       receipts:
-                        PersumptiveInc44ADA.GrsReceipt / NatOfBus44ADALength,
+                        PersumptiveInc44ADA?.GrsReceipt / NatOfBus44ADALength,
                       presumptiveIncome:
                         PersumptiveInc44ADA.TotPersumptiveInc44ADA /
                         NatOfBus44ADALength,
@@ -2295,6 +2295,20 @@ export class PrefillIdComponent implements OnInit {
               );
             }
           }
+        }
+
+        //setting relief
+        {
+          //section89
+          if (ItrJSON[this.ITR_Type].TaxComputation?.Section89) {
+            this.ITR_Obj.section89 =
+              ItrJSON[this.ITR_Type].TaxComputation?.Section89;
+          }
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
         }
 
         // DECLARATION
