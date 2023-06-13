@@ -248,6 +248,10 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSchedule(schedule) {
+    if(this.ITR_JSON.itrSummaryJson){
+      this.utilsService.showSnackBar('Editing data is not allowed after summary json is uploaded');
+      return;
+    }
     const errors = this.validateItrObj(); // invoke the function and store the result
     console.log('errors', errors);
 

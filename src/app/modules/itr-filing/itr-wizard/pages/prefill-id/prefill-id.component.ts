@@ -5014,6 +5014,7 @@ export class PrefillIdComponent implements OnInit {
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_JSON)
         );
+        this.jsonUploaded.emit(null);
       }
     });
   }
