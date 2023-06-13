@@ -10,6 +10,7 @@ import {
   UpperCaseDirective,
   InputDataMaskDirective,
   CapitalizeFirstDirective,
+  TwoDigitDecimaNumberDirective,
 } from './input-data-mask.directive';
 import { AgGridModule } from 'ag-grid-angular';
 import { CustomDateComponent } from './date.component';
@@ -91,6 +92,7 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
     CoOwnerListDropDownComponent,
     LeaderListDropdownComponent,
     AddAffiliateIdComponent,
+    TwoDigitDecimaNumberDirective,
     ViewDocumentsDialogComponent,
   ],
   imports: [
@@ -151,6 +153,7 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
     ServiceDropDownComponent,
     CoOwnerListDropDownComponent,
     LeaderListDropdownComponent,
+    TwoDigitDecimaNumberDirective,
   ],
   providers: [StorageService, Schedules, RequestManager],
   entryComponents: [
