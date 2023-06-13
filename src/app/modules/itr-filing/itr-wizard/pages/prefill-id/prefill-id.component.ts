@@ -151,6 +151,12 @@ export class PrefillIdComponent implements OnInit {
         let jsonRes = e.target.result;
         let JSONData = JSON.parse(jsonRes);
 
+        //check if uploaded json is not summary json
+        if(JSONData.hasOwnProperty('ITR')){
+          this.utilsService.showSnackBar('You are trying to upload summary json instead of prefill');
+          return;
+        }
+
         let panNo = JSONData.personalInfo?.pan;
         let mobileNo = JSONData.personalInfo?.address?.mobileNo;
         if (panNo !== this.data?.panNumber) {
@@ -1133,6 +1139,10 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
+        if(!JSONData.hasOwnProperty('ITR')){
+          this.utilsService.showSnackBar('The uploaded json is not a summary json. Please check file again');
+          return;
+        }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
           JSONData.ITR.hasOwnProperty('ITR4')
@@ -5014,6 +5024,7 @@ export class PrefillIdComponent implements OnInit {
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_JSON)
         );
+        this.jsonUploaded.emit(null);
       }
     });
   }
