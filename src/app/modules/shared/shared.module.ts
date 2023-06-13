@@ -154,6 +154,7 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
     CoOwnerListDropDownComponent,
     LeaderListDropdownComponent,
     TwoDigitDecimaNumberDirective,
+    ViewDocumentsDialogComponent,
   ],
   providers: [StorageService, Schedules, RequestManager],
   entryComponents: [
