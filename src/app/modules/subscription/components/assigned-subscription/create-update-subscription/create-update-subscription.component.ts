@@ -494,7 +494,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   getOwnerFiler(){
     // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
     this.loading = true;
-    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${this.serviceType}`;
+    let sType = this.serviceType === 'ITRU' ? 'ITR' : this.serviceType;
+    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${sType}`;
     this.userService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log('get Owner and filer name for new create sub ',result)
