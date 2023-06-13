@@ -51,7 +51,7 @@ export class PrefillIdComponent implements OnInit {
     private router: Router,
     private toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
+    public utilsService: UtilsService,
     private dialog: MatDialog
   ) {}
 
@@ -332,7 +332,7 @@ export class PrefillIdComponent implements OnInit {
         if (this.ITR_Type === 'ITR1') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
+          ].ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         } else if (this.ITR_Type === 'ITR4') {
@@ -1801,14 +1801,14 @@ export class PrefillIdComponent implements OnInit {
         {
           if (this.ITR_Type === 'ITR1') {
             if (
-              this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
-                .ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls
+              this.uploadedJson[this.ITR_Type]?.ITR1_IncomeDeductions
+                ?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
             ) {
               if (this.ITR_Obj.exemptIncomes) {
                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                 const availableExemptIncomes = this.uploadedJson[
                   this.ITR_Type
-                ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+                ]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.map(
                   (value) => value.NatureDesc
                 );
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
