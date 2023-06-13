@@ -161,3 +161,8 @@ p {
   margin-left: 0.3em;
   position: relative;
 }
+
+.btn-disabled {
+    pointer-events: none;
+    opacity: .5;
+}

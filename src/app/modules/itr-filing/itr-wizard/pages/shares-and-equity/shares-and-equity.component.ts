@@ -297,7 +297,7 @@ export class SharesAndEquityComponent
   createForm(srn, item?): FormGroup {
     let validators = this.bondType === 'listed' ? [
       Validators.required,
-      // Validators.pattern(AppConstants.amountWithDecimal),
+      Validators.pattern(AppConstants.amountWithDecimal),
     ] : [
       Validators.required,
       Validators.pattern(AppConstants.amountWithoutDecimal),
@@ -377,15 +377,42 @@ export class SharesAndEquityComponent
     );
   }
 
+  deleteBroker(brokerName){
+    this.brokerList = this.brokerList.filter(item => item.brokerName !== brokerName);
+    let itrObject = this.Copy_ITR_JSON;
+    let data;
+    if (this.bondType === 'listed') {
+      data = itrObject.capitalGain.filter(
+        (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+      );
+    } else if (this.bondType === 'unlisted') {
+      data = itrObject.capitalGain.filter(
+        (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
+      );
+    }
+    if (data.length > 0) {
+      data.forEach((obj) => {
+        let assetDetails = obj.assetDetails.filter((security: any) => security.brokerName !== brokerName);
+        obj.assetDetails = assetDetails;
+      });
+    }
+    console.log('ITR json', this.Copy_ITR_JSON);
+  }
+
   deleteArray() {
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
-    securitiesArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        securitiesArray.removeAt(index);
-      }
-    });
+
+    securitiesArray.controls = securitiesArray.controls.filter(
+      (item: FormGroup) => item.controls['hasEdit'].value !== true
+    );
+    // securitiesArray.controls.forEach((element, index) => {
+    //   if ((element as FormGroup).controls['hasEdit'].value) {
+    //     console.log('deleting', index);
+    //     securitiesArray.removeAt(index);
+    //   }
+    // });
   }
 
   pageChanged(event) {
@@ -537,12 +564,12 @@ export class SharesAndEquityComponent
     const fg = securitiesArray.controls[i] as FormGroup;
     let saleValue = parseFloat(fg.controls['sellValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
-    // fg.controls['sellValue'].setValue(saleValue);
-    if(this.bondType === 'listed') {
-      fg.controls['sellValue'].setValue(saleValue.toFixed(2));
-    } else {
-      fg.controls['sellValue'].setValue(saleValue.toFixed());
-    }
+    fg.controls['sellValue'].setValue(saleValue.toFixed());
+    // if(this.bondType === 'listed') {
+    //   fg.controls['sellValue'].setValue(saleValue.toFixed(2));
+    // } else {
+    //   fg.controls['sellValue'].setValue(saleValue.toFixed());
+    // }
   }
 
   getPurchaseValue(index){
@@ -553,12 +580,12 @@ export class SharesAndEquityComponent
     const fg = securitiesArray.controls[i] as FormGroup;
     let purchaseValue = parseFloat(fg.controls['purchaseValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
-    // fg.controls['purchaseCost'].setValue(purchaseValue);
-    if(this.bondType === 'listed') {
-      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
-    } else {
-      fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
-    }
+    fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    // if(this.bondType === 'listed') {
+    //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
+    // } else {
+    //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    // }
   }
 
   save(type?) {
@@ -572,8 +599,8 @@ export class SharesAndEquityComponent
       }
     }
 
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.compactView) {
       this.loading = true;
@@ -641,7 +668,7 @@ export class SharesAndEquityComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Securities data added successfully');
+          this.utilsService.showSnackBar('Securities data updated successfully');
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
@@ -722,7 +749,8 @@ export class SharesAndEquityComponent
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData.concat(sameData);
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
-          this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
+          let otherData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName !== this.selectedBroker);
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData;
         }
       } else {
         if (securitiesData.assetDetails.length > 0) {
@@ -734,7 +762,7 @@ export class SharesAndEquityComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Securities data added successfully');
+          this.utilsService.showSnackBar('Securities data updated successfully');
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
