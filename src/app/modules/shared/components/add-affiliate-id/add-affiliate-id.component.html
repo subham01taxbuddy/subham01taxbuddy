@@ -3,7 +3,7 @@
         registered your affiliate id with
         back office. This will help to assign your
         referred clients to you directly . </div>
-    <div class="col-offset-1 col-10 id-input">
+    <div class="col-10 id-input">
         <mat-form-field appearance="outline">
             <input matInput trim type="text" [formControl]="affiliateId" maxlength="100"
                 placeholder="Enter your valid email id registered as affiliate">
@@ -17,15 +17,16 @@
         </mat-form-field>
     </div>
 
-    <div class="modal-footer clearfix">
-        <div class="pull-right">
-            <button mat-raised-button [disabled]="affiliateId.invalid" color="primary" class="mr-10" (click)="closeDialog(true)">Submit</button>
-            <button mat-raised-button color="warn" (click)="closeDialog(false)">Cancel</button>
-        </div>
+    <div><b><i class="fa-solid fa-people-group"></i> If you have not registered as affiliate pls click here (link to <a class="clrBlue" href="https://affiliate.taxbuddy.com/" target="_blank">https://affiliate.taxbuddy.com</a>)</b>
+</div>
 
+    <div class="row spsTp bdrTp">
+        <div class="col-sm-6">
+         <button class="del" (click)="closeDialog(false)">Cancel</button>  
+        </div>
+        <div class="col-sm-6">
+        <button mat-raised-button [disabled]="affiliateId.invalid" class="tbd-btn save-btn mvRth" (click)="closeDialog(true)">Submit</button>
+        </div>         
     </div>
-    <div><b>If you have not registered as affiliate pls click here ( link to
-            <a class="clrBlue" href="https://affiliate.taxbuddy.com/" target="_blank">https://affiliate.taxbuddy.com</a>
-            ) </b>
-    </div>
+   
 </div>

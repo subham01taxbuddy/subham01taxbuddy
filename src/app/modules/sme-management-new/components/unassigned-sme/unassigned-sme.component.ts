@@ -34,7 +34,7 @@ export class UnassignedSmeComponent implements OnInit {
   },{
     value:'smeOriginalEmail',name:'Email ID'
   },];
-  searchVal: string = "";
+  searchVal: any;
   key: any;
   showError: boolean = false;
 
@@ -106,8 +106,7 @@ export class UnassignedSmeComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
         console.log("Search result:", result)
-        if (Array.isArray(result.data.content) && result.data.content.length > 0
-        ) {
+        if(Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
           this.loading = false;
           this.smeInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
@@ -115,11 +114,15 @@ export class UnassignedSmeComponent implements OnInit {
         }else{
           this.loading = false;
           this._toastMessageService.alert('error','No Lead Data Found .');
+          this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
           // this.getSmeList();
         }
      },(error) => {
       this.loading = false;
       this._toastMessageService.alert('error','No Lead Data Found .');
+      this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
     });
 
   }
@@ -210,6 +213,9 @@ export class UnassignedSmeComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {
@@ -281,9 +287,9 @@ export class UnassignedSmeComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to edit sme"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="edit">Edit</i>
+          return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
+          style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
            </button>`;
           },
 
@@ -344,7 +350,17 @@ export class UnassignedSmeComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1
     this.getSmeList();
+}
 
+resetFilters() {
+  this.searchParam.page = 0;
+  this.searchParam.pageSize = 20;
+  this.config.currentPage = 1;
+  this.key = null;
+  this.searchVal = null;
 
-  }
+  this.getSmeList();
+
+}
+
 }

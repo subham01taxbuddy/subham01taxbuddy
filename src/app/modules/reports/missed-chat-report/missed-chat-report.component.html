@@ -16,7 +16,7 @@
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-      
+
             <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
@@ -30,7 +30,7 @@
             <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
                   autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>

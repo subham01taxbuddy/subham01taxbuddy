@@ -511,132 +511,514 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.updateCurrentAYOptions();
 
     //https://dev-api.taxbuddy.com/itr/tax/old-vs-new'
-    const param = '/tax/old-vs-new';
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        console.log(this.ITR_JSON, 'ITRJSON');
+        let ITR14IncomeDeductions = '';
+        let taxComputation = '';
+        let itrType = '';
 
-    this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-      (result: any) => {
-        // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-        this.loading = false;
-        console.log('result is=====', result);
-        this.newSummaryIncome = result.data.newRegime;
-        this.oldSummaryIncome = result.data.oldRegime;
-
-        this.particularsArray = [
-          {
-            label: 'Income from Salary',
-            old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
-              .totalSalaryTaxableIncome,
-            new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
-              .totalSalaryTaxableIncome,
-          },
-          {
-            label: 'Income from House Property',
-            old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-              .totalHPTaxableIncome,
-            new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
-              .totalHPTaxableIncome,
-          },
-          {
-            label: 'Income from Business and Profession',
-            old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
-              .totalBusinessIncome,
-            new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
-              .totalBusinessIncome,
-          },
-          {
-            label: 'Income from Capital Gains',
-            old:
-              this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .totalSpecialRateIncome +
-              this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .totalNormalRateIncome,
-            new:
-              this.newSummaryIncome?.summaryIncome.cgIncomeN
-                .totalSpecialRateIncome +
-              this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .totalNormalRateIncome,
-          },
-          {
-            label: 'Income from Other Sources',
-            old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-              .totalOtherTaxableIncome,
-            new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-              .totalOtherTaxableIncome,
-          },
-          {
-            label: 'Total Headwise Income',
-            old: this.oldSummaryIncome?.taxSummary.totalIncome,
-            new: this.newSummaryIncome?.taxSummary.totalIncome,
-          },
-          {
-            label: 'CYLA',
-            old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
-            new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
-          },
-          {
-            label: 'BFLA',
-            old: this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
-            new: this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
-          },
-          {
-            label: 'Gross Total Income',
-            old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
-            new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
-          },
-          {
-            label: 'Deduction',
-            old: this.oldSummaryIncome?.taxSummary.totalDeduction,
-            new: this.newSummaryIncome?.taxSummary.totalDeduction,
-          },
-          {
-            label: 'Total Income',
-            old: this.oldSummaryIncome?.taxSummary
-              .totalIncomeAfterDeductionIncludeSR,
-            new: this.newSummaryIncome?.taxSummary
-              .totalIncomeAfterDeductionIncludeSR,
-          },
-          {
-            label: 'CFL',
-            old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
-            new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
-          },
-          {
-            label: 'Gross Tax Liability',
-            old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
-            new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
-          },
-          {
-            label: 'Interest and Fees - 234 A/B/C/F',
-            old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
-            new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
-          },
-          {
-            label: 'Aggregate Liability',
-            old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
-            new: this.newSummaryIncome?.taxSummary.agrigateLiability,
-          },
-          {
-            label: 'Tax Paid',
-            old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
-            new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
-          },
-          {
-            label: 'Tax Payable / (Refund)',
-            old: this.oldSummaryIncome?.taxSummary.taxpayable,
-            new: this.newSummaryIncome?.taxSummary.taxpayable,
-          },
-        ];
-      },
-      (error) => {
-        this.loading = false;
-        this.errorMessage = 'We are processing your request, Please wait......';
-        if (error) {
-          this.errorMessage =
-            'We are unable to display your summary,Please try again later.';
+        if (this.ITR_JSON.itrType === '1') {
+          itrType = 'ITR1';
+          ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
+          taxComputation = 'ITR1_TaxComputation';
+        } else if (this.ITR_JSON.itrType === '4') {
+          itrType = 'ITR4';
+          ITR14IncomeDeductions = 'IncomeDeductions';
+          taxComputation = 'TaxComputation';
         }
-        console.log('In error method===', error);
+
+        if (itrType === 'ITR1' || itrType === 'ITR4') {
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeFromSal
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeFromSal
+                  : 0,
+            },
+            {
+              label: 'Income from House Property',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP
+                  : 0,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old:
+                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Income from Other Sources',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeOthSrc
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeOthSrc
+                  : 0,
+            },
+            {
+              label: 'Total Headwise Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                  : 0,
+            },
+            {
+              label: 'CYLA',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'BFLA',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Gross Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                  : 0,
+            },
+            {
+              label: 'Deduction',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ].DeductUndChapVIA?.TotalChapVIADeductions
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ].DeductUndChapVIA?.TotalChapVIADeductions
+                  : 0,
+            },
+            {
+              label: 'Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncome
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncome
+                  : 0,
+            },
+            {
+              label: 'CFL',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.GrossTaxLiability
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.GrossTaxLiability
+                  : 0,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.TotalIntrstPay
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.TotalIntrstPay
+                  : 0,
+            },
+            {
+              label: 'Aggregate Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      .TotTaxPlusIntrstPay
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      .TotTaxPlusIntrstPay
+                  : 0,
+            },
+            {
+              label: 'Tax Paid',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      .TaxesPaid?.TotalTaxesPaid
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      .TaxesPaid?.TotalTaxesPaid
+                  : 0,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable
+                  : 0,
+            },
+          ];
+          this.loading = false;
+          console.log(this.particularsArray, 'this.particularsArray');
+          this.utilsService.showSnackBar(
+            'Calculations are as of the uploaded JSON'
+          );
+        }
+      } else {
+        const param = '/tax/old-vs-new';
+        this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+          (result: any) => {
+            // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+            this.loading = false;
+            console.log('result is=====', result);
+            this.newSummaryIncome = result.data.newRegime;
+            this.oldSummaryIncome = result.data.oldRegime;
+
+            this.particularsArray = [
+              {
+                label: 'Income from Salary',
+                old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
+                  .totalSalaryTaxableIncome,
+                new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
+                  .totalSalaryTaxableIncome,
+              },
+              {
+                label: 'Income from House Property',
+                old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                  .totalHPTaxableIncome,
+                new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                  .totalHPTaxableIncome,
+              },
+              {
+                label: 'Income from Business and Profession',
+                old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                  .totalBusinessIncome,
+                new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                  .totalBusinessIncome,
+              },
+              {
+                label: 'Income from Capital Gains',
+                old:
+                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalSpecialRateIncome +
+                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalNormalRateIncome,
+                new:
+                  this.newSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalSpecialRateIncome +
+                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalNormalRateIncome,
+              },
+              {
+                label: 'Income from Other Sources',
+                old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+                  .totalOtherTaxableIncome,
+                new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+                  .totalOtherTaxableIncome,
+              },
+              {
+                label: 'Total Headwise Income',
+                old: this.oldSummaryIncome?.taxSummary.totalIncome,
+                new: this.newSummaryIncome?.taxSummary.totalIncome,
+              },
+              {
+                label: 'CYLA',
+                old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
+                new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+              },
+              {
+                label: 'BFLA',
+                old: this.oldSummaryIncome?.taxSummary
+                  .totalBroughtForwordSetOff,
+                new: this.newSummaryIncome?.taxSummary
+                  .totalBroughtForwordSetOff,
+              },
+              {
+                label: 'Gross Total Income',
+                old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+                new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+              },
+              {
+                label: 'Deduction',
+                old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+                new: this.newSummaryIncome?.taxSummary.totalDeduction,
+              },
+              {
+                label: 'Total Income',
+                old: this.oldSummaryIncome?.taxSummary
+                  .totalIncomeAfterDeductionIncludeSR,
+                new: this.newSummaryIncome?.taxSummary
+                  .totalIncomeAfterDeductionIncludeSR,
+              },
+              {
+                label: 'CFL',
+                old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+                new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+              },
+              {
+                label: 'Gross Tax Liability',
+                old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+                new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+              },
+              {
+                label: 'Interest and Fees - 234 A/B/C/F',
+                old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+                new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+              },
+              {
+                label: 'Aggregate Liability',
+                old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+                new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+              },
+              {
+                label: 'Tax Paid',
+                old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+                new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+              },
+              {
+                label: 'Tax Payable / (Refund)',
+                old:
+                  this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
+                    ? this.oldSummaryIncome?.taxSummary.taxpayable
+                    : this.oldSummaryIncome?.taxSummary?.taxRefund,
+                new:
+                  this.newSummaryIncome?.taxSummary?.taxpayable !== 0
+                    ? this.newSummaryIncome?.taxSummary?.taxpayable
+                    : this.newSummaryIncome?.taxSummary?.taxRefund,
+              },
+            ];
+
+            this.utilsService.showSnackBar(
+              'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
+            );
+          },
+          (error) => {
+            this.loading = false;
+            this.errorMessage =
+              'We are processing your request, Please wait......';
+            if (error) {
+              this.errorMessage =
+                'We are unable to display your summary,Please try again later.';
+            }
+            console.log('In error method===', error);
+          }
+        );
       }
-    );
+    } else {
+      const param = '/tax/old-vs-new';
+      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+        (result: any) => {
+          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+          this.loading = false;
+          console.log('result is=====', result);
+          this.newSummaryIncome = result.data.newRegime;
+          this.oldSummaryIncome = result.data.oldRegime;
+
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
+                .totalSalaryTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
+                .totalSalaryTaxableIncome,
+            },
+            {
+              label: 'Income from House Property',
+              old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old:
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalSpecialRateIncome +
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalNormalRateIncome,
+              new:
+                this.newSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalSpecialRateIncome +
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalNormalRateIncome,
+            },
+            {
+              label: 'Income from Other Sources',
+              old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome,
+            },
+            {
+              label: 'Total Headwise Income',
+              old: this.oldSummaryIncome?.taxSummary.totalIncome,
+              new: this.newSummaryIncome?.taxSummary.totalIncome,
+            },
+            {
+              label: 'CYLA',
+              old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
+              new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+            },
+            {
+              label: 'BFLA',
+              old: this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+              new: this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+            },
+            {
+              label: 'Gross Total Income',
+              old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+              new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+            },
+            {
+              label: 'Deduction',
+              old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+              new: this.newSummaryIncome?.taxSummary.totalDeduction,
+            },
+            {
+              label: 'Total Income',
+              old: this.oldSummaryIncome?.taxSummary
+                .totalIncomeAfterDeductionIncludeSR,
+              new: this.newSummaryIncome?.taxSummary
+                .totalIncomeAfterDeductionIncludeSR,
+            },
+            {
+              label: 'CFL',
+              old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+              new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+              new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+              new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+            },
+            {
+              label: 'Aggregate Liability',
+              old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+              new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+            },
+            {
+              label: 'Tax Paid',
+              old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+              new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
+                  ? this.oldSummaryIncome?.taxSummary.taxpayable
+                  : this.oldSummaryIncome?.taxSummary?.taxRefund,
+              new:
+                this.newSummaryIncome?.taxSummary?.taxpayable !== 0
+                  ? this.newSummaryIncome?.taxSummary?.taxpayable
+                  : this.newSummaryIncome?.taxSummary?.taxRefund,
+            },
+          ];
+
+          this.utilsService.showSnackBar(
+            'The below displayed calculations are as of Taxbuddys calculation'
+          );
+        },
+        (error) => {
+          this.loading = false;
+          this.errorMessage =
+            'We are processing your request, Please wait......';
+          if (error) {
+            this.errorMessage =
+              'We are unable to display your summary,Please try again later.';
+          }
+          console.log('In error method===', error);
+        }
+      );
+    }
   }
 
   getITRType() {
@@ -874,7 +1256,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
       //save ITR object
-      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+      this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
         (result) => {
           sessionStorage.setItem(
             AppConstants.ITR_JSON,

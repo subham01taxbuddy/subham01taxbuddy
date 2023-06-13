@@ -34,7 +34,7 @@
               color="primary"
               name="hasEdit[i]"
               formControlName="hasEdit"
-              class=""
+              class="ml130"
             >
             </mat-checkbox>
             <div class="row cardClr">
@@ -251,7 +251,7 @@
                   >
                 </mat-form-field>
               </div>
-              
+
               <div class="col-sm-4 spsTp">
                 <button
                   type="button"
@@ -264,15 +264,15 @@
 
             </div>
 
-          
+
           </div>
-          <div class="row spsTp bdrTp">         
+          <div class="row spsTp bdrTp">
             <div class="col-sm-3">
                 <button
                   type="submit"
-                  mat-stroked-button                
-                  class="delete-btn btnGry"
+                  class="delete-btn"
                   (click)="deleteBondsArray()"
+                  [disabled]="!bondSelected()"
                 >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
@@ -302,7 +302,7 @@
               </div>
             </div>
 
-          
+
         </div>
       </form>
     </div>
@@ -465,7 +465,7 @@
             >
           </mat-form-field>
         </div>
-       
+
         <div class="col-sm-4 spsTp">
           <button
             type="button"
@@ -479,7 +479,7 @@
 
       </div>
 
-      
+
     </div>
   </form>
   <div class="row spsTp bdrTp" *ngIf="deduction">

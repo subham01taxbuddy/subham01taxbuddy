@@ -13,13 +13,8 @@ import { StorageService } from 'src/app/modules/shared/services/storage.service'
 import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { environment } from 'src/environments/environment';
-import { AngularFireMessagingModule } from "@angular/fire/compat/messaging";
-import { getMessaging, getToken, Messaging, onMessage } from "@angular/fire/messaging";
-import { initializeApp } from "@angular/fire/app";
-import { EMPTY, from, Observable } from "rxjs";
-import { share, tap } from 'rxjs/operators';
-import { AddAffiliateIdComponent } from './add-affiliate-id/add-affiliate-id.component';
+import {RequestManager} from "../../../shared/services/request-manager";
+import {SpeedTestService} from 'ng-speed-test';
 
 declare let $: any;
 
@@ -37,6 +32,7 @@ export class LoginComponent implements OnInit {
   public showPassword: boolean;
   userId: any;
   serviceType: any;
+  requestManagerSubscription = null;
 
   constructor(
     private fb: FormBuilder,
@@ -48,11 +44,74 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     public utilsService: UtilsService,
     private storageService: StorageService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private requestManager: RequestManager,
+    private speedTestService:SpeedTestService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
+    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
+      this.requestManager.init();
+      this.requestCompleted(value);
+    });
 
+  }
+
+  ngOn
+  SME_INFO = 'SME_INFO';
+  requestCompleted(res: any) {
+    console.log(res);
+    this.loading = false;
+    switch (res.api) {
+      case this.SME_INFO: {
+        this.handleSmeInfo(res.result);
+        this.utilsService.getStoredSmeList();
+        this.getFyList();
+        this.getAgentList();
+        this.utilsService.getFilersList();
+        break;
+      }
+    }
+  }
+
+  handleSmeInfo(res){
+    console.log(res);
+    if (res.success) {
+      sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+      setTimeout(() => {
+        this.InitChat();
+      }, 2000);
+      //get logged in userID
+      let userId = this.utilsService.getLoggedInUserID();
+      //register sme login
+      this.registerLogin(userId);
+      this.utilsService.getStoredSmeList();
+      this.getAgentList();
+
+      let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
+        'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
+      let roles = res.data[0]?.roles;
+      if (roles.indexOf("ROLE_ADMIN") !== -1) {
+        this.router.navigate(['/tasks/assigned-users-new']);
+        this.utilsService.logAction(userId, 'login');
+        // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
+        //   this.router.navigate(['/pages/dashboard/calling/calling2']);
+        //   this.utilsService.logAction(jhi.userId, 'login')
+        // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
+        //   this.router.navigate(['pages/tpa-interested']);
+        //   this.utilsService.logAction(jhi.userId, 'login')
+      } else if (allowedRoles.some(item => roles.includes(item))) {
+        this.router.navigate(['/tasks/assigned-users-new']);
+      } else {
+        if (roles.length > 0)
+          this._toastMessageService.alert("error", "Access Denied.");
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    console.log('unsubscribe');
+    this.requestManagerSubscription.unsubscribe();
   }
 
   ngOnInit() {
@@ -66,11 +125,6 @@ export class LoginComponent implements OnInit {
       console.log('Auth.current session:', res, 'USER DATA', userData);
 
       if (this.utilsService.isNonEmpty(userData)) {
-        this.utilsService.getStoredSmeList();
-        this.getFyList();
-        this.getAgentList();
-        this.utilsService.getFilersList();
-
 
         this.getSmeInfoDetails(userData.userId);
         // if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
@@ -85,7 +139,7 @@ export class LoginComponent implements OnInit {
         // }
       }
       if (userData) {
-        this.gotoCloud();
+        this.gotoCloud(userData);
       }
 
     }).catch(e => {
@@ -100,14 +154,51 @@ export class LoginComponent implements OnInit {
         this.changeMode('FORGOT_PASSWORD', params['mobile']);
       }
     });
-
+    this.speedTest()
   }
-  gotoCloud() {
+  internetSpeed:any = 10;
+  speedTest(){
+    this.speedTestService.getMbps(
+      {
+        iterations: 5,
+        // retryDelay: 1500,
+      }
+    ).subscribe(
+      (speed) => {
+        console.log('Your speed is ' + Number(speed));
+        this.internetSpeed = Number(speed).toFixed(2);
+      }
+    );
+  }
+
+  isMobileBrowser() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
+  gotoCloud(userData?) {
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('99999999999999999:', params);
-      this.userId = params['userId'];
-      this.serviceType = params['serviceType'];
+      if(params) {
+        this.userId = params['userId'];
+        this.serviceType = params['serviceType'];
+      } else {
+        this.userId = userData?.userId;
+      }
       if (this.userId && this.serviceType) {
+        const url = this.router
+          .createUrlTree(['itr-filing/docs/user-docs/'], {
+            queryParams: {
+              userId: this.userId,
+              serviceType: this.serviceType,
+            },
+          })
+          .toString();
+        window.open(url);
+      } else if(params['currentPath']){
+        let str = params['currentPath'];
+        this.userId = str.substring(0, str.indexOf('/'));
+        console.log('userId', this.userId);
+        this.serviceType = 'ITR';
         const url = this.router
           .createUrlTree(['itr-filing/docs/user-docs/'], {
             queryParams: {
@@ -146,53 +237,6 @@ export class LoginComponent implements OnInit {
     } else {
       $('input.ng-invalid').first().focus();
     }
-  }
-
-  fetchAffiliateId(userId) {
-    let param = `/sme-affiliate?smeUserId=${userId}`
-    this.userMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        if (response.data.affiliateId) {
-          return;
-        } else {
-          this.addAffiliateId(userId);
-        }
-      } else {
-        this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", "Failed to get affiliate Id");
-    })
-  }
-
-  addAffiliateId(userId) {
-    const dialogRef = this.dialog.open(AddAffiliateIdComponent, {
-      width: "60%",
-      data: {}
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const param = `/sme-affiliateId`;
-        const request = {
-          "smeUserId": userId,
-          "affiliateId": result.affiliateId
-        };
-        this.userMsService.postMethod(param, request).subscribe((res: any) => {
-          this.loading = false;
-          if (res.success) {
-            this._toastMessageService.alert("success", 'AffiliateId added successfully.');
-          } else {
-            this._toastMessageService.alert("error", res.message);
-          }
-        }, error => {
-          this.loading = false;
-          this._toastMessageService.alert("error", 'failed to add affiliateId.');
-        });
-      }
-    });
   }
 
   apiCallCounter = 0;
@@ -330,41 +374,12 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     //https://dev-api.taxbuddy.com/user/sme-details-new/1?smeUserId=1
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
-    this.userMsService.getMethodNew(param).subscribe((res: any) => {
-      console.log(res);
-      if (res.success) {
-        sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
-        setTimeout(() => {
-          this.InitChat();
-          this.fetchAffiliateId(userId);
-        }, 2000);
-        //register sme login
-        this.registerLogin(userId);
-        this.utilsService.getStoredSmeList();
-        this.getAgentList();
-
-        let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
-          'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
-        let roles = res.data[0]?.roles;
-        if (roles.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['/tasks/assigned-users-new']);
-          this.utilsService.logAction(userId, 'login');
-          // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-          //   this.router.navigate(['/pages/dashboard/calling/calling2']);
-          //   this.utilsService.logAction(jhi.userId, 'login')
-          // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
-          //   this.router.navigate(['pages/tpa-interested']);
-          //   this.utilsService.logAction(jhi.userId, 'login')
-        } else if (allowedRoles.some(item => roles.includes(item))) {
-          this.router.navigate(['/tasks/assigned-users-new']);
-        } else {
-          if (roles.length > 0)
-            this._toastMessageService.alert("error", "Access Denied.");
-        }
-      }
-    }, error => {
-      this.loading = false;
-    })
+    this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
+    // this.userMsService.getMethodNew(param).subscribe((res: any) => {
+    //
+    // }, error => {
+    //   this.loading = false;
+    // })
   }
 
   InitChat() {

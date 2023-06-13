@@ -16,6 +16,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-bo-partners',
@@ -40,7 +41,9 @@ export class BoPartnersComponent implements OnInit {
   boPartnerDateForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
-  searchMobileNumber = new FormControl('')
+  searchMobileNumber = new FormControl('');
+  fromDateValue =new FormControl('2022-09-01', Validators.required);
+  toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -52,7 +55,8 @@ export class BoPartnersComponent implements OnInit {
     private userMsService: UserMsService,
     private utileService: UtilsService,
     @Inject(LOCALE_ID) private locale: string,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _toastMessageService: ToastMessageService,
   ) {
 
     this.partnersGridOptions = <GridOptions>{
@@ -92,7 +96,7 @@ export class BoPartnersComponent implements OnInit {
   }
 
   setToDateValidation(fromDate) {
-    this.minToDate = fromDate;
+    this.minToDate = this.fromDateValue.value;
   }
   pageChanged(event: any) {
     this.config.currentPage = event;
@@ -151,6 +155,13 @@ export class BoPartnersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          if(params.value) {
+            return `<a href="mailto:${params.value}">${params.value}</a>`
+          } else {
+            return 'NA';
+          }
+        }
       },
       {
         headerName: 'City',
@@ -326,7 +337,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to view documents"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-book" aria-hidden="true" data-action-type="viewDocuments"></i>
+          <i class="fa-regular fa-file-arrow-up" style="color:#49a30a;" aria-hidden="true" data-action-type="viewDocuments"></i>
          </button>`;
         },
         width: 100,
@@ -351,7 +362,7 @@ export class BoPartnersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+        <i class="fa-regular fa-user-check" data-action-type="updateStatus"></i>
          </button>`;
         },
         cellStyle: function (params: any) {
@@ -376,7 +387,7 @@ export class BoPartnersComponent implements OnInit {
           if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-          <i class="fa fa-envelope" aria-hidden="true" data-action-type="sendEmail"></i>
+          <i class="fa-regular fa-envelope-open-text" aria-hidden="true" data-action-type="sendEmail"></i>
          </button>`;
           } else {
             return '-'
@@ -398,14 +409,13 @@ export class BoPartnersComponent implements OnInit {
     // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
-      let fromDate = this.datePipe.transform(
-        this.boPartnerDateForm.value.fromDate,
-        'yyyy-MM-dd'
-      );
-      let toDate = this.datePipe.transform(
-        this.boPartnerDateForm.value.toDate,
-        'yyyy-MM-dd'
-      );
+
+      const fromDateValue = this.fromDateValue.value;
+      const toDateValue = this.toDateValue.value;
+
+      let fromDate = this.datePipe.transform(fromDateValue,'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(toDateValue,'yyyy-MM-dd');
+
       this.loading = true;
       let param
 
@@ -419,7 +429,7 @@ export class BoPartnersComponent implements OnInit {
         (response: any) => {
           this.loading = false;
           console.log('bo-partners list: ', response);
-          if (Array.isArray(response.content)) {
+          if (Array.isArray(response.content) && response.content.length !== 0) {
             this.loading = false;
             this.boPartnersInfo = response.content;
             this.config.totalItems = response.totalElements;
@@ -430,6 +440,7 @@ export class BoPartnersComponent implements OnInit {
             this.loading = false;
             this.config.totalItems = 0;
             this.partnersGridOptions.api?.setRowData(this.createRowData([]));
+            this._toastMessageService.alert("error",'No Data Found');
           }
         },
         (error) => {
@@ -621,6 +632,8 @@ export class BoPartnersComponent implements OnInit {
 
   resetFilters() {
     this.searchMobileNumber.setValue(null);
+    this.fromDateValue.setValue('2022-09-01');
+    this.toDateValue.setValue(new Date());
     this.getBoPartners();
   }
 }

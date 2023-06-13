@@ -284,6 +284,27 @@ export class AssignedSubscriptionComponent implements OnInit {
             this._toastMessageService.alert("error", "No user with this mobile number found. " +
               "Please create user before creating subscription.");
             this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          } else if (response.data.error === 'Subscription not found') {
+            this._toastMessageService.alert('error', response.data.error);
+            let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          } else {
+            this._toastMessageService.alert('error', response.data.error);
+            this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
             return;
           }
 
@@ -291,7 +312,8 @@ export class AssignedSubscriptionComponent implements OnInit {
             this.createRowData([])
           );
           this.config.totalItems = 0;
-          this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          // this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          this.isAllowed = false;
         }
 
       },
@@ -323,7 +345,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     } else {
       this.getAssignedSubscription(0);
     }
-
+    this.isAllowed = false;
   }
 
   subscriptionCreateColumnDef(List) {
@@ -488,13 +510,13 @@ export class AssignedSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           if (params.data.cancellationStatus === 'PENDING') {
             return `<button type="button" disabled class="action_icon add_button"
-            style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#04a4bc;">
-            <i class="fas fa-edit" aria-hidden="true"> Edit</i>
+          style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
            </button>`;
           } else {
-            return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription"
+            return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription" data-action-type="edit"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
-              <i class="fas fa-edit" aria-hidden="true" data-action-type="edit"> Edit</i>
+            <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
              </button>`;
           }
         },
@@ -558,7 +580,12 @@ export class AssignedSubscriptionComponent implements OnInit {
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode)
           ? subscriptionData[i].promoCode
           : '-',
-        invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
+        invoiceAmount: (subscriptionData[i].promoApplied) ?
+          (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount - subscriptionData[i].promoApplied.discountedAmount :
+            this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount - subscriptionData[i].promoApplied.discountedAmount : '-') :
+          (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount :
+            this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '-'),
+        // invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus
         // invoiceDetails: invoiceDetails,

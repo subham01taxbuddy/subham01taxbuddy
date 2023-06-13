@@ -120,7 +120,7 @@ export class ReviewListComponent implements OnInit {
         },
         cellRenderer: (data: any) => {
           if (data.value) {
-            return data.value;
+            return `<a href="mailto:${data.value}">${data.value}</a>`
           } else {
             return '-';
           }
@@ -268,7 +268,7 @@ export class ReviewListComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="view"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-eye" aria-hidden="true" data-action-type="view"></i>
+            <i class="fa-light fa-eye" aria-hidden="true" data-action-type="view"></i>
            </button>`;
         },
         width: 80,
@@ -283,7 +283,7 @@ export class ReviewListComponent implements OnInit {
         },
       },
       {
-        headerName: 'Add Review Note',
+        headerName: 'Add Review',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -291,7 +291,7 @@ export class ReviewListComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
+          <i class="fa-regular fa-file-plus" data-action-type="update-sme-notes"></i>
            </button>`;
         },
         width: 80,

@@ -116,6 +116,9 @@ export class RefundRequestComponent implements OnInit {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
 
   resetFilters() {
+    this.invoiceFormGroup.controls['email'].setValue(null);
+    this.invoiceFormGroup.controls['mobile'].setValue(null);
+    this.invoiceFormGroup.controls['invoiceNo'].setValue(null);
     this.smeDropDown?.resetDropdown();
     const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     const loginSMEInfo = data[0];
@@ -199,16 +202,19 @@ export class RefundRequestComponent implements OnInit {
             this.refundListGridOptions.api?.setRowData(this.createRowData(response.data.content));
             this.config.totalItems = response.data.totalElements;
           } else {
+            this._toastMessageService.alert("error","No Data Found");
             this.refundListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
           }
         } else {
           this.refundListGridOptions.api?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
           this._toastMessageService.alert("error", response.message);
         }
       },
       (error) => {
         this.refundListGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
         this.loading = false;
       }
     );
@@ -278,6 +284,13 @@ export class RefundRequestComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          if(params.value) {
+            return `<a href="mailto:${params.value}">${params.value}</a>`
+          } else {
+            return 'NA';
+          }
+        }
       },
       {
         headerName: 'Request Type',
@@ -404,7 +417,7 @@ export class RefundRequestComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -428,7 +441,7 @@ export class RefundRequestComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,
@@ -452,7 +465,7 @@ export class RefundRequestComponent implements OnInit {
         userId: this.utilsService.isNonEmpty(subscriptionData[i].userId) ? subscriptionData[i].userId : '-',
         name: this.utilsService.isNonEmpty(subscriptionData[i].name) ? subscriptionData[i].name : '-',
         mobile: this.utilsService.isNonEmpty(subscriptionData[i].mobile) ? subscriptionData[i].mobile : '-',
-        email: this.utilsService.isNonEmpty(subscriptionData[i].email) ? subscriptionData[i].email : '-',
+        email: this.utilsService.isNonEmpty(subscriptionData[i].email) ? subscriptionData[i].email : null,
         refundRequestType: this.utilsService.isNonEmpty(subscriptionData[i].refundRequestType) ? subscriptionData[i].refundRequestType : '-',
         requestCreatedDate: subscriptionData[i].requestCreatedDate,
         serviceDetail: this.utilsService.isNonEmpty(subscriptionData[i].serviceDetail) ? subscriptionData[i].serviceDetail : '-',

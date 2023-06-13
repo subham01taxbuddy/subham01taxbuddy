@@ -51,7 +51,7 @@ export class PrefillIdComponent implements OnInit {
     private router: Router,
     private toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
+    public utilsService: UtilsService,
     private dialog: MatDialog
   ) {}
 
@@ -150,6 +150,12 @@ export class PrefillIdComponent implements OnInit {
       reader.onload = (e: any) => {
         let jsonRes = e.target.result;
         let JSONData = JSON.parse(jsonRes);
+
+        //check if uploaded json is not summary json
+        if(JSONData.hasOwnProperty('ITR')){
+          this.utilsService.showSnackBar('You are trying to upload summary json instead of prefill');
+          return;
+        }
 
         let panNo = JSONData.personalInfo?.pan;
         let mobileNo = JSONData.personalInfo?.address?.mobileNo;
@@ -301,6 +307,15 @@ export class PrefillIdComponent implements OnInit {
         }
       }
 
+      const allAllowance = this.ITR_Obj.employers[0].allowance.find(
+        (itrObjSalaryOtherAllowances) =>
+          itrObjSalaryOtherAllowances.allowanceType === 'ALL_ALLOWANCES'
+      );
+
+      allAllowance.exemptAmount =
+        this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ].AllwncExemptUs10?.TotalAllwncExemptUs10;
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
@@ -317,7 +332,7 @@ export class PrefillIdComponent implements OnInit {
         if (this.ITR_Type === 'ITR1') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
+          ].ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         } else if (this.ITR_Type === 'ITR4') {
@@ -1124,17 +1139,31 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
-        this.itrSummaryJson = JSONData;
-
-        this.uploadedJson = JSONData.ITR;
-        if (this.uploadedJson) {
-          this.utilsService.showSnackBar('JSON has been sucessfully uploaded');
-          this.utilsService.setUploadedJson(this.uploadedJson);
-          this.mapItrJson(this.uploadedJson);
-          this.jsonUpload();
+        if(!JSONData.hasOwnProperty('ITR')){
+          this.utilsService.showSnackBar('The uploaded json is not a summary json. Please check file again');
+          return;
+        }
+        if (
+          JSONData.ITR.hasOwnProperty('ITR1') ||
+          JSONData.ITR.hasOwnProperty('ITR4')
+        ) {
+          this.itrSummaryJson = JSONData;
+          this.uploadedJson = JSONData.ITR;
+          if (this.uploadedJson) {
+            this.utilsService.showSnackBar(
+              'JSON has been sucessfully uploaded'
+            );
+            this.utilsService.setUploadedJson(this.uploadedJson);
+            this.mapItrJson(this.uploadedJson);
+            this.jsonUpload();
+          } else {
+            this.utilsService.showSnackBar(
+              'There was some error while uploading the JSON'
+            );
+          }
         } else {
           this.utilsService.showSnackBar(
-            'There was some error while uploading the JSON'
+            'ITR2 & ITR3 parsing will be available soon'
           );
         }
       };
@@ -1772,14 +1801,14 @@ export class PrefillIdComponent implements OnInit {
         {
           if (this.ITR_Type === 'ITR1') {
             if (
-              this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
-                .ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls
+              this.uploadedJson[this.ITR_Type]?.ITR1_IncomeDeductions
+                ?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
             ) {
               if (this.ITR_Obj.exemptIncomes) {
                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                 const availableExemptIncomes = this.uploadedJson[
                   this.ITR_Type
-                ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+                ]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.map(
                   (value) => value.NatureDesc
                 );
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
@@ -5092,6 +5121,14 @@ export class PrefillIdComponent implements OnInit {
       if (result === 'YES') {
         this.ITR_JSON.itrSummaryJson = null;
         this.uploadedJson = false;
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id
+        );
         this.utilsService.showSnackBar(
           'The uploaded JSON has been deleted. You can now proceed ahead.'
         );
@@ -5100,6 +5137,7 @@ export class PrefillIdComponent implements OnInit {
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_JSON)
         );
+        this.jsonUploaded.emit(null);
       }
     });
   }

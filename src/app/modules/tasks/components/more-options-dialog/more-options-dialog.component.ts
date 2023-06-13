@@ -100,7 +100,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   goToInvoice() {
     this.router.navigate(['/subscription/proforma-invoice'], {
-      queryParams: { userId: this.data.userId },
+      queryParams: { mobile: this.data.mobileNumber },
     });
     this.dialogRef.close();
   }

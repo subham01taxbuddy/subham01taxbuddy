@@ -15,6 +15,12 @@ th {
   color:#ffffff;
 }
 
+.delete-user:hover {
+  background-color: rgb(179, 0, 0) !important;
+  color:#ffffff;
+}
+
+
 .mt-5 {
   margin: 5px;
 }
@@ -22,17 +28,15 @@ th {
 .more {
     font-size: 18px;
     font-weight: bold;
-    background-color: #f7f7f7;
-    height: 40px;
-    width: 100%;
-    padding: 7px;
 }
-.close {
-    top: -49px;
-    z-index: 5;
-    position: relative;
-    left: 96%;
+
+.back {
+  background-color: #f7f7f7;
+  height: 40px;
+  width: 100%;
+  padding: 7px;
 }
+
 
 .tbd-btn-small {
   width: 30%;
@@ -42,6 +46,11 @@ th {
   border: 1px solid #cccccc;
   margin: 15px 10px 0px 0px;
 }
+
+.tbd-btn-small:hover {
+  background-color: #b7f5f5;
+}
+
 .tablejrn {
   overflow-y: scroll;
   padding: 13px;

@@ -19,11 +19,11 @@
            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
             <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
            </div>
-         
+
             <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-         
+
             <div *ngIf="false" >
                           <div class="col-sm-6">
                            <mat-label> Search By Owner </mat-label>
@@ -45,12 +45,12 @@
                                  {{option1.name}}
                                </mat-option>
                              </mat-autocomplete>
-         
+
                            </mat-form-field>
                          </div>
                        </div>
-         
-         
+
+
                      <div *ngIf="false">
                        <div class="col-sm-6" *ngIf="!coOwnerCheck">
                            <mat-label> Search By Filer </mat-label>
@@ -59,7 +59,7 @@
                           </mat-form-field>
                        </div>
                      </div>
-         
+
                        <div class="col-sm-3 spsTp">
                          <mat-label> Select FY </mat-label>
                          <mat-form-field appearance="outline">
@@ -91,7 +91,7 @@
                                than from date</mat-error>
                        </mat-form-field>
                        </div>
-         
+
                        <div class="col-sm-3 spsTp">
                          <mat-label> Mobile Number: </mat-label>
                          <mat-form-field appearance="outline">
@@ -103,7 +103,7 @@
                            />
                          </mat-form-field>
                        </div>
-         
+
                        <div class="col-sm-6 spsTp">
                          <mat-label> Email Address: </mat-label>
                          <mat-form-field appearance="outline">
@@ -124,21 +124,21 @@
                            />
                          </mat-form-field>
                        </div>
-                      
-              
+
+
                        <div class="col-sm-12 spsTp bdrTp">
-                         <button *ngIf="!roles?.includes('ROLE_OWNER') && !roles?.includes('ROLE_FILER')" class="dwldBtn" [disabled]="loading"(click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
-                         
+                         <button *ngIf="!roles?.includes('ROLE_OWNER') && !roles?.includes('ROLE_FILER')" class="dwldBtn" [disabled]="loading" (click)="downloadInvoicesSummary()"><i class="fa fa-download" aria-hidden="true"  ></i> Download File </button>
+
                          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                             Clear form
                          </button>
-         
-                         <button  class="srch-btn mvRth" (click)="getInvoice('isAgent','agentId')"><i  class="fas fa-file-invoice" aria-hidden="true" ></i> Show Invoice </button>
+
+                         <button  class="srch-btn mvRth" [disabled]="loading" (click)="getInvoice('isAgent','agentId')"><i  class="fas fa-file-invoice" aria-hidden="true" ></i> Show Invoice </button>
                        </div>
             </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

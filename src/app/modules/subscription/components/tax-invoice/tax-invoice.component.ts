@@ -489,6 +489,11 @@ export class TaxInvoiceComponent implements OnInit {
         this.gridApi?.setRowData(this.createRowData(this.invoiceData));
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
+        if(this.invoiceData.length == 0){
+          this.gridApi?.setRowData(this.createRowData([]));
+          this.config.totalItems = 0;
+          this._toastMessageService.alert("error",'No Data Found');
+        }
       }else{
         this. _toastMessageService.alert("error",response.message);
         this.gridApi?.setRowData(this.createRowData([]));
@@ -743,6 +748,9 @@ export class TaxInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
       {
         headerName: 'Status',
@@ -900,7 +908,7 @@ export class TaxInvoiceComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 90,

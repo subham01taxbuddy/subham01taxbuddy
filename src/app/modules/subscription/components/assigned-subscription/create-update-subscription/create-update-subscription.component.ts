@@ -82,6 +82,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   };
   subscriptionObjType: any;
   isButtonDisable: boolean;
+  AssessmentYear:string;
 
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
@@ -150,8 +151,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     if (this.subscriptionObj != null) {
       this.personalInfoForm.patchValue(this.subscriptionObj);
       // this.otherInfoForm.patchValue(this.subscriptionObj);
-      if (this.subscriptionObj.subscriptionId) {
+      if (this.subscriptionObj.subscriptionId !== 0) {
         this.getUserPlanInfo(this.subscriptionObj?.subscriptionId);
+      }else {
+        this.getFy();
       }
     }
     // if(this.createSubscriptionObj !=null){
@@ -479,6 +482,28 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     console.log('promoCodeInfo: ', this.promoCodeInfo);
   }
 
+  async getFy(){
+    const fyList = await this.utilsService.getStoredFyList();
+    console.log('fylist',fyList)
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    this.AssessmentYear = currentFyDetails[0].assessmentYear
+    console.log("ay",this.AssessmentYear)
+    this.getOwnerFiler();
+  }
+
+  getOwnerFiler(){
+    // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
+    this.loading = true;
+    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${this.serviceType}`;
+    this.userService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('get Owner and filer name for new create sub ',result)
+      this.filerName.setValue(result.data?.name);
+      this.ownerName.setValue(result.data?.ownerName);
+    })
+  }
+
+
   getUserPlanInfo(id) {
     this.loading = true;
     let param = '/subscription/' + id;
@@ -493,6 +518,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.description.setValue(subscription.item.itemDescription);
         this.sacNumber.setValue(subscription.item.sacCode);
         this.assessmentYear.setValue(subscription.item.financialYear);
+        this.ownerName.setValue(subscription.ownerName);
+        this.filerName.setValue(subscription.assigneeName);
 
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
@@ -860,8 +887,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     let param = `/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`;
     this.userService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      this.filerName.setValue(result.data[0]?.name);
-      this.ownerName.setValue(result.data[0]?.parentName);
+      // this.filerName.setValue(result.data[0]?.name);
+      // this.ownerName.setValue(result.data[0]?.parentName);
     });
   }
 
@@ -943,6 +970,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: 'SME',
         promoCode: this.appliedPromo,
+        smeUserId: this?.loggedInSme[0]?.userId,
         item: {
           itemDescription: this.description?.value,
           quantity: this.userSubscription?.item[0]?.quantity,
@@ -962,7 +990,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-        smeUserId: this.loggedInSme.userId
+
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));

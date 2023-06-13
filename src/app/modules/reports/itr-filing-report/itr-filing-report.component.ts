@@ -45,7 +45,7 @@ export class ItrFilingReportComponent implements OnInit {
   endDate = new FormControl('');
   leaderView =new FormControl('');
   ownerView = new FormControl('');
-  toDateMin: any;
+  minEndDate = new Date(2023, 3, 1);
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   itrFillingReport: any;
@@ -68,7 +68,7 @@ export class ItrFilingReportComponent implements OnInit {
     private itrService: ItrMsService,
     private jsonToCsvService: JsonToCsvService
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
 
     this.itrFillingReportGridOptions = <GridOptions>{
@@ -230,7 +230,7 @@ export class ItrFilingReportComponent implements OnInit {
         itr4: fillingData[i].itr4,
         otherItr: fillingData[i].otherItr,
         itrU: fillingData[i].itrU,
-        total: fillingData[i].total,
+        totalItrFiled: fillingData[i].totalItrFiled,
         ownerName: fillingData[i].ownerName,
         leaderName: fillingData[i].leaderName,
       })
@@ -263,7 +263,7 @@ export class ItrFilingReportComponent implements OnInit {
       },
       {
         headerName: 'Total ITR Filed',
-        field: 'total',
+        field: 'totalItrFiled',
         sortable: true,
         width: 110,
         suppressMovable: true,
@@ -395,11 +395,13 @@ export class ItrFilingReportComponent implements OnInit {
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
+
+    if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${loggedInId}`
+
+    if(this.leaderId){
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
     let viewFilter = '';
@@ -458,7 +460,7 @@ export class ItrFilingReportComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+    this.minEndDate = FromDate;
   }
 
   // disableCheckbox(checkboxToDisable: FormControl, checkboxToEnable: FormControl) {

@@ -12,14 +12,14 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+          <!-- <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
            <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
-           </div>
+           </div> -->
 
            <div class="col-sm-12 bckClr">
             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
             </div>
-          
+
              <div class="col-sm-6 spsTp">
                                   <mat-label> Mobile Number </mat-label>
                                   <mat-form-field appearance="outline">
@@ -36,16 +36,16 @@
                                 <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
                                   Clear form
                                 </button>
-                                  <button class="srch-btn mvRth" (click)="applyFilter()">
+                                  <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
                                       <i class="fas fa-search" aria-hidden="true"></i> Search
                                   </button>
-          
-          
+
+
                               </div>
             </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

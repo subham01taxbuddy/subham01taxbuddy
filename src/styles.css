@@ -313,6 +313,13 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.close {
+  color:#cccccc;
+}
+.close:hover {
+color:#2199e8;
+}
+
 .txStyls {
   font-size: 17px;
   font-weight: 600;
@@ -567,14 +574,16 @@ button {
 .note1 {
   background-color: #fafafa;
   padding: 5px 0px 5px 10px;
-  width: 350px;
+  /* width: 350px; */
   border-radius: 8px;
-  font-size: 13px;
-  margin: -56px 0px 0px 65%;
+  font-size: 12px;
   font-style: italic;
-  border: 1px solid #efefef;
-  float: left;
+border: 1px solid #efefef;
   color: #b60000;
+  max-width: 250px;
+  min-width: 180px;
+  margin:0 auto;
+  margin-top:10px;
 }
 
 .edit-head {
@@ -1047,6 +1056,10 @@ pagination-controls {
   margin-top:30px!important;
 }
 
+.spsTp2 {
+  margin-top: 20px!important;
+}
+
 .topSps {
   margin-top:20px!important;
 }
@@ -1172,7 +1185,7 @@ pagination-controls {
 .delete-btn {
   background: #FFE1E1;
   border: 1px solid #E20000;
-  border-radius: 6px;
+  border-radius: 5px;
   font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
@@ -1181,13 +1194,17 @@ pagination-controls {
   padding: 10px;
   text-align: center;
   color: #E20000;
+  margin-left: -15px;
+  width: 95px;
 }
 
 .delete-btn:disabled {
-  background: #F5F5F5;
-  border: 1px solid #BDBDBD;
-  color: #BDBDBD;
+  border: 1px solid #cccccc;
   padding: 10px;
+  color: #cccccc;
+  width: 95px;
+  border-radius: 5px;
+  margin-left: -15px;
 }
 
 .btnGry {
