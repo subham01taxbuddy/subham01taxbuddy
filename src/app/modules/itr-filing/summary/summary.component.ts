@@ -182,22 +182,22 @@ export class SummaryComponent implements OnInit {
       ];
       salaryTotalIncome: Number;
     };
-    // houseProperties: {
-    //   houseProps: [
-    //     {
-    //       hpNo: Number;
-    //       typeOfHp;
-    //       grossRentReceived;
-    //       taxesPaid: Number;
-    //       annualValue: Number;
-    //       hpStandardDeduction: Number;
-    //       hpinterest: Number;
-    //       hpNetIncome: Number;
-    //       hpIncome: Number;
-    //     }
-    //   ];
-    //   hpTotalIncome: Number;
-    // };
+    houseProperties: {
+      houseProps: [
+        {
+          hpNo: Number;
+          typeOfHp;
+          grossRentReceived;
+          taxesPaid: Number;
+          annualValue: Number;
+          hpStandardDeduction: Number;
+          hpinterest: Number;
+          hpNetIncome: Number;
+          hpIncome: Number;
+        }
+      ];
+      hpTotalIncome: Number;
+    };
     // otherIncome: {
     //   otherIncomes: {
     //     saving: Number;
@@ -470,55 +470,55 @@ export class SummaryComponent implements OnInit {
                   this.ITR14IncomeDeductions
                 ]?.IncomeFromSal,
             },
-            //   houseProperties: {
-            //     houseProps: [
-            //       {
-            //         hpNo: 0,
-            //         typeOfHp:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.TypeOfHP === 'L'
-            //             ? 'LOP'
-            //             : 'S'
-            //             ? 'SOP'
-            //             : 'D'
-            //             ? 'DLOP'
-            //             : 'PropertyType not present in JSON',
-            //         grossRentReceived:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.GrossRentReceived,
-            //         taxesPaid:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.TaxPaidlocalAuth,
-            //         annualValue:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.AnnualValue,
-            //         hpStandardDeduction:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.[hpStandardDeduction],
-            //         hpinterest:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.InterestPayable,
-            //         hpNetIncome:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.TotalIncomeOfHP,
-            //         hpIncome:
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //             this.ITR14IncomeDeductions
-            //           ]?.TotalIncomeOfHP,
-            //       },
-            //     ],
-            //     hpTotalIncome:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //         this.ITR14IncomeDeductions
-            //       ]?.TotalIncomeOfHP,
-            //   },
+            houseProperties: {
+              houseProps: [
+                {
+                  hpNo: 0,
+                  typeOfHp:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TypeOfHP === 'L'
+                      ? 'LOP'
+                      : 'S'
+                      ? 'SOP'
+                      : 'D'
+                      ? 'DLOP'
+                      : 'PropertyType not present in JSON',
+                  grossRentReceived:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.GrossRentReceived,
+                  taxesPaid:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TaxPaidlocalAuth,
+                  annualValue:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.AnnualValue,
+                  hpStandardDeduction:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.[hpStandardDeduction],
+                  hpinterest:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.InterestPayable,
+                  hpNetIncome:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP,
+                  hpIncome:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP,
+                },
+              ],
+              hpTotalIncome:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ]?.TotalIncomeOfHP,
+            },
             //   otherIncome: {
             //     otherIncomes: {
             //       saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -1384,55 +1384,35 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleS
                   ?.TotIncUnderHeadSalaries,
             },
-            // houseProperties: {
-            //   houseProps: [
-            //     {
-            //       hpNo: 0,
-            //       typeOfHp:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.TypeOfHP === 'L'
-            //           ? 'LOP'
-            //           : 'S'
-            //           ? 'SOP'
-            //           : 'D'
-            //           ? 'DLOP'
-            //           : 'PropertyType not present in JSON',
-            //       grossRentReceived:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.GrossRentReceived,
-            //       taxesPaid:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.TaxPaidlocalAuth,
-            //       annualValue:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.AnnualValue,
-            //       hpStandardDeduction:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.[hpStandardDeduction],
-            //       hpinterest:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.InterestPayable,
-            //       hpNetIncome:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.TotalIncomeOfHP,
-            //       hpIncome:
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //           this.ITR14IncomeDeductions
-            //         ]?.TotalIncomeOfHP,
-            //     },
-            //   ],
-            //   hpTotalIncome:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //       this.ITR14IncomeDeductions
-            //     ]?.TotalIncomeOfHP,
-            // },
+            houseProperties: {
+              houseProps: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleHP?.PropertyDetails?.map((element, index) => {
+                return {
+                  hpNo: index,
+                  typeOfHp:
+                    element.ifLetOut === 'Y'
+                      ? 'LOP'
+                      : 'N'
+                      ? 'SOP'
+                      : 'D'
+                      ? 'DLOP'
+                      : 'PropertyType not present in JSON',
+                  grossRentReceived: element.Rentdetails.AnnualLetableValue,
+                  taxesPaid: element.Rentdetails.LocalTaxes,
+                  annualValue: element.Rentdetails.BalanceALV,
+                  hpStandardDeduction:
+                    element.Rentdetails.ThirtyPercentOfBalance,
+                  hpinterest: element.Rentdetails.IntOnBorwCap,
+                  hpNetIncome: element.Rentdetails.IncomeOfHP,
+                  hpIncome: element.Rentdetails.IncomeOfHP,
+                };
+              }),
+              hpTotalIncome:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleHP
+                  ?.TotalIncomeChargeableUnHP,
+            },
+
             // otherIncome: {
             //   otherIncomes: {
             //     saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -2609,38 +2589,38 @@ export class SummaryComponent implements OnInit {
                     salaryTotalIncome:
                       this.finalSummary?.assessment?.taxSummary?.salary,
                   },
-                  // houseProperties: {
-                  //   houseProps:
-                  //     this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
-                  //       (
-                  //         {
-                  //           propertyType,
-                  //           grossAnnualRentReceived,
-                  //           propertyTax,
-                  //           annualValue,
-                  //           exemptIncome,
-                  //           loans,
-                  //           taxableIncome,
-                  //         },
-                  //         index
-                  //       ) => {
-                  //         return {
-                  //           hpNo: index,
-                  //           typeOfHp: propertyType,
-                  //           grossRentReceived: grossAnnualRentReceived,
-                  //           taxesPaid: propertyTax,
-                  //           annualValue: annualValue,
-                  //           hpStandardDeduction: exemptIncome,
-                  //           hpinterest: loans[0]?.interestAmount,
-                  //           hpNetIncome: taxableIncome,
-                  //           hpIncome: taxableIncome,
-                  //         };
-                  //       }
-                  //     ),
-                  //   hpTotalIncome:
-                  //     this.finalSummary?.assessment?.summaryIncome
-                  //       ?.summaryHpIncome?.totalHPTaxableIncome,
-                  // },
+                  houseProperties: {
+                    houseProps:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                        (
+                          {
+                            propertyType,
+                            grossAnnualRentReceived,
+                            propertyTax,
+                            annualValue,
+                            exemptIncome,
+                            loans,
+                            taxableIncome,
+                          },
+                          index
+                        ) => {
+                          return {
+                            hpNo: index,
+                            typeOfHp: propertyType,
+                            grossRentReceived: grossAnnualRentReceived,
+                            taxesPaid: propertyTax,
+                            annualValue: annualValue,
+                            hpStandardDeduction: exemptIncome,
+                            hpinterest: loans[0]?.interestAmount,
+                            hpNetIncome: taxableIncome,
+                            hpIncome: taxableIncome,
+                          };
+                        }
+                      ),
+                    hpTotalIncome:
+                      this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryHpIncome?.totalHPTaxableIncome,
+                  },
                   // otherIncome: {
                   //   otherIncomes: {
                   //     saving:
@@ -3464,38 +3444,38 @@ export class SummaryComponent implements OnInit {
                   salaryTotalIncome:
                     this.finalSummary?.assessment?.taxSummary?.salary,
                 },
-                // houseProperties: {
-                //   houseProps:
-                //     this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
-                //       (
-                //         {
-                //           propertyType,
-                //           grossAnnualRentReceived,
-                //           propertyTax,
-                //           annualValue,
-                //           exemptIncome,
-                //           loans,
-                //           taxableIncome,
-                //         },
-                //         index
-                //       ) => {
-                //         return {
-                //           hpNo: index,
-                //           typeOfHp: propertyType,
-                //           grossRentReceived: grossAnnualRentReceived,
-                //           taxesPaid: propertyTax,
-                //           annualValue: annualValue,
-                //           hpStandardDeduction: exemptIncome,
-                //           hpinterest: loans[0]?.interestAmount,
-                //           hpNetIncome: taxableIncome,
-                //           hpIncome: taxableIncome,
-                //         };
-                //       }
-                //     ),
-                //   hpTotalIncome:
-                //     this.finalSummary?.assessment?.summaryIncome
-                //       ?.summaryHpIncome?.totalHPTaxableIncome,
-                // },
+                houseProperties: {
+                  houseProps:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                      (
+                        {
+                          propertyType,
+                          grossAnnualRentReceived,
+                          propertyTax,
+                          annualValue,
+                          exemptIncome,
+                          loans,
+                          taxableIncome,
+                        },
+                        index
+                      ) => {
+                        return {
+                          hpNo: index,
+                          typeOfHp: propertyType,
+                          grossRentReceived: grossAnnualRentReceived,
+                          taxesPaid: propertyTax,
+                          annualValue: annualValue,
+                          hpStandardDeduction: exemptIncome,
+                          hpinterest: loans[0]?.interestAmount,
+                          hpNetIncome: taxableIncome,
+                          hpIncome: taxableIncome,
+                        };
+                      }
+                    ),
+                  hpTotalIncome:
+                    this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryHpIncome?.totalHPTaxableIncome,
+                },
                 // otherIncome: {
                 //   otherIncomes: {
                 //     saving:
