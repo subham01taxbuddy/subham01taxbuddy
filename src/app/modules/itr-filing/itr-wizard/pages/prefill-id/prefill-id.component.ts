@@ -1150,7 +1150,8 @@ export class PrefillIdComponent implements OnInit {
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4')
+          JSONData.ITR.hasOwnProperty('ITR4') ||
+          JSONData.ITR.hasOwnProperty('ITR2')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
@@ -3621,24 +3622,24 @@ export class PrefillIdComponent implements OnInit {
                 ?.LongTermCapGain23?.Proviso112Applicable;
 
             if (Proviso112Applicabledtls) {
-              Proviso112Applicabledtls.forEach((zcb) => {
+              Proviso112Applicabledtls.forEach(({ zcb }, index) => {
                 if (
                   zcb === Proviso112Applicabledtls[0] &&
                   Proviso112Applicabledtls[0] &&
-                  Proviso112Applicabledtls[0].Proviso112Applicabledtls
+                  Proviso112Applicabledtls[0]?.Proviso112Applicabledtls
                     ?.BalanceCG !== 0 &&
                   Proviso112Applicabledtls[0] &&
-                  Proviso112Applicabledtls[0].Proviso112Applicabledtls
+                  Proviso112Applicabledtls[0]?.Proviso112Applicabledtls
                     ?.FullConsideration !== 0
                 ) {
                   const zcbDetail = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'ZERO_COUPON_BONDS',
                     deduction: [
                       {
-                        srn: null,
+                        srn: index,
                         underSection: 'Deduction 54F',
                         orgAssestTransferDate: null,
                         purchaseDate: null,
@@ -3646,8 +3647,10 @@ export class PrefillIdComponent implements OnInit {
                         purchaseDatePlantMachine: null,
                         costOfNewAssets: null,
                         investmentInCGAccount: null,
-                        totalDeductionClaimed:
-                          zcb.Proviso112Applicabledtls?.DeductionUs54F,
+                        totalDeductionClaimed: zcb.Proviso112Applicabledtls
+                          ?.DeductionUs54F
+                          ? zcb.Proviso112Applicabledtls?.DeductionUs54F
+                          : null,
                         costOfPlantMachinary: null,
                         usedDeduction: null,
                       },
@@ -3655,12 +3658,14 @@ export class PrefillIdComponent implements OnInit {
                     improvement: [
                       {
                         id: null,
-                        srn: null,
+                        srn: index,
                         financialYearOfImprovement: null,
                         dateOfImprovement: null,
-                        costOfImprovement:
-                          zcb.Proviso112Applicabledtls?.DeductSec48
-                            ?.ImproveCost,
+                        costOfImprovement: zcb.Proviso112Applicabledtls
+                          ?.DeductSec48?.ImproveCost
+                          ? zcb.Proviso112Applicabledtls?.DeductSec48
+                              ?.ImproveCost
+                          : null,
                         indexCostOfImprovement: null,
                       },
                     ],
@@ -3670,7 +3675,7 @@ export class PrefillIdComponent implements OnInit {
                         id: null,
                         hasIndexation: null,
                         isUploaded: null,
-                        srn: null,
+                        srn: index,
                         description: null,
                         gainType: 'LONG',
                         sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -3727,13 +3732,13 @@ export class PrefillIdComponent implements OnInit {
               SaleofBondsDebntr?.FullConsideration !== 0
             ) {
               const SaleofBondsDebntrDetails = {
-                assessmentYear: '',
-                assesseeType: '',
-                residentialStatus: '',
+                assessmentYear: this.ITR_Obj?.assessmentYear,
+                assesseeType: this.ITR_Obj?.assesseeType,
+                residentialStatus: this.ITR_Obj?.residentialStatus,
                 assetType: 'BONDS',
                 deduction: [
                   {
-                    srn: null,
+                    srn: 0,
                     underSection: 'Deduction 54F',
                     orgAssestTransferDate: null,
                     purchaseDate: null,
@@ -3741,7 +3746,9 @@ export class PrefillIdComponent implements OnInit {
                     purchaseDatePlantMachine: null,
                     costOfNewAssets: null,
                     investmentInCGAccount: null,
-                    totalDeductionClaimed: SaleofBondsDebntr?.DeductionUs54F,
+                    totalDeductionClaimed: SaleofBondsDebntr?.DeductionUs54F
+                      ? SaleofBondsDebntr?.DeductionUs54F
+                      : null,
                     costOfPlantMachinary: null,
                     usedDeduction: null,
                   },
@@ -3749,11 +3756,13 @@ export class PrefillIdComponent implements OnInit {
                 improvement: [
                   {
                     id: null,
-                    srn: null,
+                    srn: 0,
                     financialYearOfImprovement: null,
                     dateOfImprovement: null,
-                    costOfImprovement:
-                      SaleofBondsDebntr?.DeductSec48?.ImproveCost,
+                    costOfImprovement: SaleofBondsDebntr?.DeductSec48
+                      ?.ImproveCost
+                      ? SaleofBondsDebntr?.DeductSec48?.ImproveCost
+                      : null,
                     indexCostOfImprovement: null,
                   },
                 ],
@@ -3763,7 +3772,7 @@ export class PrefillIdComponent implements OnInit {
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
-                    srn: null,
+                    srn: 0,
                     description: null,
                     gainType: 'LONG',
                     sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -3809,13 +3818,13 @@ export class PrefillIdComponent implements OnInit {
               SaleofAssetNA?.FullConsideration !== 0
             ) {
               const SaleofAssetNADetail = {
-                assessmentYear: '',
-                assesseeType: '',
-                residentialStatus: '',
+                assessmentYear: this.ITR_Obj.assessmentYear,
+                assesseeType: this.ITR_Obj.assesseeType,
+                residentialStatus: this.ITR_Obj.residentialStatus,
                 assetType: 'GOLD',
                 deduction: [
                   {
-                    srn: null,
+                    srn: 0,
                     underSection: 'Deduction 54F',
                     orgAssestTransferDate: null,
                     purchaseDate: null,
@@ -3823,7 +3832,9 @@ export class PrefillIdComponent implements OnInit {
                     purchaseDatePlantMachine: null,
                     costOfNewAssets: null,
                     investmentInCGAccount: null,
-                    totalDeductionClaimed: SaleofAssetNA?.DeductionUs54F,
+                    totalDeductionClaimed: SaleofAssetNA?.DeductionUs54F
+                      ? SaleofAssetNA?.DeductionUs54F
+                      : null,
                     costOfPlantMachinary: null,
                     usedDeduction: null,
                   },
@@ -3831,10 +3842,12 @@ export class PrefillIdComponent implements OnInit {
                 improvement: [
                   {
                     id: null,
-                    srn: null,
+                    srn: 0,
                     financialYearOfImprovement: null,
                     dateOfImprovement: null,
-                    costOfImprovement: SaleofAssetNA?.DeductSec48?.ImproveCost,
+                    costOfImprovement: SaleofAssetNA?.DeductSec48?.ImproveCost
+                      ? SaleofAssetNA?.DeductSec48?.ImproveCost
+                      : null,
                     indexCostOfImprovement: null,
                   },
                 ],
@@ -3844,7 +3857,7 @@ export class PrefillIdComponent implements OnInit {
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
-                    srn: null,
+                    srn: 0,
                     description: null,
                     gainType: 'LONG',
                     sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -3882,38 +3895,54 @@ export class PrefillIdComponent implements OnInit {
                 ?.LongTermCapGain23?.SaleofLandBuild?.SaleofLandBuildDtls;
 
             if (SaleofLandBuildDtls) {
-              SaleofLandBuildDtls?.forEach((landAndBuilding) => {
+              SaleofLandBuildDtls?.forEach(({ landAndBuilding }, index) => {
                 if (
-                  landAndBuilding.FullConsideration &&
-                  landAndBuilding.FullConsideration !== 0 &&
-                  landAndBuilding.Balance &&
-                  landAndBuilding.Balance !== 0
+                  landAndBuilding?.FullConsideration &&
+                  landAndBuilding?.FullConsideration !== 0 &&
+                  landAndBuilding?.Balance &&
+                  landAndBuilding?.Balance !== 0
                 ) {
                   const SaleofLandBuildDetails = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'PLOT_OF_LAND',
-                    deduction:
-                      landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
-                        ({ ExemptionSecCode, ExemptionAmount }, index) => ({
+                    deduction: landAndBuilding?.ExemptionOrDednUs54
+                      ?.ExemptionOrDednUs54Dtls
+                      ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
+                          ({ ExemptionSecCode, ExemptionAmount }, index) => ({
+                            srn: index,
+                            underSection: ExemptionSecCode,
+                            orgAssestTransferDate: null,
+                            purchaseDate: null,
+                            panOfEligibleCompany: null,
+                            purchaseDatePlantMachine: null,
+                            costOfNewAssets: null,
+                            investmentInCGAccount: null,
+                            totalDeductionClaimed: ExemptionAmount
+                              ? ExemptionAmount
+                              : null,
+                            costOfPlantMachinary: null,
+                            usedDeduction: null,
+                          })
+                        )
+                      : {
                           srn: index,
-                          underSection: ExemptionSecCode,
+                          underSection: 'Deduction 54F',
                           orgAssestTransferDate: null,
                           purchaseDate: null,
                           panOfEligibleCompany: null,
                           purchaseDatePlantMachine: null,
                           costOfNewAssets: null,
                           investmentInCGAccount: null,
-                          totalDeductionClaimed: ExemptionAmount,
+                          totalDeductionClaimed: null,
                           costOfPlantMachinary: null,
                           usedDeduction: null,
-                        })
-                      ),
+                        },
                     improvement: [
                       {
                         id: null,
-                        srn: null,
+                        srn: index,
                         financialYearOfImprovement: null,
                         dateOfImprovement: null,
                         costOfImprovement: landAndBuilding?.ImproveCost,
@@ -3952,7 +3981,7 @@ export class PrefillIdComponent implements OnInit {
                         id: null,
                         hasIndexation: null,
                         isUploaded: null,
-                        srn: null,
+                        srn: index,
                         description: null,
                         gainType: 'LONG',
                         sellDate: this.parseAndFormatDate(
@@ -4005,60 +4034,108 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].Schedule112A?.Schedule112ADtls;
 
             if (EquityMF112A) {
-              EquityMF112A.forEach((equityLtcg) => {
-                const equityLtcgDetail = {
-                  assessmentYear: '',
-                  assesseeType: '',
-                  residentialStatus: '',
-                  assetType: 'EQUITY_SHARES_LISTED',
-                  deduction: [],
-                  improvement: [],
-                  buyersDetails: [],
-                  assetDetails: [
-                    {
-                      id: null,
-                      hasIndexation: null,
-                      isUploaded: null,
-                      srn: null,
-                      description: null,
-                      gainType: 'LONG',
-                      sellDate: this.parseAndFormatDate('2023-03-15'),
-                      sellValue: equityLtcg?.TotSaleValue,
-                      stampDutyValue: null,
-                      valueInConsideration: null,
-                      sellExpense: equityLtcg?.ExpExclCnctTransfer,
-                      purchaseDate: this.parseAndFormatDate('2021-03-13'),
-                      purchaseCost: equityLtcg?.AcquisitionCost,
-                      isinCode: equityLtcg?.ISINCode,
-                      nameOfTheUnits: equityLtcg?.ShareUnitName,
-                      sellOrBuyQuantity:
-                        equityLtcg?.NumSharesUnits === 0
-                          ? 1
-                          : equityLtcg?.NumSharesUnits,
-                      sellValuePerUnit:
-                        equityLtcg?.NumSharesUnits === 0
-                          ? equityLtcg?.TotSaleValue
-                          : equityLtcg?.TotSaleValue /
-                            equityLtcg?.NumSharesUnits,
-                      purchaseValuePerUnit:
-                        equityLtcg?.NumSharesUnits === 0
-                          ? equityLtcg?.AcquisitionCost
-                          : equityLtcg?.AcquisitionCost /
-                            equityLtcg?.NumSharesUnits,
-                      algorithm: 'cgSharesMF',
-                      fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
-                      capitalGain: equityLtcg?.Balance,
-                      indexCostOfAcquisition: null,
-                      totalFairMarketValueOfCapitalAsset:
-                        equityLtcg?.TotFairMktValueCapAst,
-                      grandFatheredValue: null,
-                      brokerName: null,
-                    },
-                  ],
-                  deductionAmount: null,
-                };
+              EquityMF112A?.forEach((equityLtcg) => {
+                let itrObjEquity112a = this.ITR_Obj?.capitalGain?.find(
+                  (equity112a) =>
+                    equity112a?.assetType === 'EQUITY_SHARES_LISTED'
+                );
 
-                this.ITR_Obj.capitalGain.push(equityLtcgDetail);
+                if (itrObjEquity112a) {
+                  itrObjEquity112a?.assetDetails.push({
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'LONG',
+                    sellDate: this.parseAndFormatDate('2023-03-15'),
+                    sellValue: equityLtcg?.TotSaleValue,
+                    stampDutyValue: null,
+                    valueInConsideration: null,
+                    sellExpense: equityLtcg?.ExpExclCnctTransfer,
+                    purchaseDate: this.parseAndFormatDate('2021-03-13'),
+                    purchaseCost: equityLtcg?.AcquisitionCost,
+                    isinCode: equityLtcg?.ISINCode,
+                    nameOfTheUnits: equityLtcg?.ShareUnitName,
+                    sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
+                    sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
+                    purchaseValuePerUnit:
+                      equityLtcg?.AcquisitionCost / equityLtcg?.NumSharesUnits,
+                    algorithm: 'cgSharesMF',
+                    fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
+                    capitalGain: equityLtcg.Balance,
+                    indexCostOfAcquisition: null,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  });
+                } else {
+                  const equityLtcgDetail = {
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
+                    assetType: 'EQUITY_SHARES_LISTED',
+                    deduction: [
+                      {
+                        srn: 0,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
+                    improvement: [{
+                      id: null,
+                      srn: null,
+                      financialYearOfImprovement: null,
+                      dateOfImprovement: null,
+                      costOfImprovement:
+                      equityLtcg.EquityMFonSTTDtls?.DeductSec48
+                          ?.ImproveCost,
+                      indexCostOfImprovement: null,
+                    }],
+                    buyersDetails: [],
+                    assetDetails: [
+                      {
+                        id: null,
+                        hasIndexation: null,
+                        isUploaded: null,
+                        srn: null,
+                        description: null,
+                        gainType: 'LONG',
+                        sellDate: this.parseAndFormatDate('2023-03-15'),
+                        sellValue: equityLtcg?.TotSaleValue,
+                        stampDutyValue: null,
+                        valueInConsideration: null,
+                        sellExpense: equityLtcg?.ExpExclCnctTransfer,
+                        purchaseDate: this.parseAndFormatDate('2021-03-13'),
+                        purchaseCost: equityLtcg?.AcquisitionCost,
+                        isinCode: equityLtcg?.ISINCode,
+                        nameOfTheUnits: equityLtcg?.ShareUnitName,
+                        sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
+                        sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
+                        purchaseValuePerUnit:
+                          equityLtcg?.AcquisitionCost /
+                          equityLtcg?.NumSharesUnits,
+                        algorithm: 'cgSharesMF',
+                        fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
+                        capitalGain: equityLtcg.Balance,
+                        indexCostOfAcquisition: null,
+                        grandFatheredValue: null,
+                        brokerName: null,
+                      },
+                    ],
+                    deductionAmount: null,
+                  };
+                  this.ITR_Obj.capitalGain.push(equityLtcgDetail);
+                }
+
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
               });
 
               this.ITR_Obj.systemFlags.hasCapitalGain = true;
@@ -4080,23 +4157,39 @@ export class PrefillIdComponent implements OnInit {
 
             if (
               SaleOnOtherAssets &&
-              SaleOnOtherAssets.CapgainonAssets !== 0 &&
-              SaleOnOtherAssets.FullConsideration !== 0
+              SaleOnOtherAssets?.CapgainonAssets !== 0 &&
+              SaleOnOtherAssets?.FullConsideration !== 0
             ) {
               const SaleOnOtherAssetsDetail = {
-                assessmentYear: '',
-                assesseeType: '',
-                residentialStatus: '',
+                assessmentYear: this.ITR_Obj.assessmentYear,
+                assesseeType: this.ITR_Obj.assesseeType,
+                residentialStatus: this.ITR_Obj.residentialStatus,
                 assetType: 'GOLD',
-                deduction: [],
+                deduction: [
+                  {
+                    srn: 0,
+                    underSection: 'Deduction 54F',
+                    orgAssestTransferDate: null,
+                    purchaseDate: null,
+                    panOfEligibleCompany: null,
+                    purchaseDatePlantMachine: null,
+                    costOfNewAssets: null,
+                    investmentInCGAccount: null,
+                    totalDeductionClaimed: null,
+                    costOfPlantMachinary: null,
+                    usedDeduction: null,
+                  },
+                ],
                 improvement: [
                   {
                     id: null,
-                    srn: null,
+                    srn: 0,
                     financialYearOfImprovement: null,
                     dateOfImprovement: null,
-                    costOfImprovement:
-                      SaleOnOtherAssets?.DeductSec48?.ImproveCost,
+                    costOfImprovement: SaleOnOtherAssets?.DeductSec48
+                      ?.ImproveCost
+                      ? SaleOnOtherAssets?.DeductSec48?.ImproveCost
+                      : null,
                     indexCostOfImprovement: null,
                   },
                 ],
@@ -4106,7 +4199,7 @@ export class PrefillIdComponent implements OnInit {
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
-                    srn: null,
+                    srn: 0,
                     description: null,
                     gainType: 'SHORT',
                     sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -4144,15 +4237,65 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.ShortTermCapGainFor23?.EquityMFonSTT;
 
-            if (EquityMFonSTT) {
-              EquityMFonSTT.forEach((equityStcg) => {
-                if (equityStcg === EquityMFonSTT[0]) {
+            EquityMFonSTT.forEach((equityStcg) => {
+              if (equityStcg === EquityMFonSTT[0]) {
+                let itrObjEquity111a = this.ITR_Obj.capitalGain?.find(
+                  (equity111a) =>
+                    equity111a?.assetType === 'EQUITY_SHARES_LISTED'
+                );
+
+                if (itrObjEquity111a) {
+                  itrObjEquity111a?.assetDetails?.push({
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'SHORT',
+                    sellDate: this.parseAndFormatDate('2023-03-15'),
+                    sellValue: equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                    stampDutyValue: null,
+                    valueInConsideration: null,
+                    sellExpense:
+                      equityStcg.EquityMFonSTTDtls.DeductSec48?.ExpOnTrans,
+                    purchaseDate: this.parseAndFormatDate('2022-04-15'),
+                    purchaseCost:
+                      equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
+                    isinCode: null,
+                    nameOfTheUnits: null,
+                    sellOrBuyQuantity: 1,
+                    sellValuePerUnit:
+                      equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                    purchaseValuePerUnit:
+                      equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
+                    algorithm: 'cgSharesMF',
+                    fmvAsOn31Jan2018: null,
+                    capitalGain: equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                    indexCostOfAcquisition: null,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  });
+                } else {
                   const equityStcgDetail = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'EQUITY_SHARES_LISTED',
-                    deduction: [],
+                    deduction: [
+                      {
+                        srn: 0,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
                     improvement: [
                       {
                         id: null,
@@ -4180,23 +4323,21 @@ export class PrefillIdComponent implements OnInit {
                         stampDutyValue: null,
                         valueInConsideration: null,
                         sellExpense:
-                          equityStcg.EquityMFonSTTDtls?.DeductSec48?.ExpOnTrans,
+                          equityStcg.EquityMFonSTTDtls.DeductSec48?.ExpOnTrans,
                         purchaseDate: this.parseAndFormatDate('2022-04-15'),
                         purchaseCost:
-                          equityStcg.EquityMFonSTTDtls?.DeductSec48
-                            ?.AquisitCost,
+                          equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                         isinCode: null,
                         nameOfTheUnits: null,
                         sellOrBuyQuantity: 1,
                         sellValuePerUnit:
                           equityStcg.EquityMFonSTTDtls?.FullConsideration,
                         purchaseValuePerUnit:
-                          equityStcg.EquityMFonSTTDtls?.DeductSec48
-                            ?.AquisitCost,
+                          equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                         algorithm: 'cgSharesMF',
                         fmvAsOn31Jan2018: null,
                         capitalGain:
-                          equityStcg?.EquityMFonSTTDtls?.CapgainonAssets,
+                          equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                         indexCostOfAcquisition: null,
                         totalFairMarketValueOfCapitalAsset: null,
                         grandFatheredValue: null,
@@ -4207,13 +4348,16 @@ export class PrefillIdComponent implements OnInit {
                   };
                   this.ITR_Obj.capitalGain.push(equityStcgDetail);
                 }
-              });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
-            }
+
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
+              }
+            });
+
+            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
           }
 
           // LAND & BUILDING
@@ -4223,26 +4367,42 @@ export class PrefillIdComponent implements OnInit {
                 ?.ShortTermCapGainFor23?.SaleofLandBuild?.SaleofLandBuildDtls;
 
             if (SaleofLandBuildDtlsStcg) {
-              SaleofLandBuildDtlsStcg?.forEach((landAndBuilding) => {
+              SaleofLandBuildDtlsStcg?.forEach(({ landAndBuilding }, index) => {
                 if (
-                  landAndBuilding.FullConsideration &&
-                  landAndBuilding.FullConsideration !== 0 &&
-                  landAndBuilding.Balance &&
-                  landAndBuilding.Balance !== 0
+                  landAndBuilding?.FullConsideration &&
+                  landAndBuilding?.FullConsideration !== 0 &&
+                  landAndBuilding?.Balance &&
+                  landAndBuilding?.Balance !== 0
                 ) {
                   const SaleofLandBuildStcgDetails = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'PLOT_OF_LAND',
-                    deduction: [],
+                    deduction: [
+                      {
+                        srn: index,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
                     improvement: [
                       {
                         id: null,
-                        srn: null,
+                        srn: index,
                         financialYearOfImprovement: null,
                         dateOfImprovement: null,
-                        costOfImprovement: landAndBuilding?.ImproveCost,
+                        costOfImprovement: landAndBuilding?.ImproveCost
+                          ? landAndBuilding?.ImproveCost
+                          : null,
                         indexCostOfImprovement: null,
                       },
                     ],
@@ -4278,7 +4438,7 @@ export class PrefillIdComponent implements OnInit {
                         id: null,
                         hasIndexation: null,
                         isUploaded: null,
-                        srn: null,
+                        srn: index,
                         description: null,
                         gainType: 'SHORT',
                         sellDate: this.parseAndFormatDate(

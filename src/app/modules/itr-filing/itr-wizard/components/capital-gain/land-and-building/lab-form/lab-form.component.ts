@@ -1522,13 +1522,13 @@ export class LabFormComponent implements OnInit {
     //return this.cgArrayElement.deduction;
     this.deductions = this.cgArrayElement.deduction?.filter(
       (deduction) =>
-        parseInt(deduction.srn) ==
+        deduction.srn ==
         this.cgArrayElement.assetDetails[this.currentCgIndex].srn
     );
     if (this.deductions)
       return this.cgArrayElement.deduction?.filter(
         (deduction) =>
-          parseInt(deduction.srn) ==
+          deduction.srn ==
           this.cgArrayElement.assetDetails[this.currentCgIndex].srn
       );
     else return [];
