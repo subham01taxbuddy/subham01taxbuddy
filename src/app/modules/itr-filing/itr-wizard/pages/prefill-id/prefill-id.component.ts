@@ -46,6 +46,7 @@ export class PrefillIdComponent implements OnInit {
   userProfile: any;
   userItrId: any;
   itrSummaryJson: any;
+  taxComputation: any;
 
   constructor(
     private router: Router,
@@ -152,8 +153,10 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
 
         //check if uploaded json is not summary json
-        if(JSONData.hasOwnProperty('ITR')){
-          this.utilsService.showSnackBar('You are trying to upload summary json instead of prefill');
+        if (JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'You are trying to upload summary json instead of prefill'
+          );
           return;
         }
 
@@ -1139,8 +1142,10 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
-        if(!JSONData.hasOwnProperty('ITR')){
-          this.utilsService.showSnackBar('The uploaded json is not a summary json. Please check file again');
+        if (!JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'The uploaded json is not a summary json. Please check file again'
+          );
           return;
         }
         if (
@@ -1188,6 +1193,7 @@ export class PrefillIdComponent implements OnInit {
         this.ITR_Obj.itrType = '1';
         this.ITR_Type = 'ITR1';
         this.ITR14_IncomeDeductions = 'ITR1_IncomeDeductions';
+        this.taxComputation = 'ITR1_TaxComputation';
       } else if (ItrJSON.hasOwnProperty('ITR2')) {
         this.ITR_Obj.itrType = '2';
         this.ITR_Type = 'ITR2';
@@ -1198,6 +1204,7 @@ export class PrefillIdComponent implements OnInit {
         this.ITR_Obj.itrType = '4';
         this.ITR_Type = 'ITR4';
         this.ITR14_IncomeDeductions = 'IncomeDeductions';
+        this.taxComputation = 'TaxComputation';
       }
     }
 
@@ -2329,9 +2336,9 @@ export class PrefillIdComponent implements OnInit {
         //setting relief
         {
           //section89
-          if (ItrJSON[this.ITR_Type].TaxComputation?.Section89) {
+          if (ItrJSON[this.ITR_Type][this.taxComputation]?.Section89) {
             this.ITR_Obj.section89 =
-              ItrJSON[this.ITR_Type].TaxComputation?.Section89;
+              ItrJSON[this.ITR_Type][this.taxComputation]?.Section89;
           }
 
           sessionStorage.setItem(

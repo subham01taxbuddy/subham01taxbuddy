@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -6,6 +6,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
 import { GridOptions } from 'ag-grid-community';
+import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 @Component({
   selector: 'app-revenue-report',
@@ -22,9 +23,10 @@ export class RevenueReportComponent implements OnInit {
   config: any;
   searchParam: any = {
     page: 0,
-    pageSize: 20,
+    pageSize: 15,
   };
   revenueReportGridOptions:GridOptions;
+  disableCheckboxes = false;
 
   constructor(
     private reportService: ReportService,
@@ -72,6 +74,7 @@ export class RevenueReportComponent implements OnInit {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.ownerId = event ? event.userId : null;
+      this.disableCheckboxes=true
     } else {
       this.filerId = event ? event.userId : null;
     }
@@ -84,6 +87,12 @@ export class RevenueReportComponent implements OnInit {
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
+    }
+
+    if(this.ownerId || this.filerId){
+      this.disableCheckboxes=true;
+    }else{
+      this.disableCheckboxes=false;
     }
 
   }
@@ -113,7 +122,7 @@ export class RevenueReportComponent implements OnInit {
     }
 
     if(this.filerId && pageChange){
-      userFilter += `&ownerUserId=${this.filerId}`;
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
     if (this.leaderId && !pageChange) {
@@ -128,9 +137,13 @@ export class RevenueReportComponent implements OnInit {
 
     let viewFilter = '';
     if(this.ownerView.value === true){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
       viewFilter += `&ownerView=${this.ownerView.value}`
     }
     if(this.leaderView.value === true){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
@@ -148,9 +161,13 @@ export class RevenueReportComponent implements OnInit {
 
       } else {
         this.loading = false;
+        this.config.totalItems = 0;
+        this.revenueReportGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error", response.message);
       }
     }, (error) => {
+      this.config.totalItems = 0;
+        this.revenueReportGridOptions.api?.setRowData(this.createRowData([]));
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });
@@ -176,11 +193,11 @@ export class RevenueReportComponent implements OnInit {
         itrU_payment: revenueData[i].itrU_payment,
         no_of_itr_up_to_50 : revenueData[i].no_of_itr_up_to_50,
         collection_up_to_50 : revenueData[i].collection_up_to_50,
-        no_of_itr_up_to_100 : revenueData[i].no_of_itr_up_to_100,
+        no_of_itr_51_to_100 : revenueData[i].no_of_itr_51_to_100,
         collection_51_to_100 : revenueData[i].collection_51_to_100,
         no_of_itr_above_100 : revenueData[i].no_of_itr_above_100,
         collection_above_100 : revenueData[i].collection_above_100,
-        internal_external : revenueData[i].internal_external,
+        internal_external : revenueData[i].internal_external || '-',
         ownerName: revenueData[i].ownerName,
         leaderName: revenueData[i].leaderName,
       })
@@ -217,11 +234,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR 2',
@@ -230,11 +242,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR 3',
@@ -243,11 +250,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR 4',
@@ -256,11 +258,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'Other ITR',
@@ -269,11 +266,6 @@ export class RevenueReportComponent implements OnInit {
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR U',
@@ -282,14 +274,19 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
         ],
 
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
       },
       {
         headerName: 'ITR wise payment collection',
@@ -302,11 +299,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR 2',
@@ -315,11 +307,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR 3',
@@ -328,11 +315,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR 4',
@@ -341,11 +323,6 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'Other ITR',
@@ -354,11 +331,6 @@ export class RevenueReportComponent implements OnInit {
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'ITR U',
@@ -367,13 +339,18 @@ export class RevenueReportComponent implements OnInit {
             width: 100,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
         ]
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
       },
       {
         headerName: 'No of filing & collection as per slabs',
@@ -383,81 +360,66 @@ export class RevenueReportComponent implements OnInit {
             headerName: 'No of ITR Up to 50 ITR',
             field: 'no_of_itr_up_to_50',
             sortable: true,
-            width: 100,
+            width: 160,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
           },
           {
             headerName: 'Collection up to 50',
             field: 'collection_up_to_50',
             sortable: true,
-            width: 100,
+            width: 160,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
+
           },
           {
             headerName: 'No of ITR from 51 to 100 ITR',
-            field: 'no_of_itr_up_to_100',
+            field: 'no_of_itr_51_to_100',
             sortable: true,
-            width: 100,
+            width: 190,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
+
           },
           {
             headerName: 'Collection from 51 to 100 ITR',
             field: 'collection_51_to_100',
             sortable: true,
-            width: 100,
+            width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
+
           },
           {
             headerName: 'No of ITR above 100',
             field: 'no_of_itr_above_100',
             sortable: true,
-            width: 100,
+            width: 160,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
+
           },
           {
-            headerName: 'No of ITR above 100',
+            headerName: 'Collection from above 100 ITR',
             field: 'collection_above_100',
             sortable: true,
-            width: 100,
+            width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
-            filter: "agTextColumnFilter",
-            filterParams: {
-              filterOptions: ["contains", "notContains"],
-              debounceMs: 0
-            }
+
           },
         ]
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
       },
       {
         headerName: 'Internal/ External',
@@ -467,11 +429,7 @@ export class RevenueReportComponent implements OnInit {
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+
       },
       {
         headerName: 'Owner Name',
@@ -504,9 +462,68 @@ export class RevenueReportComponent implements OnInit {
       },
     ]}
 
-    downloadReport() {}
+    downloadReport() {
+    this.loading = true;
 
-    resetFilters(){}
+    let loggedInId = this.utilsService.getLoggedInUserID();
+
+    let param = ''
+    let userFilter = '';
+    if (this.ownerId && !this.filerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+    }
+
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    if(this.leaderId){
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+
+    let viewFilter = '';
+    if(this.ownerView.value === true){
+      viewFilter += `&ownerView=${this.ownerView.value}`
+    }
+    if(this.leaderView.value === true){
+      viewFilter += `&leaderView=${this.leaderView.value}`
+    }
+
+    param = `/calling-report/revenue-report?page=0&pageSize=100000${userFilter}${viewFilter}`;
+
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        return this.jsonToCsvService.downloadFile(response?.data?.content);
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", 'Failed to get daily-calling-report');
+    });
+    }
+
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 15;
+    this.config.currentPage = 1
+    this.leaderView.enable();
+    this.ownerView.enable();
+    this.leaderView.setValue(false);
+    this.ownerView.setValue(false);
+    this?.smeDropDown?.resetDropdown();
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerId = this.loggedInSme[0].userId;
+    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+      this.filerId = this.loggedInSme[0].userId;
+    }
+    this.showReports();
+    this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
+    this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+  }
 
     handleLeaderViewChange(): void {
       if (this.leaderView.value) {
