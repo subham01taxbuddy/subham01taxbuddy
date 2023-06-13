@@ -1,0 +1,61 @@
+<div class="dialog-content">
+<div  style="float: right;">
+  <button style="float: right; font-size: 30px" mat-dialog-close tabindex="-1"
+  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+</div>
+<div class="card__row">
+  <ul class="breadcrumb breadTx" style="overflow: hidden;">
+      <li *ngFor="let breadcrumb of breadcrumbsPart; let i=index" class="breadcrumb-item"
+          style="display:inline-block">
+          <a href="javascript:;" (click)="getCloudFilePath(breadcrumb, 'fromBreadcrum')">
+              {{breadcrumb}}
+          </a>&nbsp;&nbsp;&nbsp;&nbsp;
+      </li>
+  </ul>
+</div>
+<div class="card__row">
+  <div class="card__col-xs-3 card__col-lg-3 tpSpc">
+      <span *ngIf="!isFile">
+          <div class="inlinBx" *ngFor="let folder of folders; let k=index;">
+              <span style="padding-left: 15px;"> <button  class="btn"
+                      aria-label="Example icon button with a heart icon" title="Click to select media file"
+                      (click)="getCloudFilePath(folder)">{{folder}}
+
+                  </button></span><br>
+
+          </div>
+      </span>
+      <div class="listVw" *ngIf="isFile">
+        <span *ngFor="let folder of folders; let k=index;">
+          <div class="card__row">
+            <div class="card__col-xs-9">
+              <ul class="bullet-list">
+                <li>
+                  <h5>{{ folder.documentTag }}</h5>
+                  <a style="line-height: 16px; overflow-wrap: break-word;" href="javascript:void(0)"
+                    (click)="getCommonDocsUrl(folder);preventDownload($event)">{{ folder.fileName }}</a>
+
+                  <br><span class="dateTime">{{ folder.uploadedDate | date:'d/M/yy,  h:mm a' }}</span>
+                  <button mat-button class="select-button" [disabled]="isFileSelected(folder)"
+                   (click)="selectFile(folder)">Select this file</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </span>
+      </div>
+
+
+  </div>
+  <div class="card__col-xs-9 card__col-lg-9 tpSpc" >
+      <h2 class="msg" *ngIf="breadcrumbsPart.length === 0"><b>No document available</b></h2>
+      <lib-ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="1"
+          [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200"
+          [lensHeight]="200" [scrollStepSize]="0.1">
+      </lib-ngx-image-zoom>
+
+      <ngx-doc-viewer *ngIf="viewer === 'DOC'" [url]="docUrl" viewer="google" style="width:100%;height:93vh;">
+      </ngx-doc-viewer>
+  </div>
+</div>
+</div>

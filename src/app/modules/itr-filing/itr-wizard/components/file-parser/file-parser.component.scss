@@ -23,8 +23,9 @@
     white-space: nowrap;
     overflow: hidden;
     display: block;
-    margin-right: 24px;
-    font-size: 10px;
+    margin-right: 0px;
+    margin-top: 10px;
+    font-size: 12px;
   }
 }
 .txTtl{
@@ -37,4 +38,8 @@
   border-radius:8px!important;
   background-color:#ffffff!important;
   margin:15px 0px 20px 0px!important;
+}
+
+.m-0 {
+  margin: -18px;
 }

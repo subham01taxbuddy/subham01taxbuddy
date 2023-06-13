@@ -8,6 +8,9 @@ import {
 import { AppConstants } from '../../../../shared/constants';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
 import { UtilsService } from '../../../../../services/utils.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewDocumentsDialogComponent } from 'src/app/modules/shared/components/view-documents-dialog/view-documents-dialog.component';
 
 @Component({
   selector: 'app-file-parser',
@@ -21,10 +24,13 @@ export class FileParserComponent implements OnInit {
   uploadDoc: any;
   loading = false;
   brokerData;
+  selectedFileId:any;
 
   constructor(
     private itrService: ItrMsService,
-    private utilService: UtilsService
+    private utilService: UtilsService,
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -111,6 +117,11 @@ export class FileParserComponent implements OnInit {
     }
   }
 
+  cloudUpload(brokerName){
+    this.brokerName = brokerName;
+    this.openDialog();
+  }
+
   upload(brokerName) {
     //check if there is data of capital gains
     let data = this.ITR_JSON.capitalGain.filter(
@@ -124,14 +135,37 @@ export class FileParserComponent implements OnInit {
     document.getElementById('input-file-id').click();
   }
 
-  uploadDocument(document) {
+  openDialog(){
+    const dialogRef = this.dialog.open(ViewDocumentsDialogComponent, {
+      data: {
+        userId: this.ITR_JSON.userId.toString(),
+        serviceType: 'ITR',
+      },
+      width: '95%',
+    });
+
+    dialogRef.afterClosed().subscribe((selectedFileId: any) => {
+      if (selectedFileId) {
+        console.log(selectedFileId);
+        this.uploadDocument('',selectedFileId)
+      }
+    });
+  }
+
+  uploadDocument(document,id?) {
+    // 'https://uat-api.taxbuddy.com/itr/upload-excel'
     this.loading = true;
     let brokerIndex = (this.brokerData as []).findIndex(
       (item: any) => item.name === this.brokerName
     );
     this.brokerData[brokerIndex].loading = true;
     const formData = new FormData();
-    formData.append('file', document);
+    if(document){
+      formData.append('file', document);
+    }else{
+      formData.append('cloudFileId',id)
+    }
+
     let annualYear = this.ITR_JSON.assessmentYear;
     // console.log('annualYear: ', annualYear);
     // //let cloudFileMetaData = '{"formCode":"' + this.ITR_JSON.itrType + ',"ay":' + this.ITR_JSON.assessmentYear + ',"filingTypeCd":"O","userId ":' + this.ITR_JSON.userId + ',"filingTeamMemberId":' + this.ITR_JSON.filingTeamMemberId + '"}';
@@ -152,7 +186,12 @@ export class FileParserComponent implements OnInit {
             let selectedBroker = this.brokerData.filter(
               (broker) => broker.name === this.brokerName
             )[0];
-            selectedBroker.filesUploaded.push(this.uploadDoc.name);
+            if(this.uploadDoc){
+              selectedBroker.filesUploaded.push(this.uploadDoc.name);
+            }else{
+              selectedBroker.filesUploaded.push(res.data.documentName);
+            }
+
             //fetch uploaded files data converted to ITR compatible
             //TODO:Ashwini: adding dummy data till the time api is ready
             this.utilService
@@ -199,6 +238,7 @@ export class FileParserComponent implements OnInit {
                     );
                     this.newDataAvailable.emit(true);
                   } else {
+                    this.brokerData[brokerIndex].loading = false;
                     this.loading = false;
                     //   this.isValidateJson = false;
                     this.utilService.showSnackBar(
@@ -207,6 +247,7 @@ export class FileParserComponent implements OnInit {
                   }
                 },
                 (error) => {
+                  this.brokerData[brokerIndex].loading = false;
                   this.loading = false;
                   //   this.isValidateJson = false;
                   this.utilService.showSnackBar(
@@ -215,6 +256,7 @@ export class FileParserComponent implements OnInit {
                 }
               );
           } else {
+            this.brokerData[brokerIndex].loading = false;
             this.utilService.showSnackBar(
               'Response is null, try after some time.'
             );
