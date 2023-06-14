@@ -1046,19 +1046,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Deduction',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
-                      ?.DeductionsUnderScheduleVIA
+                  ? itrType === 'ITR2'
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
                         ?.DeductionsUnderScheduleVIA
-                    : 0
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
-                      ?.DeductionsUnderScheduleVIA
+                  ? itrType === 'ITR2'
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
                         ?.DeductionsUnderScheduleVIA
-                    : 0
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA
                   : 0,
             },
             {

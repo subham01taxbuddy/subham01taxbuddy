@@ -209,40 +209,40 @@ export class SummaryComponent implements OnInit {
       };
       otherIncomeTotal: Number;
     };
-    // businessIncome: {
-    //   businessIncomeDetails: {
-    //     business44AD: {
-    //       bank: [
-    //         {
-    //           businessSection: String;
-    //           natureOfBusinessCode: any;
-    //           tradeName: String;
-    //           grossTurnover: Number;
-    //           TaxableIncome: Number;
-    //         }
-    //       ];
-    //       cash: [
-    //         {
-    //           businessSection: String;
-    //           natureOfBusinessCode: any;
-    //           tradeName: String;
-    //           grossTurnover: Number;
-    //           TaxableIncome: Number;
-    //         }
-    //       ];
-    //     };
-    //     business44ADA: [
-    //       {
-    //         businessSection: String;
-    //         natureOfBusinessCode: any;
-    //         tradeName: String;
-    //         grossTurnover: Number;
-    //         TaxableIncome: Number;
-    //       }
-    //     ];
-    //   };
-    //   businessIncomeTotal: Number;
-    // };
+    businessIncome: {
+      businessIncomeDetails: {
+        business44AD: {
+          bank: [
+            {
+              businessSection: String;
+              natureOfBusinessCode: any;
+              tradeName: String;
+              grossTurnover: Number;
+              TaxableIncome: Number;
+            }
+          ];
+          cash: [
+            {
+              businessSection: String;
+              natureOfBusinessCode: any;
+              tradeName: String;
+              grossTurnover: Number;
+              TaxableIncome: Number;
+            }
+          ];
+        };
+        business44ADA: [
+          {
+            businessSection: String;
+            natureOfBusinessCode: any;
+            tradeName: String;
+            grossTurnover: Number;
+            TaxableIncome: Number;
+          }
+        ];
+      };
+      businessIncomeTotal: Number;
+    };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
       currentYearLossesSetOff: [{ houseProperty: Number }];
@@ -594,78 +594,78 @@ export class SummaryComponent implements OnInit {
                   this.ITR14IncomeDeductions
                 ]?.IncomeOthSrc,
             },
-            //   businessIncome: {
-            //     businessIncomeDetails: {
-            //       business44AD: {
-            //         bank: this.ITR_JSON.itrSummaryJson['ITR'][
-            //           this.itrType
-            //         ].ScheduleBP?.NatOfBus44AD?.map((element) => {
-            //           return {
-            //             businessSection: 'Section 44AD',
-            //             natureOfBusinessCode: element?.CodeAD,
-            //             tradeName: element?.NameOfBusiness,
-            //             grossTurnover: Number(
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
-            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                   .ScheduleBP?.PersumptiveInc44AD
-            //                   ?.GrsTrnOverAnyOthMode /
-            //                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                     .ScheduleBP?.NatOfBus44AD?.length
-            //             ),
-            //             TaxableIncome: Number(
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 .ScheduleBP?.PersumptiveInc44AD
-            //                 ?.PersumptiveInc44AD6Per +
-            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                   .ScheduleBP?.PersumptiveInc44AD
-            //                   ?.PersumptiveInc44AD8Per /
-            //                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                     .ScheduleBP?.NatOfBus44AD?.length
-            //             ),
-            //           };
-            //         }),
+              businessIncome: {
+                businessIncomeDetails: {
+                  business44AD: {
+                    bank: this.ITR_JSON.itrSummaryJson['ITR'][
+                      this.itrType
+                    ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+                      return {
+                        businessSection: 'Section 44AD',
+                        natureOfBusinessCode: element?.CodeAD,
+                        tradeName: element?.NameOfBusiness,
+                        grossTurnover: Number(
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.PersumptiveInc44AD
+                              ?.GrsTrnOverAnyOthMode /
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                .ScheduleBP?.NatOfBus44AD?.length
+                        ),
+                        TaxableIncome: Number(
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.PersumptiveInc44AD6Per +
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.PersumptiveInc44AD
+                              ?.PersumptiveInc44AD8Per /
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                .ScheduleBP?.NatOfBus44AD?.length
+                        ),
+                      };
+                    }),
 
-            //         cash: [
-            //           {
-            //             businessSection: null,
-            //             natureOfBusinessCode: null,
-            //             tradeName: null,
-            //             grossTurnover: null,
-            //             TaxableIncome: null,
-            //           },
-            //         ],
-            //       },
+                    cash: [
+                      {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
+                    ],
+                  },
 
-            //       business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
-            //         this.itrType
-            //       ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
-            //         return {
-            //           businessSection: 'Section 44ADA',
-            //           natureOfBusinessCode: element?.CodeADA,
-            //           tradeName: element?.NameOfBusiness,
-            //           grossTurnover: Number(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 .ScheduleBP?.NatOfBus44ADA?.length
-            //           ),
-            //           TaxableIncome: Number(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .ScheduleBP?.PersumptiveInc44ADA
-            //               ?.TotPersumptiveInc44ADA /
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 .ScheduleBP?.NatOfBus44ADA?.length
-            //           ),
-            //         };
-            //       }),
-            //     },
-            //     businessIncomeTotal:
-            //       this.itrType === 'ITR4'
-            //         ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //             ?.PersumptiveInc44AE?.IncChargeableUnderBus
-            //         : 0,
-            //   },
+                  business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+                    return {
+                      businessSection: 'Section 44ADA',
+                      natureOfBusinessCode: element?.CodeADA,
+                      tradeName: element?.NameOfBusiness,
+                      grossTurnover: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.NatOfBus44ADA?.length
+                      ),
+                      TaxableIncome: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44ADA
+                          ?.TotPersumptiveInc44ADA /
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.NatOfBus44ADA?.length
+                      ),
+                    };
+                  }),
+                },
+                businessIncomeTotal:
+                  this.itrType === 'ITR4'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0,
+              },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
@@ -1462,78 +1462,78 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                   ?.IncChargeable,
             },
-            // businessIncome: {
-            //   businessIncomeDetails: {
-            //     business44AD: {
-            //       bank: this.ITR_JSON.itrSummaryJson['ITR'][
-            //         this.itrType
-            //       ].ScheduleBP?.NatOfBus44AD?.map((element) => {
-            //         return {
-            //           businessSection: 'Section 44AD',
-            //           natureOfBusinessCode: element?.CodeAD,
-            //           tradeName: element?.NameOfBusiness,
-            //           grossTurnover: Number(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 .ScheduleBP?.PersumptiveInc44AD
-            //                 ?.GrsTrnOverAnyOthMode /
-            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                   .ScheduleBP?.NatOfBus44AD?.length
-            //           ),
-            //           TaxableIncome: Number(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .ScheduleBP?.PersumptiveInc44AD
-            //               ?.PersumptiveInc44AD6Per +
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 .ScheduleBP?.PersumptiveInc44AD
-            //                 ?.PersumptiveInc44AD8Per /
-            //                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                   ?.ScheduleBP?.NatOfBus44AD?.length
-            //           ),
-            //         };
-            //       }),
+            businessIncome: {
+              businessIncomeDetails: {
+                business44AD: {
+                  bank: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+                    return {
+                      businessSection: 'Section 44AD',
+                      natureOfBusinessCode: element?.CodeAD,
+                      tradeName: element?.NameOfBusiness,
+                      grossTurnover: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.GrsTrnOverAnyOthMode /
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.NatOfBus44AD?.length
+                      ),
+                      TaxableIncome: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.PersumptiveInc44AD6Per +
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.PersumptiveInc44AD8Per /
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.ScheduleBP?.NatOfBus44AD?.length
+                      ),
+                    };
+                  }),
 
-            //       cash: [
-            //         {
-            //           businessSection: null,
-            //           natureOfBusinessCode: null,
-            //           tradeName: null,
-            //           grossTurnover: null,
-            //           TaxableIncome: null,
-            //         },
-            //       ],
-            //     },
+                  cash: [
+                    {
+                      businessSection: null,
+                      natureOfBusinessCode: null,
+                      tradeName: null,
+                      grossTurnover: null,
+                      TaxableIncome: null,
+                    },
+                  ],
+                },
 
-            //     business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
-            //       this.itrType
-            //     ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
-            //       return {
-            //         businessSection: 'Section 44ADA',
-            //         natureOfBusinessCode: element?.CodeADA,
-            //         tradeName: element?.NameOfBusiness,
-            //         grossTurnover: Number(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .ScheduleBP?.NatOfBus44ADA?.length
-            //         ),
-            //         TaxableIncome: Number(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             .ScheduleBP?.PersumptiveInc44ADA
-            //             ?.TotPersumptiveInc44ADA /
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .ScheduleBP?.NatOfBus44ADA?.length
-            //         ),
-            //       };
-            //     }),
-            //   },
-            //   businessIncomeTotal:
-            //     this.itrType === 'ITR4'
-            //       ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-            //           ?.PersumptiveInc44AE?.IncChargeableUnderBus
-            //       : 0,
-            // },
+                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+                  return {
+                    businessSection: 'Section 44ADA',
+                    natureOfBusinessCode: element?.CodeADA,
+                    tradeName: element?.NameOfBusiness,
+                    grossTurnover: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44ADA?.length
+                    ),
+                    TaxableIncome: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44ADA
+                        ?.TotPersumptiveInc44ADA /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44ADA?.length
+                    ),
+                  };
+                }),
+              },
+              businessIncomeTotal:
+                this.itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+            },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.TotalTI,
@@ -1571,13 +1571,29 @@ export class SummaryComponent implements OnInit {
               deductionDtls: Object.entries(
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVIA
                   ?.DeductUndChapVIA
-              ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
+              )
+                .filter(
+                  (item: any) =>
+                    item[0] !== 'TotPartBchapterVIA' &&
+                    item[0] !== 'TotPartCchapterVIA' &&
+                    item[0] !== 'TotPartCAandDchapterVIA' &&
+                    item[0] !== 'TotPartCAandDchapterVIA'
+                )
+                .map(([key, item]) => ({
+                  name: key,
+                  amount: Number(item),
+                })) as {
                 name: String;
                 amount: Number;
               }[],
               deductionTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-                  ?.DeductionsUnderScheduleVIA,
+                this.itrType === 'ITR2'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      'PartB-TI'
+                    ]?.DeductionsUnderScheduleVIA
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      'PartB-TI'
+                    ]?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA,
             },
             totalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -2663,77 +2679,77 @@ export class SummaryComponent implements OnInit {
                         0
                       ),
                   },
-                  // businessIncome: {
-                  //   businessIncomeDetails: {
-                  //     business44AD: {
-                  //       bank: [
-                  //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                  //           .filter(
-                  //             (element) =>
-                  //               element?.businessType === 'BUSINESS' &&
-                  //               element?.incomeType === 'BANK'
-                  //           )
-                  //           .reduce(
-                  //             (accumulated, element) => {
-                  //               accumulated.grossTurnover += element?.receipts;
-                  //               accumulated.TaxableIncome +=
-                  //                 element?.presumptiveIncome;
-                  //               return accumulated;
-                  //             },
-                  //             {
-                  //               businessSection: 'BUSINESS',
-                  //               natureOfBusinessCode: 0,
-                  //               tradeName: '',
-                  //               grossTurnover: 0,
-                  //               TaxableIncome: 0,
-                  //             }
-                  //           ),
-                  //       ],
+                  businessIncome: {
+                    businessIncomeDetails: {
+                      business44AD: {
+                        bank: [
+                          this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                            .filter(
+                              (element) =>
+                                element?.businessType === 'BUSINESS' &&
+                                element?.incomeType === 'BANK'
+                            )
+                            .reduce(
+                              (accumulated, element) => {
+                                accumulated.grossTurnover += element?.receipts;
+                                accumulated.TaxableIncome +=
+                                  element?.presumptiveIncome;
+                                return accumulated;
+                              },
+                              {
+                                businessSection: 'BUSINESS',
+                                natureOfBusinessCode: 0,
+                                tradeName: '',
+                                grossTurnover: 0,
+                                TaxableIncome: 0,
+                              }
+                            ),
+                        ],
 
-                  //       cash: [
-                  //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                  //           ?.filter(
-                  //             (element) =>
-                  //               element?.businessType === 'BUSINESS' &&
-                  //               element?.incomeType === 'CASH'
-                  //           )
-                  //           .reduce(
-                  //             (accumulated, element) => {
-                  //               accumulated.grossTurnover += element?.receipts;
-                  //               accumulated.TaxableIncome +=
-                  //                 element?.presumptiveIncome;
-                  //               return accumulated;
-                  //             },
-                  //             {
-                  //               businessSection: 'BUSINESS',
-                  //               natureOfBusinessCode: 0,
-                  //               tradeName: '',
-                  //               grossTurnover: 0,
-                  //               TaxableIncome: 0,
-                  //             }
-                  //           ),
-                  //       ],
-                  //     },
+                        cash: [
+                          this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                            ?.filter(
+                              (element) =>
+                                element?.businessType === 'BUSINESS' &&
+                                element?.incomeType === 'CASH'
+                            )
+                            .reduce(
+                              (accumulated, element) => {
+                                accumulated.grossTurnover += element?.receipts;
+                                accumulated.TaxableIncome +=
+                                  element?.presumptiveIncome;
+                                return accumulated;
+                              },
+                              {
+                                businessSection: 'BUSINESS',
+                                natureOfBusinessCode: 0,
+                                tradeName: '',
+                                grossTurnover: 0,
+                                TaxableIncome: 0,
+                              }
+                            ),
+                        ],
+                      },
 
-                  //     business44ADA:
-                  //       this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                  //         ?.filter(
-                  //           (element) =>
-                  //             element?.businessType === 'PROFESSIONAL'
-                  //         )
-                  //         .map((element) => ({
-                  //           businessSection: element?.businessType,
-                  //           natureOfBusinessCode: 0,
-                  //           tradeName: '',
-                  //           grossTurnover: element?.receipts,
-                  //           TaxableIncome: element?.presumptiveIncome,
-                  //         })),
-                  //   },
+                      business44ADA:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          ?.filter(
+                            (element) =>
+                              element?.businessType === 'PROFESSIONAL'
+                          )
+                          .map((element) => ({
+                            businessSection: element?.businessType,
+                            natureOfBusinessCode: 0,
+                            tradeName: '',
+                            grossTurnover: element?.receipts,
+                            TaxableIncome: element?.presumptiveIncome,
+                          })),
+                    },
 
-                  //   businessIncomeTotal:
-                  //     this.finalSummary?.assessment?.taxSummary
-                  //       ?.presumptiveIncome,
-                  // },
+                    businessIncomeTotal:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.presumptiveIncome,
+                  },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
@@ -3518,76 +3534,76 @@ export class SummaryComponent implements OnInit {
                       0
                     ),
                 },
-                // businessIncome: {
-                //   businessIncomeDetails: {
-                //     business44AD: {
-                //       bank: [
-                //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                //           .filter(
-                //             (element) =>
-                //               element?.businessType === 'BUSINESS' &&
-                //               element?.incomeType === 'BANK'
-                //           )
-                //           .reduce(
-                //             (accumulated, element) => {
-                //               accumulated.grossTurnover += element?.receipts;
-                //               accumulated.TaxableIncome +=
-                //                 element?.presumptiveIncome;
-                //               return accumulated;
-                //             },
-                //             {
-                //               businessSection: 'BUSINESS',
-                //               natureOfBusinessCode: 0,
-                //               tradeName: '',
-                //               grossTurnover: 0,
-                //               TaxableIncome: 0,
-                //             }
-                //           ),
-                //       ],
+                businessIncome: {
+                  businessIncomeDetails: {
+                    business44AD: {
+                      bank: [
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          .filter(
+                            (element) =>
+                              element?.businessType === 'BUSINESS' &&
+                              element?.incomeType === 'BANK'
+                          )
+                          .reduce(
+                            (accumulated, element) => {
+                              accumulated.grossTurnover += element?.receipts;
+                              accumulated.TaxableIncome +=
+                                element?.presumptiveIncome;
+                              return accumulated;
+                            },
+                            {
+                              businessSection: 'BUSINESS',
+                              natureOfBusinessCode: 0,
+                              tradeName: '',
+                              grossTurnover: 0,
+                              TaxableIncome: 0,
+                            }
+                          ),
+                      ],
 
-                //       cash: [
-                //         this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                //           ?.filter(
-                //             (element) =>
-                //               element?.businessType === 'BUSINESS' &&
-                //               element?.incomeType === 'CASH'
-                //           )
-                //           .reduce(
-                //             (accumulated, element) => {
-                //               accumulated.grossTurnover += element?.receipts;
-                //               accumulated.TaxableIncome +=
-                //                 element?.presumptiveIncome;
-                //               return accumulated;
-                //             },
-                //             {
-                //               businessSection: 'BUSINESS',
-                //               natureOfBusinessCode: 0,
-                //               tradeName: '',
-                //               grossTurnover: 0,
-                //               TaxableIncome: 0,
-                //             }
-                //           ),
-                //       ],
-                //     },
+                      cash: [
+                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                          ?.filter(
+                            (element) =>
+                              element?.businessType === 'BUSINESS' &&
+                              element?.incomeType === 'CASH'
+                          )
+                          .reduce(
+                            (accumulated, element) => {
+                              accumulated.grossTurnover += element?.receipts;
+                              accumulated.TaxableIncome +=
+                                element?.presumptiveIncome;
+                              return accumulated;
+                            },
+                            {
+                              businessSection: 'BUSINESS',
+                              natureOfBusinessCode: 0,
+                              tradeName: '',
+                              grossTurnover: 0,
+                              TaxableIncome: 0,
+                            }
+                          ),
+                      ],
+                    },
 
-                //     business44ADA:
-                //       this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                //         ?.filter(
-                //           (element) => element?.businessType === 'PROFESSIONAL'
-                //         )
-                //         .map((element) => ({
-                //           businessSection: element?.businessType,
-                //           natureOfBusinessCode: 0,
-                //           tradeName: '',
-                //           grossTurnover: element?.receipts,
-                //           TaxableIncome: element?.presumptiveIncome,
-                //         })),
-                //   },
+                    business44ADA:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+                        ?.filter(
+                          (element) => element?.businessType === 'PROFESSIONAL'
+                        )
+                        .map((element) => ({
+                          businessSection: element?.businessType,
+                          natureOfBusinessCode: 0,
+                          tradeName: '',
+                          grossTurnover: element?.receipts,
+                          TaxableIncome: element?.presumptiveIncome,
+                        })),
+                  },
 
-                //   businessIncomeTotal:
-                //     this.finalSummary?.assessment?.taxSummary
-                //       ?.presumptiveIncome,
-                // },
+                  businessIncomeTotal:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.presumptiveIncome,
+                },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
