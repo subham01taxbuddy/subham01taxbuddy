@@ -84,8 +84,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   };
   subscriptionObjType: any;
   isButtonDisable: boolean;
-  AssessmentYear:string;
-  dialogRef:any;
+  AssessmentYear: string;
+  dialogRef: any;
 
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
@@ -157,7 +157,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       // this.otherInfoForm.patchValue(this.subscriptionObj);
       if (this.subscriptionObj.subscriptionId !== 0) {
         this.getUserPlanInfo(this.subscriptionObj?.subscriptionId);
-      }else {
+      } else {
         this.getFy();
       }
     }
@@ -486,16 +486,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     console.log('promoCodeInfo: ', this.promoCodeInfo);
   }
 
-  async getFy(){
+  async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-    console.log('fylist',fyList)
+    console.log('fylist', fyList)
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.AssessmentYear = currentFyDetails[0].assessmentYear
-    console.log("ay",this.AssessmentYear)
+    console.log("ay", this.AssessmentYear)
     this.getOwnerFiler();
   }
 
-  getOwnerFiler(){
+  getOwnerFiler() {
     // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
     this.loading = true;
     let types = ['GST', 'NOTICE', 'TPA'];
@@ -503,7 +503,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${sType}`;
     this.userService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
-      console.log('get Owner and filer name for new create sub ',result)
+      console.log('get Owner and filer name for new create sub ', result)
       this.filerName.setValue(result.data?.name);
       this.ownerName.setValue(result.data?.ownerName);
     })
@@ -617,7 +617,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           : this.userSubscription.userSelectedPlan.name;
         break;
     }
-    this.description.setValue(this.userSubscription.item.itemDescription);
+    this.description.setValue(this.userSubscription?.item.itemDescription);
   }
 
   gstUserInfoByUserId(userId) {
@@ -875,10 +875,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         (item: any) => item.service === this.service
       );
       let planName = ''
-      if(this.userSubscription.userSelectedPlan){
+      if (this.userSubscription?.userSelectedPlan) {
         planName = this.userSubscription.userSelectedPlan.name;
-      }else{
-        planName = this.userSubscription.smeSelectedPlan.name;
+      } else {
+        planName = this.userSubscription?.smeSelectedPlan.name;
       }
       let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === planName.toLowerCase());
       if (filtered.length === 1) {
@@ -1009,21 +1009,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.itrService.postMethod(param, requestData).subscribe(
         (res: any) => {
           this.loading = false;
-          console.log('After subscription plan added res:', res);
-          this.toastMessage.alert(
-            'success',
-            'Subscription created successfully.'
-          );
+          this.toastMessage.alert('success', 'Subscription created successfully.');
           this.location.back();
-          // let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
-          // console.log('subInfo: ', subInfo)
         },
         (error) => {
-          console.log('error -> ', error);
-          this.toastMessage.alert(
-            'error',
-            this.utilsService.showErrorMsg(error.error.status)
-          );
+          this.loading = false;
+          if (error.error.error === 'BAD_REQUEST') {
+            this.toastMessage.alert('error', error.error.message);
+          } else {
+            this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+          }
         }
       );
     } else {
@@ -1061,7 +1056,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           },
           (error) => {
             this.loading = false;
-            this.toastMessage.alert('error', 'failed to update.');
+            if (error.error.error === 'BAD_REQUEST') {
+              this.toastMessage.alert('error', error.error.message);
+            } else {
+              this.toastMessage.alert('error', 'failed to update.');
+            }
           }
         );
       }
