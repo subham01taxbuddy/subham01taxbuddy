@@ -352,7 +352,8 @@ export class SummaryComponent implements OnInit {
       totalOtherThanTDSTCS: Number;
       totalTaxesPaid: Number;
     };
-    amountPayableRefund: Number;
+    amountPayable: Number;
+    amountRefund: Number;
   };
 
   constructor(
@@ -1289,9 +1290,10 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                   ?.TaxesPaid?.TotalTaxesPaid,
             },
-            amountPayableRefund:
+            amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
+            amountRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund?.RefundDue
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
@@ -2451,10 +2453,8 @@ export class SummaryComponent implements OnInit {
                     totalTaxesPaid:
                       this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                   },
-                  amountPayableRefund:
-                    this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
-                      ? this.finalSummary?.assessment?.taxSummary?.taxpayable
-                      : this.finalSummary?.assessment?.taxSummary?.taxRefund,
+                  amountPayable: this.finalSummary?.assessment?.taxSummary?.taxpayable,
+                  amountRefund: this.finalSummary?.assessment?.taxSummary?.taxRefund
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -3294,10 +3294,8 @@ export class SummaryComponent implements OnInit {
                   totalTaxesPaid:
                     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                 },
-                amountPayableRefund:
-                  this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
-                    ? this.finalSummary?.assessment?.taxSummary?.taxpayable
-                    : this.finalSummary?.assessment?.taxSummary?.taxRefund,
+                amountPayable: this.finalSummary?.assessment?.taxSummary?.taxpayable,
+                amountRefund: this.finalSummary?.assessment?.taxSummary?.taxRefund
               };
               console.log(this.finalCalculations, 'finalCalculations');
             } else {
