@@ -474,6 +474,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
+                      finalCalculations?.houseProperties?.hpTotalIncome &&
                       finalCalculations?.houseProperties?.hpTotalIncome === 0
                         ? true
                         : false

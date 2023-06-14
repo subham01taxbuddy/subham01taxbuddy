@@ -292,7 +292,7 @@ export interface Improvement {
   financialYearOfImprovement: string;
 }
 export interface Investments {
-  srn: string;
+  srn: number;
   underSection: string;
   orgAssestTransferDate: string;
   costOfNewAssets: number;
@@ -489,7 +489,7 @@ export interface Bonds {
 }
 
 export interface Deduction {
-  srn: any;
+  srn: number;
   underSection: any;
   orgAssestTransferDate: any;
   panOfEligibleCompany: any;

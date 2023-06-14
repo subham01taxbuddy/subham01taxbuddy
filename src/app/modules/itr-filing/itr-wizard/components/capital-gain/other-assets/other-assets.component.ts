@@ -150,7 +150,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         ]?.setValue(res.data[0].deductionAmount);
 
         this.ITR_JSON.capitalGain[0].deduction?.push({
-          srn: '',
+          srn: 0,
           underSection: '54F',
           orgAssestTransferDate: '',
           costOfNewAssets: res.data[0].costOfNewAsset,
@@ -249,7 +249,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
     });
     this.goldCg.deduction.forEach((ded) => {
-      if (parseInt(ded.srn) == this.goldCg.assetDetails[i].srn) {
+      if (ded.srn == this.goldCg.assetDetails[i].srn) {
         this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
       }
     });

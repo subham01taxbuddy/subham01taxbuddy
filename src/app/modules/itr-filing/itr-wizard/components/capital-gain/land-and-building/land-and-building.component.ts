@@ -170,7 +170,7 @@ export class LandAndBuildingComponent
 
       let totalDeductions = 0;
       let deductions = labData[0].deduction?.filter(
-        (ded) => parseInt(ded.srn) == assetDetails.srn
+        (ded) => ded.srn == assetDetails.srn
       );
       for (let j = 0; j < deductions?.length; j++) {
         totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
