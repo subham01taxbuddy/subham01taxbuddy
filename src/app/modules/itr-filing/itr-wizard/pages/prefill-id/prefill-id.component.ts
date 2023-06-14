@@ -541,15 +541,15 @@ export class PrefillIdComponent implements OnInit {
         if (DIV) {
           const jsonDividendObj = DIV.DividendInc?.DateRange;
 
-          if (jsonDividendObj.Upto15Of6) {
+          if (jsonDividendObj?.Upto15Of6) {
             this.ITR_Obj.dividendIncomes?.push({
-              income: jsonDividendObj.Upto15Of6,
+              income: jsonDividendObj?.Upto15Of6,
               date: '2022-04-28T18:30:00.000Z',
               quarter: 1,
             });
           }
 
-          if (jsonDividendObj.Upto15Of9) {
+          if (jsonDividendObj?.Upto15Of9) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Upto15Of9,
               date: '2022-07-28T18:30:00.000Z',
@@ -557,7 +557,7 @@ export class PrefillIdComponent implements OnInit {
             });
           }
 
-          if (jsonDividendObj.Up16Of9To15Of12) {
+          if (jsonDividendObj?.Up16Of9To15Of12) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Up16Of9To15Of12,
               date: '2022-09-28T18:30:00.000Z',
@@ -565,7 +565,7 @@ export class PrefillIdComponent implements OnInit {
             });
           }
 
-          if (jsonDividendObj.Up16Of12To15Of3) {
+          if (jsonDividendObj?.Up16Of12To15Of3) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Up16Of12To15Of3,
               date: '2022-12-28T18:30:00.000Z',
@@ -573,7 +573,7 @@ export class PrefillIdComponent implements OnInit {
             });
           }
 
-          if (jsonDividendObj.Up16Of3To31Of3) {
+          if (jsonDividendObj?.Up16Of3To31Of3) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Up16Of3To31Of3,
               date: '2023-03-20T18:30:00.000Z',
@@ -1150,9 +1150,9 @@ export class PrefillIdComponent implements OnInit {
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4') ||
-          JSONData.ITR.hasOwnProperty('ITR2') ||
-          JSONData.ITR.hasOwnProperty('ITR3')
+          JSONData.ITR.hasOwnProperty('ITR4') 
+          // || JSONData.ITR.hasOwnProperty('ITR2') ||
+          // JSONData.ITR.hasOwnProperty('ITR3')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
@@ -1951,53 +1951,55 @@ export class PrefillIdComponent implements OnInit {
                 : 'TDSonOthThanSalDtls';
 
             const jsonOtherThanSalaryTDS: Array<object> =
-              ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
+              ItrJSON[this.ITR_Type]?.TDSonOthThanSals?.[otherThanSalary16A];
 
-            const mapJsonToITRObj16A = ({
-              EmployerOrDeductorOrCollectDetl,
-              AmtForTaxDeduct,
-              ClaimOutOfTotTDSOnAmtPaid,
-              TANOfDeductor,
-              TDSClaimed,
-              GrossAmount,
-              HeadOfIncome,
-              TDSDeducted,
-              BroughtFwdTDSAmt,
-              TDSCreditCarriedFwd,
-            }) => {
-              const TAN =
-                this.ITR_Type === 'ITR1'
-                  ? EmployerOrDeductorOrCollectDetl.TAN
-                  : TANOfDeductor;
-              const deductorName =
-                this.ITR_Type === 'ITR1'
-                  ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
-                  : null;
-
-              return {
-                id: null,
-                srNo: null,
-                deductorName,
-                deductorTAN: TAN,
-                totalTdsDeposited:
+            if (jsonOtherThanSalaryTDS) {
+              const mapJsonToITRObj16A = ({
+                EmployerOrDeductorOrCollectDetl,
+                AmtForTaxDeduct,
+                ClaimOutOfTotTDSOnAmtPaid,
+                TANOfDeductor,
+                TDSClaimed,
+                GrossAmount,
+                HeadOfIncome,
+                TDSDeducted,
+                BroughtFwdTDSAmt,
+                TDSCreditCarriedFwd,
+              }) => {
+                const TAN =
                   this.ITR_Type === 'ITR1'
-                    ? ClaimOutOfTotTDSOnAmtPaid
-                    : TDSClaimed,
-                uniqueTDSCerNo: null,
-                taxDeduction: null,
-                totalAmountCredited:
-                  this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
-                headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+                    ? EmployerOrDeductorOrCollectDetl.TAN
+                    : TANOfDeductor;
+                const deductorName =
+                  this.ITR_Type === 'ITR1'
+                    ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
+                    : null;
+
+                return {
+                  id: null,
+                  srNo: null,
+                  deductorName,
+                  deductorTAN: TAN,
+                  totalTdsDeposited:
+                    this.ITR_Type === 'ITR1'
+                      ? ClaimOutOfTotTDSOnAmtPaid
+                      : TDSClaimed,
+                  uniqueTDSCerNo: null,
+                  taxDeduction: null,
+                  totalAmountCredited:
+                    this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
+                  headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+                };
               };
-            };
 
-            this.ITR_Obj.taxPaid.otherThanSalary16A =
-              jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
+              this.ITR_Obj.taxPaid.otherThanSalary16A =
+                jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
 
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
           }
 
           // TDS3Details / otherThanSalary26QB
@@ -2041,7 +2043,7 @@ export class PrefillIdComponent implements OnInit {
 
           // TCS - TAX COLLECTED AT SOURCE
           {
-            const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS.TCS;
+            const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
 
             if (!jsonTCS || jsonTCS.length === 0) {
               this.ITR_Obj.taxPaid.tcs = [];
@@ -2084,7 +2086,7 @@ export class PrefillIdComponent implements OnInit {
           {
             const taxPayment =
               this.ITR_Type === 'ITR1' ? 'TaxPayments' : 'ScheduleIT';
-            const jsonAdvSAT = ItrJSON[this.ITR_Type][taxPayment].TaxPayment;
+            const jsonAdvSAT = ItrJSON[this.ITR_Type]?.[taxPayment]?.TaxPayment;
 
             if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
               this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
@@ -3273,39 +3275,41 @@ export class PrefillIdComponent implements OnInit {
           // console.log('otherThanSalary16A', otherThanSalary16A);
 
           const jsonOtherThanSalaryTDS: Array<object> =
-            ItrJSON[this.ITR_Type].ScheduleTDS2?.TDSOthThanSalaryDtls;
+            ItrJSON[this.ITR_Type]?.ScheduleTDS2?.TDSOthThanSalaryDtls;
 
-          const mapJsonToITRObj16A = ({
-            TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
-            TDSCreditName,
-            TANOfDeductor,
-            GrossAmount,
-            HeadOfIncome,
-            AmtCarriedFwd,
-          }) => {
-            return {
-              id: null,
-              srNo: null,
-              deductorName: null,
-              deductorTAN: TANOfDeductor,
-              totalTdsDeposited: TaxClaimedOwnHands,
-              uniqueTDSCerNo: null,
-              taxDeduction: null,
-              totalAmountCredited: GrossAmount,
-              headOfIncome:
-                HeadOfIncome === 'CG'
-                  ? (HeadOfIncome = 'OS')
-                  : (HeadOfIncome = 'OS'),
+          if (jsonOtherThanSalaryTDS) {
+            const mapJsonToITRObj16A = ({
+              TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
+              TDSCreditName,
+              TANOfDeductor,
+              GrossAmount,
+              HeadOfIncome,
+              AmtCarriedFwd,
+            }) => {
+              return {
+                id: null,
+                srNo: null,
+                deductorName: null,
+                deductorTAN: TANOfDeductor,
+                totalTdsDeposited: TaxClaimedOwnHands,
+                uniqueTDSCerNo: null,
+                taxDeduction: null,
+                totalAmountCredited: GrossAmount,
+                headOfIncome:
+                  HeadOfIncome === 'CG'
+                    ? (HeadOfIncome = 'OS')
+                    : (HeadOfIncome = 'OS'),
+              };
             };
-          };
 
-          this.ITR_Obj.taxPaid.otherThanSalary16A =
-            jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
+            this.ITR_Obj.taxPaid.otherThanSalary16A =
+              jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
 
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+          }
         }
 
         // TDS3Details / otherThanSalary26QB
@@ -3349,7 +3353,7 @@ export class PrefillIdComponent implements OnInit {
 
         // TCS - TAX COLLECTED AT SOURCE
         {
-          const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS?.TCS;
+          const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
 
           if (!jsonTCS || jsonTCS.length === 0) {
             this.ITR_Obj.taxPaid.tcs = [];
@@ -3388,7 +3392,7 @@ export class PrefillIdComponent implements OnInit {
 
         // Advance and self assessment tax
         {
-          const jsonAdvSAT = ItrJSON[this.ITR_Type].ScheduleIT?.TaxPayment;
+          const jsonAdvSAT = ItrJSON[this.ITR_Type]?.ScheduleIT?.TaxPayment;
 
           if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
             this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
