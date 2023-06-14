@@ -305,12 +305,12 @@ export class PrefillIdComponent implements OnInit {
           (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3')
         ) {
           itrObjSalaryAnyOthAllowance.exemptAmount =
-            this.uploadedJson[ITR_Type].ScheduleS?.AllwncExtentExemptUs10 -
+            this.uploadedJson[ITR_Type]?.ScheduleS?.AllwncExtentExemptUs10 -
             totalAnyOtherAmount;
         }
       }
 
-      const allAllowance = this.ITR_Obj.employers[0].allowance.find(
+      const allAllowance = this.ITR_Obj.employers[0]?.allowance?.find(
         (itrObjSalaryOtherAllowances) =>
           itrObjSalaryOtherAllowances.allowanceType === 'ALL_ALLOWANCES'
       );
@@ -318,7 +318,7 @@ export class PrefillIdComponent implements OnInit {
       allAllowance.exemptAmount =
         this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].AllwncExemptUs10?.TotalAllwncExemptUs10;
+        ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
@@ -1151,7 +1151,8 @@ export class PrefillIdComponent implements OnInit {
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
           JSONData.ITR.hasOwnProperty('ITR4') ||
-          JSONData.ITR.hasOwnProperty('ITR2')
+          JSONData.ITR.hasOwnProperty('ITR2') ||
+          JSONData.ITR.hasOwnProperty('ITR3')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
