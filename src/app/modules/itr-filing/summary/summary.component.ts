@@ -244,49 +244,49 @@ export class SummaryComponent implements OnInit {
     //   businessIncomeTotal: Number;
     // };
     totalHeadWiseIncome: Number;
-    // currentYearLosses: {
-    //   currentYearLossesSetOff: [{ houseProperty: Number }];
-    //   totalCurrentYearSetOff: Number;
-    // };
+    currentYearLosses: {
+      currentYearLossesSetOff: [{ houseProperty: Number }];
+      totalCurrentYearSetOff: Number;
+    };
     balanceAfterSetOffCurrentYearLosses: Number;
-    // BroughtFwdLossesSetoff: {
-    //   BroughtFwdLossesSetoffDtls: {
-    //     hpLoss: Number;
-    //     stLoss: Number;
-    //     ltLoss: Number;
-    //   };
-    //   BroughtFwdLossesSetoffTotal: Number;
-    // };
+    BroughtFwdLossesSetoff: {
+      BroughtFwdLossesSetoffDtls: {
+        hpLoss: Number;
+        stLoss: Number;
+        ltLoss: Number;
+      };
+      BroughtFwdLossesSetoffTotal: Number;
+    };
     grossTotalIncome: Number;
     totalSpecialRateIncome: Number;
-    // deductions: {
-    //   deductionDtls: {
-    //     name: String;
-    //     amount: Number;
-    //   }[];
-    //   deductionTotal: Number;
-    // };
+    deductions: {
+      deductionDtls: {
+        name: String;
+        amount: Number;
+      }[];
+      deductionTotal: Number;
+    };
     totalIncome: Number;
     specialRateChargeable: Number;
     netAgricultureIncome: Number;
     aggregateIncome: Number;
-    // lossesToBeCarriedForward: {
-    //   cflDtls: {
-    //     assessmentPastYear: any;
-    //     housePropertyLoss: Number;
-    //     STCGLoss: Number;
-    //     LTCGLoss: Number;
-    //     pastYear: Number;
-    //     totalLoss: Number;
-    //   }[];
-    //   cflTotal: Number;
-    // };
-    // totalTax: {
-    //   taxAtNormalRate: Number;
-    //   taxAtSpecialRate: Number;
-    //   rebateOnAgricultureIncome: Number;
-    //   totalTax: Number;
-    // };
+    lossesToBeCarriedForward: {
+      cflDtls: {
+        assessmentPastYear: any;
+        housePropertyLoss: Number;
+        STCGLoss: Number;
+        LTCGLoss: Number;
+        pastYear: Number;
+        totalLoss: Number;
+      }[];
+      cflTotal: Number;
+    };
+    totalTax: {
+      taxAtNormalRate: Number;
+      taxAtSpecialRate: Number;
+      rebateOnAgricultureIncome: Number;
+      totalTax: Number;
+    };
     rebateUnderSection87A: Number;
     taxAfterRebate: Number;
     surcharge: Number;
@@ -669,43 +669,43 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ]?.GrossTotIncome,
-            //   // Need to set losses for uploadedJson
-            //   currentYearLosses: {
-            //     currentYearLossesSetOff: [
-            //       {
-            //         houseProperty: 0,
-            //       },
-            //     ],
-            //     totalCurrentYearSetOff: 0,
-            //   },
+            // Need to set losses for uploadedJson
+            currentYearLosses: {
+              currentYearLossesSetOff: [
+                {
+                  houseProperty: 0,
+                },
+              ],
+              totalCurrentYearSetOff: 0,
+            },
             balanceAfterSetOffCurrentYearLosses: 0,
-            //   BroughtFwdLossesSetoff: {
-            //     BroughtFwdLossesSetoffDtls: {
-            //       hpLoss: 0,
-            //       stLoss: 0,
-            //       ltLoss: 0,
-            //     },
-            //     BroughtFwdLossesSetoffTotal: 0,
-            //   },
+            BroughtFwdLossesSetoff: {
+              BroughtFwdLossesSetoffDtls: {
+                hpLoss: 0,
+                stLoss: 0,
+                ltLoss: 0,
+              },
+              BroughtFwdLossesSetoffTotal: 0,
+            },
             grossTotalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ]?.GrossTotIncome,
             totalSpecialRateIncome: 0,
-            //   deductions: {
-            //     deductionDtls: Object.entries(
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //         this.ITR14IncomeDeductions
-            //       ]?.DeductUndChapVIA
-            //     ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
-            //       name: String;
-            //       amount: Number;
-            //     }[],
-            //     deductionTotal:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //         this.ITR14IncomeDeductions
-            //       ].DeductUndChapVIA?.TotalChapVIADeductions,
-            //   },
+            deductions: {
+              deductionDtls: Object.entries(
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ]?.DeductUndChapVIA
+              ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
+                name: String;
+                amount: Number;
+              }[],
+              deductionTotal:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.ITR14IncomeDeductions
+                ].DeductUndChapVIA?.TotalChapVIADeductions,
+            },
             totalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
@@ -717,31 +717,31 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ]?.TotalIncome,
-            //   lossesToBeCarriedForward: {
-            //     cflDtls: [
-            //       {
-            //         assessmentPastYear: 0,
-            //         housePropertyLoss: 0,
-            //         STCGLoss: 0,
-            //         LTCGLoss: 0,
-            //         pastYear: 0,
-            //         totalLoss: 0,
-            //       },
-            //     ],
-            //     cflTotal: 0,
-            //   },
-            //   totalTax: {
-            //     taxAtNormalRate:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //         this.taxComputation
-            //       ]?.TotalTaxPayable,
-            //     taxAtSpecialRate: 0,
-            //     rebateOnAgricultureIncome: 0,
-            //     totalTax:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //         this.taxComputation
-            //       ]?.TotalTaxPayable,
-            //   },
+            lossesToBeCarriedForward: {
+              cflDtls: [
+                {
+                  assessmentPastYear: 0,
+                  housePropertyLoss: 0,
+                  STCGLoss: 0,
+                  LTCGLoss: 0,
+                  pastYear: 0,
+                  totalLoss: 0,
+                },
+              ],
+              cflTotal: 0,
+            },
+            totalTax: {
+              taxAtNormalRate:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.TotalTaxPayable,
+              taxAtSpecialRate: 0,
+              rebateOnAgricultureIncome: 0,
+              totalTax:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  this.taxComputation
+                ]?.TotalTaxPayable,
+            },
             rebateUnderSection87A:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.taxComputation
@@ -1531,114 +1531,129 @@ export class SummaryComponent implements OnInit {
             //       : 0,
             // },
             totalHeadWiseIncome:
-            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-              'PartB-TI'
-            ]?.GrossTotalIncome,
-            // // Need to set losses for uploadedJson
-            // currentYearLosses: {
-            //   currentYearLossesSetOff: [
-            //     {
-            //       houseProperty: 0,
-            //     },
-            //   ],
-            //   totalCurrentYearSetOff: 0,
-            // },
-            balanceAfterSetOffCurrentYearLosses: 0,
-            // BroughtFwdLossesSetoff: {
-            //   BroughtFwdLossesSetoffDtls: {
-            //     hpLoss: 0,
-            //     stLoss: 0,
-            //     ltLoss: 0,
-            //   },
-            //   BroughtFwdLossesSetoffTotal: 0,
-            // },
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.TotalTI,
+            // Need to set losses for uploadedJson
+            currentYearLosses: {
+              currentYearLossesSetOff: [
+                {
+                  houseProperty: 0,
+                },
+              ],
+              totalCurrentYearSetOff:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                  ?.CurrentYearLoss,
+            },
+            balanceAfterSetOffCurrentYearLosses:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.BalanceAfterSetoffLosses,
+            BroughtFwdLossesSetoff: {
+              BroughtFwdLossesSetoffDtls: {
+                hpLoss: 0,
+                stLoss: 0,
+                ltLoss: 0,
+              },
+              BroughtFwdLossesSetoffTotal:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                  ?.BroughtFwdLossesSetoff,
+            },
             grossTotalIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossTotIncome,
-            totalSpecialRateIncome: 0,
-            // deductions: {
-            //   deductionDtls: Object.entries(
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //       this.ITR14IncomeDeductions
-            //     ]?.DeductUndChapVIA
-            //   ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
-            //     name: String;
-            //     amount: Number;
-            //   }[],
-            //   deductionTotal:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //       this.ITR14IncomeDeductions
-            //     ].DeductUndChapVIA?.TotalChapVIADeductions,
-            // },
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.GrossTotalIncome,
+            totalSpecialRateIncome:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.IncChargeTaxSplRate111A112,
+            deductions: {
+              deductionDtls: Object.entries(
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVIA
+                  ?.DeductUndChapVIA
+              ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
+                name: String;
+                amount: Number;
+              }[],
+              deductionTotal:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                  ?.DeductionsUnderScheduleVIA,
+            },
             totalIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TotalIncome,
-            specialRateChargeable: 0,
-            // // Need to set this for all itr types
-            netAgricultureIncome: 0,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.TotalIncome,
+            specialRateChargeable:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.IncChargeableTaxSplRates,
+            // Need to set this for all itr types
+            netAgricultureIncome:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.NetAgricultureIncomeOrOtherIncomeForRate,
             aggregateIncome:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.TotalIncome,
-            // lossesToBeCarriedForward: {
-            //   cflDtls: [
-            //     {
-            //       assessmentPastYear: 0,
-            //       housePropertyLoss: 0,
-            //       STCGLoss: 0,
-            //       LTCGLoss: 0,
-            //       pastYear: 0,
-            //       totalLoss: 0,
-            //     },
-            //   ],
-            //   cflTotal: 0,
-            // },
-            // totalTax: {
-            //   taxAtNormalRate:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //       this.taxComputation
-            //     ]?.TotalTaxPayable,
-            //   taxAtSpecialRate: 0,
-            //   rebateOnAgricultureIncome: 0,
-            //   totalTax:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-            //       this.taxComputation
-            //     ]?.TotalTaxPayable,
-            // },
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.AggregateIncome,
+            lossesToBeCarriedForward: {
+              cflDtls: [
+                {
+                  assessmentPastYear: 0,
+                  housePropertyLoss: 0,
+                  STCGLoss: 0,
+                  LTCGLoss: 0,
+                  pastYear: 0,
+                  totalLoss: 0,
+                },
+              ],
+              cflTotal:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                  ?.LossesOfCurrentYearCarriedFwd,
+            },
+            totalTax: {
+              taxAtNormalRate:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                  ?.TaxAtNormalRatesOnAggrInc,
+              taxAtSpecialRate:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                  ?.TaxAtSpecialRates,
+
+              rebateOnAgricultureIncome:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxPayableOnTI?.RebateOnAgriInc,
+
+              totalTax:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                  ?.TaxPayableOnTotInc,
+            },
             rebateUnderSection87A:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.Rebate87A,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.Rebate87A,
             taxAfterRebate:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
-            surcharge: 0,
+                ?.ComputationOfTaxLiability?.TaxPayableOnRebate,
+            surcharge:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.TotalSurcharge,
             eductionCess:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.EducationCess,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.EducationCess,
             grossTaxLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.GrossTaxLiability,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.GrossTaxLiability,
             taxRelief: {
               taxReliefUnder89:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.Section89,
-              taxReliefUnder90_90A: 0,
-              taxReliefUnder91: 0,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxRelief?.Section89,
+              taxReliefUnder90_90A:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxRelief?.Section90,
+              taxReliefUnder91:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxRelief?.Section91,
               totalRelief:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.Section89,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.TaxRelief?.TotTaxRelief,
             },
             netTaxLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.NetTaxLiability,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.NetTaxLiability,
 
             interestAndFee: {
               interest234C: {
@@ -1649,43 +1664,28 @@ export class SummaryComponent implements OnInit {
                 q5: 0,
               },
               total234A:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.IntrstPayUs234A,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234A,
+
               total234B:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.IntrstPayUs234B,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234B,
+
               total234C:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.IntrstPayUs234C,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234C,
+
               total234F:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.taxComputation
-                ]?.IntrstPay?.LateFilingFee234F,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.IntrstPay?.LateFilingFee234F,
+
               totalInterestAndFee:
-                this.itrType === 'ITR1'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.TotalIntrstPay
-                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.LateFilingFee234F +
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.IntrstPayUs234C +
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.IntrstPayUs234B +
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.taxComputation
-                    ]?.IntrstPay?.IntrstPayUs234A,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                  ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay,
             },
             aggregateLiability:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.taxComputation
-              ]?.TotTaxPlusIntrstPay,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability,
 
             // taxPaid: {
             //   onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -2155,8 +2155,8 @@ export class SummaryComponent implements OnInit {
             //       ?.TaxesPaid?.TotalTaxesPaid,
             // },
             amountPayableRefund:
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
-                ?.BalTaxPayable,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.TaxPaid?.BalTaxPayable,
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
@@ -2705,75 +2705,75 @@ export class SummaryComponent implements OnInit {
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
-                  // currentYearLosses: {
-                  //   currentYearLossesSetOff: [
-                  //     {
-                  //       houseProperty:
-                  //         this.finalSummary?.assessment?.taxSummary
-                  //           ?.currentYearIFHPSetOff,
-                  //     },
-                  //   ],
-                  //   totalCurrentYearSetOff:
-                  //     this.finalSummary?.assessment?.taxSummary
-                  //       ?.currentYearIFHPSetOff,
-                  // },
+                  currentYearLosses: {
+                    currentYearLossesSetOff: [
+                      {
+                        houseProperty:
+                          this.finalSummary?.assessment?.taxSummary
+                            ?.currentYearIFHPSetOff,
+                      },
+                    ],
+                    totalCurrentYearSetOff:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.currentYearIFHPSetOff,
+                  },
                   balanceAfterSetOffCurrentYearLosses:
                     this.finalSummary?.assessment?.taxSummary
                       ?.balanceAfterSetOffCurrentYearLosses,
 
-                  // BroughtFwdLossesSetoff: {
-                  //   BroughtFwdLossesSetoffDtls: {
-                  //     hpLoss: this.losses?.pastYearLosses?.reduce(
-                  //       (total, item) =>
-                  //         total + item?.setOffWithCurrentYearHPIncome,
-                  //       0
-                  //     ),
-                  //     stLoss: this.losses?.pastYearLosses?.reduce(
-                  //       (total, item) =>
-                  //         total + item?.setOffWithCurrentYearSTCGIncome,
-                  //       0
-                  //     ),
-                  //     ltLoss: this.losses?.pastYearLosses?.reduce(
-                  //       (total, item) =>
-                  //         total + item?.setOffWithCurrentYearLTCGIncome,
-                  //       0
-                  //     ),
-                  //   },
-                  //   BroughtFwdLossesSetoffTotal: Number(
-                  //     this.finalSummary?.assessment?.taxSummary
-                  //       ?.totalBroughtForwordSetOff
-                  //   ),
-                  // },
+                  BroughtFwdLossesSetoff: {
+                    BroughtFwdLossesSetoffDtls: {
+                      hpLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) =>
+                          total + item?.setOffWithCurrentYearHPIncome,
+                        0
+                      ),
+                      stLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) =>
+                          total + item?.setOffWithCurrentYearSTCGIncome,
+                        0
+                      ),
+                      ltLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) =>
+                          total + item?.setOffWithCurrentYearLTCGIncome,
+                        0
+                      ),
+                    },
+                    BroughtFwdLossesSetoffTotal: Number(
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.totalBroughtForwordSetOff
+                    ),
+                  },
                   grossTotalIncome:
                     this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
                   totalSpecialRateIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.totalSpecialRateIncome,
-                  // deductions: {
-                  //   deductionDtls: Object.entries(
-                  //     this.finalSummary?.assessment?.summaryDeductions
-                  //   )
-                  //     ?.filter(
-                  //       (item: any) =>
-                  //         item[1].sectionType !== '80C' &&
-                  //         item[1].sectionType !== '80CCC' &&
-                  //         item[1].sectionType !== '80CCD1' &&
-                  //         item[1].sectionType !== '80GAGTI'
-                  //     )
-                  //     .map(([key, item]) => ({
-                  //       name: (
-                  //         item as { notes: string; eligibleAmount: number }
-                  //       ).notes,
-                  //       amount: (
-                  //         item as { notes: string; eligibleAmount: number }
-                  //       ).eligibleAmount,
-                  //     })) as {
-                  //     name: String;
-                  //     amount: Number;
-                  //   }[],
-                  //   deductionTotal:
-                  //     this.finalSummary?.assessment?.taxSummary?.totalDeduction,
-                  // },
+                  deductions: {
+                    deductionDtls: Object.entries(
+                      this.finalSummary?.assessment?.summaryDeductions
+                    )
+                      ?.filter(
+                        (item: any) =>
+                          item[1].sectionType !== '80C' &&
+                          item[1].sectionType !== '80CCC' &&
+                          item[1].sectionType !== '80CCD1' &&
+                          item[1].sectionType !== '80GAGTI'
+                      )
+                      .map(([key, item]) => ({
+                        name: (
+                          item as { notes: string; eligibleAmount: number }
+                        ).notes,
+                        amount: (
+                          item as { notes: string; eligibleAmount: number }
+                        ).eligibleAmount,
+                      })) as {
+                      name: String;
+                      amount: Number;
+                    }[],
+                    deductionTotal:
+                      this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                  },
                   totalIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.totalIncomeAfterDeductionIncludeSR,
@@ -2786,97 +2786,97 @@ export class SummaryComponent implements OnInit {
                   aggregateIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.aggregateIncomeXml,
-                  // lossesToBeCarriedForward: {
-                  //   cflDtls: Object.entries(
-                  //     this.finalSummary?.assessment?.carryForwordLosses
-                  //   )?.map(([key, item]) => ({
-                  //     assessmentPastYear: (
-                  //       item as {
-                  //         assessmentPastYear: any;
-                  //         housePropertyLoss: Number;
-                  //         STCGLoss: Number;
-                  //         LTCGLoss: Number;
-                  //         pastYear: Number;
-                  //         totalLoss: Number;
-                  //       }
-                  //     ).assessmentPastYear,
-                  //     housePropertyLoss: (
-                  //       item as {
-                  //         assessmentPastYear: any;
-                  //         housePropertyLoss: Number;
-                  //         STCGLoss: Number;
-                  //         LTCGLoss: Number;
-                  //         pastYear: Number;
-                  //         totalLoss: Number;
-                  //       }
-                  //     ).housePropertyLoss,
-                  //     STCGLoss: (
-                  //       item as {
-                  //         assessmentPastYear: any;
-                  //         housePropertyLoss: Number;
-                  //         STCGLoss: Number;
-                  //         LTCGLoss: Number;
-                  //         pastYear: Number;
-                  //         totalLoss: Number;
-                  //       }
-                  //     ).STCGLoss,
-                  //     LTCGLoss: (
-                  //       item as {
-                  //         assessmentPastYear: any;
-                  //         housePropertyLoss: Number;
-                  //         STCGLoss: Number;
-                  //         LTCGLoss: Number;
-                  //         pastYear: Number;
-                  //         totalLoss: Number;
-                  //       }
-                  //     ).LTCGLoss,
-                  //     pastYear: (
-                  //       item as {
-                  //         assessmentPastYear: any;
-                  //         housePropertyLoss: Number;
-                  //         STCGLoss: Number;
-                  //         LTCGLoss: Number;
-                  //         pastYear: Number;
-                  //         totalLoss: Number;
-                  //       }
-                  //     ).pastYear,
-                  //     totalLoss: (
-                  //       item as {
-                  //         assessmentPastYear: any;
-                  //         housePropertyLoss: Number;
-                  //         STCGLoss: Number;
-                  //         LTCGLoss: Number;
-                  //         pastYear: Number;
-                  //         totalLoss: Number;
-                  //       }
-                  //     ).totalLoss,
-                  //   })) as {
-                  //     assessmentPastYear: any;
-                  //     housePropertyLoss: Number;
-                  //     STCGLoss: Number;
-                  //     LTCGLoss: Number;
-                  //     pastYear: Number;
-                  //     totalLoss: Number;
-                  //   }[],
-                  //   cflTotal:
-                  //     this.finalSummary?.assessment?.carryForwordLosses?.reduce(
-                  //       (total, item) => total + item.totalLoss,
-                  //       0
-                  //     ),
-                  // },
-                  // totalTax: {
-                  //   taxAtNormalRate:
-                  //     this.finalSummary?.assessment?.taxSummary
-                  //       ?.taxAtNormalRate,
-                  //   taxAtSpecialRate:
-                  //     this.finalSummary?.assessment?.taxSummary
-                  //       ?.taxAtSpecialRate,
-                  //   rebateOnAgricultureIncome:
-                  //     this.finalSummary?.assessment?.taxSummary
-                  //       ?.rebateOnAgricultureIncome,
-                  //   totalTax:
-                  //     this.finalSummary?.assessment?.taxSummary?.totalTax,
-                  // },
+                  lossesToBeCarriedForward: {
+                    cflDtls: Object.entries(
+                      this.finalSummary?.assessment?.carryForwordLosses
+                    )?.map(([key, item]) => ({
+                      assessmentPastYear: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).assessmentPastYear,
+                      housePropertyLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).housePropertyLoss,
+                      STCGLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).STCGLoss,
+                      LTCGLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).LTCGLoss,
+                      pastYear: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).pastYear,
+                      totalLoss: (
+                        item as {
+                          assessmentPastYear: any;
+                          housePropertyLoss: Number;
+                          STCGLoss: Number;
+                          LTCGLoss: Number;
+                          pastYear: Number;
+                          totalLoss: Number;
+                        }
+                      ).totalLoss,
+                    })) as {
+                      assessmentPastYear: any;
+                      housePropertyLoss: Number;
+                      STCGLoss: Number;
+                      LTCGLoss: Number;
+                      pastYear: Number;
+                      totalLoss: Number;
+                    }[],
+                    cflTotal:
+                      this.finalSummary?.assessment?.carryForwordLosses?.reduce(
+                        (total, item) => total + item.totalLoss,
+                        0
+                      ),
+                  },
+                  totalTax: {
+                    taxAtNormalRate:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxAtNormalRate,
+                    taxAtSpecialRate:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.taxAtSpecialRate,
+                    rebateOnAgricultureIncome:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.rebateOnAgricultureIncome,
+                    totalTax:
+                      this.finalSummary?.assessment?.taxSummary?.totalTax,
+                  },
                   rebateUnderSection87A:
                     this.finalSummary?.assessment?.taxSummary
                       ?.rebateUnderSection87A,
@@ -3559,74 +3559,74 @@ export class SummaryComponent implements OnInit {
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
-                // currentYearLosses: {
-                //   currentYearLossesSetOff: [
-                //     {
-                //       houseProperty:
-                //         this.finalSummary?.assessment?.taxSummary
-                //           ?.currentYearIFHPSetOff,
-                //     },
-                //   ],
-                //   totalCurrentYearSetOff:
-                //     this.finalSummary?.assessment?.taxSummary
-                //       ?.currentYearIFHPSetOff,
-                // },
+                currentYearLosses: {
+                  currentYearLossesSetOff: [
+                    {
+                      houseProperty:
+                        this.finalSummary?.assessment?.taxSummary
+                          ?.currentYearIFHPSetOff,
+                    },
+                  ],
+                  totalCurrentYearSetOff:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.currentYearIFHPSetOff,
+                },
                 balanceAfterSetOffCurrentYearLosses:
                   this.finalSummary?.assessment?.taxSummary
                     ?.balanceAfterSetOffCurrentYearLosses,
 
-                // BroughtFwdLossesSetoff: {
-                //   BroughtFwdLossesSetoffDtls: {
-                //     hpLoss: this.losses?.pastYearLosses?.reduce(
-                //       (total, item) =>
-                //         total + item?.setOffWithCurrentYearHPIncome,
-                //       0
-                //     ),
-                //     stLoss: this.losses?.pastYearLosses?.reduce(
-                //       (total, item) =>
-                //         total + item?.setOffWithCurrentYearSTCGIncome,
-                //       0
-                //     ),
-                //     ltLoss: this.losses?.pastYearLosses?.reduce(
-                //       (total, item) =>
-                //         total + item?.setOffWithCurrentYearLTCGIncome,
-                //       0
-                //     ),
-                //   },
-                //   BroughtFwdLossesSetoffTotal: Number(
-                //     this.finalSummary?.assessment?.taxSummary
-                //       ?.totalBroughtForwordSetOff
-                //   ),
-                // },
+                BroughtFwdLossesSetoff: {
+                  BroughtFwdLossesSetoffDtls: {
+                    hpLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) =>
+                        total + item?.setOffWithCurrentYearHPIncome,
+                      0
+                    ),
+                    stLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) =>
+                        total + item?.setOffWithCurrentYearSTCGIncome,
+                      0
+                    ),
+                    ltLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) =>
+                        total + item?.setOffWithCurrentYearLTCGIncome,
+                      0
+                    ),
+                  },
+                  BroughtFwdLossesSetoffTotal: Number(
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.totalBroughtForwordSetOff
+                  ),
+                },
                 grossTotalIncome:
                   this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
                 totalSpecialRateIncome:
                   this.finalSummary?.assessment?.taxSummary
                     ?.totalSpecialRateIncome,
-                // deductions: {
-                //   deductionDtls: Object.entries(
-                //     this.finalSummary?.assessment?.summaryDeductions
-                //   )
-                //     ?.filter(
-                //       (item: any) =>
-                //         item[1].sectionType !== '80C' &&
-                //         item[1].sectionType !== '80CCC' &&
-                //         item[1].sectionType !== '80CCD1' &&
-                //         item[1].sectionType !== '80GAGTI'
-                //     )
-                //     .map(([key, item]) => ({
-                //       name: (item as { notes: string; eligibleAmount: number })
-                //         .notes,
-                //       amount: (
-                //         item as { notes: string; eligibleAmount: number }
-                //       ).eligibleAmount,
-                //     })) as {
-                //     name: String;
-                //     amount: Number;
-                //   }[],
-                //   deductionTotal:
-                //     this.finalSummary?.assessment?.taxSummary?.totalDeduction,
-                // },
+                deductions: {
+                  deductionDtls: Object.entries(
+                    this.finalSummary?.assessment?.summaryDeductions
+                  )
+                    ?.filter(
+                      (item: any) =>
+                        item[1].sectionType !== '80C' &&
+                        item[1].sectionType !== '80CCC' &&
+                        item[1].sectionType !== '80CCD1' &&
+                        item[1].sectionType !== '80GAGTI'
+                    )
+                    .map(([key, item]) => ({
+                      name: (item as { notes: string; eligibleAmount: number })
+                        .notes,
+                      amount: (
+                        item as { notes: string; eligibleAmount: number }
+                      ).eligibleAmount,
+                    })) as {
+                    name: String;
+                    amount: Number;
+                  }[],
+                  deductionTotal:
+                    this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+                },
                 totalIncome:
                   this.finalSummary?.assessment?.taxSummary
                     ?.totalIncomeAfterDeductionIncludeSR,
@@ -3637,94 +3637,94 @@ export class SummaryComponent implements OnInit {
                   this.finalSummary?.assessment?.taxSummary?.agricultureIncome,
                 aggregateIncome:
                   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
-                // lossesToBeCarriedForward: {
-                //   cflDtls: Object.entries(
-                //     this.finalSummary?.assessment?.carryForwordLosses
-                //   )?.map(([key, item]) => ({
-                //     assessmentPastYear: (
-                //       item as {
-                //         assessmentPastYear: any;
-                //         housePropertyLoss: Number;
-                //         STCGLoss: Number;
-                //         LTCGLoss: Number;
-                //         pastYear: Number;
-                //         totalLoss: Number;
-                //       }
-                //     ).assessmentPastYear,
-                //     housePropertyLoss: (
-                //       item as {
-                //         assessmentPastYear: any;
-                //         housePropertyLoss: Number;
-                //         STCGLoss: Number;
-                //         LTCGLoss: Number;
-                //         pastYear: Number;
-                //         totalLoss: Number;
-                //       }
-                //     ).housePropertyLoss,
-                //     STCGLoss: (
-                //       item as {
-                //         assessmentPastYear: any;
-                //         housePropertyLoss: Number;
-                //         STCGLoss: Number;
-                //         LTCGLoss: Number;
-                //         pastYear: Number;
-                //         totalLoss: Number;
-                //       }
-                //     ).STCGLoss,
-                //     LTCGLoss: (
-                //       item as {
-                //         assessmentPastYear: any;
-                //         housePropertyLoss: Number;
-                //         STCGLoss: Number;
-                //         LTCGLoss: Number;
-                //         pastYear: Number;
-                //         totalLoss: Number;
-                //       }
-                //     ).LTCGLoss,
-                //     pastYear: (
-                //       item as {
-                //         assessmentPastYear: any;
-                //         housePropertyLoss: Number;
-                //         STCGLoss: Number;
-                //         LTCGLoss: Number;
-                //         pastYear: Number;
-                //         totalLoss: Number;
-                //       }
-                //     ).pastYear,
-                //     totalLoss: (
-                //       item as {
-                //         assessmentPastYear: any;
-                //         housePropertyLoss: Number;
-                //         STCGLoss: Number;
-                //         LTCGLoss: Number;
-                //         pastYear: Number;
-                //         totalLoss: Number;
-                //       }
-                //     ).totalLoss,
-                //   })) as {
-                //     assessmentPastYear: any;
-                //     housePropertyLoss: Number;
-                //     STCGLoss: Number;
-                //     LTCGLoss: Number;
-                //     pastYear: Number;
-                //     totalLoss: Number;
-                //   }[],
-                //   cflTotal:
-                //     this.finalSummary?.assessment?.carryForwordLosses?.reduce(
-                //       (total, item) => total + item.totalLoss,
-                //       0
-                //     ),
-                // },
-                // totalTax: {
-                //   taxAtNormalRate:
-                //     this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
-                //   taxAtSpecialRate:
-                //     this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
-                //   rebateOnAgricultureIncome:
-                //     this.finalSummary?.assessment?.taxSummary
-                //       ?.rebateOnAgricultureIncome,
-                //   totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
-                // },
+                lossesToBeCarriedForward: {
+                  cflDtls: Object.entries(
+                    this.finalSummary?.assessment?.carryForwordLosses
+                  )?.map(([key, item]) => ({
+                    assessmentPastYear: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).assessmentPastYear,
+                    housePropertyLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).housePropertyLoss,
+                    STCGLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).STCGLoss,
+                    LTCGLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).LTCGLoss,
+                    pastYear: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).pastYear,
+                    totalLoss: (
+                      item as {
+                        assessmentPastYear: any;
+                        housePropertyLoss: Number;
+                        STCGLoss: Number;
+                        LTCGLoss: Number;
+                        pastYear: Number;
+                        totalLoss: Number;
+                      }
+                    ).totalLoss,
+                  })) as {
+                    assessmentPastYear: any;
+                    housePropertyLoss: Number;
+                    STCGLoss: Number;
+                    LTCGLoss: Number;
+                    pastYear: Number;
+                    totalLoss: Number;
+                  }[],
+                  cflTotal:
+                    this.finalSummary?.assessment?.carryForwordLosses?.reduce(
+                      (total, item) => total + item.totalLoss,
+                      0
+                    ),
+                },
+                totalTax: {
+                  taxAtNormalRate:
+                    this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
+                  taxAtSpecialRate:
+                    this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
+                  rebateOnAgricultureIncome:
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.rebateOnAgricultureIncome,
+                  totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
+                },
                 rebateUnderSection87A:
                   this.finalSummary?.assessment?.taxSummary
                     ?.rebateUnderSection87A,

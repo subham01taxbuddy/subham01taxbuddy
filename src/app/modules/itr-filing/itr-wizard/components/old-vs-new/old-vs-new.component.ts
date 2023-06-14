@@ -37,6 +37,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     { label: 'CYLA', old: 0, new: 0 },
     { label: 'BFLA', old: 0, new: 0 },
     { label: 'Gross Total Income', old: 0, new: 0 },
+    { label: 'Taxable Special Rate Income', old: 0, new: 0 },
     { label: 'Deduction', old: 0, new: 0 },
     { label: 'Total Income', old: 0, new: 0 },
     { label: 'CFL', old: 0, new: 0 },
@@ -685,6 +686,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : 0,
             },
             {
+              label: 'Taxable Special Rate Income',
+              old: 0,
+              new: 0,
+            },
+            {
               label: 'Deduction',
               old:
                 this.ITR_JSON.regime === 'OLD'
@@ -1018,6 +1024,25 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : 0,
             },
             {
+              label: 'Taxable Special Rate Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                      ?.IncChargeTaxSplRate111A112
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                        ?.IncChargeTaxSplRate111A112
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                      ?.IncChargeTaxSplRate111A112
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncChargeTaxSplRate111A112
+                    : 0
+                  : 0,
+            },
+            {
               label: 'Deduction',
               old:
                 this.ITR_JSON.regime === 'OLD'
@@ -1077,21 +1102,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             {
               label: 'Gross Tax Liability',
               old:
-                this.ITR_JSON.regime === 'OLD'
+                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR2'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                       ?.ComputationOfTaxLiability?.GrossTaxLiability
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                        ?.ComputationOfTaxLiability?.GrossTaxLiability
-                    : 0
-                  : 0,
+                  : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                      ?.GrossTaxLiability,
+
               new:
-                this.ITR_JSON.regime === 'NEW'
+                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR2'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                       ?.ComputationOfTaxLiability?.GrossTaxLiability
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                        ?.ComputationOfTaxLiability?.GrossTaxLiability
-                    : 0
-                  : 0,
+                  : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                      ?.GrossTaxLiability,
             },
             {
               label: 'Interest and Fees - 234 A/B/C/F',
@@ -1117,9 +1141,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                      ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                        ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                        ?.ComputationOfTaxLiability
+                        ?.AggregateTaxInterestLiability
                     : 0
                   : 0,
               new:
@@ -1250,6 +1275,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 label: 'Gross Total Income',
                 old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
                 new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+              },
+              {
+                label: 'Taxable Special Rate Income',
+                old: 0,
+                new: 0,
               },
               {
                 label: 'Deduction',
