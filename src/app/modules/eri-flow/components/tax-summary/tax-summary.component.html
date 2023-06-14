@@ -398,7 +398,7 @@
                         <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
                             autocomplete="off" required>
                             <mat-option *ngFor="let year of financialYear" [value]="year.financialYear"
-                                [disabled]="year.financialYear === '2022-23'">
+                                >
                                 {{year.financialYear}}
                             </mat-option>
                         </mat-select>

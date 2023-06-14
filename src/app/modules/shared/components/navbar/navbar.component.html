@@ -41,10 +41,10 @@
                     <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
                 </div>
             </div>
-             <div class="header__breadcrumbs" style="float:right">
+             <div *ngIf="showAffiliateBtn" class="header__breadcrumbs" style="float:right">
                 <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;
                     <i class="fa-light fa-people-group"></i> Affiliate ID Linking</button>|
-             </div>            
+             </div>
          </div>
 
 
