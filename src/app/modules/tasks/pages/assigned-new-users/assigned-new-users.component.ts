@@ -5,7 +5,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import {GridOptions, ICellRendererParams} from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -28,6 +28,7 @@ import {RequestManager} from "../../../shared/services/request-manager";
 import {Subscription} from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
+import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -79,6 +80,13 @@ export class AssignedNewUsersComponent implements OnInit {
       },
 
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
     };
 
     this.config = {
@@ -91,6 +99,12 @@ export class AssignedNewUsersComponent implements OnInit {
     this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
       this.requestCompleted(value);
     });
+  }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
   }
 
   requestManagerSubscription: Subscription;
