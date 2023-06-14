@@ -1102,20 +1102,24 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             {
               label: 'Gross Tax Liability',
               old:
-                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR2'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.ComputationOfTaxLiability?.GrossTaxLiability
-                  : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.ComputationOfTaxLiability?.TaxPayableOnTI
-                      ?.GrossTaxLiability,
+                this.ITR_JSON.regime === 'OLD'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.GrossTaxLiability
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                        ?.GrossTaxLiability
+                  : 0,
 
               new:
-                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR2'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.ComputationOfTaxLiability?.GrossTaxLiability
-                  : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.ComputationOfTaxLiability?.TaxPayableOnTI
-                      ?.GrossTaxLiability,
+                this.ITR_JSON.regime === 'NEW'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.GrossTaxLiability
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                        ?.GrossTaxLiability
+                  : 0,
             },
             {
               label: 'Interest and Fees - 234 A/B/C/F',
