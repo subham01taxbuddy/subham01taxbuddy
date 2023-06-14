@@ -108,13 +108,13 @@
       </div>
       <div>
         <span class="text-secondary" *ngIf="internetSpeed !== -1">
-          Your internet speed is {{internetSpeed}}
+          Your internet speed is {{internetSpeed}} Mbps
         </span>
         <span class="text-secondary" *ngIf="internetSpeed === -1">
           Checking your internet speed...
         </span>
         <em class="text-danger" *ngIf="internetSpeed < 10 && internetSpeed !== -1">
-          Your internet speed is lower than required: 10 MBps. you may face slowness or functional issues while using the Back Office.
+          Your internet speed is lower than required: 10 Mbps. You may face slowness or functional issues while using the Back Office.
         </em>
       </div>
       <!-- Best Screen Resolution -->
