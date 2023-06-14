@@ -341,13 +341,13 @@ export class PrefillIdComponent implements OnInit {
         } else if (this.ITR_Type === 'ITR4') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.find(
+          ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         } else if (this.ITR_Type === 'ITR2') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].ScheduleEI?.OthersInc?.OthersIncDtls.find(
+          ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         }
@@ -429,7 +429,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name SAV
         const JsonDetailSAV = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'SAV'
         );
 
@@ -450,8 +450,8 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name IFD
         const JsonDetailIFD = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
-          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'IFD'
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+          (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'IFD'
         );
 
         // if IFD is present in the utility json then pushing the below object in incomes array
@@ -471,7 +471,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name SAV
         const JsonDetailFAP = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'FAP'
         );
 
@@ -492,7 +492,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name TAX
         const JsonDetailTAX = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'TAX'
         );
 
@@ -513,7 +513,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name OTH
         const JsonDetailOTH = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'OTH'
         );
 
@@ -533,7 +533,7 @@ export class PrefillIdComponent implements OnInit {
       {
         const DIV = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc?.OthersIncDtlsOthSrc?.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'DIV'
         );
 
@@ -1781,8 +1781,8 @@ export class PrefillIdComponent implements OnInit {
               //getting all the other income keys from the JSON and passing it to the updateOtherIncomes function
               const availableOtherIncomes = this.uploadedJson[this.ITR_Type][
                 this.ITR14_IncomeDeductions
-              ].OthersInc?.OthersIncDtlsOthSrc?.map(
-                (value) => value.OthSrcNatureDesc
+              ]?.OthersInc?.OthersIncDtlsOthSrc?.map(
+                (value) => value?.OthSrcNatureDesc
               );
               this.updateOtherIncomes(availableOtherIncomes, this.ITR_Type);
             } else {
@@ -1838,14 +1838,14 @@ export class PrefillIdComponent implements OnInit {
 
           if (this.ITR_Type === 'ITR4') {
             if (
-              this.uploadedJson[this.ITR_Type].TaxExmpIntIncDtls.OthersInc
-                .OthersIncDtls
+              this.uploadedJson[this.ITR_Type]?.TaxExmpIntIncDtls?.OthersInc
+                ?.OthersIncDtls
             ) {
               if (this.ITR_Obj.exemptIncomes) {
                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                 const availableExemptIncomes = this.uploadedJson[
                   this.ITR_Type
-                ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.map(
+                ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.map(
                   (value) => value.NatureDesc
                 );
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
@@ -3462,13 +3462,13 @@ export class PrefillIdComponent implements OnInit {
       // EXEMPT INCOME
       {
         if (
-          this.uploadedJson[this.ITR_Type].ScheduleEI?.OthersInc?.OthersIncDtls
+          this.uploadedJson[this.ITR_Type]?.ScheduleEI?.OthersInc?.OthersIncDtls
         ) {
           if (this.ITR_Obj.exemptIncomes) {
             //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
             const availableExemptIncomes = this.uploadedJson[
               this.ITR_Type
-            ].ScheduleEI?.OthersInc?.OthersIncDtls.map(
+            ].ScheduleEI?.OthersInc?.OthersIncDtls?.map(
               (value) => value.NatureDesc
             );
             this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);

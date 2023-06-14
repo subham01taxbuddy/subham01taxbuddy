@@ -4427,18 +4427,13 @@ export class SummaryComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
         const param =
-          '/api/txbdyReport?userId=' +
-          this.ITR_JSON.userId +
-          '&itrId=' +
-          this.ITR_JSON.itrId +
-          '&assessmentYear=' +
-          this.ITR_JSON.assessmentYear;
-        this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+          '/summary/json/pdf/download?itrId=' +
+          this.ITR_JSON.itrId;
+        this.itrMsService.downloadJsonFile( param, 'application/pdf' ).subscribe(
           (result) => {
             console.log('PDF Result', result);
             const fileURL = webkitURL.createObjectURL(result);
             window.open(fileURL);
-
             this.loading = false;
             // Commented both routes as its currently option is for download xml file
             // this.router.navigate(['itr-result/success']);
