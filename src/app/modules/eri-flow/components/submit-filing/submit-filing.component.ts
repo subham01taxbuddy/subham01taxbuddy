@@ -18,7 +18,7 @@ declare let $: any;
 export class SubmitFilingComponent implements OnInit, OnChanges {
   uploadDoc: any;
   loading = false;
-  selectedOption = 'ERI';
+  selectedOption = 'MANUAL';
   // ITR_JSON: ITR_JSON;
   isValidateJson = false;
   validateJsonResponse: any;
