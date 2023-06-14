@@ -314,44 +314,44 @@ export class SummaryComponent implements OnInit {
       totalInterestAndFee: Number;
     };
     aggregateLiability: Number;
-    // taxPaid: {
-    //   onSalary: {
-    //     deductorName: String;
-    //     deductorTAN: String;
-    //     totalAmountCredited: Number;
-    //     totalTdsDeposited: Number;
-    //   }[];
-    //   totalOnSalary: Number;
-    //   otherThanSalary16A: {
-    //     deductorName: String;
-    //     deductorTAN: String;
-    //     totalAmountCredited: Number;
-    //     totalTdsDeposited: Number;
-    //   }[];
-    //   totalOtherThanSalary16A: Number;
-    //   otherThanSalary26QB: {
-    //     deductorName: String;
-    //     deductorTAN: String;
-    //     totalAmountCredited: Number;
-    //     totalTdsDeposited: Number;
-    //   }[];
-    //   totalOtherThanSalary26QB: number;
-    //   tcs: {
-    //     deductorName: String;
-    //     deductorTAN: String;
-    //     totalAmountCredited: Number;
-    //     totalTdsDeposited: Number;
-    //   }[];
-    //   totalTcs: Number;
-    //   otherThanTDSTCS: {
-    //     bsrCode: String;
-    //     date: Date;
-    //     challanNo: Number;
-    //     amount: Number;
-    //   }[];
-    //   totalOtherThanTDSTCS: Number;
-    //   totalTaxesPaid: Number;
-    // };
+    taxPaid: {
+      onSalary: {
+        deductorName: String;
+        deductorTAN: String;
+        totalAmountCredited: Number;
+        totalTdsDeposited: Number;
+      }[];
+      totalOnSalary: Number;
+      otherThanSalary16A: {
+        deductorName: String;
+        deductorTAN: String;
+        totalAmountCredited: Number;
+        totalTdsDeposited: Number;
+      }[];
+      totalOtherThanSalary16A: Number;
+      otherThanSalary26QB: {
+        deductorName: String;
+        deductorTAN: String;
+        totalAmountCredited: Number;
+        totalTdsDeposited: Number;
+      }[];
+      totalOtherThanSalary26QB: number;
+      tcs: {
+        deductorName: String;
+        deductorTAN: String;
+        totalAmountCredited: Number;
+        totalTdsDeposited: Number;
+      }[];
+      totalTcs: Number;
+      otherThanTDSTCS: {
+        bsrCode: String;
+        date: Date;
+        challanNo: Number;
+        amount: Number;
+      }[];
+      totalOtherThanTDSTCS: Number;
+      totalTaxesPaid: Number;
+    };
     amountPayable: Number;
     amountRefund: Number;
   };
@@ -594,78 +594,78 @@ export class SummaryComponent implements OnInit {
                   this.ITR14IncomeDeductions
                 ]?.IncomeOthSrc,
             },
-              businessIncome: {
-                businessIncomeDetails: {
-                  business44AD: {
-                    bank: this.ITR_JSON.itrSummaryJson['ITR'][
-                      this.itrType
-                    ].ScheduleBP?.NatOfBus44AD?.map((element) => {
-                      return {
-                        businessSection: 'Section 44AD',
-                        natureOfBusinessCode: element?.CodeAD,
-                        tradeName: element?.NameOfBusiness,
-                        grossTurnover: Number(
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.PersumptiveInc44AD
-                              ?.GrsTrnOverAnyOthMode /
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                .ScheduleBP?.NatOfBus44AD?.length
-                        ),
-                        TaxableIncome: Number(
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.PersumptiveInc44AD6Per +
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.PersumptiveInc44AD
-                              ?.PersumptiveInc44AD8Per /
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                .ScheduleBP?.NatOfBus44AD?.length
-                        ),
-                      };
-                    }),
-
-                    cash: [
-                      {
-                        businessSection: null,
-                        natureOfBusinessCode: null,
-                        tradeName: null,
-                        grossTurnover: null,
-                        TaxableIncome: null,
-                      },
-                    ],
-                  },
-
-                  business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+            businessIncome: {
+              businessIncomeDetails: {
+                business44AD: {
+                  bank: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
-                  ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+                  ].ScheduleBP?.NatOfBus44AD?.map((element) => {
                     return {
-                      businessSection: 'Section 44ADA',
-                      natureOfBusinessCode: element?.CodeADA,
+                      businessSection: 'Section 44AD',
+                      natureOfBusinessCode: element?.CodeAD,
                       tradeName: element?.NameOfBusiness,
                       grossTurnover: Number(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
                           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.NatOfBus44ADA?.length
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.GrsTrnOverAnyOthMode /
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.NatOfBus44AD?.length
                       ),
                       TaxableIncome: Number(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44ADA
-                          ?.TotPersumptiveInc44ADA /
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.PersumptiveInc44AD6Per +
                           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.NatOfBus44ADA?.length
+                            .ScheduleBP?.PersumptiveInc44AD
+                            ?.PersumptiveInc44AD8Per /
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              .ScheduleBP?.NatOfBus44AD?.length
                       ),
                     };
                   }),
+
+                  cash: [
+                    {
+                      businessSection: null,
+                      natureOfBusinessCode: null,
+                      tradeName: null,
+                      grossTurnover: null,
+                      TaxableIncome: null,
+                    },
+                  ],
                 },
-                businessIncomeTotal:
-                  this.itrType === 'ITR4'
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
-                    : 0,
+
+                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+                  return {
+                    businessSection: 'Section 44ADA',
+                    natureOfBusinessCode: element?.CodeADA,
+                    tradeName: element?.NameOfBusiness,
+                    grossTurnover: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44ADA?.length
+                    ),
+                    TaxableIncome: Number(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.PersumptiveInc44ADA
+                        ?.TotPersumptiveInc44ADA /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44ADA?.length
+                    ),
+                  };
+                }),
               },
+              businessIncomeTotal:
+                this.itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  : 0,
+            },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
@@ -823,473 +823,473 @@ export class SummaryComponent implements OnInit {
                 this.taxComputation
               ]?.TotTaxPlusIntrstPay,
 
-            //   taxPaid: {
-            //     onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //       .TDSonSalaries?.TDSonSalary
-            //       ? (Object.entries(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             .TDSonSalaries?.TDSonSalary
-            //         ).map(([key, item]) => ({
-            //           deductorName: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               IncChrgSal: Number;
-            //               TotalTDSSal: Number;
-            //             }
-            //           ).EmployerOrDeductorOrCollectDetl
-            //             ?.EmployerOrDeductorOrCollecterName,
-            //           deductorTAN: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               IncChrgSal: Number;
-            //               TotalTDSSal: Number;
-            //             }
-            //           ).EmployerOrDeductorOrCollectDetl?.TAN,
-            //           totalAmountCredited: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               IncChrgSal: Number;
-            //               TotalTDSSal: Number;
-            //             }
-            //           ).IncChrgSal,
-            //           totalTdsDeposited: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               IncChrgSal: Number;
-            //               TotalTDSSal: Number;
-            //             }
-            //           ).TotalTDSSal,
-            //         })) as {
-            //           deductorName: String;
-            //           deductorTAN: String;
-            //           totalAmountCredited: Number;
-            //           totalTdsDeposited: Number;
-            //         }[])
-            //       : null,
-            //     totalOnSalary:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
-            //         ?.TotalTDSonSalaries,
+            taxPaid: {
+              onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                .TDSonSalaries?.TDSonSalary
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      .TDSonSalaries?.TDSonSalary
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl
+                      ?.EmployerOrDeductorOrCollecterName,
+                    deductorTAN: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl?.TAN,
+                    totalAmountCredited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).IncChrgSal,
+                    totalTdsDeposited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).TotalTDSSal,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalOnSalary:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
+                  ?.TotalTDSonSalaries,
 
-            //     otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
-            //       this.itrType
-            //     ].TDSonOthThanSals?.TDSonOthThanSal
-            //       ? this.itrType === 'ITR1'
-            //         ? (Object.entries(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               .TDSonOthThanSals?.TDSonOthThanSal
-            //           ).map(([key, item]) => ({
-            //             deductorName: (
-            //               item as {
-            //                 EmployerOrDeductorOrCollectDetl: {
-            //                   TAN: String;
-            //                   EmployerOrDeductorOrCollecterName: String;
-            //                 };
-            //                 AmtForTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TotTDSOnAmtPaid: Number;
-            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
-            //               }
-            //             ).EmployerOrDeductorOrCollectDetl
-            //               ?.EmployerOrDeductorOrCollecterName,
-            //             deductorTAN: (
-            //               item as {
-            //                 EmployerOrDeductorOrCollectDetl: {
-            //                   TAN: String;
-            //                   EmployerOrDeductorOrCollecterName: String;
-            //                 };
-            //                 AmtForTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TotTDSOnAmtPaid: Number;
-            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
-            //               }
-            //             ).EmployerOrDeductorOrCollectDetl?.TAN,
-            //             totalAmountCredited: (
-            //               item as {
-            //                 EmployerOrDeductorOrCollectDetl: {
-            //                   TAN: String;
-            //                   EmployerOrDeductorOrCollecterName: String;
-            //                 };
-            //                 AmtForTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TotTDSOnAmtPaid: Number;
-            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
-            //               }
-            //             ).AmtForTaxDeduct,
-            //             totalTdsDeposited: (
-            //               item as {
-            //                 EmployerOrDeductorOrCollectDetl: {
-            //                   TAN: String;
-            //                   EmployerOrDeductorOrCollecterName: String;
-            //                 };
-            //                 AmtForTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TotTDSOnAmtPaid: Number;
-            //                 ClaimOutOfTotTDSOnAmtPaid: Number;
-            //               }
-            //             ).ClaimOutOfTotTDSOnAmtPaid,
-            //           })) as {
-            //             deductorName: String;
-            //             deductorTAN: String;
-            //             totalAmountCredited: Number;
-            //             totalTdsDeposited: Number;
-            //           }[])
-            //         : (Object.entries(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               ?.TDSonOthThanSals?.TDSonOthThanSalDtls
-            //           ).map(([key, item]) => ({
-            //             deductorName: (
-            //               item as {
-            //                 TANOfDeductor: String;
-            //                 BroughtFwdTDSAmt: Number;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).TANOfDeductor,
-            //             deductorTAN: (
-            //               item as {
-            //                 TANOfDeductor: String;
-            //                 BroughtFwdTDSAmt: Number;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).TANOfDeductor,
-            //             totalAmountCredited: (
-            //               item as {
-            //                 TANOfDeductor: String;
-            //                 BroughtFwdTDSAmt: Number;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).GrossAmount,
-            //             totalTdsDeposited: (
-            //               item as {
-            //                 TANOfDeductor: String;
-            //                 BroughtFwdTDSAmt: Number;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).TDSDeducted,
-            //           })) as {
-            //             deductorName: String;
-            //             deductorTAN: String;
-            //             totalAmountCredited: Number;
-            //             totalTdsDeposited: Number;
-            //           }[])
-            //       : null,
-            //     totalOtherThanSalary16A:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //         ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
+              otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ].TDSonOthThanSals?.TDSonOthThanSal
+                ? this.itrType === 'ITR1'
+                  ? (Object.entries(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .TDSonOthThanSals?.TDSonOthThanSal
+                    ).map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          EmployerOrDeductorOrCollectDetl: {
+                            TAN: String;
+                            EmployerOrDeductorOrCollecterName: String;
+                          };
+                          AmtForTaxDeduct: Number;
+                          DeductedYr: String;
+                          TotTDSOnAmtPaid: Number;
+                          ClaimOutOfTotTDSOnAmtPaid: Number;
+                        }
+                      ).EmployerOrDeductorOrCollectDetl
+                        ?.EmployerOrDeductorOrCollecterName,
+                      deductorTAN: (
+                        item as {
+                          EmployerOrDeductorOrCollectDetl: {
+                            TAN: String;
+                            EmployerOrDeductorOrCollecterName: String;
+                          };
+                          AmtForTaxDeduct: Number;
+                          DeductedYr: String;
+                          TotTDSOnAmtPaid: Number;
+                          ClaimOutOfTotTDSOnAmtPaid: Number;
+                        }
+                      ).EmployerOrDeductorOrCollectDetl?.TAN,
+                      totalAmountCredited: (
+                        item as {
+                          EmployerOrDeductorOrCollectDetl: {
+                            TAN: String;
+                            EmployerOrDeductorOrCollecterName: String;
+                          };
+                          AmtForTaxDeduct: Number;
+                          DeductedYr: String;
+                          TotTDSOnAmtPaid: Number;
+                          ClaimOutOfTotTDSOnAmtPaid: Number;
+                        }
+                      ).AmtForTaxDeduct,
+                      totalTdsDeposited: (
+                        item as {
+                          EmployerOrDeductorOrCollectDetl: {
+                            TAN: String;
+                            EmployerOrDeductorOrCollecterName: String;
+                          };
+                          AmtForTaxDeduct: Number;
+                          DeductedYr: String;
+                          TotTDSOnAmtPaid: Number;
+                          ClaimOutOfTotTDSOnAmtPaid: Number;
+                        }
+                      ).ClaimOutOfTotTDSOnAmtPaid,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : (Object.entries(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.TDSonOthThanSals?.TDSonOthThanSalDtls
+                    ).map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          TANOfDeductor: String;
+                          BroughtFwdTDSAmt: Number;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).TANOfDeductor,
+                      deductorTAN: (
+                        item as {
+                          TANOfDeductor: String;
+                          BroughtFwdTDSAmt: Number;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).TANOfDeductor,
+                      totalAmountCredited: (
+                        item as {
+                          TANOfDeductor: String;
+                          BroughtFwdTDSAmt: Number;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).GrossAmount,
+                      totalTdsDeposited: (
+                        item as {
+                          TANOfDeductor: String;
+                          BroughtFwdTDSAmt: Number;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).TDSDeducted,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                : null,
+              totalOtherThanSalary16A:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
 
-            //     otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
-            //       this.itrType
-            //     ].ScheduleTDS3Dtls?.TDS3Details
-            //       ? this.itrType === 'ITR1'
-            //         ? (Object.entries(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               ?.ScheduleTDS3Dtls?.TDS3Details
-            //           ).map(([key, item]) => ({
-            //             deductorName: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 NameOfTenant: String;
-            //                 GrsRcptToTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //               }
-            //             ).NameOfTenant,
-            //             deductorTAN: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 NameOfTenant: String;
-            //                 GrsRcptToTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //               }
-            //             ).PANofTenant,
-            //             totalAmountCredited: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 NameOfTenant: String;
-            //                 GrsRcptToTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //               }
-            //             ).GrsRcptToTaxDeduct,
-            //             totalTdsDeposited: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 NameOfTenant: String;
-            //                 GrsRcptToTaxDeduct: Number;
-            //                 DeductedYr: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //               }
-            //             ).TDSClaimed,
-            //           })) as {
-            //             deductorName: String;
-            //             deductorTAN: String;
-            //             totalAmountCredited: Number;
-            //             totalTdsDeposited: Number;
-            //           }[])
-            //         : (Object.entries(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               ?.ScheduleTDS3Dtls?.TDS3Details
-            //           ).map(([key, item]) => ({
-            //             deductorName: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).HeadOfIncome,
-            //             deductorTAN: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).PANofTenant,
-            //             totalAmountCredited: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).GrossAmount,
-            //             totalTdsDeposited: (
-            //               item as {
-            //                 PANofTenant: String;
-            //                 AadhaarofTenant: String;
-            //                 TDSDeducted: Number;
-            //                 TDSClaimed: Number;
-            //                 GrossAmount: Number;
-            //                 HeadOfIncome: String;
-            //                 TDSCreditCarriedFwd: Number;
-            //               }
-            //             ).TDSDeducted,
-            //           })) as {
-            //             deductorName: String;
-            //             deductorTAN: String;
-            //             totalAmountCredited: Number;
-            //             totalTdsDeposited: Number;
-            //           }[])
-            //       : null,
-            //     totalOtherThanSalary26QB:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //         ?.ScheduleTDS3Dtls?.TDS3Details,
+              otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ].ScheduleTDS3Dtls?.TDS3Details
+                ? this.itrType === 'ITR1'
+                  ? (Object.entries(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleTDS3Dtls?.TDS3Details
+                    ).map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).NameOfTenant,
+                      deductorTAN: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).PANofTenant,
+                      totalAmountCredited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).GrsRcptToTaxDeduct,
+                      totalTdsDeposited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          NameOfTenant: String;
+                          GrsRcptToTaxDeduct: Number;
+                          DeductedYr: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                        }
+                      ).TDSClaimed,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : (Object.entries(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleTDS3Dtls?.TDS3Details
+                    ).map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).HeadOfIncome,
+                      deductorTAN: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).PANofTenant,
+                      totalAmountCredited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).GrossAmount,
+                      totalTdsDeposited: (
+                        item as {
+                          PANofTenant: String;
+                          AadhaarofTenant: String;
+                          TDSDeducted: Number;
+                          TDSClaimed: Number;
+                          GrossAmount: Number;
+                          HeadOfIncome: String;
+                          TDSCreditCarriedFwd: Number;
+                        }
+                      ).TDSDeducted,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                : null,
+              totalOtherThanSalary26QB:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  ?.ScheduleTDS3Dtls?.TDS3Details,
 
-            //     tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
-            //       ?.TCS
-            //       ? (Object.entries(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             ?.ScheduleTCS?.TCS
-            //         ).map(([key, item]) => ({
-            //           deductorName: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtTaxCollected: Number;
-            //               CollectedYr: String;
-            //               TotalTCS: Number;
-            //               AmtTCSClaimedThisYear: Number;
-            //             }
-            //           ).EmployerOrDeductorOrCollectDetl
-            //             ?.EmployerOrDeductorOrCollecterName,
-            //           deductorTAN: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtTaxCollected: Number;
-            //               CollectedYr: String;
-            //               TotalTCS: Number;
-            //               AmtTCSClaimedThisYear: Number;
-            //             }
-            //           ).EmployerOrDeductorOrCollectDetl?.TAN,
-            //           totalAmountCredited: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtTaxCollected: Number;
-            //               CollectedYr: String;
-            //               TotalTCS: Number;
-            //               AmtTCSClaimedThisYear: Number;
-            //             }
-            //           ).AmtTaxCollected,
-            //           totalTdsDeposited: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtTaxCollected: Number;
-            //               CollectedYr: String;
-            //               TotalTCS: Number;
-            //               AmtTCSClaimedThisYear: Number;
-            //             }
-            //           ).AmtTCSClaimedThisYear,
-            //         })) as {
-            //           deductorName: String;
-            //           deductorTAN: String;
-            //           totalAmountCredited: Number;
-            //           totalTdsDeposited: Number;
-            //         }[])
-            //       : null,
-            //     totalTcs:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
-            //         ?.TotalSchTCS,
+              tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
+                ?.TCS
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleTCS?.TCS
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl
+                      ?.EmployerOrDeductorOrCollecterName,
+                    deductorTAN: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl?.TAN,
+                    totalAmountCredited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).AmtTaxCollected,
+                    totalTdsDeposited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).AmtTCSClaimedThisYear,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalTcs:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
+                  ?.TotalSchTCS,
 
-            //     otherThanTDSTCS:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
-            //         ?.TotalTaxPayments ||
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
-            //         ?.TotalTaxPayments
-            //         ? this.itrType === 'ITR1'
-            //           ? (Object.entries(
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 ?.TaxPayments?.TaxPayment
-            //             ).map(([key, item]) => ({
-            //               bsrCode: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).BSRCode,
-            //               date: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).DateDep,
-            //               challanNo: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).SrlNoOfChaln,
-            //               amount: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).Amt,
-            //             })) as {
-            //               bsrCode: String;
-            //               date: Date;
-            //               challanNo: Number;
-            //               amount: Number;
-            //             }[])
-            //           : (Object.entries(
-            //               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //                 ?.ScheduleIT?.TaxPayment
-            //             ).map(([key, item]) => ({
-            //               bsrCode: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).BSRCode,
-            //               date: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).DateDep,
-            //               challanNo: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).SrlNoOfChaln,
-            //               amount: (
-            //                 item as {
-            //                   BSRCode: String;
-            //                   DateDep: Date;
-            //                   SrlNoOfChaln: Number;
-            //                   Amt: Number;
-            //                 }
-            //               ).Amt,
-            //             })) as {
-            //               bsrCode: String;
-            //               date: Date;
-            //               challanNo: Number;
-            //               amount: Number;
-            //             }[])
-            //         : null,
+              otherThanTDSTCS:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
+                  ?.TotalTaxPayments ||
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
+                  ?.TotalTaxPayments
+                  ? this.itrType === 'ITR1'
+                    ? (Object.entries(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.TaxPayments?.TaxPayment
+                      ).map(([key, item]) => ({
+                        bsrCode: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).BSRCode,
+                        date: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).DateDep,
+                        challanNo: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).SrlNoOfChaln,
+                        amount: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).Amt,
+                      })) as {
+                        bsrCode: String;
+                        date: Date;
+                        challanNo: Number;
+                        amount: Number;
+                      }[])
+                    : (Object.entries(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleIT?.TaxPayment
+                      ).map(([key, item]) => ({
+                        bsrCode: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).BSRCode,
+                        date: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).DateDep,
+                        challanNo: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).SrlNoOfChaln,
+                        amount: (
+                          item as {
+                            BSRCode: String;
+                            DateDep: Date;
+                            SrlNoOfChaln: Number;
+                            Amt: Number;
+                          }
+                        ).Amt,
+                      })) as {
+                        bsrCode: String;
+                        date: Date;
+                        challanNo: Number;
+                        amount: Number;
+                      }[])
+                  : null,
 
-            //     totalOtherThanTDSTCS:
-            //       this.itrType === 'ITR1'
-            //         ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             ?.TaxPayments?.TotalTaxPayments
-            //         : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             ?.ScheduleIT?.TotalTaxPayments,
+              totalOtherThanTDSTCS:
+                this.itrType === 'ITR1'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.TaxPayments?.TotalTaxPayments
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleIT?.TotalTaxPayments,
 
-            //     totalTaxesPaid:
-            //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
-            //         ?.TaxesPaid?.TotalTaxesPaid,
-            //   },
+              totalTaxesPaid:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
+                  ?.TaxesPaid?.TotalTaxesPaid,
+            },
             amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
@@ -1642,7 +1642,6 @@ export class SummaryComponent implements OnInit {
                   ?.ComputationOfTaxLiability?.TaxPayableOnTI
                   ?.TaxPayableOnTotInc,
             },
-
             rebateUnderSection87A:
               this.itrType === 'ITR2'
                 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
@@ -1731,473 +1730,317 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability,
 
-            // taxPaid: {
-            //   onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //     .TDSonSalaries?.TDSonSalary
-            //     ? (Object.entries(
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //           .TDSonSalaries?.TDSonSalary
-            //       ).map(([key, item]) => ({
-            //         deductorName: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             IncChrgSal: Number;
-            //             TotalTDSSal: Number;
-            //           }
-            //         ).EmployerOrDeductorOrCollectDetl
-            //           ?.EmployerOrDeductorOrCollecterName,
-            //         deductorTAN: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             IncChrgSal: Number;
-            //             TotalTDSSal: Number;
-            //           }
-            //         ).EmployerOrDeductorOrCollectDetl?.TAN,
-            //         totalAmountCredited: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             IncChrgSal: Number;
-            //             TotalTDSSal: Number;
-            //           }
-            //         ).IncChrgSal,
-            //         totalTdsDeposited: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             IncChrgSal: Number;
-            //             TotalTDSSal: Number;
-            //           }
-            //         ).TotalTDSSal,
-            //       })) as {
-            //         deductorName: String;
-            //         deductorTAN: String;
-            //         totalAmountCredited: Number;
-            //         totalTdsDeposited: Number;
-            //       }[])
-            //     : null,
-            //   totalOnSalary:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TDSonSalaries
-            //       ?.TotalTDSonSalaries,
+            taxPaid: {
+              onSalary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.ScheduleTDS1?.TDSonSalary
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleTDS1?.TDSonSalary
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl
+                      ?.EmployerOrDeductorOrCollecterName,
+                    deductorTAN: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl?.TAN,
+                    totalAmountCredited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).IncChrgSal,
+                    totalTdsDeposited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        IncChrgSal: Number;
+                        TotalTDSSal: Number;
+                      }
+                    ).TotalTDSSal,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalOnSalary:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTDS1
+                  ?.TotalTDSonSalaries,
 
-            //   otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
-            //     this.itrType
-            //   ].TDSonOthThanSals?.TDSonOthThanSal
-            //     ? this.itrType === 'ITR1'
-            //       ? (Object.entries(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             .TDSonOthThanSals?.TDSonOthThanSal
-            //         ).map(([key, item]) => ({
-            //           deductorName: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtForTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TotTDSOnAmtPaid: Number;
-            //               ClaimOutOfTotTDSOnAmtPaid: Number;
-            //             }
-            //           ).EmployerOrDeductorOrCollectDetl
-            //             ?.EmployerOrDeductorOrCollecterName,
-            //           deductorTAN: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtForTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TotTDSOnAmtPaid: Number;
-            //               ClaimOutOfTotTDSOnAmtPaid: Number;
-            //             }
-            //           ).EmployerOrDeductorOrCollectDetl?.TAN,
-            //           totalAmountCredited: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtForTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TotTDSOnAmtPaid: Number;
-            //               ClaimOutOfTotTDSOnAmtPaid: Number;
-            //             }
-            //           ).AmtForTaxDeduct,
-            //           totalTdsDeposited: (
-            //             item as {
-            //               EmployerOrDeductorOrCollectDetl: {
-            //                 TAN: String;
-            //                 EmployerOrDeductorOrCollecterName: String;
-            //               };
-            //               AmtForTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TotTDSOnAmtPaid: Number;
-            //               ClaimOutOfTotTDSOnAmtPaid: Number;
-            //             }
-            //           ).ClaimOutOfTotTDSOnAmtPaid,
-            //         })) as {
-            //           deductorName: String;
-            //           deductorTAN: String;
-            //           totalAmountCredited: Number;
-            //           totalTdsDeposited: Number;
-            //         }[])
-            //       : (Object.entries(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             ?.TDSonOthThanSals?.TDSonOthThanSalDtls
-            //         ).map(([key, item]) => ({
-            //           deductorName: (
-            //             item as {
-            //               TANOfDeductor: String;
-            //               BroughtFwdTDSAmt: Number;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).TANOfDeductor,
-            //           deductorTAN: (
-            //             item as {
-            //               TANOfDeductor: String;
-            //               BroughtFwdTDSAmt: Number;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).TANOfDeductor,
-            //           totalAmountCredited: (
-            //             item as {
-            //               TANOfDeductor: String;
-            //               BroughtFwdTDSAmt: Number;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).GrossAmount,
-            //           totalTdsDeposited: (
-            //             item as {
-            //               TANOfDeductor: String;
-            //               BroughtFwdTDSAmt: Number;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).TDSDeducted,
-            //         })) as {
-            //           deductorName: String;
-            //           deductorTAN: String;
-            //           totalAmountCredited: Number;
-            //           totalTdsDeposited: Number;
-            //         }[])
-            //     : null,
-            //   totalOtherThanSalary16A:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //       ?.TDSonOthThanSals?.TotalTDSonOthThanSals,
+              otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleTDS2?.TDSOthThanSalaryDtls
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleTDS2?.TDSOthThanSalaryDtls
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.TDSCreditName,
+                    deductorTAN: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.TANOfDeductor,
+                    totalAmountCredited: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.GrossAmount,
+                    totalTdsDeposited: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.TaxDeductCreditDtls?.TaxClaimedOwnHands,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalOtherThanSalary16A:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTDS2
+                  ?.TotalTDSonOthThanSals,
 
-            //   otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
-            //     this.itrType
-            //   ].ScheduleTDS3Dtls?.TDS3Details
-            //     ? this.itrType === 'ITR1'
-            //       ? (Object.entries(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             ?.ScheduleTDS3Dtls?.TDS3Details
-            //         ).map(([key, item]) => ({
-            //           deductorName: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               NameOfTenant: String;
-            //               GrsRcptToTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //             }
-            //           ).NameOfTenant,
-            //           deductorTAN: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               NameOfTenant: String;
-            //               GrsRcptToTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //             }
-            //           ).PANofTenant,
-            //           totalAmountCredited: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               NameOfTenant: String;
-            //               GrsRcptToTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //             }
-            //           ).GrsRcptToTaxDeduct,
-            //           totalTdsDeposited: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               NameOfTenant: String;
-            //               GrsRcptToTaxDeduct: Number;
-            //               DeductedYr: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //             }
-            //           ).TDSClaimed,
-            //         })) as {
-            //           deductorName: String;
-            //           deductorTAN: String;
-            //           totalAmountCredited: Number;
-            //           totalTdsDeposited: Number;
-            //         }[])
-            //       : (Object.entries(
-            //           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //             ?.ScheduleTDS3Dtls?.TDS3Details
-            //         ).map(([key, item]) => ({
-            //           deductorName: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).HeadOfIncome,
-            //           deductorTAN: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).PANofTenant,
-            //           totalAmountCredited: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).GrossAmount,
-            //           totalTdsDeposited: (
-            //             item as {
-            //               PANofTenant: String;
-            //               AadhaarofTenant: String;
-            //               TDSDeducted: Number;
-            //               TDSClaimed: Number;
-            //               GrossAmount: Number;
-            //               HeadOfIncome: String;
-            //               TDSCreditCarriedFwd: Number;
-            //             }
-            //           ).TDSDeducted,
-            //         })) as {
-            //           deductorName: String;
-            //           deductorTAN: String;
-            //           totalAmountCredited: Number;
-            //           totalTdsDeposited: Number;
-            //         }[])
-            //     : null,
-            //   totalOtherThanSalary26QB:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //       ?.ScheduleTDS3Dtls?.TDS3Details,
+              otherThanSalary26QB: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleTDS3?.TDS3onOthThanSalDtls
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleTDS3?.TDS3onOthThanSalDtls
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                        TDSCreditName: String;
+                        PANOfBuyerTenant: String;
+                        GrossAmount: Number;
+                        HeadOfIncome: String;
+                        AmtCarriedFwd: Number;
+                      }
+                    ).TDSCreditName,
+                    deductorTAN: (
+                      item as {
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                        TDSCreditName: String;
+                        PANOfBuyerTenant: String;
+                        GrossAmount: Number;
+                        HeadOfIncome: String;
+                        AmtCarriedFwd: Number;
+                      }
+                    ).PANOfBuyerTenant,
+                    totalAmountCredited: (
+                      item as {
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                        TDSCreditName: String;
+                        PANOfBuyerTenant: String;
+                        GrossAmount: Number;
+                        HeadOfIncome: String;
+                        AmtCarriedFwd: Number;
+                      }
+                    ).GrossAmount,
+                    totalTdsDeposited: (
+                      item as {
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                        TDSCreditName: String;
+                        PANOfBuyerTenant: String;
+                        GrossAmount: Number;
+                        HeadOfIncome: String;
+                        AmtCarriedFwd: Number;
+                      }
+                    ).TaxDeductCreditDtls?.TaxClaimedOwnHands,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalOtherThanSalary26QB:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTDS3
+                  ?.TotalTDS3OnOthThanSal,
 
-            //   tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
-            //     ?.TCS
-            //     ? (Object.entries(
-            //         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //           ?.ScheduleTCS?.TCS
-            //       ).map(([key, item]) => ({
-            //         deductorName: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             AmtTaxCollected: Number;
-            //             CollectedYr: String;
-            //             TotalTCS: Number;
-            //             AmtTCSClaimedThisYear: Number;
-            //           }
-            //         ).EmployerOrDeductorOrCollectDetl
-            //           ?.EmployerOrDeductorOrCollecterName,
-            //         deductorTAN: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             AmtTaxCollected: Number;
-            //             CollectedYr: String;
-            //             TotalTCS: Number;
-            //             AmtTCSClaimedThisYear: Number;
-            //           }
-            //         ).EmployerOrDeductorOrCollectDetl?.TAN,
-            //         totalAmountCredited: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             AmtTaxCollected: Number;
-            //             CollectedYr: String;
-            //             TotalTCS: Number;
-            //             AmtTCSClaimedThisYear: Number;
-            //           }
-            //         ).AmtTaxCollected,
-            //         totalTdsDeposited: (
-            //           item as {
-            //             EmployerOrDeductorOrCollectDetl: {
-            //               TAN: String;
-            //               EmployerOrDeductorOrCollecterName: String;
-            //             };
-            //             AmtTaxCollected: Number;
-            //             CollectedYr: String;
-            //             TotalTCS: Number;
-            //             AmtTCSClaimedThisYear: Number;
-            //           }
-            //         ).AmtTCSClaimedThisYear,
-            //       })) as {
-            //         deductorName: String;
-            //         deductorTAN: String;
-            //         totalAmountCredited: Number;
-            //         totalTdsDeposited: Number;
-            //       }[])
-            //     : null,
-            //   totalTcs:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
-            //       ?.TotalSchTCS,
+              tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
+                ?.TCS
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleTCS?.TCS
+                  ).map(([key, item]) => ({
+                    deductorName: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl
+                      ?.EmployerOrDeductorOrCollecterName,
+                    deductorTAN: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).EmployerOrDeductorOrCollectDetl?.TAN,
+                    totalAmountCredited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).TotalTCS,
+                    totalTdsDeposited: (
+                      item as {
+                        EmployerOrDeductorOrCollectDetl: {
+                          TAN: String;
+                          EmployerOrDeductorOrCollecterName: String;
+                        };
+                        AmtTaxCollected: Number;
+                        CollectedYr: String;
+                        TotalTCS: Number;
+                        AmtTCSClaimedThisYear: Number;
+                      }
+                    ).AmtTCSClaimedThisYear,
+                  })) as {
+                    deductorName: String;
+                    deductorTAN: String;
+                    totalAmountCredited: Number;
+                    totalTdsDeposited: Number;
+                  }[])
+                : null,
+              totalTcs:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
+                  ?.TotalSchTCS,
 
-            //   otherThanTDSTCS:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPayments
-            //       ?.TotalTaxPayments ||
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
-            //       ?.TotalTaxPayments
-            //       ? this.itrType === 'ITR1'
-            //         ? (Object.entries(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               ?.TaxPayments?.TaxPayment
-            //           ).map(([key, item]) => ({
-            //             bsrCode: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).BSRCode,
-            //             date: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).DateDep,
-            //             challanNo: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).SrlNoOfChaln,
-            //             amount: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).Amt,
-            //           })) as {
-            //             bsrCode: String;
-            //             date: Date;
-            //             challanNo: Number;
-            //             amount: Number;
-            //           }[])
-            //         : (Object.entries(
-            //             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //               ?.ScheduleIT?.TaxPayment
-            //           ).map(([key, item]) => ({
-            //             bsrCode: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).BSRCode,
-            //             date: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).DateDep,
-            //             challanNo: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).SrlNoOfChaln,
-            //             amount: (
-            //               item as {
-            //                 BSRCode: String;
-            //                 DateDep: Date;
-            //                 SrlNoOfChaln: Number;
-            //                 Amt: Number;
-            //               }
-            //             ).Amt,
-            //           })) as {
-            //             bsrCode: String;
-            //             date: Date;
-            //             challanNo: Number;
-            //             amount: Number;
-            //           }[])
-            //       : null,
+              otherThanTDSTCS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.ScheduleIT?.TaxPayment
+                ? (Object.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleIT?.TaxPayment
+                  ).map(([key, item]) => ({
+                    bsrCode: (
+                      item as {
+                        BSRCode: String;
+                        DateDep: Date;
+                        SrlNoOfChaln: Number;
+                        Amt: Number;
+                      }
+                    ).BSRCode,
+                    date: (
+                      item as {
+                        BSRCode: String;
+                        DateDep: Date;
+                        SrlNoOfChaln: Number;
+                        Amt: Number;
+                      }
+                    ).DateDep,
+                    challanNo: (
+                      item as {
+                        BSRCode: String;
+                        DateDep: Date;
+                        SrlNoOfChaln: Number;
+                        Amt: Number;
+                      }
+                    ).SrlNoOfChaln,
+                    amount: (
+                      item as {
+                        BSRCode: String;
+                        DateDep: Date;
+                        SrlNoOfChaln: Number;
+                        Amt: Number;
+                      }
+                    ).Amt,
+                  })) as {
+                    bsrCode: String;
+                    date: Date;
+                    challanNo: Number;
+                    amount: Number;
+                  }[])
+                : null,
 
-            //   totalOtherThanTDSTCS:
-            //     this.itrType === 'ITR1'
-            //       ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //           ?.TaxPayments?.TotalTaxPayments
-            //       : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            //           ?.ScheduleIT?.TotalTaxPayments,
+              totalOtherThanTDSTCS:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleIT
+                  ?.TotalTaxPayments,
 
-            //   totalTaxesPaid:
-            //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
-            //       ?.TaxesPaid?.TotalTaxesPaid,
-            // },
+              totalTaxesPaid:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB_TTI']
+                  ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid,
+            },
             amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.TaxPaid?.BalTaxPayable,
@@ -2504,13 +2347,13 @@ export class SummaryComponent implements OnInit {
             // 30. EXEMPT INCOME
             ExemptIncAgriOthUs10Total:
               this.itrType === 'ITR2'
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI
-                    .TotalExemptInc
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleEI
+                    ?.TotalExemptInc
                 : null,
             ExemptIncomeDetails:
               this.itrType === 'ITR2'
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleEI
-                    .OthersInc?.OthersIncDtls
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleEI
+                    ?.OthersInc?.OthersIncDtls
                 : null,
           };
           console.log(this.keys, 'this.keys ITR2&3');
@@ -2989,360 +2832,360 @@ export class SummaryComponent implements OnInit {
                   aggregateLiability:
                     this.finalSummary?.assessment?.taxSummary
                       ?.agrigateLiability,
-                  // taxPaid: {
-                  //   onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
-                  //     ? (Object.entries(
-                  //         this.finalSummary?.itr?.taxPaid?.onSalary
-                  //       )?.map(([key, item]) => ({
-                  //         deductorName: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //           }
-                  //         ).deductorName,
-                  //         deductorTAN: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //           }
-                  //         ).deductorTAN,
-                  //         totalAmountCredited: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //           }
-                  //         ).totalAmountCredited,
-                  //         totalTdsDeposited: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //           }
-                  //         ).totalTdsDeposited,
-                  //       })) as {
-                  //         deductorName: String;
-                  //         deductorTAN: String;
-                  //         totalAmountCredited: Number;
-                  //         totalTdsDeposited: Number;
-                  //       }[])
-                  //     : null,
-                  //   totalOnSalary:
-                  //     this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
-                  //       (total, item) => total + item?.totalTdsDeposited,
-                  //       0
-                  //     ),
+                  taxPaid: {
+                    onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.onSalary
+                        )?.map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).deductorName,
+                          deductorTAN: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).deductorTAN,
+                          totalAmountCredited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).totalAmountCredited,
+                          totalTdsDeposited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                            }
+                          ).totalTdsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
+                    totalOnSalary:
+                      this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                        (total, item) => total + item?.totalTdsDeposited,
+                        0
+                      ),
 
-                  //   otherThanSalary16A: this.finalSummary?.itr?.taxPaid
-                  //     ?.otherThanSalary16A
-                  //     ? (Object.entries(
-                  //         this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                  //       )?.map(([key, item]) => ({
-                  //         deductorName: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             headOfIncome: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: any;
-                  //           }
-                  //         ).deductorName,
-                  //         deductorTAN: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             headOfIncome: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: any;
-                  //           }
-                  //         ).deductorTAN,
-                  //         totalAmountCredited: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             headOfIncome: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: any;
-                  //           }
-                  //         ).totalAmountCredited,
-                  //         totalTdsDeposited: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorTAN: String;
-                  //             headOfIncome: String;
-                  //             id: any;
-                  //             srNo: any;
-                  //             taxDeduction: any;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: any;
-                  //           }
-                  //         ).totalTdsDeposited,
-                  //       })) as {
-                  //         deductorName: String;
-                  //         deductorTAN: String;
-                  //         totalAmountCredited: Number;
-                  //         totalTdsDeposited: Number;
-                  //       }[])
-                  //     : null,
+                    otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                      ?.otherThanSalary16A
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                        )?.map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).deductorName,
+                          deductorTAN: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).deductorTAN,
+                          totalAmountCredited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).totalAmountCredited,
+                          totalTdsDeposited: (
+                            item as {
+                              deductorName: String;
+                              deductorTAN: String;
+                              headOfIncome: String;
+                              id: any;
+                              srNo: any;
+                              taxDeduction: any;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: any;
+                            }
+                          ).totalTdsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
 
-                  //   totalOtherThanSalary16A:
-                  //     this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
-                  //       (total, item) => total + item?.totalTdsDeposited,
-                  //       0
-                  //     ),
+                    totalOtherThanSalary16A:
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
+                        (total, item) => total + item?.totalTdsDeposited,
+                        0
+                      ),
 
-                  //   otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
-                  //     ?.otherThanSalary26QB
-                  //     ? (Object.entries(
-                  //         this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                  //       )?.map(([key, item]) => ({
-                  //         deductorName: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorPAN: String;
-                  //             headOfIncome: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: null;
-                  //           }
-                  //         ).deductorName,
-                  //         deductorTAN: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorPAN: String;
-                  //             headOfIncome: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: null;
-                  //           }
-                  //         ).deductorPAN,
-                  //         totalAmountCredited: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorPAN: String;
-                  //             headOfIncome: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: null;
-                  //           }
-                  //         ).totalAmountCredited,
-                  //         totalTdsDeposited: (
-                  //           item as {
-                  //             deductorName: String;
-                  //             deductorPAN: String;
-                  //             headOfIncome: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountCredited: Number;
-                  //             totalTdsDeposited: Number;
-                  //             uniqueTDSCerNo: null;
-                  //           }
-                  //         ).totalTdsDeposited,
-                  //       })) as {
-                  //         deductorName: String;
-                  //         deductorTAN: String;
-                  //         totalAmountCredited: Number;
-                  //         totalTdsDeposited: Number;
-                  //       }[])
-                  //     : null,
+                    otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                      ?.otherThanSalary26QB
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                        )?.map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).deductorName,
+                          deductorTAN: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).deductorPAN,
+                          totalAmountCredited: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).totalAmountCredited,
+                          totalTdsDeposited: (
+                            item as {
+                              deductorName: String;
+                              deductorPAN: String;
+                              headOfIncome: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountCredited: Number;
+                              totalTdsDeposited: Number;
+                              uniqueTDSCerNo: null;
+                            }
+                          ).totalTdsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
 
-                  //   totalOtherThanSalary26QB:
-                  //     this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
-                  //       (total, item) => total + item?.totalTdsDeposited,
-                  //       0
-                  //     ),
+                    totalOtherThanSalary26QB:
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
+                        (total, item) => total + item?.totalTdsDeposited,
+                        0
+                      ),
 
-                  //   tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                  //     ? (Object.entries(
-                  //         this.finalSummary?.itr?.taxPaid?.tcs
-                  //       )?.map(([key, item]) => ({
-                  //         deductorName: (
-                  //           item as {
-                  //             collectorName: String;
-                  //             collectorTAN: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountPaid: Number;
-                  //             totalTaxCollected: Number;
-                  //             totalTcsDeposited: Number;
-                  //           }
-                  //         ).collectorName,
-                  //         deductorTAN: (
-                  //           item as {
-                  //             collectorName: String;
-                  //             collectorTAN: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountPaid: Number;
-                  //             totalTaxCollected: Number;
-                  //             totalTcsDeposited: Number;
-                  //           }
-                  //         ).collectorTAN,
-                  //         totalAmountCredited: (
-                  //           item as {
-                  //             collectorName: String;
-                  //             collectorTAN: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountPaid: Number;
-                  //             totalTaxCollected: Number;
-                  //             totalTcsDeposited: Number;
-                  //           }
-                  //         ).totalAmountPaid,
-                  //         totalTdsDeposited: (
-                  //           item as {
-                  //             collectorName: String;
-                  //             collectorTAN: String;
-                  //             id: null;
-                  //             srNo: null;
-                  //             taxDeduction: null;
-                  //             totalAmountPaid: Number;
-                  //             totalTaxCollected: Number;
-                  //             totalTcsDeposited: Number;
-                  //           }
-                  //         ).totalTcsDeposited,
-                  //       })) as {
-                  //         deductorName: String;
-                  //         deductorTAN: String;
-                  //         totalAmountCredited: Number;
-                  //         totalTdsDeposited: Number;
-                  //       }[])
-                  //     : null,
-                  //   totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
-                  //     (total, item) => total + item?.totalTcsDeposited,
-                  //     0
-                  //   ),
+                    tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.tcs
+                        )?.map(([key, item]) => ({
+                          deductorName: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).collectorName,
+                          deductorTAN: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).collectorTAN,
+                          totalAmountCredited: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).totalAmountPaid,
+                          totalTdsDeposited: (
+                            item as {
+                              collectorName: String;
+                              collectorTAN: String;
+                              id: null;
+                              srNo: null;
+                              taxDeduction: null;
+                              totalAmountPaid: Number;
+                              totalTaxCollected: Number;
+                              totalTcsDeposited: Number;
+                            }
+                          ).totalTcsDeposited,
+                        })) as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }[])
+                      : null,
+                    totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                      (total, item) => total + item?.totalTcsDeposited,
+                      0
+                    ),
 
-                  //   otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
-                  //     ?.otherThanTDSTCS
-                  //     ? (Object.entries(
-                  //         this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
-                  //       )?.map(([key, item]) => ({
-                  //         bsrCode: (
-                  //           item as {
-                  //             bsrCode: String;
-                  //             challanNumber: Number;
-                  //             dateOfDeposit: Date;
-                  //             educationCess: any;
-                  //             id: any;
-                  //             majorHead: any;
-                  //             minorHead: any;
-                  //             other: any;
-                  //             srNo: any;
-                  //             surcharge: any;
-                  //             tax: any;
-                  //             totalTax: Number;
-                  //           }
-                  //         ).bsrCode,
-                  //         date: (
-                  //           item as {
-                  //             bsrCode: String;
-                  //             challanNumber: Number;
-                  //             dateOfDeposit: Date;
-                  //             educationCess: any;
-                  //             id: any;
-                  //             majorHead: any;
-                  //             minorHead: any;
-                  //             other: any;
-                  //             srNo: any;
-                  //             surcharge: any;
-                  //             tax: any;
-                  //             totalTax: Number;
-                  //           }
-                  //         ).dateOfDeposit,
-                  //         challanNo: (
-                  //           item as {
-                  //             bsrCode: String;
-                  //             challanNumber: Number;
-                  //             dateOfDeposit: Date;
-                  //             educationCess: any;
-                  //             id: any;
-                  //             majorHead: any;
-                  //             minorHead: any;
-                  //             other: any;
-                  //             srNo: any;
-                  //             surcharge: any;
-                  //             tax: any;
-                  //             totalTax: Number;
-                  //           }
-                  //         ).challanNumber,
-                  //         amount: (
-                  //           item as {
-                  //             bsrCode: String;
-                  //             challanNumber: Number;
-                  //             dateOfDeposit: Date;
-                  //             educationCess: any;
-                  //             id: any;
-                  //             majorHead: any;
-                  //             minorHead: any;
-                  //             other: any;
-                  //             srNo: any;
-                  //             surcharge: any;
-                  //             tax: any;
-                  //             totalTax: Number;
-                  //           }
-                  //         ).totalTax,
-                  //       })) as {
-                  //         bsrCode: String;
-                  //         date: Date;
-                  //         challanNo: Number;
-                  //         amount: Number;
-                  //       }[])
-                  //     : null,
+                    otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                      ?.otherThanTDSTCS
+                      ? (Object.entries(
+                          this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                        )?.map(([key, item]) => ({
+                          bsrCode: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: Date;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).bsrCode,
+                          date: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: Date;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).dateOfDeposit,
+                          challanNo: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: Date;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).challanNumber,
+                          amount: (
+                            item as {
+                              bsrCode: String;
+                              challanNumber: Number;
+                              dateOfDeposit: Date;
+                              educationCess: any;
+                              id: any;
+                              majorHead: any;
+                              minorHead: any;
+                              other: any;
+                              srNo: any;
+                              surcharge: any;
+                              tax: any;
+                              totalTax: Number;
+                            }
+                          ).totalTax,
+                        })) as {
+                          bsrCode: String;
+                          date: Date;
+                          challanNo: Number;
+                          amount: Number;
+                        }[])
+                      : null,
 
-                  //   totalOtherThanTDSTCS:
-                  //     this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
-                  //       (total, item) => total + item?.totalTax,
-                  //       0
-                  //     ),
+                    totalOtherThanTDSTCS:
+                      this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                        (total, item) => total + item?.totalTax,
+                        0
+                      ),
 
-                  //   totalTaxesPaid:
-                  //     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
-                  // },
+                    totalTaxesPaid:
+                      this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
+                  },
                   amountPayable:
                     this.finalSummary?.assessment?.taxSummary?.taxpayable,
                   amountRefund:
@@ -3832,360 +3675,360 @@ export class SummaryComponent implements OnInit {
                 },
                 aggregateLiability:
                   this.finalSummary?.assessment?.taxSummary?.agrigateLiability,
-                // taxPaid: {
-                //   onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
-                //     ? (Object.entries(
-                //         this.finalSummary?.itr?.taxPaid?.onSalary
-                //       )?.map(([key, item]) => ({
-                //         deductorName: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //           }
-                //         ).deductorName,
-                //         deductorTAN: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //           }
-                //         ).deductorTAN,
-                //         totalAmountCredited: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //           }
-                //         ).totalAmountCredited,
-                //         totalTdsDeposited: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //           }
-                //         ).totalTdsDeposited,
-                //       })) as {
-                //         deductorName: String;
-                //         deductorTAN: String;
-                //         totalAmountCredited: Number;
-                //         totalTdsDeposited: Number;
-                //       }[])
-                //     : null,
-                //   totalOnSalary:
-                //     this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
-                //       (total, item) => total + item?.totalTdsDeposited,
-                //       0
-                //     ),
+                taxPaid: {
+                  onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.onSalary
+                      )?.map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).deductorName,
+                        deductorTAN: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).deductorTAN,
+                        totalAmountCredited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).totalAmountCredited,
+                        totalTdsDeposited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                          }
+                        ).totalTdsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
+                  totalOnSalary:
+                    this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                      (total, item) => total + item?.totalTdsDeposited,
+                      0
+                    ),
 
-                //   otherThanSalary16A: this.finalSummary?.itr?.taxPaid
-                //     ?.otherThanSalary16A
-                //     ? (Object.entries(
-                //         this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                //       )?.map(([key, item]) => ({
-                //         deductorName: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             headOfIncome: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: any;
-                //           }
-                //         ).deductorName,
-                //         deductorTAN: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             headOfIncome: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: any;
-                //           }
-                //         ).deductorTAN,
-                //         totalAmountCredited: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             headOfIncome: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: any;
-                //           }
-                //         ).totalAmountCredited,
-                //         totalTdsDeposited: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorTAN: String;
-                //             headOfIncome: String;
-                //             id: any;
-                //             srNo: any;
-                //             taxDeduction: any;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: any;
-                //           }
-                //         ).totalTdsDeposited,
-                //       })) as {
-                //         deductorName: String;
-                //         deductorTAN: String;
-                //         totalAmountCredited: Number;
-                //         totalTdsDeposited: Number;
-                //       }[])
-                //     : null,
+                  otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                    ?.otherThanSalary16A
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                      )?.map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).deductorName,
+                        deductorTAN: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).deductorTAN,
+                        totalAmountCredited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).totalAmountCredited,
+                        totalTdsDeposited: (
+                          item as {
+                            deductorName: String;
+                            deductorTAN: String;
+                            headOfIncome: String;
+                            id: any;
+                            srNo: any;
+                            taxDeduction: any;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: any;
+                          }
+                        ).totalTdsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
 
-                //   totalOtherThanSalary16A:
-                //     this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
-                //       (total, item) => total + item?.totalTdsDeposited,
-                //       0
-                //     ),
+                  totalOtherThanSalary16A:
+                    this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
+                      (total, item) => total + item?.totalTdsDeposited,
+                      0
+                    ),
 
-                //   otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
-                //     ?.otherThanSalary26QB
-                //     ? (Object.entries(
-                //         this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                //       )?.map(([key, item]) => ({
-                //         deductorName: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorPAN: String;
-                //             headOfIncome: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: null;
-                //           }
-                //         ).deductorName,
-                //         deductorTAN: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorPAN: String;
-                //             headOfIncome: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: null;
-                //           }
-                //         ).deductorPAN,
-                //         totalAmountCredited: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorPAN: String;
-                //             headOfIncome: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: null;
-                //           }
-                //         ).totalAmountCredited,
-                //         totalTdsDeposited: (
-                //           item as {
-                //             deductorName: String;
-                //             deductorPAN: String;
-                //             headOfIncome: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountCredited: Number;
-                //             totalTdsDeposited: Number;
-                //             uniqueTDSCerNo: null;
-                //           }
-                //         ).totalTdsDeposited,
-                //       })) as {
-                //         deductorName: String;
-                //         deductorTAN: String;
-                //         totalAmountCredited: Number;
-                //         totalTdsDeposited: Number;
-                //       }[])
-                //     : null,
+                  otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                    ?.otherThanSalary26QB
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                      )?.map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).deductorName,
+                        deductorTAN: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).deductorPAN,
+                        totalAmountCredited: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).totalAmountCredited,
+                        totalTdsDeposited: (
+                          item as {
+                            deductorName: String;
+                            deductorPAN: String;
+                            headOfIncome: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountCredited: Number;
+                            totalTdsDeposited: Number;
+                            uniqueTDSCerNo: null;
+                          }
+                        ).totalTdsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
 
-                //   totalOtherThanSalary26QB:
-                //     this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
-                //       (total, item) => total + item?.totalTdsDeposited,
-                //       0
-                //     ),
+                  totalOtherThanSalary26QB:
+                    this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
+                      (total, item) => total + item?.totalTdsDeposited,
+                      0
+                    ),
 
-                //   tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                //     ? (Object.entries(
-                //         this.finalSummary?.itr?.taxPaid?.tcs
-                //       )?.map(([key, item]) => ({
-                //         deductorName: (
-                //           item as {
-                //             collectorName: String;
-                //             collectorTAN: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountPaid: Number;
-                //             totalTaxCollected: Number;
-                //             totalTcsDeposited: Number;
-                //           }
-                //         ).collectorName,
-                //         deductorTAN: (
-                //           item as {
-                //             collectorName: String;
-                //             collectorTAN: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountPaid: Number;
-                //             totalTaxCollected: Number;
-                //             totalTcsDeposited: Number;
-                //           }
-                //         ).collectorTAN,
-                //         totalAmountCredited: (
-                //           item as {
-                //             collectorName: String;
-                //             collectorTAN: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountPaid: Number;
-                //             totalTaxCollected: Number;
-                //             totalTcsDeposited: Number;
-                //           }
-                //         ).totalAmountPaid,
-                //         totalTdsDeposited: (
-                //           item as {
-                //             collectorName: String;
-                //             collectorTAN: String;
-                //             id: null;
-                //             srNo: null;
-                //             taxDeduction: null;
-                //             totalAmountPaid: Number;
-                //             totalTaxCollected: Number;
-                //             totalTcsDeposited: Number;
-                //           }
-                //         ).totalTcsDeposited,
-                //       })) as {
-                //         deductorName: String;
-                //         deductorTAN: String;
-                //         totalAmountCredited: Number;
-                //         totalTdsDeposited: Number;
-                //       }[])
-                //     : null,
-                //   totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
-                //     (total, item) => total + item?.totalTcsDeposited,
-                //     0
-                //   ),
+                  tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.tcs
+                      )?.map(([key, item]) => ({
+                        deductorName: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).collectorName,
+                        deductorTAN: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).collectorTAN,
+                        totalAmountCredited: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).totalAmountPaid,
+                        totalTdsDeposited: (
+                          item as {
+                            collectorName: String;
+                            collectorTAN: String;
+                            id: null;
+                            srNo: null;
+                            taxDeduction: null;
+                            totalAmountPaid: Number;
+                            totalTaxCollected: Number;
+                            totalTcsDeposited: Number;
+                          }
+                        ).totalTcsDeposited,
+                      })) as {
+                        deductorName: String;
+                        deductorTAN: String;
+                        totalAmountCredited: Number;
+                        totalTdsDeposited: Number;
+                      }[])
+                    : null,
+                  totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                    (total, item) => total + item?.totalTcsDeposited,
+                    0
+                  ),
 
-                //   otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
-                //     ?.otherThanTDSTCS
-                //     ? (Object.entries(
-                //         this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
-                //       )?.map(([key, item]) => ({
-                //         bsrCode: (
-                //           item as {
-                //             bsrCode: String;
-                //             challanNumber: Number;
-                //             dateOfDeposit: Date;
-                //             educationCess: any;
-                //             id: any;
-                //             majorHead: any;
-                //             minorHead: any;
-                //             other: any;
-                //             srNo: any;
-                //             surcharge: any;
-                //             tax: any;
-                //             totalTax: Number;
-                //           }
-                //         ).bsrCode,
-                //         date: (
-                //           item as {
-                //             bsrCode: String;
-                //             challanNumber: Number;
-                //             dateOfDeposit: Date;
-                //             educationCess: any;
-                //             id: any;
-                //             majorHead: any;
-                //             minorHead: any;
-                //             other: any;
-                //             srNo: any;
-                //             surcharge: any;
-                //             tax: any;
-                //             totalTax: Number;
-                //           }
-                //         ).dateOfDeposit,
-                //         challanNo: (
-                //           item as {
-                //             bsrCode: String;
-                //             challanNumber: Number;
-                //             dateOfDeposit: Date;
-                //             educationCess: any;
-                //             id: any;
-                //             majorHead: any;
-                //             minorHead: any;
-                //             other: any;
-                //             srNo: any;
-                //             surcharge: any;
-                //             tax: any;
-                //             totalTax: Number;
-                //           }
-                //         ).challanNumber,
-                //         amount: (
-                //           item as {
-                //             bsrCode: String;
-                //             challanNumber: Number;
-                //             dateOfDeposit: Date;
-                //             educationCess: any;
-                //             id: any;
-                //             majorHead: any;
-                //             minorHead: any;
-                //             other: any;
-                //             srNo: any;
-                //             surcharge: any;
-                //             tax: any;
-                //             totalTax: Number;
-                //           }
-                //         ).totalTax,
-                //       })) as {
-                //         bsrCode: String;
-                //         date: Date;
-                //         challanNo: Number;
-                //         amount: Number;
-                //       }[])
-                //     : null,
+                  otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                    ?.otherThanTDSTCS
+                    ? (Object.entries(
+                        this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                      )?.map(([key, item]) => ({
+                        bsrCode: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: Date;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).bsrCode,
+                        date: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: Date;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).dateOfDeposit,
+                        challanNo: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: Date;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).challanNumber,
+                        amount: (
+                          item as {
+                            bsrCode: String;
+                            challanNumber: Number;
+                            dateOfDeposit: Date;
+                            educationCess: any;
+                            id: any;
+                            majorHead: any;
+                            minorHead: any;
+                            other: any;
+                            srNo: any;
+                            surcharge: any;
+                            tax: any;
+                            totalTax: Number;
+                          }
+                        ).totalTax,
+                      })) as {
+                        bsrCode: String;
+                        date: Date;
+                        challanNo: Number;
+                        amount: Number;
+                      }[])
+                    : null,
 
-                //   totalOtherThanTDSTCS:
-                //     this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
-                //       (total, item) => total + item?.totalTax,
-                //       0
-                //     ),
+                  totalOtherThanTDSTCS:
+                    this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                      (total, item) => total + item?.totalTax,
+                      0
+                    ),
 
-                //   totalTaxesPaid:
-                //     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
-                // },
+                  totalTaxesPaid:
+                    this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
+                },
                 amountPayable:
                   this.finalSummary?.assessment?.taxSummary?.taxpayable,
                 amountRefund:
@@ -4579,36 +4422,101 @@ export class SummaryComponent implements OnInit {
 
   downloadPDF() {
     // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
+    // https://api.taxbuddy.com/itr/summary/json/pdf/download?itrId={itrId}
     this.loading = true;
-    const param =
-      '/api/txbdyReport?userId=' +
-      this.ITR_JSON.userId +
-      '&itrId=' +
-      this.ITR_JSON.itrId +
-      '&assessmentYear=' +
-      this.ITR_JSON.assessmentYear;
-    this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
-      (result) => {
-        console.log('PDF Result', result);
-        const fileURL = webkitURL.createObjectURL(result);
-        window.open(fileURL);
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        const param =
+          '/api/txbdyReport?userId=' +
+          this.ITR_JSON.userId +
+          '&itrId=' +
+          this.ITR_JSON.itrId +
+          '&assessmentYear=' +
+          this.ITR_JSON.assessmentYear;
+        this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+          (result) => {
+            console.log('PDF Result', result);
+            const fileURL = webkitURL.createObjectURL(result);
+            window.open(fileURL);
 
-        this.loading = false;
-        // Commented both routes as its currently option is for download xml file
-        // this.router.navigate(['itr-result/success']);
-      },
-      (error) => {
-        this.loading = false;
-        if (error.status === 403) {
-          alert('403 Download PDF');
-        } else {
-          // this.router.navigate(['itr-result/failure']);
-          this.utilsService.showSnackBar(
-            'Failed to download PDF report, please try again.'
-          );
-        }
+            this.loading = false;
+            // Commented both routes as its currently option is for download xml file
+            // this.router.navigate(['itr-result/success']);
+          },
+          (error) => {
+            this.loading = false;
+            if (error.status === 403) {
+              alert('403 Download PDF');
+            } else {
+              // this.router.navigate(['itr-result/failure']);
+              this.utilsService.showSnackBar(
+                'Failed to download PDF report, please try again.'
+              );
+            }
+          }
+        );
+      } else if (this.ITR_JSON.isItrSummaryJsonEdited === true) {
+        const param =
+          '/api/txbdyReport?userId=' +
+          this.ITR_JSON.userId +
+          '&itrId=' +
+          this.ITR_JSON.itrId +
+          '&assessmentYear=' +
+          this.ITR_JSON.assessmentYear;
+        this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+          (result) => {
+            console.log('PDF Result', result);
+            const fileURL = webkitURL.createObjectURL(result);
+            window.open(fileURL);
+
+            this.loading = false;
+            // Commented both routes as its currently option is for download xml file
+            // this.router.navigate(['itr-result/success']);
+          },
+          (error) => {
+            this.loading = false;
+            if (error.status === 403) {
+              alert('403 Download PDF');
+            } else {
+              // this.router.navigate(['itr-result/failure']);
+              this.utilsService.showSnackBar(
+                'Failed to download PDF report, please try again.'
+              );
+            }
+          }
+        );
       }
-    );
+    } else {
+      const param =
+        '/api/txbdyReport?userId=' +
+        this.ITR_JSON.userId +
+        '&itrId=' +
+        this.ITR_JSON.itrId +
+        '&assessmentYear=' +
+        this.ITR_JSON.assessmentYear;
+      this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+        (result) => {
+          console.log('PDF Result', result);
+          const fileURL = webkitURL.createObjectURL(result);
+          window.open(fileURL);
+
+          this.loading = false;
+          // Commented both routes as its currently option is for download xml file
+          // this.router.navigate(['itr-result/success']);
+        },
+        (error) => {
+          this.loading = false;
+          if (error.status === 403) {
+            alert('403 Download PDF');
+          } else {
+            // this.router.navigate(['itr-result/failure']);
+            this.utilsService.showSnackBar(
+              'Failed to download PDF report, please try again.'
+            );
+          }
+        }
+      );
+    }
   }
 
   confirmSubmitITR() {

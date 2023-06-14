@@ -4244,7 +4244,7 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.ShortTermCapGainFor23?.EquityMFonSTT;
 
-            EquityMFonSTT.forEach((equityStcg) => {
+            EquityMFonSTT?.forEach((equityStcg) => {
               if (equityStcg === EquityMFonSTT[0]) {
                 let itrObjEquity111a = this.ITR_Obj.capitalGain?.find(
                   (equity111a) =>
@@ -4634,7 +4634,7 @@ export class PrefillIdComponent implements OnInit {
 
         // AY 2017 - 2018
         {
-          const LossCFFromPrev5thYearFromAY = CFL.LossCFFromPrev5thYearFromAY;
+          const LossCFFromPrev5thYearFromAY = CFL?.LossCFFromPrev5thYearFromAY;
 
           if (
             LossCFFromPrev5thYearFromAY &&
@@ -4681,7 +4681,7 @@ export class PrefillIdComponent implements OnInit {
 
         // AY 2018 - 2019
         {
-          const LossCFFromPrev4thYearFromAY = CFL.LossCFFromPrev4thYearFromAY;
+          const LossCFFromPrev4thYearFromAY = CFL?.LossCFFromPrev4thYearFromAY;
 
           if (
             LossCFFromPrev4thYearFromAY &&
