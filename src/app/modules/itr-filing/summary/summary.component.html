@@ -115,13 +115,13 @@
         </div>
 
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-          <div *ngIf="finalCalculations?.amountPayableRefund > 0">
+          <div *ngIf="finalCalculations?.amountPayable > 0">
             <div class="incBx">
               <span class="inTex">Income Tax Payable:</span><br /><br />
               <span class="inNo"
                 >{{
                   utilsService.currencyFormatter(
-                    finalCalculations?.amountPayableRefund
+                    finalCalculations?.amountPayable
                   )
                 }}.00</span
               >
@@ -3018,7 +3018,9 @@
                             <label class="rtNumb">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
-                                finalCalculations?.amountPayableRefund
+                                finalCalculations?.amountPayable > 0
+                                  ? finalCalculations?.amountPayable
+                                  : finalCalculations?.amountRefund
                               }}</label
                             >
                           </div>
