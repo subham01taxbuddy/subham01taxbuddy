@@ -3,7 +3,7 @@
   [config]="{ backdropBorderRadius: '14px' }"
 ></ngx-loading>
 <div class="main1">
-  
+
   <div class="login_content1">
     <div class="login_content_container">
       <div class="">
@@ -107,10 +107,13 @@
         </em>
       </div>
       <div>
-        <span class="text-secondary">
+        <span class="text-secondary" *ngIf="internetSpeed !== -1">
           Your internet speed is {{internetSpeed}}
         </span>
-        <em class="text-danger" *ngIf="internetSpeed < 10">
+        <span class="text-secondary" *ngIf="internetSpeed === -1">
+          Checking your internet speed...
+        </span>
+        <em class="text-danger" *ngIf="internetSpeed < 10 && internetSpeed !== -1">
           Your internet speed is lower than required: 10 MBps. you may face slowness or functional issues while using the Back Office.
         </em>
       </div>

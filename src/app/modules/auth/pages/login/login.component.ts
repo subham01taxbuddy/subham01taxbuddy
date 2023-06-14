@@ -154,9 +154,9 @@ export class LoginComponent implements OnInit {
         this.changeMode('FORGOT_PASSWORD', params['mobile']);
       }
     });
-    this.speedTest()
+    this.speedTest();
   }
-  internetSpeed:any = 10;
+  internetSpeed:any = -1;
   speedTest(){
     this.speedTestService.getMbps(
       {
