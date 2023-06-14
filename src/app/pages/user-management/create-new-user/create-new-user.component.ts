@@ -37,6 +37,8 @@ export class CreateNewUserComponent implements OnInit {
   options :Country[] = []
   filteredOptions: Observable<any[]>;
   maxNo=20;
+  smeRecords:any;
+  smeServices:any;
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
@@ -124,13 +126,14 @@ export class CreateNewUserComponent implements OnInit {
     if(this.filerId) {
       this.disableUserSignUp=false;
       this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+      this.getSmeRecords(this.filerId);
     } else if(this.ownerId) {
       this.disableUserSignUp=true;
       if(this.roles.includes('ROLE_OWNER')){
         this.disableUserSignUp=false;
       }
       this.signUpForm.controls['agentUserId'].setValue(this.ownerId);
-
+      this.getSmeRecords(this.ownerId)
     } else {
         if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
         this.disableUserSignUp=true;
@@ -162,12 +165,14 @@ export class CreateNewUserComponent implements OnInit {
     if(this.coFilerId) {
       this.disableUserSignUp=false;
       this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
+      this.getSmeRecords(this.coFilerId);
     } else if(this.coOwnerId) {
       this.disableUserSignUp=true;
       if(this.roles.includes('ROLE_OWNER')){
         this.disableUserSignUp=false;
       }
       this.signUpForm.controls['agentUserId'].setValue(this.coOwnerId);
+      this.getSmeRecords(this.coOwnerId);
 
     } else {
       if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
@@ -257,6 +262,23 @@ export class CreateNewUserComponent implements OnInit {
     }
   }
 
+  getSmeRecords(agentUserId){
+    const userId = agentUserId;
+    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+
+    this.userService.getMethodNew(param).subscribe((result: any) => {
+      console.log('sme record by service  -> ', result);
+      this.smeRecords=result.data;
+      this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
+      this.smeServices =this.smeRecords.map((item) => {
+        return { serviceType: item.serviceType};
+      });
+      console.log("servicesList for selected sme ",this.smeServices)
+      this.changeServiceType();
+    })
+  }
+
   changeServiceType() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     if(this.signUpForm.controls['serviceType'].value === 'GST') {
@@ -269,6 +291,23 @@ export class CreateNewUserComponent implements OnInit {
     } else {
       this.disableAssignedToMe = false;
     }
+
+    if(this.signUpForm.controls['serviceType'].value == ''){
+      return;
+    }
+
+    const selectedServiceType = this.signUpForm.controls['serviceType'].value;
+    if (this.smeServices.every(service => service.serviceType !== selectedServiceType)){
+      if(this.filerId || this.coFilerId){
+        this.utilSerive.showSnackBar("Selected filer doesn't have this service type ");
+      }else{
+        this.utilSerive.showSnackBar("Selected owner doesn't have this service type ");
+      }
+      this.disableUserSignUp = true;
+    }else{
+      this.disableUserSignUp = false;
+    }
+
   }
 
   getToggleValue(){
