@@ -352,7 +352,8 @@ export class SummaryComponent implements OnInit {
     //   totalOtherThanTDSTCS: Number;
     //   totalTaxesPaid: Number;
     // };
-    amountPayableRefund: Number;
+    amountPayable: Number;
+    amountRefund: Number;
   };
 
   constructor(
@@ -1289,9 +1290,12 @@ export class SummaryComponent implements OnInit {
             //       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
             //         ?.TaxesPaid?.TotalTaxesPaid,
             //   },
-            amountPayableRefund:
+            amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
+            amountRefund:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund
+                ?.RefundDue,
           };
           // console.log(this.finalCalculations, 'finalCalculations');
 
@@ -1623,32 +1627,43 @@ export class SummaryComponent implements OnInit {
                   ?.TaxPayableOnTotInc,
             },
 
-            rebateUnderSection87A: this.itrType === 'ITR2' ? 
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.Rebate87A : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.RebateOnAgriInc,
+            rebateUnderSection87A:
+              this.itrType === 'ITR2'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.Rebate87A
+                : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                    ?.RebateOnAgriInc,
 
-            taxAfterRebate: this.itrType === 'ITR2' ? 
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TaxPayableOnRebate : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnRebate,
+            taxAfterRebate:
+              this.itrType === 'ITR2'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TaxPayableOnRebate
+                : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                    ?.TaxPayableOnRebate,
 
-            surcharge:  this.itrType === 'ITR2' ? 
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TotalSurcharge : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-                ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TotalSurcharge,
-            
+            surcharge:
+              this.itrType === 'ITR2'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TotalSurcharge
+                : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TotalSurcharge,
+
             eductionCess:
-            this.itrType === 'ITR2' ? 
-            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-              ?.ComputationOfTaxLiability?.EducationCess : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-              ?.ComputationOfTaxLiability?.TaxPayableOnTI?.EducationCess,
+              this.itrType === 'ITR2'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.EducationCess
+                : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TaxPayableOnTI?.EducationCess,
 
             grossTaxLiability:
-               this.itrType === 'ITR2' ? 
-            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-              ?.ComputationOfTaxLiability?.GrossTaxLiability : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-              ?.ComputationOfTaxLiability?.TaxPayableOnTI?.GrossTaxLiability,
+              this.itrType === 'ITR2'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.GrossTaxLiability
+                : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                    ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                    ?.GrossTaxLiability,
 
             taxRelief: {
               taxReliefUnder89:
@@ -2167,9 +2182,13 @@ export class SummaryComponent implements OnInit {
             //     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
             //       ?.TaxesPaid?.TotalTaxesPaid,
             // },
-            amountPayableRefund:
+            amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.TaxPaid?.BalTaxPayable,
+
+            amountRefund:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
+                ?.Refund?.RefundDue,
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
@@ -3308,10 +3327,10 @@ export class SummaryComponent implements OnInit {
                   //   totalTaxesPaid:
                   //     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                   // },
-                  amountPayableRefund:
-                    this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
-                      ? this.finalSummary?.assessment?.taxSummary?.taxpayable
-                      : this.finalSummary?.assessment?.taxSummary?.taxRefund,
+                  amountPayable:
+                    this.finalSummary?.assessment?.taxSummary?.taxpayable,
+                  amountRefund:
+                    this.finalSummary?.assessment?.taxSummary?.taxRefund,
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -4151,10 +4170,10 @@ export class SummaryComponent implements OnInit {
                 //   totalTaxesPaid:
                 //     this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
                 // },
-                amountPayableRefund:
-                  this.finalSummary?.assessment?.taxSummary?.taxpayable > 0
-                    ? this.finalSummary?.assessment?.taxSummary?.taxpayable
-                    : this.finalSummary?.assessment?.taxSummary?.taxRefund,
+                amountPayable:
+                  this.finalSummary?.assessment?.taxSummary?.taxpayable,
+                amountRefund:
+                  this.finalSummary?.assessment?.taxSummary?.taxRefund,
               };
               console.log(this.finalCalculations, 'finalCalculations');
             } else {

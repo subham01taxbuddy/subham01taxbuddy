@@ -79,29 +79,31 @@
                 </mat-form-field>
               </div>
 
+              <!--sale value-->
               <div class="col-sm-4">
-                <mat-label>Cost of Acquisition*</mat-label>
+                <mat-label>Sale value*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
                     matInput
                     class="input-field"
+                    name="assets[i]"
+                    (change)="calculateTotalCG(bonds); calculateDeductionGain()"
+                    placeholder="Sale value/Full value consideration"
                     digitsOnly
-                    matTooltip="Cost of Acquisition without indexation (Purchase value)"
+                    formControlName="valueInConsideration"
+                    maxlength="14"
+                    matTooltip="Sale value/Full value consideration"
                     matTooltipClass="tab-tooltip"
                     matTooltipPosition="above"
-                    placeholder="Cost of Acquisition without indexation (Purchase value)"
-                    (change)="calculateTotalCG(bonds)"
-                    formControlName="purchaseCost"
-                    maxlength="14"
                     required
                   />
                   <mat-error
                     *ngIf="
                       bondsForm.controls['bondsArray'].controls[i].controls[
-                        'purchaseCost'
+                        'valueInConsideration'
                       ].hasError('required')
                     "
-                    >Please enter cost of acquisition</mat-error
+                  >Please sale value</mat-error
                   >
                 </mat-form-field>
               </div>
@@ -160,30 +162,30 @@
                   >
                 </mat-form-field>
               </div>
+              <!--cost of acquisition-->
               <div class="col-sm-4 spsTp">
-                <mat-label>Sale value*</mat-label>
+                <mat-label>Cost of Acquisition*</mat-label>
                 <mat-form-field appearance="outline">
                   <input
                     matInput
                     class="input-field"
-                    name="assets[i]"
-                    (change)="calculateTotalCG(bonds); calculateDeductionGain()"
-                    placeholder="Sale value/Full value consideration"
                     digitsOnly
-                    formControlName="valueInConsideration"
-                    maxlength="14"
-                    matTooltip="Sale value/Full value consideration"
+                    matTooltip="Cost of Acquisition without indexation (Purchase value)"
                     matTooltipClass="tab-tooltip"
                     matTooltipPosition="above"
+                    placeholder="Cost of Acquisition without indexation (Purchase value)"
+                    (change)="calculateTotalCG(bonds)"
+                    formControlName="purchaseCost"
+                    maxlength="14"
                     required
                   />
                   <mat-error
                     *ngIf="
                       bondsForm.controls['bondsArray'].controls[i].controls[
-                        'valueInConsideration'
+                        'purchaseCost'
                       ].hasError('required')
                     "
-                    >Please sale value</mat-error
+                  >Please enter cost of acquisition</mat-error
                   >
                 </mat-form-field>
               </div>

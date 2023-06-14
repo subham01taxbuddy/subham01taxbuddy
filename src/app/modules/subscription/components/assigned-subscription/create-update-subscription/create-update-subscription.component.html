@@ -423,14 +423,14 @@
                   [disabled]="isButtonDisable">
                   <mat-option value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
-                  <mat-option value="GST" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> GST
+                  <mat-option value="GST"> GST
                   </mat-option>
-                  <mat-option value="NOTICE" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> Notice
+                  <mat-option value="NOTICE"> Notice
                     response </mat-option>
                   <!--                    <mat-option value="TDS filing"> TDS filing </mat-option>-->
-                  <mat-option value="TPA" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')"> TPA
+                  <mat-option value="TPA"> TPA
                   </mat-option>
-                  <mat-option value="OTHER" *ngIf="subType!=='edit' && (service!=='ITR' || service!=='ITRU')">
+                  <mat-option value="OTHER">
                     Other Services
                   </mat-option>
                 </mat-select>

@@ -44,6 +44,10 @@
   justify-content: center;
 }
 
+.ag-header-group-cell-label, .ag-header-cell-label{
+  justify-content: center;
+}
+
 .ag-overlay-wrapper {
   align-items: flex-end;
   padding-bottom: 15px;
