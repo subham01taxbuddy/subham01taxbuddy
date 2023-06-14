@@ -228,7 +228,7 @@ export class AppComponent {
     // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
-    let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}`;
+    let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
 
     this.userMsService.postMethod(param, '').subscribe((response:any)=>{
       this.loading = false;
