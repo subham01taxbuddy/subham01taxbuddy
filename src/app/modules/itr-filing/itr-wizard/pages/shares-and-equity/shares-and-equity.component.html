@@ -20,7 +20,7 @@
           {{ title }}
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button *ngIf="compactView"
+          <button *ngIf="compactView || selectedBroker === ''"
             class="edit_btn"
             (click)="$event.stopPropagation(); addMore()"
           >
