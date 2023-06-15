@@ -1150,7 +1150,7 @@ export class PrefillIdComponent implements OnInit {
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4') 
+          JSONData.ITR.hasOwnProperty('ITR4')
           // || JSONData.ITR.hasOwnProperty('ITR2') ||
           // JSONData.ITR.hasOwnProperty('ITR3')
         ) {
@@ -1247,6 +1247,22 @@ export class PrefillIdComponent implements OnInit {
       if (
         this.ITR_Obj?.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo?.PAN
       ) {
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id
+        );
+        console.log(this.ITR_JSON, 'ITRJSON');
+        this.ITR_Obj.itrSummaryJson = null;
+        this.ITR_JSON.itrSummaryJson = null;
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+
         this.utilsService.showSnackBar(
           'PAN from the uploaded JSON and the PAN from Users Profile / Customer Profile are different'
         );
