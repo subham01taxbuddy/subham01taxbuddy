@@ -240,27 +240,33 @@ export class SummaryComponent implements OnInit {
             TaxableIncome: Number;
           }
         ];
-        // nonSpecIncome: {
-        //   businessSection: String;
-        //   natureOfBusinessCode: any;
-        //   tradeName: String;
-        //   grossTurnover: Number;
-        //   TaxableIncome: Number;
-        // };
+        nonSpecIncome: {
+          businessSection: String;
+          natureOfBusinessCode: any;
+          tradeName: String;
+          grossTurnover: Number;
+          TaxableIncome: Number;
+        };
 
-        // specIncome: {
-        //   businessSection: String;
-        //   natureOfBusinessCode: any;
-        //   tradeName: String;
-        //   grossTurnover: Number;
-        //   TaxableIncome: Number;
-        // };
+        specIncome: {
+          businessSection: String;
+          natureOfBusinessCode: any;
+          tradeName: String;
+          grossTurnover: Number;
+          TaxableIncome: Number;
+        };
       };
       businessIncomeTotal: Number;
     };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
-      currentYearLossesSetOff: [{ houseProperty: Number }];
+      currentYearLossesSetOff: [
+        {
+          houseProperty: Number;
+          businessSetOff: Number;
+          otherThanHpBusiness: Number;
+        }
+      ];
       totalCurrentYearSetOff: Number;
     };
     balanceAfterSetOffCurrentYearLosses: Number;
@@ -675,21 +681,21 @@ export class SummaryComponent implements OnInit {
                   };
                 }),
 
-                // nonSpecIncome: {
-                //   businessSection: null,
-                //   natureOfBusinessCode: null,
-                //   tradeName: null,
-                //   grossTurnover: null,
-                //   TaxableIncome: null,
-                // },
+                nonSpecIncome: {
+                  businessSection: null,
+                  natureOfBusinessCode: null,
+                  tradeName: null,
+                  grossTurnover: null,
+                  TaxableIncome: null,
+                },
 
-                // specIncome: {
-                //   businessSection: null,
-                //   natureOfBusinessCode: null,
-                //   tradeName: null,
-                //   grossTurnover: null,
-                //   TaxableIncome: null,
-                // },
+                specIncome: {
+                  businessSection: null,
+                  natureOfBusinessCode: null,
+                  tradeName: null,
+                  grossTurnover: null,
+                  TaxableIncome: null,
+                },
               },
               businessIncomeTotal:
                 this.itrType === 'ITR4'
@@ -706,6 +712,8 @@ export class SummaryComponent implements OnInit {
               currentYearLossesSetOff: [
                 {
                   houseProperty: 0,
+                  businessSetOff: 0,
+                  otherThanHpBusiness: 0,
                 },
               ],
               totalCurrentYearSetOff: 0,
@@ -1577,6 +1585,51 @@ export class SummaryComponent implements OnInit {
                           TaxableIncome: null,
                         },
                       ],
+
+                nonSpecIncome:
+                  this.itrType === 'ITR3'
+                    ? {
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ]?.TradingAccount?.OtherOperatingRevenueDtls.reduce(
+                          (sum, obj) => sum + obj.OperatingRevenueAmt,
+                          0
+                        ),
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
+                    : {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
+
+                specIncome:
+                  this.itrType === 'ITR3'
+                    ? {
+                        businessSection: 'Speculative Income',
+                        natureOfBusinessCode: 'speculative',
+                        tradeName: 'Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.PARTA_PL?.TurnverFrmSpecActivity,
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.PARTA_PL?.NetIncomeFrmSpecActivity,
+                      }
+                    : {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
               },
               businessIncomeTotal:
                 this.itrType === 'ITR3'
@@ -1592,7 +1645,18 @@ export class SummaryComponent implements OnInit {
             currentYearLosses: {
               currentYearLossesSetOff: [
                 {
-                  houseProperty: 0,
+                  houseProperty:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.TotalLossSetOff?.TotHPlossCurYrSetoff,
+                  businessSetOff:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCYLA?.TotalLossSetOff?.TotBusLossSetoff
+                      : 0,
+                  otherThanHpBusiness:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.TotalLossSetOff
+                      ?.TotOthSrcLossNoRaceHorseSetoff,
                 },
               ],
               totalCurrentYearSetOff:
@@ -2638,6 +2702,35 @@ export class SummaryComponent implements OnInit {
                             grossTurnover: element?.receipts,
                             TaxableIncome: element?.presumptiveIncome,
                           })),
+
+                      nonSpecIncome: {
+                        businessSection: 'Non Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON?.business?.profitLossACIncomes
+                            ?.find(
+                              (element) =>
+                                element?.businessType === 'NONSPECULATIVEINCOME'
+                            )
+                            ?.incomes?.reduce(
+                              (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                              0
+                            ),
+                        TaxableIncome:
+                          this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                            (element) =>
+                              element?.businessType === 'NONSPECULATIVEINCOME'
+                          )?.netProfitfromNonSpeculativeIncome,
+                      },
+
+                      specIncome: {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
                     },
 
                     businessIncomeTotal:
@@ -2653,6 +2746,8 @@ export class SummaryComponent implements OnInit {
                         houseProperty:
                           this.finalSummary?.assessment?.taxSummary
                             ?.currentYearIFHPSetOff,
+                        businessSetOff: 0,
+                        otherThanHpBusiness: 0,
                       },
                     ],
                     totalCurrentYearSetOff:
@@ -3492,6 +3587,35 @@ export class SummaryComponent implements OnInit {
                           grossTurnover: element?.receipts,
                           TaxableIncome: element?.presumptiveIncome,
                         })),
+
+                    nonSpecIncome: {
+                      businessSection: 'Non Speculative Income',
+                      natureOfBusinessCode: 'nonSpec',
+                      tradeName: 'Non Speculative Income',
+                      grossTurnover:
+                        this.ITR_JSON?.business?.profitLossACIncomes
+                          ?.find(
+                            (element) =>
+                              element?.businessType === 'NONSPECULATIVEINCOME'
+                          )
+                          ?.incomes?.reduce(
+                            (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                            0
+                          ),
+                      TaxableIncome:
+                        this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                          (element) =>
+                            element?.businessType === 'NONSPECULATIVEINCOME'
+                        )?.netProfitfromNonSpeculativeIncome,
+                    },
+
+                    specIncome: {
+                      businessSection: null,
+                      natureOfBusinessCode: null,
+                      tradeName: null,
+                      grossTurnover: null,
+                      TaxableIncome: null,
+                    },
                   },
 
                   businessIncomeTotal:
@@ -3507,6 +3631,8 @@ export class SummaryComponent implements OnInit {
                       houseProperty:
                         this.finalSummary?.assessment?.taxSummary
                           ?.currentYearIFHPSetOff,
+                      businessSetOff: 0,
+                      otherThanHpBusiness: 0,
                     },
                   ],
                   totalCurrentYearSetOff:

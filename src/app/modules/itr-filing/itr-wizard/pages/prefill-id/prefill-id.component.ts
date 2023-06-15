@@ -1150,8 +1150,8 @@ export class PrefillIdComponent implements OnInit {
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4') ||
-          JSONData.ITR.hasOwnProperty('ITR2') ||
+          JSONData.ITR.hasOwnProperty('ITR4') 
+          || JSONData.ITR.hasOwnProperty('ITR2') ||
           JSONData.ITR.hasOwnProperty('ITR3')
         ) {
           this.itrSummaryJson = JSONData;

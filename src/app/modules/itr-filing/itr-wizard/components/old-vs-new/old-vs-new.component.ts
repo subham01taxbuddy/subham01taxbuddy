@@ -829,30 +829,45 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                         ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                         ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
                     : 0
                   : 0,
             },
           ];
           console.log(this.particularsArray, 'this.particularsArray');
-          this.loading = false;
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
         }
 
         if (itrType === 'ITR2' || itrType === 'ITR3') {
-          this.loading=true;
+          this.loading = true;
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -896,18 +911,30 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Business and Profession',
               old:
                 this.ITR_JSON.regime === 'OLD' && itrType === 'ITR3'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
-                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.ProfBusGain?.TotProfBusGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.ProfBusGain?.TotProfBusGain
+                    : 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
                         ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                          ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      : 0
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW' && itrType === 'ITR3'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.ProfBusGain?.TotProfBusGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.ProfBusGain?.TotProfBusGain
+                    : 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                          ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      : 0
                     : 0
                   : 0,
             },
@@ -1187,27 +1214,44 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.TaxPaid?.BalTaxPayable
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
                     : 0
                   : 0,
+
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.TaxPaid?.BalTaxPayable
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
                     : 0
                   : 0,
             },
           ];
           console.log(this.particularsArray, 'this.particularsArray');
-          this.loading = false;
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
         }
+        this.loading = false;
       } else {
         const param = '/tax/old-vs-new';
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
