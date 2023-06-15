@@ -260,7 +260,13 @@ export class SummaryComponent implements OnInit {
     };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
-      currentYearLossesSetOff: [{ houseProperty: Number }];
+      currentYearLossesSetOff: [
+        {
+          houseProperty: Number;
+          businessSetOff: Number;
+          otherThanHpBusiness: Number;
+        }
+      ];
       totalCurrentYearSetOff: Number;
     };
     balanceAfterSetOffCurrentYearLosses: Number;
@@ -706,6 +712,8 @@ export class SummaryComponent implements OnInit {
               currentYearLossesSetOff: [
                 {
                   houseProperty: 0,
+                  businessSetOff: 0,
+                  otherThanHpBusiness: 0,
                 },
               ],
               totalCurrentYearSetOff: 0,
@@ -1637,7 +1645,18 @@ export class SummaryComponent implements OnInit {
             currentYearLosses: {
               currentYearLossesSetOff: [
                 {
-                  houseProperty: 0,
+                  houseProperty:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.TotalLossSetOff?.TotHPlossCurYrSetoff,
+                  businessSetOff:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCYLA?.TotalLossSetOff?.TotBusLossSetoff
+                      : 0,
+                  otherThanHpBusiness:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.TotalLossSetOff
+                      ?.TotOthSrcLossNoRaceHorseSetoff,
                 },
               ],
               totalCurrentYearSetOff:
@@ -2727,6 +2746,8 @@ export class SummaryComponent implements OnInit {
                         houseProperty:
                           this.finalSummary?.assessment?.taxSummary
                             ?.currentYearIFHPSetOff,
+                        businessSetOff: 0,
+                        otherThanHpBusiness: 0,
                       },
                     ],
                     totalCurrentYearSetOff:
@@ -3610,6 +3631,8 @@ export class SummaryComponent implements OnInit {
                       houseProperty:
                         this.finalSummary?.assessment?.taxSummary
                           ?.currentYearIFHPSetOff,
+                      businessSetOff: 0,
+                      otherThanHpBusiness: 0,
                     },
                   ],
                   totalCurrentYearSetOff:

@@ -1558,15 +1558,55 @@
                           <td><b>Loss Of Current Year </b></td>
                           <td><b>Amount Adjusted</b></td>
                         </tr>
-                        <tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.currentYearLosses
+                              ?.currentYearLossesSetOff[0]?.houseProperty !== 0
+                          "
+                        >
                           <td>House Property</td>
                           <td>
-                            <!-- need to loop over currentYearLossesSetOff once confirmed  -->
                             Rs
                             {{
                               utilsService.currencyFormatter(
                                 finalCalculations?.currentYearLosses
-                                  ?.totalCurrentYearSetOff
+                                  ?.currentYearLossesSetOff[0]?.houseProperty
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.currentYearLosses
+                              ?.currentYearLossesSetOff[0]?.businessSetOff !== 0
+                          "
+                        >
+                          <td>Business</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.currentYearLosses
+                                  ?.currentYearLossesSetOff[0]?.businessSetOff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.currentYearLosses
+                              ?.currentYearLossesSetOff[0]
+                              ?.otherThanHpBusiness !== 0
+                          "
+                        >
+                          <td>Other's</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.currentYearLosses
+                                  ?.currentYearLossesSetOff[0]
+                                  ?.otherThanHpBusiness
                               )
                             }}
                           </td>
