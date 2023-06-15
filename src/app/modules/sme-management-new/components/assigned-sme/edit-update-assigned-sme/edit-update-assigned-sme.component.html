@@ -335,19 +335,13 @@
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> SME/Partner </mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                type="text"
-                matInput
-                placeholder=""
-                [formControl]="internal"
-                class="input-field"
-               />
-              <!-- <mat-error
-              *ngIf="officialEmail?.hasError('required') ">
-              This field is required</mat-error> -->
-            </mat-form-field>
+            <mat-label style="margin-left: 50px;"> SME/Partner </mat-label>
+            <div class="radio-group">
+              <mat-radio-group [formControl]="internal">
+                <mat-radio-button value="internal">Internal</mat-radio-button>&nbsp; &nbsp;
+                <mat-radio-button value="external">External</mat-radio-button>
+              </mat-radio-group>
+            </div>
           </div>
       </div>
       <div class="row">
