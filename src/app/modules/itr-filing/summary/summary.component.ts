@@ -272,9 +272,9 @@ export class SummaryComponent implements OnInit {
     balanceAfterSetOffCurrentYearLosses: Number;
     BroughtFwdLossesSetoff: {
       BroughtFwdLossesSetoffDtls: {
-        hpLoss: Number;
-        stLoss: Number;
-        ltLoss: Number;
+        hpLoss: Number; // TotBFLossSetoff
+        stLoss: Number; // TotUnabsorbedDeprSetoff
+        ltLoss: Number; // TotAllUs35cl4Setoff
       };
       BroughtFwdLossesSetoffTotal: Number;
     };
@@ -1668,13 +1668,28 @@ export class SummaryComponent implements OnInit {
                 ?.BalanceAfterSetoffLosses,
             BroughtFwdLossesSetoff: {
               BroughtFwdLossesSetoffDtls: {
-                hpLoss: 0,
-                stLoss: 0,
-                ltLoss: 0,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotBFLossSetoff,
+                stLoss:
+                  this.itrType === 'ITR3'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff
+                        ?.TotUnabsorbedDeprSetoff
+                    : 0,
+                ltLoss:
+                  this.itrType === 'ITR3'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff?.TotAllUs35cl4Setoff
+                    : 0,
               },
               BroughtFwdLossesSetoffTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-                  ?.BroughtFwdLossesSetoff,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
+                  ?.TotalBFLossSetOff?.TotBFLossSetoff +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
+                  ?.TotalBFLossSetOff?.TotUnabsorbedDeprSetoff +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
+                  ?.TotalBFLossSetOff?.TotAllUs35cl4Setoff,
             },
             grossTotalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
