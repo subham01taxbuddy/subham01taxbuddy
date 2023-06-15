@@ -171,12 +171,14 @@
         <div
           class="card__col-xs-12 card__col-sm-4 card__col-md-4"
           style="margin-top: 25px"
-          *ngIf="refund > 0"
+          *ngIf="finalCalculations?.amountRefund > 0"
         >
           <div class="incBx">
             <span class="inTex">Income Tax Refund:</span><br /><br />
             <span class="inRef"
-              >{{ utilsService.currencyFormatter(refund) }}.00</span
+              >{{
+                utilsService.currencyFormatter(finalCalculations?.amountRefund)
+              }}.00</span
             >
           </div>
           <p class="paIncTx">
@@ -3021,7 +3023,7 @@
                               >&nbsp;{{
                                 finalCalculations?.amountPayable > 0
                                   ? finalCalculations?.amountPayable
-                                  : finalCalculations?.amountRefund
+                                  : "(" + finalCalculations?.amountRefund + ")"
                               }}</label
                             >
                           </div>
