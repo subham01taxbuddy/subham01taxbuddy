@@ -206,7 +206,8 @@ export class CreateNewUserComponent implements OnInit {
       let reqBody=this.signUpForm.getRawValue();
       let finalReq: any = {};
       Object.assign(finalReq,reqBody );
-      finalReq.countryCode=this.countryCode;
+      //Ashwini: adding + in the country code since user facing app sends country code with +
+      finalReq.countryCode= '+' + this.countryCode;
       console.log("request body : ", finalReq);
       this.loading = true;
       let param = "/user_account";
