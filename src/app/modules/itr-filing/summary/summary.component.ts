@@ -2685,11 +2685,24 @@ export class SummaryComponent implements OnInit {
                           })),
 
                       nonSpecIncome: {
-                        businessSection: null,
-                        natureOfBusinessCode: null,
-                        tradeName: null,
-                        grossTurnover: null,
-                        TaxableIncome: null,
+                        businessSection: 'Non Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON?.business?.profitLossACIncomes
+                            ?.find(
+                              (element) =>
+                                element?.businessType === 'NONSPECULATIVEINCOME'
+                            )
+                            ?.incomes?.reduce(
+                              (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                              0
+                            ),
+                        TaxableIncome:
+                          this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                            (element) =>
+                              element?.businessType === 'NONSPECULATIVEINCOME'
+                          )?.netProfitfromNonSpeculativeIncome,
                       },
 
                       specIncome: {
@@ -3555,11 +3568,24 @@ export class SummaryComponent implements OnInit {
                         })),
 
                     nonSpecIncome: {
-                      businessSection: null,
-                      natureOfBusinessCode: null,
-                      tradeName: null,
-                      grossTurnover: null,
-                      TaxableIncome: null,
+                      businessSection: 'Non Speculative Income',
+                      natureOfBusinessCode: 'nonSpec',
+                      tradeName: 'Non Speculative Income',
+                      grossTurnover:
+                        this.ITR_JSON?.business?.profitLossACIncomes
+                          ?.find(
+                            (element) =>
+                              element?.businessType === 'NONSPECULATIVEINCOME'
+                          )
+                          ?.incomes?.reduce(
+                            (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                            0
+                          ),
+                      TaxableIncome:
+                        this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                          (element) =>
+                            element?.businessType === 'NONSPECULATIVEINCOME'
+                        )?.netProfitfromNonSpeculativeIncome,
                     },
 
                     specIncome: {
