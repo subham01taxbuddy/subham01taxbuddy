@@ -4541,7 +4541,7 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    const param = `/subscription-payment-status?userId=9630&serviceType=ITR`;
+    const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
     this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
