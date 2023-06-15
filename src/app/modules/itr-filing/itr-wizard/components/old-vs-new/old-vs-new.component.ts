@@ -829,17 +829,33 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                         ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                         ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
                     : 0
                   : 0,
             },
@@ -1198,17 +1214,34 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.TaxPaid?.BalTaxPayable
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
                     : 0
                   : 0,
+
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.TaxPaid?.BalTaxPayable
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
                     : 0
                   : 0,
             },
