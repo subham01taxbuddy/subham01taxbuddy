@@ -1,3 +1,12 @@
+.bdrArnd {
+  border: 1px solid #00AECA!important;
+  padding: 20px 30px 10px 25px!important;
+}
+
+.mat-radio-button {
+   margin-right: 15px!important;
+}
+
 .hide {
   .mat-select-trigger {
     .mat-select-arrow-wrapper {
@@ -17,9 +26,13 @@ margin-bottom:150px!important;
 float: left;
 }
 
+.delete-icon{
+  margin-top: 20px;
+}
+
 .drop {
     cursor:pointer!important;
-    background-color:#fbfbff!important;    
+    background-color:#fbfbff!important;
 }
 
 .isDeduction {
@@ -110,4 +123,24 @@ float: left;
       }
     }
   }
+}
+
+.cancel {
+  font-weight: 400;
+  border-width: 1px;
+  border-style: solid;
+  padding: 9px 15px;
+  text-transform: capitalize;
+  width: auto;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-top: 7px;
+}
+
+.cancel:hover {
+  font-weight: 400;
+  border-width: 1px;
+  border:1px solid #cccccc;
+  background-color: #fafafa;
 }

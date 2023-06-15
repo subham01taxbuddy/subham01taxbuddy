@@ -79,6 +79,9 @@ export class UserListComponent implements OnInit {
   advanceSearch(key: any) {
     this.user_data = [];
     if (this.searchVal !== "") {
+      if(key === 'emailAddress'){
+        this.searchVal = this.searchVal.toLocaleLowerCase();
+      }
       this.getUserSearchList(key, this.searchVal);
     }
   }
@@ -193,6 +196,9 @@ export class UserListComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {

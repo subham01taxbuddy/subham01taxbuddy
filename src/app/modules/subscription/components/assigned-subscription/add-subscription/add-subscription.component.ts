@@ -109,6 +109,7 @@ export class AddSubscriptionComponent implements OnInit {
       })
     }
     else {
+      this.loading=false
       this.toastMessage.alert("error", "Select Plan.")
     }
   }

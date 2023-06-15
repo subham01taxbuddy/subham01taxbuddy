@@ -114,6 +114,10 @@ export class PromoCodesComponent implements OnInit {
       this.totalCount = result?.totalElements;
       this.config.totalItems = result?.totalElements;
       this.promoCodeGridOptions.api?.setRowData(this.createRowData(result.content));
+      if(result?.content.length == 0){
+        this.promoCodeGridOptions.api?.setRowData(this.createRowData([]));
+        this._toastMessageService.alert("error",'No Data Found');
+      }
 
     }, error => {
       this.loading = false;
@@ -304,9 +308,9 @@ export class PromoCodesComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params:any) {
-          return `<button type="button" class="action_icon add_button" title="Click to Edit Promo"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="editPromo">Edit</i>
+          return `<button type="button" class="action_icon add_button" title="Click to Edit Promo" data-action-type="editPromo"
+          style="border: none; background: transparent; font-size: 14px; cursor:pointer;color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="editPromo"> Edit</i>
            </button>`;
         },
         pinned: 'right',

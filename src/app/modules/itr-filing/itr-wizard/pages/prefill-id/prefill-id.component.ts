@@ -46,12 +46,13 @@ export class PrefillIdComponent implements OnInit {
   userProfile: any;
   userItrId: any;
   itrSummaryJson: any;
+  taxComputation: any;
 
   constructor(
     private router: Router,
     private toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
+    public utilsService: UtilsService,
     private dialog: MatDialog
   ) {}
 
@@ -151,6 +152,14 @@ export class PrefillIdComponent implements OnInit {
         let jsonRes = e.target.result;
         let JSONData = JSON.parse(jsonRes);
 
+        //check if uploaded json is not summary json
+        if (JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'You are trying to upload summary json instead of prefill'
+          );
+          return;
+        }
+
         let panNo = JSONData.personalInfo?.pan;
         let mobileNo = JSONData.personalInfo?.address?.mobileNo;
         if (panNo !== this.data?.panNumber) {
@@ -187,7 +196,6 @@ export class PrefillIdComponent implements OnInit {
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
   updateSalaryAllowances(salaryAllowances, ITR_Type) {
-    // console.log('salaryAllowances List =>', salaryAllowances, ITR_Type);
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       '10(5)': 'LTA',
@@ -242,10 +250,6 @@ export class PrefillIdComponent implements OnInit {
                   (itrObjSalaryAllowances) =>
                     itrObjSalaryAllowances.allowanceType === newName
                 );
-              // console.log(
-              //   'itrObjSalaryAllowancesDetail====>>>>',
-              //   itrObjSalaryAllowancesDetail
-              // );
 
               // If same type is not found in the ITR Object then show an error message
               if (!itrObjSalaryAllowancesDetail) {
@@ -301,11 +305,20 @@ export class PrefillIdComponent implements OnInit {
           (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3')
         ) {
           itrObjSalaryAnyOthAllowance.exemptAmount =
-            this.uploadedJson[ITR_Type].ScheduleS?.AllwncExtentExemptUs10 -
+            this.uploadedJson[ITR_Type]?.ScheduleS?.AllwncExtentExemptUs10 -
             totalAnyOtherAmount;
         }
       }
 
+      const allAllowance = this.ITR_Obj.employers[0]?.allowance?.find(
+        (itrObjSalaryOtherAllowances) =>
+          itrObjSalaryOtherAllowances.allowanceType === 'ALL_ALLOWANCES'
+      );
+
+      allAllowance.exemptAmount =
+        this.uploadedJson[ITR_Type][
+          this.ITR14_IncomeDeductions
+        ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
@@ -322,19 +335,19 @@ export class PrefillIdComponent implements OnInit {
         if (this.ITR_Type === 'ITR1') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.find(
+          ].ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         } else if (this.ITR_Type === 'ITR4') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.find(
+          ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         } else if (this.ITR_Type === 'ITR2') {
           JsonDetail = this.uploadedJson[
             ITR_Type
-          ].ScheduleEI?.OthersInc?.OthersIncDtls.find(
+          ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
         }
@@ -411,21 +424,12 @@ export class PrefillIdComponent implements OnInit {
   // Taking the other income name from json and checking for those income in our itr object. If it exists then mapping jsons amount to itr object amount
   updateOtherIncomes(otherIncomes, ITR_Type) {
     if (ITR_Type === 'ITR1' || ITR_Type === 'ITR4') {
-      // const mapping = {
-      //   SAV: 'SAVING_INTEREST',
-      //   IFD: 'FD_RD_INTEREST',
-      //   DIV: '', // we have a different object of dividend Income.It is taken care of below
-      //   FAP: 'FAMILY_PENSION',
-      //   TAX: 'TAX_REFUND_INTEREST',
-      //   OTH: 'ANY_OTHER',
-      // };
-
       // Savings Interest Income
       {
         // finding and storing the object in utility with the name SAV
         const JsonDetailSAV = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'SAV'
         );
 
@@ -446,8 +450,8 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name IFD
         const JsonDetailIFD = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
-          (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'IFD'
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+          (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'IFD'
         );
 
         // if IFD is present in the utility json then pushing the below object in incomes array
@@ -467,7 +471,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name SAV
         const JsonDetailFAP = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'FAP'
         );
 
@@ -488,7 +492,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name TAX
         const JsonDetailTAX = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'TAX'
         );
 
@@ -509,7 +513,7 @@ export class PrefillIdComponent implements OnInit {
         // finding and storing the object in utility with the name OTH
         const JsonDetailOTH = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc.OthersIncDtlsOthSrc.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'OTH'
         );
 
@@ -529,7 +533,7 @@ export class PrefillIdComponent implements OnInit {
       {
         const DIV = this.uploadedJson[ITR_Type][
           this.ITR14_IncomeDeductions
-        ].OthersInc?.OthersIncDtlsOthSrc?.find(
+        ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
           (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'DIV'
         );
 
@@ -537,15 +541,15 @@ export class PrefillIdComponent implements OnInit {
         if (DIV) {
           const jsonDividendObj = DIV.DividendInc?.DateRange;
 
-          if (jsonDividendObj.Upto15Of6) {
+          if (jsonDividendObj?.Upto15Of6) {
             this.ITR_Obj.dividendIncomes?.push({
-              income: jsonDividendObj.Upto15Of6,
+              income: jsonDividendObj?.Upto15Of6,
               date: '2022-04-28T18:30:00.000Z',
               quarter: 1,
             });
           }
 
-          if (jsonDividendObj.Upto15Of9) {
+          if (jsonDividendObj?.Upto15Of9) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Upto15Of9,
               date: '2022-07-28T18:30:00.000Z',
@@ -553,7 +557,7 @@ export class PrefillIdComponent implements OnInit {
             });
           }
 
-          if (jsonDividendObj.Up16Of9To15Of12) {
+          if (jsonDividendObj?.Up16Of9To15Of12) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Up16Of9To15Of12,
               date: '2022-09-28T18:30:00.000Z',
@@ -561,7 +565,7 @@ export class PrefillIdComponent implements OnInit {
             });
           }
 
-          if (jsonDividendObj.Up16Of12To15Of3) {
+          if (jsonDividendObj?.Up16Of12To15Of3) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Up16Of12To15Of3,
               date: '2022-12-28T18:30:00.000Z',
@@ -569,7 +573,7 @@ export class PrefillIdComponent implements OnInit {
             });
           }
 
-          if (jsonDividendObj.Up16Of3To31Of3) {
+          if (jsonDividendObj?.Up16Of3To31Of3) {
             this.ITR_Obj.dividendIncomes?.push({
               income: jsonDividendObj.Up16Of3To31Of3,
               date: '2023-03-20T18:30:00.000Z',
@@ -594,8 +598,6 @@ export class PrefillIdComponent implements OnInit {
           const disabilities80UArray = investments.find(
             (disabilities80U) => disabilities80U[0] === 'Section80U'
           );
-          // console.log('IndividualDisabilities80UArray=>', disabilities80UArray);
-
           if (disabilities80UArray && disabilities80UArray[1] > 75000) {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
           } else if (
@@ -613,7 +615,6 @@ export class PrefillIdComponent implements OnInit {
             // need to implement this later where the whole object is deleted if amount is 0.
             // this.ITR_Obj.disabilities.splice(0, 1);
           }
-          // console.log('IndividualDisabilities80UName', disabilities80U);
         }
 
         // setting 80dd names with this logic
@@ -622,7 +623,6 @@ export class PrefillIdComponent implements OnInit {
           const disabilities80ddArray = investments.find(
             (disabilities80dd) => disabilities80dd[0] === 'Section80DD'
           );
-          // console.log('IndividualDisabilities80ddArray=>', disabilities80ddArray);
 
           if (disabilities80ddArray && disabilities80ddArray[1] > 75000) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
@@ -642,8 +642,6 @@ export class PrefillIdComponent implements OnInit {
             // need to implement this later where the whole object is deleted if amount is 0.
             // this.ITR_Obj.disabilities.splice(0, 2);
           }
-
-          // console.log('IndividualDisabilities80ddName', disabilities80dd);
         }
 
         // setting 80dd names with this logic
@@ -652,7 +650,6 @@ export class PrefillIdComponent implements OnInit {
           const disabilities80DDBArray = investments.find(
             (disabilities80DDB) => disabilities80DDB[0] === 'Section80DDB'
           );
-          // console.log('IndividualDisabilities80DDBArray=>', disabilities80DDBArray);
 
           if (disabilities80DDBArray && disabilities80DDBArray[1] > 40000) {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
@@ -671,7 +668,6 @@ export class PrefillIdComponent implements OnInit {
             // need to implement this later where the whole object is deleted if amount is 0.
             // this.ITR_Obj.disabilities.splice(0, 3);
           }
-          // console.log('IndividualDisabilities80DDBName', disabilities80DDB);
         }
 
         //setting 80G fields
@@ -682,7 +678,6 @@ export class PrefillIdComponent implements OnInit {
             const Don100Percent =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don100Percent
                 ?.DoneeWithPan;
-            // console.log('donation100', Don100Percent);
 
             const mapJsonToITRObjDon100Percent = ({
               DoneeWithPanName,
@@ -727,7 +722,6 @@ export class PrefillIdComponent implements OnInit {
             const Don50PercentNoApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G
                 ?.Don50PercentNoApprReqd?.DoneeWithPan;
-            // console.log('donation50', Don50PercentNoApprReqd);
 
             const mapJsonToITRObjDon50Percent = ({
               DoneeWithPanName,
@@ -777,7 +771,6 @@ export class PrefillIdComponent implements OnInit {
             const Don100PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G
                 ?.Don100PercentApprReqd?.DoneeWithPan;
-            // console.log('donation100AGTI', Don100PercentApprReqd);
 
             const mapJsonToITRObjDon100PercentAGTI = ({
               DoneeWithPanName,
@@ -827,7 +820,6 @@ export class PrefillIdComponent implements OnInit {
             const Don50PercentApprReqd =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don50PercentApprReqd
                 ?.DoneeWithPan;
-            // console.log('donation50AGTI', Don50PercentApprReqd);
 
             const mapJsonToITRObjDon50PercentAGTI = ({
               DoneeWithPanName,
@@ -872,7 +864,6 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -901,11 +892,9 @@ export class PrefillIdComponent implements OnInit {
           Section80TTA: 0, // Did not find this in itrObject
           Section80TTB: 0, // Did not find this in itrObject
         };
-        // console.log('updateInvestmentsMapping==>>', mapping);
 
         let expenseIndex = 0;
         for (let i = 0; i < investments.length; i++) {
-          // console.log('i ==>>>>', i);
           const type = investmentNames[i];
           {
             // use the mapping object to get the new name for the current type
@@ -948,11 +937,8 @@ export class PrefillIdComponent implements OnInit {
             }
 
             if (newName === disabilities80U) {
-              // console.log('disabilities80uName', disabilities80U);
-
               // finding the 80U array
               const disability80U = this.ITR_Obj.disabilities[0];
-              // console.log('disability80UObjFound', disability80U);
 
               // setting the field name in ITR Obj as per the new name
               if (disability80U) {
@@ -960,16 +946,12 @@ export class PrefillIdComponent implements OnInit {
                 // setting the amount in ITR object
                 const disabilities80UAmount = (disability80U.amount =
                   investments[i][1]);
-                // console.log('disabilities80UAmount', disabilities80UAmount);
               }
             }
 
             if (newName === disabilities80dd) {
-              // console.log('disabilities80ddName', disabilities80dd);
-
               // finding the 80DD array
               const disability80DD = this.ITR_Obj.disabilities[1];
-              // console.log('disability80DDObjFound', disability80DD);
 
               // setting the field name in ITR Obj as per the new name
               if (disability80DD) {
@@ -977,16 +959,12 @@ export class PrefillIdComponent implements OnInit {
                 // setting the amount in ITR object
                 const disabilities80DDAmount = (disability80DD.amount =
                   investments[i][1]);
-                // console.log('disabilities80DDAmount', disabilities80DDAmount);
               }
             }
 
             if (newName === disabilities80DDB) {
-              // console.log('disabilities80DDBName', disabilities80DDB);
-
               // finding the 80DDB array
               const disability80DDB = this.ITR_Obj.disabilities[2];
-              // console.log('disability80DDBObjFound', disability80DDB);
 
               // setting the field name in ITR Obj as per the new name
               if (disability80DDB) {
@@ -994,7 +972,6 @@ export class PrefillIdComponent implements OnInit {
                 // setting the amount in ITR object
                 const disabilities80DDBAmount = (disability80DDB.amount =
                   investments[i][1]);
-                // console.log('disabilities80DDBAmount', disabilities80DDBAmount);
               }
             }
 
@@ -1003,13 +980,11 @@ export class PrefillIdComponent implements OnInit {
               const itrObjSelf80D = this.ITR_Obj.insurances?.find(
                 (healthInsurance) => healthInsurance.policyFor === 'DEPENDANT'
               );
-              // console.log('self80DObjFound', itrObjSelf80D);
 
               // finding the Section80D array for parents in itr object
               const itrObjParents80D = this.ITR_Obj.insurances.find(
                 (healthInsurance) => healthInsurance.policyFor === 'PARENTS'
               );
-              // console.log('itrObjParents80D', itrObjParents80D);
 
               // finding the Section80D array for self in json
               const json80DSeniorCitizen =
@@ -1023,8 +998,6 @@ export class PrefillIdComponent implements OnInit {
                 const json80DSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
                     .Sec80DSelfFamSrCtznHealth?.SeniorCitizenFlag;
-
-                // console.log('json80DSeniorCitizenFlag', json80DSeniorCitizenFlag);
 
                 if (json80DSeniorCitizenFlag === 'Y') {
                   // SELF HEALTH INSURANCE PREMIUM
@@ -1068,11 +1041,6 @@ export class PrefillIdComponent implements OnInit {
                 const json80DParentsSeniorCitizenFlag =
                   this.uploadedJson[this.ITR_Type].Schedule80D
                     .Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag;
-
-                // console.log(
-                //   'json80DSeniorCitizenFlag',
-                //   json80DParentsSeniorCitizenFlag
-                // );
 
                 if (json80DParentsSeniorCitizenFlag === 'Y') {
                   // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
@@ -1174,17 +1142,35 @@ export class PrefillIdComponent implements OnInit {
         let JSONData = JSON.parse(jsonRes);
         // console.log('JSONData: ', JSONData);
 
-        this.itrSummaryJson = JSONData;
-
-        this.uploadedJson = JSONData.ITR;
-        if (this.uploadedJson) {
-          this.utilsService.showSnackBar('JSON has been sucessfully uploaded');
-          this.utilsService.setUploadedJson(this.uploadedJson);
-          this.mapItrJson(this.uploadedJson);
-          this.jsonUpload();
+        if (!JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'The uploaded json is not a summary json. Please check file again'
+          );
+          return;
+        }
+        if (
+          JSONData.ITR.hasOwnProperty('ITR1') ||
+          JSONData.ITR.hasOwnProperty('ITR4')
+          // || JSONData.ITR.hasOwnProperty('ITR2') ||
+          // JSONData.ITR.hasOwnProperty('ITR3')
+        ) {
+          this.itrSummaryJson = JSONData;
+          this.uploadedJson = JSONData.ITR;
+          if (this.uploadedJson) {
+            this.utilsService.showSnackBar(
+              'JSON has been sucessfully uploaded'
+            );
+            this.utilsService.setUploadedJson(this.uploadedJson);
+            this.mapItrJson(this.uploadedJson);
+            this.jsonUpload();
+          } else {
+            this.utilsService.showSnackBar(
+              'There was some error while uploading the JSON'
+            );
+          }
         } else {
           this.utilsService.showSnackBar(
-            'There was some error while uploading the JSON'
+            'ITR2 & ITR3 parsing will be available soon'
           );
         }
       };
@@ -1209,6 +1195,7 @@ export class PrefillIdComponent implements OnInit {
         this.ITR_Obj.itrType = '1';
         this.ITR_Type = 'ITR1';
         this.ITR14_IncomeDeductions = 'ITR1_IncomeDeductions';
+        this.taxComputation = 'ITR1_TaxComputation';
       } else if (ItrJSON.hasOwnProperty('ITR2')) {
         this.ITR_Obj.itrType = '2';
         this.ITR_Type = 'ITR2';
@@ -1219,6 +1206,7 @@ export class PrefillIdComponent implements OnInit {
         this.ITR_Obj.itrType = '4';
         this.ITR_Type = 'ITR4';
         this.ITR14_IncomeDeductions = 'IncomeDeductions';
+        this.taxComputation = 'TaxComputation';
       }
     }
 
@@ -1236,28 +1224,45 @@ export class PrefillIdComponent implements OnInit {
       }
 
       if (assessmentYear === '2023') {
-        this.ITR_Obj.assessmentYear = '2023-24';
-        this.ITR_Obj.financialYear = '2022-23';
+        this.ITR_Obj.assessmentYear = '2023-2024';
+        this.ITR_Obj.financialYear = '2022-2023';
       } else if (assessmentYear === '2022') {
-        this.ITR_Obj.assessmentYear = '2022-23';
-        this.ITR_Obj.financialYear = '2021-22';
+        this.ITR_Obj.assessmentYear = '2022-2023';
+        this.ITR_Obj.financialYear = '2021-2022';
       } else if (assessmentYear === '2021') {
-        this.ITR_Obj.assessmentYear = '2021-22';
-        this.ITR_Obj.financialYear = '2020-21';
+        this.ITR_Obj.assessmentYear = '2021-2022';
+        this.ITR_Obj.financialYear = '2020-2021';
       } else if (assessmentYear === '2020') {
-        this.ITR_Obj.assessmentYear = '2020-21';
-        this.ITR_Obj.financialYear = '2019-20';
+        this.ITR_Obj.assessmentYear = '2020-2021';
+        this.ITR_Obj.financialYear = '2019-2020';
       }
     }
 
-    // setting assesseType, need to set for HUF dynamically
+    // setting assesseType, need to set for HUF dynamically later
     this.ITR_Obj.assesseeType = 'INDIVIDUAL';
 
     // SOME DEDUCTION FIELDS, HP CODE UPDATE
     if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
+      // Error if PAN does not match the PAN in ITR OBJECT
       if (
         this.ITR_Obj?.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo?.PAN
       ) {
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id
+        );
+        console.log(this.ITR_JSON, 'ITRJSON');
+        this.ITR_Obj.itrSummaryJson = null;
+        this.ITR_JSON.itrSummaryJson = null;
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+
         this.utilsService.showSnackBar(
           'PAN from the uploaded JSON and the PAN from Users Profile / Customer Profile are different'
         );
@@ -1416,7 +1421,6 @@ export class PrefillIdComponent implements OnInit {
                     : null;
                 }
 
-                // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
                 sessionStorage.setItem(
                   AppConstants.ITR_JSON,
                   JSON.stringify(this.ITR_Obj)
@@ -1439,7 +1443,6 @@ export class PrefillIdComponent implements OnInit {
                     ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
                 : null;
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -1449,12 +1452,10 @@ export class PrefillIdComponent implements OnInit {
             // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
             this.ITR_Obj.residentialStatus = 'RESIDENT';
 
-            // Updating employer categaory based on the key that we get from json in our itr obj employer category
+            // Updating employer category based on the key that we get from json in our itr obj employer category
             {
               let jsonEmployerCategory =
                 ItrJSON[this.ITR_Type].PersonalInfo?.EmployerCategory;
-
-              // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
 
               if (jsonEmployerCategory === 'CGOV') {
                 this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
@@ -1480,7 +1481,7 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.aadharNumber =
               ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
-            // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
+            // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
             this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo?.DOB);
             this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
           }
@@ -1718,90 +1719,6 @@ export class PrefillIdComponent implements OnInit {
 
               this.ITR_Obj.systemFlags.hasSalary = true;
             }
-
-            // OLD CODE
-            // if (ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].GrossSalary) {
-            //   // Net salary Income
-            //   this.ITR_Obj.employers[0].taxableIncome =
-            //     ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].IncomeFromSal;
-
-            //   // Standard deduction of 50k
-            //   this.ITR_Obj.employers[0].standardDeduction =
-            //     ItrJSON[this.ITR_Type][
-            //       this.ITR14_IncomeDeductions
-            //     ].DeductionUs16ia;
-
-            //   //Total of exempt income (Salary allowances total)
-            //   if (this.regime === 'OLD') {
-            //     this.ITR_Obj.employers[0].exemptIncome =
-            //       ItrJSON[this.ITR_Type][
-            //         this.ITR14_IncomeDeductions
-            //       ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
-            //   }
-
-            //   // Salary 17(1)
-            //   this.ITR_Obj.employers[0].salary[0].taxableAmount =
-            //     ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].Salary;
-
-            //   // Salary 17(2)
-            //   this.ITR_Obj.employers[0].perquisites[0].taxableAmount =
-            //     ItrJSON[this.ITR_Type][
-            //       this.ITR14_IncomeDeductions
-            //     ].PerquisitesValue;
-
-            //   // Salary 17(3)
-            //   this.ITR_Obj.employers[0].profitsInLieuOfSalaryType[0].taxableAmount =
-            //     ItrJSON[this.ITR_Type][
-            //       this.ITR14_IncomeDeductions
-            //     ].ProfitsInSalary;
-
-            //   // ALLOWANCES - getting all the available salary allowances keys from the uploaded Json and passing it to the updateSalaryAllowances function
-            //   if (this.regime === 'OLD') {
-            //     const availableSalaryAllowances = this.uploadedJson[
-            //       this.ITR_Type
-            //     ][
-            //       this.ITR14_IncomeDeductions
-            //     ].AllwncExemptUs10?.AllwncExemptUs10Dtls.map(
-            //       (value) => value.SalNatureDesc
-            //     );
-            //     // console.log(
-            //     //   'Available salary allowances in JSON => ',
-            //     //   availableSalaryAllowances
-            //     // );
-            //     this.updateSalaryAllowances(
-            //       availableSalaryAllowances,
-            //       this.ITR_Type
-            //     );
-            //   }
-
-            //   try {
-            //     const deductions = this.ITR_Obj.employers[0].deductions;
-            //     if (deductions && deductions[0]) {
-            //       deductions[0].exemptAmount =
-            //         ItrJSON[this.ITR_Type][
-            //           this.ITR14_IncomeDeductions
-            //         ].ProfessionalTaxUs16iii;
-            //     } else {
-            //       console.error('Cannot access deductions or its first element');
-            //     }
-            //   } catch (error) {
-            //     console.error('Cannot access ITR_Obj or its properties', error);
-            //   }
-            //   // DEDUCTIONS - PROFESSIONAL TAX
-            //   // this.ITR_Obj?.employers?.[0]?.deductions?.[0]?.exemptAmount ?? {} =
-            //   //   ItrJSON[this.ITR_Type][
-            //   //     this.ITR14_IncomeDeductions
-            //   //   ].ProfessionalTaxUs16iii;
-
-            //   // DEDUCTIONS - ENTERTAINMENT ALLOWANCE - PENDING
-            // } else {
-            //   console.log(
-            //     'SALARY INCOME',
-            //     `ItrJSON[this.ITR_Type]${[
-            //       this.ITR14_IncomeDeductions,
-            //     ]}.GrossSalary does not exist`
-            //   );
-            // }
           }
         }
 
@@ -1867,82 +1784,22 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.systemFlags.hasHouseProperty = true;
             }
           }
-
-          // if (
-          //   ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TotalIncomeOfHP
-          // ) {
-          // House Property Type
-          // this.ITR_Obj.houseProperties[0].propertyType =
-          //   ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP ===
-          //   'S'
-          //     ? 'SOP'
-          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
-          //         .TypeOfHP === 'L'
-          //     ? 'LOP'
-          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]
-          //         .TypeOfHP === 'D'
-          //     ? 'DLOP'
-          //     : ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].TypeOfHP;
-          // // There is no principal amount for itr1&4 in json. Hence, did not map it
-          // this.ITR_Obj.houseProperties[0].grossAnnualRentReceived =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].GrossRentReceived;
-          // Property Tax
-          // this.ITR_Obj.houseProperties[0].propertyTax =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].TaxPaidlocalAuth;
-          // Not able to map annualValue as we are not storing it in the ITRobject. Anyways, the annual value is being displayed properly on UI after parsing
-          // Annual Value 30% / Exempt Income (in itr4 object)
-          // this.ITR_Obj.houseProperties[0].exemptIncome =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].AnnualValue30Percent;
-          // if (!this.ITR_Obj.houseProperties[0].loans) {
-          //   this.ITR_Obj.houseProperties[0].loans = [];
-          // }
-          // this.ITR_Obj.houseProperties[0].loans.push({
-          //   loanType: '',
-          //   principalAmount: 0,
-          //   interestAmount: 0,
-          // });
-          // Interest on HP loan
-          // this.ITR_Obj.houseProperties[0].loans[0].interestAmount =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].InterestPayable;
-          // Total Hp income
-          // this.ITR_Obj.houseProperties[0].taxableIncome =
-          //   ItrJSON[this.ITR_Type][
-          //     this.ITR14_IncomeDeductions
-          //   ].TotalIncomeOfHP;
-          //80EE AND 80EEA values need to be set as true if interest is above 2l. However, this has to be done from the sme's end. PENDING
-          // } else {
-          //   console.log(
-          //     'ITRJSON => ITR4 => HOUSE PROPERTY',
-          //     `ItrJSON[this.ITR_Type]${[
-          //       this.ITR14_IncomeDeductions,
-          //     ]}.TotalIncomeOfHP`
-          //   );
-          // }
         }
 
         // OTHER INCOMES
         {
           if (
             ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions]?.OthersInc
-              .OthersIncDtlsOthSrc
+              ?.OthersIncDtlsOthSrc
           ) {
             // All other incomes
             if (this.ITR_Obj.incomes) {
-              //getting all the exempt income keys from the JSON and passing it to the updateOtherIncomes function
+              //getting all the other income keys from the JSON and passing it to the updateOtherIncomes function
               const availableOtherIncomes = this.uploadedJson[this.ITR_Type][
                 this.ITR14_IncomeDeductions
-              ].OthersInc?.OthersIncDtlsOthSrc?.map(
-                (value) => value.OthSrcNatureDesc
+              ]?.OthersInc?.OthersIncDtlsOthSrc?.map(
+                (value) => value?.OthSrcNatureDesc
               );
-              // console.log('OtherIncomes => ', availableOtherIncomes);
               this.updateOtherIncomes(availableOtherIncomes, this.ITR_Type);
             } else {
               console.log(
@@ -1959,7 +1816,6 @@ export class PrefillIdComponent implements OnInit {
             );
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -1970,18 +1826,16 @@ export class PrefillIdComponent implements OnInit {
         {
           if (this.ITR_Type === 'ITR1') {
             if (
-              this.uploadedJson[this.ITR_Type].ITR1_IncomeDeductions
-                .ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls
+              this.uploadedJson[this.ITR_Type]?.ITR1_IncomeDeductions
+                ?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls
             ) {
               if (this.ITR_Obj.exemptIncomes) {
                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                 const availableExemptIncomes = this.uploadedJson[
                   this.ITR_Type
-                ].ITR1_IncomeDeductions.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls.map(
+                ]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.map(
                   (value) => value.NatureDesc
                 );
-                // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
               } else {
                 console.log(
@@ -2000,18 +1854,16 @@ export class PrefillIdComponent implements OnInit {
 
           if (this.ITR_Type === 'ITR4') {
             if (
-              this.uploadedJson[this.ITR_Type].TaxExmpIntIncDtls.OthersInc
-                .OthersIncDtls
+              this.uploadedJson[this.ITR_Type]?.TaxExmpIntIncDtls?.OthersInc
+                ?.OthersIncDtls
             ) {
               if (this.ITR_Obj.exemptIncomes) {
                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                 const availableExemptIncomes = this.uploadedJson[
                   this.ITR_Type
-                ].TaxExmpIntIncDtls.OthersInc.OthersIncDtls.map(
+                ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.map(
                   (value) => value.NatureDesc
                 );
-                // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
                 this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
               } else {
                 console.log(
@@ -2028,7 +1880,6 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -2041,14 +1892,11 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type][this.ITR14_IncomeDeductions].DeductUndChapVIA
           ) {
             if (this.ITR_Obj.investments) {
-              //getting all the exempt income keys from the JSON and passing it to the updateInvestments function
+              //getting all the deductions keys from the JSON and passing it to the updateInvestments function
               const availableInvestments = Object.entries(
                 this.uploadedJson[this.ITR_Type][this.ITR14_IncomeDeductions]
                   .DeductUndChapVIA
               ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
-
-              // console.log('availableInvestments==>>', availableInvestments);
-
               this.updateInvestments(availableInvestments, this.ITR_Type);
             } else {
               console.log(
@@ -2063,7 +1911,7 @@ export class PrefillIdComponent implements OnInit {
               ]}.DeductUndChapVIA does not exist in JSON`
             );
           }
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
@@ -2076,7 +1924,6 @@ export class PrefillIdComponent implements OnInit {
           {
             const jsonSalaryTDS =
               ItrJSON[this.ITR_Type]?.TDSonSalaries?.TDSonSalary;
-            // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
             if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
               this.ITR_Obj.taxPaid.onSalary = [];
@@ -2106,7 +1953,6 @@ export class PrefillIdComponent implements OnInit {
               );
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
@@ -2119,58 +1965,57 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Type === 'ITR1'
                 ? 'TDSonOthThanSal'
                 : 'TDSonOthThanSalDtls';
-            // console.log('otherThanSalary16A', otherThanSalary16A);
 
             const jsonOtherThanSalaryTDS: Array<object> =
-              ItrJSON[this.ITR_Type].TDSonOthThanSals[otherThanSalary16A];
-            // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
+              ItrJSON[this.ITR_Type]?.TDSonOthThanSals?.[otherThanSalary16A];
 
-            const mapJsonToITRObj16A = ({
-              EmployerOrDeductorOrCollectDetl,
-              AmtForTaxDeduct,
-              ClaimOutOfTotTDSOnAmtPaid,
-              TANOfDeductor,
-              TDSClaimed,
-              GrossAmount,
-              HeadOfIncome,
-              TDSDeducted,
-              BroughtFwdTDSAmt,
-              TDSCreditCarriedFwd,
-            }) => {
-              const TAN =
-                this.ITR_Type === 'ITR1'
-                  ? EmployerOrDeductorOrCollectDetl.TAN
-                  : TANOfDeductor;
-              const deductorName =
-                this.ITR_Type === 'ITR1'
-                  ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
-                  : null;
-
-              return {
-                id: null,
-                srNo: null,
-                deductorName,
-                deductorTAN: TAN,
-                totalTdsDeposited:
+            if (jsonOtherThanSalaryTDS) {
+              const mapJsonToITRObj16A = ({
+                EmployerOrDeductorOrCollectDetl,
+                AmtForTaxDeduct,
+                ClaimOutOfTotTDSOnAmtPaid,
+                TANOfDeductor,
+                TDSClaimed,
+                GrossAmount,
+                HeadOfIncome,
+                TDSDeducted,
+                BroughtFwdTDSAmt,
+                TDSCreditCarriedFwd,
+              }) => {
+                const TAN =
                   this.ITR_Type === 'ITR1'
-                    ? ClaimOutOfTotTDSOnAmtPaid
-                    : TDSClaimed,
-                uniqueTDSCerNo: null,
-                taxDeduction: null,
-                totalAmountCredited:
-                  this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
-                headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+                    ? EmployerOrDeductorOrCollectDetl.TAN
+                    : TANOfDeductor;
+                const deductorName =
+                  this.ITR_Type === 'ITR1'
+                    ? EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName
+                    : null;
+
+                return {
+                  id: null,
+                  srNo: null,
+                  deductorName,
+                  deductorTAN: TAN,
+                  totalTdsDeposited:
+                    this.ITR_Type === 'ITR1'
+                      ? ClaimOutOfTotTDSOnAmtPaid
+                      : TDSClaimed,
+                  uniqueTDSCerNo: null,
+                  taxDeduction: null,
+                  totalAmountCredited:
+                    this.ITR_Type === 'ITR1' ? AmtForTaxDeduct : GrossAmount,
+                  headOfIncome: this.ITR_Type === 'ITR4' ? HeadOfIncome : null,
+                };
               };
-            };
 
-            this.ITR_Obj.taxPaid.otherThanSalary16A =
-              jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
+              this.ITR_Obj.taxPaid.otherThanSalary16A =
+                jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
 
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_Obj)
-            );
-            // console.log(this.ITR_Obj);
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_Obj)
+              );
+            }
           }
 
           // TDS3Details / otherThanSalary26QB
@@ -2210,12 +2055,11 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // TCS - TAX COLLECTED AT SOURCE
           {
-            const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS.TCS;
+            const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
 
             if (!jsonTCS || jsonTCS.length === 0) {
               this.ITR_Obj.taxPaid.tcs = [];
@@ -2252,16 +2096,13 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // Advance and self assessment tax
           {
             const taxPayment =
               this.ITR_Type === 'ITR1' ? 'TaxPayments' : 'ScheduleIT';
-            // console.log('taxPayment', taxPayment);
-            const jsonAdvSAT = ItrJSON[this.ITR_Type][taxPayment].TaxPayment;
-            // console.log('jsonAdvSAT', jsonAdvSAT);
+            const jsonAdvSAT = ItrJSON[this.ITR_Type]?.[taxPayment]?.TaxPayment;
 
             if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
               this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
@@ -2290,27 +2131,22 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // BUSINESS AND PROFESSION - PRESUMPTIVE INCOME
         {
           if (this.ITR_Type === 'ITR4') {
-            // Business44AD - If json is uploaded more than once than this will keep on pushing the new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
             {
               const NatOfBus44AD =
                 ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44AD;
               const NatOfBus44ADLength = NatOfBus44AD?.length;
-              // console.log('NatOfBus44AD', NatOfBus44AD);
 
               const PersumptiveInc44AD =
                 ItrJSON[this.ITR_Type].ScheduleBP?.PersumptiveInc44AD;
-              // console.log('PersumptiveInc44AD', PersumptiveInc44AD);
 
               NatOfBus44AD?.forEach((obj) => {
                 this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
@@ -2367,36 +2203,27 @@ export class PrefillIdComponent implements OnInit {
                   tradeName: obj.NameOfBusiness,
                   businessDescription: obj.Description,
                 };
-
-                // console.log('newObject', newObject);
                 this.ITR_Obj.business.presumptiveIncomes.push(newObject);
-
-                // console.log(
-                //   'businessDescriptionObject',
-                //   businessDescriptionObject
-                // );
                 this.ITR_Obj.business.businessDescription.push(
                   businessDescriptionObject
                 );
               });
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
               );
             }
 
-            // Profession44ADA - If json is uploaded more than once than this will keep on pushing new objects. Need to write a code where it updates the existing one if the CODEAD/CODEADA is same
+            // Profession44ADA
             {
               const NatOfBus44ADA =
-                ItrJSON[this.ITR_Type].ScheduleBP.NatOfBus44ADA;
-              const NatOfBus44ADALength = NatOfBus44ADA.length;
-              // console.log('NatOfBus44ADA', NatOfBus44ADA);
+                ItrJSON[this.ITR_Type]?.ScheduleBP?.NatOfBus44ADA;
+              const NatOfBus44ADALength = NatOfBus44ADA?.length;
 
               const PersumptiveInc44ADA =
                 ItrJSON[this.ITR_Type].ScheduleBP.PersumptiveInc44ADA;
-              // console.log('PersumptiveInc44ADA', PersumptiveInc44ADA);
 
               NatOfBus44ADA?.forEach((obj) => {
                 this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
@@ -2418,7 +2245,7 @@ export class PrefillIdComponent implements OnInit {
                       id: null,
                       incomeType: 'PROFESSIONAL',
                       receipts:
-                        PersumptiveInc44ADA.GrsReceipt / NatOfBus44ADALength,
+                        PersumptiveInc44ADA?.GrsReceipt / NatOfBus44ADALength,
                       presumptiveIncome:
                         PersumptiveInc44ADA.TotPersumptiveInc44ADA /
                         NatOfBus44ADALength,
@@ -2443,15 +2270,8 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Obj.business.businessDescription.push(
                   professionDescriptionObject
                 );
-
-                // console.log('newObjectProfession', newObject);
-                // console.log(
-                //   'businessDescriptionObject',
-                //   professionDescriptionObject
-                // );
               });
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -2525,13 +2345,26 @@ export class PrefillIdComponent implements OnInit {
                 }
               }
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
               );
             }
           }
+        }
+
+        //setting relief
+        {
+          //section89
+          if (ItrJSON[this.ITR_Type][this.taxComputation]?.Section89) {
+            this.ITR_Obj.section89 =
+              ItrJSON[this.ITR_Type][this.taxComputation]?.Section89;
+          }
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
         }
 
         // DECLARATION
@@ -2557,15 +2390,12 @@ export class PrefillIdComponent implements OnInit {
               ItrJSON[this.ITR_Type].Verification.Place;
           }
 
-          // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
@@ -2581,9 +2411,6 @@ export class PrefillIdComponent implements OnInit {
         {
           this.ITR_Obj.panNumber =
             ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.PAN;
-
-          // this.ITR_Obj.contactNumber =
-          //   ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.MobileNo;
 
           this.ITR_Obj.email =
             ItrJSON[
@@ -2616,12 +2443,14 @@ export class PrefillIdComponent implements OnInit {
             ) {
               this.regime = 'OLD';
               this.ITR_Obj.regime = this.regime;
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
             } else if (
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus.NewTaxRegime ===
               'Y'
             ) {
               this.regime = 'NEW';
               this.ITR_Obj.regime = this.regime;
+              this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
             } else {
               this.utilsService.showSnackBar(
                 'Type of regime is not present in the uploaded JSON'
@@ -2797,10 +2626,14 @@ export class PrefillIdComponent implements OnInit {
 
           // Updating employer details based on the key that we get from json in our itr obj employer category
           {
-            let jsonEmployerCategory =
-              ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]?.NatureOfEmployment;
-
-            // console.log('Employe Category in JSON ==>>', jsonEmployerCategory);
+            let jsonEmployerCategory: any;
+            if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
+              jsonEmployerCategory =
+                ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]
+                  ?.NatureOfEmployment;
+            } else {
+              jsonEmployerCategory = 'OTH';
+            }
 
             if (jsonEmployerCategory === 'CGOV') {
               this.ITR_Obj.employerCategory = 'CENTRAL_GOVT';
@@ -2942,7 +2775,6 @@ export class PrefillIdComponent implements OnInit {
                 ?.HeldUnlistedEqShrPrYrFlg === 'Y'
             ) {
               this.ITR_Obj.systemFlags.haveUnlistedShares = true;
-
               const HeldUnlistedEqShrPrYrFlg =
                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                   ?.HeldUnlistedEqShrPrYr?.HeldUnlistedEqShrPrYrDtls;
@@ -3128,7 +2960,6 @@ export class PrefillIdComponent implements OnInit {
               calculators: null,
             };
             this.ITR_Obj.employers.push(employerDetails);
-            this.ITR_Obj.systemFlags.hasSalary = true;
           });
 
           // calling updateSalaryAllowance function to update allowances and deductions if regime is OLD.
@@ -3244,7 +3075,6 @@ export class PrefillIdComponent implements OnInit {
               ],
             };
             this.ITR_Obj.houseProperties.push(housePropertyDetails);
-            this.ITR_Obj.systemFlags.hasHouseProperty = true;
           });
         }
       }
@@ -3252,7 +3082,6 @@ export class PrefillIdComponent implements OnInit {
       // OTHER INCOME
       {
         // DIVIDEND INCOMES
-
         const jsonDividendObj =
           this.uploadedJson[this.ITR_Type].ScheduleOS?.DividendIncUs115BBDA
             ?.DateRange;
@@ -3418,7 +3247,6 @@ export class PrefillIdComponent implements OnInit {
           {
             const jsonSalaryTDS =
               ItrJSON[this.ITR_Type]?.ScheduleTDS1?.TDSonSalary;
-            // console.log('jsonSalaryTDS', jsonSalaryTDS);
 
             if (!jsonSalaryTDS || jsonSalaryTDS.length === 0) {
               this.ITR_Obj.taxPaid.onSalary = [];
@@ -3448,12 +3276,10 @@ export class PrefillIdComponent implements OnInit {
               );
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
-            // console.log(this.ITR_Obj);
           }
 
           // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
@@ -3465,41 +3291,41 @@ export class PrefillIdComponent implements OnInit {
           // console.log('otherThanSalary16A', otherThanSalary16A);
 
           const jsonOtherThanSalaryTDS: Array<object> =
-            ItrJSON[this.ITR_Type].ScheduleTDS2?.TDSOthThanSalaryDtls;
-          // console.log('jsonOtherThanSalaryTDS', jsonOtherThanSalaryTDS);
+            ItrJSON[this.ITR_Type]?.ScheduleTDS2?.TDSOthThanSalaryDtls;
 
-          const mapJsonToITRObj16A = ({
-            TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
-            TDSCreditName,
-            TANOfDeductor,
-            GrossAmount,
-            HeadOfIncome,
-            AmtCarriedFwd,
-          }) => {
-            return {
-              id: null,
-              srNo: null,
-              deductorName: null,
-              deductorTAN: TANOfDeductor,
-              totalTdsDeposited: TaxClaimedOwnHands,
-              uniqueTDSCerNo: null,
-              taxDeduction: null,
-              totalAmountCredited: GrossAmount,
-              headOfIncome:
-                HeadOfIncome === 'CG'
-                  ? (HeadOfIncome = 'OS')
-                  : (HeadOfIncome = 'OS'),
+          if (jsonOtherThanSalaryTDS) {
+            const mapJsonToITRObj16A = ({
+              TaxDeductCreditDtls: { TaxDeductedOwnHands, TaxClaimedOwnHands },
+              TDSCreditName,
+              TANOfDeductor,
+              GrossAmount,
+              HeadOfIncome,
+              AmtCarriedFwd,
+            }) => {
+              return {
+                id: null,
+                srNo: null,
+                deductorName: null,
+                deductorTAN: TANOfDeductor,
+                totalTdsDeposited: TaxClaimedOwnHands,
+                uniqueTDSCerNo: null,
+                taxDeduction: null,
+                totalAmountCredited: GrossAmount,
+                headOfIncome:
+                  HeadOfIncome === 'CG'
+                    ? (HeadOfIncome = 'OS')
+                    : (HeadOfIncome = 'OS'),
+              };
             };
-          };
 
-          this.ITR_Obj.taxPaid.otherThanSalary16A =
-            jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
+            this.ITR_Obj.taxPaid.otherThanSalary16A =
+              jsonOtherThanSalaryTDS?.map(mapJsonToITRObj16A);
 
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
-          // console.log(this.ITR_Obj);
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_Obj)
+            );
+          }
         }
 
         // TDS3Details / otherThanSalary26QB
@@ -3539,12 +3365,11 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // TCS - TAX COLLECTED AT SOURCE
         {
-          const jsonTCS = ItrJSON[this.ITR_Type].ScheduleTCS?.TCS;
+          const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
 
           if (!jsonTCS || jsonTCS.length === 0) {
             this.ITR_Obj.taxPaid.tcs = [];
@@ -3579,12 +3404,11 @@ export class PrefillIdComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_Obj)
           );
-          // console.log(this.ITR_Obj);
         }
 
         // Advance and self assessment tax
         {
-          const jsonAdvSAT = ItrJSON[this.ITR_Type].ScheduleIT?.TaxPayment;
+          const jsonAdvSAT = ItrJSON[this.ITR_Type]?.ScheduleIT?.TaxPayment;
 
           if (!jsonAdvSAT || jsonAdvSAT.length === 0) {
             this.ITR_Obj.taxPaid.otherThanTDSTCS = [];
@@ -3613,12 +3437,10 @@ export class PrefillIdComponent implements OnInit {
           }
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log(this.ITR_Obj);
       }
 
       // INVESTMENTS / DEDUCTIONS
@@ -3647,7 +3469,6 @@ export class PrefillIdComponent implements OnInit {
           );
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
@@ -3657,17 +3478,15 @@ export class PrefillIdComponent implements OnInit {
       // EXEMPT INCOME
       {
         if (
-          this.uploadedJson[this.ITR_Type].ScheduleEI?.OthersInc?.OthersIncDtls
+          this.uploadedJson[this.ITR_Type]?.ScheduleEI?.OthersInc?.OthersIncDtls
         ) {
           if (this.ITR_Obj.exemptIncomes) {
             //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
             const availableExemptIncomes = this.uploadedJson[
               this.ITR_Type
-            ].ScheduleEI?.OthersInc?.OthersIncDtls.map(
+            ].ScheduleEI?.OthersInc?.OthersIncDtls?.map(
               (value) => value.NatureDesc
             );
-            // console.log(`availableExemptIncomes`, availableExemptIncomes);
-
             this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
           } else {
             console.log(
@@ -3683,12 +3502,10 @@ export class PrefillIdComponent implements OnInit {
           );
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log('asdfghj', this.ITR_Obj, this.ITR_Obj.exemptIncomes);
       }
 
       // DECLARATION
@@ -3719,12 +3536,10 @@ export class PrefillIdComponent implements OnInit {
             ItrJSON[this.ITR_Type].Verification.Place;
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
         );
-        // console.log(this.ITR_Obj);
       }
 
       // Financial Particulars - Balance Sheet
@@ -3810,9 +3625,9 @@ export class PrefillIdComponent implements OnInit {
           if (!isBalanceSheetKeysEmpty) {
             this.ITR_Obj.business.financialParticulars = balanceSheetKeys;
           }
+          this.ITR_Obj.systemFlags.hasBusinessProfessionIncome = true;
         }
 
-        // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
         sessionStorage.setItem(
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_Obj)
@@ -3830,16 +3645,24 @@ export class PrefillIdComponent implements OnInit {
                 ?.LongTermCapGain23?.Proviso112Applicable;
 
             if (Proviso112Applicabledtls) {
-              Proviso112Applicabledtls.forEach((zcb) => {
-                if (zcb === Proviso112Applicabledtls[0]) {
+              Proviso112Applicabledtls.forEach(({ zcb }, index) => {
+                if (
+                  zcb === Proviso112Applicabledtls[0] &&
+                  Proviso112Applicabledtls[0] &&
+                  Proviso112Applicabledtls[0]?.Proviso112Applicabledtls
+                    ?.BalanceCG !== 0 &&
+                  Proviso112Applicabledtls[0] &&
+                  Proviso112Applicabledtls[0]?.Proviso112Applicabledtls
+                    ?.FullConsideration !== 0
+                ) {
                   const zcbDetail = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'ZERO_COUPON_BONDS',
                     deduction: [
                       {
-                        srn: null,
+                        srn: index,
                         underSection: 'Deduction 54F',
                         orgAssestTransferDate: null,
                         purchaseDate: null,
@@ -3847,8 +3670,10 @@ export class PrefillIdComponent implements OnInit {
                         purchaseDatePlantMachine: null,
                         costOfNewAssets: null,
                         investmentInCGAccount: null,
-                        totalDeductionClaimed:
-                          zcb.Proviso112Applicabledtls?.DeductionUs54F,
+                        totalDeductionClaimed: zcb.Proviso112Applicabledtls
+                          ?.DeductionUs54F
+                          ? zcb.Proviso112Applicabledtls?.DeductionUs54F
+                          : null,
                         costOfPlantMachinary: null,
                         usedDeduction: null,
                       },
@@ -3856,12 +3681,14 @@ export class PrefillIdComponent implements OnInit {
                     improvement: [
                       {
                         id: null,
-                        srn: null,
+                        srn: index,
                         financialYearOfImprovement: null,
                         dateOfImprovement: null,
-                        costOfImprovement:
-                          zcb.Proviso112Applicabledtls?.DeductSec48
-                            ?.ImproveCost,
+                        costOfImprovement: zcb.Proviso112Applicabledtls
+                          ?.DeductSec48?.ImproveCost
+                          ? zcb.Proviso112Applicabledtls?.DeductSec48
+                              ?.ImproveCost
+                          : null,
                         indexCostOfImprovement: null,
                       },
                     ],
@@ -3871,7 +3698,7 @@ export class PrefillIdComponent implements OnInit {
                         id: null,
                         hasIndexation: null,
                         isUploaded: null,
-                        srn: null,
+                        srn: index,
                         description: null,
                         gainType: 'LONG',
                         sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -3904,15 +3731,13 @@ export class PrefillIdComponent implements OnInit {
                   };
 
                   this.ITR_Obj.capitalGain.push(zcbDetail);
+                  sessionStorage.setItem(
+                    AppConstants.ITR_JSON,
+                    JSON.stringify(this.ITR_Obj)
+                  );
                   this.ITR_Obj.systemFlags.hasCapitalGain = true;
                 }
               });
-
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
             }
           }
 
@@ -3922,15 +3747,21 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.LongTermCapGain23?.SaleofBondsDebntr;
 
-            if (SaleofBondsDebntr) {
+            if (
+              SaleofBondsDebntr &&
+              SaleofBondsDebntr?.BalanceCG &&
+              SaleofBondsDebntr?.BalanceCG !== 0 &&
+              SaleofBondsDebntr?.FullConsideration &&
+              SaleofBondsDebntr?.FullConsideration !== 0
+            ) {
               const SaleofBondsDebntrDetails = {
-                assessmentYear: '',
-                assesseeType: '',
-                residentialStatus: '',
+                assessmentYear: this.ITR_Obj?.assessmentYear,
+                assesseeType: this.ITR_Obj?.assesseeType,
+                residentialStatus: this.ITR_Obj?.residentialStatus,
                 assetType: 'BONDS',
                 deduction: [
                   {
-                    srn: null,
+                    srn: 0,
                     underSection: 'Deduction 54F',
                     orgAssestTransferDate: null,
                     purchaseDate: null,
@@ -3938,7 +3769,9 @@ export class PrefillIdComponent implements OnInit {
                     purchaseDatePlantMachine: null,
                     costOfNewAssets: null,
                     investmentInCGAccount: null,
-                    totalDeductionClaimed: SaleofBondsDebntr?.DeductionUs54F,
+                    totalDeductionClaimed: SaleofBondsDebntr?.DeductionUs54F
+                      ? SaleofBondsDebntr?.DeductionUs54F
+                      : null,
                     costOfPlantMachinary: null,
                     usedDeduction: null,
                   },
@@ -3946,11 +3779,13 @@ export class PrefillIdComponent implements OnInit {
                 improvement: [
                   {
                     id: null,
-                    srn: null,
+                    srn: 0,
                     financialYearOfImprovement: null,
                     dateOfImprovement: null,
-                    costOfImprovement:
-                      SaleofBondsDebntr?.DeductSec48?.ImproveCost,
+                    costOfImprovement: SaleofBondsDebntr?.DeductSec48
+                      ?.ImproveCost
+                      ? SaleofBondsDebntr?.DeductSec48?.ImproveCost
+                      : null,
                     indexCostOfImprovement: null,
                   },
                 ],
@@ -3960,7 +3795,7 @@ export class PrefillIdComponent implements OnInit {
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
-                    srn: null,
+                    srn: 0,
                     description: null,
                     gainType: 'LONG',
                     sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -3998,15 +3833,21 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.LongTermCapGain23?.SaleofAssetNA;
 
-            if (SaleofAssetNA) {
+            if (
+              SaleofAssetNA &&
+              SaleofAssetNA?.BalanceCG &&
+              SaleofAssetNA?.BalanceCG !== 0 &&
+              SaleofAssetNA?.FullConsideration &&
+              SaleofAssetNA?.FullConsideration !== 0
+            ) {
               const SaleofAssetNADetail = {
-                assessmentYear: '',
-                assesseeType: '',
-                residentialStatus: '',
+                assessmentYear: this.ITR_Obj.assessmentYear,
+                assesseeType: this.ITR_Obj.assesseeType,
+                residentialStatus: this.ITR_Obj.residentialStatus,
                 assetType: 'GOLD',
                 deduction: [
                   {
-                    srn: null,
+                    srn: 0,
                     underSection: 'Deduction 54F',
                     orgAssestTransferDate: null,
                     purchaseDate: null,
@@ -4014,7 +3855,9 @@ export class PrefillIdComponent implements OnInit {
                     purchaseDatePlantMachine: null,
                     costOfNewAssets: null,
                     investmentInCGAccount: null,
-                    totalDeductionClaimed: SaleofAssetNA?.DeductionUs54F,
+                    totalDeductionClaimed: SaleofAssetNA?.DeductionUs54F
+                      ? SaleofAssetNA?.DeductionUs54F
+                      : null,
                     costOfPlantMachinary: null,
                     usedDeduction: null,
                   },
@@ -4022,10 +3865,12 @@ export class PrefillIdComponent implements OnInit {
                 improvement: [
                   {
                     id: null,
-                    srn: null,
+                    srn: 0,
                     financialYearOfImprovement: null,
                     dateOfImprovement: null,
-                    costOfImprovement: SaleofAssetNA?.DeductSec48?.ImproveCost,
+                    costOfImprovement: SaleofAssetNA?.DeductSec48?.ImproveCost
+                      ? SaleofAssetNA?.DeductSec48?.ImproveCost
+                      : null,
                     indexCostOfImprovement: null,
                   },
                 ],
@@ -4035,7 +3880,7 @@ export class PrefillIdComponent implements OnInit {
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
-                    srn: null,
+                    srn: 0,
                     description: null,
                     gainType: 'LONG',
                     sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -4061,7 +3906,6 @@ export class PrefillIdComponent implements OnInit {
                 ],
                 deductionAmount: null,
               };
-
               this.ITR_Obj.capitalGain.push(SaleofAssetNADetail);
               this.ITR_Obj.systemFlags.hasCapitalGain = true;
             }
@@ -4074,114 +3918,136 @@ export class PrefillIdComponent implements OnInit {
                 ?.LongTermCapGain23?.SaleofLandBuild?.SaleofLandBuildDtls;
 
             if (SaleofLandBuildDtls) {
-              SaleofLandBuildDtls?.forEach((landAndBuilding) => {
-                const SaleofLandBuildDetails = {
-                  assessmentYear: '',
-                  assesseeType: '',
-                  residentialStatus: '',
-                  assetType: 'PLOT_OF_LAND',
-                  deduction:
-                    landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
-                      ({ ExemptionSecCode, ExemptionAmount }, index) => ({
-                        srn: index,
-                        underSection: ExemptionSecCode,
-                        orgAssestTransferDate: null,
-                        purchaseDate: null,
-                        panOfEligibleCompany: null,
-                        purchaseDatePlantMachine: null,
-                        costOfNewAssets: null,
-                        investmentInCGAccount: null,
-                        totalDeductionClaimed: ExemptionAmount,
-                        costOfPlantMachinary: null,
-                        usedDeduction: null,
-                      })
-                    ),
-                  improvement: [
-                    {
-                      id: null,
-                      srn: null,
-                      financialYearOfImprovement: null,
-                      dateOfImprovement: null,
-                      costOfImprovement: landAndBuilding?.ImproveCost,
-                      indexCostOfImprovement: null,
-                    },
-                  ],
-                  buyersDetails:
-                    landAndBuilding?.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
-                      (
-                        {
-                          NameOfBuyer,
-                          PANofBuyer,
-                          PercentageShare,
-                          Amount,
-                          AddressOfProperty,
-                          StateCode,
-                          CountryCode,
-                          PinCode,
+              SaleofLandBuildDtls?.forEach(({ landAndBuilding }, index) => {
+                if (
+                  landAndBuilding?.FullConsideration &&
+                  landAndBuilding?.FullConsideration !== 0 &&
+                  landAndBuilding?.Balance &&
+                  landAndBuilding?.Balance !== 0
+                ) {
+                  const SaleofLandBuildDetails = {
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
+                    assetType: 'PLOT_OF_LAND',
+                    deduction: landAndBuilding?.ExemptionOrDednUs54
+                      ?.ExemptionOrDednUs54Dtls
+                      ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
+                          ({ ExemptionSecCode, ExemptionAmount }, index) => ({
+                            srn: index,
+                            underSection: ExemptionSecCode,
+                            orgAssestTransferDate: null,
+                            purchaseDate: null,
+                            panOfEligibleCompany: null,
+                            purchaseDatePlantMachine: null,
+                            costOfNewAssets: null,
+                            investmentInCGAccount: null,
+                            totalDeductionClaimed: ExemptionAmount
+                              ? ExemptionAmount
+                              : null,
+                            costOfPlantMachinary: null,
+                            usedDeduction: null,
+                          })
+                        )
+                      : {
+                          srn: index,
+                          underSection: 'Deduction 54F',
+                          orgAssestTransferDate: null,
+                          purchaseDate: null,
+                          panOfEligibleCompany: null,
+                          purchaseDatePlantMachine: null,
+                          costOfNewAssets: null,
+                          investmentInCGAccount: null,
+                          totalDeductionClaimed: null,
+                          costOfPlantMachinary: null,
+                          usedDeduction: null,
                         },
-                        index
-                      ) => ({
-                        aadhaarNumber: null,
-                        address: AddressOfProperty,
-                        amount: Amount,
-                        country: CountryCode,
-                        name: NameOfBuyer,
-                        pan: PANofBuyer,
-                        pin: PinCode,
-                        share: PercentageShare,
+                    improvement: [
+                      {
+                        id: null,
                         srn: index,
-                        state: StateCode,
-                      })
-                    ),
-                  assetDetails: [
-                    {
-                      id: null,
-                      hasIndexation: null,
-                      isUploaded: null,
-                      srn: null,
-                      description: null,
-                      gainType: 'LONG',
-                      sellDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofSale
-                          ? landAndBuilding?.DateofSale
-                          : '2023-03-15'
+                        financialYearOfImprovement: null,
+                        dateOfImprovement: null,
+                        costOfImprovement: landAndBuilding?.ImproveCost,
+                        indexCostOfImprovement: null,
+                      },
+                    ],
+                    buyersDetails:
+                      landAndBuilding?.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
+                        (
+                          {
+                            NameOfBuyer,
+                            PANofBuyer,
+                            PercentageShare,
+                            Amount,
+                            AddressOfProperty,
+                            StateCode,
+                            CountryCode,
+                            PinCode,
+                          },
+                          index
+                        ) => ({
+                          aadhaarNumber: null,
+                          address: AddressOfProperty,
+                          amount: Amount,
+                          country: CountryCode,
+                          name: NameOfBuyer,
+                          pan: PANofBuyer,
+                          pin: PinCode,
+                          share: PercentageShare,
+                          srn: index,
+                          state: StateCode,
+                        })
                       ),
-                      sellValue: null,
-                      stampDutyValue: null,
-                      valueInConsideration:
-                        landAndBuilding?.FullConsideration50C,
-                      sellExpense: landAndBuilding?.ExpOnTrans,
-                      purchaseDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofPurchase
-                          ? landAndBuilding?.DateofPurchase
-                          : '2021-03-13'
-                      ),
-                      purchaseCost: landAndBuilding?.AquisitCost,
-                      isinCode: null,
-                      nameOfTheUnits: null,
-                      sellOrBuyQuantity: 1,
-                      sellValuePerUnit: null,
-                      purchaseValuePerUnit: null,
-                      algorithm: 'cgProperty',
-                      fmvAsOn31Jan2018: null,
-                      capitalGain: landAndBuilding?.Balance,
-                      indexCostOfAcquisition: landAndBuilding?.AquisitCostIndex,
-                      totalFairMarketValueOfCapitalAsset: null,
-                      grandFatheredValue: null,
-                      brokerName: null,
-                    },
-                  ],
-                  deductionAmount: null,
-                };
-                this.ITR_Obj.capitalGain.push(SaleofLandBuildDetails);
+                    assetDetails: [
+                      {
+                        id: null,
+                        hasIndexation: null,
+                        isUploaded: null,
+                        srn: index,
+                        description: null,
+                        gainType: 'LONG',
+                        sellDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofSale
+                            ? landAndBuilding?.DateofSale
+                            : '2023-03-15'
+                        ),
+                        sellValue: null,
+                        stampDutyValue: null,
+                        valueInConsideration:
+                          landAndBuilding?.FullConsideration50C,
+                        sellExpense: landAndBuilding?.ExpOnTrans,
+                        purchaseDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofPurchase
+                            ? landAndBuilding?.DateofPurchase
+                            : '2021-03-13'
+                        ),
+                        purchaseCost: landAndBuilding?.AquisitCost,
+                        isinCode: null,
+                        nameOfTheUnits: null,
+                        sellOrBuyQuantity: 1,
+                        sellValuePerUnit: null,
+                        purchaseValuePerUnit: null,
+                        algorithm: 'cgProperty',
+                        fmvAsOn31Jan2018: null,
+                        capitalGain: landAndBuilding?.Balance,
+                        indexCostOfAcquisition:
+                          landAndBuilding?.AquisitCostIndex,
+                        totalFairMarketValueOfCapitalAsset: null,
+                        grandFatheredValue: null,
+                        brokerName: null,
+                      },
+                    ],
+                    deductionAmount: null,
+                  };
+                  this.ITR_Obj.capitalGain.push(SaleofLandBuildDetails);
+                  this.ITR_Obj.systemFlags.hasCapitalGain = true;
+                  sessionStorage.setItem(
+                    AppConstants.ITR_JSON,
+                    JSON.stringify(this.ITR_Obj)
+                  );
+                }
               });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
-
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_Obj)
-              );
             }
           }
 
@@ -4191,55 +4057,111 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].Schedule112A?.Schedule112ADtls;
 
             if (EquityMF112A) {
-              EquityMF112A.forEach((equityLtcg) => {
-                const equityLtcgDetail = {
-                  assessmentYear: '',
-                  assesseeType: '',
-                  residentialStatus: '',
-                  assetType: 'EQUITY_SHARES_LISTED',
-                  deduction: [],
-                  improvement: [],
-                  buyersDetails: [],
-                  assetDetails: [
-                    {
-                      id: null,
-                      hasIndexation: null,
-                      isUploaded: null,
-                      srn: null,
-                      description: null,
-                      gainType: 'LONG',
-                      sellDate: this.parseAndFormatDate('2023-03-15'),
-                      sellValue: equityLtcg?.TotSaleValue,
-                      stampDutyValue: null,
-                      valueInConsideration: null,
-                      sellExpense: equityLtcg?.ExpExclCnctTransfer,
-                      purchaseDate: this.parseAndFormatDate('2021-03-13'),
-                      purchaseCost: equityLtcg?.AcquisitionCost,
-                      isinCode: equityLtcg?.ISINCode,
-                      nameOfTheUnits: equityLtcg?.ShareUnitName,
-                      sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
-                      sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
-                      purchaseValuePerUnit:
-                        equityLtcg?.AcquisitionCost /
-                        equityLtcg?.NumSharesUnits,
-                      algorithm: 'cgSharesMF',
-                      fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
-                      capitalGain: equityLtcg?.Balance,
-                      indexCostOfAcquisition: null,
-                      totalFairMarketValueOfCapitalAsset:
-                        equityLtcg?.TotFairMktValueCapAst,
-                      grandFatheredValue: null,
-                      brokerName: null,
-                    },
-                  ],
-                  deductionAmount: null,
-                };
+              EquityMF112A?.forEach((equityLtcg) => {
+                let itrObjEquity112a = this.ITR_Obj?.capitalGain?.find(
+                  (equity112a) =>
+                    equity112a?.assetType === 'EQUITY_SHARES_LISTED'
+                );
 
-                this.ITR_Obj.capitalGain.push(equityLtcgDetail);
+                if (itrObjEquity112a) {
+                  itrObjEquity112a?.assetDetails.push({
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'LONG',
+                    sellDate: this.parseAndFormatDate('2023-03-15'),
+                    sellValue: equityLtcg?.TotSaleValue,
+                    stampDutyValue: null,
+                    valueInConsideration: null,
+                    sellExpense: equityLtcg?.ExpExclCnctTransfer,
+                    purchaseDate: this.parseAndFormatDate('2021-03-13'),
+                    purchaseCost: equityLtcg?.AcquisitionCost,
+                    isinCode: equityLtcg?.ISINCode,
+                    nameOfTheUnits: equityLtcg?.ShareUnitName,
+                    sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
+                    sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
+                    purchaseValuePerUnit:
+                      equityLtcg?.AcquisitionCost / equityLtcg?.NumSharesUnits,
+                    algorithm: 'cgSharesMF',
+                    fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
+                    capitalGain: equityLtcg.Balance,
+                    indexCostOfAcquisition: null,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  });
+                } else {
+                  const equityLtcgDetail = {
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
+                    assetType: 'EQUITY_SHARES_LISTED',
+                    deduction: [
+                      {
+                        srn: 0,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
+                    improvement: [
+                      {
+                        id: null,
+                        srn: null,
+                        financialYearOfImprovement: null,
+                        dateOfImprovement: null,
+                        costOfImprovement: null,
+                        indexCostOfImprovement: null,
+                      },
+                    ],
+                    buyersDetails: [],
+                    assetDetails: [
+                      {
+                        id: null,
+                        hasIndexation: null,
+                        isUploaded: null,
+                        srn: null,
+                        description: null,
+                        gainType: 'LONG',
+                        sellDate: this.parseAndFormatDate('2023-03-15'),
+                        sellValue: equityLtcg?.TotSaleValue,
+                        stampDutyValue: null,
+                        valueInConsideration: null,
+                        sellExpense: equityLtcg?.ExpExclCnctTransfer,
+                        purchaseDate: this.parseAndFormatDate('2021-03-13'),
+                        purchaseCost: equityLtcg?.AcquisitionCost,
+                        isinCode: equityLtcg?.ISINCode,
+                        nameOfTheUnits: equityLtcg?.ShareUnitName,
+                        sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
+                        sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
+                        purchaseValuePerUnit:
+                          equityLtcg?.AcquisitionCost /
+                          equityLtcg?.NumSharesUnits,
+                        algorithm: 'cgSharesMF',
+                        fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
+                        capitalGain: equityLtcg.Balance,
+                        indexCostOfAcquisition: null,
+                        grandFatheredValue: null,
+                        brokerName: null,
+                      },
+                    ],
+                    deductionAmount: null,
+                  };
+                  this.ITR_Obj.capitalGain.push(equityLtcgDetail);
+                }
+
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
               });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
 
-              // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+              this.ITR_Obj.systemFlags.hasCapitalGain = true;
               sessionStorage.setItem(
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_Obj)
@@ -4258,23 +4180,39 @@ export class PrefillIdComponent implements OnInit {
 
             if (
               SaleOnOtherAssets &&
-              SaleOnOtherAssets.CapgainonAssets !== 0 &&
-              SaleOnOtherAssets.FullConsideration !== 0
+              SaleOnOtherAssets?.CapgainonAssets !== 0 &&
+              SaleOnOtherAssets?.FullConsideration !== 0
             ) {
               const SaleOnOtherAssetsDetail = {
-                assessmentYear: '',
-                assesseeType: '',
-                residentialStatus: '',
+                assessmentYear: this.ITR_Obj.assessmentYear,
+                assesseeType: this.ITR_Obj.assesseeType,
+                residentialStatus: this.ITR_Obj.residentialStatus,
                 assetType: 'GOLD',
-                deduction: [],
+                deduction: [
+                  {
+                    srn: 0,
+                    underSection: 'Deduction 54F',
+                    orgAssestTransferDate: null,
+                    purchaseDate: null,
+                    panOfEligibleCompany: null,
+                    purchaseDatePlantMachine: null,
+                    costOfNewAssets: null,
+                    investmentInCGAccount: null,
+                    totalDeductionClaimed: null,
+                    costOfPlantMachinary: null,
+                    usedDeduction: null,
+                  },
+                ],
                 improvement: [
                   {
                     id: null,
-                    srn: null,
+                    srn: 0,
                     financialYearOfImprovement: null,
                     dateOfImprovement: null,
-                    costOfImprovement:
-                      SaleOnOtherAssets?.DeductSec48?.ImproveCost,
+                    costOfImprovement: SaleOnOtherAssets?.DeductSec48
+                      ?.ImproveCost
+                      ? SaleOnOtherAssets?.DeductSec48?.ImproveCost
+                      : null,
                     indexCostOfImprovement: null,
                   },
                 ],
@@ -4284,7 +4222,7 @@ export class PrefillIdComponent implements OnInit {
                     id: null,
                     hasIndexation: null,
                     isUploaded: null,
-                    srn: null,
+                    srn: 0,
                     description: null,
                     gainType: 'SHORT',
                     sellDate: this.parseAndFormatDate('2023-03-15'),
@@ -4322,15 +4260,65 @@ export class PrefillIdComponent implements OnInit {
               this.uploadedJson[this.ITR_Type].ScheduleCGFor23
                 ?.ShortTermCapGainFor23?.EquityMFonSTT;
 
-            if (EquityMFonSTT) {
-              EquityMFonSTT.forEach((equityStcg) => {
-                if (equityStcg === EquityMFonSTT[0]) {
+            EquityMFonSTT?.forEach((equityStcg) => {
+              if (equityStcg === EquityMFonSTT[0]) {
+                let itrObjEquity111a = this.ITR_Obj.capitalGain?.find(
+                  (equity111a) =>
+                    equity111a?.assetType === 'EQUITY_SHARES_LISTED'
+                );
+
+                if (itrObjEquity111a) {
+                  itrObjEquity111a?.assetDetails?.push({
+                    id: null,
+                    hasIndexation: null,
+                    isUploaded: null,
+                    srn: null,
+                    description: null,
+                    gainType: 'SHORT',
+                    sellDate: this.parseAndFormatDate('2023-03-15'),
+                    sellValue: equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                    stampDutyValue: null,
+                    valueInConsideration: null,
+                    sellExpense:
+                      equityStcg.EquityMFonSTTDtls.DeductSec48?.ExpOnTrans,
+                    purchaseDate: this.parseAndFormatDate('2022-04-15'),
+                    purchaseCost:
+                      equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
+                    isinCode: null,
+                    nameOfTheUnits: null,
+                    sellOrBuyQuantity: 1,
+                    sellValuePerUnit:
+                      equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                    purchaseValuePerUnit:
+                      equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
+                    algorithm: 'cgSharesMF',
+                    fmvAsOn31Jan2018: null,
+                    capitalGain: equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                    indexCostOfAcquisition: null,
+                    grandFatheredValue: null,
+                    brokerName: null,
+                  });
+                } else {
                   const equityStcgDetail = {
-                    assessmentYear: '',
-                    assesseeType: '',
-                    residentialStatus: '',
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
                     assetType: 'EQUITY_SHARES_LISTED',
-                    deduction: [],
+                    deduction: [
+                      {
+                        srn: 0,
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
                     improvement: [
                       {
                         id: null,
@@ -4358,23 +4346,21 @@ export class PrefillIdComponent implements OnInit {
                         stampDutyValue: null,
                         valueInConsideration: null,
                         sellExpense:
-                          equityStcg.EquityMFonSTTDtls?.DeductSec48?.ExpOnTrans,
+                          equityStcg.EquityMFonSTTDtls.DeductSec48?.ExpOnTrans,
                         purchaseDate: this.parseAndFormatDate('2022-04-15'),
                         purchaseCost:
-                          equityStcg.EquityMFonSTTDtls?.DeductSec48
-                            ?.AquisitCost,
+                          equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                         isinCode: null,
                         nameOfTheUnits: null,
                         sellOrBuyQuantity: 1,
                         sellValuePerUnit:
                           equityStcg.EquityMFonSTTDtls?.FullConsideration,
                         purchaseValuePerUnit:
-                          equityStcg.EquityMFonSTTDtls?.DeductSec48
-                            ?.AquisitCost,
+                          equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                         algorithm: 'cgSharesMF',
                         fmvAsOn31Jan2018: null,
                         capitalGain:
-                          equityStcg?.EquityMFonSTTDtls?.CapgainonAssets,
+                          equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                         indexCostOfAcquisition: null,
                         totalFairMarketValueOfCapitalAsset: null,
                         grandFatheredValue: null,
@@ -4385,9 +4371,10 @@ export class PrefillIdComponent implements OnInit {
                   };
                   this.ITR_Obj.capitalGain.push(equityStcgDetail);
                 }
-              });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
-            }
+
+                this.ITR_Obj.systemFlags.hasCapitalGain = true;
+              }
+            });
 
             // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
@@ -4403,96 +4390,119 @@ export class PrefillIdComponent implements OnInit {
                 ?.ShortTermCapGainFor23?.SaleofLandBuild?.SaleofLandBuildDtls;
 
             if (SaleofLandBuildDtlsStcg) {
-              SaleofLandBuildDtlsStcg?.forEach((landAndBuilding) => {
-                const SaleofLandBuildStcgDetails = {
-                  assessmentYear: '',
-                  assesseeType: '',
-                  residentialStatus: '',
-                  assetType: 'PLOT_OF_LAND',
-                  deduction: [],
-                  improvement: [
-                    {
-                      id: null,
-                      srn: null,
-                      financialYearOfImprovement: null,
-                      dateOfImprovement: null,
-                      costOfImprovement: landAndBuilding?.ImproveCost,
-                      indexCostOfImprovement: null,
-                    },
-                  ],
-                  buyersDetails:
-                    landAndBuilding.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
-                      (
-                        {
-                          NameOfBuyer,
-                          PANofBuyer,
-                          PercentageShare,
-                          Amount,
-                          AddressOfProperty,
-                          StateCode,
-                          CountryCode,
-                          PinCode,
-                        },
-                        index
-                      ) => ({
-                        aadhaarNumber: null,
-                        address: AddressOfProperty,
-                        amount: Amount,
-                        country: CountryCode,
-                        name: NameOfBuyer,
-                        pan: PANofBuyer,
-                        pin: PinCode,
-                        share: PercentageShare,
+              SaleofLandBuildDtlsStcg?.forEach(({ landAndBuilding }, index) => {
+                if (
+                  landAndBuilding?.FullConsideration &&
+                  landAndBuilding?.FullConsideration !== 0 &&
+                  landAndBuilding?.Balance &&
+                  landAndBuilding?.Balance !== 0
+                ) {
+                  const SaleofLandBuildStcgDetails = {
+                    assessmentYear: this.ITR_Obj.assessmentYear,
+                    assesseeType: this.ITR_Obj.assesseeType,
+                    residentialStatus: this.ITR_Obj.residentialStatus,
+                    assetType: 'PLOT_OF_LAND',
+                    deduction: [
+                      {
                         srn: index,
-                        state: StateCode,
-                      })
-                    ),
-                  assetDetails: [
-                    {
-                      id: null,
-                      hasIndexation: null,
-                      isUploaded: null,
-                      srn: null,
-                      description: null,
-                      gainType: 'SHORT',
-                      sellDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofSale
-                          ? landAndBuilding?.DateofSale
-                          : '2023-03-15'
+                        underSection: 'Deduction 54F',
+                        orgAssestTransferDate: null,
+                        purchaseDate: null,
+                        panOfEligibleCompany: null,
+                        purchaseDatePlantMachine: null,
+                        costOfNewAssets: null,
+                        investmentInCGAccount: null,
+                        totalDeductionClaimed: null,
+                        costOfPlantMachinary: null,
+                        usedDeduction: null,
+                      },
+                    ],
+                    improvement: [
+                      {
+                        id: null,
+                        srn: index,
+                        financialYearOfImprovement: null,
+                        dateOfImprovement: null,
+                        costOfImprovement: landAndBuilding?.ImproveCost
+                          ? landAndBuilding?.ImproveCost
+                          : null,
+                        indexCostOfImprovement: null,
+                      },
+                    ],
+                    buyersDetails:
+                      landAndBuilding.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
+                        (
+                          {
+                            NameOfBuyer,
+                            PANofBuyer,
+                            PercentageShare,
+                            Amount,
+                            AddressOfProperty,
+                            StateCode,
+                            CountryCode,
+                            PinCode,
+                          },
+                          index
+                        ) => ({
+                          aadhaarNumber: null,
+                          address: AddressOfProperty,
+                          amount: Amount,
+                          country: CountryCode,
+                          name: NameOfBuyer,
+                          pan: PANofBuyer,
+                          pin: PinCode,
+                          share: PercentageShare,
+                          srn: index,
+                          state: StateCode,
+                        })
                       ),
-                      sellValue: null,
-                      stampDutyValue: null,
-                      valueInConsideration:
-                        landAndBuilding?.FullConsideration50C,
-                      sellExpense: landAndBuilding?.ExpOnTrans,
-                      purchaseDate: this.parseAndFormatDate(
-                        landAndBuilding?.DateofPurchase
-                          ? landAndBuilding?.DateofPurchase
-                          : '2022-04-15'
-                      ),
-                      purchaseCost: landAndBuilding?.AquisitCost,
-                      isinCode: null,
-                      nameOfTheUnits: null,
-                      sellOrBuyQuantity: 1,
-                      sellValuePerUnit: null,
-                      purchaseValuePerUnit: null,
-                      algorithm: 'cgProperty',
-                      fmvAsOn31Jan2018: null,
-                      capitalGain: landAndBuilding?.Balance,
-                      indexCostOfAcquisition: landAndBuilding?.AquisitCostIndex,
-                      totalFairMarketValueOfCapitalAsset: null,
-                      grandFatheredValue: null,
-                      brokerName: null,
-                    },
-                  ],
-                  deductionAmount: null,
-                };
-                this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+                    assetDetails: [
+                      {
+                        id: null,
+                        hasIndexation: null,
+                        isUploaded: null,
+                        srn: index,
+                        description: null,
+                        gainType: 'SHORT',
+                        sellDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofSale
+                            ? landAndBuilding?.DateofSale
+                            : '2023-03-15'
+                        ),
+                        sellValue: null,
+                        stampDutyValue: null,
+                        valueInConsideration:
+                          landAndBuilding?.FullConsideration50C,
+                        sellExpense: landAndBuilding?.ExpOnTrans,
+                        purchaseDate: this.parseAndFormatDate(
+                          landAndBuilding?.DateofPurchase
+                            ? landAndBuilding?.DateofPurchase
+                            : '2022-04-15'
+                        ),
+                        purchaseCost: landAndBuilding?.AquisitCost,
+                        isinCode: null,
+                        nameOfTheUnits: null,
+                        sellOrBuyQuantity: 1,
+                        sellValuePerUnit: null,
+                        purchaseValuePerUnit: null,
+                        algorithm: 'cgProperty',
+                        fmvAsOn31Jan2018: null,
+                        capitalGain: landAndBuilding?.Balance,
+                        indexCostOfAcquisition:
+                          landAndBuilding?.AquisitCostIndex,
+                        totalFairMarketValueOfCapitalAsset: null,
+                        grandFatheredValue: null,
+                        brokerName: null,
+                      },
+                    ],
+                    deductionAmount: null,
+                  };
+                  this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+                  this.ITR_Obj.systemFlags.hasCapitalGain = true;
+                }
               });
-              this.ITR_Obj.systemFlags.hasCapitalGain = true;
             }
 
-            // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
@@ -4640,7 +4650,7 @@ export class PrefillIdComponent implements OnInit {
 
         // AY 2017 - 2018
         {
-          const LossCFFromPrev5thYearFromAY = CFL.LossCFFromPrev5thYearFromAY;
+          const LossCFFromPrev5thYearFromAY = CFL?.LossCFFromPrev5thYearFromAY;
 
           if (
             LossCFFromPrev5thYearFromAY &&
@@ -4687,7 +4697,7 @@ export class PrefillIdComponent implements OnInit {
 
         // AY 2018 - 2019
         {
-          const LossCFFromPrev4thYearFromAY = CFL.LossCFFromPrev4thYearFromAY;
+          const LossCFFromPrev4thYearFromAY = CFL?.LossCFFromPrev4thYearFromAY;
 
           if (
             LossCFFromPrev4thYearFromAY &&
@@ -4974,6 +4984,7 @@ export class PrefillIdComponent implements OnInit {
                   : [],
             };
             this.ITR_Obj.business.profitLossACIncomes.push(nonSpecIncome);
+            this.ITR_Obj.systemFlags.hasFutureOptionsIncome = true;
           }
         }
       }
@@ -5006,6 +5017,7 @@ export class PrefillIdComponent implements OnInit {
             };
 
             this.ITR_Obj.business.profitLossACIncomes.push(speculativeIncome);
+            this.ITR_Obj.systemFlags.hasFutureOptionsIncome = true;
           }
         }
       }
@@ -5200,6 +5212,14 @@ export class PrefillIdComponent implements OnInit {
       if (result === 'YES') {
         this.ITR_JSON.itrSummaryJson = null;
         this.uploadedJson = false;
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id
+        );
         this.utilsService.showSnackBar(
           'The uploaded JSON has been deleted. You can now proceed ahead.'
         );
@@ -5208,6 +5228,7 @@ export class PrefillIdComponent implements OnInit {
           AppConstants.ITR_JSON,
           JSON.stringify(this.ITR_JSON)
         );
+        this.jsonUploaded.emit(null);
       }
     });
   }

@@ -5,7 +5,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import {GridOptions, ICellRendererParams} from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -27,6 +27,8 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import {RequestManager} from "../../../shared/services/request-manager";
 import {Subscription} from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
+import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 
 @Component({
   selector: 'app-assigned-new-users',
@@ -78,6 +80,13 @@ export class AssignedNewUsersComponent implements OnInit {
       },
 
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
     };
 
     this.config = {
@@ -90,6 +99,12 @@ export class AssignedNewUsersComponent implements OnInit {
     this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
       this.requestCompleted(value);
     });
+  }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
   }
 
   requestManagerSubscription: Subscription;
@@ -313,7 +328,7 @@ export class AssignedNewUsersComponent implements OnInit {
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
-        headerName: 'Name',
+        headerName: 'Client Name',
         field: 'name',
         width: 160,
         suppressMovable: true,
@@ -338,7 +353,7 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Email',
+        headerName: 'Email Address',
         field: 'email',
         width: 200,
         suppressMovable: true,
@@ -348,6 +363,9 @@ export class AssignedNewUsersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
       // {
       //   headerName: 'Status',
@@ -379,6 +397,27 @@ export class AssignedNewUsersComponent implements OnInit {
       //     }
       //   },
       // },
+      {
+        headerName: 'Action With',
+        field: 'conversationWithFiler',
+        width: 110,
+        suppressMovable: true,
+        hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {{
+          if(params.data.conversationWithFiler === true){
+            return params.data.filerName;
+          } else {
+            return params.data.ownerName;
+          }
+        }
+        }
+      },
       {
         headerName: 'Owner Name',
         field: 'ownerName',
@@ -467,7 +506,11 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          if(data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
         },
         // filter: "agTextColumnFilter",
         // filterParams: {
@@ -518,6 +561,33 @@ export class AssignedNewUsersComponent implements OnInit {
       //   }
       // },
       {
+        headerName: 'ITR Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if(params.data.serviceType === 'ITR') {
+            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
         headerName: 'Call',
         editable: false,
         suppressMenu: true,
@@ -525,8 +595,8 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
            </button>`;
         },
         width: 60,
@@ -563,7 +633,7 @@ export class AssignedNewUsersComponent implements OnInit {
           }
           return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
           style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            <i class="fas fa-exclamation-triangle" aria-hidden="true" data-action-type="updateStatus"></i> ${statusText}
+          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
         width:160,
@@ -585,7 +655,7 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color: #2dd35c; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -609,7 +679,7 @@ export class AssignedNewUsersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-            <i class="far fa-file-alt" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,
@@ -633,7 +703,7 @@ export class AssignedNewUsersComponent implements OnInit {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#04a4bc" data-action-type="startFiling">
+              background: transparent; font-size: 13px; cursor:pointer;color:#ffa704;" data-action-type="startFiling">
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i> Yet to Start
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
@@ -647,9 +717,9 @@ export class AssignedNewUsersComponent implements OnInit {
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
-              return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#2dd35c"font-weight:bold; data-action-type="startFiling">
-              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>In Progress
+              return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="text-align:left; border: none;
+              background: transparent; font-size: 13px;  font-weight:bold; cursor:pointer;color:#04a4bc;" data-action-type="startFiling">
+              <i class="fa-regular fa-money-check-pen" data-action-type="startFiling"></i> Resume Filing
             </button>`;
             }
           } else {
@@ -696,7 +766,7 @@ export class AssignedNewUsersComponent implements OnInit {
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
-        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
+        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : null,
         name: userData[i].name,
         mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
@@ -709,12 +779,13 @@ export class AssignedNewUsersComponent implements OnInit {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
-        lastFiledItrId: userData[i].lastFiledItrId
+        lastFiledItrId: userData[i].lastFiledItrId,
+        conversationWithFiler: userData[i].conversationWithFiler
       })
       userArray.push(userInfo);
     }
@@ -775,8 +846,28 @@ export class AssignedNewUsersComponent implements OnInit {
           this.openReviseReturnDialog(params.data);
           break;
         }
+        case 'getItrStatus': {
+          this.getItrStatus(params.data);
+          break;
+        }
       }
     }
+  }
+
+  getItrStatus(data){
+    let disposable = this.dialog.open(ItrStatusDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: data.userId,
+        clientName: data.name,
+        serviceType: data.serviceType
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+
   }
 
   rowData: any;
@@ -1097,6 +1188,9 @@ export class AssignedNewUsersComponent implements OnInit {
       this.searchParam.emailId = null
     } else if (form == 'agent') {
       this.searchParam.page = 0;
+    }
+    if(this.searchParam.emailId){
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);

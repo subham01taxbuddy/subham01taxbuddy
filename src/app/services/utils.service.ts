@@ -18,6 +18,8 @@ import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
 import { parse } from '@typescript-eslint/parser';
+import {AppSetting} from "../modules/shared/app.setting";
+import {StorageService} from "../modules/shared/services/storage.service";
 
 @Injectable()
 export class UtilsService {
@@ -31,7 +33,8 @@ export class UtilsService {
     private router: Router,
     private dialog: MatDialog,
     private serializer: UrlSerializer,
-    private userMsService: UserMsService
+    private userMsService: UserMsService,
+    private storageService: StorageService
   ) {}
   /**
    * @function isNonEmpty()
@@ -62,14 +65,14 @@ export class UtilsService {
       if (
         key === 'profitLossACIncomes' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          const profitLossACIncomes = obj[key][i].incomes;
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const profitLossACIncomes = obj[key][i]?.incomes;
           if (
-            (obj[key][i].netProfitfromNonSpeculativeIncome === 0 ||
-              obj[key][i].netProfitfromNonSpeculativeIncome === null) &&
-            obj[key][i].incomes.length === 0
+            (obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
+              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) &&
+            obj[key][i]?.incomes.length === 0
           ) {
             delete obj[key][i];
           }
@@ -80,11 +83,11 @@ export class UtilsService {
       if (
         key === 'employers' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
         //allowances
-        for (let i = 0; i < obj[key].length; i++) {
-          const salaryAllowance = obj[key][i].allowance;
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const salaryAllowance = obj[key][i]?.allowance;
           if (
             salaryAllowance &&
             Array.isArray(salaryAllowance) &&
@@ -93,8 +96,8 @@ export class UtilsService {
             for (let j = salaryAllowance.length - 1; j >= 0; j--) {
               if (
                 salaryAllowance[j] &&
-                (salaryAllowance[j].exemptAmount === 0 ||
-                  salaryAllowance[j].exemptAmount === null)
+                (salaryAllowance[j]?.exemptAmount === 0 ||
+                  salaryAllowance[j]?.exemptAmount === null)
               ) {
                 salaryAllowance.splice(j, 1);
               }
@@ -103,18 +106,18 @@ export class UtilsService {
         }
 
         //deductions
-        for (let i = 0; i < obj[key].length; i++) {
-          const salaryDeductions = obj[key][i].deductions;
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const salaryDeductions = obj[key][i]?.deductions;
           if (
             salaryDeductions &&
             Array.isArray(salaryDeductions) &&
-            salaryDeductions.length > 0
+            salaryDeductions?.length > 0
           ) {
-            for (let j = salaryDeductions.length - 1; j >= 0; j--) {
+            for (let j = salaryDeductions?.length - 1; j >= 0; j--) {
               if (
                 salaryDeductions[j] &&
-                (salaryDeductions[j].exemptAmount === 0 ||
-                  salaryDeductions[j].exemptAmount === null)
+                (salaryDeductions[j]?.exemptAmount === 0 ||
+                  salaryDeductions[j]?.exemptAmount === null)
               ) {
                 salaryDeductions.splice(j, 1);
               }
@@ -124,14 +127,14 @@ export class UtilsService {
       }
 
       //LOANS
-      if (key === 'loans' && Array.isArray(obj[key]) && obj[key].length > 0) {
-        for (let i = 0; i < obj[key].length; i++) {
+      if (key === 'loans' && Array.isArray(obj[key]) && obj[key]?.length > 0) {
+        for (let i = 0; i < obj[key]?.length; i++) {
           if (
-            (obj[key][i].interestPaidPerAnum === 0 ||
-              obj[key][i].interestPaidPerAnum === null) &&
-            (obj[key][i].principalPaidPerAnum === 0 ||
-              obj[key][i].principalPaidPerAnum === null) &&
-            (obj[key][i].loanAmount === 0 || obj[key][i].loanAmount === null)
+            (obj[key][i]?.interestPaidPerAnum === 0 ||
+              obj[key][i]?.interestPaidPerAnum === null) &&
+            (obj[key][i]?.principalPaidPerAnum === 0 ||
+              obj[key][i]?.principalPaidPerAnum === null) &&
+            (obj[key][i]?.loanAmount === 0 || obj[key][i]?.loanAmount === null)
           ) {
             delete obj[key][i];
           }
@@ -142,10 +145,10 @@ export class UtilsService {
       if (
         key === 'expenses' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -155,15 +158,15 @@ export class UtilsService {
       if (
         key === 'insurances' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
+        for (let i = 0; i < obj[key]?.length; i++) {
           if (
-            (obj[key][i].medicalExpenditure === 0 ||
-              obj[key][i].medicalExpenditure === null) &&
-            (obj[key][i].premium === 0 || obj[key][i].premium === null) &&
-            (obj[key][i].preventiveCheckUp === 0 ||
-              obj[key][i].preventiveCheckUp === null)
+            (obj[key][i]?.medicalExpenditure === 0 ||
+              obj[key][i]?.medicalExpenditure === null) &&
+            (obj[key][i]?.premium === 0 || obj[key][i]?.premium === null) &&
+            (obj[key][i]?.preventiveCheckUp === 0 ||
+              obj[key][i]?.preventiveCheckUp === null)
           ) {
             delete obj[key][i];
           }
@@ -171,9 +174,13 @@ export class UtilsService {
       }
 
       //INCOMES
-      if (key === 'incomes' && Array.isArray(obj[key]) && obj[key].length > 0) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+      if (
+        key === 'incomes' &&
+        Array.isArray(obj[key]) &&
+        obj[key]?.length > 0
+      ) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -183,16 +190,16 @@ export class UtilsService {
       if (
         key === 'donations' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
+        for (let i = 0; i < obj[key]?.length; i++) {
           if (
-            (obj[key][i].schemeCode === '' ||
-              obj[key][i].schemeCode === null) &&
-            (obj[key][i].amountOtherThanCash === 0 ||
-              obj[key][i].amountOtherThanCash === null) &&
-            (obj[key][i].amountInCash === 0 ||
-              obj[key][i].amountInCash === null)
+            (obj[key][i]?.schemeCode === '' ||
+              obj[key][i]?.schemeCode === null) &&
+            (obj[key][i]?.amountOtherThanCash === 0 ||
+              obj[key][i]?.amountOtherThanCash === null) &&
+            (obj[key][i]?.amountInCash === 0 ||
+              obj[key][i]?.amountInCash === null)
           ) {
             delete obj[key][i];
           }
@@ -203,10 +210,10 @@ export class UtilsService {
       if (
         key === 'dividendIncomes' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
         for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].income === 0 || obj[key][i].income === null) {
+          if (obj[key][i]?.income === 0 || obj[key][i]?.income === null) {
             delete obj[key][i];
           }
         }
@@ -216,10 +223,10 @@ export class UtilsService {
       if (
         key === 'investments' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -229,10 +236,10 @@ export class UtilsService {
       if (
         key === 'disabilities' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          if (obj[key][i].amount === 0 || obj[key][i].amount === null) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          if (obj[key][i]?.amount === 0 || obj[key][i]?.amount === null) {
             delete obj[key][i];
           }
         }
@@ -242,18 +249,18 @@ export class UtilsService {
       if (
         key === 'houseProperties' &&
         Array.isArray(obj[key]) &&
-        obj[key].length > 0
+        obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key].length; i++) {
-          const HPloans = obj[key][i].loans;
-          if (HPloans && Array.isArray(HPloans) && HPloans.length > 0) {
-            for (let j = HPloans.length - 1; j >= 0; j--) {
+        for (let i = 0; i < obj[key]?.length; i++) {
+          const HPloans = obj[key][i]?.loans;
+          if (HPloans && Array.isArray(HPloans) && HPloans?.length > 0) {
+            for (let j = HPloans?.length - 1; j >= 0; j--) {
               if (
                 HPloans[j] &&
-                (HPloans[j].interestAmount === 0 ||
-                  HPloans[j].interestAmount === null) &&
-                (HPloans[j].principalAmount === 0 ||
-                  HPloans[j].principalAmount === null)
+                (HPloans[j]?.interestAmount === 0 ||
+                  HPloans[j]?.interestAmount === null) &&
+                (HPloans[j]?.principalAmount === 0 ||
+                  HPloans[j]?.principalAmount === null)
               ) {
                 HPloans.splice(j, 1);
               }
@@ -267,7 +274,7 @@ export class UtilsService {
         delete obj[key];
       } else if (typeof obj[key] === 'object') {
         if (Array.isArray(obj[key])) {
-          obj[key] = obj[key].filter((item) => item !== null);
+          obj[key] = obj[key]?.filter((item) => item !== null);
         } else {
           this.removeNullProperties(obj[key]);
           if (Object.keys(obj[key]).length === 0) {
@@ -850,9 +857,18 @@ export class UtilsService {
         date: '',
         currentYearRegime: '',
       },
-      section89: 0,
-      section90: 0,
-      section91: 0,
+      section89: null,
+      acknowledgement89: null,
+      acknowledgementDate89: null,
+
+      section90: null,
+      acknowledgement90: null,
+      acknowledgementDate90: null,
+
+      section91: null,
+      acknowledgement91: null,
+      acknowledgementDate91: null,
+
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
     };
@@ -1391,6 +1407,14 @@ export class UtilsService {
       .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
   }
 
+  saveFinalItrObject(itrObject: ITR_JSON): Observable<any> {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+    const param = `/itr/itr-type`;
+    return this.itrMsService
+      .postMethod(param, itrObject)
+      .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+  }
+
   uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     const param = `/itr/itr-type`;
@@ -1437,16 +1461,38 @@ export class UtilsService {
   }
 
   getLoggedInUserID() {
-    const loggedInSmeInfo = JSON.parse(
-      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
-    );
-    if (
-      this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].userId)
-    ) {
-      return loggedInSmeInfo[0].userId;
+    let smeInfoStr = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    if(smeInfoStr) {
+      const loggedInSmeInfo = JSON.parse(
+        smeInfoStr ?? ''
+      );
+      if (
+        this.isNonEmpty(loggedInSmeInfo) &&
+        this.isNonEmpty(loggedInSmeInfo[0].userId)
+      ) {
+        return loggedInSmeInfo[0].userId;
+      }
+    } else {
+      //send id from local storage, but fetch data in session storage..
+      // probably the case is for sharing the login between tabs
+      const userData = this.storageService.getLocalStorage(AppSetting.UMD_KEY);
+      this.fetchSmeInfo(userData.USER_UNIQUE_ID);
+      return userData.USER_UNIQUE_ID;
     }
   }
+
+  fetchSmeInfo(userId) {
+    const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
+    // this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
+    this.userMsService.getMethodNew(param).subscribe((res: any) => {
+      if (res.success) {
+        sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+      }
+    }, error => {
+      console.log('error in fetching sme info', error);
+    })
+  }
+
 
   getIdToken() {
     let userData = JSON.parse(localStorage.getItem('UMD'));

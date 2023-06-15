@@ -112,8 +112,10 @@ export class ItrWizardComponent implements OnInit {
     ) {
       this.ITR_JSON.family.filter((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
+          let fName = item.fName ? item.fName : '';
           let mName = item.mName ? item.mName : '';
-          this.customerName = item.fName + ' ' + mName + ' ' + item.lName;
+          let lName = item.lName ? item.lName : '';
+          this.customerName = fName + ' ' + mName + ' ' + lName;
         }
       });
     }
@@ -246,6 +248,10 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSchedule(schedule) {
+    if(this.ITR_JSON.itrSummaryJson){
+      this.utilsService.showSnackBar('Editing data is not allowed after summary json is uploaded');
+      return;
+    }
     const errors = this.validateItrObj(); // invoke the function and store the result
     console.log('errors', errors);
 

@@ -44,6 +44,10 @@
   justify-content: center;
 }
 
+.ag-header-group-cell-label, .ag-header-cell-label{
+  justify-content: center;
+}
+
 .ag-overlay-wrapper {
   align-items: flex-end;
   padding-bottom: 15px;
@@ -313,6 +317,65 @@ button {
 /*CSS changes by Sushma End */
 
 /* Rizwan CSS 06 March 2023 */
+.close {
+  color:#cccccc;
+}
+.close:hover {
+color:#2199e8;
+}
+
+.txStyls {
+  font-size: 17px;
+  font-weight: 600;
+  color: #6a6a6a;
+}
+.linSps {
+  margin-top: 20px!important;
+  margin-bottom: 10px!important;
+}
+
+.cardClr {
+  background: #FBFBFD;
+  border: 1px solid #F5F5FA !important;
+  border-radius: 10px;
+  padding: 20px 20px 20px 50px;
+  margin-bottom:15px;
+  margin-top: -40px!important;
+}
+.cardClr1 {
+  background: #FBFBFD;
+  border: 1px solid #F5F5FA !important;
+  border-radius: 10px;
+  padding: 20px 20px 20px 50px;
+  margin-bottom:15px;
+  margin-top: -20px!important;
+  margin-left: -30px!important;
+}
+.cardClr2 {
+  background: #FBFBFD;
+  border: 1px solid #F5F5FA !important;
+  border-radius: 10px;
+  padding: 20px 20px 20px 20px;
+  margin-bottom:15px;
+  margin-top: 20px!important;
+  margin-left: 10px!important;
+}
+.mvTp{
+  margin-top:30px!important;
+}
+.mvTp1{
+  margin-left:10px!important;
+}
+.spcUpDw{
+  margin:30px 0px 0px 0px;
+  border-top:1px solid #efefef;
+  padding-top:10px;
+}
+.edtRthBtn {
+  margin-top: 35px!important;
+  margin-left: -10px!important;
+  float: left!important;
+}
 .mvRthEdt {
   float: right;
   margin-right: 0px;
@@ -336,6 +399,12 @@ button {
   padding-top:15px;
   padding-bottom:15px;
 }
+.titMed {
+  font-size: 18px;
+  color: #04A4BC;
+  font-weight: 600;
+  padding-bottom:10px;
+ }
 .tpBtn1 {
   margin-top: 20px!important;
 }
@@ -509,14 +578,16 @@ button {
 .note1 {
   background-color: #fafafa;
   padding: 5px 0px 5px 10px;
-  width: 350px;
+  /* width: 350px; */
   border-radius: 8px;
-  font-size: 13px;
-  margin: -56px 0px 0px 65%;
+  font-size: 12px;
   font-style: italic;
-  border: 1px solid #efefef;
-  float: left;
+border: 1px solid #efefef;
   color: #b60000;
+  max-width: 250px;
+  min-width: 180px;
+  margin:0 auto;
+  margin-top:10px;
 }
 
 .edit-head {
@@ -989,6 +1060,10 @@ pagination-controls {
   margin-top:30px!important;
 }
 
+.spsTp2 {
+  margin-top: 20px!important;
+}
+
 .topSps {
   margin-top:20px!important;
 }
@@ -1114,7 +1189,7 @@ pagination-controls {
 .delete-btn {
   background: #FFE1E1;
   border: 1px solid #E20000;
-  border-radius: 6px;
+  border-radius: 5px;
   font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
@@ -1123,13 +1198,17 @@ pagination-controls {
   padding: 10px;
   text-align: center;
   color: #E20000;
+  margin-left: -15px;
+  width: 95px;
 }
 
 .delete-btn:disabled {
-  background: #F5F5F5;
-  border: 1px solid #BDBDBD;
-  color: #BDBDBD;
+  border: 1px solid #cccccc;
   padding: 10px;
+  color: #cccccc;
+  width: 95px;
+  border-radius: 5px;
+  margin-left: -15px;
 }
 
 .btnGry {

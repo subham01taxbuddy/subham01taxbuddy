@@ -29,13 +29,13 @@
         <div>
           <label for="start-date">Start Date:</label>
           <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
-            [min]="minDate" [max]="maxDate">
+            [min]="minDate" [max]="maxDate" (change)="setEndDateValidate(this.startDate)">
         </div>
       </div>
       <div class="col-sm-2">
         <div>
           <label for="end-date">End Date:</label>
-          <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minDate"
+          <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
             [max]="maxDate">
         </div>
       </div>
@@ -104,17 +104,17 @@
   <div class="col-sm-12">
     <div class="tpMain">
       <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Partners</span>&nbsp;
-      <span class="numTxBg1">{{ partnerCount || 'NA'}}</span>
+      <span class="numTxBg1">{{ partnerCount }}</span>
       <!-- Inside Row -->
       <div class="row">
         <div class="col-sm-4">
           <div class="radius2">
             <div class="inBxL">
-              <span class="numTxSm grTx1">{{ partnerCount || 'NA'}}</span><br>
+              <span class="numTxSm grTx1">{{ activePartnerCount }}</span><br>
               <span class="TxSm">Active Partners</span>
             </div>
             <div class="inBxR">
-              <span class="numTxSm OrgTx">{{ inactivePartnerCount || 'NA'}}</span><br>
+              <span class="numTxSm OrgTx">{{ inactivePartnerCount }}</span><br>
               <span class="TxSm">Inactive Partners</span>
             </div>
           </div>
@@ -122,11 +122,11 @@
         <div class="col-sm-4">
           <div class="radius2">
             <div class="inBxL">
-              <span class="numTxSm grTx1">{{ assignmentOnCount || 'NA'}}</span><br>
+              <span class="numTxSm grTx1">{{ assignmentOnCount }}</span><br>
               <span class="TxSm">Assignment On</span>
             </div>
             <div class="inBxR">
-              <span class="numTxSm OrgTx">{{ assignmentOffCount || 'NA'}}</span><br>
+              <span class="numTxSm OrgTx">{{ assignmentOffCount }}</span><br>
               <span class="TxSm">Assignment Off</span>
             </div>
           </div>

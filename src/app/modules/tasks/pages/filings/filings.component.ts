@@ -35,7 +35,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
   templateUrl: './filings.component.html',
   styleUrls: ['./filings.component.scss'],
 })
-export class FilingsComponent implements OnInit, AfterContentChecked {
+export class FilingsComponent implements OnInit {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
@@ -59,6 +59,9 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     ownerUserId: null,
     filerUserId: null,
   };
+
+  allFilerList:any;
+
   constructor(
     private reviewService:ReviewService,
     private itrMsService: ItrMsService,
@@ -71,9 +74,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
   ) {
+    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
-      columnDefs: this.columnDef(),
+      columnDefs: this.columnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -121,9 +125,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
     })
   }
-  ngAfterContentChecked() {
-    this.cdRef.detectChanges();
-  }
+
+  // ngAfterContentChecked() {
+  //   this.cdRef.detectChanges();
+  // }
 
   async getMasterStatusList() {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
@@ -209,6 +214,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           this.searchParams.filerUserId = loggedInId;
           }
 
+        if(loggedInUserRoles.includes('ROLE_OWNER')){
+          this.searchParams.ownerUserId = loggedInId;
+          }
+
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
@@ -237,6 +246,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.email)) {
+
+        this.searchParams.email = this.searchParams.email.toLocaleLowerCase();
         param = param + `&email=${this.searchParams.email}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
@@ -264,25 +275,26 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
-          if (res?.data?.content instanceof Array) {
+          if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData(this.itrDataList)
+              this?.createOnSalaryRowData(this?.itrDataList)
             );
           } else {
             this.itrDataList = [];
             this.config.totalItems = 0;
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
+            this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+            if (res.message) {this.toastMsgService.alert('error', res.message);}
+            else{this.toastMsgService.alert('error', 'No Data Found'); }
           }
           this.loading = false;
           return resolve(true);
         },
         (error) => {
           this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
-              this.config.totalItems = 0;
+          this.config.totalItems = 0;
+          this.toastMsgService.alert("error",'No Data Found ');
           this.loading = false;
           return resolve(false);
         }
@@ -333,6 +345,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         ownerUserId: data[i].ownerUserId,
         filerUserId: data[i].filerUserId,
         status: data[i].status,
+        filingTeamMemberId: data[i].filingTeamMemberId
       });
     }
     return newData;
@@ -343,12 +356,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     ).length;
   }
 
-  columnDef() {
+  columnDef(filerList) {
     return [
       {
         headerName: 'Client Name',
         // field: "fName",
         sortable: true,
+        cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         pinned: 'left',
         filterParams: {
@@ -372,6 +386,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'Mobile',
         field: 'contactNumber',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -382,6 +397,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'ITR Type',
         field: 'itrType',
+        cellStyle: { textAlign: 'center' },
         width: 90,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -393,6 +409,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'Filing Date',
         field: 'eFillingDate',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 100,
         valueFormatter: (data) =>
@@ -401,6 +418,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'Return Type',
         field: 'isRevised',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -417,6 +435,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'PAN Number',
         field: 'panNumber',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -427,37 +446,53 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       {
         headerName: 'Email Address',
         field: 'email',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
+        cellRenderer: function(params) {
+          return `<a href="mailto:${params.value}">${params.value}</a>`
+        }
       },
-      {
-        headerName: 'Owner',
-        field: 'ownerName',
-        sortable: true,
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          defaultOption: 'startsWith',
-          debounceMs: 0,
-        },
-      },
+      // {
+      //   headerName: 'Owner',
+      //   field: 'ownerName',
+      //   cellStyle: { textAlign: 'center' },
+      //   sortable: true,
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     defaultOption: 'startsWith',
+      //     debounceMs: 0,
+      //   },
+      // },
       {
         headerName: 'Filer',
-        field: 'filerName',
+        field: 'filingTeamMemberId',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.filingTeamMemberId)
+          let filer1= filerList;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer
+        }
       },
-
       {
         headerName: 'ITR ID',
         field: 'itrId',
+        cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 70,
       },
@@ -484,8 +519,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>
+            background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa-regular fa-money-check-pen" aria-hidden="true" data-action-type="startFiling"></i>
            </button>`;
           }
         },
@@ -517,7 +552,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color:#2dd35c; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -539,7 +574,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;transform: rotate(90deg);color:#04a4bc;"> <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-phone" data-action-type="call"></i>
           </button>`;
         },
         width: 58,
@@ -674,7 +710,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,

@@ -3,7 +3,7 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<div>
+<div class="mrgArd">
   <!-- other-assets  -->
   <mat-accordion class="headers-align">
     <mat-expansion-panel
@@ -20,12 +20,11 @@
         </mat-panel-title>
         <div class="edit clearfix isShow">
           <button
-            class="flex items-center btn gap-[15px]"
-            style="flex-direction: row"
+            class="new-add mvRth"
             (click)="$event.stopPropagation(); addOtherAssets('otherAssets')"
           >
-            <mat-icon [inline]="true"> edit_square </mat-icon>
-            <span>Add Other Assets</span>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span>  Add Other Assets</span>
           </button>
         </div>
       </mat-expansion-panel-header>
@@ -45,11 +44,11 @@
   <br />
 
   <!-- deductions  -->
-  <div class="card spBlw" style="padding-top: 25px">
+  <div class="card bdrArnd">
     <!-- header  -->
     <div class="flex items-center justify-between">
       <div>
-        <div class="card__title">Add Deduction under section 54F</div>
+        <div class="isDeduction">Add Deduction under section 54F</div>
         <div>
           (Applicable for any capital assets other than residential House
           Property)
@@ -58,8 +57,7 @@
     </div>
 
     <!-- form  -->
-    <div style="padding-top: 25px">
-      <form [formGroup]="deductionForm">
+       <form [formGroup]="deductionForm">
         <div formArrayName="deductions">
           <div
             *ngFor="
@@ -68,17 +66,16 @@
             "
             [formGroupName]="fieldGlobalIndex(i)"
           >
-            <div class="card flex" style="flex-direction: row">
-              <div class="flex">
+              <div class="row cardClr2">
                 <!-- CHECKBOX  -->
-                <div style="padding-right: 35px">
+                <div class="col-sm-1">
                   <mat-checkbox color="primary"></mat-checkbox>
                 </div>
 
                 <!-- inputs  -->
-                <div class="flex flex-wrap items-center">
+
                   <!-- type-of-deduction  -->
-                  <div class="card__col-xs-12 card__col-sm-4">
+                  <div class="col-sm-3">
                     <mat-label>Type of Deduction</mat-label>
                     <mat-form-field
                       class="input-field-width"
@@ -106,7 +103,7 @@
                     </mat-form-field>
                   </div>
                   <!-- buy-date  -->
-                  <div class="card__col-xs-12 card__col-sm-4">
+                  <div class="col-sm-4">
                     <mat-label> Buy Date / Date of Acquisition </mat-label>
                     <mat-form-field appearance="outline">
                       <input
@@ -124,7 +121,7 @@
                     </mat-form-field>
                   </div>
                   <!-- cost-of-new-asset  -->
-                  <div class="card__col-xs-12 card__col-sm-4">
+                  <div class="col-sm-4">
                     <mat-label>Cost of New Asset</mat-label>
                     <mat-form-field
                       class="input-field-width"
@@ -149,7 +146,7 @@
                     </mat-form-field>
                   </div>
                   <!-- CGAS Deposit  -->
-                  <div class="card__col-xs-12 card__col-sm-4">
+                  <div class="col-sm-4 spsTp">
                     <mat-label
                       >Amount deposited in CGAS before due date</mat-label
                     >
@@ -176,7 +173,7 @@
                     </mat-form-field>
                   </div>
                   <!-- deduction claimed  -->
-                  <div class="card__col-xs-12 card__col-sm-4">
+                  <div class="col-sm-4 spsTp">
                     <mat-label>Amount of Deduction Claimed</mat-label>
                     <mat-form-field
                       class="input-field-width"
@@ -196,39 +193,31 @@
                       />
                     </mat-form-field>
                   </div>
-                </div>
+
+                  <div class="col-sm-4 spsTp">
+                    <button
+                      type="button"
+                      class="edit-donation"
+                      (click)="editDeduction(i)"
+                    >
+                      <mat-icon> edit_square </mat-icon>Edit
+                    </button>
+                  </div>
+
+                </div><!-- Row Ends -->
               </div>
 
               <!-- edit Other Assets deduction -->
-              <div class="edit-head">
-                <button
-                  type="button"
-                  class="edit-donation"
-                  (click)="editDeduction(i)"
-                >
-                  <mat-icon> edit_square </mat-icon>Edit
-                </button>
-              </div>
+
             </div>
 
-            <br />
-            <br />
-          </div>
-        </div>
       </form>
-    </div>
+
 
     <!-- footer  -->
-    <div
-      class="card__col-xs-12 flex items-center justify-between"
-      style="padding-bottom: 10px"
-    >
-      <div class="card__col-sm-3">
-        <button
-          type="submit"
-          class="tbd-btn-secondary"
-          (click)="deleteDeduction(index)"
-        >
+    <div class="row spsTp bdrTp">
+      <div class="col-sm-9">
+        <button type="submit" class="delete-btn" (click)="deleteDeduction(index)">
           <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
         </button>
       </div>
@@ -244,25 +233,23 @@
             (pageChange)="pageChanged($event)"
           ></pagination-controls>
         </div> -->
-      <div class="card__col-sm-3" style="text-align: right">
-        <button class="tbd-btn save-btn" (click)="saveCg()">Save</button>
+      <div class="col-sm-3">
+        <button class="tbd-btn save-btn mvRth" (click)="saveCg()">Save</button>
       </div>
     </div>
   </div>
 
-  <br />
-  <hr />
 
   <!-- page-navigation-buttons  -->
   <div class="flex justify-between p-[30px] back-foot">
-   
+
       <button class="lgtBtn" (click)="goBack()">
         Back to Capital Gain Topics
-      </button> 
+      </button>
 
-   
+
       <button class="saveBtnIn">Save All</button>
-   
+
   </div>
 </div>
 

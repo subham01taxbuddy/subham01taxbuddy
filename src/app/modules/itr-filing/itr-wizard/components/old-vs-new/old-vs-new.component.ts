@@ -37,6 +37,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     { label: 'CYLA', old: 0, new: 0 },
     { label: 'BFLA', old: 0, new: 0 },
     { label: 'Gross Total Income', old: 0, new: 0 },
+    { label: 'Taxable Special Rate Income', old: 0, new: 0 },
     { label: 'Deduction', old: 0, new: 0 },
     { label: 'Total Income', old: 0, new: 0 },
     { label: 'CFL', old: 0, new: 0 },
@@ -94,119 +95,245 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     });
 
     this.summaryToolReliefsForm = this.fb.group({
-      section89: null,
-      section90: null,
-      section91: null,
+      section89: [],
+      acknowledgement89: [],
+      acknowledgementDate89: [],
+
+      section90: [],
+      acknowledgement90: [],
+      acknowledgementDate90: [],
+
+      section91: [],
+      acknowledgement91: [],
+      acknowledgementDate91: [],
     });
   }
 
   onChanges() {
-    const everOptedNewRegime =
-      this.regimeSelectionForm.get('everOptedNewRegime');
+    {
+      const everOptedNewRegime =
+        this.regimeSelectionForm.get('everOptedNewRegime');
 
-    const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
-      'everOptedOutOfNewRegime'
-    );
+      const everOptedOutOfNewRegime = this.regimeSelectionForm.get(
+        'everOptedOutOfNewRegime'
+      );
 
-    if (this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4') {
-      everOptedNewRegime.setValidators(Validators.required);
-      everOptedNewRegime.updateValueAndValidity();
+      if (this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4') {
+        everOptedNewRegime.setValidators(Validators.required);
+        everOptedNewRegime.updateValueAndValidity();
 
-      everOptedOutOfNewRegime.setValidators(Validators.required);
-      everOptedOutOfNewRegime.updateValueAndValidity();
-    } else {
-      everOptedNewRegime.setValidators(null);
-      everOptedNewRegime.updateValueAndValidity();
+        everOptedOutOfNewRegime.setValidators(Validators.required);
+        everOptedOutOfNewRegime.updateValueAndValidity();
+      } else {
+        everOptedNewRegime.setValidators(null);
+        everOptedNewRegime.updateValueAndValidity();
 
-      everOptedOutOfNewRegime.setValidators(null);
-      everOptedOutOfNewRegime.updateValueAndValidity();
+        everOptedOutOfNewRegime.setValidators(null);
+        everOptedOutOfNewRegime.updateValueAndValidity();
+      }
+
+      everOptedNewRegime
+        .get('everOptedNewRegime')
+        .valueChanges.subscribe((val) => {
+          if (val) {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedNewRegime
+              .get('assessmentYear')
+              .setValidators(Validators.required);
+            everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedNewRegime
+              .get('acknowledgementNumber')
+              .setValidators(Validators.required);
+            everOptedNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedNewRegime.get('date').setValidators(Validators.required);
+            everOptedNewRegime.get('date').updateValueAndValidity();
+          } else {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedNewRegime.get('assessmentYear').setValidators(null);
+            everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
+            everOptedNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedNewRegime.get('date').setValidators(null);
+            everOptedNewRegime.get('date').updateValueAndValidity();
+          }
+        });
+
+      everOptedOutOfNewRegime
+        .get('everOptedOutOfNewRegime')
+        .valueChanges.subscribe((val) => {
+          if (val) {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedOutOfNewRegime
+              .get('assessmentYear')
+              .setValidators(Validators.required);
+            everOptedOutOfNewRegime
+              .get('assessmentYear')
+              .updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .setValidators(Validators.required);
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedOutOfNewRegime
+              .get('date')
+              .setValidators(Validators.required);
+            everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          } else {
+            this.updateCurrentAYOptions();
+            // assesmentYear
+            everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
+            everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+
+            // acknowledgementNumber
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .setValidators(null);
+            everOptedOutOfNewRegime
+              .get('acknowledgementNumber')
+              .updateValueAndValidity();
+
+            // date
+            everOptedOutOfNewRegime.get('date').setValidators(null);
+            everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          }
+        });
     }
 
-    everOptedNewRegime
-      .get('everOptedNewRegime')
-      .valueChanges.subscribe((val) => {
-        if (val) {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedNewRegime
-            .get('assessmentYear')
-            .setValidators(Validators.required);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+    {
+      const section89 = this.summaryToolReliefsForm.controls['section89'];
 
-          // acknowledgementNumber
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+      section89.valueChanges.subscribe((value) => {
+        if (Number(value) > 0) {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].setValidators(Validators.required);
 
-          // date
-          everOptedNewRegime.get('date').setValidators(Validators.required);
-          everOptedNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].updateValueAndValidity();
         } else {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedNewRegime.get('assessmentYear').setValidators(null);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].setValidators(null);
 
-          // acknowledgementNumber
-          everOptedNewRegime.get('acknowledgementNumber').setValidators(null);
-          everOptedNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement89'
+          ].updateValueAndValidity();
 
-          // date
-          everOptedNewRegime.get('date').setValidators(null);
-          everOptedNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate89'
+          ].updateValueAndValidity();
         }
       });
 
-    everOptedOutOfNewRegime
-      .get('everOptedOutOfNewRegime')
-      .valueChanges.subscribe((val) => {
-        if (val) {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedOutOfNewRegime
-            .get('assessmentYear')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime
-            .get('assessmentYear')
-            .updateValueAndValidity();
+      const section90 = this.summaryToolReliefsForm.controls['section90'];
 
-          // acknowledgementNumber
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+      section90.valueChanges.subscribe((value) => {
+        if (Number(value) > 0) {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].setValidators(Validators.required);
 
-          // date
-          everOptedOutOfNewRegime
-            .get('date')
-            .setValidators(Validators.required);
-          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].updateValueAndValidity();
         } else {
-          this.updateCurrentAYOptions();
-          // assesmentYear
-          everOptedOutOfNewRegime.get('assessmentYear').setValidators(null);
-          everOptedNewRegime.get('assessmentYear').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].setValidators(null);
 
-          // acknowledgementNumber
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .setValidators(null);
-          everOptedOutOfNewRegime
-            .get('acknowledgementNumber')
-            .updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement90'
+          ].updateValueAndValidity();
 
-          // date
-          everOptedOutOfNewRegime.get('date').setValidators(null);
-          everOptedOutOfNewRegime.get('date').updateValueAndValidity();
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate90'
+          ].updateValueAndValidity();
         }
       });
+
+      const section91 = this.summaryToolReliefsForm.controls['section91'];
+
+      section91.valueChanges.subscribe((value) => {
+        if (Number(value) > 0) {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].setValidators(Validators.required);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].updateValueAndValidity();
+        } else {
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgement91'
+          ].updateValueAndValidity();
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].setValidators(null);
+
+          this.summaryToolReliefsForm.controls[
+            'acknowledgementDate91'
+          ].updateValueAndValidity();
+        }
+      });
+    }
   }
 
   updateCurrentAYOptions() {
@@ -385,132 +512,981 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.updateCurrentAYOptions();
 
     //https://dev-api.taxbuddy.com/itr/tax/old-vs-new'
-    const param = '/tax/old-vs-new';
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        console.log(this.ITR_JSON, 'ITRJSON');
+        let ITR14IncomeDeductions = '';
+        let taxComputation = '';
+        let itrType = '';
 
-    this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-      (result: any) => {
-        // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-        this.loading = false;
-        console.log('result is=====', result);
-        this.newSummaryIncome = result.data.newRegime;
-        this.oldSummaryIncome = result.data.oldRegime;
-
-        this.particularsArray = [
-          {
-            label: 'Income from Salary',
-            old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
-              .totalSalaryTaxableIncome,
-            new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
-              .totalSalaryTaxableIncome,
-          },
-          {
-            label: 'Income from House Property',
-            old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-              .totalHPTaxableIncome,
-            new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
-              .totalHPTaxableIncome,
-          },
-          {
-            label: 'Income from Business and Profession',
-            old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
-              .totalBusinessIncome,
-            new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
-              .totalBusinessIncome,
-          },
-          {
-            label: 'Income from Capital Gains',
-            old:
-              this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .totalSpecialRateIncome +
-              this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .totalNormalRateIncome,
-            new:
-              this.newSummaryIncome?.summaryIncome.cgIncomeN
-                .totalSpecialRateIncome +
-              this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .totalNormalRateIncome,
-          },
-          {
-            label: 'Income from Other Sources',
-            old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-              .totalOtherTaxableIncome,
-            new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-              .totalOtherTaxableIncome,
-          },
-          {
-            label: 'Total Headwise Income',
-            old: this.oldSummaryIncome?.taxSummary.totalIncome,
-            new: this.newSummaryIncome?.taxSummary.totalIncome,
-          },
-          {
-            label: 'CYLA',
-            old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
-            new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
-          },
-          {
-            label: 'BFLA',
-            old: this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
-            new: this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
-          },
-          {
-            label: 'Gross Total Income',
-            old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
-            new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
-          },
-          {
-            label: 'Deduction',
-            old: this.oldSummaryIncome?.taxSummary.totalDeduction,
-            new: this.newSummaryIncome?.taxSummary.totalDeduction,
-          },
-          {
-            label: 'Total Income',
-            old: this.oldSummaryIncome?.taxSummary
-              .totalIncomeAfterDeductionIncludeSR,
-            new: this.newSummaryIncome?.taxSummary
-              .totalIncomeAfterDeductionIncludeSR,
-          },
-          {
-            label: 'CFL',
-            old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
-            new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
-          },
-          {
-            label: 'Gross Tax Liability',
-            old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
-            new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
-          },
-          {
-            label: 'Interest and Fees - 234 A/B/C/F',
-            old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
-            new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
-          },
-          {
-            label: 'Aggregate Liability',
-            old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
-            new: this.newSummaryIncome?.taxSummary.agrigateLiability,
-          },
-          {
-            label: 'Tax Paid',
-            old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
-            new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
-          },
-          {
-            label: 'Tax Payable / (Refund)',
-            old: this.oldSummaryIncome?.taxSummary.taxpayable,
-            new: this.newSummaryIncome?.taxSummary.taxpayable,
-          },
-        ];
-      },
-      (error) => {
-        this.loading = false;
-        this.errorMessage = 'We are processing your request, Please wait......';
-        if (error) {
-          this.errorMessage =
-            'We are unable to display your summary,Please try again later.';
+        if (this.ITR_JSON.itrType === '1') {
+          itrType = 'ITR1';
+          ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
+          taxComputation = 'ITR1_TaxComputation';
+        } else if (this.ITR_JSON.itrType === '4') {
+          itrType = 'ITR4';
+          ITR14IncomeDeductions = 'IncomeDeductions';
+          taxComputation = 'TaxComputation';
+        } else if (this.ITR_JSON.itrType === '2') {
+          itrType = 'ITR2';
+        } else if (this.ITR_JSON.itrType === '3') {
+          itrType = 'ITR3';
         }
-        console.log('In error method===', error);
+
+        if (itrType === 'ITR1' || itrType === 'ITR4') {
+          this.loading = true;
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeFromSal
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeFromSal
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeFromSal
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeFromSal
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from House Property',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncomeOfHP
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncomeOfHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncomeOfHP
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old:
+                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Income from Other Sources',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeOthSrc
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeOthSrc
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.IncomeOthSrc
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeOthSrc
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Total Headwise Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'CYLA',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'BFLA',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Gross Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Taxable Special Rate Income',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Deduction',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ].DeductUndChapVIA?.TotalChapVIADeductions
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ].DeductUndChapVIA?.TotalChapVIADeductions
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ].DeductUndChapVIA?.TotalChapVIADeductions
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ].DeductUndChapVIA?.TotalChapVIADeductions
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                      ITR14IncomeDeductions
+                    ]?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'CFL',
+              old: 0,
+              new: 0,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.GrossTaxLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.GrossTaxLiability
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.GrossTaxLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.GrossTaxLiability
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.TotalIntrstPay
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      ?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.TotalIntrstPay
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Aggregate Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      .TotTaxPlusIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ].TotTaxPlusIntrstPay
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
+                      .TotTaxPlusIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ].TotTaxPlusIntrstPay
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Tax Paid',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      .TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        .TaxesPaid?.TotalTaxesPaid
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      .TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        .TaxesPaid?.TotalTaxesPaid
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        ?.BalTaxPayable
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        ?.BalTaxPayable
+                    : 0
+                  : 0,
+            },
+          ];
+          console.log(this.particularsArray, 'this.particularsArray');
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Calculations are as of the uploaded JSON'
+          );
+        }
+
+        if (itrType === 'ITR2' || itrType === 'ITR3') {
+          this.loading=true;
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.Salaries
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.Salaries
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.Salaries
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.Salaries
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from House Property',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                      ?.TotalIncomeChargeableUnHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                        ?.TotalIncomeChargeableUnHP
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                      ?.TotalIncomeChargeableUnHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                        ?.TotalIncomeChargeableUnHP
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old:
+                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CapGain?.TotalCapGains
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CapGain?.TotalCapGains
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CapGain?.TotalCapGains
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CapGain?.TotalCapGains
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Other Sources',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.IncFromOS?.TotIncFromOS
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncFromOS?.TotIncFromOS
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.IncFromOS?.TotIncFromOS
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncFromOS?.TotIncFromOS
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Total Headwise Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalTI
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.TotalTI
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalTI
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.TotalTI
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'CYLA',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CurrentYearLoss
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CurrentYearLoss
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CurrentYearLoss
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CurrentYearLoss
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'BFLA',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.BroughtFwdLossesSetoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.BroughtFwdLossesSetoff
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.BroughtFwdLossesSetoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.BroughtFwdLossesSetoff
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Gross Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.GrossTotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.GrossTotalIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.GrossTotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.GrossTotalIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Deduction',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUnderScheduleVIA
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUnderScheduleVIA
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA
+                  : 0,
+            },
+            {
+              label: 'Taxable Special Rate Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                      ?.IncChargeTaxSplRate111A112
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                        ?.IncChargeTaxSplRate111A112
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                      ?.IncChargeTaxSplRate111A112
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncChargeTaxSplRate111A112
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.AggregateIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.AggregateIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'CFL',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.LossesOfCurrentYearCarriedFwd
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.LossesOfCurrentYearCarriedFwd
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.LossesOfCurrentYearCarriedFwd
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.LossesOfCurrentYearCarriedFwd
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.GrossTaxLiability
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                        ?.GrossTaxLiability
+                  : 0,
+
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.GrossTaxLiability
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                        ?.GrossTaxLiability
+                  : 0,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Aggregate Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability
+                        ?.AggregateTaxInterestLiability
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability
+                        ?.AggregateTaxInterestLiability
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Tax Paid',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.BalTaxPayable
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.BalTaxPayable
+                    : 0
+                  : 0,
+            },
+          ];
+          console.log(this.particularsArray, 'this.particularsArray');
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Calculations are as of the uploaded JSON'
+          );
+        }
+      } else {
+        const param = '/tax/old-vs-new';
+        this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+          (result: any) => {
+            // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+            console.log('result is=====', result);
+            this.newSummaryIncome = result.data.newRegime;
+            this.oldSummaryIncome = result.data.oldRegime;
+            this.particularsArray = [
+              {
+                label: 'Income from Salary',
+                old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
+                  .totalSalaryTaxableIncome,
+                new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
+                  .totalSalaryTaxableIncome,
+              },
+              {
+                label: 'Income from House Property',
+                old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                  .totalHPTaxableIncome,
+                new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                  .totalHPTaxableIncome,
+              },
+              {
+                label: 'Income from Business and Profession',
+                old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                  .totalBusinessIncome,
+                new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                  .totalBusinessIncome,
+              },
+              {
+                label: 'Income from Capital Gains',
+                old:
+                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalSpecialRateIncome +
+                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalNormalRateIncome,
+                new:
+                  this.newSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalSpecialRateIncome +
+                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                    .totalNormalRateIncome,
+              },
+              {
+                label: 'Income from Other Sources',
+                old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+                  .totalOtherTaxableIncome,
+                new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+                  .totalOtherTaxableIncome,
+              },
+              {
+                label: 'Total Headwise Income',
+                old: this.oldSummaryIncome?.taxSummary.totalIncome,
+                new: this.newSummaryIncome?.taxSummary.totalIncome,
+              },
+              {
+                label: 'CYLA',
+                old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
+                new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+              },
+              {
+                label: 'BFLA',
+                old: this.oldSummaryIncome?.taxSummary
+                  .totalBroughtForwordSetOff,
+                new: this.newSummaryIncome?.taxSummary
+                  .totalBroughtForwordSetOff,
+              },
+              {
+                label: 'Gross Total Income',
+                old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+                new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+              },
+              {
+                label: 'Taxable Special Rate Income',
+                old: 0,
+                new: 0,
+              },
+              {
+                label: 'Deduction',
+                old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+                new: this.newSummaryIncome?.taxSummary.totalDeduction,
+              },
+              {
+                label: 'Total Income',
+                old: this.oldSummaryIncome?.taxSummary
+                  .totalIncomeAfterDeductionIncludeSR,
+                new: this.newSummaryIncome?.taxSummary
+                  .totalIncomeAfterDeductionIncludeSR,
+              },
+              {
+                label: 'CFL',
+                old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+                new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+              },
+              {
+                label: 'Gross Tax Liability',
+                old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+                new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+              },
+              {
+                label: 'Interest and Fees - 234 A/B/C/F',
+                old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+                new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+              },
+              {
+                label: 'Aggregate Liability',
+                old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+                new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+              },
+              {
+                label: 'Tax Paid',
+                old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+                new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+              },
+              {
+                label: 'Tax Payable / (Refund)',
+                old:
+                  this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
+                    ? this.oldSummaryIncome?.taxSummary.taxpayable
+                    : this.oldSummaryIncome?.taxSummary?.taxRefund,
+                new:
+                  this.newSummaryIncome?.taxSummary?.taxpayable !== 0
+                    ? this.newSummaryIncome?.taxSummary?.taxpayable
+                    : this.newSummaryIncome?.taxSummary?.taxRefund,
+              },
+            ];
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
+            );
+          },
+          (error) => {
+            this.loading = false;
+            this.errorMessage =
+              'We are processing your request, Please wait......';
+            if (error) {
+              this.errorMessage =
+                'We are unable to display your summary,Please try again later.';
+            }
+            console.log('In error method===', error);
+          }
+        );
       }
-    );
+    } else {
+      const param = '/tax/old-vs-new';
+      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+        (result: any) => {
+          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+          console.log('result is=====', result);
+          this.newSummaryIncome = result.data.newRegime;
+          this.oldSummaryIncome = result.data.oldRegime;
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
+                .totalSalaryTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
+                .totalSalaryTaxableIncome,
+            },
+            {
+              label: 'Income from House Property',
+              old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old:
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalSpecialRateIncome +
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalNormalRateIncome,
+              new:
+                this.newSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalSpecialRateIncome +
+                this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .totalNormalRateIncome,
+            },
+            {
+              label: 'Income from Other Sources',
+              old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome,
+              new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome,
+            },
+            {
+              label: 'Total Headwise Income',
+              old: this.oldSummaryIncome?.taxSummary.totalIncome,
+              new: this.newSummaryIncome?.taxSummary.totalIncome,
+            },
+            {
+              label: 'CYLA',
+              old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
+              new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+            },
+            {
+              label: 'BFLA',
+              old: this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+              new: this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+            },
+            {
+              label: 'Gross Total Income',
+              old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+              new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+            },
+            {
+              label: 'Deduction',
+              old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+              new: this.newSummaryIncome?.taxSummary.totalDeduction,
+            },
+            {
+              label: 'Total Income',
+              old: this.oldSummaryIncome?.taxSummary
+                .totalIncomeAfterDeductionIncludeSR,
+              new: this.newSummaryIncome?.taxSummary
+                .totalIncomeAfterDeductionIncludeSR,
+            },
+            {
+              label: 'CFL',
+              old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+              new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+              new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+              new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+            },
+            {
+              label: 'Aggregate Liability',
+              old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+              new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+            },
+            {
+              label: 'Tax Paid',
+              old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+              new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
+                  ? this.oldSummaryIncome?.taxSummary.taxpayable
+                  : this.oldSummaryIncome?.taxSummary?.taxRefund,
+              new:
+                this.newSummaryIncome?.taxSummary?.taxpayable !== 0
+                  ? this.newSummaryIncome?.taxSummary?.taxpayable
+                  : this.newSummaryIncome?.taxSummary?.taxRefund,
+            },
+          ];
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'The below displayed calculations are as of Taxbuddys calculation'
+          );
+        },
+        (error) => {
+          this.loading = false;
+          this.errorMessage =
+            'We are processing your request, Please wait......';
+          if (error) {
+            this.errorMessage =
+              'We are unable to display your summary,Please try again later.';
+          }
+          console.log('In error method===', error);
+        }
+      );
+    }
   }
 
   getITRType() {
@@ -522,6 +1498,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           JSON.stringify(this.ITR_JSON)
         );
         this.itrType = ITR_RESULT.itrType;
+        this.loading = false;
         console.log('this.itrType', this.itrType);
 
         //if(this.ITR_JSON.itrType === '3') {
@@ -640,17 +1617,43 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     // Relief selection
     {
-      this.summaryToolReliefsForm.controls['section89'].setValue(
+      this.summaryToolReliefsForm.controls['section89']?.setValue(
         this.ITR_JSON.section89
       );
 
-      this.summaryToolReliefsForm.controls['section90'].setValue(
+      if (this.ITR_JSON.section89 && this.ITR_JSON.section89 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement89']?.setValue(
+          this.ITR_JSON.acknowledgement89
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate89']?.setValue(
+          this.ITR_JSON.acknowledgementDate89
+        );
+      } else {
+      }
+
+      this.summaryToolReliefsForm.controls['section90']?.setValue(
         this.ITR_JSON.section90
       );
+      if (this.ITR_JSON.section90 && this.ITR_JSON.section90 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
+          this.ITR_JSON.acknowledgement90
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
+          this.ITR_JSON.acknowledgementDate90
+        );
+      }
 
-      this.summaryToolReliefsForm.controls['section91'].setValue(
+      this.summaryToolReliefsForm.controls['section91']?.setValue(
         this.ITR_JSON.section91
       );
+      if (this.ITR_JSON.section91 && this.ITR_JSON.section91 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
+          this.ITR_JSON.acknowledgement91
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate91']?.setValue(
+          this.ITR_JSON.acknowledgementDate91
+        );
+      }
     }
   }
 
@@ -677,14 +1680,52 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON.regime =
       this.regimeSelectionForm.value.optionForCurrentAY.currentYearRegime;
 
-    this.ITR_JSON.section89 = this.summaryToolReliefsForm.value.section89;
-    this.ITR_JSON.section90 = this.summaryToolReliefsForm.value.section90;
-    this.ITR_JSON.section91 = this.summaryToolReliefsForm.value.section91;
+    this.ITR_JSON.section89 = Number(
+      this.summaryToolReliefsForm?.value?.section89
+    );
+    if (this.ITR_JSON.section89 && this.ITR_JSON.section89 > 0) {
+      this.ITR_JSON.acknowledgement89 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement89
+      );
+      this.ITR_JSON.acknowledgementDate89 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate89;
+    } else {
+      this.ITR_JSON.acknowledgement89 = null;
+      this.ITR_JSON.acknowledgementDate89 = null;
+    }
 
-    if (this.regimeSelectionForm.valid) {
+    this.ITR_JSON.section90 = Number(
+      this.summaryToolReliefsForm?.value?.section90
+    );
+    if (this.ITR_JSON.section90 && this.ITR_JSON.section90 > 0) {
+      this.ITR_JSON.acknowledgement90 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement90
+      );
+      this.ITR_JSON.acknowledgementDate90 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate90;
+    } else {
+      this.ITR_JSON.acknowledgement90 = null;
+      this.ITR_JSON.acknowledgementDate90 = null;
+    }
+
+    this.ITR_JSON.section91 = Number(
+      this.summaryToolReliefsForm?.value?.section91
+    );
+    if (this.ITR_JSON.section91 && this.ITR_JSON.section91 > 0) {
+      this.ITR_JSON.acknowledgement91 = Number(
+        this.summaryToolReliefsForm?.value?.acknowledgement91
+      );
+      this.ITR_JSON.acknowledgementDate91 =
+        this.summaryToolReliefsForm?.value?.acknowledgementDate91;
+    } else {
+      this.ITR_JSON.acknowledgement91 = null;
+      this.ITR_JSON.acknowledgementDate91 = null;
+    }
+
+    if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
       //save ITR object
-      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+      this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
         (result) => {
           sessionStorage.setItem(
             AppConstants.ITR_JSON,
@@ -705,7 +1746,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     } else {
       this.submitted = true;
       this.utilsService.showSnackBar(
-        'Please fill all required Tax Regime details to continue'
+        'Please fill all required details to continue'
       );
       Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
         const control = this.regimeSelectionForm.get(key);

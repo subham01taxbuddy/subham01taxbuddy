@@ -1,4 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="row">
+  <div class="col-sm-6">
+    <h4>ITR Filing Report:</h4>
+  </div>
+</div>
+
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog2">
   <mat-accordion class="headers-align">
@@ -12,11 +18,25 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12 bckClr">
+            <div class="col-sm-12">
+              <section class="example-section checkbox-right">
+                <div class="checkbox-group ">
+                  <mat-checkbox  [formControl]="leaderView" [disabled]="disableCheckboxes" *ngIf="roles.includes('ROLE_ADMIN')"  (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
+                  <mat-checkbox  [formControl]="ownerView" [disabled]="disableCheckboxes" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}" *ngIf="roles.includes('ROLE_ADMIN')">
+              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)" [showOwnerList]=true>
+              </app-leader-list-dropdown>
+            </div>
+            <div class="col-sm-8 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-      
+
             <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
@@ -30,7 +50,7 @@
             <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate"
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
                   autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>

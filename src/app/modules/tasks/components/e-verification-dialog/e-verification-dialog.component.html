@@ -1,6 +1,8 @@
-<h1 mat-dialog-title>E-Verification For: {{data.name }} ({{data.pan}})
-  <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i
-    class="fa fa-close"></i></button>
+<h1 mat-dialog-title>
+  E-Verification For: {{ data.name }} ({{ data.pan }})
+  <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1">
+    <i class="fa fa-close"></i>
+  </button>
 </h1>
 
 <mat-tab-group>
@@ -8,60 +10,106 @@
     <form [formGroup]="eVerifyForm">
       <mat-dialog-content>
         <div class="card__row">
-          <div class=" card__col-xs-12 card__col-sm-3">
+          <div class="card__col-xs-12 card__col-sm-3">
             <mat-form-field appearance="outline">
               <mat-label>ACK Number: </mat-label>
-              <input matInput type="text" placeholder="Ack Number" formControlName="ackNum" required>
+              <input
+                matInput
+                type="text"
+                placeholder="Ack Number"
+                formControlName="ackNum"
+                required
+              />
             </mat-form-field>
-
           </div>
-          <div class=" card__col-xs-12 card__col-sm-3">
+          <div class="card__col-xs-12 card__col-sm-3">
             <mat-form-field appearance="outline">
               <mat-label>Select ITR Type</mat-label>
-              <mat-select matInput formControlName="formCode" placeholder="Select ITR Type" autocomplete="off" required
-                disable>
+              <mat-select
+                matInput
+                formControlName="formCode"
+                placeholder="Select ITR Type"
+                autocomplete="off"
+                required
+                disable
+              >
                 <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
                   {{ itr.label }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-          <div class=" card__col-xs-12 card__col-sm-3">
+          <div class="card__col-xs-12 card__col-sm-3">
             <mat-form-field appearance="outline">
               <mat-label>Select Mode</mat-label>
-              <mat-select matInput formControlName="verMode" placeholder="Select Mode" autocomplete="off" required>
+              <mat-select
+                matInput
+                formControlName="verMode"
+                placeholder="Select Mode"
+                autocomplete="off"
+                required
+              >
                 <mat-option value="AADHAAR"> Aadhaar</mat-option>
                 <mat-option value="BANKEVC"> Bank EVC</mat-option>
                 <mat-option value="DEMATEVC"> Demat EVC</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-          <div class=" card__col-xs-12 card__col-sm-3">
-            <button class="tbd-btn" [disabled]="loading" (click)="generateOtp()">Generate OTP</button>
+          <div class="card__col-xs-12 card__col-sm-3">
+            <button
+              class="tbd-btn"
+              [disabled]="loading"
+              (click)="generateOtp()"
+            >
+              Generate OTP
+            </button>
           </div>
         </div>
       </mat-dialog-content>
-      <p *ngIf="otpSent">{{otpMessage}}</p>
+      <p *ngIf="otpSent">{{ otpMessage }}</p>
 
       <mat-dialog-actions align="center" *ngIf="otpSent">
         <div class="card__row">
-          <div class=" card__col-xs-12 card__col-sm-6">
+          <div class="card__col-xs-12 card__col-sm-6">
             <mat-form-field appearance="outline">
               <mat-label>OTP: </mat-label>
-              <input matInput type="text" maxlength="6" digitsOnly placeholder="OTP" [formControl]="otpValue" required>
+              <input
+                matInput
+                maxlength="25"
+                placeholder="OTP"
+                [formControl]="otpValue"
+                required
+              />
             </mat-form-field>
           </div>
-          <div class=" card__col-xs-12 card__col-sm-6">
-            <button type="submit" [disabled]="loading" class="tbd-btn-secondary" (click)="validateOtp()">E-Verify</button>
+          <div class="card__col-xs-12 card__col-sm-6">
+            <button
+              type="submit"
+              [disabled]="loading"
+              class="tbd-btn-secondary"
+              (click)="validateOtp()"
+            >
+              E-Verify
+            </button>
           </div>
         </div>
       </mat-dialog-actions>
     </form>
   </mat-tab>
   <mat-tab label="Manually Update">
-    <p> Mark as e verification done, Only in case e verification is done from outside the BO. It will only update here
-      as e
-      verified for the future reference</p><br>
-    <button type="submit" class="tbd-btn-secondary" [disabled]="loading" (click)="markAsEverified()">Mark as E - verify</button>
+    <p>
+      Mark as e verification done, Only in case e verification is done from
+      outside the BO. It will only update here as e verified for the future
+      reference
+    </p>
+    <br />
+    <button
+      type="submit"
+      class="tbd-btn-secondary"
+      [disabled]="loading"
+      (click)="markAsEverified()"
+    >
+      Mark as E - verify
+    </button>
   </mat-tab>
 </mat-tab-group>

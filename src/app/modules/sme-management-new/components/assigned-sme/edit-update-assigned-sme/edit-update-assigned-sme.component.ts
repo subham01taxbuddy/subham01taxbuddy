@@ -550,7 +550,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(option)
   }
 
-  async updateSmeDetails() {
+  updateSmeDetails() {
     if (this?.ownerDetails?.userId == this?.smeObj?.userId){
       this._toastMessageService.alert('false','You can not add yourself as co-owner ');
       return;
@@ -603,9 +603,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       if(this.serviceRecords.findIndex(element => element.serviceType === 'ITR') > -1) {
 
-        if (this.nriServiceToggle === true && this.smeObj.owner) {
+        if (this.nriServiceToggle === true && this.smeObj.roles.includes('ROLE_OWNER')) {
           finalReq.roles.push('OWNER_NRI');
-        } else if (this.nriServiceToggle === true && this.smeObj.filer) {
+        } else if (this.nriServiceToggle === true && this.smeObj.roles.includes('ROLE_FILER')) {
           finalReq.roles.push('FILER_NRI');
         } else if (this.nriServiceToggle === false && this.smeObj.owner){
           let index = finalReq.roles.findIndex(item => item === 'OWNER_NRI');
@@ -623,23 +623,24 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       if (this.serviceRecords.length > 0) {
         for (let i = 0; i < this.serviceRecords.length; i++) {
-          const service = this.serviceRecords[i];
-          finalReq.serviceType = service.serviceType;
-          finalReq.assignmentStart = service.assignmentStart;
-          finalReq.roles.push(service.role);
-          console.log(finalReq);
+            const service = this.serviceRecords[i];
+            finalReq.serviceType = service.serviceType;
+            finalReq.assignmentStart = service.assignmentStart;
+            finalReq.roles.push(service.role);
+            console.log(finalReq);
 
-          if (i === 0) {
-            await this.serviceApiCall(finalReq, false);
-            // add a delay of 2 seconds
-            await new Promise(resolve => setTimeout(resolve, 2000));
-          } else {
-            await this.serviceApiCall(finalReq);
-          }
+            if (i === 0) {
+              this.serviceApiCall(finalReq, false);
+              // add a delay of 2 seconds
+              new Promise(resolve => setTimeout(resolve, 2000));
+            } else {
+              this.serviceApiCall(finalReq);
+            }
+
         }
       } else {
         console.log(finalReq);
-        await this.serviceApiCall(finalReq);
+        this.serviceApiCall(finalReq);
       }
 
       // if(this.serviceRecords.length > 0) {

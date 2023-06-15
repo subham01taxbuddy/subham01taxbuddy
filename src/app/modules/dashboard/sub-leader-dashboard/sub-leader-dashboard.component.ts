@@ -43,7 +43,7 @@ export class SubLeaderDashboardComponent implements OnInit {
   roles: any;
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  toDateMin: any;
+  minEndDate:string ='2023-04-01';
   startDate = new FormControl('');
   endDate = new FormControl('');
   searchFiler = new FormControl('');
@@ -64,7 +64,7 @@ export class SubLeaderDashboardComponent implements OnInit {
     private router: Router,
     public datePipe: DatePipe,
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
   }
@@ -225,4 +225,10 @@ export class SubLeaderDashboardComponent implements OnInit {
     this?.smeDropDown?.resetDropdown();
     this.search();
   }
+
+  setEndDateValidate(startDateVal: any) {
+    console.log('startDateVal: ', startDateVal);
+    this.minEndDate = startDateVal.value;
+  }
+
 }

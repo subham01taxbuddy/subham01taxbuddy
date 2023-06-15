@@ -38,7 +38,6 @@ export class CancelSubscriptionComponent implements OnInit {
   loggedInUserRoles: any;
   isOwner: boolean;
   invoiceFormGroup: FormGroup = this.fb.group({
-
     mobile: new FormControl(''),
     email: new FormControl(''),
   });
@@ -106,15 +105,21 @@ export class CancelSubscriptionComponent implements OnInit {
     this.loggedInUserRoles = this.utilService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
   }
+
+  public rowSelection: 'single' | 'multiple' = 'multiple';
+  rowMultiSelectWithClick: true;
+
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
-
   resetFilters() {
+    this.invoiceFormGroup.controls['mobile'].setValue(null);
+    this.invoiceFormGroup.controls['email'].setValue(null);
     this.smeDropDown?.resetDropdown();
     const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
+
     this.filerId=null;
     this.ownerId=null;
     if (this.isOwner) {
@@ -157,7 +162,7 @@ export class CancelSubscriptionComponent implements OnInit {
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value;
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
 
 
@@ -184,12 +189,14 @@ export class CancelSubscriptionComponent implements OnInit {
         this.cancelSubscriptionData = response;
         this.loading = false;
         if (response.success) {
-          if (response.data.content instanceof Array && response.data.content.length > 0) {
+          if (response?.data?.content instanceof Array && response?.data?.content?.length > 0) {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData(response.data.content));
             this.config.totalItems = response.data.totalElements;
           } else {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
+            if (response.message !==null) {this._toastMessageService.alert('error', response.message);}
+            else{this._toastMessageService.alert('error', 'No Data Found'); }
           }
         } else {
           this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
@@ -199,6 +206,7 @@ export class CancelSubscriptionComponent implements OnInit {
       (error) => {
         this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
+        this._toastMessageService.alert("error","Error while fetching subscription cancellation requests: Not_found: data not found");
       }
     );
   }
@@ -345,7 +353,7 @@ export class CancelSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fas fa-edit" aria-hidden="true" data-action-type="updateStatus"></i>
+            <i class="fa-regular fa-user-check" data-action-type="updateStatus"></i>
            </button>`;
         },
         width: 80,
@@ -367,7 +375,7 @@ export class CancelSubscriptionComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -391,7 +399,7 @@ export class CancelSubscriptionComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+            <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,

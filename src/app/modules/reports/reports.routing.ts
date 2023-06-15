@@ -7,6 +7,7 @@ import { ScheduleCallReportComponent } from './calling-reports/schedule-call-rep
 import { ReportsComponent } from './reports.component';
 import { ItrFilingReportComponent } from './itr-filing-report/itr-filing-report.component';
 import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
+import { RevenueReportComponent } from './revenue-report/revenue-report.component';
 
 
 const routes: Routes = [
@@ -49,6 +50,10 @@ const routes: Routes = [
       {
         path: 'missed-chat-report',
         component: MissedChatReportComponent,
+      },
+      {
+        path: 'revenue-report',
+        component: RevenueReportComponent,
       },
     ],
 

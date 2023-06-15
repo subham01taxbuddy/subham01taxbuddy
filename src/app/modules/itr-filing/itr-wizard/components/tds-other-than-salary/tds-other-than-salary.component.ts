@@ -103,7 +103,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       return this.fb.group({
         hasEdit: [item ? item.hasEdit : false],
         deductorTAN: [item ? item.deductorTAN : '', [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)]],
-        deductorName: [item ? item.deductorName : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+        deductorName: [item ? item.deductorName : '', [Validators.required]],
         totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
         totalTdsDeposited: [item ? item.totalTdsDeposited : null, Validators.required],
         headOfIncome: [item ? item.headOfIncome : '', Validators.required],

@@ -3,6 +3,7 @@
   [config]="{ backdropBorderRadius: '14px' }"
 ></ngx-loading>
 <div class="main1">
+
   <div class="login_content1">
     <div class="login_content_container">
       <div class="">
@@ -56,7 +57,7 @@
             </mat-form-field>
           </div>
 
-              <button type="submit" [disabled]="loading" class="btn" (click)="onSubmit()">
+              <button type="submit" [class.btn-disabled]="isMobileBrowser()" [disabled]="loading" class="btn" (click)="onSubmit()">
                 Login
               </button>
 
@@ -100,6 +101,27 @@
           </div>
         </div>
       </div>
+      <div *ngIf="isMobileBrowser()">
+        <em class="text-danger">
+          Back Office is not compatible with Mobile browser
+        </em>
+      </div>
+      <div>
+        <span class="text-secondary" *ngIf="internetSpeed !== -1">
+          Your internet speed is {{internetSpeed}} Mbps
+        </span>
+        <span class="text-secondary" *ngIf="internetSpeed === -1">
+          Checking your internet speed...
+        </span>
+        <em class="text-danger" *ngIf="internetSpeed < 10 && internetSpeed !== -1">
+          Your internet speed is lower than required: 10 Mbps. You may face slowness or functional issues while using the Back Office.
+        </em>
+      </div>
+      <!-- Best Screen Resolution -->
+<div class="txRes">**Please Note: Backoffice in best viewed in 1024px and above screen resolution.</div>
+<!-- Best Screen Resolution Ends-->
     </div>
   </div>
 </div>
+
+

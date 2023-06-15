@@ -1,0 +1,29 @@
+.checkbox-group {
+  display: flex;
+  gap: 30px;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.checkbox-right {
+  float: right;
+  margin-bottom: 8px;
+}
+
+.checkbox-group.checkbox-right {
+  text-align: right;
+}
+
+.centered-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vertical-line {
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+}

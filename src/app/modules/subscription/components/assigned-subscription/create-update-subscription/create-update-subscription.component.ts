@@ -17,6 +17,8 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { Schedules } from 'src/app/modules/shared/interfaces/schedules';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 
 // export class Schedules {
 //   public PERSONAL_INFO = 'PERSONAL_INFO';
@@ -82,6 +84,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   };
   subscriptionObjType: any;
   isButtonDisable: boolean;
+  AssessmentYear: string;
+  dialogRef: any;
 
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
@@ -99,7 +103,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     private userService: UserMsService,
     private toastMessage: ToastMessageService,
     private schedules: Schedules,
-    private location: Location
+    private location: Location,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -150,8 +155,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     if (this.subscriptionObj != null) {
       this.personalInfoForm.patchValue(this.subscriptionObj);
       // this.otherInfoForm.patchValue(this.subscriptionObj);
-      if (this.subscriptionObj.subscriptionId) {
+      if (this.subscriptionObj.subscriptionId !== 0) {
         this.getUserPlanInfo(this.subscriptionObj?.subscriptionId);
+      } else {
+        this.getFy();
       }
     }
     // if(this.createSubscriptionObj !=null){
@@ -479,6 +486,30 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     console.log('promoCodeInfo: ', this.promoCodeInfo);
   }
 
+  async getFy() {
+    const fyList = await this.utilsService.getStoredFyList();
+    console.log('fylist', fyList)
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    this.AssessmentYear = currentFyDetails[0].assessmentYear
+    console.log("ay", this.AssessmentYear)
+    this.getOwnerFiler();
+  }
+
+  getOwnerFiler() {
+    // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
+    this.loading = true;
+    let types = ['GST', 'NOTICE', 'TPA'];
+    let sType = types.includes(this.serviceType) ? this.serviceType : 'ITR';
+    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${sType}`;
+    this.userService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('get Owner and filer name for new create sub ', result)
+      this.filerName.setValue(result.data?.name);
+      this.ownerName.setValue(result.data?.ownerName);
+    })
+  }
+
+
   getUserPlanInfo(id) {
     this.loading = true;
     let param = '/subscription/' + id;
@@ -493,6 +524,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.description.setValue(subscription.item.itemDescription);
         this.sacNumber.setValue(subscription.item.sacCode);
         this.assessmentYear.setValue(subscription.item.financialYear);
+        this.ownerName.setValue(subscription.ownerName);
+        this.filerName.setValue(subscription.assigneeName);
 
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
@@ -584,7 +617,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           : this.userSubscription.userSelectedPlan.name;
         break;
     }
-    this.description.setValue(this.userSubscription.item.itemDescription);
+    this.description.setValue(this.userSubscription?.item.itemDescription);
   }
 
   gstUserInfoByUserId(userId) {
@@ -841,7 +874,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.serviceDetails = serviceArray.filter(
         (item: any) => item.service === this.service
       );
-      let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === this.userSubscription.userSelectedPlan.name.toLowerCase());
+      let planName = ''
+      if (this.userSubscription?.userSelectedPlan) {
+        planName = this.userSubscription.userSelectedPlan.name;
+      } else {
+        planName = this.userSubscription?.smeSelectedPlan.name;
+      }
+      let filtered = this.serviceDetails.filter(item => item.details.toLowerCase() === planName.toLowerCase());
       if (filtered.length === 1) {
         this.serviceDetail = filtered[0].details;
       }
@@ -860,8 +899,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     let param = `/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`;
     this.userService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      this.filerName.setValue(result.data[0]?.name);
-      this.ownerName.setValue(result.data[0]?.parentName);
+      // this.filerName.setValue(result.data[0]?.name);
+      // this.ownerName.setValue(result.data[0]?.parentName);
     });
   }
 
@@ -943,6 +982,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: 'SME',
         promoCode: this.appliedPromo,
+        smeUserId: this?.loggedInSme[0]?.userId,
         item: {
           itemDescription: this.description?.value,
           quantity: this.userSubscription?.item[0]?.quantity,
@@ -962,28 +1002,23 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-        smeUserId: this.loggedInSme.userId
+
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));
       this.itrService.postMethod(param, requestData).subscribe(
         (res: any) => {
           this.loading = false;
-          console.log('After subscription plan added res:', res);
-          this.toastMessage.alert(
-            'success',
-            'Subscription created successfully.'
-          );
+          this.toastMessage.alert('success', 'Subscription created successfully.');
           this.location.back();
-          // let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
-          // console.log('subInfo: ', subInfo)
         },
         (error) => {
-          console.log('error -> ', error);
-          this.toastMessage.alert(
-            'error',
-            this.utilsService.showErrorMsg(error.error.status)
-          );
+          this.loading = false;
+          if (error.error.error === 'BAD_REQUEST') {
+            this.toastMessage.alert('error', error.error.message);
+          } else {
+            this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+          }
         }
       );
     } else {
@@ -998,23 +1033,39 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   cancelSubscription() {
-    this.loading = true;
-    let param = `/itr/subscription`;
-    let reqBody = {
-      "subscriptionId": this.userSubscription.subscriptionId,
-      "cancellationStatus": "PENDING"
-    };
-    this.userService.spamPutMethod(param, reqBody).subscribe(
-      (res: any) => {
-        this.loading = false;
-        this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
-        this.location.back();
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Cancel Subscription!',
+        message: 'Are you sure you want to Cancel the Subscription?',
       },
-      (error) => {
-        this.loading = false;
-        this.toastMessage.alert('error', 'failed to update.');
+
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let param = `/itr/subscription`;
+        let reqBody = {
+          "subscriptionId": this.userSubscription.subscriptionId,
+          "cancellationStatus": "PENDING"
+        };
+        this.userService.spamPutMethod(param, reqBody).subscribe(
+          (res: any) => {
+            this.loading = false;
+            this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
+            this.location.back();
+          },
+          (error) => {
+            this.loading = false;
+            if (error.error.error === 'BAD_REQUEST') {
+              this.toastMessage.alert('error', error.error.message);
+            } else {
+              this.toastMessage.alert('error', 'failed to update.');
+            }
+          }
+        );
       }
-    );
+    });
+
   }
 }
 

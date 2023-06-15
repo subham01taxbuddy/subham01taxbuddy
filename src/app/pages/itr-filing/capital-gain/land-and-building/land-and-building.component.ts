@@ -1,15 +1,24 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  ITR_JSON,
+  NewCapitalGain,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-land-and-building',
   templateUrl: './land-and-building.component.html',
-  styleUrls: ['./land-and-building.component.scss']
+  styleUrls: ['./land-and-building.component.scss'],
 })
 export class LandAndBuildingComponent implements OnInit, OnChanges {
   loading = false;
@@ -18,21 +27,22 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   Copy_ITR_JSON: ITR_JSON;
   isExmptAvail = false;
   assestTypesDropdown = [];
-  labView: string = "FORM";
+  labView: string = 'FORM';
 
   public capitalGainGridOptions: GridOptions;
   public investmentGridOptions: GridOptions;
   showInvestmentTable = false;
 
-  data: any
-  constructor(private itrMsService: ItrMsService,
+  data: any;
+  constructor(
+    private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    public matDialog: MatDialog) {
+    public matDialog: MatDialog
+  ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     this.cgCallInConstructor([]);
     this.getAssetDetails();
-    
 
     // TODO Add this in edit or add section
     this.data = {
@@ -41,19 +51,18 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       mode: 'ADD',
       // assetSelected: assetSelected,
     };
-
   }
   ngOnChanges(changes: SimpleChanges) {
-    console.log('+++++++++', changes)
+    console.log('+++++++++', changes);
   }
-
-
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    let labData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'PLOT_OF_LAND'
+    );
     if (labData?.length > 0) {
-      this.labView = 'TABLE'
+      this.labView = 'TABLE';
     }
   }
 
@@ -74,27 +83,35 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     this.isExmptAvail = false;
     const data = [];
     const dataToReturn = [];
-    let labData = this.ITR_JSON.capitalGain?.filter(item => item.assetType === 'PLOT_OF_LAND');
+    let labData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'PLOT_OF_LAND'
+    );
     for (let i = 0; labData && i < labData[0]?.assetDetails?.length; i++) {
       let assetDetails = labData[0].assetDetails[i];
-      let buyerDetails = labData[0].buyersDetails?.filter(buyer => (buyer.srn === assetDetails.srn))[0];
+      let buyerDetails = labData[0].buyersDetails?.filter(
+        (buyer) => buyer.srn === assetDetails.srn
+      )[0];
       // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
       //   cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
       // }
 
       let costOfImprovement = 0;
-      let improvements = labData[0].improvement?.filter(imp => (imp.srn == assetDetails.srn));
+      let improvements = labData[0].improvement?.filter(
+        (imp) => imp.srn == assetDetails.srn
+      );
       for (let j = 0; j < improvements.length; j++) {
-        costOfImprovement = costOfImprovement + improvements[j].costOfImprovement;
+        costOfImprovement =
+          costOfImprovement + improvements[j].costOfImprovement;
       }
       console.log('cost', improvements.length, costOfImprovement);
 
       let totalDeductions = 0;
-      let deductions = labData[0].deduction?.filter(ded => (parseInt(ded.srn) == assetDetails.srn));
+      let deductions = labData[0].deduction?.filter(
+        (ded) => ded.srn == assetDetails.srn
+      );
       for (let j = 0; j < deductions?.length; j++) {
         totalDeductions = totalDeductions + deductions[j].totalDeductionClaimed;
       }
-      
 
       data.push({
         id: i + 1,
@@ -102,11 +119,11 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         description: assetDetails.description,
         sellDate: assetDetails.sellDate,
         costOfAcquisition: assetDetails.indexCostOfAcquisition,
-        valueInConsideration: /* value */assetDetails.valueInConsideration,
+        valueInConsideration: /* value */ assetDetails.valueInConsideration,
         // totalCost: tCost,
         gainType: assetDetails.gainType,
         cgIncome: assetDetails.capitalGain,
-        deductions: totalDeductions,//TODO
+        deductions: totalDeductions, //TODO
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
         address: buyerDetails?.address,
@@ -114,32 +131,34 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
         isShow: true,
         rowSpan: 1,
-        assetSelected: JSON.stringify(assetDetails)
+        assetSelected: JSON.stringify(assetDetails),
       });
       console.log('row', assetDetails, costOfImprovement);
     }
 
-    
     return data;
   }
-
 
   getAssetDetails() {
     // todo
     const param = '/assetDetails';
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Asset Details =', result);
-      this.assestTypesDropdown = result;
-      this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
-      this.capitalGainGridOptions.api?.setColumnDefs(this.cgCreateColoumnDef(this.assestTypesDropdown));
-      if (this.ITR_JSON.capitalGain?.length > 0) {
-        //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
-        // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        console.log('Asset Details =', result);
+        this.assestTypesDropdown = result;
+        this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
+        this.capitalGainGridOptions.api?.setColumnDefs(
+          this.cgCreateColoumnDef(this.assestTypesDropdown)
+        );
+        if (this.ITR_JSON.capitalGain?.length > 0) {
+          //TODO   // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
+          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData(this.assestTypesDropdown))
+        }
+      },
+      (error) => {
+        this.getAssetDetails();
       }
-    }, error => {
-      this.getAssetDetails();
-    });
-
+    );
   }
 
   cgCreateColoumnDef(assestTypesDropdown) {
@@ -157,9 +176,10 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
         rowSpan: function (params) {
           if (params.data.isShow) {
@@ -170,7 +190,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         },
         cellClassRules: {
           'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
+            return params.data.rowSpan > 1;
           },
         },
       },
@@ -180,9 +200,10 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
         rowSpan: function (params) {
           if (params.data.isShow) {
@@ -193,7 +214,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         },
         cellClassRules: {
           'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
+            return params.data.rowSpan > 1;
           },
         },
       },
@@ -203,7 +224,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.valueInConsideration ? params.data.valueInConsideration.toLocaleString('en-IN') : params.data.valueInConsideration;
+          return params.data.valueInConsideration
+            ? params.data.valueInConsideration.toLocaleString('en-IN')
+            : params.data.valueInConsideration;
         },
       },
       {
@@ -212,7 +235,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.costOfAcquisition ? params.data.costOfAcquisition.toLocaleString('en-IN') : params.data.costOfAcquisition;
+          return params.data.costOfAcquisition
+            ? params.data.costOfAcquisition.toLocaleString('en-IN')
+            : params.data.costOfAcquisition;
         },
       },
       {
@@ -236,7 +261,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.deductions ? params.data.deductions.toLocaleString('en-IN') : 0;
+          return params.data.deductions
+            ? params.data.deductions.toLocaleString('en-IN')
+            : 0;
         },
       },
       {
@@ -254,7 +281,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.cgIncome ? params.data.cgIncome.toLocaleString('en-IN') : params.data.cgIncome;
+          return params.data.cgIncome
+            ? params.data.cgIncome.toLocaleString('en-IN')
+            : params.data.cgIncome;
         },
       },
       {
@@ -269,12 +298,12 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
         rowSpan: function (params) {
           if (params.data.isShow) {
@@ -285,7 +314,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         },
         cellClassRules: {
           'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
+            return params.data.rowSpan > 1;
           },
         },
       },
@@ -301,12 +330,12 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>`;
-
         },
         cellStyle: {
-          textAlign: 'center', display: 'flex',
+          textAlign: 'center',
+          display: 'flex',
           'align-items': 'center',
-          'justify-content': 'center'
+          'justify-content': 'center',
         },
         rowSpan: function (params) {
           if (params.data.isShow) {
@@ -317,10 +346,10 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         },
         cellClassRules: {
           'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
+            return params.data.rowSpan > 1;
           },
         },
-      }
+      },
     ];
   }
 
@@ -352,9 +381,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       defaultColDef: {
-        resizable: true
+        resizable: true,
       },
-      suppressRowTransform: true
+      suppressRowTransform: true,
     };
   }
 
@@ -373,35 +402,49 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
 
     this.loading = true;
     let selectedObject = JSON.parse(assetSelected.assetSelected);
-    let filtered = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType !== assetSelected.assetType));
-    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(item => (item.assetType === assetSelected.assetType))[0];
-    if(selectedTypeList){
-      selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.deduction = selectedTypeList.deduction?.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.improvement = selectedTypeList.improvement?.filter(itm => (itm.srn !== selectedObject.srn));
-      selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(itm => (itm.srn !== selectedObject.srn));
+    let filtered = this.Copy_ITR_JSON.capitalGain.filter(
+      (item) => item.assetType !== assetSelected.assetType
+    );
+    let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(
+      (item) => item.assetType === assetSelected.assetType
+    )[0];
+    if (selectedTypeList) {
+      selectedTypeList.assetDetails = selectedTypeList.assetDetails.filter(
+        (itm) => itm.srn !== selectedObject.srn
+      );
+      selectedTypeList.deduction = selectedTypeList.deduction?.filter(
+        (itm) => itm.srn !== selectedObject.srn
+      );
+      selectedTypeList.improvement = selectedTypeList.improvement?.filter(
+        (itm) => itm.srn !== selectedObject.srn
+      );
+      selectedTypeList.buyersDetails = selectedTypeList.buyersDetails?.filter(
+        (itm) => itm.srn !== selectedObject.srn
+      );
     }
     this.Copy_ITR_JSON.capitalGain = filtered;
-    if(selectedTypeList && selectedTypeList.assetDetails.length > 0) {
+    if (selectedTypeList && selectedTypeList.assetDetails.length > 0) {
       this.Copy_ITR_JSON.capitalGain.push(selectedTypeList);
     }
 
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Capital gain deleted successfully');
-      console.log('Capital gain save result=', result);
-      this.utilsService.smoothScrollToTop();
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+      (result: any) => {
+        this.ITR_JSON = result;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Capital gain deleted successfully');
+        console.log('Capital gain save result=', result);
+        this.utilsService.smoothScrollToTop();
 
-      this.capitalGainGridOptions.api.setRowData(this.cgCreateRowData());
-    }, error => {
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to delete capital gain data');
-      this.utilsService.smoothScrollToTop();
-    });
-
+        this.capitalGainGridOptions.api.setRowData(this.cgCreateRowData());
+      },
+      (error) => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to delete capital gain data');
+        this.utilsService.smoothScrollToTop();
+      }
+    );
   }
 }

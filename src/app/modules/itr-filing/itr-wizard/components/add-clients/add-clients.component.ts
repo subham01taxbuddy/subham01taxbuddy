@@ -79,35 +79,42 @@ export class AddClientsComponent implements OnInit, OnDestroy {
       otp: [],
     });
 
+    this.getProfile();
+  }
+
+  getProfile() {
     this.utilsService
       .getUserProfile(this.ITR_JSON.userId)
       .then((result: any) => {
         console.log(result);
-        if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber)) {
+        if (this.utilsService.isNonEmpty(result.panNumber)) {
+          this.addClientForm.controls['panNumber'].setValue(result.panNumber);
+          this.getUserDataByPan(result.panNumber);
+        } else {
           this.addClientForm.controls['panNumber'].setValue(
             this.ITR_JSON.panNumber
           );
-        } else {
-          this.addClientForm.controls['panNumber'].setValue(result.panNumber);
-          this.getUserDataByPan(result.panNumber);
         }
+
+        if (this.utilsService.isNonEmpty(result.dateOfBirth)) {
+          this.addClientForm.controls['dateOfBirth'].setValue(
+            result.dateOfBirth
+          );
+        } else {
+          this.addClientForm.controls['dateOfBirth'].setValue(
+            this.ITR_JSON.family[0].dateOfBirth
+          );
+        }
+
         let headerObj = {
           panNumber: this.addClientForm.controls['panNumber'].value,
           assessmentYear: this.ITR_JSON.assessmentYear,
           userId: this.ITR_JSON.userId.toString(),
         };
         sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+        console.log('ITR_JSON: ', this.ITR_JSON);
+        console.log('addClientForm value: ', this.addClientForm.value);
       });
-
-    this.personalInfo = this.ITR_JSON.family[0];
-    this.addClientForm.controls['dateOfBirth'].setValue(
-      this.personalInfo.dateOfBirth
-    );
-
-    console.log('ITR_JSON: ', this.ITR_JSON);
-    console.log('addClientForm value: ', this.addClientForm.value);
-
-
   }
 
   setOtpValidation() {
@@ -123,10 +130,10 @@ export class AddClientsComponent implements OnInit, OnDestroy {
   getUserDataByPan(pan) {
     let param = `/api/getPanDetail?panNumber=${pan}`;
     this.itrService.getMethod(param).subscribe((result: any) => {
-      let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-      this.addClientForm.controls['dateOfBirth'].setValue(
-        moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
-      );
+      // let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+      // this.addClientForm.controls['dateOfBirth'].setValue(
+      //   moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+      // );
     });
   }
 
