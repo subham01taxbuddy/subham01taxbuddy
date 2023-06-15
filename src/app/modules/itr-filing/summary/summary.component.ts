@@ -1465,34 +1465,50 @@ export class SummaryComponent implements OnInit {
             businessIncome: {
               businessIncomeDetails: {
                 business44AD: {
-                  bank: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ].ScheduleBP?.NatOfBus44AD?.map((element) => {
-                    return {
-                      businessSection: 'Section 44AD',
-                      natureOfBusinessCode: element?.CodeAD,
-                      tradeName: element?.NameOfBusiness,
-                      grossTurnover: Number(
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.GrsTrnOverAnyOthMode /
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.NatOfBus44AD?.length
-                      ),
-                      TaxableIncome: Number(
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44AD
-                          ?.PersumptiveInc44AD6Per +
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.PersumptiveInc44AD8Per /
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.ScheduleBP?.NatOfBus44AD?.length
-                      ),
-                    };
-                  }),
+                  bank:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+                          return {
+                            businessSection: 'Section 44AD',
+                            natureOfBusinessCode: element?.CodeAD,
+                            tradeName: element?.NameOfBusiness,
+                            grossTurnover: Number(
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                .ScheduleBP?.PersumptiveInc44AD
+                                ?.GrsTrnOverBank +
+                                this.ITR_JSON.itrSummaryJson['ITR'][
+                                  this.itrType
+                                ].ScheduleBP?.PersumptiveInc44AD
+                                  ?.GrsTrnOverAnyOthMode /
+                                  this.ITR_JSON.itrSummaryJson['ITR'][
+                                    this.itrType
+                                  ].ScheduleBP?.NatOfBus44AD?.length
+                            ),
+                            TaxableIncome: Number(
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                .ScheduleBP?.PersumptiveInc44AD
+                                ?.PersumptiveInc44AD6Per +
+                                this.ITR_JSON.itrSummaryJson['ITR'][
+                                  this.itrType
+                                ].ScheduleBP?.PersumptiveInc44AD
+                                  ?.PersumptiveInc44AD8Per /
+                                  this.ITR_JSON.itrSummaryJson['ITR'][
+                                    this.itrType
+                                  ]?.ScheduleBP?.NatOfBus44AD?.length
+                            ),
+                          };
+                        })
+                      : [
+                          {
+                            businessSection: null,
+                            natureOfBusinessCode: null,
+                            tradeName: null,
+                            grossTurnover: null,
+                            TaxableIncome: null,
+                          },
+                        ],
 
                   cash: [
                     {
@@ -1505,33 +1521,45 @@ export class SummaryComponent implements OnInit {
                   ],
                 },
 
-                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
-                  return {
-                    businessSection: 'Section 44ADA',
-                    natureOfBusinessCode: element?.CodeADA,
-                    tradeName: element?.NameOfBusiness,
-                    grossTurnover: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.NatOfBus44ADA?.length
-                    ),
-                    TaxableIncome: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44ADA
-                        ?.TotPersumptiveInc44ADA /
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.NatOfBus44ADA?.length
-                    ),
-                  };
-                }),
+                business44ADA:
+                  this.itrType === 'ITR3'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][
+                        this.itrType
+                      ]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
+                        return {
+                          businessSection: 'Section 44ADA',
+                          natureOfBusinessCode: element?.CodeADA,
+                          tradeName: element?.NameOfBusiness,
+                          grossTurnover: Number(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt /
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                ?.PARTA_PL?.NatOfBus44ADA?.length
+                          ),
+                          TaxableIncome: Number(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44ADA
+                              ?.TotPersumptiveInc44ADA /
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                ?.PARTA_PL?.NatOfBus44ADA?.length
+                          ),
+                        };
+                      })
+                    : [
+                        {
+                          businessSection: null,
+                          natureOfBusinessCode: null,
+                          tradeName: null,
+                          grossTurnover: null,
+                          TaxableIncome: null,
+                        },
+                      ],
               },
               businessIncomeTotal:
-                this.itrType === 'ITR4'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP
-                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                this.itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      'PartB-TI'
+                    ]?.ProfBusGain?.TotProfBusGain
                   : 0,
             },
             totalHeadWiseIncome:
@@ -4426,10 +4454,8 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
-        const param =
-          '/summary/json/pdf/download?itrId=' +
-          this.ITR_JSON.itrId;
-        this.itrMsService.downloadJsonFile( param, 'application/pdf' ).subscribe(
+        const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
+        this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
           (result) => {
             console.log('PDF Result', result);
             const fileURL = webkitURL.createObjectURL(result);

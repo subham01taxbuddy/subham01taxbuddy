@@ -535,6 +535,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         }
 
         if (itrType === 'ITR1' || itrType === 'ITR4') {
+          this.loading = true;
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -843,14 +844,15 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : 0,
             },
           ];
-          this.loading = false;
           console.log(this.particularsArray, 'this.particularsArray');
+          this.loading = false;
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
         }
 
         if (itrType === 'ITR2' || itrType === 'ITR3') {
+          this.loading=true;
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -1200,8 +1202,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : 0,
             },
           ];
-          this.loading = false;
           console.log(this.particularsArray, 'this.particularsArray');
+          this.loading = false;
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
@@ -1211,11 +1213,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
           (result: any) => {
             // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-            this.loading = false;
             console.log('result is=====', result);
             this.newSummaryIncome = result.data.newRegime;
             this.oldSummaryIncome = result.data.oldRegime;
-
             this.particularsArray = [
               {
                 label: 'Income from Salary',
@@ -1334,7 +1334,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                     : this.newSummaryIncome?.taxSummary?.taxRefund,
               },
             ];
-
+            this.loading = false;
             this.utilsService.showSnackBar(
               'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
             );
@@ -1356,11 +1356,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
         (result: any) => {
           // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-          this.loading = false;
           console.log('result is=====', result);
           this.newSummaryIncome = result.data.newRegime;
           this.oldSummaryIncome = result.data.oldRegime;
-
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -1472,7 +1470,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : this.newSummaryIncome?.taxSummary?.taxRefund,
             },
           ];
-
+          this.loading = false;
           this.utilsService.showSnackBar(
             'The below displayed calculations are as of Taxbuddys calculation'
           );
