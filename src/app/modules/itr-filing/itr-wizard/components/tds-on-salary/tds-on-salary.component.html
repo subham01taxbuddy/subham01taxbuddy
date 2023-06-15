@@ -15,7 +15,7 @@
     <form [formGroup]="salaryForm">
         <div formArrayName="salaryArray">
             <div class="tds-on boxClr" *ngFor="let salary of getSalaryArray.controls | paginate:config ;let i=index"
-                [formGroupName]="i">
+                [formGroupName]="fieldGlobalIndex(i)">
                 <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="chkSp">
                 </mat-checkbox>
                 <div class="row">
