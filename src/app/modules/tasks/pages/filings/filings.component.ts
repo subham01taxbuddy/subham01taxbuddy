@@ -59,6 +59,9 @@ export class FilingsComponent implements OnInit {
     ownerUserId: null,
     filerUserId: null,
   };
+
+  allFilerList:any;
+
   constructor(
     private reviewService:ReviewService,
     private itrMsService: ItrMsService,
@@ -71,9 +74,10 @@ export class FilingsComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
   ) {
+    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
-      columnDefs: this.columnDef(),
+      columnDefs: this.columnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -341,6 +345,7 @@ export class FilingsComponent implements OnInit {
         ownerUserId: data[i].ownerUserId,
         filerUserId: data[i].filerUserId,
         status: data[i].status,
+        filingTeamMemberId: data[i].filingTeamMemberId
       });
     }
     return newData;
@@ -351,7 +356,7 @@ export class FilingsComponent implements OnInit {
     ).length;
   }
 
-  columnDef() {
+  columnDef(filerList) {
     return [
       {
         headerName: 'Client Name',
@@ -452,20 +457,20 @@ export class FilingsComponent implements OnInit {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
-      {
-        headerName: 'Owner',
-        field: 'ownerName',
-        cellStyle: { textAlign: 'center' },
-        sortable: true,
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          defaultOption: 'startsWith',
-          debounceMs: 0,
-        },
-      },
+      // {
+      //   headerName: 'Owner',
+      //   field: 'ownerName',
+      //   cellStyle: { textAlign: 'center' },
+      //   sortable: true,
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     defaultOption: 'startsWith',
+      //     debounceMs: 0,
+      //   },
+      // },
       {
         headerName: 'Filer',
-        field: 'filerName',
+        field: 'filingTeamMemberId',
         cellStyle: { textAlign: 'center' },
         sortable: true,
         filter: 'agTextColumnFilter',
@@ -473,8 +478,17 @@ export class FilingsComponent implements OnInit {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.filingTeamMemberId)
+          let filer1= filerList;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer
+        }
       },
-
       {
         headerName: 'ITR ID',
         field: 'itrId',
