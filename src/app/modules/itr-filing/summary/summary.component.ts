@@ -240,6 +240,21 @@ export class SummaryComponent implements OnInit {
             TaxableIncome: Number;
           }
         ];
+        // nonSpecIncome: {
+        //   businessSection: String;
+        //   natureOfBusinessCode: any;
+        //   tradeName: String;
+        //   grossTurnover: Number;
+        //   TaxableIncome: Number;
+        // };
+
+        // specIncome: {
+        //   businessSection: String;
+        //   natureOfBusinessCode: any;
+        //   tradeName: String;
+        //   grossTurnover: Number;
+        //   TaxableIncome: Number;
+        // };
       };
       businessIncomeTotal: Number;
     };
@@ -659,6 +674,22 @@ export class SummaryComponent implements OnInit {
                     ),
                   };
                 }),
+
+                // nonSpecIncome: {
+                //   businessSection: null,
+                //   natureOfBusinessCode: null,
+                //   tradeName: null,
+                //   grossTurnover: null,
+                //   TaxableIncome: null,
+                // },
+
+                // specIncome: {
+                //   businessSection: null,
+                //   natureOfBusinessCode: null,
+                //   tradeName: null,
+                //   grossTurnover: null,
+                //   TaxableIncome: null,
+                // },
               },
               businessIncomeTotal:
                 this.itrType === 'ITR4'
@@ -1469,34 +1500,26 @@ export class SummaryComponent implements OnInit {
                     this.itrType === 'ITR3'
                       ? this.ITR_JSON.itrSummaryJson['ITR'][
                           this.itrType
-                        ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+                        ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
                           return {
                             businessSection: 'Section 44AD',
                             natureOfBusinessCode: element?.CodeAD,
                             tradeName: element?.NameOfBusiness,
                             grossTurnover: Number(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                .ScheduleBP?.PersumptiveInc44AD
-                                ?.GrsTrnOverBank +
+                                ?.PARTA_PL?.PersumptiveInc44AD
+                                ?.GrsTrnOverOrReceipt /
                                 this.ITR_JSON.itrSummaryJson['ITR'][
                                   this.itrType
-                                ].ScheduleBP?.PersumptiveInc44AD
-                                  ?.GrsTrnOverAnyOthMode /
-                                  this.ITR_JSON.itrSummaryJson['ITR'][
-                                    this.itrType
-                                  ].ScheduleBP?.NatOfBus44AD?.length
+                                ]?.PARTA_PL?.NatOfBus44AD?.length
                             ),
                             TaxableIncome: Number(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                .ScheduleBP?.PersumptiveInc44AD
-                                ?.PersumptiveInc44AD6Per +
+                                ?.PARTA_PL?.PersumptiveInc44AD
+                                ?.TotPersumptiveInc44AD /
                                 this.ITR_JSON.itrSummaryJson['ITR'][
                                   this.itrType
-                                ].ScheduleBP?.PersumptiveInc44AD
-                                  ?.PersumptiveInc44AD8Per /
-                                  this.ITR_JSON.itrSummaryJson['ITR'][
-                                    this.itrType
-                                  ]?.ScheduleBP?.NatOfBus44AD?.length
+                                ]?.PARTA_PL?.NatOfBus44AD?.length
                             ),
                           };
                         })
