@@ -2055,8 +2055,6 @@
                                 >keyboard_arrow_up
                               </mat-icon>
                             </div>
-                            <!-- <label class="rtNumb1"
-                                [ngClass]="summaryDetail.totalDeduction === 0 ? 'lbl-right rtNumb' : 'expand-lbl-right '"> -->
                             <label class="rtNumb1">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
@@ -2078,51 +2076,138 @@
                       class="table table-bordered table-striped table-hover"
                       style="margin-top: 20px"
                     >
-                      <tbody>
+                      <thead>
                         <tr>
-                          <td><b>Year</b></td>
-                          <td><b>House Property Loss</b></td>
-                          <td><b>Short Term Capital Loss</b></td>
-                          <td><b>Long Term Capital Loss</b></td>
-                          <td><b>Losses Set Off During The Year</b></td>
-                          <td><b>Carried Forward To Next Year</b></td>
+                          <th>
+                            <b>Year</b>
+                          </th>
+                          <th>
+                            <b>House Property Loss</b>
+                          </th>
+                          <th>
+                            <b>Short Term Capital Loss</b>
+                          </th>
+                          <th>
+                            <b>Long Term Capital Loss</b>
+                          </th>
+                          <th>
+                            <b>Other than Speculative Business Loss</b>
+                          </th>
+                          <th>
+                            <b>Loss from Speculative Business</b>
+                          </th>
+                          <th>
+                            <b>Loss from Specified Business</b>
+                          </th>
+                          <th>
+                            <b>other Losses</b>
+                          </th>
+                          <th>
+                            <b>Losses Set Off During The Year</b>
+                          </th>
+                          <th>
+                            <b>Carried Forward To Next Year</b>
+                          </th>
                         </tr>
-                        <tr
+                      </thead>
+                      <tbody>
+                        <ng-container
                           *ngFor="
                             let losses of finalCalculations
                               ?.lossesToBeCarriedForward?.cflDtls;
                             let i = index
                           "
                         >
-                          <td>{{ losses?.assessmentPastYear }}</td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(
-                                losses?.housePropertyLoss
-                              )
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.STCGLoss)
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.LTCGLoss)
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.pastYear)
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.totalLoss)
-                            }}
-                          </td>
-                        </tr>
+                          <tr>
+                            <td>
+                              {{
+                                losses?.assessmentPastYear
+                                  ? losses?.assessmentPastYear
+                                  : 0
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.housePropertyLoss
+                                    ? losses?.housePropertyLoss
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.STCGLoss ? losses?.STCGLoss : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.LTCGLoss ? losses?.LTCGLoss : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.BusLossOthThanSpecLossCF
+                                    ? losses?.BusLossOthThanSpecLossCF
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.LossFrmSpecBusCF
+                                    ? losses?.LossFrmSpecBusCF
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.LossFrmSpecifiedBusCF
+                                    ? losses?.LossFrmSpecifiedBusCF
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.OthSrcLoss ? losses?.OthSrcLoss : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.lossesToBeCarriedForward
+                                    ?.lossSetOffDuringYear
+                                    ? finalCalculations
+                                        ?.lossesToBeCarriedForward
+                                        ?.lossSetOffDuringYear
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.lossesToBeCarriedForward
+                                    ?.cflTotal
+                                    ? finalCalculations
+                                        ?.lossesToBeCarriedForward?.cflTotal
+                                    : 0
+                                )
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
                       </tbody>
                     </table>
                   </mat-expansion-panel>

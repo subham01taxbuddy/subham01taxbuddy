@@ -297,9 +297,14 @@ export class SummaryComponent implements OnInit {
         housePropertyLoss: Number;
         STCGLoss: Number;
         LTCGLoss: Number;
+        BusLossOthThanSpecLossCF: Number;
+        LossFrmSpecBusCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        OthSrcLoss: Number;
         pastYear: Number;
         totalLoss: Number;
       }[];
+      lossSetOffDuringYear: Number;
       cflTotal: Number;
     };
     totalTax: {
@@ -764,10 +769,15 @@ export class SummaryComponent implements OnInit {
                   housePropertyLoss: 0,
                   STCGLoss: 0,
                   LTCGLoss: 0,
+                  BusLossOthThanSpecLossCF: 0,
+                  LossFrmSpecBusCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  OthSrcLoss: 0,
                   pastYear: 0,
                   totalLoss: 0,
                 },
               ],
+              lossSetOffDuringYear: 0,
               cflTotal: 0,
             },
             totalTax: {
@@ -1594,7 +1604,7 @@ export class SummaryComponent implements OnInit {
                         tradeName: 'Non-Speculative Income',
                         grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
                           this.itrType
-                        ]?.TradingAccount?.OtherOperatingRevenueDtls.reduce(
+                        ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
                           (sum, obj) => sum + obj.OperatingRevenueAmt,
                           0
                         ),
@@ -1742,13 +1752,81 @@ export class SummaryComponent implements OnInit {
               cflDtls: [
                 {
                   assessmentPastYear: 0,
-                  housePropertyLoss: 0,
-                  STCGLoss: 0,
-                  LTCGLoss: 0,
+
+                  housePropertyLoss: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ]?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.TotalHPPTILossCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.TotalHPPTILossCF
+                    : 0,
+
+                  STCGLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.TotalSTCGPTILossCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.TotalSTCGPTILossCF
+                    : 0,
+
+                  LTCGLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.TotalLTCGPTILossCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.TotalLTCGPTILossCF
+                    : 0,
+
+                  BusLossOthThanSpecLossCF:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                          ?.BusLossOthThanSpecLossCF
+                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                            ?.BusLossOthThanSpecLossCF
+                        : 0
+                      : 0,
+
+                  LossFrmSpecBusCF:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                          ?.LossFrmSpecBusCF
+                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                            ?.LossFrmSpecBusCF
+                        : 0
+                      : 0,
+
+                  LossFrmSpecifiedBusCF:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                          ?.LossFrmSpecifiedBusCF
+                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                            ?.LossFrmSpecifiedBusCF
+                        : 0
+                      : 0,
+
+                  OthSrcLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.OthSrcLossRaceHorseCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.OthSrcLossRaceHorseCF
+                    : 0,
+
                   pastYear: 0,
+
                   totalLoss: 0,
                 },
               ],
+              lossSetOffDuringYear:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                  ?.CurrentYearLoss,
               cflTotal:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                   ?.LossesOfCurrentYearCarriedFwd,
@@ -2848,6 +2926,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2858,6 +2940,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2868,6 +2954,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2878,6 +2968,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2888,6 +2982,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2898,6 +2996,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2907,9 +3009,15 @@ export class SummaryComponent implements OnInit {
                       housePropertyLoss: Number;
                       STCGLoss: Number;
                       LTCGLoss: Number;
+                      BusLossOthThanSpecLossCF: Number;
+                      LossFrmSpecBusCF: Number;
+                      LossFrmSpecifiedBusCF: Number;
+                      OthSrcLoss: Number;
                       pastYear: Number;
                       totalLoss: Number;
                     }[],
+                    lossSetOffDuringYear: 0,
+
                     cflTotal:
                       this.finalSummary?.assessment?.carryForwordLosses?.reduce(
                         (total, item) => total + item.totalLoss,
@@ -3730,6 +3838,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3740,6 +3852,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3750,6 +3866,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3760,6 +3880,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3770,6 +3894,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3780,6 +3908,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3789,9 +3921,14 @@ export class SummaryComponent implements OnInit {
                     housePropertyLoss: Number;
                     STCGLoss: Number;
                     LTCGLoss: Number;
+                    BusLossOthThanSpecLossCF: Number;
+                    LossFrmSpecBusCF: Number;
+                    LossFrmSpecifiedBusCF: Number;
+                    OthSrcLoss: Number;
                     pastYear: Number;
                     totalLoss: Number;
                   }[],
+                  lossSetOffDuringYear: 0,
                   cflTotal:
                     this.finalSummary?.assessment?.carryForwordLosses?.reduce(
                       (total, item) => total + item.totalLoss,
