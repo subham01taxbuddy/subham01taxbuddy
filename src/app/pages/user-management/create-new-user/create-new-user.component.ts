@@ -36,7 +36,8 @@ export class CreateNewUserComponent implements OnInit {
   countryCode:any;
   options :Country[] = []
   filteredOptions: Observable<any[]>;
-  maxNo=20;
+  maxNo=50;
+  minNo=1;
   smeRecords:any;
   smeServices:any;
   constructor(
@@ -96,8 +97,10 @@ export class CreateNewUserComponent implements OnInit {
     // this.signUpForm.controls['countryCode'].setValue(option.code)
     if(this.countryCode == '91'){
       this.maxNo=10;
+      this.minNo=10;
     }else{
-      this.maxNo=20;
+      this.maxNo=50;
+      this.minNo=1
     }
   }
 
@@ -206,7 +209,8 @@ export class CreateNewUserComponent implements OnInit {
       let reqBody=this.signUpForm.getRawValue();
       let finalReq: any = {};
       Object.assign(finalReq,reqBody );
-      finalReq.countryCode=this.countryCode;
+      //Ashwini: adding + in the country code since user facing app sends country code with +
+      finalReq.countryCode= '+' + this.countryCode;
       console.log("request body : ", finalReq);
       this.loading = true;
       let param = "/user_account";

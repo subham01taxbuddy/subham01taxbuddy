@@ -601,7 +601,7 @@ export class PrefillIdComponent implements OnInit {
           if (disabilities80UArray && disabilities80UArray[1] > 75000) {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
           } else if (
-            disabilities80UArray[1] < 75000
+            disabilities80UArray?.[1] < 75000
             // &&
             // disabilities80UArray[1] !== 0 &&
             // disabilities80UArray[1] !== null
@@ -627,7 +627,7 @@ export class PrefillIdComponent implements OnInit {
           if (disabilities80ddArray && disabilities80ddArray[1] > 75000) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
           } else if (
-            disabilities80ddArray[1] < 75000
+            disabilities80ddArray?.[1] < 75000
             // &&
             // disabilities80ddArray[1] !== 0 &&
             // disabilities80ddArray[1] !== null
@@ -654,7 +654,7 @@ export class PrefillIdComponent implements OnInit {
           if (disabilities80DDBArray && disabilities80DDBArray[1] > 40000) {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
           } else if (
-            disabilities80DDBArray[1] < 40000
+            disabilities80DDBArray?.[1] < 40000
             // &&  disabilities80DDBArray[1] !== 0 &&
             // disabilities80DDBArray[1] !== null
           ) {
@@ -1150,9 +1150,9 @@ export class PrefillIdComponent implements OnInit {
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4')
-          // || JSONData.ITR.hasOwnProperty('ITR2') ||
-          // JSONData.ITR.hasOwnProperty('ITR3')
+          JSONData.ITR.hasOwnProperty('ITR4') ||
+          JSONData.ITR.hasOwnProperty('ITR2') ||
+          JSONData.ITR.hasOwnProperty('ITR3')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;

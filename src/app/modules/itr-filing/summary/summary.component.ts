@@ -240,20 +240,41 @@ export class SummaryComponent implements OnInit {
             TaxableIncome: Number;
           }
         ];
+        nonSpecIncome: {
+          businessSection: String;
+          natureOfBusinessCode: any;
+          tradeName: String;
+          grossTurnover: Number;
+          TaxableIncome: Number;
+        };
+
+        specIncome: {
+          businessSection: String;
+          natureOfBusinessCode: any;
+          tradeName: String;
+          grossTurnover: Number;
+          TaxableIncome: Number;
+        };
       };
       businessIncomeTotal: Number;
     };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
-      currentYearLossesSetOff: [{ houseProperty: Number }];
+      currentYearLossesSetOff: [
+        {
+          houseProperty: Number;
+          businessSetOff: Number;
+          otherThanHpBusiness: Number;
+        }
+      ];
       totalCurrentYearSetOff: Number;
     };
     balanceAfterSetOffCurrentYearLosses: Number;
     BroughtFwdLossesSetoff: {
       BroughtFwdLossesSetoffDtls: {
-        hpLoss: Number;
-        stLoss: Number;
-        ltLoss: Number;
+        hpLoss: Number; // TotBFLossSetoff
+        stLoss: Number; // TotUnabsorbedDeprSetoff
+        ltLoss: Number; // TotAllUs35cl4Setoff
       };
       BroughtFwdLossesSetoffTotal: Number;
     };
@@ -276,9 +297,14 @@ export class SummaryComponent implements OnInit {
         housePropertyLoss: Number;
         STCGLoss: Number;
         LTCGLoss: Number;
+        BusLossOthThanSpecLossCF: Number;
+        LossFrmSpecBusCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        OthSrcLoss: Number;
         pastYear: Number;
         totalLoss: Number;
       }[];
+      lossSetOffDuringYear: Number;
       cflTotal: Number;
     };
     totalTax: {
@@ -659,6 +685,22 @@ export class SummaryComponent implements OnInit {
                     ),
                   };
                 }),
+
+                nonSpecIncome: {
+                  businessSection: null,
+                  natureOfBusinessCode: null,
+                  tradeName: null,
+                  grossTurnover: null,
+                  TaxableIncome: null,
+                },
+
+                specIncome: {
+                  businessSection: null,
+                  natureOfBusinessCode: null,
+                  tradeName: null,
+                  grossTurnover: null,
+                  TaxableIncome: null,
+                },
               },
               businessIncomeTotal:
                 this.itrType === 'ITR4'
@@ -675,6 +717,8 @@ export class SummaryComponent implements OnInit {
               currentYearLossesSetOff: [
                 {
                   houseProperty: 0,
+                  businessSetOff: 0,
+                  otherThanHpBusiness: 0,
                 },
               ],
               totalCurrentYearSetOff: 0,
@@ -725,10 +769,15 @@ export class SummaryComponent implements OnInit {
                   housePropertyLoss: 0,
                   STCGLoss: 0,
                   LTCGLoss: 0,
+                  BusLossOthThanSpecLossCF: 0,
+                  LossFrmSpecBusCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  OthSrcLoss: 0,
                   pastYear: 0,
                   totalLoss: 0,
                 },
               ],
+              lossSetOffDuringYear: 0,
               cflTotal: 0,
             },
             totalTax: {
@@ -1469,34 +1518,26 @@ export class SummaryComponent implements OnInit {
                     this.itrType === 'ITR3'
                       ? this.ITR_JSON.itrSummaryJson['ITR'][
                           this.itrType
-                        ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+                        ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
                           return {
                             businessSection: 'Section 44AD',
                             natureOfBusinessCode: element?.CodeAD,
                             tradeName: element?.NameOfBusiness,
                             grossTurnover: Number(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                .ScheduleBP?.PersumptiveInc44AD
-                                ?.GrsTrnOverBank +
+                                ?.PARTA_PL?.PersumptiveInc44AD
+                                ?.GrsTrnOverOrReceipt /
                                 this.ITR_JSON.itrSummaryJson['ITR'][
                                   this.itrType
-                                ].ScheduleBP?.PersumptiveInc44AD
-                                  ?.GrsTrnOverAnyOthMode /
-                                  this.ITR_JSON.itrSummaryJson['ITR'][
-                                    this.itrType
-                                  ].ScheduleBP?.NatOfBus44AD?.length
+                                ]?.PARTA_PL?.NatOfBus44AD?.length
                             ),
                             TaxableIncome: Number(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                .ScheduleBP?.PersumptiveInc44AD
-                                ?.PersumptiveInc44AD6Per +
+                                ?.PARTA_PL?.PersumptiveInc44AD
+                                ?.TotPersumptiveInc44AD /
                                 this.ITR_JSON.itrSummaryJson['ITR'][
                                   this.itrType
-                                ].ScheduleBP?.PersumptiveInc44AD
-                                  ?.PersumptiveInc44AD8Per /
-                                  this.ITR_JSON.itrSummaryJson['ITR'][
-                                    this.itrType
-                                  ]?.ScheduleBP?.NatOfBus44AD?.length
+                                ]?.PARTA_PL?.NatOfBus44AD?.length
                             ),
                           };
                         })
@@ -1554,6 +1595,51 @@ export class SummaryComponent implements OnInit {
                           TaxableIncome: null,
                         },
                       ],
+
+                nonSpecIncome:
+                  this.itrType === 'ITR3'
+                    ? {
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
+                          (sum, obj) => sum + obj.OperatingRevenueAmt,
+                          0
+                        ),
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
+                    : {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
+
+                specIncome:
+                  this.itrType === 'ITR3'
+                    ? {
+                        businessSection: 'Speculative Income',
+                        natureOfBusinessCode: 'speculative',
+                        tradeName: 'Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.PARTA_PL?.TurnverFrmSpecActivity,
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.PARTA_PL?.NetIncomeFrmSpecActivity,
+                      }
+                    : {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
               },
               businessIncomeTotal:
                 this.itrType === 'ITR3'
@@ -1569,7 +1655,18 @@ export class SummaryComponent implements OnInit {
             currentYearLosses: {
               currentYearLossesSetOff: [
                 {
-                  houseProperty: 0,
+                  houseProperty:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.TotalLossSetOff?.TotHPlossCurYrSetoff,
+                  businessSetOff:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCYLA?.TotalLossSetOff?.TotBusLossSetoff
+                      : 0,
+                  otherThanHpBusiness:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.TotalLossSetOff
+                      ?.TotOthSrcLossNoRaceHorseSetoff,
                 },
               ],
               totalCurrentYearSetOff:
@@ -1581,13 +1678,28 @@ export class SummaryComponent implements OnInit {
                 ?.BalanceAfterSetoffLosses,
             BroughtFwdLossesSetoff: {
               BroughtFwdLossesSetoffDtls: {
-                hpLoss: 0,
-                stLoss: 0,
-                ltLoss: 0,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotBFLossSetoff,
+                stLoss:
+                  this.itrType === 'ITR3'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff
+                        ?.TotUnabsorbedDeprSetoff
+                    : 0,
+                ltLoss:
+                  this.itrType === 'ITR3'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff?.TotAllUs35cl4Setoff
+                    : 0,
               },
               BroughtFwdLossesSetoffTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-                  ?.BroughtFwdLossesSetoff,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
+                  ?.TotalBFLossSetOff?.TotBFLossSetoff +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
+                  ?.TotalBFLossSetOff?.TotUnabsorbedDeprSetoff +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
+                  ?.TotalBFLossSetOff?.TotAllUs35cl4Setoff,
             },
             grossTotalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -1640,13 +1752,81 @@ export class SummaryComponent implements OnInit {
               cflDtls: [
                 {
                   assessmentPastYear: 0,
-                  housePropertyLoss: 0,
-                  STCGLoss: 0,
-                  LTCGLoss: 0,
+
+                  housePropertyLoss: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ]?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.TotalHPPTILossCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.TotalHPPTILossCF
+                    : 0,
+
+                  STCGLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.TotalSTCGPTILossCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.TotalSTCGPTILossCF
+                    : 0,
+
+                  LTCGLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.TotalLTCGPTILossCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.TotalLTCGPTILossCF
+                    : 0,
+
+                  BusLossOthThanSpecLossCF:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                          ?.BusLossOthThanSpecLossCF
+                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                            ?.BusLossOthThanSpecLossCF
+                        : 0
+                      : 0,
+
+                  LossFrmSpecBusCF:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                          ?.LossFrmSpecBusCF
+                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                            ?.LossFrmSpecBusCF
+                        : 0
+                      : 0,
+
+                  LossFrmSpecifiedBusCF:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                          ?.LossFrmSpecifiedBusCF
+                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                            ?.LossFrmSpecifiedBusCF
+                        : 0
+                      : 0,
+
+                  OthSrcLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.OthSrcLossRaceHorseCF
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
+                        ?.OthSrcLossRaceHorseCF
+                    : 0,
+
                   pastYear: 0,
+
                   totalLoss: 0,
                 },
               ],
+              lossSetOffDuringYear:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                  ?.CurrentYearLoss,
               cflTotal:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                   ?.LossesOfCurrentYearCarriedFwd,
@@ -2615,6 +2795,35 @@ export class SummaryComponent implements OnInit {
                             grossTurnover: element?.receipts,
                             TaxableIncome: element?.presumptiveIncome,
                           })),
+
+                      nonSpecIncome: {
+                        businessSection: 'Non Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON?.business?.profitLossACIncomes
+                            ?.find(
+                              (element) =>
+                                element?.businessType === 'NONSPECULATIVEINCOME'
+                            )
+                            ?.incomes?.reduce(
+                              (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                              0
+                            ),
+                        TaxableIncome:
+                          this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                            (element) =>
+                              element?.businessType === 'NONSPECULATIVEINCOME'
+                          )?.netProfitfromNonSpeculativeIncome,
+                      },
+
+                      specIncome: {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
                     },
 
                     businessIncomeTotal:
@@ -2630,6 +2839,8 @@ export class SummaryComponent implements OnInit {
                         houseProperty:
                           this.finalSummary?.assessment?.taxSummary
                             ?.currentYearIFHPSetOff,
+                        businessSetOff: 0,
+                        otherThanHpBusiness: 0,
                       },
                     ],
                     totalCurrentYearSetOff:
@@ -2715,6 +2926,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2725,6 +2940,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2735,6 +2954,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2745,6 +2968,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2755,6 +2982,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2765,6 +2996,10 @@ export class SummaryComponent implements OnInit {
                           housePropertyLoss: Number;
                           STCGLoss: Number;
                           LTCGLoss: Number;
+                          BusLossOthThanSpecLossCF: Number;
+                          LossFrmSpecBusCF: Number;
+                          LossFrmSpecifiedBusCF: Number;
+                          OthSrcLoss: Number;
                           pastYear: Number;
                           totalLoss: Number;
                         }
@@ -2774,9 +3009,15 @@ export class SummaryComponent implements OnInit {
                       housePropertyLoss: Number;
                       STCGLoss: Number;
                       LTCGLoss: Number;
+                      BusLossOthThanSpecLossCF: Number;
+                      LossFrmSpecBusCF: Number;
+                      LossFrmSpecifiedBusCF: Number;
+                      OthSrcLoss: Number;
                       pastYear: Number;
                       totalLoss: Number;
                     }[],
+                    lossSetOffDuringYear: 0,
+
                     cflTotal:
                       this.finalSummary?.assessment?.carryForwordLosses?.reduce(
                         (total, item) => total + item.totalLoss,
@@ -3469,6 +3710,35 @@ export class SummaryComponent implements OnInit {
                           grossTurnover: element?.receipts,
                           TaxableIncome: element?.presumptiveIncome,
                         })),
+
+                    nonSpecIncome: {
+                      businessSection: 'Non Speculative Income',
+                      natureOfBusinessCode: 'nonSpec',
+                      tradeName: 'Non Speculative Income',
+                      grossTurnover:
+                        this.ITR_JSON?.business?.profitLossACIncomes
+                          ?.find(
+                            (element) =>
+                              element?.businessType === 'NONSPECULATIVEINCOME'
+                          )
+                          ?.incomes?.reduce(
+                            (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                            0
+                          ),
+                      TaxableIncome:
+                        this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                          (element) =>
+                            element?.businessType === 'NONSPECULATIVEINCOME'
+                        )?.netProfitfromNonSpeculativeIncome,
+                    },
+
+                    specIncome: {
+                      businessSection: null,
+                      natureOfBusinessCode: null,
+                      tradeName: null,
+                      grossTurnover: null,
+                      TaxableIncome: null,
+                    },
                   },
 
                   businessIncomeTotal:
@@ -3484,6 +3754,8 @@ export class SummaryComponent implements OnInit {
                       houseProperty:
                         this.finalSummary?.assessment?.taxSummary
                           ?.currentYearIFHPSetOff,
+                      businessSetOff: 0,
+                      otherThanHpBusiness: 0,
                     },
                   ],
                   totalCurrentYearSetOff:
@@ -3566,6 +3838,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3576,6 +3852,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3586,6 +3866,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3596,6 +3880,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3606,6 +3894,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3616,6 +3908,10 @@ export class SummaryComponent implements OnInit {
                         housePropertyLoss: Number;
                         STCGLoss: Number;
                         LTCGLoss: Number;
+                        BusLossOthThanSpecLossCF: Number;
+                        LossFrmSpecBusCF: Number;
+                        LossFrmSpecifiedBusCF: Number;
+                        OthSrcLoss: Number;
                         pastYear: Number;
                         totalLoss: Number;
                       }
@@ -3625,9 +3921,14 @@ export class SummaryComponent implements OnInit {
                     housePropertyLoss: Number;
                     STCGLoss: Number;
                     LTCGLoss: Number;
+                    BusLossOthThanSpecLossCF: Number;
+                    LossFrmSpecBusCF: Number;
+                    LossFrmSpecifiedBusCF: Number;
+                    OthSrcLoss: Number;
                     pastYear: Number;
                     totalLoss: Number;
                   }[],
+                  lossSetOffDuringYear: 0,
                   cflTotal:
                     this.finalSummary?.assessment?.carryForwordLosses?.reduce(
                       (total, item) => total + item.totalLoss,
