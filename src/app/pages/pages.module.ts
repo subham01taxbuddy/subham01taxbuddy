@@ -42,7 +42,7 @@ import { ValidateOtpByWhatAppComponent } from '../modules/auth/components/valida
 import { AgGridCheckboxComponent } from '../additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 import { SharedModule } from '../modules/shared/shared.module';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+// import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NeedHelpComponent } from './need-help/need-help.component';
 
@@ -109,7 +109,7 @@ export const MY_FORMATS = {
     NgxLoadingModule.forRoot({}),
     ModalModule.forRoot(),
     PdfViewerModule,
-    NgxExtendedPdfViewerModule,
+    // NgxExtendedPdfViewerModule,
     SharedModule,
   ],
   providers: [
@@ -126,6 +126,6 @@ export const MY_FORMATS = {
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, NgxExtendedPdfViewerModule, NeedHelpComponent]
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, /*NgxExtendedPdfViewerModule,*/ NeedHelpComponent]
 })
 export class PagesModule { }
