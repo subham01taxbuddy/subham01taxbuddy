@@ -80,13 +80,15 @@
           <mat-form-field appearance="outline" class="class1">
             <mat-label>Mobile Number</mat-label>
             <input matInput  [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
-            pattern="[0-9]{10,20}" [maxlength]="maxNo" required />
+             [maxlength]="maxNo" [minlength]="minNo" required />
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
               is required</mat-error>
             <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
               valid mobile no.</mat-error>
               <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number cannot
                 exceed 10 characters.</mat-error>
+                <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('minlength')">Mobile number must
+                  be 10 digits.</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-3 spsTp">
