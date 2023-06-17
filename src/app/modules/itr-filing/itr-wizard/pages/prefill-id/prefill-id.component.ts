@@ -3370,44 +3370,44 @@ export class PrefillIdComponent implements OnInit {
         }
 
         // TCS - TAX COLLECTED AT SOURCE
-        {
-          const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
+        // {
+        //   const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
 
-          if (!jsonTCS || jsonTCS.length === 0) {
-            this.ITR_Obj.taxPaid.tcs = [];
-            console.log(
-              'There are no TCS tax paid other than salary details in the JSON that you have provided'
-            );
-          } else {
-            this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
-              ({
-                TCSCurrFYDtls: { TCSAmtCollOwnHand },
-                TCSClaimedThisYearDtls: {
-                  TCSAmtCollOthrHands: { TCSAmtCollSpouseOrOthrHand },
-                },
-                TCSCreditOwner,
-                EmployerOrDeductorOrCollectTAN,
-                AmtCarriedFwd,
-              }) => {
-                return {
-                  id: null,
-                  srNo: null,
-                  collectorName: EmployerOrDeductorOrCollectTAN,
-                  collectorTAN: EmployerOrDeductorOrCollectTAN,
-                  totalAmountPaid: TCSAmtCollSpouseOrOthrHand,
-                  totalTaxCollected: 0,
-                  totalTcsDeposited: TCSAmtCollSpouseOrOthrHand,
-                  taxDeduction: null,
-                };
-              }
-            );
-          }
+        //   if (!jsonTCS || jsonTCS.length === 0) {
+        //     this.ITR_Obj.taxPaid.tcs = [];
+        //     console.log(
+        //       'There are no TCS tax paid other than salary details in the JSON that you have provided'
+        //     );
+        //   } else {
+        //     this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
+        //       ({
+        //         TCSCurrFYDtls: { TCSAmtCollOwnHand },
+        //         TCSClaimedThisYearDtls: {
+        //           TCSAmtCollOthrHands: { TCSAmtCollSpouseOrOthrHand },
+        //         },
+        //         TCSCreditOwner,
+        //         EmployerOrDeductorOrCollectTAN,
+        //         AmtCarriedFwd,
+        //       }) => {
+        //         return {
+        //           id: null,
+        //           srNo: null,
+        //           collectorName: EmployerOrDeductorOrCollectTAN,
+        //           collectorTAN: EmployerOrDeductorOrCollectTAN,
+        //           totalAmountPaid: TCSAmtCollSpouseOrOthrHand,
+        //           totalTaxCollected: 0,
+        //           totalTcsDeposited: TCSAmtCollSpouseOrOthrHand,
+        //           taxDeduction: null,
+        //         };
+        //       }
+        //     );
+        //   }
 
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
-        }
+        //   sessionStorage.setItem(
+        //     AppConstants.ITR_JSON,
+        //     JSON.stringify(this.ITR_Obj)
+        //   );
+        // }
 
         // Advance and self assessment tax
         {
