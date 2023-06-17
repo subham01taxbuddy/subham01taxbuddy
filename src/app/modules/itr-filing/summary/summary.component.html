@@ -183,8 +183,10 @@
           </div>
           <p class="paIncTx">
             Great news...!!! You are getting refund of
-            {{ utilsService.currencyFormatter(refund) }}.00 of your tax return
-            into your bank account number. <b>{{ bankArray?.accountNumber }}</b>
+            {{
+              utilsService.currencyFormatter(finalCalculations?.amountRefund)
+            }}.00 of your tax return into your bank account number.
+            <b>{{ bankArray?.accountNumber }}</b>
           </p>
         </div>
       </div>

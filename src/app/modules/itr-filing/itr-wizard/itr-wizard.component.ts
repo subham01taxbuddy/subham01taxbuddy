@@ -233,7 +233,11 @@ export class ItrWizardComponent implements OnInit {
       errors.residentialStatus = 'residentialStatus is required';
     }
 
-    if (!userItrObj.family || userItrObj.family.length == 0 || !userItrObj.family[0].dateOfBirth) {
+    if (
+      !userItrObj.family ||
+      userItrObj.family.length == 0 ||
+      !userItrObj.family[0].dateOfBirth
+    ) {
       errors.dateOfBirth = 'dateOfBirth is required';
     }
 
@@ -248,8 +252,10 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSchedule(schedule) {
-    if(this.ITR_JSON.itrSummaryJson){
-      this.utilsService.showSnackBar('Editing data is not allowed after summary json is uploaded');
+    if (this.ITR_JSON.itrSummaryJson) {
+      this.utilsService.showSnackBar(
+        'Editing data is not allowed after summary json is uploaded'
+      );
       return;
     }
     const errors = this.validateItrObj(); // invoke the function and store the result
@@ -466,21 +472,43 @@ export class ItrWizardComponent implements OnInit {
     }
 
     //json upload is complete, save it to backend
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.loading = true;
-    this.utilsService.uploadInitialItrObject(this.ITR_JSON).subscribe((res:any) => {
-      this.loading = false;
-      console.log(res);
-    });
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        console.log(this.ITR_JSON.itrType, 'ITR Type as per JSON');
+      } else {
+        this.ITR_JSON = JSON.parse(
+          sessionStorage.getItem(AppConstants.ITR_JSON)
+        );
+        this.loading = true;
+        this.utilsService
+          .uploadInitialItrObject(this.ITR_JSON)
+          .subscribe((res: any) => {
+            this.loading = false;
+            console.log(res);
+          });
+      }
+    } else {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.loading = true;
+      this.utilsService
+        .uploadInitialItrObject(this.ITR_JSON)
+        .subscribe((res: any) => {
+          this.loading = false;
+          console.log(res);
+        });
+    }
   }
 
-  goToCloud(){
-    const url = this.router.createUrlTree(['itr-filing/docs/user-docs/'],{
-      queryParams:{
-        userId: this.ITR_JSON.userId,
-        serviceType:'ITR',
-      }
-    }).toString();
+  goToCloud() {
+    const url = this.router
+      .createUrlTree(['itr-filing/docs/user-docs/'], {
+        queryParams: {
+          userId: this.ITR_JSON.userId,
+          serviceType: 'ITR',
+        },
+      })
+      .toString();
     window.open(url, '_blank');
   }
 
