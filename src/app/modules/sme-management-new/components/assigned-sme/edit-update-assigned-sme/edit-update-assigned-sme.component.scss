@@ -76,3 +76,10 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #ddd;
 }
+
+.radio-group {
+  margin-top: 15px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}

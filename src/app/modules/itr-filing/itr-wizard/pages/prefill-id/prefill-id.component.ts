@@ -263,7 +263,7 @@ export class PrefillIdComponent implements OnInit {
             }
           } catch (error) {
             console.log(`Error occurred for type ${type}: `, error);
-            this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+            // this.utilsService.showSnackBar(`Error occurred for type ${type}`);
           }
         }
       }
@@ -315,10 +315,12 @@ export class PrefillIdComponent implements OnInit {
           itrObjSalaryOtherAllowances.allowanceType === 'ALL_ALLOWANCES'
       );
 
-      allAllowance.exemptAmount =
-        this.uploadedJson[ITR_Type][
-          this.ITR14_IncomeDeductions
-        ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+      if (allAllowance) {
+        allAllowance.exemptAmount =
+          this.uploadedJson[ITR_Type][
+            this.ITR14_IncomeDeductions
+          ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+      }
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
@@ -365,7 +367,7 @@ export class PrefillIdComponent implements OnInit {
         }
       } catch (error) {
         console.log(`Error occurred for type ${type}: `, error);
-        this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+        // this.utilsService.showSnackBar(`Error occurred for type ${type}`);
       }
     }
 
@@ -601,7 +603,7 @@ export class PrefillIdComponent implements OnInit {
           if (disabilities80UArray && disabilities80UArray[1] > 75000) {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
           } else if (
-            disabilities80UArray[1] < 75000
+            disabilities80UArray?.[1] < 75000
             // &&
             // disabilities80UArray[1] !== 0 &&
             // disabilities80UArray[1] !== null
@@ -627,7 +629,7 @@ export class PrefillIdComponent implements OnInit {
           if (disabilities80ddArray && disabilities80ddArray[1] > 75000) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
           } else if (
-            disabilities80ddArray[1] < 75000
+            disabilities80ddArray?.[1] < 75000
             // &&
             // disabilities80ddArray[1] !== 0 &&
             // disabilities80ddArray[1] !== null
@@ -654,7 +656,7 @@ export class PrefillIdComponent implements OnInit {
           if (disabilities80DDBArray && disabilities80DDBArray[1] > 40000) {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
           } else if (
-            disabilities80DDBArray[1] < 40000
+            disabilities80DDBArray?.[1] < 40000
             // &&  disabilities80DDBArray[1] !== 0 &&
             // disabilities80DDBArray[1] !== null
           ) {
@@ -1150,9 +1152,9 @@ export class PrefillIdComponent implements OnInit {
         }
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
-          JSONData.ITR.hasOwnProperty('ITR4')
-          // || JSONData.ITR.hasOwnProperty('ITR2') ||
-          // JSONData.ITR.hasOwnProperty('ITR3')
+          JSONData.ITR.hasOwnProperty('ITR4') ||
+          JSONData.ITR.hasOwnProperty('ITR2') ||
+          JSONData.ITR.hasOwnProperty('ITR3')
         ) {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
@@ -3379,21 +3381,22 @@ export class PrefillIdComponent implements OnInit {
           } else {
             this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
               ({
-                EmployerOrDeductorOrCollectDetl: {
-                  TAN,
-                  EmployerOrDeductorOrCollecterName,
+                TCSCurrFYDtls: { TCSAmtCollOwnHand },
+                TCSClaimedThisYearDtls: {
+                  TCSAmtCollOthrHands: { TCSAmtCollSpouseOrOthrHand },
                 },
-                TotalTCS,
-                AmtTCSClaimedThisYear,
+                TCSCreditOwner,
+                EmployerOrDeductorOrCollectTAN,
+                AmtCarriedFwd,
               }) => {
                 return {
                   id: null,
                   srNo: null,
-                  collectorName: EmployerOrDeductorOrCollecterName,
-                  collectorTAN: TAN,
-                  totalAmountPaid: TotalTCS,
+                  collectorName: EmployerOrDeductorOrCollectTAN,
+                  collectorTAN: EmployerOrDeductorOrCollectTAN,
+                  totalAmountPaid: TCSAmtCollSpouseOrOthrHand,
                   totalTaxCollected: 0,
-                  totalTcsDeposited: AmtTCSClaimedThisYear,
+                  totalTcsDeposited: TCSAmtCollSpouseOrOthrHand,
                   taxDeduction: null,
                 };
               }
@@ -5019,6 +5022,47 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.business.profitLossACIncomes.push(speculativeIncome);
             this.ITR_Obj.systemFlags.hasFutureOptionsIncome = true;
           }
+        }
+      }
+
+      // setting relief
+      {
+        {
+          //section89
+          if (
+            ItrJSON[this.ITR_Type]?.PartB_TTI?.ComputationOfTaxLiability
+              ?.TaxRelief?.Section89
+          ) {
+            this.ITR_Obj.section89 =
+              ItrJSON[
+                this.ITR_Type
+              ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section89;
+          }
+
+          if (
+            ItrJSON[this.ITR_Type]?.PartB_TTI?.ComputationOfTaxLiability
+              ?.TaxRelief?.Section90
+          ) {
+            this.ITR_Obj.section90 =
+              ItrJSON[
+                this.ITR_Type
+              ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section90;
+          }
+
+          if (
+            ItrJSON[this.ITR_Type]?.PartB_TTI?.ComputationOfTaxLiability
+              ?.TaxRelief?.Section91
+          ) {
+            this.ITR_Obj.section91 =
+              ItrJSON[
+                this.ITR_Type
+              ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section91;
+          }
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
         }
       }
     }

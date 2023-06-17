@@ -47,7 +47,7 @@
     "ng2-pdf-viewer": "^8.0.1",
     "ngx-bootstrap": "^8.0.0",
     "ngx-doc-viewer": "2.1.2",
-    "ngx-extended-pdf-viewer": "^12.0.0-alpha.3",
+    "pdfjs-dist": "~2.11.338",
     "ngx-image-zoom": "~1.0.1",
     "ngx-loading": "^13.0.0",
     "ngx-loading-buttons": "^13.0.3",

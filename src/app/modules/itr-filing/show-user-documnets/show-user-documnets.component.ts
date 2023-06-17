@@ -58,7 +58,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     });
 
     let roles = this.utilsService.getUserRoles();
-    let filtered = roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
+    let filtered = roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
   }
 
@@ -213,7 +213,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
     console.log('filePath: ', this.filePath)
     console.log('Href path is: ', environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName)
     if (document.isPasswordProtected) {
-      location.href = document.passwordProtectedFileUrl;
+      // location.href = document.passwordProtectedFileUrl;
+      location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
       return;
     } else {
       location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
@@ -233,6 +234,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
   viewer = 'DOC';
   docUrl = '';
+  docType = '';
   supportedTypes = ['pdf', 'xls', 'doc', 'xlsx', 'docx'];
   supportedImageTypes = ['jpg', 'jpeg', 'png', 'svg'];
 
@@ -252,6 +254,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     } else if(this.supportedImageTypes.includes(ext.toLowerCase())) {
       this.viewer = 'IMG';
     }
+    this.docType = document.fileName.substr(document.fileName.lastIndexOf('.')+1);
     if (document.isPasswordProtected) {
       this.docUrl = document.passwordProtectedFileUrl;
       this.loading = false;

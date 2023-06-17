@@ -51,6 +51,7 @@ export class TokenInterceptor implements HttpInterceptor {
             panNumber: eriHeader.panNumber,
             assessmentYear: eriHeader.assessmentYear,
             userId: eriHeader.userId,
+            Authorization: `Bearer ` + TOKEN,
           },
         });
       } else if (request.url.startsWith(environment.url)) {

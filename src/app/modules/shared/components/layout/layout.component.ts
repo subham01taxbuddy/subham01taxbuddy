@@ -33,21 +33,6 @@ export class LayoutComponent implements OnInit {
     public sanitizer: DomSanitizer,
   ) {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(environment.assistedKmScript);
-    const knowlarityScript = document.createElement('script');
-    knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.com:8200/update-stream/560397a2-d875-478b-8003-cc4675e9a0eb/konnect"
-                                    var knowlarityData = [];
-                                    var aa = 0;
-                                    source = new EventSource(URL);
-                                    source.onmessage = function (event) {
-                                    var data = JSON.parse(event.data)
-                                    // console.log('Knowlarity Received an event .......');
-                                    // console.log(data);
-                                    knowlarityData.push(data)
-                                    window.angularComponentReference.zone.run(() => { window.angularComponentReference.loadKnowlarityData(data); });
-                               }`
-    knowlarityScript.id = '_webengage_script_tag';
-    knowlarityScript.type = 'text/javascript';
-    document.head.appendChild(knowlarityScript);
 
     this.timer = interval(10000)
     this.timer.subscribe(() => {

@@ -98,7 +98,7 @@ export class PayoutsComponent implements OnInit {
   getLeaders() {
     let adminId = 3000;
     if (environment.environment === 'PROD') {
-      adminId = 7002;
+      adminId = 1067;
     }
     let param = `/sme-details-new/${adminId}?leader=true`;
     this.userService.getMethodNew(param).subscribe((result: any) => {

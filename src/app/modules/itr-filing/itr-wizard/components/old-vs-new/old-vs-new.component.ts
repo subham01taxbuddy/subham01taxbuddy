@@ -829,30 +829,45 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                         ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                         ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
                     : 0
                   : 0,
             },
           ];
           console.log(this.particularsArray, 'this.particularsArray');
-          this.loading = false;
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
         }
 
         if (itrType === 'ITR2' || itrType === 'ITR3') {
-          this.loading=true;
+          this.loading = true;
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -896,18 +911,30 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Business and Profession',
               old:
                 this.ITR_JSON.regime === 'OLD' && itrType === 'ITR3'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
-                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.ProfBusGain?.TotProfBusGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.ProfBusGain?.TotProfBusGain
+                    : 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
                         ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                          ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      : 0
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW' && itrType === 'ITR3'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.ProfBusGain?.TotProfBusGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.ProfBusGain?.TotProfBusGain
+                    : 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                          ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      : 0
                     : 0
                   : 0,
             },
@@ -1187,27 +1214,44 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.TaxPaid?.BalTaxPayable
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
                     : 0
                   : 0,
+
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                      ?.TaxPaid?.BalTaxPayable
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
                     : 0
                   : 0,
             },
           ];
           console.log(this.particularsArray, 'this.particularsArray');
-          this.loading = false;
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
         }
+        this.loading = false;
       } else {
         const param = '/tax/old-vs-new';
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
@@ -1491,29 +1535,60 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   getITRType() {
     this.loading = true;
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
-      (ITR_RESULT: ITR_JSON) => {
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
-        );
-        this.itrType = ITR_RESULT.itrType;
-        this.loading = false;
-        console.log('this.itrType', this.itrType);
 
-        //if(this.ITR_JSON.itrType === '3') {
-        //  alert('This is ITR 3 and can not be filed from backoffice');
-        //  return;
-        //}
-        // this.saveAndNext.emit(true);
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Unable to update details, Please try again.'
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        this.itrType = this.ITR_JSON.itrType;
+        console.log(this.itrType, 'ITR Type as per JSON');
+      } else {
+        this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+          (ITR_RESULT: ITR_JSON) => {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.itrType = ITR_RESULT.itrType;
+            this.loading = false;
+            console.log('this.itrType', this.itrType);
+            //if(this.ITR_JSON.itrType === '3') {
+            //  alert('This is ITR 3 and can not be filed from backoffice');
+            //  return;
+            //}
+            // this.saveAndNext.emit(true);
+          },
+          (error) => {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Unable to update details, Please try again.'
+            );
+          }
         );
       }
-    );
+    } else {
+      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+        (ITR_RESULT: ITR_JSON) => {
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.itrType = ITR_RESULT.itrType;
+          this.loading = false;
+          console.log('this.itrType', this.itrType);
+          //if(this.ITR_JSON.itrType === '3') {
+          //  alert('This is ITR 3 and can not be filed from backoffice');
+          //  return;
+          //}
+          // this.saveAndNext.emit(true);
+        },
+        (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Unable to update details, Please try again.'
+          );
+        }
+      );
+    }
   }
 
   settingValues() {
@@ -1724,25 +1799,62 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
-      //save ITR object
-      this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
-        (result) => {
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
+
+      if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+        this.ITR_JSON = JSON.parse(
+          sessionStorage.getItem(AppConstants.ITR_JSON)
+        );
+        if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Regime selection updated successfully.'
-          );
           this.nextBreadcrumb.emit('Summary');
           this.router.navigate(['/itr-filing/itr/summary']);
-        },
-        (error) => {
-          this.utilsService.showSnackBar('Failed to update regime selection.');
-          this.loading = false;
+          console.log(this.itrType, 'ITR Type as per JSON');
+        } else {
+          //save ITR object
+          this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+            (result) => {
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_JSON)
+              );
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Regime selection updated successfully.'
+              );
+              this.nextBreadcrumb.emit('Summary');
+              this.router.navigate(['/itr-filing/itr/summary']);
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Failed to update regime selection.'
+              );
+              this.loading = false;
+            }
+          );
         }
-      );
+      } else {
+        //save ITR object
+        this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+          (result) => {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Regime selection updated successfully.'
+            );
+            this.nextBreadcrumb.emit('Summary');
+            this.router.navigate(['/itr-filing/itr/summary']);
+          },
+          (error) => {
+            this.utilsService.showSnackBar(
+              'Failed to update regime selection.'
+            );
+            this.loading = false;
+          }
+        );
+      }
     } else {
       this.submitted = true;
       this.utilsService.showSnackBar(

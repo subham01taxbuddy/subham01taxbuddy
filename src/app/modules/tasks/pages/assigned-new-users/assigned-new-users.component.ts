@@ -162,7 +162,10 @@ export class AssignedNewUsersComponent implements OnInit {
           });
           let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           //Object.assign(obj, this.ITR_JSON)
-          objITR.filingTeamMemberId = loggedInId;
+          // Ashwini: Current implementation sends filing team member id as logged in user id.
+          // So credit will go to the one who files ITR
+          // changing the filingTeamMemberId to filerUserId so credit will go to assigned filer
+          objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
           console.log('obj:', objITR);
 
@@ -871,6 +874,7 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   rowData: any;
+
   async startFiling(data) {
     console.log(data);
 
