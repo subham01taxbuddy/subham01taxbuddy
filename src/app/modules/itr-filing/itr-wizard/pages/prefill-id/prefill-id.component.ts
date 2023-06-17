@@ -263,7 +263,7 @@ export class PrefillIdComponent implements OnInit {
             }
           } catch (error) {
             console.log(`Error occurred for type ${type}: `, error);
-            this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+            // this.utilsService.showSnackBar(`Error occurred for type ${type}`);
           }
         }
       }
@@ -365,7 +365,7 @@ export class PrefillIdComponent implements OnInit {
         }
       } catch (error) {
         console.log(`Error occurred for type ${type}: `, error);
-        this.utilsService.showSnackBar(`Error occurred for type ${type}`);
+        // this.utilsService.showSnackBar(`Error occurred for type ${type}`);
       }
     }
 

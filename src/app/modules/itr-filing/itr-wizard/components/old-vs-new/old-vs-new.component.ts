@@ -1535,29 +1535,60 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   getITRType() {
     this.loading = true;
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
-      (ITR_RESULT: ITR_JSON) => {
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
-        );
-        this.itrType = ITR_RESULT.itrType;
-        this.loading = false;
-        console.log('this.itrType', this.itrType);
 
-        //if(this.ITR_JSON.itrType === '3') {
-        //  alert('This is ITR 3 and can not be filed from backoffice');
-        //  return;
-        //}
-        // this.saveAndNext.emit(true);
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Unable to update details, Please try again.'
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        this.itrType = this.ITR_JSON.itrType;
+        console.log(this.itrType, 'ITR Type as per JSON');
+      } else {
+        this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+          (ITR_RESULT: ITR_JSON) => {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.itrType = ITR_RESULT.itrType;
+            this.loading = false;
+            console.log('this.itrType', this.itrType);
+            //if(this.ITR_JSON.itrType === '3') {
+            //  alert('This is ITR 3 and can not be filed from backoffice');
+            //  return;
+            //}
+            // this.saveAndNext.emit(true);
+          },
+          (error) => {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Unable to update details, Please try again.'
+            );
+          }
         );
       }
-    );
+    } else {
+      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+        (ITR_RESULT: ITR_JSON) => {
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.itrType = ITR_RESULT.itrType;
+          this.loading = false;
+          console.log('this.itrType', this.itrType);
+          //if(this.ITR_JSON.itrType === '3') {
+          //  alert('This is ITR 3 and can not be filed from backoffice');
+          //  return;
+          //}
+          // this.saveAndNext.emit(true);
+        },
+        (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Unable to update details, Please try again.'
+          );
+        }
+      );
+    }
   }
 
   settingValues() {
@@ -1768,25 +1799,62 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
-      //save ITR object
-      this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
-        (result) => {
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
+
+      if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+        this.ITR_JSON = JSON.parse(
+          sessionStorage.getItem(AppConstants.ITR_JSON)
+        );
+        if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Regime selection updated successfully.'
-          );
           this.nextBreadcrumb.emit('Summary');
           this.router.navigate(['/itr-filing/itr/summary']);
-        },
-        (error) => {
-          this.utilsService.showSnackBar('Failed to update regime selection.');
-          this.loading = false;
+          console.log(this.itrType, 'ITR Type as per JSON');
+        } else {
+          //save ITR object
+          this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+            (result) => {
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_JSON)
+              );
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Regime selection updated successfully.'
+              );
+              this.nextBreadcrumb.emit('Summary');
+              this.router.navigate(['/itr-filing/itr/summary']);
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Failed to update regime selection.'
+              );
+              this.loading = false;
+            }
+          );
         }
-      );
+      } else {
+        //save ITR object
+        this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+          (result) => {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Regime selection updated successfully.'
+            );
+            this.nextBreadcrumb.emit('Summary');
+            this.router.navigate(['/itr-filing/itr/summary']);
+          },
+          (error) => {
+            this.utilsService.showSnackBar(
+              'Failed to update regime selection.'
+            );
+            this.loading = false;
+          }
+        );
+      }
     } else {
       this.submitted = true;
       this.utilsService.showSnackBar(
