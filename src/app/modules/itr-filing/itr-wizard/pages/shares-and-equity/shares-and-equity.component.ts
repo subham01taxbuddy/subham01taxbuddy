@@ -570,6 +570,7 @@ export class SharesAndEquityComponent
     // } else {
     //   fg.controls['sellValue'].setValue(saleValue.toFixed());
     // }
+    this.calculateTotalCG(fg);
   }
 
   getPurchaseValue(index){
@@ -586,6 +587,7 @@ export class SharesAndEquityComponent
     // } else {
     //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
     // }
+    this.calculateTotalCG(fg);
   }
 
   save(type?) {
