@@ -33,20 +33,32 @@ export class UpdateManualFilingComponent implements OnInit {
   updateManualDetails() {
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
-      this.data.eFillingDate = this.eFillingDate.value;
-      this.data.ackNumber = this.ackNumber.value;
-      console.log('Updated Data:', this.data)
-      const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-      this.itrMsService.putMethod(param, this.data).subscribe((res: any) => {
-        console.log(res);
-        this.updateStatus();
-        this.loading = false;
-        this.utilsService.showSnackBar('Manual Filing Details updated successfully')
-        this.location.back();
-      }, error => {
-        this.utilsService.showSnackBar('Failed to update Manual Filing Details')
-        this.loading = false;
-      })
+      const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+      this.itrMsService.getMethod(param1).subscribe(
+        (res: any) => {
+          if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+            this.data.eFillingDate = this.eFillingDate.value;
+            this.data.ackNumber = this.ackNumber.value;
+            console.log('Updated Data:', this.data)
+            const param = `${ApiEndpoints.itrMs.itrManuallyData}`
+            this.itrMsService.putMethod(param, this.data).subscribe((res: any) => {
+              console.log(res);
+              this.updateStatus();
+              this.loading = false;
+              this.utilsService.showSnackBar('Manual Filing Details updated successfully')
+              this.location.back();
+            }, error => {
+              this.utilsService.showSnackBar('Failed to update Manual Filing Details')
+              this.loading = false;
+            });
+          } else {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Please make sure that the payment has been made by the user to proceed ahead'
+            );
+          }
+        });
+
     }
   }
 
