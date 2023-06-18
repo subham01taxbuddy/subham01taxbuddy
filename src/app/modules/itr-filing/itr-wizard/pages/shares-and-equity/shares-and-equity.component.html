@@ -273,7 +273,6 @@
                       placeholder="Buy Price"
                       name="purchaseValuePerUnit"
                       maxlength="14"
-                      (change)="calculateTotalCG(securities)"
                       (blur)="getPurchaseValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
