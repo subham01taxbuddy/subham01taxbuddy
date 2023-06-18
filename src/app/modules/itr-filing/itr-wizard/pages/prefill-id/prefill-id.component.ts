@@ -315,10 +315,12 @@ export class PrefillIdComponent implements OnInit {
           itrObjSalaryOtherAllowances.allowanceType === 'ALL_ALLOWANCES'
       );
 
-      allAllowance.exemptAmount =
-        this.uploadedJson[ITR_Type][
-          this.ITR14_IncomeDeductions
-        ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+      if (allAllowance) {
+        allAllowance.exemptAmount =
+          this.uploadedJson[ITR_Type][
+            this.ITR14_IncomeDeductions
+          ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+      }
       // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
       // console.log(this.allowanceDetails23, 'allowanceDetails23');
       // return this.allowanceDetails23;
@@ -3368,43 +3370,44 @@ export class PrefillIdComponent implements OnInit {
         }
 
         // TCS - TAX COLLECTED AT SOURCE
-        {
-          const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
+        // {
+        //   const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
 
-          if (!jsonTCS || jsonTCS.length === 0) {
-            this.ITR_Obj.taxPaid.tcs = [];
-            console.log(
-              'There are no TCS tax paid other than salary details in the JSON that you have provided'
-            );
-          } else {
-            this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
-              ({
-                EmployerOrDeductorOrCollectDetl: {
-                  TAN,
-                  EmployerOrDeductorOrCollecterName,
-                },
-                TotalTCS,
-                AmtTCSClaimedThisYear,
-              }) => {
-                return {
-                  id: null,
-                  srNo: null,
-                  collectorName: EmployerOrDeductorOrCollecterName,
-                  collectorTAN: TAN,
-                  totalAmountPaid: TotalTCS,
-                  totalTaxCollected: 0,
-                  totalTcsDeposited: AmtTCSClaimedThisYear,
-                  taxDeduction: null,
-                };
-              }
-            );
-          }
+        //   if (!jsonTCS || jsonTCS.length === 0) {
+        //     this.ITR_Obj.taxPaid.tcs = [];
+        //     console.log(
+        //       'There are no TCS tax paid other than salary details in the JSON that you have provided'
+        //     );
+        //   } else {
+        //     this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
+        //       ({
+        //         TCSCurrFYDtls: { TCSAmtCollOwnHand },
+        //         TCSClaimedThisYearDtls: {
+        //           TCSAmtCollOthrHands: { TCSAmtCollSpouseOrOthrHand },
+        //         },
+        //         TCSCreditOwner,
+        //         EmployerOrDeductorOrCollectTAN,
+        //         AmtCarriedFwd,
+        //       }) => {
+        //         return {
+        //           id: null,
+        //           srNo: null,
+        //           collectorName: EmployerOrDeductorOrCollectTAN,
+        //           collectorTAN: EmployerOrDeductorOrCollectTAN,
+        //           totalAmountPaid: TCSAmtCollSpouseOrOthrHand,
+        //           totalTaxCollected: 0,
+        //           totalTcsDeposited: TCSAmtCollSpouseOrOthrHand,
+        //           taxDeduction: null,
+        //         };
+        //       }
+        //     );
+        //   }
 
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_Obj)
-          );
-        }
+        //   sessionStorage.setItem(
+        //     AppConstants.ITR_JSON,
+        //     JSON.stringify(this.ITR_Obj)
+        //   );
+        // }
 
         // Advance and self assessment tax
         {
@@ -5019,6 +5022,47 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.business.profitLossACIncomes.push(speculativeIncome);
             this.ITR_Obj.systemFlags.hasFutureOptionsIncome = true;
           }
+        }
+      }
+
+      // setting relief
+      {
+        {
+          //section89
+          if (
+            ItrJSON[this.ITR_Type]?.PartB_TTI?.ComputationOfTaxLiability
+              ?.TaxRelief?.Section89
+          ) {
+            this.ITR_Obj.section89 =
+              ItrJSON[
+                this.ITR_Type
+              ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section89;
+          }
+
+          if (
+            ItrJSON[this.ITR_Type]?.PartB_TTI?.ComputationOfTaxLiability
+              ?.TaxRelief?.Section90
+          ) {
+            this.ITR_Obj.section90 =
+              ItrJSON[
+                this.ITR_Type
+              ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section90;
+          }
+
+          if (
+            ItrJSON[this.ITR_Type]?.PartB_TTI?.ComputationOfTaxLiability
+              ?.TaxRelief?.Section91
+          ) {
+            this.ITR_Obj.section91 =
+              ItrJSON[
+                this.ITR_Type
+              ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section91;
+          }
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_Obj)
+          );
         }
       }
     }
