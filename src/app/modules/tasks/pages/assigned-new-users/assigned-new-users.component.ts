@@ -782,7 +782,7 @@ export class AssignedNewUsersComponent implements OnInit {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
