@@ -5,6 +5,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-direct-calling',
@@ -15,7 +16,7 @@ export class DirectCallingComponent implements OnInit {
   loading!: boolean;
   mobileNo = new FormControl('', Validators.required);
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     public dialogRef: MatDialogRef<DirectCallingComponent>,
     private utilsService: UtilsService,
     private userService: UserMsService,
@@ -27,7 +28,7 @@ export class DirectCallingComponent implements OnInit {
 
 
   async call() {
-     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log(agentNumber);
     this.loading = true;
@@ -41,15 +42,19 @@ export class DirectCallingComponent implements OnInit {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success == false) {
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
       if (result.success == true) {
-            this._toastMessageService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+        we_track('Call', {
+          'User Name': this.mobileNo.value,
+          'User Phone number ': agentNumber,
+        });
+        this._toastMessageService.alert("success", result.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
     // this.userService.getMethod(param, param2).subscribe(res => {
     //   this.loading = false;

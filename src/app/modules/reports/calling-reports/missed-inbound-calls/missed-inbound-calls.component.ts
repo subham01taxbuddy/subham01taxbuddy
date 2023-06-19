@@ -13,7 +13,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-
+declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -40,30 +40,30 @@ export const MY_FORMATS = {
   ],
 })
 export class MissedInboundCallsComponent implements OnInit {
-  loading=false;
+  loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
   status = new FormControl('');
   minEndDate = new Date(2023, 3, 1);
-  maxDate = new Date(2024,2,31);
+  maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
-  missedInboundCallingReport:any;
+  missedInboundCallingReport: any;
   config: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
   };
-  statusDropDown:any
+  statusDropDown: any
   missedInboundCallGridOptions: GridOptions;
-  statusList:any = [{label:'All' , value:'All'},{label:'Pending',value:'Pending'},{label:'Completed',value:'Completed'}]
-  loggedInSme:any;
-  roles:any;
+  statusList: any = [{ label: 'All', value: 'All' }, { label: 'Pending', value: 'Pending' }, { label: 'Completed', value: 'Completed' }]
+  loggedInSme: any;
+  roles: any;
 
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
     private reportService: ReportService,
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
@@ -80,7 +80,7 @@ export class MissedInboundCallsComponent implements OnInit {
       enableCellTextSelection: true,
       onGridReady: (params) => { },
       sortable: true,
-      filter:true,
+      filter: true,
     };
 
 
@@ -97,7 +97,7 @@ export class MissedInboundCallsComponent implements OnInit {
 
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showMissedInboundCall();
@@ -127,7 +127,7 @@ export class MissedInboundCallsComponent implements OnInit {
 
   }
 
-  showMissedInboundCall(){
+  showMissedInboundCall() {
     // https://uat-api.taxbuddy.com/report/calling-report/missed-inbound-calls
     this.loading = true;
 
@@ -136,7 +136,7 @@ export class MissedInboundCallsComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let status = this.status.value || 'ALL'
 
-    let param=''
+    let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
@@ -153,8 +153,8 @@ export class MissedInboundCallsComponent implements OnInit {
     param = `/calling-report/missed-inbound-calls?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${statusFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if(response.success == false){
-        this. _toastMessageService.alert("error",response.message);
+      if (response.success == false) {
+        this._toastMessageService.alert("error", response.message);
 
       }
       if (response.success) {
@@ -162,13 +162,13 @@ export class MissedInboundCallsComponent implements OnInit {
         this.config.totalItems = response?.data?.totalElements;
         this.missedInboundCallGridOptions.api?.setRowData(this.createRowData(this.missedInboundCallingReport));
 
-      }else{
-         this.loading = false;
-         this. _toastMessageService.alert("error",response.message);
-       }
-    },(error) => {
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
       this.loading = false;
-      this. _toastMessageService.alert("error","Error");
+      this._toastMessageService.alert("error", "Error");
     });
 
   }
@@ -191,14 +191,14 @@ export class MissedInboundCallsComponent implements OnInit {
     return missedInboundCallArray;
   }
 
-  inboundCallColumnDef(){
-    return[
+  inboundCallColumnDef() {
+    return [
       {
         headerName: 'Client Name',
         field: 'clientName',
         sortable: true,
         width: 180,
-        pinned:'left',
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -233,9 +233,9 @@ export class MissedInboundCallsComponent implements OnInit {
           debounceMs: 0
         },
         cellRenderer: (data) => {
-          if(data?.value != '-'){
+          if (data?.value != '-') {
             return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
-          }else{
+          } else {
             return '-';
           }
         }
@@ -312,7 +312,7 @@ export class MissedInboundCallsComponent implements OnInit {
     }
   }
 
-  async placeCall(params){
+  async placeCall(params) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     const agentNumber = await this.utilsService.getMyCallingNumber();
     if (!agentNumber) {
@@ -330,25 +330,29 @@ export class MissedInboundCallsComponent implements OnInit {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success == false) {
         this.loading = false;
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-      if (result.success == true) {
-            this._toastMessageService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+      if (result.success) {
+        this._toastMessageService.alert("success", result.message)
+        we_track('Call', {
+          'User Name': params?.clientName,
+          'User Phone number ': agentNumber,
+        });
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
   }
 
-  downloadReport(){
+  downloadReport() {
 
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  resetFilters(){
+  resetFilters() {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -359,7 +363,7 @@ export class MissedInboundCallsComponent implements OnInit {
     this.showMissedInboundCall();
   }
 
-  pageChanged(event){
+  pageChanged(event) {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showMissedInboundCall();

@@ -24,7 +24,8 @@ import { ServiceDropDownComponent } from '../../../shared/components/service-dro
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
-import {ActivatedRoute} from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
+declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -66,11 +67,11 @@ export class PerformaInvoiceComponent implements OnInit {
   loggedInSme: any;
   // maxDate: any = new Date();
   // currentYear = new Date().getFullYear();
-  maxDate = new Date(2024,2,31);
+  maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   toDateMin: any;
   roles: any;
-  allFilerList:any;
+  allFilerList: any;
   allFilers: any;
   filerList: any;
   filerNames: User[];
@@ -117,7 +118,7 @@ export class PerformaInvoiceComponent implements OnInit {
     },
   ];
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private fb: FormBuilder,
     public datePipe: DatePipe,
     private utilService: UtilsService,
@@ -146,17 +147,17 @@ export class PerformaInvoiceComponent implements OnInit {
   gridApi: GridApi;
 
   ngOnInit() {
-    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
-    console.log('new Filer List ',this.allFilerList)
+    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    console.log('new Filer List ', this.allFilerList)
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     this.cardTitle = this.roles?.includes('ROLE_ADMIN')
       ? 'Leader/Admin'
       : this.roles?.includes('ROLE_OWNER')
-      ? 'Owner'
-      : this.roles?.includes('ROLE_FILER')
-      ? 'Filer'
-      : 'NA';
+        ? 'Owner'
+        : this.roles?.includes('ROLE_FILER')
+          ? 'Filer'
+          : 'NA';
     console.log('roles', this.roles);
 
     this.setFiletedOptions1();
@@ -217,7 +218,7 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.activatedRoute.queryParams.subscribe(params => {
       let mobileNo = params['mobile'];
-      if(mobileNo) {
+      if (mobileNo) {
         this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
         this.getInvoice();
       }
@@ -231,16 +232,16 @@ export class PerformaInvoiceComponent implements OnInit {
 
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.ownerId = event? event.userId : null;
+    if (isOwner) {
+      this.ownerId = event ? event.userId : null;
     } else {
-      this.filerId = event? event.userId : null;
+      this.filerId = event ? event.userId : null;
     }
-    if(this.filerId) {
+    if (this.filerId) {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
       // this.filerUserId = this.filerId;
-    } else if(this.ownerId) {
+    } else if (this.ownerId) {
       this.agentId = this.ownerId;
       this.getInvoice();
     } else {
@@ -316,17 +317,17 @@ export class PerformaInvoiceComponent implements OnInit {
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
-    if(this.coFilerId) {
+    if (this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.getInvoice('','agentId');
-    } else if(this.coOwnerId) {
+      this.getInvoice('', 'agentId');
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getInvoice('','agentId');
+      this.getInvoice('', 'agentId');
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -449,16 +450,16 @@ export class PerformaInvoiceComponent implements OnInit {
     this.searchOwner.setValue(null);
     this.searchFiler.setValue(null);
     this?.smeDropDown?.resetDropdown();
-    if(this.coOwnerDropDown){
+    if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
       this.getInvoice('true');
-    }else{
+    } else {
       this.getInvoice();
     }
 
   }
 
-    getInvoice(isCoOwner?,agentId?) {
+  getInvoice(isCoOwner?, agentId?) {
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
@@ -529,9 +530,9 @@ export class PerformaInvoiceComponent implements OnInit {
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
 
     if (this.coOwnerToggle.value == true && isCoOwner) {
-      if(this.coOwnerId || this.coFilerId){
+      if (this.coOwnerId || this.coFilerId) {
         param
-      }else{
+      } else {
         param = param + '&searchAsCoOwner=true';
       }
     }
@@ -541,10 +542,10 @@ export class PerformaInvoiceComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
-      if(response.success == false){
-        this. _toastMessageService.alert("error",response.message);
+      if (response.success == false) {
+        this._toastMessageService.alert("error", response.message);
         this.gridApi?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
+        this.config.totalItems = 0;
       }
       if (response.success) {
         this.invoiceData = response.data.content;
@@ -553,19 +554,19 @@ export class PerformaInvoiceComponent implements OnInit {
         this.gridApi?.setRowData(this.createRowData(this.invoiceData));
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
-        if(this.invoiceData.length == 0){
+        if (this.invoiceData.length == 0) {
           this.gridApi?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
-          this._toastMessageService.alert("error",'No Data Found');
+          this._toastMessageService.alert("error", 'No Data Found');
         }
-      }else{
-        this. _toastMessageService.alert("error",response.message);
+      } else {
+        this._toastMessageService.alert("error", response.message);
         this.gridApi?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
+        this.config.totalItems = 0;
       }
-    },(error) => {
+    }, (error) => {
       this.gridApi?.setRowData(this.createRowData([]));
-      this.totalInvoice=0
+      this.totalInvoice = 0
       this.config.totalItems = 0;
       this.loading = false;
     }
@@ -810,7 +811,7 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -892,9 +893,9 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.inovicePreparedBy)
-          let filer1=List;
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.inovicePreparedBy)
+          let filer1 = List;
           let filer = filer1.filter((item) => {
             return item.userId === createdUserId;
           }).map((item) => {
@@ -914,15 +915,15 @@ export class PerformaInvoiceComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        valueGetter: function(params) {
-          let createdUserId= params.data.invoiceAssignedTo
-          let filer1=List;
+        valueGetter: function (params) {
+          let createdUserId = params.data.invoiceAssignedTo
+          let filer1 = List;
           let filer = filer1.filter((item) => {
             return item.userId === createdUserId;
           }).map((item) => {
             return item.name;
           });
-           return filer;
+          return filer;
         }
       },
 
@@ -1121,16 +1122,20 @@ export class PerformaInvoiceComponent implements OnInit {
     // );
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success == false) {
         this.loading = false;
         this.utilService.showSnackBar('Error while making call, Please try again.');
       }
       if (result.success == true) {
-            this._toastMessageService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+        we_track('Call', {
+          'User Name': user?.billTo,
+          'User Phone number ': agentNumber,
+        });
+        this._toastMessageService.alert("success", result.message)
+      }
+    }, error => {
+      this.utilService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
   }
 
@@ -1169,16 +1174,17 @@ export class PerformaInvoiceComponent implements OnInit {
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
       this.getInvoice(true);
-    }else{
+    } else {
       this.getInvoice();
     }
     // this.getInvoice();
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }

@@ -13,10 +13,12 @@ import { StorageService } from 'src/app/modules/shared/services/storage.service'
 import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import {RequestManager} from "../../../shared/services/request-manager";
-import {SpeedTestService} from 'ng-speed-test';
+import { RequestManager } from "../../../shared/services/request-manager";
+import { SpeedTestService } from 'ng-speed-test';
 
 declare let $: any;
+declare function we_login(userId: string);
+declare function we_setAttribute(key: string, value: any);
 
 @Component({
   selector: 'app-login',
@@ -46,11 +48,11 @@ export class LoginComponent implements OnInit {
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
-    private speedTestService:SpeedTestService
+    private speedTestService: SpeedTestService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
-    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
+    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value: any) => {
       this.requestManager.init();
       this.requestCompleted(value);
     });
@@ -74,10 +76,17 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  handleSmeInfo(res){
+  handleSmeInfo(res) {
+    debugger
     console.log(res);
     if (res.success) {
       sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+      we_login(res.data[0].userId.toString());
+      we_setAttribute('we_email', res.data[0].email);
+      we_setAttribute('we_phone', (res.data[0].callingNumber));
+      we_setAttribute('we_first_name', res.data[0].name);
+      we_setAttribute('User Id', parseInt(res.data[0].userId));
+
       setTimeout(() => {
         this.InitChat();
       }, 2000);
@@ -156,8 +165,8 @@ export class LoginComponent implements OnInit {
     });
     this.speedTest()
   }
-  internetSpeed:any = 10;
-  speedTest(){
+  internetSpeed: any = 10;
+  speedTest() {
     this.speedTestService.getMbps(
       {
         iterations: 5,
@@ -178,7 +187,7 @@ export class LoginComponent implements OnInit {
   gotoCloud(userData?) {
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('99999999999999999:', params);
-      if(params) {
+      if (params) {
         this.userId = params['userId'];
         this.serviceType = params['serviceType'];
       } else {
@@ -194,7 +203,7 @@ export class LoginComponent implements OnInit {
           })
           .toString();
         window.open(url);
-      } else if(params['currentPath']){
+      } else if (params['currentPath']) {
         let str = params['currentPath'];
         this.userId = str.substring(0, str.indexOf('/'));
         console.log('userId', this.userId);
@@ -301,7 +310,6 @@ export class LoginComponent implements OnInit {
       role: jhi.role,
     };
     NavbarService.getInstance().setUserData(userData);
-
     this.getSmeInfoDetails(jhi.userId);
     this.getFyList();
     this.getDueDateDetails();
@@ -372,14 +380,8 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.loading = true;
-    //https://dev-api.taxbuddy.com/user/sme-details-new/1?smeUserId=1
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
     this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
-    // this.userMsService.getMethodNew(param).subscribe((res: any) => {
-    //
-    // }, error => {
-    //   this.loading = false;
-    // })
   }
 
   InitChat() {

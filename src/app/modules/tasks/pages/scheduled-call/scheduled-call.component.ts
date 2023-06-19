@@ -16,6 +16,7 @@ import { SmeListDropDownComponent } from '../../../shared/components/sme-list-dr
 import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-scheduled-call',
@@ -42,7 +43,7 @@ export class ScheduledCallComponent implements OnInit {
   loggedUserId: any;
   showByAdminUserId: boolean = true;
   searchVal: any;
-  searchStatusId:any;
+  searchStatusId: any;
   searchParam: any = {
     page: 0,
     size: 30,
@@ -52,7 +53,7 @@ export class ScheduledCallComponent implements OnInit {
   };
 
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private toastMsgService: ToastMessageService,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
@@ -96,12 +97,12 @@ export class ScheduledCallComponent implements OnInit {
       // this.searchParam.mobileNumber = this.searchVal;
       // this.search('mobile');
 
-      if(this.searchVal){
+      if (this.searchVal) {
         // console.log('q param',this.searchVal)
         this.searchParam.mobileNumber = this.searchVal;
         this.search('mobile');
       }
-      else if(this.searchStatusId){
+      else if (this.searchStatusId) {
         // console.log('q param',this.searchStatus)
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
@@ -307,7 +308,7 @@ export class ScheduledCallComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -457,7 +458,7 @@ export class ScheduledCallComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;"><i class="fa-solid fa-phone"></i>
+          return `<button type="button" class="action_icon add_button" title="Call to user" style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;"><i class="fa-solid fa-phone"  data-action-type="call"></i>
           </button>`;
         },
         width: 60,
@@ -585,6 +586,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   async startCalling(user) {
+    debugger
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber);
@@ -600,33 +602,22 @@ export class ScheduledCallComponent implements OnInit {
 
     // const param = `/prod/call-support/call`;
     const param = `tts/outbound-call`;
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
-    //   (result: any) => {
-    //     console.log('Call Result: ', result);
-    //     this.loading = false;
-    //     if (result.success.status) {
-    //       this.toastMsgService.alert('success', result.success.message);
-    //     }
-    //   },
-    //   (error) => {
-    //     this.utilsService.showSnackBar(
-    //       'Error while making call, Please try again.'
-    //     );
-    //     this.loading = false;
-    //   }
-    // );
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success == false) {
         this.loading = false;
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
       if (result.success == true) {
-            this.toastMsgService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+        we_track('Call', {
+          'User Name': user.userName,
+          'User Phone number ': agentNumber,
+        });
+        this.toastMsgService.alert("success", result.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
 
   }
@@ -771,7 +762,7 @@ export class ScheduledCallComponent implements OnInit {
       this.searchParam.email = null;
     }
 
-    if(this.searchParam.email){
+    if (this.searchParam.email) {
       this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
     }
 
@@ -812,8 +803,8 @@ export class ScheduledCallComponent implements OnInit {
         this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        if (result.message) {this.toastMsgService.alert('error', result.message);}
-        else{this.toastMsgService.alert('error', 'No Data Found'); }
+        if (result.message) { this.toastMsgService.alert('error', result.message); }
+        else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
     });
