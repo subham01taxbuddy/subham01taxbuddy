@@ -92,14 +92,14 @@ export class AssignedSmeComponent implements OnInit {
     this.searchVal = "";
   }
   advanceSearch(key: any) {
-    if (!this.key || !this.searchVal) {
-      this.showError = true;
-      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
-      return;
-    }else{
+    // if (!this.key || !this.searchVal) {
+    //   this.showError = true;
+    //   this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+    //   return;
+    // }else{
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
-    }
+    // }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
@@ -114,9 +114,17 @@ export class AssignedSmeComponent implements OnInit {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
+    let userFilter=''
+    if(this.leaderId){
+      userFilter='&leaderView=true&smeUserId='+this.leaderId;
+    }
+    if(this.ownerId){
+      userFilter='&ownerView=true&smeUserId='+this.ownerId;
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
+    let param = key ? `/sme-details-new/${loggedInSmeUserId}?${data}${userFilter}&${key}=${searchValue}` :
+      `/sme-details-new/${loggedInSmeUserId}?${data}${userFilter}`;
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
