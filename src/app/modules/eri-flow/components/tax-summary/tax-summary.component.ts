@@ -834,11 +834,11 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           for (let i = 0; i < sec80Ginfo.Don100Percent.DoneeWithPan.length; i++) {
             let body = {
               name: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+              address: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
               amountInCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtCash),
@@ -858,17 +858,17 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         if (sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length > 0) {
           for (let i = 0; i < sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length; i++) {
             let body = {
-              name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneePAN,
+              name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DoneeWithPanName,
+              address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'FND_SEC80G',
-              amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtCash),
-              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
-              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+              amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.EligibleDonationAmt),
               details: '',
               category: 'AGTI'
             }
@@ -884,16 +884,16 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           for (let i = 0; i < sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length; i++) {
             let body = {
               name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneePAN,
+              address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
-              amountInCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
-              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
-              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+              amountInCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.EligibleDonationAmt),
               details: '',
               category: 'REGULAR'
             }
@@ -910,11 +910,11 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           for (let i = 0; i < sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length; i++) {
             let body = {
               name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneePAN,
+              address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'JN_MEM_FND',
               amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
@@ -936,12 +936,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         if (scientificInfo instanceof Array && scientificInfo.length > 0) {
           for (let i = 0; i < scientificInfo.length; i++) {
             let body = {
-              name: scientificInfo[i].NameOfDonee,
-              address: scientificInfo[i].AddressDetail.AddrDetail,
-              city: scientificInfo[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: scientificInfo[i].AddressDetail.PinCode,
-              state: scientificInfo[i].AddressDetail.StateCode,
-              panNumber: scientificInfo[i].DoneePAN,
+              name: scientificInfo[i]?.NameOfDonee,
+              address: scientificInfo[i]?.AddressDetail.AddrDetail,
+              city: scientificInfo[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: scientificInfo[i]?.AddressDetail.PinCode,
+              state: scientificInfo[i]?.AddressDetail.StateCode,
+              panNumber: scientificInfo[i]?.DoneePAN,
               donationType: 'SCIENTIFIC',
               schemeCode: '',
               amountInCash: this.getNumberFormat(scientificInfo[i].DonationAmtCash),
@@ -962,12 +962,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       if (politicalInfo.DonationDtlsSciRsrchRuralDev instanceof Array && politicalInfo.DonationDtlsSciRsrchRuralDev.length > 0) {
         for (let i = 0; i < politicalInfo.DonationDtlsSciRsrchRuralDev.length; i++) {
           let body = {
-            name: politicalInfo.DonationDtlsSciRsrchRuralDev[i].NameOfDonee,
-            address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
-            city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-            pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
-            state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
-            panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+            name: politicalInfo.DonationDtlsSciRsrchRuralDev[i]?.NameOfDonee,
+            address: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.PinCode,
+            state: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.DoneePAN,
             donationType: 'POLITICAL',
             schemeCode: '',
             amountInCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtCash),
