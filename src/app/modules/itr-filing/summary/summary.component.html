@@ -231,10 +231,10 @@
       <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
               Download XML</button> -->
       <!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
-      <button type="button" *ngIf="this.ITR_JSON.itrType !== '2' && this.ITR_JSON.itrType !== '3'" (click)="downloadPDF()" class="btn grBut">
+      <button type="button" *ngIf="isDownloadAllowed()" (click)="downloadPDF()" class="btn grBut">
         Download PDF
       </button>
-      <button *ngIf="this.ITR_JSON.itrType !== '2' && this.ITR_JSON.itrType !== '3'"
+      <button *ngIf="isDownloadAllowed()"
         type="button"
         class="btn kommBut"
         (click)="sendPdf('kommunicate')"
@@ -242,7 +242,7 @@
         Send PDF to Kommunicate chat
       </button>
 
-      <button *ngIf="this.ITR_JSON.itrType !== '2' && this.ITR_JSON.itrType !== '3'"
+      <button *ngIf="isDownloadAllowed()"
         type="button"
         class="btn whatsAppBut"
         (click)="sendPdf('whatsapp')"
@@ -3386,7 +3386,7 @@
           <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
             Download XML
         </button> -->
-          <button *ngIf="this.ITR_JSON.itrType !== '2' && this.ITR_JSON.itrType !== '3'" type="button" (click)="downloadPDF()" class="btn grBut">
+          <button *ngIf="isDownloadAllowed()" type="button" (click)="downloadPDF()" class="btn grBut">
             Download PDF
           </button>
         </div>

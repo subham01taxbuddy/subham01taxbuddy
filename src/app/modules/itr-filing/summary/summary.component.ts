@@ -4900,6 +4900,10 @@ export class SummaryComponent implements OnInit {
       });
   }
 
+  isDownloadAllowed(){
+    return !this.ITR_JSON.itrSummaryJson || (this.ITR_JSON.itrSummaryJson && (this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '4'))
+  }
+
   validateITR() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
     console.log(url);
