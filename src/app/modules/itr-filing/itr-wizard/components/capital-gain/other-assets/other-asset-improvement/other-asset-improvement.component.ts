@@ -312,7 +312,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       //find improvement
       let improvements = this.goldCg.improvement;
       let srnObj = improvements.find((element) => element.srn === index);
-      if (!srnObj) {
+      if (!srnObj && improvements.length > 0) {
         improvements[0].srn = index;
       }
       if (!improvements || improvements.length == 0) {
@@ -331,7 +331,7 @@ export class OtherAssetImprovementComponent implements OnInit {
 
       let deduction = this.goldCg.deduction;
       let srnDednObj = deduction.find((element) => element.srn === index);
-      if (!srnDednObj) {
+      if (!srnDednObj && deduction.length > 0) {
         deduction[0].srn = index;
       }
       if (!deduction || deduction.length == 0) {
