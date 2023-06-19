@@ -550,22 +550,22 @@ export class SummaryComponent implements OnInit {
               otherIncomes: {
                 saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'SAV'
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'SAV'
                 )?.OthSrcOthAmount,
 
                 intFromDeposit: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
                 ][
                   this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'IFD'
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'IFD'
                 )?.OthSrcOthAmount,
 
                 taxRefund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
-                ].OthersInc.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'TAX'
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'TAX'
                 )?.OthSrcOthAmount,
 
                 anyOtherInterest:
@@ -574,44 +574,44 @@ export class SummaryComponent implements OnInit {
                   ]?.IncomeOthSrc -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'SAV'
+                  ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                    (val) => val?.OthSrcNatureDesc === 'SAV'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'IFD'
+                  ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                    (val) => val?.OthSrcNatureDesc === 'IFD'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'TAX'
+                  ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                    (val) => val?.OthSrcNatureDesc === 'TAX'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
+                  ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val.OthSrcNatureDesc === 'FAP'
                   )?.OthSrcOthAmount -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                    (val) => val.OthSrcNatureDesc === 'DIV'
+                  ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                    (val) => val?.OthSrcNatureDesc === 'DIV'
                   )?.OthSrcOthAmount,
 
                 dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
                 ][
                   this.ITR14IncomeDeductions
-                ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'DIV'
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'DIV'
                 )?.OthSrcOthAmount,
 
                 familyPension: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
                 ][
                   this.ITR14IncomeDeductions
-                ]?.OthersInc?.OthersIncDtlsOthSrc.find(
-                  (val) => val.OthSrcNatureDesc === 'FAP'
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'FAP'
                 )?.OthSrcOthAmount,
               },
 
@@ -4966,11 +4966,11 @@ export class SummaryComponent implements OnInit {
                   res.messages instanceof Array &&
                   res.messages.length > 0
                 ) {
-                  let errors = res.errors.map((error) => error.code).join(', ');
+                  let errors = res.messages
+                    .map((error) => error.desc)
+                    .join(', ');
                   console.log(errors, 'errors');
-                  this.utilsService.showSnackBar(
-                    res.errors[0].desc ? res.errors[0].desc : errors
-                  );
+                  this.utilsService.showSnackBar(errors);
                 }
               }
             } else {
