@@ -4940,12 +4940,20 @@ export class SummaryComponent implements OnInit {
                 }
               } else {
                 if (res.errors instanceof Array && res.errors.length > 0) {
-                  this.utilsService.showSnackBar(res.errors[0].desc);
+                  let errors = res.errors.map((error) => error.code).join(', ');
+                  console.log(errors, 'errors');
+                  this.utilsService.showSnackBar(
+                    res.errors[0].desc ? res.errors[0].desc : errors
+                  );
                 } else if (
                   res.messages instanceof Array &&
                   res.messages.length > 0
                 ) {
-                  this.utilsService.showSnackBar(res.messages[0].desc);
+                  let errors = res.errors.map((error) => error.code).join(', ');
+                  console.log(errors, 'errors');
+                  this.utilsService.showSnackBar(
+                    res.errors[0].desc ? res.errors[0].desc : errors
+                  );
                 }
               }
             } else {
