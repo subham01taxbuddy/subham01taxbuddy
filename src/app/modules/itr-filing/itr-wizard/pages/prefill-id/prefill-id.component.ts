@@ -553,7 +553,7 @@ export class PrefillIdComponent implements OnInit {
 
           if (jsonDividendObj?.Upto15Of9) {
             this.ITR_Obj.dividendIncomes?.push({
-              income: jsonDividendObj.Upto15Of9,
+              income: jsonDividendObj?.Upto15Of9,
               date: '2022-07-28T18:30:00.000Z',
               quarter: 2,
             });
@@ -561,7 +561,7 @@ export class PrefillIdComponent implements OnInit {
 
           if (jsonDividendObj?.Up16Of9To15Of12) {
             this.ITR_Obj.dividendIncomes?.push({
-              income: jsonDividendObj.Up16Of9To15Of12,
+              income: jsonDividendObj?.Up16Of9To15Of12,
               date: '2022-09-28T18:30:00.000Z',
               quarter: 3,
             });
@@ -577,7 +577,7 @@ export class PrefillIdComponent implements OnInit {
 
           if (jsonDividendObj?.Up16Of3To31Of3) {
             this.ITR_Obj.dividendIncomes?.push({
-              income: jsonDividendObj.Up16Of3To31Of3,
+              income: jsonDividendObj?.Up16Of3To31Of3,
               date: '2023-03-20T18:30:00.000Z',
               quarter: 5,
             });
@@ -3096,7 +3096,7 @@ export class PrefillIdComponent implements OnInit {
           });
         }
 
-        if (jsonDividendObj.Upto15Of9) {
+        if (jsonDividendObj?.Upto15Of9) {
           this.ITR_Obj.dividendIncomes.push({
             income: jsonDividendObj?.Upto15Of9,
             date: '2022-07-28T18:30:00.000Z',
@@ -3104,7 +3104,7 @@ export class PrefillIdComponent implements OnInit {
           });
         }
 
-        if (jsonDividendObj.Up16Of9To15Of12) {
+        if (jsonDividendObj?.Up16Of9To15Of12) {
           this.ITR_Obj.dividendIncomes.push({
             income: jsonDividendObj?.Up16Of9To15Of12,
             date: '2022-09-28T18:30:00.000Z',
@@ -3112,7 +3112,7 @@ export class PrefillIdComponent implements OnInit {
           });
         }
 
-        if (jsonDividendObj.Up16Of12To15Of3) {
+        if (jsonDividendObj?.Up16Of12To15Of3) {
           this.ITR_Obj.dividendIncomes.push({
             income: jsonDividendObj?.Up16Of12To15Of3,
             date: '2022-12-28T18:30:00.000Z',
@@ -3120,7 +3120,7 @@ export class PrefillIdComponent implements OnInit {
           });
         }
 
-        if (jsonDividendObj.Up16Of3To31Of3) {
+        if (jsonDividendObj?.Up16Of3To31Of3) {
           this.ITR_Obj.dividendIncomes.push({
             income: jsonDividendObj?.Up16Of3To31Of3,
             date: '2023-03-20T18:30:00.000Z',
