@@ -759,7 +759,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
           var housingObj = {
             propertyType: housingInfo.PropertyDetails[i].ifLetOut === "Y" ? 'DOP' : (housingInfo.PropertyDetails[i].PropertyOwner === "SE" ? 'SOP' : 'LOP'),
-            address: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.AddrDetail + ', ' + housingInfo.PropertyDetails[i].AddressDetailWithZipCode.CityOrTownOrDistrict,
+            address: housingInfo.PropertyDetails[i]?.AddressDetailWithZipCode.AddrDetail + ', ' + housingInfo.PropertyDetails[i]?.AddressDetailWithZipCode.CityOrTownOrDistrict,
             ownerOfProperty: '',
             coOwners: housingInfo.PropertyDetails[i].hasOwnProperty('CoOwners') ? this.bindCoOwnerInfo(housingInfo.PropertyDetails[i].CoOwners) : [],
             otherOwnerOfProperty: '',
@@ -772,15 +772,15 @@ export class Itr2mainComponent implements OnInit, OnChanges {
             taxableIncome: this.getNumberFormat(housingInfo.PropertyDetails[i].Rentdetails.IncomeOfHP),
             exemptIncome: housingInfo.PropertyDetails[i].Rentdetails.hasOwnProperty('ThirtyPercentOfBalance') ? this.getNumberFormat(housingInfo.PropertyDetails[i].Rentdetails.ThirtyPercentOfBalance) : '',
 
-            pinCode: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.PinCode,
+            pinCode: housingInfo.PropertyDetails[i]?.AddressDetailWithZipCode.PinCode,
             flatNo: '',
             building: '',
-            street: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.AddrDetail,
+            street: housingInfo.PropertyDetails[i]?.AddressDetailWithZipCode.AddrDetail,
             locality: '',
-            city: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.CityOrTownOrDistrict,
-            country: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.CountryCode === "91" ? 'India' : '',
+            city: housingInfo.PropertyDetails[i]?.AddressDetailWithZipCode.CityOrTownOrDistrict,
+            country: housingInfo.PropertyDetails[i]?.AddressDetailWithZipCode.CountryCode === "91" ? 'India' : '',
             state: '',
-            percentage: housingInfo.PropertyDetails[i].AsseseeShareProperty
+            percentage: housingInfo.PropertyDetails[i]?.AsseseeShareProperty
           }
           console.log(i + 'th housingObj: ', housingObj);
           this.housingData.push(housingObj);
@@ -892,8 +892,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         for (let i = 0; i < salaryInfo.Salaries.length; i++) {
           var salObj = {
             employerName: salaryInfo.Salaries[i].NameOfEmployer,
-            address: salaryInfo.Salaries[i].AddressDetail.AddrDetail,
-            employerTAN: salaryInfo.Salaries[i].TANofEmployer,
+            address: salaryInfo.Salaries[i]?.AddressDetail.AddrDetail,
+            employerTAN: salaryInfo.Salaries[i]?.TANofEmployer,
             employerCategory: salaryInfo.Salaries[i].NatureOfEmployment,
             salAsPerSec171: salaryInfo.Salaries[i].Salarys.Salary,
             valOfPerquisites: salaryInfo.Salaries[i].Salarys.ValueOfPerquisites,
@@ -910,10 +910,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
             totalSalaryDeduction: i === maxIndex ? Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? (i === maxIndex ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : 0) : (i === maxIndex ? (i === maxIndex ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : 0),
             taxableIncome: this.newItrSumChanges ? this.calTaxableSal(i, salaryInfo, hra, otherAmnt, maxIndex) : Number(salaryInfo.TotIncUnderHeadSalaries),
 
-            pinCode: salaryInfo.Salaries[i].AddressDetail.PinCode,
+            pinCode: salaryInfo.Salaries[i]?.AddressDetail.PinCode,
             country: 'India',
-            state: salaryInfo.Salaries[i].AddressDetail.StateCode,
-            city: salaryInfo.Salaries[i].AddressDetail.CityOrTownOrDistrict
+            state: salaryInfo.Salaries[i]?.AddressDetail.StateCode,
+            city: salaryInfo.Salaries[i]?.AddressDetail.CityOrTownOrDistrict
           }
 
           this.salaryItrData.push(salObj);
@@ -1780,11 +1780,11 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           for (let i = 0; i < sec80Ginfo.Don100Percent.DoneeWithPan.length; i++) {
             let body = {
               name: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+              address: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
               amountInCash: sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtCash,
@@ -1803,17 +1803,17 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         if (sec80Ginfo.Don50PercentNoApprReqd.hasOwnProperty('DoneeWithPan')) {
           for (let i = 0; i < sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length; i++) {
             let body = {
-              name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneePAN,
+              name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DoneeWithPanName,
+              address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'FND_SEC80G',
-              amountInCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtCash,
-              amountOtherThanCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtOtherMode,
-              eligibleAmount: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].EligibleDonationAmt,
+              amountInCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DonationAmtCash,
+              amountOtherThanCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.DonationAmtOtherMode,
+              eligibleAmount: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i]?.EligibleDonationAmt,
               details: '',
               category: 'AGTI'
             }
@@ -1828,16 +1828,16 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           for (let i = 0; i < sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length; i++) {
             let body = {
               name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneePAN,
+              address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
-              amountInCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtCash,
-              amountOtherThanCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode,
-              eligibleAmount: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt,
+              amountInCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.DonationAmtCash,
+              amountOtherThanCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.DonationAmtOtherMode,
+              eligibleAmount: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i]?.EligibleDonationAmt,
               details: '',
               category: 'REGULAR'
             }
@@ -1852,16 +1852,16 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           for (let i = 0; i < sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length; i++) {
             let body = {
               name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
-              address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-              city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-              pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-              state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-              panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneePAN,
+              address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.PinCode,
+              state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.DoneePAN,
               donationType: 'OTHER',
               schemeCode: 'JN_MEM_FND',
-              amountInCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtCash,
-              amountOtherThanCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode,
-              eligibleAmount: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt,
+              amountInCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.DonationAmtCash,
+              amountOtherThanCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.DonationAmtOtherMode,
+              eligibleAmount: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i]?.EligibleDonationAmt,
               details: '',
               category: 'REGULAR'
             }
@@ -1874,17 +1874,17 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         if (itrData.Schedule80GGA.hasOwnProperty('DonationDtlsSciRsrchRuralDev')) {
           let scientificInfo = itrData.Schedule80GGA.DonationDtlsSciRsrchRuralDev;
           let body = {
-            name: scientificInfo[0].NameOfDonee,
-            address: scientificInfo[0].AddressDetail.AddrDetail,
-            city: scientificInfo[0].AddressDetail.CityOrTownOrDistrict,
-            pinCode: scientificInfo[0].AddressDetail.PinCode,
-            state: scientificInfo[0].AddressDetail.StateCode,
-            panNumber: scientificInfo[0].DoneePAN,
+            name: scientificInfo[0]?.NameOfDonee,
+            address: scientificInfo[0]?.AddressDetail.AddrDetail,
+            city: scientificInfo[0]?.AddressDetail.CityOrTownOrDistrict,
+            pinCode: scientificInfo[0]?.AddressDetail.PinCode,
+            state: scientificInfo[0]?.AddressDetail.StateCode,
+            panNumber: scientificInfo[0]?.DoneePAN,
             donationType: 'SCIENTIFIC',
             schemeCode: '',
-            amountInCash: scientificInfo[0].DonationAmtCash,
-            amountOtherThanCash: scientificInfo[0].DonationAmtOtherMode,
-            eligibleAmount: scientificInfo[0].EligibleDonationAmt,
+            amountInCash: scientificInfo[0]?.DonationAmtCash,
+            amountOtherThanCash: scientificInfo[0]?.DonationAmtOtherMode,
+            eligibleAmount: scientificInfo[0]?.EligibleDonationAmt,
             details: '',
             category: ''
           }
@@ -1895,17 +1895,17 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       if (itrData.hasOwnProperty('Schedule80GGC')) {
         let politicalInfo = itrData.Schedule80GGC;
         let body = {
-          name: politicalInfo.DonationDtlsSciRsrchRuralDev[0].NameOfDonee,
-          address: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.AddrDetail,
-          city: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-          pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.PinCode,
-          state: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.StateCode,
-          panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneePAN,
+          name: politicalInfo.DonationDtlsSciRsrchRuralDev[0]?.NameOfDonee,
+          address: sec80Ginfo.Don100Percent.DoneeWithPan[0]?.AddressDetail.AddrDetail,
+          city: sec80Ginfo.Don100Percent.DoneeWithPan[0]?.AddressDetail.CityOrTownOrDistrict,
+          pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[0]?.AddressDetail.PinCode,
+          state: sec80Ginfo.Don100Percent.DoneeWithPan[0]?.AddressDetail.StateCode,
+          panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[0]?.DoneePAN,
           donationType: 'POLITICAL',
           schemeCode: '',
-          amountInCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0].DonationAmtCash,
-          amountOtherThanCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0].DonationAmtOtherMode,
-          eligibleAmount: politicalInfo.DonationDtlsSciRsrchRuralDev[0].EligibleDonationAmt,
+          amountInCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0]?.DonationAmtCash,
+          amountOtherThanCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0]?.DonationAmtOtherMode,
+          eligibleAmount: politicalInfo.DonationDtlsSciRsrchRuralDev[0]?.EligibleDonationAmt,
           details: '',
           category: ''
         }
