@@ -32,3 +32,84 @@ font-weight:600;
 .error {
   border: 1px solid red;
 }
+
+.count2 {
+  color: #07070C;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: right;
+  margin-right: 25px;
+}
+
+.tpMain {
+  margin: 10px 0 30px 20px;
+}
+
+.TxSm {
+  font-size: 16px;
+  color: #000000;
+  font-weight: normal;
+}
+
+.numTxBg {
+  font-size: 22px;
+  color: #04a4bc;
+  font-weight: bold;
+  padding-left: 7px;
+  padding-right: 10px;
+}
+
+.numTxBg1 {
+  font-size: 22px;
+  color: #04a4bc;
+  font-weight: bold;
+  padding-left: 0px;
+  padding-right: 10px;
+}
+
+.radius2 {
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 15px;
+  margin-top: 0px;
+  box-shadow: 2px 5px #fafafa;
+  border: 1px solid #eaeaea;
+  height: 100px;
+  margin-bottom: 0px;
+  display: block;
+  box-shadow: 1px 2px #e4e4ff;
+}
+
+.inBxL {
+  width: 50%;
+  float: left;
+  border-right: 1px solid #ededed;
+  height: 80px;
+}
+
+.numTxSm {
+  font-size: 18px;
+  color: #04a4bc;
+  font-weight: bold;
+}
+
+.grTx1 {
+  color: #63b12d !important;
+  font-weight: 600;
+}
+
+
+.inBxR {
+  width: 50%;
+  float: right;
+  padding-left: 20px;
+  height: 80px;
+}
+
+.OrgTx {
+  color: #ff7f00 !important;
+}
+
+.OrgBk {
+  background-color: #fffcf1;
+}

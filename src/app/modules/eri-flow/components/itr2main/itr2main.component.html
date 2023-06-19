@@ -368,8 +368,7 @@
                         <mat-label>Financial Year</mat-label>
                         <mat-select matInput placeholder="Financial Year" formControlName="financialYear"
                             autocomplete="off" required>
-                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear"
-                                [disabled]="year.financialYear === '2022-23'">
+                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
                                 {{year.financialYear}}
                             </mat-option>
                         </mat-select>
@@ -1091,13 +1090,13 @@
             <!-- <div class="card__row">
                                     <div class="card__col-lg-6">
                                         <mat-form-field appearance="outline">
-                                            <mat-label>Nature of business</mat-label> 
+                                            <mat-label>Nature of business</mat-label>
                                             <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                                                 formControlName="natureOfothertThanSpeculativeBusiness" [matAutocomplete]="auto3" >
                                             <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].invalid">
                                                 Please select value from dropdown only.
                                             </mat-error>
-                                            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
+                                            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">
                                                 <mat-option *ngFor="let option of otherThanSpeculativeOptions | async" [value]="option.label">
                                                     {{option.label}}-{{option.code}}
                                                 </mat-option>
@@ -1775,7 +1774,7 @@
                                     <input type="number"  maxlength="8">
                                 </td>
                             </tr>
-                        
+
                         </table><br><br> -->
 
 

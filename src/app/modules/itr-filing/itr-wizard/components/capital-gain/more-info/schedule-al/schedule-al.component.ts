@@ -145,7 +145,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
   }
 
   async updateDataByPincode(immovableAssets) {
-    let pincode = immovableAssets.controls['pinCode'].value;
+    let pincode = immovableAssets.controls['pinCode'];
     await this.utilsService.getPincodeData(pincode).then((result) => {
       immovableAssets.controls['city'].setValue(result.city);
       immovableAssets.controls['country'].setValue(result.countryCode);

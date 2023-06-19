@@ -37,6 +37,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     { label: 'CYLA', old: 0, new: 0 },
     { label: 'BFLA', old: 0, new: 0 },
     { label: 'Gross Total Income', old: 0, new: 0 },
+    { label: 'Taxable Special Rate Income', old: 0, new: 0 },
     { label: 'Deduction', old: 0, new: 0 },
     { label: 'Total Income', old: 0, new: 0 },
     { label: 'CFL', old: 0, new: 0 },
@@ -527,9 +528,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           itrType = 'ITR4';
           ITR14IncomeDeductions = 'IncomeDeductions';
           taxComputation = 'TaxComputation';
+        } else if (this.ITR_JSON.itrType === '2') {
+          itrType = 'ITR2';
+        } else if (this.ITR_JSON.itrType === '3') {
+          itrType = 'ITR3';
         }
 
         if (itrType === 'ITR1' || itrType === 'ITR4') {
+          this.loading = true;
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -538,12 +544,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.IncomeFromSal
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeFromSal
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.IncomeFromSal
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeFromSal
+                    : 0
                   : 0,
             },
             {
@@ -553,12 +567,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.TotalIncomeOfHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncomeOfHP
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.TotalIncomeOfHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncomeOfHP
+                    : 0
                   : 0,
             },
             {
@@ -567,11 +589,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'OLD' && itrType === 'ITR4'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
                       ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW' && itrType === 'ITR4'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBP
-                      ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBP?.PersumptiveInc44AE?.IncChargeableUnderBus
+                    : 0
                   : 0,
             },
             {
@@ -586,12 +614,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.IncomeOthSrc
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeOthSrc
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.IncomeOthSrc
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.IncomeOthSrc
+                    : 0
                   : 0,
             },
             {
@@ -601,12 +637,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
                   : 0,
             },
             {
@@ -626,13 +670,26 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.GrossTotIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.GrossTotIncome
+                    : 0
                   : 0,
+            },
+            {
+              label: 'Taxable Special Rate Income',
+              old: 0,
+              new: 0,
             },
             {
               label: 'Deduction',
@@ -641,12 +698,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ].DeductUndChapVIA?.TotalChapVIADeductions
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ].DeductUndChapVIA?.TotalChapVIADeductions
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ].DeductUndChapVIA?.TotalChapVIADeductions
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ].DeductUndChapVIA?.TotalChapVIADeductions
+                    : 0
                   : 0,
             },
             {
@@ -656,12 +721,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncome
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
                       ITR14IncomeDeductions
                     ]?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        ITR14IncomeDeductions
+                      ]?.TotalIncome
+                    : 0
                   : 0,
             },
             {
@@ -675,11 +748,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
                       ?.GrossTaxLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.GrossTaxLiability
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
                       ?.GrossTaxLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.GrossTaxLiability
+                    : 0
                   : 0,
             },
             {
@@ -688,11 +769,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
                       ?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.TotalIntrstPay
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
                       ?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ]?.TotalIntrstPay
+                    : 0
                   : 0,
             },
             {
@@ -701,11 +790,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
                       .TotTaxPlusIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ].TotTaxPlusIntrstPay
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][taxComputation]
                       .TotTaxPlusIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
+                        taxComputation
+                      ].TotTaxPlusIntrstPay
+                    : 0
                   : 0,
             },
             {
@@ -714,11 +811,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                       .TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        .TaxesPaid?.TotalTaxesPaid
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
                       .TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        .TaxesPaid?.TotalTaxesPaid
+                    : 0
                   : 0,
             },
             {
@@ -726,31 +829,437 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.ITR_JSON.regime === 'OLD'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
+                    : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
-                      ?.BalTaxPayable
+                      ?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                      ?.BalTaxPayable > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType].TaxPaid
+                        ?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue
+                    : 0
                   : 0,
             },
           ];
-          this.loading = false;
           console.log(this.particularsArray, 'this.particularsArray');
           this.utilsService.showSnackBar(
             'Calculations are as of the uploaded JSON'
           );
         }
+
+        if (itrType === 'ITR2' || itrType === 'ITR3') {
+          this.loading = true;
+          this.particularsArray = [
+            {
+              label: 'Income from Salary',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.Salaries
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.Salaries
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.Salaries
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.Salaries
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from House Property',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                      ?.TotalIncomeChargeableUnHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                        ?.TotalIncomeChargeableUnHP
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                      ?.TotalIncomeChargeableUnHP
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleHP
+                        ?.TotalIncomeChargeableUnHP
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Business and Profession',
+              old:
+                this.ITR_JSON.regime === 'OLD' && itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.ProfBusGain?.TotProfBusGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.ProfBusGain?.TotProfBusGain
+                    : 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                          ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      : 0
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW' && itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.ProfBusGain?.TotProfBusGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.ProfBusGain?.TotProfBusGain
+                    : 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                        ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
+                          ?.PersumptiveInc44AE?.IncChargeableUnderBus
+                      : 0
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Capital Gains',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CapGain?.TotalCapGains
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CapGain?.TotalCapGains
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CapGain?.TotalCapGains
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CapGain?.TotalCapGains
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Other Sources',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.IncFromOS?.TotIncFromOS
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncFromOS?.TotIncFromOS
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.IncFromOS?.TotIncFromOS
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncFromOS?.TotIncFromOS
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Total Headwise Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalTI
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.TotalTI
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalTI
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.TotalTI
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'CYLA',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CurrentYearLoss
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CurrentYearLoss
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.CurrentYearLoss
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.CurrentYearLoss
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'BFLA',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.BroughtFwdLossesSetoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.BroughtFwdLossesSetoff
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.BroughtFwdLossesSetoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.BroughtFwdLossesSetoff
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Gross Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.GrossTotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.GrossTotalIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.GrossTotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.GrossTotalIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Deduction',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUnderScheduleVIA
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUnderScheduleVIA
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA
+                  : 0,
+            },
+            {
+              label: 'Taxable Special Rate Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                      ?.IncChargeTaxSplRate111A112
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                        ?.IncChargeTaxSplRate111A112
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                      ?.IncChargeTaxSplRate111A112
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.IncChargeTaxSplRate111A112
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Total Income',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.AggregateIncome
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.TotalIncome
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.AggregateIncome
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'CFL',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.LossesOfCurrentYearCarriedFwd
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.LossesOfCurrentYearCarriedFwd
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                      ?.LossesOfCurrentYearCarriedFwd
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                        ?.LossesOfCurrentYearCarriedFwd
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Gross Tax Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.GrossTaxLiability
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                        ?.GrossTaxLiability
+                  : 0,
+
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? itrType === 'ITR2'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.GrossTaxLiability
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.TaxPayableOnTI
+                        ?.GrossTaxLiability
+                  : 0,
+            },
+            {
+              label: 'Interest and Fees - 234 A/B/C/F',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Aggregate Liability',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability
+                        ?.AggregateTaxInterestLiability
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.ComputationOfTaxLiability
+                        ?.AggregateTaxInterestLiability
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Tax Paid',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Tax Payable / (Refund)',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
+                    : 0
+                  : 0,
+
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable &&
+                    this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                      ?.TaxPaid?.BalTaxPayable > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.TaxPaid?.BalTaxPayable
+                    : this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue &&
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue > 0
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue
+                    : 0
+                  : 0,
+            },
+          ];
+          console.log(this.particularsArray, 'this.particularsArray');
+          this.utilsService.showSnackBar(
+            'Calculations are as of the uploaded JSON'
+          );
+        }
+        this.loading = false;
       } else {
         const param = '/tax/old-vs-new';
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
           (result: any) => {
             // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-            this.loading = false;
             console.log('result is=====', result);
             this.newSummaryIncome = result.data.newRegime;
             this.oldSummaryIncome = result.data.oldRegime;
-
             this.particularsArray = [
               {
                 label: 'Income from Salary',
@@ -816,6 +1325,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
               },
               {
+                label: 'Taxable Special Rate Income',
+                old: 0,
+                new: 0,
+              },
+              {
                 label: 'Deduction',
                 old: this.oldSummaryIncome?.taxSummary.totalDeduction,
                 new: this.newSummaryIncome?.taxSummary.totalDeduction,
@@ -864,7 +1378,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                     : this.newSummaryIncome?.taxSummary?.taxRefund,
               },
             ];
-
+            this.loading = false;
             this.utilsService.showSnackBar(
               'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
             );
@@ -886,11 +1400,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
         (result: any) => {
           // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-          this.loading = false;
           console.log('result is=====', result);
           this.newSummaryIncome = result.data.newRegime;
           this.oldSummaryIncome = result.data.oldRegime;
-
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -1002,7 +1514,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : this.newSummaryIncome?.taxSummary?.taxRefund,
             },
           ];
-
+          this.loading = false;
           this.utilsService.showSnackBar(
             'The below displayed calculations are as of Taxbuddys calculation'
           );
@@ -1023,28 +1535,60 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   getITRType() {
     this.loading = true;
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
-      (ITR_RESULT: ITR_JSON) => {
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
-        );
-        this.itrType = ITR_RESULT.itrType;
-        console.log('this.itrType', this.itrType);
 
-        //if(this.ITR_JSON.itrType === '3') {
-        //  alert('This is ITR 3 and can not be filed from backoffice');
-        //  return;
-        //}
-        // this.saveAndNext.emit(true);
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Unable to update details, Please try again.'
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+        this.itrType = this.ITR_JSON.itrType;
+        console.log(this.itrType, 'ITR Type as per JSON');
+      } else {
+        this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+          (ITR_RESULT: ITR_JSON) => {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.itrType = ITR_RESULT.itrType;
+            this.loading = false;
+            console.log('this.itrType', this.itrType);
+            //if(this.ITR_JSON.itrType === '3') {
+            //  alert('This is ITR 3 and can not be filed from backoffice');
+            //  return;
+            //}
+            // this.saveAndNext.emit(true);
+          },
+          (error) => {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Unable to update details, Please try again.'
+            );
+          }
         );
       }
-    );
+    } else {
+      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+        (ITR_RESULT: ITR_JSON) => {
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.itrType = ITR_RESULT.itrType;
+          this.loading = false;
+          console.log('this.itrType', this.itrType);
+          //if(this.ITR_JSON.itrType === '3') {
+          //  alert('This is ITR 3 and can not be filed from backoffice');
+          //  return;
+          //}
+          // this.saveAndNext.emit(true);
+        },
+        (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Unable to update details, Please try again.'
+          );
+        }
+      );
+    }
   }
 
   settingValues() {
@@ -1255,25 +1799,62 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
-      //save ITR object
-      this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
-        (result) => {
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
+
+      if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+        this.ITR_JSON = JSON.parse(
+          sessionStorage.getItem(AppConstants.ITR_JSON)
+        );
+        if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Regime selection updated successfully.'
-          );
           this.nextBreadcrumb.emit('Summary');
           this.router.navigate(['/itr-filing/itr/summary']);
-        },
-        (error) => {
-          this.utilsService.showSnackBar('Failed to update regime selection.');
-          this.loading = false;
+          console.log(this.itrType, 'ITR Type as per JSON');
+        } else {
+          //save ITR object
+          this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+            (result) => {
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.ITR_JSON)
+              );
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Regime selection updated successfully.'
+              );
+              this.nextBreadcrumb.emit('Summary');
+              this.router.navigate(['/itr-filing/itr/summary']);
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Failed to update regime selection.'
+              );
+              this.loading = false;
+            }
+          );
         }
-      );
+      } else {
+        //save ITR object
+        this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+          (result) => {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Regime selection updated successfully.'
+            );
+            this.nextBreadcrumb.emit('Summary');
+            this.router.navigate(['/itr-filing/itr/summary']);
+          },
+          (error) => {
+            this.utilsService.showSnackBar(
+              'Failed to update regime selection.'
+            );
+            this.loading = false;
+          }
+        );
+      }
     } else {
       this.submitted = true;
       this.utilsService.showSnackBar(

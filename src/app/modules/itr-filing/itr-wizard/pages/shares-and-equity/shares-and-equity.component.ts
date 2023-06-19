@@ -570,6 +570,7 @@ export class SharesAndEquityComponent
     // } else {
     //   fg.controls['sellValue'].setValue(saleValue.toFixed());
     // }
+    this.calculateTotalCG(fg);
   }
 
   getPurchaseValue(index){
@@ -586,6 +587,7 @@ export class SharesAndEquityComponent
     // } else {
     //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
     // }
+    this.calculateTotalCG(fg);
   }
 
   save(type?) {
@@ -741,10 +743,14 @@ export class SharesAndEquityComponent
           if(!sameData){
             sameData = [];
           }
-          if(this.isAdd) {
-            sameData = sameData.concat(securitiesData.assetDetails);
-          } else {
+          if(this.selectedBroker === ''){
             sameData = securitiesData.assetDetails;
+          }else {
+            if (this.isAdd) {
+              sameData = sameData.concat(securitiesData.assetDetails);
+            } else {
+              sameData = securitiesData.assetDetails;
+            }
           }
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData.concat(sameData);
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);

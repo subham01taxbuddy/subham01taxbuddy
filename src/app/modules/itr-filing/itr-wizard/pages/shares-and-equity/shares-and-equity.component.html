@@ -20,7 +20,7 @@
           {{ title }}
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button *ngIf="compactView"
+          <button *ngIf="compactView || selectedBroker === ''"
             class="edit_btn"
             (click)="$event.stopPropagation(); addMore()"
           >
@@ -273,7 +273,6 @@
                       placeholder="Buy Price"
                       name="purchaseValuePerUnit"
                       maxlength="14"
-                      (change)="calculateTotalCG(securities)"
                       (blur)="getPurchaseValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />

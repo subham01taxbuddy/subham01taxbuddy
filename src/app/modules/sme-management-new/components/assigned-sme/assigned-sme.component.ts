@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -28,7 +29,7 @@ export class AssignedSmeComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 30,
+    size: 15,
     assigned:true,
     // owner:true,
     mobileNumber: null,
@@ -68,9 +69,15 @@ export class AssignedSmeComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 30,
+      itemsPerPage: 15,
       currentPage: 1,
       totalItems: null,
+      internalCount:null,
+      externalCount:null,
+      activeCount:null,
+      inactiveCount: null,
+      assignmentOnCount: null,
+      assignmentOffCount:null
     };
   }
 
@@ -85,14 +92,14 @@ export class AssignedSmeComponent implements OnInit {
     this.searchVal = "";
   }
   advanceSearch(key: any) {
-    if (!this.key || !this.searchVal) {
-      this.showError = true;
-      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
-      return;
-    }else{
+    // if (!this.key || !this.searchVal) {
+    //   this.showError = true;
+    //   this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+    //   return;
+    // }else{
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
-    }
+    // }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
@@ -107,9 +114,17 @@ export class AssignedSmeComponent implements OnInit {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
+    let userFilter=''
+    if(this.leaderId){
+      userFilter='&leaderView=true&smeUserId='+this.leaderId;
+    }
+    if(this.ownerId){
+      userFilter='&ownerView=true&smeUserId='+this.ownerId;
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
+    let param = key ? `/sme-details-new/${loggedInSmeUserId}?${data}${userFilter}&${key}=${searchValue}` :
+      `/sme-details-new/${loggedInSmeUserId}?${data}${userFilter}`;
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
@@ -139,6 +154,10 @@ export class AssignedSmeComponent implements OnInit {
   coOwnerId: number;
   coFilerId: number;
   agentId: number;
+  leaderId:number;
+  ownerId:number;
+  smeUserId:number;
+
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
@@ -149,6 +168,7 @@ export class AssignedSmeComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
+      this.getSmeList()
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
       this.getSmeList();
@@ -159,9 +179,28 @@ export class AssignedSmeComponent implements OnInit {
 
   }
 
+  fromSme(event, isOwner) {
+    console.log('sme-drop-down', event, isOwner);
+    if (isOwner) {
+     this.leaderId = event ? event.userId : null;
+   } else {
+     this.ownerId = event ? event.userId : null;
+   }
+   if (this.ownerId) {
+     this.smeUserId = this.ownerId;
+     this.getSmeList()
+   }
+    if (this.leaderId) {
+     this.smeUserId = this.leaderId;
+     this.getSmeList()
+   }
+ }
+
   getSmeList(isAgent?) {
     // for co-owner-
     //https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&assigned=true&searchAsCoOwner=true
+    //for new leader wise and owner wise filter
+    //https://uat-api.taxbuddy.com/report/sme-details-new/1064?page=0&size=30&assigned=true&leaderView=true&smeUserId=1064
 
     const loggedInSmeUserId=this.loggedInSme[0].userId
 
@@ -169,8 +208,17 @@ export class AssignedSmeComponent implements OnInit {
       this.agentId = loggedInSmeUserId;
     }
 
+    let userFilter=''
+    if(this.leaderId){
+      userFilter='&leaderView=true&smeUserId='+this.leaderId;
+    }
+    if(this.ownerId){
+      userFilter='&ownerView=true&smeUserId='+this.ownerId;
+    }
+
+
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/${this.agentId}?${data}`;
+    let param = `/sme-details-new/${this.agentId}?${data}${userFilter}`;
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
@@ -183,12 +231,18 @@ export class AssignedSmeComponent implements OnInit {
       (result: any) => {
         console.log('sme list result -> ', result);
         if (
-          Array.isArray(result.data.content) &&
-          result.data.content.length > 0
+          Array.isArray(result?.data?.content) &&
+          result?.data?.content?.length > 0
         ) {
           this.loading = false;
-          this.smeInfo = result.data.content;
-          this.config.totalItems = result.data.totalElements;
+          this.smeInfo = result?.data?.content;
+          this.config.totalItems = result?.data?.totalElements;
+          this.config.internalCount = result?.data?.internalCount;
+          this.config.externalCount = result?.data?.externalCount;
+          this.config.activeCount = result?.data?.activeCount;
+          this.config.inactiveCount = result?.data?.inactiveCount;
+          this.config.assignmentOnCount = result?.data?.assignmentOnCount;
+          this.config.assignmentOffCount = result?.data?.assignmentOffCount;
 
           console.log('smelist length no ', this.smeListLength);
           this.smeListGridOptions.api?.setRowData(
@@ -199,7 +253,7 @@ export class AssignedSmeComponent implements OnInit {
           this.loading = false;
           console.log('in else');
           this.smeListGridOptions.api?.setRowData(
-            this.createRowData(result.data.content)
+            this.createRowData([])
           );
         }
       },
@@ -545,12 +599,14 @@ export class AssignedSmeComponent implements OnInit {
     this.getSmeList(true);
   }
 
+  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.searchParam.page = 0;
-    this.searchParam.pageSize = 20;
+    this.searchParam.size = 15;
     this.config.currentPage = 1;
     this.key = null;
     this.searchVal = null;
+    this?.leaderDropDown?.resetDropdown();
 
     this.getSmeList();
 

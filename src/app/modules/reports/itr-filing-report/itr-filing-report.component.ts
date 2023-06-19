@@ -189,10 +189,21 @@ export class ItrFilingReportComponent implements OnInit {
     }
 
     let viewFilter = '';
-    if(this.ownerView.value === true){
+    if(this.ownerView.value === true && !pageChange){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
       viewFilter += `&ownerView=${this.ownerView.value}`
     }
-    if(this.leaderView.value === true){
+    if(this.ownerView.value === true && pageChange){
+      viewFilter += `&ownerView=${this.ownerView.value}`
+    }
+
+    if(this.leaderView.value === true && !pageChange){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
+      viewFilter += `&leaderView=${this.leaderView.value}`
+    }
+    if(this.leaderView.value === true && pageChange){
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 

@@ -21,6 +21,11 @@
             <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
           </div>
 
+          <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
+          <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme($event, true)"
+          (sendOwner)="fromSme($event, false)"></app-leader-list-dropdown>
+          </div>
+
            <div class="col-sm-6 spsTp">
             <label class="input__label" for="attr">Select attribute</label>
             <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey [ngClass]="{'error': showError && (!key || !searchVal)}">
@@ -58,14 +63,61 @@
 <!-- Table Below -->
 <div class="tableSpc">
   <div class="row">
-  <div class="col-sm-8">
-    <div class="txTit">
-      Assigned SME Details:
+    <div class="col-sm-9">
+      <div class="txTit">
+        Assigned SME Details:
+      </div>
     </div>
+    <!-- <div class="col-sm-3">
+      <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
+    </div> -->
   </div>
-  <div class="col-sm-4">
-  <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
-  </div>
+  <div class="col-sm-12">
+    <div class="tpMain">
+      <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
+      <span class="numTxBg1">{{ this.config.totalItems }}</span>
+      <!-- Inside Row -->
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">{{ this.config.internalCount }}</span><br>
+              <span class="TxSm">Internal Count</span>
+            </div>
+            <div class="inBxR">
+              <span class="numTxSm OrgTx">{{ this.config.externalCount }}</span><br>
+              <span class="TxSm">External Count</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">{{ this.config.activeCount }}</span><br>
+              <span class="TxSm">Active Count</span>
+            </div>
+            <div class="inBxR">
+              <span class="numTxSm OrgTx">{{ this.config.inactiveCount }}</span><br>
+              <span class="TxSm">Inactive Count</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">{{ this.config.assignmentOnCount }}</span><br>
+              <span class="TxSm">Assignment On</span>
+            </div>
+            <div class="inBxR">
+              <span class="numTxSm OrgTx">{{ this.config.assignmentOffCount }}</span><br>
+              <span class="TxSm">Assignment Off</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Inside Row Ends -->
+    </div>
   </div>
 
       <table>

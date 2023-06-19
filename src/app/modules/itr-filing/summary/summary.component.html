@@ -115,13 +115,13 @@
         </div>
 
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-          <div *ngIf="finalCalculations?.amountPayableRefund > 0">
+          <div *ngIf="finalCalculations?.amountPayable > 0">
             <div class="incBx">
               <span class="inTex">Income Tax Payable:</span><br /><br />
               <span class="inNo"
                 >{{
                   utilsService.currencyFormatter(
-                    finalCalculations?.amountPayableRefund
+                    finalCalculations?.amountPayable
                   )
                 }}.00</span
               >
@@ -130,7 +130,7 @@
               You must pay the balance tax before proceeding to e-filing. To pay
               your tax
               <a
-                href="https://onlineservices.tin.egov-nsdl.com/etaxnew/tdsnontds.jsp"
+                href="https://eportal.incometax.gov.in/iec/foservices/#/e-pay-tax-prelogin/user-details"
                 target="_new"
                 class="LkTx"
                 >Click here</a
@@ -171,18 +171,22 @@
         <div
           class="card__col-xs-12 card__col-sm-4 card__col-md-4"
           style="margin-top: 25px"
-          *ngIf="refund > 0"
+          *ngIf="finalCalculations?.amountRefund > 0"
         >
           <div class="incBx">
             <span class="inTex">Income Tax Refund:</span><br /><br />
             <span class="inRef"
-              >{{ utilsService.currencyFormatter(refund) }}.00</span
+              >{{
+                utilsService.currencyFormatter(finalCalculations?.amountRefund)
+              }}.00</span
             >
           </div>
           <p class="paIncTx">
             Great news...!!! You are getting refund of
-            {{ utilsService.currencyFormatter(refund) }}.00 of your tax return
-            into your bank account number. <b>{{ bankArray?.accountNumber }}</b>
+            {{
+              utilsService.currencyFormatter(finalCalculations?.amountRefund)
+            }}.00 of your tax return into your bank account number.
+            <b>{{ bankArray?.accountNumber }}</b>
           </p>
         </div>
       </div>
@@ -474,6 +478,7 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="[
+                      finalCalculations?.houseProperties?.hpTotalIncome &&
                       finalCalculations?.houseProperties?.hpTotalIncome === 0
                         ? true
                         : false
@@ -809,63 +814,112 @@
                           </ng-container>
 
                           <!-- PROFIT AND LOSS INCOMES  -->
-                          <tr
-                            *ngFor="
-                              let business of ITR_JSON.business
-                                ?.profitLossACIncomes
+                          <!-- Non speculative Income  -->
+                          <ng-container
+                            *ngIf="
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.grossTurnover &&
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.grossTurnover !== 0
                             "
                           >
-                            <td>
-                              {{
-                                business?.businessType === "SPECULATIVEINCOME"
-                                  ? "Income from Speculative"
-                                  : business?.businessType ===
-                                    "NONSPECULATIVEINCOME"
-                                  ? "Income from Non speculative"
-                                  : ""
-                              }}
-                            </td>
-                            <td>
-                              {{
-                                natureOfBusinessFromCode(
-                                  business?.natureOfBusiness
-                                )
-                              }}
-                            </td>
-                            <td>{{ business?.tradeName }}</td>
-                            <td>Rs {{ business?.incomes[0]?.turnOver }}</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  business?.businessType === "SPECULATIVEINCOME"
-                                    ? business?.incomes[0]
-                                        ?.netIncomeFromSpeculativeIncome
-                                    : business?.businessType ===
-                                      "NONSPECULATIVEINCOME"
-                                    ? business?.netProfitfromNonSpeculativeIncome
-                                    : ""
-                                )
-                              }}
-                            </td>
-                          </tr>
-
-                          <!--  <tr>
-                            <td>Section 44ADA</td>
-                            <td>14006-BPO Services</td>
-                            <td>M/s. ABC</td>
-                            <td>Rs 6500000</td>
-                            <td>Rs 78908</td>
-                          </tr>
-
-                          <tr>
-                            <td>Section 44AE</td>
-                            <td>10004-Guest Houses And Circuit Houses
-                            </td>
-                            <td>M/s. PQR</td>
-                            <td>Rs 780000</td>
-                            <td>Rs 780000</td>
-                          </tr> -->
+                            <tr>
+                              <td>
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.nonSpecIncome
+                                    ?.businessSection
+                                }}
+                              </td>
+                              <td>
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.nonSpecIncome
+                                    ?.natureOfBusinessCode
+                                }}
+                              </td>
+                              <td>
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.nonSpecIncome
+                                    ?.tradeName
+                                }}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.nonSpecIncome
+                                    ?.grossTurnover
+                                }}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(
+                                    finalCalculations?.businessIncome
+                                      ?.businessIncomeDetails?.nonSpecIncome
+                                      ?.TaxableIncome
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
+                          <!-- speculative Income  -->
+                          <ng-container
+                            *ngIf="
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.grossTurnover &&
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.grossTurnover !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.specIncome
+                                    ?.businessSection
+                                }}
+                              </td>
+                              <td>
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.specIncome
+                                    ?.natureOfBusinessCode
+                                }}
+                              </td>
+                              <td>
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.specIncome
+                                    ?.tradeName
+                                }}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.specIncome
+                                    ?.grossTurnover
+                                }}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(
+                                    finalCalculations?.businessIncome
+                                      ?.businessIncomeDetails?.specIncome
+                                      ?.TaxableIncome
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                       </table>
                     </div>
@@ -1506,15 +1560,55 @@
                           <td><b>Loss Of Current Year </b></td>
                           <td><b>Amount Adjusted</b></td>
                         </tr>
-                        <tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.currentYearLosses
+                              ?.currentYearLossesSetOff[0]?.houseProperty !== 0
+                          "
+                        >
                           <td>House Property</td>
                           <td>
-                            <!-- need to loop over currentYearLossesSetOff once confirmed  -->
                             Rs
                             {{
                               utilsService.currencyFormatter(
                                 finalCalculations?.currentYearLosses
-                                  ?.totalCurrentYearSetOff
+                                  ?.currentYearLossesSetOff[0]?.houseProperty
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.currentYearLosses
+                              ?.currentYearLossesSetOff[0]?.businessSetOff !== 0
+                          "
+                        >
+                          <td>Business</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.currentYearLosses
+                                  ?.currentYearLossesSetOff[0]?.businessSetOff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.currentYearLosses
+                              ?.currentYearLossesSetOff[0]
+                              ?.otherThanHpBusiness !== 0
+                          "
+                        >
+                          <td>Other's</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.currentYearLosses
+                                  ?.currentYearLossesSetOff[0]
+                                  ?.otherThanHpBusiness
                               )
                             }}
                           </td>
@@ -1963,8 +2057,6 @@
                                 >keyboard_arrow_up
                               </mat-icon>
                             </div>
-                            <!-- <label class="rtNumb1"
-                                [ngClass]="summaryDetail.totalDeduction === 0 ? 'lbl-right rtNumb' : 'expand-lbl-right '"> -->
                             <label class="rtNumb1">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
@@ -1986,51 +2078,138 @@
                       class="table table-bordered table-striped table-hover"
                       style="margin-top: 20px"
                     >
-                      <tbody>
+                      <thead>
                         <tr>
-                          <td><b>Year</b></td>
-                          <td><b>House Property Loss</b></td>
-                          <td><b>Short Term Capital Loss</b></td>
-                          <td><b>Long Term Capital Loss</b></td>
-                          <td><b>Losses Set Off During The Year</b></td>
-                          <td><b>Carried Forward To Next Year</b></td>
+                          <th>
+                            <b>Year</b>
+                          </th>
+                          <th>
+                            <b>House Property Loss</b>
+                          </th>
+                          <th>
+                            <b>Short Term Capital Loss</b>
+                          </th>
+                          <th>
+                            <b>Long Term Capital Loss</b>
+                          </th>
+                          <th>
+                            <b>Other than Speculative Business Loss</b>
+                          </th>
+                          <th>
+                            <b>Loss from Speculative Business</b>
+                          </th>
+                          <th>
+                            <b>Loss from Specified Business</b>
+                          </th>
+                          <th>
+                            <b>other Losses</b>
+                          </th>
+                          <th>
+                            <b>Losses Set Off During The Year</b>
+                          </th>
+                          <th>
+                            <b>Carried Forward To Next Year</b>
+                          </th>
                         </tr>
-                        <tr
+                      </thead>
+                      <tbody>
+                        <ng-container
                           *ngFor="
                             let losses of finalCalculations
                               ?.lossesToBeCarriedForward?.cflDtls;
                             let i = index
                           "
                         >
-                          <td>{{ losses?.assessmentPastYear }}</td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(
-                                losses?.housePropertyLoss
-                              )
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.STCGLoss)
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.LTCGLoss)
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.pastYear)
-                            }}
-                          </td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(losses?.totalLoss)
-                            }}
-                          </td>
-                        </tr>
+                          <tr>
+                            <td>
+                              {{
+                                losses?.assessmentPastYear
+                                  ? losses?.assessmentPastYear
+                                  : 0
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.housePropertyLoss
+                                    ? losses?.housePropertyLoss
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.STCGLoss ? losses?.STCGLoss : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.LTCGLoss ? losses?.LTCGLoss : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.BusLossOthThanSpecLossCF
+                                    ? losses?.BusLossOthThanSpecLossCF
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.LossFrmSpecBusCF
+                                    ? losses?.LossFrmSpecBusCF
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.LossFrmSpecifiedBusCF
+                                    ? losses?.LossFrmSpecifiedBusCF
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  losses?.OthSrcLoss ? losses?.OthSrcLoss : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.lossesToBeCarriedForward
+                                    ?.lossSetOffDuringYear
+                                    ? finalCalculations
+                                        ?.lossesToBeCarriedForward
+                                        ?.lossSetOffDuringYear
+                                    : 0
+                                )
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.lossesToBeCarriedForward
+                                    ?.cflTotal
+                                    ? finalCalculations
+                                        ?.lossesToBeCarriedForward?.cflTotal
+                                    : 0
+                                )
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
                       </tbody>
                     </table>
                   </mat-expansion-panel>
@@ -3018,7 +3197,9 @@
                             <label class="rtNumb">
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
-                                finalCalculations?.amountPayableRefund
+                                finalCalculations?.amountPayable > 0
+                                  ? finalCalculations?.amountPayable
+                                  : "(" + finalCalculations?.amountRefund + ")"
                               }}</label
                             >
                           </div>

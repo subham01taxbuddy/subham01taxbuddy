@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import {GridOptions, ICellRendererParams} from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -28,6 +28,7 @@ import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
+import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 
 declare function we_track(key: string, value: any);
 
@@ -81,6 +82,13 @@ export class AssignedNewUsersComponent implements OnInit {
       },
 
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
     };
 
     this.config = {
@@ -93,6 +101,12 @@ export class AssignedNewUsersComponent implements OnInit {
     this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value: any) => {
       this.requestCompleted(value);
     });
+  }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
   }
 
   requestManagerSubscription: Subscription;
@@ -150,7 +164,10 @@ export class AssignedNewUsersComponent implements OnInit {
           });
           let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           //Object.assign(obj, this.ITR_JSON)
-          objITR.filingTeamMemberId = loggedInId;
+          // Ashwini: Current implementation sends filing team member id as logged in user id.
+          // So credit will go to the one who files ITR
+          // changing the filingTeamMemberId to filerUserId so credit will go to assigned filer
+          objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
           console.log('obj:', objITR);
 
@@ -769,7 +786,7 @@ export class AssignedNewUsersComponent implements OnInit {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
         itrObjectStatus: userData[i].itrObjectStatus,
@@ -861,6 +878,7 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   rowData: any;
+
   async startFiling(data) {
     console.log(data);
 
