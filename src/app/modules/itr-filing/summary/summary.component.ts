@@ -738,14 +738,21 @@ export class SummaryComponent implements OnInit {
               ]?.GrossTotIncome,
             totalSpecialRateIncome: 0,
             deductions: {
-              deductionDtls: Object.entries(
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                  this.ITR14IncomeDeductions
-                ]?.DeductUndChapVIA
-              ).map(([key, item]) => ({ name: key, amount: Number(item) })) as {
-                name: String;
-                amount: Number;
-              }[],
+              deductionDtls: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.DeductUndChapVIA
+                ? (Object?.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.DeductUndChapVIA
+                  ).map(([key, item]) => ({
+                    name: key,
+                    amount: Number(item),
+                  })) as {
+                    name: String;
+                    amount: Number;
+                  }[])
+                : [],
               deductionTotal:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
@@ -1708,24 +1715,27 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.IncChargeTaxSplRate111A112,
             deductions: {
-              deductionDtls: Object.entries(
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVIA
-                  ?.DeductUndChapVIA
-              )
-                .filter(
-                  (item: any) =>
-                    item[0] !== 'TotPartBchapterVIA' &&
-                    item[0] !== 'TotPartCchapterVIA' &&
-                    item[0] !== 'TotPartCAandDchapterVIA' &&
-                    item[0] !== 'TotPartCAandDchapterVIA'
-                )
-                .map(([key, item]) => ({
-                  name: key,
-                  amount: Number(item),
-                })) as {
-                name: String;
-                amount: Number;
-              }[],
+              deductionDtls: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.ScheduleVIA?.DeductUndChapVIA
+                ? (Object?.entries(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleVIA?.DeductUndChapVIA
+                  )
+                    .filter(
+                      (item: any) =>
+                        item[0] !== 'TotPartBchapterVIA' &&
+                        item[0] !== 'TotPartCchapterVIA' &&
+                        item[0] !== 'TotPartCAandDchapterVIA' &&
+                        item[0] !== 'TotPartCAandDchapterVIA'
+                    )
+                    .map(([key, item]) => ({
+                      name: key,
+                      amount: Number(item),
+                    })) as {
+                    name: String;
+                    amount: Number;
+                  }[])
+                : [],
               deductionTotal:
                 this.itrType === 'ITR2'
                   ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
@@ -2880,27 +2890,30 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.taxSummary
                       ?.totalSpecialRateIncome,
                   deductions: {
-                    deductionDtls: Object.entries(
-                      this.finalSummary?.assessment?.summaryDeductions
-                    )
-                      ?.filter(
-                        (item: any) =>
-                          item[1].sectionType !== '80C' &&
-                          item[1].sectionType !== '80CCC' &&
-                          item[1].sectionType !== '80CCD1' &&
-                          item[1].sectionType !== '80GAGTI'
-                      )
-                      .map(([key, item]) => ({
-                        name: (
-                          item as { notes: string; eligibleAmount: number }
-                        ).notes,
-                        amount: (
-                          item as { notes: string; eligibleAmount: number }
-                        ).eligibleAmount,
-                      })) as {
-                      name: String;
-                      amount: Number;
-                    }[],
+                    deductionDtls: this.finalSummary?.assessment
+                      ?.summaryDeductions
+                      ? (Object?.entries(
+                          this.finalSummary?.assessment?.summaryDeductions
+                        )
+                          ?.filter(
+                            (item: any) =>
+                              item[1].sectionType !== '80C' &&
+                              item[1].sectionType !== '80CCC' &&
+                              item[1].sectionType !== '80CCD1' &&
+                              item[1].sectionType !== '80GAGTI'
+                          )
+                          .map(([key, item]) => ({
+                            name: (
+                              item as { notes: string; eligibleAmount: number }
+                            ).notes,
+                            amount: (
+                              item as { notes: string; eligibleAmount: number }
+                            ).eligibleAmount,
+                          })) as {
+                          name: String;
+                          amount: Number;
+                        }[])
+                      : [],
                     deductionTotal:
                       this.finalSummary?.assessment?.taxSummary?.totalDeduction,
                   },
@@ -3795,26 +3808,30 @@ export class SummaryComponent implements OnInit {
                   this.finalSummary?.assessment?.taxSummary
                     ?.totalSpecialRateIncome,
                 deductions: {
-                  deductionDtls: Object.entries(
-                    this.finalSummary?.assessment?.summaryDeductions
-                  )
-                    ?.filter(
-                      (item: any) =>
-                        item[1].sectionType !== '80C' &&
-                        item[1].sectionType !== '80CCC' &&
-                        item[1].sectionType !== '80CCD1' &&
-                        item[1].sectionType !== '80GAGTI'
-                    )
-                    .map(([key, item]) => ({
-                      name: (item as { notes: string; eligibleAmount: number })
-                        .notes,
-                      amount: (
-                        item as { notes: string; eligibleAmount: number }
-                      ).eligibleAmount,
-                    })) as {
-                    name: String;
-                    amount: Number;
-                  }[],
+                  deductionDtls: this.finalSummary?.assessment
+                    ?.summaryDeductions
+                    ? (Object?.entries(
+                        this.finalSummary?.assessment?.summaryDeductions
+                      )
+                        ?.filter(
+                          (item: any) =>
+                            item[1].sectionType !== '80C' &&
+                            item[1].sectionType !== '80CCC' &&
+                            item[1].sectionType !== '80CCD1' &&
+                            item[1].sectionType !== '80GAGTI'
+                        )
+                        .map(([key, item]) => ({
+                          name: (
+                            item as { notes: string; eligibleAmount: number }
+                          ).notes,
+                          amount: (
+                            item as { notes: string; eligibleAmount: number }
+                          ).eligibleAmount,
+                        })) as {
+                        name: String;
+                        amount: Number;
+                      }[])
+                    : [],
                   deductionTotal:
                     this.finalSummary?.assessment?.taxSummary?.totalDeduction,
                 },
