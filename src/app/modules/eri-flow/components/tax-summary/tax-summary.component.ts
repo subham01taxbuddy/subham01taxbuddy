@@ -4742,6 +4742,13 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.loading = true;
       let tempAy = this.itrObject.assessmentYear;
       let tempFy = this.itrObject.financialYear;
+      this.itrObject.family[0].dateOfBirth = new Date(
+        this.itrObject.family[0].dateOfBirth
+      );
+      this.itrObject.isRevised = 'N';
+      if (this.itrSummaryForm.controls['returnType'].value === 'REVISED') {
+        this.itrObject.isRevised = 'Y';
+      }
 
       console.log(this.itrSummaryForm.controls['assesse'].value);
 
