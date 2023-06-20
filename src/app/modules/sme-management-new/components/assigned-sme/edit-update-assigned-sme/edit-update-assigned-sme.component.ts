@@ -550,6 +550,30 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(option)
   }
 
+  updateResignedStatus(){
+    console.log('updating resigned status');
+    const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
+    const userId = this.smeObj.userId;
+    const param = `/mark-sme-as-resigned`;
+    let request = {
+      userId:userId,
+      resigningDate : ResigningDate
+    }
+    this.userMsService.postMethod(param, request).subscribe((result: any) => {
+      console.log('updated resigned status  -> ', result);
+      this.loading = false;
+      if(result.success){
+        this.utilsService.showSnackBar(result.message);
+        this.location.back();
+      } else {
+        this.utilsService.showSnackBar(result.message);
+      }
+    }, (error)=>{
+      this.loading = false;
+      console.log(error);
+    });
+  }
+
   updateSmeDetails() {
     if (this?.ownerDetails?.userId == this?.smeObj?.userId){
       this._toastMessageService.alert('false','You can not add yourself as co-owner ');
@@ -559,10 +583,15 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
    const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
    const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
    const LeaveEndDate = this.convertToDDMMYY(this.leaveEndDate.value);
-   const  ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
+   const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
 
     if (this.smeFormGroup.valid && this.roles.valid) {
 
+      if(ResigningDate){
+        //mark SME as resigned
+        this.updateResignedStatus();
+        return;
+      }
       let finalReq: any = {};
       if(this.smeRecords[0]) {
         finalReq = this.smeRecords[0];
