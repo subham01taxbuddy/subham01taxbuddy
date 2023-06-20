@@ -1031,7 +1031,8 @@ export class AssignedNewUsersComponent implements OnInit {
     if (this.coOwnerToggle.value == true){
        agent_number = agentNumber;
     }else {
-      agent_number = data.callerAgentNumber;
+      agent_number = agentNumber;
+      // agent_number = data.callerAgentNumber;
     }
     const reqBody = {
       "agent_number": agent_number,
