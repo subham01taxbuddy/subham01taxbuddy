@@ -34,6 +34,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
   eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
+  itrobj: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private itrMsService: ItrMsService,
@@ -44,6 +45,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.data);
+    this.itrobj =JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   updateManualDetails() {
@@ -60,6 +62,8 @@ export class UpdateManualFilingDialogComponent implements OnInit {
         this.loading = false;
         this.utilsService.showSnackBar('Manual Filing Details updated successfully')
         this.location.back();
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.itrobj));
+
       }, error => {
         this.utilsService.showSnackBar('Failed to update Manual Filing Details')
         this.loading = false;

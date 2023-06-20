@@ -222,7 +222,12 @@
                         <i class="material-icons-outlined adIc">cloud_upload</i>
                         Upload JSON &nbsp;&nbsp;
 
-                        <div *ngIf="ITR_JSON.hasOwnProperty('itrSummaryJson') && ITR_JSON.itrSummaryJson !== null">
+                        <div
+                          *ngIf="
+                            ITR_JSON.hasOwnProperty('itrSummaryJson') &&
+                            ITR_JSON.itrSummaryJson !== null
+                          "
+                        >
                           <button
                             type="button"
                             class="delete-btn"
@@ -304,7 +309,7 @@
           </div>
           <!-- if prefill  -->
           <div *ngIf="downloadPrefill">
-            <app-prefill-data></app-prefill-data>
+            <app-prefill-data [data]="data"></app-prefill-data>
             <!-- action-buttons  -->
             <div class="flex justify-between p-[30px] back-foot">
               <button (click)="skipToSources()" class="lgtBtn">

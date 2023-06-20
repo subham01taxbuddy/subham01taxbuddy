@@ -90,6 +90,9 @@ export class AssignedSmeComponent implements OnInit {
   }
   clearValue() {
     this.searchVal = "";
+    this.leaderId = null;
+    this.ownerId = null;
+    this.leaderDropDown.resetDropdown();
   }
   advanceSearch(key: any) {
     // if (!this.key || !this.searchVal) {
@@ -114,17 +117,9 @@ export class AssignedSmeComponent implements OnInit {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
-    let userFilter=''
-    if(this.leaderId){
-      userFilter='&leaderView=true&smeUserId='+this.leaderId;
-    }
-    if(this.ownerId){
-      userFilter='&ownerView=true&smeUserId='+this.ownerId;
-    }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    let param = key ? `/sme-details-new/${loggedInSmeUserId}?${data}${userFilter}&${key}=${searchValue}` :
-      `/sme-details-new/${loggedInSmeUserId}?${data}${userFilter}`;
+    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
         this.loading = false;
@@ -176,7 +171,6 @@ export class AssignedSmeComponent implements OnInit {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-
   }
 
   fromSme(event, isOwner) {
@@ -229,6 +223,8 @@ export class AssignedSmeComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe(
       (result: any) => {
+        this.key = null;
+        this.searchVal = null;
         console.log('sme list result -> ', result);
         if (
           Array.isArray(result?.data?.content) &&

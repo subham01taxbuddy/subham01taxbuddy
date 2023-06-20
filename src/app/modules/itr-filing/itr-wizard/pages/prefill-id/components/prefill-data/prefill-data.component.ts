@@ -15,6 +15,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   styleUrls: ['./prefill-data.component.scss'],
 })
 export class PrefillDataComponent implements OnInit, OnDestroy {
+  @Input() data: any;
   loading = false;
   selectedOtpOption = 'A';
   validateOtpForm: FormGroup;
@@ -31,12 +32,13 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     private toastMessageService: ToastMessageService,
     private router: Router,
     public dialogRef: MatDialogRef<PrefillDataComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public datas: any,
     private fb: FormBuilder,
     private _formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
+    console.log(this.data, 'downloadPrefillData');
     this.validateOtpForm = this.fb.group({
       mobile: [null, [Validators.required]],
       email: [null],
@@ -94,11 +96,11 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         emailOtp: this.validateOtpForm.controls['email'].value,
         mobileOtp: this.validateOtpForm.controls['mobile'].value,
         otpSourceFlag: this.selectedOtpOption,
-        assessmentYear: '2022',
+        assessmentYear: '2023',
       };
       let headerObj = {
         panNumber: this.data.panNumber,
-        assessmentYear: '2022-2023',
+        assessmentYear: '2023-2024',
         userId: this.data.userId.toString(),
       };
       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
@@ -141,7 +143,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   downloadPrefillJson() {
     const fileURL = `${
       environment.url
-    }/itr/eri/download-prefill-json-file?userId=${this.data.userId.toString()}&assessmentYear=2022-2023`;
+    }/itr/eri/download-prefill-json-file?userId=${this.data.userId.toString()}&assessmentYear=2023-2024`;
     window.open(fileURL);
     this.dialogRef.close();
     return;
