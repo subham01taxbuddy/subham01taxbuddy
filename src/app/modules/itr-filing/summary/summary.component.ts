@@ -391,6 +391,10 @@ export class SummaryComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
     const bank = this.ITR_JSON.bankDetails?.filter(
       (item: any) => item.hasRefund === true
     );
