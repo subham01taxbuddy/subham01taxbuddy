@@ -338,9 +338,13 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       );
     }
 
-    let ITRJSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    const ITRJSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    ITRJSON.itrSummaryJson = this.jsonData;
+    console.log(ITRJSON, 'ITRJSON');
+    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITRJSON));
+
     itrId = ITRJSON?.itrId;
-    console.log(this.jsonData, 'JSONData', this.userDetails);
+
     if (this.jsonData) {
       let finalJson = this.jsonData.ITR;
       let itrType = '';
@@ -409,6 +413,8 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       disposable.afterClosed().subscribe((result) => {
         console.log('The dialog was closed');
       });
+
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITRJSON));
     } else {
       this.utilsService.showSnackBar(
         'All the required details for updating manually are not present. Please make sure that you have successfully uploaded the json in the previous step'
