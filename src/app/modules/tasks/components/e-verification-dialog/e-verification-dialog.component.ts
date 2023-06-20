@@ -62,7 +62,11 @@ export class EVerificationDialogComponent implements OnInit {
             if (res.messages instanceof Array && res.messages.length > 0)
               this.otpMessage = res.messages[0].desc;
             this.otpSent = true;
-            this.otpValue.setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+            if(this.eVerifyForm.controls['verMode'].value === 'AADHAAR') {
+              this.otpValue.setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(6)])
+            } else {
+              this.otpValue.setValidators([Validators.required])
+            }
           }
         } else {
           if (res.hasOwnProperty('messages')) {
