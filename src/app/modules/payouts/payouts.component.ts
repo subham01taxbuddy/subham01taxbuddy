@@ -14,6 +14,7 @@ import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 import {environment} from "../../../environments/environment";
 import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
+import {capitalize} from "lodash";
 
 @Component({
   selector: 'app-payouts',
@@ -42,7 +43,9 @@ export class PayoutsComponent implements OnInit {
   paymentStatusList =[
     {value: '', name: 'All'},
     {value: 'Paid',name:'Paid'},
-    {value: 'Unpaid',name:'Unpaid'}
+    {value: 'Unpaid',name:'Unpaid'},
+    {value: 'processing',name:'Processing'},
+    {value: 'initiated',name:'Initiated'}
   ];
   selectedStatus: any;
   selectedPayoutStatus:any;
@@ -305,6 +308,18 @@ export class PayoutsComponent implements OnInit {
         }
       },
       {
+        headerName: 'Filing Source',
+        field: 'filingSource',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Ack No',
         field: 'ackNumber',
         width: 140,
@@ -462,6 +477,9 @@ export class PayoutsComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          return data.value.charAt(0).toUpperCase() + data.value.slice(1).toLowerCase();
         }
       },
       {
