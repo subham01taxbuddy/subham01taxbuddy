@@ -307,6 +307,10 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       let jsonRes = e.target.result;
 
       this.JSONData = JSON.parse(jsonRes);
+      if (this.JSONData) {
+        this.utilsService.showSnackBar('JSON uploaded scucessfully');
+        this.utilsService.setAddClientJsonData(this.JSONData);
+      }
     };
     reader.readAsText(event.target.files[0]);
   }

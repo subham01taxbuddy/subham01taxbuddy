@@ -2,12 +2,16 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import {ReAssignDialogComponent} from "../re-assign-dialog/re-assign-dialog.component";
+import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -51,12 +55,14 @@ export class MoreOptionsDialogComponent implements OnInit {
   ngOnInit() {
     // this.getStatus();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    console.log('data from assigned users',this.data)
-
+    console.log('data from assigned users', this.data);
   }
 
   isApplicable(permissionRoles: any) {
-    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, permissionRoles);
+    return this.roleBaseAuthGuardService.checkHasPermission(
+      this.loggedInUserRoles,
+      permissionRoles
+    );
   }
 
   closeDialog() {
@@ -107,22 +113,26 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   goToSubscription() {
     this.router.navigate(['/subscription/assigned-subscription'], {
-      queryParams: { userMobNo: this.data.mobileNumber,
-        userId: this.data.userId },
-      });
-      // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
+      queryParams: {
+        userMobNo: this.data.mobileNumber,
+        userId: this.data.userId,
+      },
+    });
+    // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
     this.dialogRef.close();
   }
   goToCloud() {
-    console.log('data to send to doc',this.data)
+    console.log('data to send to doc', this.data);
     // const url=`https://uat-api.taxbuddy.com/itr-filing/docs/user-docs/${this.data.userId}`
     // window.open(url,'_blank');
-    const url = this.router.createUrlTree(['itr-filing/docs/user-docs/'],{
-      queryParams:{
-        userId: this.data.userId,
-        serviceType:this.data.serviceType,
-      }
-    }).toString();
+    const url = this.router
+      .createUrlTree(['itr-filing/docs/user-docs/'], {
+        queryParams: {
+          userId: this.data.userId,
+          serviceType: this.data.serviceType,
+        },
+      })
+      .toString();
     window.open(url, '_blank');
     // this.router.navigate(['itr-filing/docs/user-docs/' + this.data.userId]);
     // this.dialogRef.close();
@@ -167,11 +177,11 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.userMsService.getMethod(param).subscribe(
         (res: any) => {
           this.optedServices();
-          if(res.success) {
+          if (res.success) {
             this.utilsService.showSnackBar(
               'Successfully opted the service type ' + this.selectedService
             );
-          }else {
+          } else {
             this.utilsService.showSnackBar(res.message);
           }
         },
@@ -204,27 +214,47 @@ export class MoreOptionsDialogComponent implements OnInit {
     );
   }
 
-  addClient(){
+  addClient() {
     this.dialogRef.close();
     if (this.data.statusId !== 11) {
       const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${this.data.userId}`;
       this.userMsService.getMethod(reqParam).subscribe((res: any) => {
-        console.log('Result DOB:', res);
-        this.router.navigate(['/eri'], {
-          state:
-            {
-              userId: this.data.userId,
-              panNumber: this.data.panNumber ? this.data.panNumber : res.data.panNumber,
-              eriClientValidUpto: this.data.eriClientValidUpto,
-              callerAgentUserId: this.data.callerAgentUserId,
-              assessmentYear: this.data.assessmentYear,
-              name: this.data.name,
-              dateOfBirth: res.data.dateOfBirth,
-              mobileNumber: this.data.mobileNumber
-            }
-        });
-      })
+        const addClientData = {
+          userId: this.data.userId,
+          panNumber: this.data.panNumber
+            ? this.data.panNumber
+            : res.data.panNumber,
+          eriClientValidUpto: this.data.eriClientValidUpto,
+          callerAgentUserId: this.data.callerAgentUserId,
+          assessmentYear: this.data.assessmentYear,
+          name: this.data.name,
+          dateOfBirth: res.data.dateOfBirth,
+          mobileNumber: this.data.mobileNumber,
+          itrId: this.data.itrId,
+          itrObjectStatus: this.data.itrObjectStatus,
+          openItrId: this.data.openItrId
+        };
 
+        // Store stateData in session storage
+        sessionStorage.setItem('addClientData', JSON.stringify(addClientData));
+
+        console.log('Result DOB:', res);
+
+        this.router.navigate(['/eri'], {
+          state: {
+            userId: this.data.userId,
+            panNumber: this.data.panNumber
+              ? this.data.panNumber
+              : res.data.panNumber,
+            eriClientValidUpto: this.data.eriClientValidUpto,
+            callerAgentUserId: this.data.callerAgentUserId,
+            assessmentYear: this.data.assessmentYear,
+            name: this.data.name,
+            dateOfBirth: res.data.dateOfBirth,
+            mobileNumber: this.data.mobileNumber,
+          },
+        });
+      });
     } else {
       this.utilsService.showSnackBar('This user ITR is filed');
     }
@@ -257,14 +287,14 @@ export class MoreOptionsDialogComponent implements OnInit {
         serviceType: this.data.serviceType,
         ownerName: this.data.ownerName,
         filerName: this.data.filerName,
-      }
+      },
     });
-    disposable.afterClosed().subscribe(result => {
-      console.log('result of reassign user ',result);
+    disposable.afterClosed().subscribe((result) => {
+      console.log('result of reassign user ', result);
       if (result?.data === 'success') {
         return this.dialogRef.close({ event: 'close', data: 'success' });
       }
-   });
+    });
   }
 
   createRowData(data) {
