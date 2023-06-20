@@ -873,17 +873,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Salary',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.Salaries
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.Salaries
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.Salaries
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.Salaries
                     : 0
                   : 0,
@@ -911,9 +911,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Business and Profession',
               old:
                 this.ITR_JSON.regime === 'OLD' && itrType === 'ITR3'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.ProfBusGain?.TotProfBusGain
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.ProfBusGain?.TotProfBusGain
                     : 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
@@ -925,9 +925,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW' && itrType === 'ITR3'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.ProfBusGain?.TotProfBusGain
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.ProfBusGain?.TotProfBusGain
                     : 0
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleBP
@@ -942,17 +942,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Capital Gains',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.CapGain?.TotalCapGains
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.CapGain?.TotalCapGains
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.CapGain?.TotalCapGains
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.CapGain?.TotalCapGains
                     : 0
                   : 0,
@@ -961,17 +961,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Other Sources',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.IncFromOS?.TotIncFromOS
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.IncFromOS?.TotIncFromOS
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.IncFromOS?.TotIncFromOS
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.IncFromOS?.TotIncFromOS
                     : 0
                   : 0,
@@ -980,17 +980,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Total Headwise Income',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.TotalTI
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.TotalTI
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.TotalTI
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.TotalTI
                     : 0
                   : 0,
@@ -999,17 +999,17 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'CYLA',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.CurrentYearLoss
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.CurrentYearLoss
                     : 0
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.CurrentYearLoss
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.CurrentYearLoss
                     : 0
                   : 0,
@@ -1018,9 +1018,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'BFLA',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.BroughtFwdLossesSetoff
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB-TI']
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                         ?.BroughtFwdLossesSetoff
                     : 0
                   : 0,
@@ -1805,6 +1805,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           sessionStorage.getItem(AppConstants.ITR_JSON)
         );
         if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
           this.loading = false;
           this.nextBreadcrumb.emit('Summary');
           this.router.navigate(['/itr-filing/itr/summary']);
