@@ -74,7 +74,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
   addSalary() {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid) {
+    if (salaryArray.valid || salaryArray.disabled) {
       this.addMoreSalary();
     } else {
       salaryArray.controls.forEach((element) => {
