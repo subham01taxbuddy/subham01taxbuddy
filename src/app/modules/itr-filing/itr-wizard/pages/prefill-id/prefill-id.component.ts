@@ -2475,8 +2475,8 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.isRevised =
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReturnFileSec ===
               11
-                ? 'Y'
-                : 'N';
+                ? 'N'
+                : 'Y';
 
             // SETTING REGIME TYPE FOR ITR2
             if (this.ITR_Type === 'ITR2') {
