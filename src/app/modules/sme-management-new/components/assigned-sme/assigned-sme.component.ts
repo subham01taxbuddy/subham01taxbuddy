@@ -194,7 +194,7 @@ export class AssignedSmeComponent implements OnInit {
    }
  }
 
-  getSmeList(isAgent?) {
+  getSmeList(isAgent?,pageChange?) {
     // for co-owner-
     //https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&assigned=true&searchAsCoOwner=true
     //for new leader wise and owner wise filter
@@ -207,10 +207,23 @@ export class AssignedSmeComponent implements OnInit {
     }
 
     let userFilter=''
-    if(this.leaderId){
+    if(this.leaderId && !pageChange){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
       userFilter='&leaderView=true&smeUserId='+this.leaderId;
     }
-    if(this.ownerId){
+
+    if(this.leaderId && pageChange){
+      userFilter='&leaderView=true&smeUserId='+this.leaderId;
+    }
+
+    if(this.ownerId && !pageChange){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
+      userFilter='&ownerView=true&smeUserId='+this.ownerId;
+    }
+
+    if(this.ownerId && pageChange){
       userFilter='&ownerView=true&smeUserId='+this.ownerId;
     }
 
@@ -249,9 +262,19 @@ export class AssignedSmeComponent implements OnInit {
             this.createRowData(this.smeInfo)
           );
         } else {
-          this.config.totalItems =0
           this.loading = false;
+          this.config.totalItems =0;
+          this.config.internalCount = 0;
+          this.config.externalCount = 0;
+          this.config.activeCount = 0;
+          this.config.inactiveCount = 0;
+          this.config.assignmentOnCount = 0;
+          this.config.assignmentOffCount = 0;
           console.log('in else');
+          this._toastMessageService.alert(
+            'error',
+            'Fail to getting leads data, try after some time.'
+          );
           this.smeListGridOptions.api?.setRowData(
             this.createRowData([])
           );
@@ -579,12 +602,13 @@ export class AssignedSmeComponent implements OnInit {
   }
 
   pageChanged(event: any) {
+    let pageChange =event
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
       this.getSmeList(true);
     }else{
-      this.getSmeList();
+      this.getSmeList('',pageChange);
     }
     ;
   }
