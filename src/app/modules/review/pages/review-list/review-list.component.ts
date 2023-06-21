@@ -51,7 +51,7 @@ export class ReviewListComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 12,
+      itemsPerPage: 20,
       currentPage: 1,
       totalItems: 0,
     };
@@ -383,7 +383,7 @@ export class ReviewListComponent implements OnInit {
   }
 
   getReview(pageNo) {
-    let pagination = `page=${pageNo}&pageSize=12`;
+    let pagination = `page=${pageNo}&pageSize=20`;
     let platform =
       this.selectPlatform && this.selectPlatform != 'All'
         ? `&platform=${this.selectPlatform}`

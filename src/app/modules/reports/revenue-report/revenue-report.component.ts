@@ -23,7 +23,7 @@ export class RevenueReportComponent implements OnInit {
   config: any;
   searchParam: any = {
     page: 0,
-    pageSize: 15,
+    pageSize: 20,
   };
   revenueReportGridOptions:GridOptions;
   disableCheckboxes = false;
@@ -516,7 +516,7 @@ export class RevenueReportComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.searchParam.page = 0;
-    this.searchParam.pageSize = 15;
+    this.searchParam.pageSize = 20;
     this.config.currentPage = 1
     this.leaderView.enable();
     this.ownerView.enable();
