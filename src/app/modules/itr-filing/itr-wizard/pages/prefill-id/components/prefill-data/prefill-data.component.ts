@@ -48,17 +48,19 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     console.log(this.selectedOtpOption);
   }
 
-  getPrefillData() {
+  async getPrefillData() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     const param = '/eri/v1/api';
     const request = {
       serviceName: 'EriPrefill',
       pan: this.data.panNumber,
-      assessmentYear: '2022',
+      assessmentYear: currentFyDetails[0].assessmentYear.substring(0, 4),
       otpSourceFlag: this.selectedOtpOption,
     };
     let headerObj = {
       panNumber: this.data.panNumber,
-      assessmentYear: '2022-2023',
+      assessmentYear: currentFyDetails[0].assessmentYear,
       userId: this.data.userId.toString(),
     };
     sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
