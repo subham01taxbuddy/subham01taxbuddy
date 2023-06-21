@@ -183,8 +183,8 @@ export class PrefillIdComponent implements OnInit {
   }
 
   parseDate(dateStr: string) {
-    const parts = dateStr.split('-');
-    return new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    const parts = dateStr?.split('-');
+    return new Date(+parts?.[0], +parts[1] - 1, +parts[2]);
   }
 
   // setting correct format dates
@@ -1296,11 +1296,6 @@ export class PrefillIdComponent implements OnInit {
               ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 11
                 ? 'N'
                 : 'Y';
-            this.ITR_Obj.orgITRAckNum =
-              ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo;
-            this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-              ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
-            );
 
             if (this.ITR_Type === 'ITR1') {
               if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N') {
@@ -2482,11 +2477,6 @@ export class PrefillIdComponent implements OnInit {
               11
                 ? 'Y'
                 : 'N';
-            this.ITR_Obj.orgITRAckNum =
-              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo;
-            this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OrigRetFiledDate
-            );
 
             // SETTING REGIME TYPE FOR ITR2
             if (this.ITR_Type === 'ITR2') {
