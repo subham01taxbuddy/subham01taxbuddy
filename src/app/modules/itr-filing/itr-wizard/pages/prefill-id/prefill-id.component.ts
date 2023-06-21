@@ -2486,8 +2486,8 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_Obj.isRevised =
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReturnFileSec ===
               11
-                ? 'Y'
-                : 'N';
+                ? 'N'
+                : 'Y';
 
             ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
               ? (this.ITR_Obj.orgITRAckNum =
