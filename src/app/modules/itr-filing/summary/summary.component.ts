@@ -2826,7 +2826,7 @@ export class SummaryComponent implements OnInit {
                     shortTerm: {
                       ShortTerm15Per:
                         this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                          (item: any) => item?.cgIncome && item?.taxRate === -1
+                          (item: any) => item?.cgIncome && item?.taxRate === 15
                         ),
                       ShortTerm30Per: [
                         {
@@ -3804,9 +3804,16 @@ export class SummaryComponent implements OnInit {
                 capitalGain: {
                   shortTerm: {
                     ShortTerm15Per:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                        (item: any) => item?.cgIncome && item?.taxRate === 15
-                      ),
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) => item?.cgIncome && item?.taxRate === 15
+                        )
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
                     ShortTerm30Per: [
                       {
                         nameOfAsset: '',
@@ -3816,9 +3823,16 @@ export class SummaryComponent implements OnInit {
                       },
                     ],
                     ShortTermAppSlabRate:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                        (item: any) => item?.cgIncome && item?.taxRate === -1
-                      ),
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) => item?.cgIncome && item?.taxRate === -1
+                        )
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
                     ShortTermSplRateDTAA: [
                       {
                         nameOfAsset: '',
@@ -3828,7 +3842,12 @@ export class SummaryComponent implements OnInit {
                       },
                     ],
                   },
-                  totalShortTerm: 0,
+                  totalShortTerm:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === -1)
+                      .forEach((element) => {
+                        element = element + element.incomeAfterInternalSetOff;
+                      }),
                   longTerm: {
                     LongTerm10Per: [
                       {
@@ -4480,7 +4499,13 @@ export class SummaryComponent implements OnInit {
                 amountRefund:
                   this.finalSummary?.assessment?.taxSummary?.taxRefund,
               };
-              console.log(this.finalCalculations, 'finalCalculations');
+              console.log(
+                this.finalCalculations,
+                'finalCalculations',
+                this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
+                  (item: any) => item?.cgIncome && item?.taxRate === 15
+                )
+              );
             } else {
               this.loading = false;
               this.errorMessage =
