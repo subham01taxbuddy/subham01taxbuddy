@@ -511,7 +511,7 @@ export class AssignedSubscriptionComponent implements OnInit {
           if (params.data.cancellationStatus === 'PENDING') {
             return `<button type="button" disabled class="action_icon add_button"
           style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
-          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
+          <i class="fa-sharp fa-solid fa-pen fa-xs"> Edit</i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Click to Edit Subscription" data-action-type="edit"
