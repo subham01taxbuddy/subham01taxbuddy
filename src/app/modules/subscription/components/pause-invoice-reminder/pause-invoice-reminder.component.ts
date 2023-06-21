@@ -80,7 +80,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
 
   getSearchInfo(invoiceNo) {
     this.loading = true;
-    let param = `/v1/invoice/back-office?page=0&pageSize=30&txbdyInvoiceId=${invoiceNo}`;
+    let param = `/v1/invoice/back-office?page=0&pageSize=20&txbdyInvoiceId=${invoiceNo}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log('Invoice ', result);
