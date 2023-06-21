@@ -1292,6 +1292,15 @@ export class PrefillIdComponent implements OnInit {
               ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
             this.ITR_Obj.family[0].fatherName =
               ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
+            this.ITR_Obj.isRevised =
+              ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 11
+                ? 'N'
+                : 'Y';
+            this.ITR_Obj.orgITRAckNum =
+              ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo;
+            this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
+              ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
+            );
 
             if (this.ITR_Type === 'ITR1') {
               if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N') {
@@ -2467,6 +2476,17 @@ export class PrefillIdComponent implements OnInit {
 
             this.ITR_Obj.family[0].fatherName =
               ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
+
+            this.ITR_Obj.isRevised =
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReturnFileSec ===
+              11
+                ? 'Y'
+                : 'N';
+            this.ITR_Obj.orgITRAckNum =
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo;
+            this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OrigRetFiledDate
+            );
 
             // SETTING REGIME TYPE FOR ITR2
             if (this.ITR_Type === 'ITR2') {
