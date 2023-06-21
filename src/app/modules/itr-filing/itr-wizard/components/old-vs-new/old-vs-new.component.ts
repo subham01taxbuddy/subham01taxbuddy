@@ -520,18 +520,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         let taxComputation = '';
         let itrType = '';
 
+        itrType = Object.keys(this.ITR_JSON.itrSummaryJson.ITR)[0];
         if (this.ITR_JSON.itrType === '1') {
-          itrType = 'ITR1';
+          // itrType = 'ITR1';
           ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
           taxComputation = 'ITR1_TaxComputation';
         } else if (this.ITR_JSON.itrType === '4') {
-          itrType = 'ITR4';
+          // itrType = 'ITR4';
           ITR14IncomeDeductions = 'IncomeDeductions';
           taxComputation = 'TaxComputation';
         } else if (this.ITR_JSON.itrType === '2') {
-          itrType = 'ITR2';
+          // itrType = 'ITR2';
         } else if (this.ITR_JSON.itrType === '3') {
-          itrType = 'ITR3';
+          // itrType = 'ITR3';
         }
 
         if (itrType === 'ITR1' || itrType === 'ITR4') {

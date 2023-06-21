@@ -92,17 +92,23 @@ export class AssignedSmeComponent implements OnInit {
     this.searchVal = "";
     this.leaderId = null;
     this.ownerId = null;
+    this.showError = false;
     this.leaderDropDown.resetDropdown();
   }
+
   advanceSearch(key: any) {
-    // if (!this.key || !this.searchVal) {
-    //   this.showError = true;
-    //   this._toastMessageService.alert('error','Please select attribute and also enter search value.');
-    //   return;
-    // }else{
+    if(this.leaderId || this.ownerId){
+      this.getSmeList()
+      return;
+    }
+    if (!this.key || !this.searchVal) {
+      this.showError = true;
+      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+      return;
+    }else{
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
-    // }
+     }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
@@ -180,13 +186,11 @@ export class AssignedSmeComponent implements OnInit {
    } else {
      this.ownerId = event ? event.userId : null;
    }
+   if (this.leaderId) {
+    this.smeUserId = this.leaderId;
+  }
    if (this.ownerId) {
      this.smeUserId = this.ownerId;
-     this.getSmeList()
-   }
-    if (this.leaderId) {
-     this.smeUserId = this.leaderId;
-     this.getSmeList()
    }
  }
 
@@ -195,7 +199,7 @@ export class AssignedSmeComponent implements OnInit {
     //https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&assigned=true&searchAsCoOwner=true
     //for new leader wise and owner wise filter
     //https://uat-api.taxbuddy.com/report/sme-details-new/1064?page=0&size=30&assigned=true&leaderView=true&smeUserId=1064
-
+    this.loading=true;
     const loggedInSmeUserId=this.loggedInSme[0].userId
 
     if (this.coOwnerToggle.value == false) {
@@ -602,6 +606,7 @@ export class AssignedSmeComponent implements OnInit {
     this.config.currentPage = 1;
     this.key = null;
     this.searchVal = null;
+    this.showError = false;
     this?.leaderDropDown?.resetDropdown();
 
     this.getSmeList();

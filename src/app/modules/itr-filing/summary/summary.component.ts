@@ -493,6 +493,10 @@ export class SummaryComponent implements OnInit {
     }
   }
 
+  getItrTypeInSummary(){
+    return Object.keys(this.ITR_JSON.itrSummaryJson.ITR)[0].substring(3);
+  }
+
   calculations() {
     this.loading = true;
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {

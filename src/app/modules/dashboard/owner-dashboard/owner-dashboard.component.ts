@@ -354,7 +354,7 @@ export class OwnerDashboardComponent implements OnInit {
 
     let param = `/dashboard/partner-commission-cumulative?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}`;
 
-    this.itrService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
@@ -422,7 +422,7 @@ export class OwnerDashboardComponent implements OnInit {
 
   param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
 
-  this.itrService.getMethod(param).subscribe((response: any) => {
+  this.userMsService.getMethodNew(param).subscribe((response: any) => {
     if (response.success) {
       this.itrOverview = response.data;
     }else{

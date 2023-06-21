@@ -125,7 +125,7 @@ export class SubLeaderDashboardComponent implements OnInit {
 
      param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
+     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if(response.success == false){
         this.itrOverview=null;
         this. _toastMessageService.alert("error",response.message);
@@ -200,9 +200,13 @@ export class SubLeaderDashboardComponent implements OnInit {
       userFilter += `leaderUserId=${this.loggedInSmeUserId}`;
     }
 
-    param = `/dashboard/partner-commission-cumulative?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
+    if(this.filerId){
+      param = `/dashboard/partner-commission?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
+    }else{
+      param = `/dashboard/partner-commission-cumulative?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
+    }
 
-    this.itrService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;

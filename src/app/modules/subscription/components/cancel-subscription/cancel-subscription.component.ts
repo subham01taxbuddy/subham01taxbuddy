@@ -24,7 +24,7 @@ export class CancelSubscriptionComponent implements OnInit {
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
-    itemsPerPage: 10,
+    itemsPerPage: 20,
     currentPage: 1,
     totalItems: null,
   };

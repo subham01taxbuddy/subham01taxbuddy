@@ -4168,6 +4168,8 @@ export class PrefillIdComponent implements OnInit {
                       indexCostOfAcquisition: null,
                       grandFatheredValue: null,
                       brokerName: null,
+                      //TODO: shreekant update for summary json key
+                      totalFairMarketValueOfCapitalAsset: null,
                     });
                   } else {
                     const equityLtcgDetail = {
@@ -4230,6 +4232,8 @@ export class PrefillIdComponent implements OnInit {
                           indexCostOfAcquisition: null,
                           grandFatheredValue: null,
                           brokerName: null,
+                          //TODO: shreekant update for summary json
+                          totalFairMarketValueOfCapitalAsset: null,
                         },
                       ],
                       deductionAmount: null,
@@ -4378,6 +4382,8 @@ export class PrefillIdComponent implements OnInit {
                       indexCostOfAcquisition: null,
                       grandFatheredValue: null,
                       brokerName: null,
+                      //TODO: shreekant update for summary json tool
+                      totalFairMarketValueOfCapitalAsset: null,
                     });
                   } else {
                     const equityStcgDetail = {
