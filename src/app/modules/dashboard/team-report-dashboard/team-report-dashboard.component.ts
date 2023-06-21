@@ -220,7 +220,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    this.itrService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;

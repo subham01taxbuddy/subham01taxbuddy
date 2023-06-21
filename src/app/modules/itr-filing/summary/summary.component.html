@@ -95,7 +95,7 @@
           <!-- ITR Form -->
           <div class="txBt">
             <span class="txLf">ITR Form:</span>
-            <span class="txMuLf">{{ ITR_JSON.itrType }}</span>
+            <span class="txMuLf">{{ ITR_JSON.itrSummaryJson ? getItrTypeInSummary() : ITR_JSON.itrType }}</span>
           </div>
 
           <div class="txBt">

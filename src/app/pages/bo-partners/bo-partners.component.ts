@@ -46,7 +46,7 @@ export class BoPartnersComponent implements OnInit {
   toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
     page: 0,
-    pageSize: 20,
+    size: 20,
     fromDate: this.maxDate,
   };
   constructor(
@@ -83,7 +83,7 @@ export class BoPartnersComponent implements OnInit {
   }
   ngOnInit() {
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 20,
       currentPage: 1,
       totalItems: null,
     };
@@ -422,7 +422,7 @@ export class BoPartnersComponent implements OnInit {
       if (mobile && this.searchMobileNumber.value) {
         param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
       } else {
-        param = `/partner-details?page=${this.config.currentPage - 1}&size=10&from=${fromDate}&to=${toDate}`;
+        param = `/partner-details?page=${this.config.currentPage - 1}&size=20&from=${fromDate}&to=${toDate}`;
       }
 
       this.userMsService.getMethod(param).subscribe(

@@ -92,17 +92,23 @@ export class AssignedSmeComponent implements OnInit {
     this.searchVal = "";
     this.leaderId = null;
     this.ownerId = null;
+    this.showError = false;
     this.leaderDropDown.resetDropdown();
   }
+
   advanceSearch(key: any) {
-    // if (!this.key || !this.searchVal) {
-    //   this.showError = true;
-    //   this._toastMessageService.alert('error','Please select attribute and also enter search value.');
-    //   return;
-    // }else{
+    if(this.leaderId || this.ownerId){
+      this.getSmeList()
+      return;
+    }
+    if (!this.key || !this.searchVal) {
+      this.showError = true;
+      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+      return;
+    }else{
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
-    // }
+     }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
@@ -180,22 +186,20 @@ export class AssignedSmeComponent implements OnInit {
    } else {
      this.ownerId = event ? event.userId : null;
    }
+   if (this.leaderId) {
+    this.smeUserId = this.leaderId;
+  }
    if (this.ownerId) {
      this.smeUserId = this.ownerId;
-     this.getSmeList()
-   }
-    if (this.leaderId) {
-     this.smeUserId = this.leaderId;
-     this.getSmeList()
    }
  }
 
-  getSmeList(isAgent?) {
+  getSmeList(isAgent?,pageChange?) {
     // for co-owner-
     //https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&assigned=true&searchAsCoOwner=true
     //for new leader wise and owner wise filter
     //https://uat-api.taxbuddy.com/report/sme-details-new/1064?page=0&size=30&assigned=true&leaderView=true&smeUserId=1064
-
+    this.loading=true;
     const loggedInSmeUserId=this.loggedInSme[0].userId
 
     if (this.coOwnerToggle.value == false) {
@@ -203,10 +207,23 @@ export class AssignedSmeComponent implements OnInit {
     }
 
     let userFilter=''
-    if(this.leaderId){
+    if(this.leaderId && !pageChange){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
       userFilter='&leaderView=true&smeUserId='+this.leaderId;
     }
-    if(this.ownerId){
+
+    if(this.leaderId && pageChange){
+      userFilter='&leaderView=true&smeUserId='+this.leaderId;
+    }
+
+    if(this.ownerId && !pageChange){
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
+      userFilter='&ownerView=true&smeUserId='+this.ownerId;
+    }
+
+    if(this.ownerId && pageChange){
       userFilter='&ownerView=true&smeUserId='+this.ownerId;
     }
 
@@ -245,9 +262,19 @@ export class AssignedSmeComponent implements OnInit {
             this.createRowData(this.smeInfo)
           );
         } else {
-          this.config.totalItems =0
           this.loading = false;
+          this.config.totalItems =0;
+          this.config.internalCount = 0;
+          this.config.externalCount = 0;
+          this.config.activeCount = 0;
+          this.config.inactiveCount = 0;
+          this.config.assignmentOnCount = 0;
+          this.config.assignmentOffCount = 0;
           console.log('in else');
+          this._toastMessageService.alert(
+            'error',
+            'Fail to getting leads data, try after some time.'
+          );
           this.smeListGridOptions.api?.setRowData(
             this.createRowData([])
           );
@@ -575,12 +602,13 @@ export class AssignedSmeComponent implements OnInit {
   }
 
   pageChanged(event: any) {
+    let pageChange =event
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
       this.getSmeList(true);
     }else{
-      this.getSmeList();
+      this.getSmeList('',pageChange);
     }
     ;
   }
@@ -602,6 +630,7 @@ export class AssignedSmeComponent implements OnInit {
     this.config.currentPage = 1;
     this.key = null;
     this.searchVal = null;
+    this.showError = false;
     this?.leaderDropDown?.resetDropdown();
 
     this.getSmeList();

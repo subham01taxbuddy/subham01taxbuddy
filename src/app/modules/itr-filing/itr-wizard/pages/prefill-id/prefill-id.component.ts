@@ -1297,6 +1297,17 @@ export class PrefillIdComponent implements OnInit {
                 ? 'N'
                 : 'Y';
 
+            ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo
+              ? (this.ITR_Obj.orgITRAckNum =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo)
+              : (this.ITR_Obj.orgITRAckNum = null);
+
+            ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
+              ? (this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
+                ))
+              : (this.ITR_Obj.orgITRDate = null);
+
             if (this.ITR_Type === 'ITR1') {
               if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N') {
                 this.regime = 'OLD';
@@ -2477,6 +2488,18 @@ export class PrefillIdComponent implements OnInit {
               11
                 ? 'N'
                 : 'Y';
+
+            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
+              ? (this.ITR_Obj.orgITRAckNum =
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo)
+              : (this.ITR_Obj.orgITRAckNum = null);
+
+            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OrigRetFiledDate
+              ? (this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OrigRetFiledDate
+                ))
+              : (this.ITR_Obj.orgITRDate = null);
 
             // SETTING REGIME TYPE FOR ITR2
             if (this.ITR_Type === 'ITR2') {

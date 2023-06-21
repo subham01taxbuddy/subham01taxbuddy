@@ -319,7 +319,7 @@ export class DashboardComponent implements OnInit {
 
     let param = `/dashboard/itr-users-overview?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&page=0&size=30`
 
-    this.itrService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success == false) {
         this.itrOverview = null;
         this._toastMessageService.alert("error", response.message);
