@@ -341,6 +341,7 @@ export class SharesAndEquityComponent
       stampDutyValue: [item ? item.stampDutyValue : null],
       valueInConsideration: [item ? item.valueInConsideration : null],
       capitalGain: [item ? item.capitalGain : null],
+      totalFairMarketValueOfCapitalAsset: [item ? item.totalFairMarketValueOfCapitalAsset : null],
     });
   }
 
@@ -421,6 +422,11 @@ export class SharesAndEquityComponent
 
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  checkBuyDateBefore31stJan(securities){
+    return new Date(securities.controls['purchaseDate'].value) <
+    new Date('02/01/2018');
   }
 
   calculateGainType(securities) {
@@ -533,6 +539,13 @@ export class SharesAndEquityComponent
             securities.controls['grandFatheredValue'].setValue(
               res.assetDetails[0].purchaseCost
             );
+          }
+          if (res.assetDetails[0].totalFairMarketValueOfCapitalAsset) {
+            securities.controls['totalFairMarketValueOfCapitalAsset'].setValue(
+              res.assetDetails[0].totalFairMarketValueOfCapitalAsset
+            );
+          } else {
+            securities.controls['grandFatheredValue'].setValue(0);
           }
         },
         (error) => {

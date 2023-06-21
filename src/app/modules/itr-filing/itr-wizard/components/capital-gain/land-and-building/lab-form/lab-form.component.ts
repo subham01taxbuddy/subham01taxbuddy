@@ -365,6 +365,7 @@ export class LabFormComponent implements OnInit {
       algorithm: 'cgProperty',
       capitalGain: 0,
       grandFatheredValue: 0,
+      totalFairMarketValueOfCapitalAsset: 0
     };
     if (cgObject.assetDetails && cgObject.assetDetails.length > 0) {
       Object.assign(assetDetails, cgObject.assetDetails[this.currentCgIndex]);
