@@ -1296,11 +1296,6 @@ export class PrefillIdComponent implements OnInit {
               ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 11
                 ? 'N'
                 : 'Y';
-            this.ITR_Obj.orgITRAckNum =
-              ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo;
-            this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-              ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
-            );
 
             if (this.ITR_Type === 'ITR1') {
               if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N') {
@@ -2482,11 +2477,6 @@ export class PrefillIdComponent implements OnInit {
               11
                 ? 'Y'
                 : 'N';
-            this.ITR_Obj.orgITRAckNum =
-              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo;
-            this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OrigRetFiledDate
-            );
 
             // SETTING REGIME TYPE FOR ITR2
             if (this.ITR_Type === 'ITR2') {
@@ -4156,7 +4146,7 @@ export class PrefillIdComponent implements OnInit {
                       grandFatheredValue: null,
                       brokerName: null,
                       //TODO: shreekant update for summary json key
-                      totalFairMarketValueOfCapitalAsset: null
+                      totalFairMarketValueOfCapitalAsset: null,
                     });
                   } else {
                     const equityLtcgDetail = {
@@ -4220,7 +4210,7 @@ export class PrefillIdComponent implements OnInit {
                           grandFatheredValue: null,
                           brokerName: null,
                           //TODO: shreekant update for summary json
-                          totalFairMarketValueOfCapitalAsset: null
+                          totalFairMarketValueOfCapitalAsset: null,
                         },
                       ],
                       deductionAmount: null,
@@ -4370,7 +4360,7 @@ export class PrefillIdComponent implements OnInit {
                       grandFatheredValue: null,
                       brokerName: null,
                       //TODO: shreekant update for summary json tool
-                      totalFairMarketValueOfCapitalAsset: null
+                      totalFairMarketValueOfCapitalAsset: null,
                     });
                   } else {
                     const equityStcgDetail = {
