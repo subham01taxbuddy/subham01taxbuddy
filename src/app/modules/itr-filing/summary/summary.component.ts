@@ -258,6 +258,71 @@ export class SummaryComponent implements OnInit {
       };
       businessIncomeTotal: Number;
     };
+    capitalGain: {
+      shortTerm: {
+        ShortTerm15Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTerm30Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTermAppSlabRate: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTermSplRateDTAA: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+      };
+      totalShortTerm: Number;
+      longTerm: {
+        LongTerm10Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        LongTerm20Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        LongTermSplRateDTAA: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+      };
+      totalLongTerm: Number;
+      totalCapitalGain: Number;
+    };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
       currentYearLossesSetOff: [
@@ -712,6 +777,72 @@ export class SummaryComponent implements OnInit {
                       ?.PersumptiveInc44AE?.IncChargeableUnderBus
                   : 0,
             },
+            capitalGain: {
+              shortTerm: {
+                ShortTerm15Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTerm30Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTermAppSlabRate: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTermSplRateDTAA: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+              },
+              totalShortTerm: 0,
+              longTerm: {
+                LongTerm10Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                LongTerm20Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                LongTermSplRateDTAA: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+              },
+              totalLongTerm: 0,
+              totalCapitalGain: 0,
+            },
+
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
@@ -1659,6 +1790,119 @@ export class SummaryComponent implements OnInit {
                     ]?.ProfBusGain?.TotProfBusGain
                   : 0,
             },
+            capitalGain: {
+              shortTerm: {
+                ShortTerm15Per: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @15%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm15Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm15Per,
+                  },
+                ],
+                ShortTerm30Per: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @30%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm30Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm30Per,
+                  },
+                ],
+                ShortTermAppSlabRate: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @ slab rate',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                  },
+                ],
+                ShortTermSplRateDTAA: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @ special rate DTAA',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+                  },
+                ],
+              },
+              totalShortTerm:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.ShortTerm?.TotalShortTerm,
+              longTerm: {
+                LongTerm10Per: [
+                  {
+                    nameOfAsset: 'long Term Capital Gains @10%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm10Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm10Per,
+                  },
+                ],
+                LongTerm20Per: [
+                  {
+                    nameOfAsset: 'long Term Capital Gains @20%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                  },
+                ],
+                LongTermSplRateDTAA: [
+                  {
+                    nameOfAsset: 'long Term Capital Gains @ special rate DTAA',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+                  },
+                ],
+              },
+              totalLongTerm:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.LongTerm?.TotalLongTerm,
+              totalCapitalGain:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.TotalCapGains,
+            },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.TotalTI,
@@ -2271,7 +2515,12 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
           };
-          console.log(this.finalCalculations, 'finalCalculations');
+          console.log(
+            this.finalCalculations,
+            'finalCalculations',
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB_TI']
+              ?.CapGain?.ShortTerm?.ShortTerm15Per
+          );
 
           this.keys = {
             // 1. SALARY INCOME
@@ -2843,6 +3092,71 @@ export class SummaryComponent implements OnInit {
                     businessIncomeTotal:
                       this.finalSummary?.assessment?.taxSummary
                         ?.presumptiveIncome,
+                  },
+                  capitalGain: {
+                    shortTerm: {
+                      ShortTerm15Per: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      ShortTerm30Per: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      ShortTermAppSlabRate: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      ShortTermSplRateDTAA: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                    },
+                    totalShortTerm: 0,
+                    longTerm: {
+                      LongTerm10Per: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      LongTerm20Per: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      LongTermSplRateDTAA: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                    },
+                    totalLongTerm: 0,
+                    totalCapitalGain: 0,
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -3761,6 +4075,71 @@ export class SummaryComponent implements OnInit {
                   businessIncomeTotal:
                     this.finalSummary?.assessment?.taxSummary
                       ?.presumptiveIncome,
+                },
+                capitalGain: {
+                  shortTerm: {
+                    ShortTerm15Per: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    ShortTerm30Per: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    ShortTermAppSlabRate: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    ShortTermSplRateDTAA: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                  },
+                  totalShortTerm: 0,
+                  longTerm: {
+                    LongTerm10Per: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    LongTerm20Per: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    LongTermSplRateDTAA: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                  },
+                  totalLongTerm: 0,
+                  totalCapitalGain: 0,
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
