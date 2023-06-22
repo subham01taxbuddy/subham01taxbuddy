@@ -8,7 +8,8 @@ import { Observable, Subject } from 'rxjs';
 })
 export class GenericCsvService {
   headers: any;
-  pageSize = 20;
+  pageSize = 30;
+  size = 30;
   data = [];
   count: number;
   constructor(
@@ -30,12 +31,12 @@ export class GenericCsvService {
     } else {
       addOn = '&';
     }
-    paramUrl = `${param}${addOn}page=${page}&size=${this.pageSize}`;
+    paramUrl = `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
     this.count = 0;
     await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     page += 1;
     for (; page < this.count; page++) {
-      paramUrl = `${param}${addOn}page=${page}&size=${this.pageSize}`;
+      paramUrl = `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
     this.jsonToCsvService.downloadFile(this.data, name, fields);
