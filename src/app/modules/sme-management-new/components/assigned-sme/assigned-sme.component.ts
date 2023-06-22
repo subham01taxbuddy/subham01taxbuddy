@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -97,7 +98,7 @@ export class AssignedSmeComponent implements OnInit {
   }
 
   advanceSearch(key: any) {
-    if(this.leaderId || this.ownerId){
+    if(this.leaderId || this.ownerId || this.coFilerId || this.coOwnerId){
       this.getSmeList()
       return;
     }
@@ -169,10 +170,10 @@ export class AssignedSmeComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.getSmeList()
+      // this.getSmeList()
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getSmeList();
+      // this.getSmeList();
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -296,7 +297,7 @@ export class AssignedSmeComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
         pinned: 'left',
@@ -539,8 +540,8 @@ export class AssignedSmeComponent implements OnInit {
       },
     ];
   }
-  public rowSelection: 'single' | 'multiple' = 'multiple';
-  rowMultiSelectWithClick: true;
+  public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   createRowData(data: any) {
     var smeArray = [];
@@ -624,7 +625,9 @@ export class AssignedSmeComponent implements OnInit {
   }
 
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
+  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    const loggedInSmeUserId=this.loggedInSme[0].userId
     this.searchParam.page = 0;
     this.searchParam.size = 15;
     this.config.currentPage = 1;
@@ -632,9 +635,14 @@ export class AssignedSmeComponent implements OnInit {
     this.searchVal = null;
     this.showError = false;
     this?.leaderDropDown?.resetDropdown();
+    this.agentId = loggedInSmeUserId;
 
-    this.getSmeList();
-
+    if(this.coOwnerDropDown){
+      this.coOwnerDropDown.resetDropdown();
+      this.getSmeList(true);
+    }else{
+      this.getSmeList();
+    }
   }
 
 }

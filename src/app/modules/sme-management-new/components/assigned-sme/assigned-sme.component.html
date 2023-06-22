@@ -3,7 +3,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]=false>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -18,7 +18,7 @@
            </div>
 
            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-            <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
           </div>
 
           <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
