@@ -697,6 +697,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       setTimeout(()=>{
         if(this.updateSuccessful) {
+          this.loading = false;
+          this._toastMessageService.alert(
+            'success',
+            'SME details updated successfully'
+          );
           this.location.back();
         }
       }, 500);
@@ -720,7 +725,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       let res:any
        res = await this.userMsService.putMethod(param, requestData).toPromise();
       console.log('SME assignment updated', res);
-      this.loading = false;
+      // this.loading = false;
       this.initialCall = true;
 
       if (res.success === false) {
@@ -731,10 +736,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
         this.updateSuccessful = false;
       } else {
-        this._toastMessageService.alert(
-          'success',
-          'sme details updated successfully'
-        );
+        // this._toastMessageService.alert(
+        //   'success',
+        //   'sme details updated successfully'
+        // );
         this.updateSuccessful = true;
       }
 

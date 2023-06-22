@@ -24,7 +24,7 @@ export class CancelSubscriptionComponent implements OnInit {
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
-    itemsPerPage: 10,
+    itemsPerPage: 20,
     currentPage: 1,
     totalItems: null,
   };
@@ -106,8 +106,8 @@ export class CancelSubscriptionComponent implements OnInit {
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
   }
 
-  public rowSelection: 'single' | 'multiple' = 'multiple';
-  rowMultiSelectWithClick: true;
+  public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
@@ -221,7 +221,7 @@ export class CancelSubscriptionComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
 

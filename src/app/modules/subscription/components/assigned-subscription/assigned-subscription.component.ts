@@ -51,7 +51,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 10,
+    pageSize: 20,
     assigned: true,
     // owner:true,
     mobileNumber: null,
@@ -80,7 +80,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 10,
+      itemsPerPage: 20,
       currentPage: 1,
       totalItems: null,
     };
@@ -353,7 +353,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
 
@@ -523,8 +523,8 @@ export class AssignedSubscriptionComponent implements OnInit {
       },
     ];
   }
-  public rowSelection: 'single' | 'multiple' = 'multiple';
-  rowMultiSelectWithClick: true;
+  public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   createRowData(subscriptionData) {
 

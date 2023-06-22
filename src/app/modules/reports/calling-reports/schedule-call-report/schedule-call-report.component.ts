@@ -45,7 +45,7 @@ export class ScheduleCallReportComponent implements OnInit {
   config: any;
   searchParam: any = {
     page: 0,
-    pageSize: 8,
+    pageSize: 20,
   };
   loggedInSme: any;
   roles: any;
@@ -286,7 +286,7 @@ export class ScheduleCallReportComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.searchParam.page = 0;
-    this.searchParam.pageSize = 8;
+    this.searchParam.pageSize = 20;
     this.config.currentPage = 1
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {

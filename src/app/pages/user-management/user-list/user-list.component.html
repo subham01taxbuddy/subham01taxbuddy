@@ -7,10 +7,10 @@
         <mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
         Filter - All Users List:
-        </mat-panel-title>     
+        </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="rowClr">
-        <div class="surround">         
+        <div class="surround">
           <div class="row">
             <div class="col-sm-5">
               <label class="input__label" for="attr">Select attribute</label>
@@ -20,23 +20,23 @@
                   {{drop.name}}</option>
               </select>
             </div>
-  
+
           <div class="col-sm-5">
             <div class="input">
-              <label class="clrTx" for="attr">Enter value</label>            
+              <label class="clrTx" for="attr">Enter value</label>
                 <input type="text" class="select__box ogp_select" style="background-image:none"
-                  [(ngModel)]="searchVal" name="searchVal" />              
+                  [(ngModel)]="searchVal" name="searchVal" />
             </div>
           </div>
            <div class="col-sm-2">
             <button class="srch-btn btnTp" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)"><i
               class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
-          </div> 
-  
+          </div>
+
       </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>
@@ -57,7 +57,7 @@
         </table>
 
         <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
-          (rowClicked)="onUsersRowClicked($event)" paginationPageSize=15 pagination=true>
+          (rowClicked)="onUsersRowClicked($event)" paginationPageSize=20 pagination=true>
 
         </ag-grid-angular>
 

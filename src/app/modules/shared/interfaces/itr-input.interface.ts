@@ -274,6 +274,7 @@ export interface AssetDetails {
   algorithm: string;
   fmvAsOn31Jan2018: string;
   indexCostOfAcquisition: number;
+  totalFairMarketValueOfCapitalAsset:number;
 }
 
 export interface NewCapitalGain {

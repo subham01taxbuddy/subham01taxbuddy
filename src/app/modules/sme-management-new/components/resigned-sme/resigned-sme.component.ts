@@ -22,7 +22,7 @@ export class ResignedSmeComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 20,
+    size: 20,
     // assigned:true,
     // owner:true,
     active: false,
@@ -49,7 +49,7 @@ export class ResignedSmeComponent implements OnInit {
       sortable: true,
     };
     this.config = {
-      itemsPerPage: 30,
+      itemsPerPage: 20,
       currentPage: 1,
       totalItems: null,
     };
@@ -100,7 +100,7 @@ export class ResignedSmeComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
         pinned: 'left',
@@ -264,8 +264,8 @@ export class ResignedSmeComponent implements OnInit {
       },
     ];
   }
-  public rowSelection: 'single' | 'multiple' = 'multiple';
-  rowMultiSelectWithClick: true;
+  public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   createRowData(data: any) {
     var smeArray = [];

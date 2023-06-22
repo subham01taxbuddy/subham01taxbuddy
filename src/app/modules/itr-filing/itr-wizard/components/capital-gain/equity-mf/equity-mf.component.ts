@@ -199,7 +199,7 @@ export class EquityMfComponent implements OnInit {
         suppressMovable: true,
       },
       {
-        headerName: 'FMV as on 31st Jan 2018',
+        headerName: 'FMV Per Unit as on 31st Jan 2018',
         field: 'fmvAsOn31Jan2018',
         editable: false,
         suppressMovable: true,
@@ -302,7 +302,7 @@ export class EquityMfComponent implements OnInit {
             }
             this.listedCg.assetDetails.push(result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
-            
+
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
             if(!this.unlistedCg.assetDetails) {
               this.unlistedCg.assetDetails = [];
@@ -968,7 +968,7 @@ export class EquityMfComponent implements OnInit {
       this.calculateTotalUnlistedCg();
     }
     if(this.listedCg.assetDetails.length === 0) {
-      //remove deductions 
+      //remove deductions
       this.listedCg.deduction = [];
       this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction);
     } else if(this.unlistedCg.assetDetails.length === 0) {
@@ -1059,17 +1059,17 @@ export class EquityMfComponent implements OnInit {
   saveCg() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    
+
     this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_LISTED')
     if(this.listedCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain.push(this.listedCg);
     }
-    
+
     this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_UNLISTED')
     if(this.unlistedCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain.push(this.unlistedCg);
     }
-    
+
     console.log('CG:', this.ITR_JSON.capitalGain);
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
       console.log(result);

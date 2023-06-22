@@ -97,12 +97,12 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     if (this.leaderId && !this.ownerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    else if (this.ownerId) {
+    if (this.ownerId) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else{
-      userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
-    }
+    // else{
+    //   userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
+    // }
 
     param =`/dashboard/partner-commission?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
@@ -117,9 +117,9 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
         this.allDetails = response.data;
         this.calculateCounts();
         // this.config.docUpload.totalItems = response.data.totalElements;
-        const totalItrFiled = this.allDetails.reduce((total, item) => total + item.totalItrFiled, 0);
-        const totalPaidRevenue = this.allDetails.reduce((total, item) => total + item.totalPaidRevenue, 0);
-        const totalCommissionEarned = this.allDetails.reduce((total, item) => total + item.totalCommissionEarned, 0);
+        const totalItrFiled = this.allDetails?.reduce((total, item) => total + item.totalItrFiled, 0);
+        const totalPaidRevenue = this.allDetails?.reduce((total, item) => total + item.totalPaidRevenue, 0);
+        const totalCommissionEarned = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarned, 0);
 
         // Assign the totals to a property
         this.grandTotal = {
