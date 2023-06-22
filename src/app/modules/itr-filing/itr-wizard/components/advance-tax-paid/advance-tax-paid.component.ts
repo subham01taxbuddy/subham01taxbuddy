@@ -118,7 +118,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     this.loading = true;
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS =
-        this.salaryForm.value.salaryArray;
+        (this.salaryForm.controls['salaryArray'] as FormGroup).getRawValue();
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
