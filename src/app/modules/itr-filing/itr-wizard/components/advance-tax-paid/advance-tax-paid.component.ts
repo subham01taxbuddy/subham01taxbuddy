@@ -74,7 +74,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
   addSalary() {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid) {
+    if (salaryArray.valid || salaryArray.disabled) {
       this.addMoreSalary();
     } else {
       salaryArray.controls.forEach((element) => {
@@ -118,7 +118,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     this.loading = true;
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS =
-        this.salaryForm.value.salaryArray;
+        (this.salaryForm.controls['salaryArray'] as FormGroup).getRawValue();
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)

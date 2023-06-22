@@ -281,12 +281,12 @@ export class AssignedNewUsersComponent implements OnInit {
       this.agentId = this.filerId;
     } else if (this.ownerId) {
       this.agentId = this.ownerId;
-      this.search('agent');
+      // this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    this.search('agent');
+    // this.search('agent');
   }
 
   coOwnerId: number;
@@ -301,10 +301,10 @@ export class AssignedNewUsersComponent implements OnInit {
     }
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.search('agent');
-    } else if (this.coOwnerId) {
+      // this.search('agent');
+    } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.search('agent');
+      //  this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -1033,10 +1033,11 @@ export class AssignedNewUsersComponent implements OnInit {
       this._toastMessageService.alert('error', "You don't have calling role.");
       return;
     }
-    if (this.coOwnerToggle.value == true) {
+    if (this.coOwnerToggle.value == true){
+       agent_number = agentNumber;
+    }else {
       agent_number = agentNumber;
-    } else {
-      agent_number = data.callerAgentNumber;
+      // agent_number = data.callerAgentNumber;
     }
     const reqBody = {
       "agent_number": agent_number,

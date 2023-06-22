@@ -391,6 +391,10 @@ export class SummaryComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
     const bank = this.ITR_JSON.bankDetails?.filter(
       (item: any) => item.hasRefund === true
     );
@@ -422,6 +426,10 @@ export class SummaryComponent implements OnInit {
     } else if (this.ITR_JSON.itrType === '4') {
       this.itrType = 'ITR4';
     }
+  }
+
+  getItrTypeInSummary(){
+    return Object.keys(this.ITR_JSON.itrSummaryJson.ITR)[0].substring(3);
   }
 
   calculations() {

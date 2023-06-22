@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]=false>
       <mat-expansion-panel-header>
         <mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
@@ -13,7 +13,7 @@
         </div>
       </mat-expansion-panel-header>
       <div class="rowClr">
-        <div class="surround">         
+        <div class="surround">
        <div class="row">
         <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
@@ -60,14 +60,14 @@
             </button>
 
             <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                aria-hidden="true"></i>&nbsp;Search</button>       
-            
+                aria-hidden="true"></i>&nbsp;Search</button>
+
           </div>
 
   </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>
@@ -75,7 +75,7 @@
 
 
 
-<div class="main clearfix">     
+<div class="main clearfix">
 <!-- Container -->
       <!-- Top card Ends -->
       <!-- Below Table Starts -->
@@ -87,7 +87,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div> 
+        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
         </div>
         </div>
         <table>

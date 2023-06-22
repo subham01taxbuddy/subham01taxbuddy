@@ -21,7 +21,7 @@ export class UnassignedSmeComponent implements OnInit {
   searchParam: any = {
     statusId: null,
     page: 0,
-    pageSize: 30,
+    size: 20,
     assigned:false,
     // owner:true,
     mobileNumber: null,
@@ -56,7 +56,7 @@ export class UnassignedSmeComponent implements OnInit {
 
         sortable: true,
       };this.config = {
-        itemsPerPage: 30,
+        itemsPerPage: 20,
         currentPage: 1,
         totalItems: null
       };
@@ -354,7 +354,7 @@ export class UnassignedSmeComponent implements OnInit {
 
 resetFilters() {
   this.searchParam.page = 0;
-  this.searchParam.pageSize = 20;
+  this.searchParam.size = 20;
   this.config.currentPage = 1;
   this.key = null;
   this.searchVal = null;

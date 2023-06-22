@@ -175,11 +175,11 @@ export class FilingsComponent implements OnInit {
   fromOwner(event) {
     this.searchParams.ownerUserId = event ? event.userId : null;
     console.log('fromowner:', event);
-    this.myItrsList(0, this.selectedFilingTeamMemberId);
+    // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
   fromFiler(event) {
     this.searchParams.filerUserId = event ? event.userId : null;
-    this.myItrsList(0, this.selectedFilingTeamMemberId);
+    // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
   search() {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
@@ -193,13 +193,13 @@ export class FilingsComponent implements OnInit {
   coFilerId: number;
   agentId: number;
 
-  fromCoOwner(event) {
-    this.coOwnerId = event.userId;
-    this.myItrsList(0, this.selectedFilingTeamMemberId);
+  fromCoOwner(event){
+  this.coOwnerId = event.userId;
+  // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
-  fromCoFiler(event) {
-    this.coFilerId = event.userId;
-    this.myItrsList(0, this.selectedFilingTeamMemberId);
+  fromCoFiler(event){
+  this.coFilerId = event.userId;
+  // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
   myItrsList(pageNo, filingTeamMemberId) {
