@@ -100,7 +100,7 @@ export class ResignedSmeComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
         pinned: 'left',
@@ -264,8 +264,8 @@ export class ResignedSmeComponent implements OnInit {
       },
     ];
   }
-  public rowSelection: 'single' | 'multiple' = 'multiple';
-  rowMultiSelectWithClick: true;
+  public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   createRowData(data: any) {
     var smeArray = [];

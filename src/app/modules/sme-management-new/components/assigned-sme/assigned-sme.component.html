@@ -3,7 +3,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]=false>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -13,50 +13,82 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
-           </div>
-
-           <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-            <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-          </div>
-
-          <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
-          <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme($event, true)"
-          (sendOwner)="fromSme($event, false)"></app-leader-list-dropdown>
-          </div>
-
-           <div class="col-sm-6 spsTp">
-            <label class="input__label" for="attr">Select attribute</label>
-            <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey [ngClass]="{'error': showError && (!key || !searchVal)}">
-              <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                {{drop.name}}</option>
-            </select>
-        </div>
-
-        <div class="col-sm-6 spsTp">
-            <label class="input__label" for="attr">Enter value</label>
-            <div class="input__select">
-              <input type="text" class="select__box ogp_select" style="background-image:none"
-                [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+            <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
+              </mat-slide-toggle>
             </div>
-        </div>
 
-        <div class="col-sm-12 spsTp bdrTp">
-          <button class="spsTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-            Clear form
-          </button>
-          <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
-            <i class="fa fa-search" aria-hidden="true"></i> Search
-          </button>
+            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
+                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+            </div>
 
+            <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
+              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme($event, true)"
+                (sendOwner)="fromSme($event, false)"></app-leader-list-dropdown>
+            </div>
+
+            <div class="col-sm-6 spsTp">
+              <label class="input__label" for="attr">Select attribute</label>
+              <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey
+                [ngClass]="{'error': showError && (!key || !searchVal)}">
+                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                  {{drop.name}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-6 spsTp">
+              <label class="input__label" for="attr">Enter value</label>
+              <div class="input__select">
+                <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
+                  name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+              </div>
+
+              <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+                <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)"
+                  (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+              </div>
+
+              <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
+                <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme($event, true)"
+                  (sendOwner)="fromSme($event, false)"></app-leader-list-dropdown>
+              </div>
+
+              <div class="col-sm-6 spsTp">
+                <label class="input__label" for="attr">Select attribute</label>
+                <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey
+                  [ngClass]="{'error': showError && (!key || !searchVal)}">
+                  <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                    {{drop.name}}</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6 spsTp">
+                <label class="input__label" for="attr">Enter value</label>
+                <div class="input__select">
+                  <input type="text" class="select__box ogp_select" style="background-image:none"
+                    [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+                </div>
+              </div>
+
+              <div class="col-sm-12 spsTp bdrTp">
+                <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+                  <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="spsTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+                  Clear form
+                </button>
+                <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
+                  <i class="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-</div>
-</div>
-
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 
@@ -120,12 +152,12 @@
     </div>
   </div>
 
-      <table>
-        <tr *ngFor="let item of smeInfo | paginate : config"></tr>
-      </table>
-      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
-        (rowClicked)="onSmeRowClicked($event)" >
-      </ag-grid-angular>
-      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <table>
+    <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+  </table>
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
+    (rowClicked)="onSmeRowClicked($event)">
+  </ag-grid-angular>
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
- </div>
+</div>
