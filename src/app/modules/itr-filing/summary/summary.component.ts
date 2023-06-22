@@ -428,7 +428,7 @@ export class SummaryComponent implements OnInit {
     }
   }
 
-  getItrTypeInSummary(){
+  getItrTypeInSummary() {
     return Object.keys(this.ITR_JSON.itrSummaryJson.ITR)[0].substring(3);
   }
 
@@ -1709,12 +1709,28 @@ export class SummaryComponent implements OnInit {
                     : 0,
               },
               BroughtFwdLossesSetoffTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
-                  ?.TotalBFLossSetOff?.TotBFLossSetoff +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
-                  ?.TotalBFLossSetOff?.TotUnabsorbedDeprSetoff +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA
-                  ?.TotalBFLossSetOff?.TotAllUs35cl4Setoff,
+                Number(
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotBFLossSetoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff?.TotBFLossSetoff
+                    : 0
+                ) +
+                Number(
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotUnabsorbedDeprSetoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff
+                        ?.TotUnabsorbedDeprSetoff
+                    : 0
+                ) +
+                Number(
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotAllUs35cl4Setoff
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleBFLA?.TotalBFLossSetOff?.TotAllUs35cl4Setoff
+                    : 0
+                ),
             },
             grossTotalIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
