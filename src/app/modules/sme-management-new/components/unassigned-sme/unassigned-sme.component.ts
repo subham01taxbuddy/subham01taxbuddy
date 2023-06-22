@@ -169,7 +169,7 @@ export class UnassignedSmeComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
         pinned: 'left',
@@ -299,8 +299,8 @@ export class UnassignedSmeComponent implements OnInit {
     ]
 
   }
-  public rowSelection: 'single' | 'multiple' = 'multiple';
-  rowMultiSelectWithClick: true;
+  public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   createRowData(data:any) {
     var smeArray = [];

@@ -5,11 +5,13 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 
 
 export const MY_FORMATS = {
@@ -39,7 +41,7 @@ export const MY_FORMATS = {
 })
 export class ScheduleCallReportComponent implements OnInit {
   loading = false;
-  scheduleCallingReport:any;
+  scheduleCallingReport: any;
   config: any;
   searchParam: any = {
     page: 0,
@@ -51,19 +53,17 @@ export class ScheduleCallReportComponent implements OnInit {
 
   constructor(
     public datePipe: DatePipe,
-    private userMsService: UserMsService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private itrService: ItrMsService,
-    private jsonToCsvService: JsonToCsvService
+    private genericCsvService: GenericCsvService,
   ) {
     this.scheduleCallingReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
       sortable: true,
       filter: true,
     };
@@ -82,7 +82,7 @@ export class ScheduleCallReportComponent implements OnInit {
 
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports();
@@ -124,7 +124,7 @@ export class ScheduleCallReportComponent implements OnInit {
       this.config.currentPage = 1
     }
 
-    if(this.ownerId && pageChange){
+    if (this.ownerId && pageChange) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
 
@@ -134,7 +134,7 @@ export class ScheduleCallReportComponent implements OnInit {
       this.config.currentPage = 1
     }
 
-    if(this.filerId && pageChange){
+    if (this.filerId && pageChange) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
     // else{
@@ -262,11 +262,11 @@ export class ScheduleCallReportComponent implements OnInit {
       },
 
 
-    ]}
+    ]
+  }
 
-  downloadReport() {
+  async downloadReport() {
     this.loading = true;
-    // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -275,23 +275,12 @@ export class ScheduleCallReportComponent implements OnInit {
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
-    // else{
-    //   userFilter += `&leaderUserId=${loggedInId}`
-    // }
 
-    param = `/calling-report/schedule-call-report?page=0&pageSize=100000${userFilter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        return this.jsonToCsvService.downloadFile(response?.data?.content);
-      } else {
-        this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", 'Failed to get daily-calling-report');
-    });
+    param = `/calling-report/schedule-call-report?${userFilter}`;
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-report');
+
+    this.loading = false;
+
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -302,14 +291,14 @@ export class ScheduleCallReportComponent implements OnInit {
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports();
   }
 
   pageChanged(event) {
-    let pageChange =event
+    let pageChange = event
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showReports(pageChange);
