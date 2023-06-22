@@ -191,19 +191,19 @@ export class SubLeaderDashboardComponent implements OnInit {
     let param=''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
-      userFilter += `ownerUserId=${this.ownerId}`;
+      userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    else if (this.filerId) {
-      userFilter += `filerUserId=${this.filerId}`;
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
-    else{
-      userFilter += `leaderUserId=${this.loggedInSmeUserId}`;
-    }
+    // else{
+    //   userFilter += `leaderUserId=${this.loggedInSmeUserId}`;
+    // }
 
     if(this.filerId){
-      param = `/dashboard/partner-commission?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
+      param = `/dashboard/partner-commission?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     }else{
-      param = `/dashboard/partner-commission-cumulative?${userFilter}&fromDate=${fromDate}&toDate=${toDate}`;
+      param = `/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     }
 
     this.userMsService.getMethodNew(param).subscribe(
