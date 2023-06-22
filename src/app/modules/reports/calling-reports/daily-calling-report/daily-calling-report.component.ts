@@ -11,7 +11,9 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import {AppConstants} from "../../../shared/constants";
+import { AppConstants } from "../../../shared/constants";
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -41,6 +43,8 @@ export const MY_FORMATS = {
 })
 export class DailyCallingReportComponent implements OnInit {
   loading = false;
+  
+fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
   startDate = new FormControl('');
   endDate = new FormControl('');
   minEndDate = new Date(2023, 3, 1);
@@ -62,8 +66,7 @@ export class DailyCallingReportComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private itrService: ItrMsService,
-    private jsonToCsvService: JsonToCsvService
+    private genericCsvService: GenericCsvService
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -92,7 +95,7 @@ export class DailyCallingReportComponent implements OnInit {
 
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports();
@@ -314,11 +317,8 @@ export class DailyCallingReportComponent implements OnInit {
     ]
   }
 
-  downloadReport() {
+  async downloadReport() {
     this.loading = true;
-    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -327,20 +327,12 @@ export class DailyCallingReportComponent implements OnInit {
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&page=0&pageSize=100000${userFilter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        return this.jsonToCsvService.downloadFile(response?.data?.content);
-      } else {
-        this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", 'Failed to get daily-calling-report');
-    });
+    param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'daily-calling-report', this.fields);
+    this.loading = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -353,7 +345,7 @@ export class DailyCallingReportComponent implements OnInit {
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports();
