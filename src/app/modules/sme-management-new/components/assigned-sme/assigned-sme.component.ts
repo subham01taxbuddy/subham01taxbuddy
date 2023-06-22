@@ -6,10 +6,12 @@ import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-assigned-sme',
@@ -22,7 +24,7 @@ export class AssignedSmeComponent implements OnInit {
   smeListLength: any;
   smeInfo: any;
   config: any;
-  loggedInSme:any;
+  loggedInSme: any;
   roles: any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
@@ -30,23 +32,24 @@ export class AssignedSmeComponent implements OnInit {
     statusId: null,
     page: 0,
     size: 15,
-    assigned:true,
+    assigned: true,
     // owner:true,
     mobileNumber: null,
     emailId: null,
   };
   searchMenus = [{
     value: 'mobileNumber', name: 'Mobile Number'
-  },{
+  }, {
     value: 'name', name: 'Name'
   }, {
     value: 'kommunicateEmailId', name: 'Kommunicate Email Id'
-  },{
-    value:'smeOfficialEmailId',name:'Official Email ID'
+  }, {
+    value: 'smeOfficialEmailId', name: 'Official Email ID'
   },];
   searchVal: string = "";
   key: any;
   showError: boolean = false;
+  fields = ["Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom"]
 
 
   constructor(
@@ -56,7 +59,8 @@ export class AssignedSmeComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private matDialog: MatDialog,
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
+    private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -64,7 +68,7 @@ export class AssignedSmeComponent implements OnInit {
       columnDefs: this.smeCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -72,17 +76,17 @@ export class AssignedSmeComponent implements OnInit {
       itemsPerPage: 15,
       currentPage: 1,
       totalItems: null,
-      internalCount:null,
-      externalCount:null,
-      activeCount:null,
+      internalCount: null,
+      externalCount: null,
+      activeCount: null,
       inactiveCount: null,
       assignmentOnCount: null,
-      assignmentOffCount:null
+      assignmentOffCount: null
     };
   }
 
   ngOnInit() {
-    this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.agentId = this.utilsService.getLoggedInUserID()
     this.roles = this.loggedInSme[0]?.roles
     console.log('roles', this.roles)
@@ -100,20 +104,20 @@ export class AssignedSmeComponent implements OnInit {
     //   this._toastMessageService.alert('error','Please select attribute and also enter search value.');
     //   return;
     // }else{
-      this.showError = false;
-      this.getSmeSearchList(key, this.searchVal);
+    this.showError = false;
+    this.getSmeSearchList(key, this.searchVal);
     // }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
     //https://uat-api.taxbuddy.com/report/sme-details-new/7521?page=0&pageSize=30&assigned=true
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
 
-    if(this.searchParam.emailId){
+    if (this.searchParam.emailId) {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
-    if(searchValue){
+    if (searchValue) {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
@@ -122,24 +126,24 @@ export class AssignedSmeComponent implements OnInit {
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
-        this.loading = false;
-        console.log("Search result:", result)
-        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0
-        ) {
-          this.loading = false;
-          this.smeInfo = result.data.content;
-          this.config.totalItems = result.data.totalElements;
-          this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
-        }else{
-          this.loading = false;
-          this._toastMessageService.alert('error','No Lead Data Found .');
-          this.smeListGridOptions.api?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
-          // this.getSmeList();
-        }
-     },(error) => {
       this.loading = false;
-      this._toastMessageService.alert('error','No Lead Data Found .');
+      console.log("Search result:", result)
+      if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0
+      ) {
+        this.loading = false;
+        this.smeInfo = result.data.content;
+        this.config.totalItems = result.data.totalElements;
+        this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'No Lead Data Found .');
+        this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+        // this.getSmeList();
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'No Lead Data Found .');
       this.smeListGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     });
@@ -149,22 +153,22 @@ export class AssignedSmeComponent implements OnInit {
   coOwnerId: number;
   coFilerId: number;
   agentId: number;
-  leaderId:number;
-  ownerId:number;
-  smeUserId:number;
+  leaderId: number;
+  ownerId: number;
+  smeUserId: number;
 
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
-    if(this.coFilerId) {
+    if (this.coFilerId) {
       this.agentId = this.coFilerId;
       this.getSmeList()
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
       this.getSmeList();
     } else {
@@ -176,19 +180,19 @@ export class AssignedSmeComponent implements OnInit {
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-     this.leaderId = event ? event.userId : null;
-   } else {
-     this.ownerId = event ? event.userId : null;
-   }
-   if (this.ownerId) {
-     this.smeUserId = this.ownerId;
-     this.getSmeList()
-   }
+      this.leaderId = event ? event.userId : null;
+    } else {
+      this.ownerId = event ? event.userId : null;
+    }
+    if (this.ownerId) {
+      this.smeUserId = this.ownerId;
+      this.getSmeList()
+    }
     if (this.leaderId) {
-     this.smeUserId = this.leaderId;
-     this.getSmeList()
-   }
- }
+      this.smeUserId = this.leaderId;
+      this.getSmeList()
+    }
+  }
 
   getSmeList(isAgent?) {
     // for co-owner-
@@ -196,18 +200,18 @@ export class AssignedSmeComponent implements OnInit {
     //for new leader wise and owner wise filter
     //https://uat-api.taxbuddy.com/report/sme-details-new/1064?page=0&size=30&assigned=true&leaderView=true&smeUserId=1064
 
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId = this.loggedInSme[0].userId
 
     if (this.coOwnerToggle.value == false) {
       this.agentId = loggedInSmeUserId;
     }
 
-    let userFilter=''
-    if(this.leaderId){
-      userFilter='&leaderView=true&smeUserId='+this.leaderId;
+    let userFilter = ''
+    if (this.leaderId) {
+      userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
     }
-    if(this.ownerId){
-      userFilter='&ownerView=true&smeUserId='+this.ownerId;
+    if (this.ownerId) {
+      userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
     }
 
 
@@ -245,7 +249,7 @@ export class AssignedSmeComponent implements OnInit {
             this.createRowData(this.smeInfo)
           );
         } else {
-          this.config.totalItems =0
+          this.config.totalItems = 0
           this.loading = false;
           console.log('in else');
           this.smeListGridOptions.api?.setRowData(
@@ -264,6 +268,35 @@ export class AssignedSmeComponent implements OnInit {
     );
   }
 
+  async downloadReport() {
+    this.loading = true;
+    const loggedInSmeUserId = this.loggedInSme[0].userId
+
+    if (this.coOwnerToggle.value == false) {
+      this.agentId = loggedInSmeUserId;
+    }
+
+    let userFilter = ''
+    if (this.leaderId) {
+      userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
+    }
+    if (this.ownerId) {
+      userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
+    }
+
+
+    let param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+
+    if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', this.fields);
+    this.loading = false;
+  }
+
   smeCreateColumnDef() {
     return [
       {
@@ -275,7 +308,7 @@ export class AssignedSmeComponent implements OnInit {
         pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
-        cellRenderer: (params) => {},
+        cellRenderer: (params) => { },
       },
       {
         headerName: 'Mobile No',
@@ -324,8 +357,8 @@ export class AssignedSmeComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
-          if(params.value) {
+        cellRenderer: function (params) {
+          if (params.value) {
             return `<a href="mailto:${params.value}">${params.value}</a>`
           } else {
             return 'NA';
@@ -359,9 +392,10 @@ export class AssignedSmeComponent implements OnInit {
         },
         cellRenderer: (params: any) => {
           // console.log('param',params)
-        const items = params?.value;
-        const itemsHtml = items?.map(item => `<li>${item}</li>`)?.join('');
-        return `<ul>${itemsHtml}</ul>`;}
+          const items = params?.value;
+          const itemsHtml = items?.map(item => `<li>${item}</li>`)?.join('');
+          return `<ul>${itemsHtml}</ul>`;
+        }
       },
       {
         headerName: 'Assigned Services',
@@ -382,76 +416,76 @@ export class AssignedSmeComponent implements OnInit {
         cellRenderer: (params: any) => {
           // console.log('param',params)
           const smeServices = params?.value;
-           let result=[] ; let result1='';let result2='';let result3='';let result4='';let result5='';let result6='';let result7='';let result8='';
+          let result = []; let result1 = ''; let result2 = ''; let result3 = ''; let result4 = ''; let result5 = ''; let result6 = ''; let result7 = ''; let result8 = '';
           smeServices?.forEach((element) => {
             if (element?.serviceType == "ITR") {
-              var r1='ITR';
+              var r1 = 'ITR';
               let r2 = '';
-              if(element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true" ></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true" ></i>&nbsp;'
               }
-               result1=r2+r1 ;
+              result1 = r2 + r1;
             }
             else if (element?.serviceType == "NRI") {
-              var r1='NRI';
+              var r1 = 'NRI';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
-               result2=(r2+r1)||'';
+              result2 = (r2 + r1) || '';
             }
             else if (element?.serviceType == "TPA") {
-              var r1='TPA';
+              var r1 = 'TPA';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
-               result3=r2+r1;
+              result3 = r2 + r1;
             }
             else if (element?.serviceType == "GST") {
-              var r1='GST';
+              var r1 = 'GST';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
-               result4=r2+r1;
+              result4 = r2 + r1;
             }
             else if (element?.serviceType == "NOTICE") {
-              var r1='NOTICE';
+              var r1 = 'NOTICE';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i> &nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i> &nbsp;'
               }
-               result5=r2+r1;
+              result5 = r2 + r1;
             }
             else if (element?.serviceType == "WB") {
-              var r1='WB';
+              var r1 = 'WB';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
-               result6=r2+r1;
+              result6 = r2 + r1;
             }
             else if (element?.serviceType == "PD") {
-              var r1='PD';
+              var r1 = 'PD';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
-               result7=r2+r1;
+              result7 = r2 + r1;
             }
             else if (element?.serviceType == "MF") {
-              var r1='MF';
+              var r1 = 'MF';
               let r2 = '';
-              if( element?.assignmentStart == true){
-                r2='<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
+              if (element?.assignmentStart == true) {
+                r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
               }
-               result8=r2+r1;
+              result8 = r2 + r1;
             }
           })
-            result.push(result1,result2,result3,result4,result5,result6,result7,result8);
-            const itemsHtml = result?.map(item => `<li>${item}</li>`)?.join('');
-           return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
+          result.push(result1, result2, result3, result4, result5, result6, result7, result8);
+          const itemsHtml = result?.map(item => `<li>${item}</li>`)?.join('');
+          return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
         }
       },
       {
@@ -561,16 +595,16 @@ export class AssignedSmeComponent implements OnInit {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success == false) {
         this.loading = false;
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
       if (result.success == true) {
-            this._toastMessageService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+        this._toastMessageService.alert("success", result.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
   }
 
@@ -579,16 +613,17 @@ export class AssignedSmeComponent implements OnInit {
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
       this.getSmeList(true);
-    }else{
+    } else {
       this.getSmeList();
     }
     ;
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }
