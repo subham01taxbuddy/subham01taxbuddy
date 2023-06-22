@@ -839,8 +839,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                         ?.RefundDue &&
                       this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
                         ?.RefundDue > 0
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
-                        ?.RefundDue
+                    ? '(' +
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue +
+                      ')'
                     : 0
                   : 0,
               new:
@@ -855,8 +857,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                         ?.RefundDue &&
                       this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
                         ?.RefundDue > 0
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
-                        ?.RefundDue
+                    ? '(' +
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.Refund
+                        ?.RefundDue +
+                      ')'
                     : 0
                   : 0,
             },
@@ -1224,8 +1228,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                         ?.Refund?.RefundDue &&
                       this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.Refund?.RefundDue > 0
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                        ?.Refund?.RefundDue
+                    ? '(' +
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue +
+                      ')'
                     : 0
                   : 0,
 
@@ -1241,8 +1247,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                         ?.Refund?.RefundDue &&
                       this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
                         ?.Refund?.RefundDue > 0
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
-                        ?.Refund?.RefundDue
+                    ? '(' +
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]['PartB_TTI']
+                        ?.Refund?.RefundDue +
+                      ')'
                     : 0
                   : 0,
             },
@@ -1372,11 +1380,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 old:
                   this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
                     ? this.oldSummaryIncome?.taxSummary.taxpayable
-                    : this.oldSummaryIncome?.taxSummary?.taxRefund,
+                    : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
                 new:
                   this.newSummaryIncome?.taxSummary?.taxpayable !== 0
                     ? this.newSummaryIncome?.taxSummary?.taxpayable
-                    : this.newSummaryIncome?.taxSummary?.taxRefund,
+                    : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
               },
             ];
             this.loading = false;
@@ -1508,11 +1516,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old:
                 this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
                   ? this.oldSummaryIncome?.taxSummary.taxpayable
-                  : this.oldSummaryIncome?.taxSummary?.taxRefund,
+                  : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
               new:
                 this.newSummaryIncome?.taxSummary?.taxpayable !== 0
                   ? this.newSummaryIncome?.taxSummary?.taxpayable
-                  : this.newSummaryIncome?.taxSummary?.taxRefund,
+                  : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
             },
           ];
           this.loading = false;
