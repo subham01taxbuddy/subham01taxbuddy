@@ -54,6 +54,7 @@ export class BusinessDialogComponent implements OnInit {
     } else {
       this.getMastersData();
     }
+
     this.initBusinessForm(this.data.data);
   }
 
@@ -81,10 +82,12 @@ export class BusinessDialogComponent implements OnInit {
       ],
       minimumPresumptiveIncome: [
         cash && cash[0] ? cash[0].presumptiveIncome : 0,
-        [Validators.required, Validators.min(this.amountSix)],
+        [Validators.required, Validators.min(this.amountSix )],
       ],
     });
-    console.log(this.businessForm);
+    console.log('business form ',this.businessForm);
+    this.calculateSixPer();
+    this.calculateEightPer();
   }
 
   getFullName() {
