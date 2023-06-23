@@ -237,8 +237,13 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
   updateManualFiling() {
     this.jsonData = this.utilsService.getAddClientJsonData();
     let details = JSON.parse(sessionStorage.getItem('addClientData'));
-    let loggedInUserId = this.utilsService.getLoggedInUserID();
     let itrId = '';
+
+    if(details.panNumber !== this.manualUpdateForm.controls['panNumber']){
+      //check the pan in json with pan in profile
+      this.utilsService.showSnackBar('PAN Number from profile and PAN number from json are different please confirm once.')
+      return;
+    }
 
     if (details.itrObjectStatus === 'CREATE') {
       //no ITR object found, create a new ITR object
@@ -315,7 +320,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
               '2022-2023'
             );
             Object.assign(obj, workingItr);
-            workingItr.filingTeamMemberId = loggedInUserId;
+            workingItr.filingTeamMemberId = details.callerAgentUserId;
             console.log('obj:', obj);
             workingItr = JSON.parse(JSON.stringify(obj));
             sessionStorage.setItem(
@@ -398,7 +403,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       }
 
       this.manualUpdateForm.controls['filingTeamMemberId'].setValue(
-        loggedInUserId
+        details.callerAgentUserId
       );
       this.manualUpdateForm.controls['userId'].setValue(details?.userId);
       this.manualUpdateForm.controls['itrId'].setValue(itrId);

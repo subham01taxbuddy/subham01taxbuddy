@@ -112,12 +112,12 @@ export class PotentialUserComponent implements OnInit {
       this.agentId = this.filerId;
     } else if(this.ownerId) {
       this.agentId = this.ownerId;
-       this.search('agent');
+      //  this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-     this.search('agent');
+    //  this.search('agent');
   }
 
   coOwnerId: number;
@@ -132,10 +132,10 @@ export class PotentialUserComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.search('agent');
+      // this.search('agent');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-       this.search('agent');
+      //  this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;

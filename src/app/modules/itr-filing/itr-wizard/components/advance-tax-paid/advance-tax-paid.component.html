@@ -146,12 +146,12 @@
       </div>
 
       <div class="edit-head">
-        <button type="button" class="edit-donation" (click)="editSalaryForm(i)">
+        <button type="button" class="edit-donation" (click)="editSalaryForm(fieldGlobalIndex(i))">
           <mat-icon> edit_square </mat-icon>Edit
         </button>
       </div>
     </div>
-    <div class="row spsTp bdrTp">  
+    <div class="row spsTp bdrTp">
         <div class="col-sm-3">
           <button
             type="submit"
@@ -176,7 +176,7 @@
             Save
           </button>
         </div>
-     
+
     </div>
   </div>
 </form>
