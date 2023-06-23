@@ -404,7 +404,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
                     finalJson[itrType].PersonalInfo.Address?.EmailAddress
                   );
                   this.manualUpdateForm.controls['isRevised'].setValue(
-                    finalJson[itrType].FilingStatus?.ReturnFileSec === 11 ? 'Y' : 'N'
+                    finalJson[itrType].FilingStatus?.ReturnFileSec === 11 ? 'N' : 'Y'
                   );
 
                   this.manualUpdateForm.controls['itrType'].setValue(
@@ -422,8 +422,8 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
 
                   this.manualUpdateForm.controls['isRevised'].setValue(
                     finalJson[itrType].PartA_GEN1?.FilingStatus?.ReturnFileSec === 11
-                      ? 'Y'
-                      : 'N'
+                      ? 'N'
+                      : 'Y'
                   );
 
                   this.manualUpdateForm.controls['itrType'].setValue(
