@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]=false>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -54,8 +54,8 @@
                           </mat-select>
                         </mat-form-field>
             </div>
-                        
-                  
+
+
                       <div class="col-sm-12 spsTp bdrTp">
                         <button class="dwldBtn" [disabled]="loading" (click)="downloadInvoicesSummary()">
                           <i class="fa fa-download" aria-hidden="true"></i> Download File
@@ -64,11 +64,11 @@
                           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
                         </button>
                       </div>
-        
+
         </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

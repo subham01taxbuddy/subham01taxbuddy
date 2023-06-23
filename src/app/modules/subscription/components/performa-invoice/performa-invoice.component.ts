@@ -554,7 +554,8 @@ export class PerformaInvoiceComponent implements OnInit {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
         // this.invoicesCreateColumnDef(this.smeList);
-        this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+        this.gridApi?.setRowData(this.createRowData(response?.data?.content));
+        this.invoiceListGridOptions.api?.setRowData(this.createRowData(response?.data?.content))
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
         if(this.invoiceData.length == 0){
