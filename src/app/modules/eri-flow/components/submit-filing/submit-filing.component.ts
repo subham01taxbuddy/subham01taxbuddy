@@ -29,6 +29,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
   @Input() itrData: any;
   @Input() userDetails: any;
   jsonData: any;
+  userProfile: any;
   constructor(
     private itrMsService: ItrMsService,
     private utilsService: UtilsService,
@@ -69,6 +70,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       filingTeamMemberId: ['', [Validators.required]],
       filingSource: ['MANUALLY', [Validators.required]],
     });
+
   }
   selectJson(file: FileList) {
     console.log('File', file);
@@ -76,6 +78,17 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       this.uploadDoc = file.item(0);
     }
   }
+
+  // getUserProfile(userId){
+  //   let param = '/search/userprofile/query?userId=' + userId;
+  //   this.userMsService.getMethod(param).subscribe(
+  //     (res: any) => {
+  //       console.log('Get user info by userId: ', res);
+  //       if (res && res.records instanceof Array) {
+  //         this.userProfile = res.records[0];
+  //       }
+  //     });
+  // }
 
   validateJson(document) {
     if (this.submitJsonForm.valid) {
@@ -239,192 +252,208 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     let details = JSON.parse(sessionStorage.getItem('addClientData'));
     let itrId = '';
 
-    if(details.panNumber !== this.manualUpdateForm.controls['panNumber']){
-      //check the pan in json with pan in profile
-      this.utilsService.showSnackBar('PAN Number from profile and PAN number from json are different please confirm once.')
-      return;
-    }
-
-    if (details.itrObjectStatus === 'CREATE') {
-      //no ITR object found, create a new ITR object
-      this.loading = true;
-      let profile = this.getUserProfile(details.userId).catch((error) => {
-        this.loading = false;
-        console.log(error);
-        this.utilsService.showSnackBar(error.error.detail);
-        return;
-      });
-      let objITR = this.utilsService.createEmptyJson(
-        profile,
-        details?.assessmentYear,
-        '2022-2023'
-      );
-      //Object.assign(obj, this.ITR_JSON)
-      // Ashwini: Current implementation sends filing team member id as logged in user id.
-      // So credit will go to the one who files ITR
-      // changing the filingTeamMemberId to filerUserId so credit will go to assigned filer
-      objITR.filingTeamMemberId = details.callerAgentUserId; //loggedInId;
-      objITR.userId = details.userId;
-      objITR.assessmentYear = details.assessmentYear;
-      objITR.isRevised = 'N';
-      //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
-      console.log('obj:', objITR);
-
-      //update status to WIP
-      //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
-
-      const param = '/itr';
-      this.itrMsService.postMethod(param, objITR).subscribe(
-        (result: any) => {
-          console.log('My iTR Json successfully created-==', result);
-          this.loading = false;
-          objITR = result;
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-        },
-        (error) => {
-          this.loading = false;
-        }
-      );
-      this.loading = false;
-      console.log('end');
-    } else {
-      //one more ITR objects in place, use existing ITR object
-      let itrFilter =
-        details.itrObjectStatus !== 'MULTIPLE_ITR'
-          ? `&itrId=${details.openItrId}`
-          : '';
-      const param =
-        `/itr?userId=${details.userId}&assessmentYear=${details.assessmentYear}` +
-        itrFilter;
-      this.itrMsService.getMethod(param).subscribe(
-        async (result: any) => {
-          console.log(`My ITR by ${param}`, result);
-          if (result == null || result.length == 0) {
-            //no ITR found, error case
-            this.utilsService.showErrorMsg(
-              'Something went wrong. Please try again'
-            );
-          } else if (result.length == 1) {
-            //update status to WIP
-            //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
-            let workingItr = result[0];
-            // Object.entries(workingItr).forEach((key, value) => {
-            //   console.log(key, value)
-            //   if (key[1] === null) {
-            //     delete workingItr[key[0]];
-            //   }
-            // });
-            let obj = this.utilsService.createEmptyJson(
-              null,
-              details.assessmentYear,
-              '2022-2023'
-            );
-            Object.assign(obj, workingItr);
-            workingItr.filingTeamMemberId = details.callerAgentUserId;
-            console.log('obj:', obj);
-            workingItr = JSON.parse(JSON.stringify(obj));
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(workingItr)
-            );
-          } else {
-            //multiple ITRs found, navigate to ITR tab with the results
-            this.router.navigateByUrl('/tasks/filings', {
-              state: { mobileNumber: details?.mobileNumber },
-            });
-          }
-        },
-        async (error: any) => {
-          console.log('Error:', error);
-          this.utilsService.showErrorMsg(
-            'Something went wrong. Please try again'
-          );
-        }
-      );
-    }
-
-    const ITRJSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    ITRJSON.itrSummaryJson = this.jsonData;
-    console.log(ITRJSON, 'ITRJSON');
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITRJSON));
-
-    itrId = ITRJSON?.itrId;
-
-    if (this.jsonData) {
-      let finalJson = this.jsonData.ITR;
+    const param = `/profile/${details.userId}`;
+    this.userMsService.getMethod(param).subscribe((res:any) => {
+      console.log(res);
       let itrType = '';
-      if (finalJson.hasOwnProperty('ITR1')) {
+      if (this.jsonData.ITR.hasOwnProperty('ITR1')) {
         itrType = 'ITR1';
-      } else if (finalJson.hasOwnProperty('ITR2')) {
+      } else if (this.jsonData.ITR.hasOwnProperty('ITR2')) {
         itrType = 'ITR2';
-      } else if (finalJson.hasOwnProperty('ITR3')) {
+      } else if (this.jsonData.ITR.hasOwnProperty('ITR3')) {
         itrType = 'ITR3';
-      } else if (finalJson.hasOwnProperty('ITR4')) {
+      } else if (this.jsonData.ITR.hasOwnProperty('ITR4')) {
         itrType = 'ITR4';
       }
-      if (itrType === 'ITR1' || itrType === 'ITR4') {
-        this.manualUpdateForm.controls['panNumber'].setValue(
-          finalJson[itrType].PersonalInfo.PAN
-        );
-        this.manualUpdateForm.controls['email'].setValue(
-          finalJson[itrType].PersonalInfo.Address?.EmailAddress
-        );
-        this.manualUpdateForm.controls['contactNumber'].setValue(
-          finalJson[itrType].PersonalInfo.Address?.MobileNo
-        );
-        this.manualUpdateForm.controls['isRevised'].setValue(
-          finalJson[itrType].FilingStatus?.ReturnFileSec === 11 ? 'Y' : 'N'
-        );
+      if(res.panNumber !== this.jsonData.ITR[itrType].PartA_GEN1.PersonalInfo.PAN){
+        //check the pan in json with pan in profile
+        this.utilsService.showSnackBar('PAN Number from profile and PAN number from json are different please confirm once.')
+        return;
+      } else {
+        const param1 = `/subscription-payment-status?userId=${details.userId}&serviceType=ITR`;
+        this.itrMsService.getMethod(param1).subscribe(
+          (res: any) => {
+            if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+              if (details.itrObjectStatus === 'CREATE') {
+                //no ITR object found, create a new ITR object
+                this.loading = true;
+                let profile = this.getUserProfile(details.userId).catch((error) => {
+                  this.loading = false;
+                  console.log(error);
+                  this.utilsService.showSnackBar(error.error.detail);
+                  return;
+                });
+                let objITR = this.utilsService.createEmptyJson(
+                  profile,
+                  details?.assessmentYear,
+                  '2022-2023'
+                );
+                //Object.assign(obj, this.ITR_JSON)
+                // Ashwini: Current implementation sends filing team member id as logged in user id.
+                // So credit will go to the one who files ITR
+                // changing the filingTeamMemberId to filerUserId so credit will go to assigned filer
+                objITR.filingTeamMemberId = details.callerAgentUserId; //loggedInId;
+                objITR.userId = details.userId;
+                objITR.assessmentYear = details.assessmentYear;
+                objITR.isRevised = 'N';
+                //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+                console.log('obj:', objITR);
 
-        this.manualUpdateForm.controls['itrType'].setValue(
-          itrType === 'ITR1' ? '1' : '4'
-        );
+                //update status to WIP
+                //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
+
+                const param = '/itr';
+                this.itrMsService.postMethod(param, objITR).subscribe(
+                  (result: any) => {
+                    console.log('My iTR Json successfully created-==', result);
+                    this.loading = false;
+                    objITR = result;
+                    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
+                  },
+                  (error) => {
+                    this.loading = false;
+                  }
+                );
+                this.loading = false;
+                console.log('end');
+              } else {
+                //one more ITR objects in place, use existing ITR object
+                let itrFilter =
+                  details.itrObjectStatus !== 'MULTIPLE_ITR'
+                    ? `&itrId=${details.openItrId}`
+                    : '';
+                const param =
+                  `/itr?userId=${details.userId}&assessmentYear=${details.assessmentYear}` +
+                  itrFilter;
+                this.itrMsService.getMethod(param).subscribe(
+                  async (result: any) => {
+                    console.log(`My ITR by ${param}`, result);
+                    if (result == null || result.length == 0) {
+                      //no ITR found, error case
+                      this.utilsService.showErrorMsg(
+                        'Something went wrong. Please try again'
+                      );
+                    } else if (result.length == 1) {
+                      //update status to WIP
+                      //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
+                      let workingItr = result[0];
+                      // Object.entries(workingItr).forEach((key, value) => {
+                      //   console.log(key, value)
+                      //   if (key[1] === null) {
+                      //     delete workingItr[key[0]];
+                      //   }
+                      // });
+                      let obj = this.utilsService.createEmptyJson(
+                        null,
+                        details.assessmentYear,
+                        '2022-2023'
+                      );
+                      Object.assign(obj, workingItr);
+                      workingItr.filingTeamMemberId = details.callerAgentUserId;
+                      console.log('obj:', obj);
+                      workingItr = JSON.parse(JSON.stringify(obj));
+                      sessionStorage.setItem(
+                        AppConstants.ITR_JSON,
+                        JSON.stringify(workingItr)
+                      );
+                    } else {
+                      //multiple ITRs found, navigate to ITR tab with the results
+                      this.router.navigateByUrl('/tasks/filings', {
+                        state: {mobileNumber: details?.mobileNumber},
+                      });
+                    }
+                  },
+                  async (error: any) => {
+                    console.log('Error:', error);
+                    this.utilsService.showErrorMsg(
+                      'Something went wrong. Please try again'
+                    );
+                  }
+                );
+              }
+
+              const ITRJSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+              ITRJSON.itrSummaryJson = this.jsonData;
+              console.log(ITRJSON, 'ITRJSON');
+              sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITRJSON));
+
+              itrId = ITRJSON?.itrId;
+
+              if (this.jsonData) {
+                let finalJson = this.jsonData.ITR;
+                let itrType = '';
+                if (finalJson.hasOwnProperty('ITR1')) {
+                  itrType = 'ITR1';
+                } else if (finalJson.hasOwnProperty('ITR2')) {
+                  itrType = 'ITR2';
+                } else if (finalJson.hasOwnProperty('ITR3')) {
+                  itrType = 'ITR3';
+                } else if (finalJson.hasOwnProperty('ITR4')) {
+                  itrType = 'ITR4';
+                }
+                if (itrType === 'ITR1' || itrType === 'ITR4') {
+                  this.manualUpdateForm.controls['panNumber'].setValue(
+                    finalJson[itrType].PersonalInfo.PAN
+                  );
+                  this.manualUpdateForm.controls['email'].setValue(
+                    finalJson[itrType].PersonalInfo.Address?.EmailAddress
+                  );
+                  this.manualUpdateForm.controls['isRevised'].setValue(
+                    finalJson[itrType].FilingStatus?.ReturnFileSec === 11 ? 'Y' : 'N'
+                  );
+
+                  this.manualUpdateForm.controls['itrType'].setValue(
+                    itrType === 'ITR1' ? '1' : '4'
+                  );
+                }
+
+                if (itrType === 'ITR2' || itrType === 'ITR3') {
+                  this.manualUpdateForm.controls['panNumber'].setValue(
+                    finalJson[itrType].PartA_GEN1.PersonalInfo?.PAN
+                  );
+                  this.manualUpdateForm.controls['email'].setValue(
+                    finalJson[itrType].PartA_GEN1.PersonalInfo?.Address?.EmailAddress
+                  );
+
+                  this.manualUpdateForm.controls['isRevised'].setValue(
+                    finalJson[itrType].PartA_GEN1?.FilingStatus?.ReturnFileSec === 11
+                      ? 'Y'
+                      : 'N'
+                  );
+
+                  this.manualUpdateForm.controls['itrType'].setValue(
+                    itrType === 'ITR2' ? '2' : '3'
+                  );
+                }
+
+                this.manualUpdateForm.controls['filingTeamMemberId'].setValue(
+                  details.callerAgentUserId
+                );
+                this.manualUpdateForm.controls['userId'].setValue(details?.userId);
+                this.manualUpdateForm.controls['contactNumber'].setValue(details?.mobileNumber);
+                this.manualUpdateForm.controls['itrId'].setValue(itrId);
+              }
+              if (this.manualUpdateForm.valid) {
+                let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+                  width: '50%',
+                  height: 'auto',
+                  data: this.manualUpdateForm.getRawValue(),
+                });
+
+                disposable.afterClosed().subscribe((result) => {
+                  console.log('The dialog was closed');
+                });
+
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITRJSON));
+              } else {
+                this.utilsService.showSnackBar(
+                  'All the required details for updating manually are not present. Please make sure that you have successfully uploaded the json in the previous step'
+                );
+              }
+            }
+          });
       }
-
-      if (itrType === 'ITR2' || itrType === 'ITR3') {
-        this.manualUpdateForm.controls['panNumber'].setValue(
-          finalJson[itrType].PartA_GEN1.PersonalInfo?.PAN
-        );
-        this.manualUpdateForm.controls['email'].setValue(
-          finalJson[itrType].PartA_GEN1.PersonalInfo?.Address?.EmailAddress
-        );
-        this.manualUpdateForm.controls['contactNumber'].setValue(
-          finalJson[itrType].PartA_GEN1.PersonalInfo?.Address?.MobileNo
-        );
-        this.manualUpdateForm.controls['isRevised'].setValue(
-          finalJson[itrType].PartA_GEN1?.FilingStatus?.ReturnFileSec === 11
-            ? 'Y'
-            : 'N'
-        );
-
-        this.manualUpdateForm.controls['itrType'].setValue(
-          itrType === 'ITR2' ? '2' : '3'
-        );
-      }
-
-      this.manualUpdateForm.controls['filingTeamMemberId'].setValue(
-        details.callerAgentUserId
-      );
-      this.manualUpdateForm.controls['userId'].setValue(details?.userId);
-      this.manualUpdateForm.controls['itrId'].setValue(itrId);
-    }
-    if (this.manualUpdateForm.valid) {
-      let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
-        width: '50%',
-        height: 'auto',
-        data: this.manualUpdateForm.getRawValue(),
-      });
-
-      disposable.afterClosed().subscribe((result) => {
-        console.log('The dialog was closed');
-      });
-
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITRJSON));
-    } else {
-      this.utilsService.showSnackBar(
-        'All the required details for updating manually are not present. Please make sure that you have successfully uploaded the json in the previous step'
-      );
-    }
+    });
   }
 
   findAssesseeType() {
