@@ -308,7 +308,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
       this.JSONData = JSON.parse(jsonRes);
       if (this.JSONData) {
-        this.utilsService.showSnackBar('JSON uploaded scucessfully');
+        this.utilsService.showSnackBar(
+          'JSON uploaded scucessfully. You can now directly proceed ahead to update filing details without needing to parse and save summary. (You will have to save summary only in order to generate summary PDF)'
+        );
         this.utilsService.setAddClientJsonData(this.JSONData);
       }
     };
