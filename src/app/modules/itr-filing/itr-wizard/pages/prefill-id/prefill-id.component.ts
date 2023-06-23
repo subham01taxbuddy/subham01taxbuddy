@@ -186,8 +186,8 @@ export class PrefillIdComponent implements OnInit {
   }
 
   parseDate(dateStr: string) {
-    const parts = dateStr.split('-');
-    return new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    const parts = dateStr?.split('-');
+    return new Date(+parts?.[0], +parts[1] - 1, +parts[2]);
   }
 
   // setting correct format dates
