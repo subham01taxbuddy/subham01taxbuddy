@@ -256,16 +256,21 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     this.userMsService.getMethod(param).subscribe((res:any) => {
       console.log(res);
       let itrType = '';
+      let panNumber = '';
       if (this.jsonData.ITR.hasOwnProperty('ITR1')) {
         itrType = 'ITR1';
+        panNumber = this.jsonData.ITR[itrType].PersonalInfo.PAN;
       } else if (this.jsonData.ITR.hasOwnProperty('ITR2')) {
         itrType = 'ITR2';
+        panNumber = this.jsonData.ITR[itrType].PartA_GEN1.PersonalInfo.PAN;
       } else if (this.jsonData.ITR.hasOwnProperty('ITR3')) {
         itrType = 'ITR3';
+        panNumber = this.jsonData.ITR[itrType].PartA_GEN1.PersonalInfo.PAN;
       } else if (this.jsonData.ITR.hasOwnProperty('ITR4')) {
         itrType = 'ITR4';
+        panNumber = this.jsonData.ITR[itrType].PersonalInfo.PAN;
       }
-      if(res.panNumber !== this.jsonData.ITR[itrType].PartA_GEN1.PersonalInfo.PAN){
+      if(res.panNumber !== panNumber){
         //check the pan in json with pan in profile
         this.utilsService.showSnackBar('PAN Number from profile and PAN number from json are different please confirm once.')
         return;
