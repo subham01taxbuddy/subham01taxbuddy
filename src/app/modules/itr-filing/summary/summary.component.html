@@ -95,7 +95,9 @@
           <!-- ITR Form -->
           <div class="txBt">
             <span class="txLf">ITR Form:</span>
-            <span class="txMuLf">{{ ITR_JSON.itrSummaryJson ? getItrTypeInSummary() : ITR_JSON.itrType }}</span>
+            <span class="txMuLf">{{
+              ITR_JSON.itrSummaryJson ? getItrTypeInSummary() : ITR_JSON.itrType
+            }}</span>
           </div>
 
           <div class="txBt">
@@ -926,15 +928,8 @@
                   </mat-expansion-panel>
 
                   <!-- ************************** Income from Capital Gain ****************************** -->
-                  <mat-expansion-panel
+                  <!-- <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[
-                      totalCapitalGain('AMT') === 0 &&
-                      !ITR_JSON.systemFlags.hasCapitalGain &&
-                      !ITR_JSON.itrSummaryJson
-                        ? true
-                        : false
-                    ]"
                     #CG
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -970,10 +965,10 @@
                           </div>
                         </div>
                       </div>
-                    </mat-expansion-panel-header>
-                    <!-- <label>Short term</label> -->
-                    <!-- Content goes here -->
-                    <div class="bxHed" *ngIf="slab(-1, 'INPUT').length > 0">
+                    </mat-expansion-panel-header> -->
+                  <!-- <label>Short term</label> -->
+                  <!-- Content goes here -->
+                  <!-- <div class="bxHed" *ngIf="slab(-1, 'INPUT').length > 0">
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
                         keys?.ShortTermAppRate
@@ -987,9 +982,9 @@
                     >
                       <thead>
                         <tr>
-                          <th style="font-weight: bold">Name of asset</th>
-                          <!-- <th style="font-weight:bold;">Description</th> -->
-                          <th style="font-weight: bold">
+                          <th style="font-weight: bold">Name of asset</th> -->
+                  <!-- <th style="font-weight:bold;">Description</th> -->
+                  <!-- <th style="font-weight: bold">
                             Capital gain amount (1)
                           </th>
                           <th style="font-weight: bold">Deduction (2)</th>
@@ -1005,9 +1000,9 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
-                          <!-- <td>{{slabRate.description}}</td> -->
-                          <td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td> -->
+                  <!-- <td>{{slabRate.description}}</td> -->
+                  <!-- <td>
                             Rs
                             {{
                               utilsService.currencyFormatter(slabRate?.cgIncome)
@@ -1048,9 +1043,9 @@
                     >
                       <thead>
                         <tr>
-                          <th style="font-weight: bold">Name of asset</th>
-                          <!-- <th style="font-weight:bold;">Description</th> -->
-                          <th style="font-weight: bold">
+                          <th style="font-weight: bold">Name of asset</th> -->
+                  <!-- <th style="font-weight:bold;">Description</th> -->
+                  <!-- <th style="font-weight: bold">
                             Capital gain amount (1)
                           </th>
                           <th style="font-weight: bold">Deduction (2)</th>
@@ -1066,9 +1061,9 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
-                          <!-- <td>{{slabRate.description}}</td> -->
-                          <td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td> -->
+                  <!-- <td>{{slabRate.description}}</td> -->
+                  <!-- <td>
                             Rs
                             {{
                               utilsService.currencyFormatter(slabRate?.cgIncome)
@@ -1093,9 +1088,9 @@
                           </td>
                         </tr>
                       </tbody>
-                    </table>
+                    </table> -->
 
-                    <div class="bxHed" *ngIf="slab(10, 'INPUT').length > 0">
+                  <!-- <div class="bxHed" *ngIf="slab(10, 'INPUT').length > 0">
                       Long term capital gain @ 10%
                       <span style="float: right">{{
                         keys?.LongTerm10Per
@@ -1109,9 +1104,9 @@
                     >
                       <thead>
                         <tr>
-                          <th style="font-weight: bold">Name of asset</th>
-                          <!-- <th style="font-weight:bold;">Description</th> -->
-                          <th style="font-weight: bold">
+                          <th style="font-weight: bold">Name of asset</th> -->
+                  <!-- <th style="font-weight:bold;">Description</th> -->
+                  <!-- <th style="font-weight: bold">
                             Capital gain amount (1)
                           </th>
                           <th style="font-weight: bold">Deduction (2)</th>
@@ -1127,9 +1122,9 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
-                          <!-- <td>{{slabRate.description}}</td> -->
-                          <td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td> -->
+                  <!-- <td>{{slabRate.description}}</td> -->
+                  <!-- <td>
                             Rs
                             {{
                               utilsService.currencyFormatter(slabRate?.cgIncome)
@@ -1154,9 +1149,9 @@
                           </td>
                         </tr>
                       </tbody>
-                    </table>
+                    </table> -->
 
-                    <div class="bxHed" *ngIf="slab(20, 'INPUT').length > 0">
+                  <!-- <div class="bxHed" *ngIf="slab(20, 'INPUT').length > 0">
                       Long term capital gain @ 20%
                       <span style="float: right">{{
                         keys?.LongTerm20Per
@@ -1170,9 +1165,9 @@
                     >
                       <thead>
                         <tr>
-                          <th style="font-weight: bold">Name of asset</th>
-                          <!-- <th style="font-weight:bold;">Description</th> -->
-                          <th style="font-weight: bold">
+                          <th style="font-weight: bold">Name of asset</th> -->
+                  <!-- <th style="font-weight:bold;">Description</th> -->
+                  <!-- <th style="font-weight: bold">
                             Capital gain amount (1)
                           </th>
                           <th style="font-weight: bold">Deduction (2)</th>
@@ -1188,9 +1183,9 @@
                             let i = index
                           "
                         >
-                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td>
-                          <!-- <td>{{slabRate.description}}</td> -->
-                          <td>
+                          <td>{{ getNameFromCode(slabRate?.assetType) }}</td> -->
+                  <!-- <td>{{slabRate.description}}</td> -->
+                  <!-- <td>
                             Rs
                             {{
                               utilsService.currencyFormatter(slabRate?.cgIncome)
@@ -1215,19 +1210,19 @@
                           </td>
                         </tr>
                       </tbody>
-                    </table>
+                    </table> -->
 
-                    <!-- Content goes here -->
-                    <table class="table" style="width: 100%">
-                      <tbody>
-                        <!--  <tr *ngFor="let cg of capitalGain.capitalGain;let i=index">
+                  <!-- Content goes here -->
+                  <!-- <table class="table" style="width: 100%">
+                      <tbody> -->
+                  <!--  <tr *ngFor="let cg of capitalGain.capitalGain;let i=index">
                             <td>{{displayLabel(cg.taxRate)}}</td>
                             <td class="tbl-lbl-right">
                               <i
                                 class="material-icons icRup">&#8377;</i>&nbsp;{{totalCg(cg.cgIncome,cg.belAdjustmentAmount,cg.setOffAmount,cg.hpSetOff ,cg.pastYearSetOffAmount)}}
                             </td>
                           </tr> -->
-                        <!-- <tr>
+                  <!-- <tr>
                               <td>Short-term chargeable at application rate</td>
                               <td class="tbl-lbl-right">
                                 <i class="material-icons"
@@ -1243,11 +1238,11 @@
                                   style="font-size:15px;">&#8377;</i>&nbsp;{{capitalGain.summaryBucketCGST.taxableIncome}}
                               </td>
                             </tr> -->
-                      </tbody>
-                    </table>
-                    <!-- <hr> -->
-                    <!-- <label>Long term</label> -->
-                    <!-- <table class="table" style="width:100%">
+                  <!-- </tbody>
+                    </table> -->
+                  <!-- <hr> -->
+                  <!-- <label>Long term</label> -->
+                  <!-- <table class="table" style="width:100%">
                           <tbody>
                             <tr>
                               <td>Long-term chargeable at 10%</td>
@@ -1274,6 +1269,567 @@
                             </tr>
                           </tbody>
                         </table> -->
+                  <!-- </mat-expansion-panel> -->
+
+                  <!-- ************************** Income from Capital Gain ****************************** -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    [disabled]="
+                      finalCalculations.capitalGain.totalCapitalGain === 0 &&
+                      this.utilsService.isNonEmpty(
+                        this.ITR_JSON.itrSummaryJson
+                      ) &&
+                      this.ITR_JSON.isItrSummaryJsonEdited === false
+                    "
+                    #CG
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            4. Income from Capital Gain
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr1">
+                              <mat-icon *ngIf="!CG.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="CG.expanded"
+                                >keyboard_arrow_up</mat-icon
+                              >
+                            </div>
+                            <label class="rtNumb1">
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.capitalGain
+                                    ?.totalCapitalGain
+                                )
+                              }}</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <!-- short term -1 slab rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermAppSlabRate.length > 0
+                      "
+                    >
+                      Short term capital gain @ slab rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermAppSlabRateTotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermAppSlabRate.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.shortTerm?.ShortTermAppSlabRate;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- short term -15 rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm15Per.length > 0
+                      "
+                    >
+                      Short term capital gain @ 15% rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm15PerTotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm15Per.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.shortTerm?.ShortTerm15Per;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- short term 30 rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm30Per.length > 0 &&
+                        this.utilsService.isNonEmpty(
+                          this.ITR_JSON.itrSummaryJson
+                        ) &&
+                        this.ITR_JSON.isItrSummaryJsonEdited === false
+                      "
+                    >
+                      Short term capital gain @ 30% rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm30PerTotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm30Per.length > 0 &&
+                        this.utilsService.isNonEmpty(
+                          this.ITR_JSON.itrSummaryJson
+                        ) &&
+                        this.ITR_JSON.isItrSummaryJsonEdited === false
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.shortTerm?.ShortTerm30Per;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- short term special rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermSplRateDTAA.length > 0 &&
+                        this.utilsService.isNonEmpty(
+                          this.ITR_JSON.itrSummaryJson
+                        ) &&
+                        this.ITR_JSON.isItrSummaryJsonEdited === false
+                      "
+                    >
+                      Short term capital gain @ special rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermSplRateDTAATotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermSplRateDTAA.length > 0 &&
+                        this.utilsService.isNonEmpty(
+                          this.ITR_JSON.itrSummaryJson
+                        ) &&
+                        this.ITR_JSON.isItrSummaryJsonEdited === false
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.shortTerm?.ShortTermSplRateDTAA;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- long term 10 rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.LongTerm10Per
+                          .length > 0
+                      "
+                    >
+                      Long term capital gain @ 10% rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.longTerm
+                          ?.LongTerm10PerTotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.LongTerm10Per
+                          .length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.longTerm?.LongTerm10Per;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- long term 20 rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.LongTerm20Per
+                          .length > 0
+                      "
+                    >
+                      Long term capital gain @ 20% rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.longTerm
+                          ?.LongTerm20PerTotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.LongTerm20Per
+                          .length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.longTerm?.LongTerm20Per;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- long term special rate  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm
+                          ?.LongTermSplRateDTAA.length > 0 &&
+                        this.utilsService.isNonEmpty(
+                          this.ITR_JSON.itrSummaryJson
+                        ) &&
+                        this.ITR_JSON.isItrSummaryJsonEdited === false
+                      "
+                    >
+                      Long term capital gain @ special rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.longTerm
+                          ?.LongTermSplRateDTAATotal
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm
+                          ?.LongTermSplRateDTAA.length > 0 &&
+                        this.utilsService.isNonEmpty(
+                          this.ITR_JSON.itrSummaryJson
+                        ) &&
+                        this.ITR_JSON.isItrSummaryJsonEdited === false
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Name of asset</th>
+                          <th style="font-weight: bold">
+                            Capital gain amount (1)
+                          </th>
+                          <th style="font-weight: bold">Deduction (2)</th>
+                          <th style="font-weight: bold">
+                            Net capital gain (3=1-2)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.longTerm?.LongTermSplRateDTAA;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.nameOfAsset }}</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.capitalGain
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.Deduction
+                              )
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                slabRate?.netCapitalGain
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
 
                   <!-- ***************************** Income from Other Source ***************************** -->

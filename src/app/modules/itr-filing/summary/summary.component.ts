@@ -268,6 +268,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        ShortTerm15PerTotal: Number;
         ShortTerm30Per: [
           {
             nameOfAsset: String;
@@ -276,6 +277,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        ShortTerm30PerTotal: Number;
         ShortTermAppSlabRate: [
           {
             nameOfAsset: String;
@@ -284,6 +286,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        ShortTermAppSlabRateTotal: Number;
         ShortTermSplRateDTAA: [
           {
             nameOfAsset: String;
@@ -292,6 +295,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        ShortTermSplRateDTAATotal: Number;
       };
       totalShortTerm: Number;
       longTerm: {
@@ -303,6 +307,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        LongTerm10PerTotal: Number;
         LongTerm20Per: [
           {
             nameOfAsset: String;
@@ -311,6 +316,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        LongTerm20PerTotal: Number;
         LongTermSplRateDTAA: [
           {
             nameOfAsset: String;
@@ -319,6 +325,7 @@ export class SummaryComponent implements OnInit {
             netCapitalGain: Number;
           }
         ];
+        LongTermSplRateDTAATotal: Number;
       };
       totalLongTerm: Number;
       totalCapitalGain: Number;
@@ -791,6 +798,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                ShortTerm15PerTotal: 0,
                 ShortTerm30Per: [
                   {
                     nameOfAsset: '',
@@ -799,6 +807,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                ShortTerm30PerTotal: 0,
                 ShortTermAppSlabRate: [
                   {
                     nameOfAsset: '',
@@ -807,6 +816,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                ShortTermAppSlabRateTotal: 0,
                 ShortTermSplRateDTAA: [
                   {
                     nameOfAsset: '',
@@ -815,6 +825,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                ShortTermSplRateDTAATotal: 0,
               },
               totalShortTerm: 0,
               longTerm: {
@@ -826,6 +837,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                LongTerm10PerTotal: 0,
                 LongTerm20Per: [
                   {
                     nameOfAsset: '',
@@ -834,6 +846,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                LongTerm20PerTotal: 0,
                 LongTermSplRateDTAA: [
                   {
                     nameOfAsset: '',
@@ -842,6 +855,7 @@ export class SummaryComponent implements OnInit {
                     netCapitalGain: 0,
                   },
                 ],
+                LongTermSplRateDTAATotal: 0,
               },
               totalLongTerm: 0,
               totalCapitalGain: 0,
@@ -1810,6 +1824,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.ShortTerm?.ShortTerm15Per,
                   },
                 ],
+                ShortTerm15PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTerm15Per,
                 ShortTerm30Per: [
                   {
                     nameOfAsset: 'Short Term Capital Gains @30%',
@@ -1824,6 +1842,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.ShortTerm?.ShortTerm30Per,
                   },
                 ],
+                ShortTerm30PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTerm30Per,
                 ShortTermAppSlabRate: [
                   {
                     nameOfAsset: 'Short Term Capital Gains @ slab rate',
@@ -1838,6 +1860,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.ShortTerm?.ShortTermAppRate,
                   },
                 ],
+                ShortTermAppSlabRateTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTermAppRate,
                 ShortTermSplRateDTAA: [
                   {
                     nameOfAsset: 'Short Term Capital Gains @ special rate DTAA',
@@ -1852,6 +1878,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
                   },
                 ],
+                ShortTermSplRateDTAATotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
               },
               totalShortTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
@@ -1871,6 +1901,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.LongTerm?.LongTerm10Per,
                   },
                 ],
+                LongTerm10PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.LongTerm?.LongTerm10Per,
                 LongTerm20Per: [
                   {
                     nameOfAsset: 'long Term Capital Gains @20%',
@@ -1885,6 +1919,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.LongTerm?.LongTerm20Per,
                   },
                 ],
+                LongTerm20PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.LongTerm?.LongTerm20Per,
                 LongTermSplRateDTAA: [
                   {
                     nameOfAsset: 'long Term Capital Gains @ special rate DTAA',
@@ -1899,6 +1937,10 @@ export class SummaryComponent implements OnInit {
                       ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
                   },
                 ],
+                LongTermSplRateDTAATotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
               },
               totalLongTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
@@ -2845,9 +2887,23 @@ export class SummaryComponent implements OnInit {
                   capitalGain: {
                     shortTerm: {
                       ShortTerm15Per:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                          (item: any) => item?.cgIncome && item?.taxRate === 15
-                        ),
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 15)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      ShortTerm15PerTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 15)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
+
                       ShortTerm30Per: [
                         {
                           nameOfAsset: '',
@@ -2856,14 +2912,24 @@ export class SummaryComponent implements OnInit {
                           netCapitalGain: 0,
                         },
                       ],
-                      ShortTermAppSlabRate: [
-                        {
-                          nameOfAsset: '',
-                          capitalGain: 0,
-                          Deduction: 0,
-                          netCapitalGain: 0,
-                        },
-                      ],
+                      ShortTerm30PerTotal: 0,
+                      ShortTermAppSlabRate:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === -1)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      ShortTermAppSlabRateTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === -1)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
                       ShortTermSplRateDTAA: [
                         {
                           nameOfAsset: '',
@@ -2872,25 +2938,60 @@ export class SummaryComponent implements OnInit {
                           netCapitalGain: 0,
                         },
                       ],
+                      ShortTermSplRateDTAATotal: 0,
                     },
-                    totalShortTerm: 0,
+                    totalShortTerm:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) =>
+                            item?.taxRate === -1 || item?.taxRate === 15
+                        )
+                        .reduce((total, element) => {
+                          const incomeAfterInternalSetOff =
+                            element.incomeAfterInternalSetOff;
+                          console.log(element, 'element');
+                          console.log(
+                            incomeAfterInternalSetOff,
+                            'incomeAfterInternalSetOff'
+                          );
+
+                          return total + incomeAfterInternalSetOff;
+                        }, 0),
                     longTerm: {
-                      LongTerm10Per: [
-                        {
-                          nameOfAsset: '',
-                          capitalGain: 0,
-                          Deduction: 0,
-                          netCapitalGain: 0,
-                        },
-                      ],
-                      LongTerm20Per: [
-                        {
-                          nameOfAsset: '',
-                          capitalGain: 0,
-                          Deduction: 0,
-                          netCapitalGain: 0,
-                        },
-                      ],
+                      LongTerm10Per:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 10)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      LongTerm10PerTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 10)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
+                      LongTerm20Per:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 20)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      LongTerm20PerTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 20)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
                       LongTermSplRateDTAA: [
                         {
                           nameOfAsset: '',
@@ -2899,9 +3000,45 @@ export class SummaryComponent implements OnInit {
                           netCapitalGain: 0,
                         },
                       ],
+                      LongTermSplRateDTAATotal: 0,
                     },
-                    totalLongTerm: 0,
-                    totalCapitalGain: 0,
+                    totalLongTerm:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) =>
+                            item?.taxRate === 10 || item?.taxRate === 20
+                        )
+                        .reduce((total, element) => {
+                          const incomeAfterInternalSetOff =
+                            element.incomeAfterInternalSetOff;
+                          console.log(element, 'element');
+                          console.log(
+                            incomeAfterInternalSetOff,
+                            'incomeAfterInternalSetOff'
+                          );
+
+                          return total + incomeAfterInternalSetOff;
+                        }, 0),
+                    totalCapitalGain:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) =>
+                            item?.taxRate === -1 ||
+                            item?.taxRate === 15 ||
+                            item?.taxRate === 10 ||
+                            item?.taxRate === 20
+                        )
+                        .reduce((total, element) => {
+                          const incomeAfterInternalSetOff =
+                            element.incomeAfterInternalSetOff;
+                          console.log(element, 'element');
+                          console.log(
+                            incomeAfterInternalSetOff,
+                            'incomeAfterInternalSetOff'
+                          );
+
+                          return total + incomeAfterInternalSetOff;
+                        }, 0),
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -3825,15 +3962,22 @@ export class SummaryComponent implements OnInit {
                   shortTerm: {
                     ShortTerm15Per:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter(
-                          (item: any) => item?.cgIncome && item?.taxRate === 15
-                        )
+                        ?.filter((item: any) => item?.taxRate === 15)
                         .map((element) => ({
                           nameOfAsset: element?.assetType,
                           capitalGain: element.cgIncome,
                           Deduction: element.deductionAmount,
                           netCapitalGain: element.cgIncome,
                         })),
+                    ShortTerm15PerTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 15)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
+
                     ShortTerm30Per: [
                       {
                         nameOfAsset: '',
@@ -3842,17 +3986,24 @@ export class SummaryComponent implements OnInit {
                         netCapitalGain: 0,
                       },
                     ],
+                    ShortTerm30PerTotal: 0,
                     ShortTermAppSlabRate:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter(
-                          (item: any) => item?.cgIncome && item?.taxRate === -1
-                        )
+                        ?.filter((item: any) => item?.taxRate === -1)
                         .map((element) => ({
                           nameOfAsset: element?.assetType,
                           capitalGain: element.cgIncome,
                           Deduction: element.deductionAmount,
                           netCapitalGain: element.cgIncome,
                         })),
+                    ShortTermAppSlabRateTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === -1)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
                     ShortTermSplRateDTAA: [
                       {
                         nameOfAsset: '',
@@ -3861,30 +4012,60 @@ export class SummaryComponent implements OnInit {
                         netCapitalGain: 0,
                       },
                     ],
+                    ShortTermSplRateDTAATotal: 0,
                   },
                   totalShortTerm:
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.filter((item: any) => item?.taxRate === -1)
-                      .forEach((element) => {
-                        element = element + element.incomeAfterInternalSetOff;
-                      }),
+                      ?.filter(
+                        (item: any) =>
+                          item?.taxRate === -1 || item?.taxRate === 15
+                      )
+                      .reduce((total, element) => {
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
+                        console.log(element, 'element');
+                        console.log(
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
+                        );
+
+                        return total + incomeAfterInternalSetOff;
+                      }, 0),
                   longTerm: {
-                    LongTerm10Per: [
-                      {
-                        nameOfAsset: '',
-                        capitalGain: 0,
-                        Deduction: 0,
-                        netCapitalGain: 0,
-                      },
-                    ],
-                    LongTerm20Per: [
-                      {
-                        nameOfAsset: '',
-                        capitalGain: 0,
-                        Deduction: 0,
-                        netCapitalGain: 0,
-                      },
-                    ],
+                    LongTerm10Per:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 10)
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
+                    LongTerm10PerTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 10)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
+                    LongTerm20Per:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 20)
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
+                    LongTerm20PerTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 20)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
                     LongTermSplRateDTAA: [
                       {
                         nameOfAsset: '',
@@ -3893,9 +4074,45 @@ export class SummaryComponent implements OnInit {
                         netCapitalGain: 0,
                       },
                     ],
+                    LongTermSplRateDTAATotal: 0,
                   },
-                  totalLongTerm: 0,
-                  totalCapitalGain: 0,
+                  totalLongTerm:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter(
+                        (item: any) =>
+                          item?.taxRate === 10 || item?.taxRate === 20
+                      )
+                      .reduce((total, element) => {
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
+                        console.log(element, 'element');
+                        console.log(
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
+                        );
+
+                        return total + incomeAfterInternalSetOff;
+                      }, 0),
+                  totalCapitalGain:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter(
+                        (item: any) =>
+                          item?.taxRate === -1 ||
+                          item?.taxRate === 15 ||
+                          item?.taxRate === 10 ||
+                          item?.taxRate === 20
+                      )
+                      .reduce((total, element) => {
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
+                        console.log(element, 'element');
+                        console.log(
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
+                        );
+
+                        return total + incomeAfterInternalSetOff;
+                      }, 0),
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -4523,7 +4740,7 @@ export class SummaryComponent implements OnInit {
                 this.finalCalculations,
                 'finalCalculations',
                 this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                  (item: any) => item?.cgIncome && item?.taxRate === 15
+                  (item: any) => item?.taxRate === 15
                 )
               );
             } else {
