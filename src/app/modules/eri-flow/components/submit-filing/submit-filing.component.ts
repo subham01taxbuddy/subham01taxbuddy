@@ -455,6 +455,10 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
                   'All the required details for updating manually are not present. Please make sure that you have successfully uploaded the json in the previous step'
                 );
               }
+            } else {
+              this.utilsService.showSnackBar(
+                'Please make sure all the invoices are paid before updating the filing status.'
+              );
             }
           });
       }
