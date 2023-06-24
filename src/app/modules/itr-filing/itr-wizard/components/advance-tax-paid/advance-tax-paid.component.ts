@@ -116,6 +116,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
     this.loading = true;
+    console.log('salary form', this.salaryForm);
     if (this.salaryForm.valid) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS =
         (this.salaryForm.controls['salaryArray'] as FormGroup).getRawValue();
@@ -123,6 +124,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
+      (this.salaryForm.controls['salaryArray'] as FormGroup).disable();
       this.onSave.emit();
       this.loading = false;
       this.utilsService.showSnackBar(
@@ -146,12 +148,20 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   deleteSalaryArray() {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        salaryArray.removeAt(index);
+    // salaryArray.controls.forEach((element, index) => {
+    //   if ((element as FormGroup).controls['hasEdit'].value) {
+    //     salaryArray.removeAt(index);
+    //   }
+    // });
+    const salaryArray = this.salaryForm.get('salaryArray') as FormArray;
+
+    for (let i = salaryArray.length - 1; i >= 0; i--) {
+      const item = salaryArray.at(i) as FormGroup;
+      if (item.controls['hasEdit'].value) {
+        salaryArray.removeAt(i);
+        (this.salaryForm.controls['salaryArray'] as FormGroup).enable();
       }
-    });
+    }
   }
 
   pageChanged(event) {
