@@ -4942,7 +4942,7 @@ export class SummaryComponent implements OnInit {
   }
 
   isDownloadAllowed(){
-    return !this.ITR_JSON.itrSummaryJson || (this.ITR_JSON.itrSummaryJson && (this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '4' || this.ITR_JSON.itrType === '2'))
+    return true;
   }
 
   validateITR() {
