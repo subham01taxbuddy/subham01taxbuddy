@@ -154,7 +154,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/dashboard/sme-report${userFilter}`
 
-    this.userMsService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
          this.operationTeamData = response.data;
@@ -187,7 +187,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/dashboard/filers-partnerAssignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
 
-    this.userMsService.getMethod(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
          this.partnersAssignmentData = response.data;
