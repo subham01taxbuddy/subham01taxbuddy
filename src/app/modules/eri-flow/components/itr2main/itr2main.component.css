@@ -98,3 +98,8 @@ tbody {
   margin-bottom: 10px;
   float: right;
 }
+
+.ag-theme-balham {
+  font-family: "DM Sans", sans-serif;
+  margin: 0px !important;
+}
