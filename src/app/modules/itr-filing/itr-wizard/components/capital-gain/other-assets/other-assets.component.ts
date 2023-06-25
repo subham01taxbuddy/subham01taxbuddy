@@ -124,7 +124,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.loading = true;
     const param = '/calculate/capital-gain/deduction';
     let request = {
-      capitalGain: this.ITR_JSON.capitalGain[0].assetDetails[0].capitalGain,
+      capitalGain: this.ITR_JSON.capitalGain[0]?.assetDetails[0]?.capitalGain,
       capitalGainDeductions: [
         {
           deductionSection: 'SECTION_54F',
@@ -132,8 +132,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
             .controls['costOfNewAsset'].value,
           cgasDepositedAmount: (this.getDeductions.controls[0] as FormGroup)
             .controls['CGASAmount'].value,
-          saleValue: this.ITR_JSON.capitalGain[0].assetDetails[0].sellValue,
-          expenses: this.ITR_JSON.capitalGain[0].assetDetails[0].sellExpense,
+          saleValue: this.ITR_JSON.capitalGain[0]?.assetDetails[0]?.sellValue,
+          expenses: this.ITR_JSON.capitalGain[0]?.assetDetails[0]?.sellExpense,
         },
       ],
     };
@@ -147,18 +147,18 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         // this.goldCg.deduction = res.deduction;
         (this.getDeductions.controls[0] as FormGroup).controls[
           'deductionClaimed'
-        ]?.setValue(res.data[0].deductionAmount);
+        ]?.setValue(res.data[0]?.deductionAmount);
 
-        this.ITR_JSON.capitalGain[0].deduction?.push({
+        this.ITR_JSON.capitalGain[0]?.deduction?.push({
           srn: 0,
           underSection: '54F',
           orgAssestTransferDate: '',
-          costOfNewAssets: res.data[0].costOfNewAsset,
-          investmentInCGAccount: res.data[0].cgasDepositedAmount,
+          costOfNewAssets: res.data[0]?.costOfNewAsset,
+          investmentInCGAccount: res.data[0]?.cgasDepositedAmount,
           purchaseDate: (this.getDeductions.controls[0] as FormGroup).controls[
             'purchaseDate'
           ].value,
-          totalDeductionClaimed: res.data[0].deductionAmount,
+          totalDeductionClaimed: res.data[0]?.deductionAmount,
         });
       },
       (error) => {
@@ -177,11 +177,61 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
-    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
-      (item) => item.assetType !== 'GOLD'
-    );
-    if (this.goldCg.assetDetails.length > 0) {
-      this.ITR_JSON.capitalGain.push(this.goldCg);
+    // this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
+    //   (item) => item.assetType !== 'GOLD'
+    // );
+    // if (this.goldCg?.assetDetails?.length > 0) {
+    //   this.ITR_JSON.capitalGain.push(this.goldCg);
+    // }
+
+    const deductionDetails = (
+      this.deductionForm.controls['deductions'] as FormArray
+    ).getRawValue();
+
+    if (deductionDetails && deductionDetails.length > 0) {
+      const extraDeductionDetails = {
+        srn: 0,
+        underSection: deductionDetails[0].typeOfDeduction,
+        costOfNewAssets: deductionDetails[0].costOfNewAsset,
+        orgAssestTransferDate: null,
+
+        costOfPlantMachinary: null,
+        investmentInCGAccount: deductionDetails[0].CGASAmount,
+        panOfEligibleCompany: null,
+        purchaseDate: deductionDetails[0].purchaseDate,
+        purchaseDatePlantMachine: null,
+        totalDeductionClaimed: deductionDetails[0].deductionClaimed,
+        usedDeduction: null,
+      };
+
+      this.ITR_JSON.capitalGain
+        .filter((item) => item.assetType === 'GOLD')?.[0]
+        .deduction.splice(
+          0,
+          this.ITR_JSON.capitalGain[0].deduction.length,
+          extraDeductionDetails
+        );
+    } else {
+      this.ITR_JSON.capitalGain
+        .filter((item) => item.assetType === 'GOLD')?.[0]
+        ?.deduction.splice(0, this.ITR_JSON.capitalGain[0]?.deduction.length);
+
+      const capitalGainArray = this.ITR_JSON.capitalGain;
+      // Filter the capitalGain array based on the assetType 'GOLD'
+      const filteredCapitalGain = capitalGainArray?.filter(
+        (item) => item.assetType === 'GOLD'
+      );
+
+      // Check if the filtered capitalGain array is not empty and assetDetails length is 0
+      if (
+        filteredCapitalGain?.length > 0 &&
+        filteredCapitalGain[0]?.assetDetails?.length === 0
+      ) {
+        const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
+
+        // Delete the entire element from the capitalGain array
+        capitalGainArray?.splice(index, 1);
+      }
     }
 
     console.log('CG:', this.ITR_JSON.capitalGain);
@@ -203,10 +253,10 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     const deleteDeduction = this.getDeductions;
     deleteDeduction.removeAt(index);
     // Condition is added because at least one deduction needs to be shown
-    if (deleteDeduction.length === 0) {
-      deleteDeduction.push(this.createDeductionForm());
-    }
-    this.goldCg.deduction.splice(index, 1);
+    // if (deleteDeduction.length === 0) {
+    //   deleteDeduction.push(this.createDeductionForm());
+    // }
+    // this.goldCg.deduction.splice(index, 1);
     // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 

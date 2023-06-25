@@ -78,7 +78,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       currentPage: 1,
     };
 
-    let data = this.goldCg.assetDetails;
+    let data = this.goldCg?.assetDetails;
 
     // console.log(data);
 
@@ -474,6 +474,23 @@ export class OtherAssetImprovementComponent implements OnInit {
       this.goldCg.assetDetails.push(cgObject);
     }
     this.ITR_JSON.capitalGain.push(this.goldCg);
+
+    const capitalGainArray = this.ITR_JSON.capitalGain;
+    // Filter the capitalGain array based on the assetType 'GOLD'
+    const filteredCapitalGain = capitalGainArray?.filter(
+      (item) => item.assetType === 'GOLD'
+    );
+
+    // Check if the filtered capitalGain array is not empty and assetDetails length is 0
+    if (
+      filteredCapitalGain?.length > 0 &&
+      filteredCapitalGain[0]?.assetDetails?.length === 0
+    ) {
+      const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
+
+      // Delete the entire element from the capitalGain array
+      capitalGainArray?.splice(index, 1);
+    }
 
     console.log('CG:', this.ITR_JSON.capitalGain);
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
