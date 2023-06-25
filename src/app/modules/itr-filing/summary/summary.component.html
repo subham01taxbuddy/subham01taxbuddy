@@ -477,12 +477,6 @@
                   <!-- *******************Income from House Property ************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[
-                      finalCalculations?.houseProperties?.hpTotalIncome &&
-                      finalCalculations?.houseProperties?.hpTotalIncome === 0
-                        ? true
-                        : false
-                    ]"
                     #HP
                   >
                     <mat-expansion-panel-header>
@@ -637,12 +631,6 @@
                   <!-- ************************** Income from Business ****************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[
-                      finalCalculations?.businessIncome?.businessIncomeTotal ===
-                      0
-                        ? true
-                        : false
-                    ]"
                     #business
                   >
                     <mat-expansion-panel-header>
@@ -928,13 +916,6 @@
                   <!-- ************************** Income from Capital Gain ****************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[
-                      totalCapitalGain('AMT') === 0 &&
-                      !ITR_JSON.systemFlags.hasCapitalGain &&
-                      !ITR_JSON.itrSummaryJson
-                        ? true
-                        : false
-                    ]"
                     #CG
                   >
                     <mat-expansion-panel-header class="newclass">
