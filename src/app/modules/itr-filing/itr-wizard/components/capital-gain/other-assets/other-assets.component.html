@@ -24,7 +24,7 @@
             (click)="$event.stopPropagation(); addOtherAssets('otherAssets')"
           >
             <i class="fa fa-plus" aria-hidden="true"></i>
-            <span>  Add Other Assets</span>
+            <span> Add Other Assets</span>
           </button>
         </div>
       </mat-expansion-panel-header>
@@ -57,42 +57,39 @@
     </div>
 
     <!-- form  -->
-       <form [formGroup]="deductionForm">
-        <div formArrayName="deductions">
-          <div
-            *ngFor="
-              let deduction of getDeductions?.controls | paginate : config;
-              let i = index
-            "
-            [formGroupName]="fieldGlobalIndex(i)"
-          >
-              <div class="row cardClr2">
-                <!-- CHECKBOX  -->
-                <div class="col-sm-1">
-                  <mat-checkbox color="primary"></mat-checkbox>
-                </div>
+    <form [formGroup]="deductionForm">
+      <div formArrayName="deductions">
+        <div
+          *ngFor="
+            let deduction of getDeductions?.controls | paginate : config;
+            let i = index
+          "
+          [formGroupName]="fieldGlobalIndex(i)"
+        >
+          <div class="row cardClr2">
+            <!-- CHECKBOX  -->
+            <div class="col-sm-1">
+              <mat-checkbox color="primary"></mat-checkbox>
+            </div>
 
-                <!-- inputs  -->
+            <!-- inputs  -->
 
-                  <!-- type-of-deduction  -->
-                  <div class="col-sm-3">
-                    <mat-label>Type of Deduction</mat-label>
-                    <mat-form-field
-                      class="input-field-width"
-                      appearance="outline"
-                    >
-                      <input
-                        matInput
-                        digitsOnly
-                        formControlName="typeOfDeduction"
-                        placeholder="Type of Deduction"
-                        name="typeOfDeduction"
-                        class="input-field"
-                        maxlength="14"
-                        readonly
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      />
-                      <!-- <mat-error
+            <!-- type-of-deduction  -->
+            <div class="col-sm-3">
+              <mat-label>Type of Deduction</mat-label>
+              <mat-form-field class="input-field-width" appearance="outline">
+                <input
+                  matInput
+                  digitsOnly
+                  formControlName="typeOfDeduction"
+                  placeholder="Type of Deduction"
+                  name="typeOfDeduction"
+                  class="input-field"
+                  maxlength="14"
+                  readonly
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                />
+                <!-- <mat-error
                   *ngIf="
                     assetDetailsForm.controls['purchaseCost'].hasError(
                       'pattern'
@@ -100,124 +97,114 @@
                   "
                   >Enter valid amount.</mat-error
                 > -->
-                    </mat-form-field>
-                  </div>
-                  <!-- buy-date  -->
-                  <div class="col-sm-4">
-                    <mat-label> Buy Date / Date of Acquisition </mat-label>
-                    <mat-form-field appearance="outline">
-                      <input
-                        matInput
-                        formControlName="purchaseDate"
-                        name="purchaseDate"
-                        [matDatepicker]="purchaseDate"
-                        placeholder="Buy Date / Date of Acquisition"
-                      />
-                      <mat-datepicker-toggle
-                        matSuffix
-                        [for]="purchaseDate"
-                      ></mat-datepicker-toggle>
-                      <mat-datepicker #purchaseDate></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                  <!-- cost-of-new-asset  -->
-                  <div class="col-sm-4">
-                    <mat-label>Cost of New Asset</mat-label>
-                    <mat-form-field
-                      class="input-field-width"
-                      appearance="outline"
-                    >
-                      <input
-                        matInput
-                        digitsOnly
-                        formControlName="costOfNewAsset"
-                        placeholder="Cost Of New Asset"
-                        name="costOfNewAsset"
-                        class="input-field"
-                        maxlength="14"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      />
-                      <!-- <mat-error
+              </mat-form-field>
+            </div>
+            <!-- buy-date  -->
+            <div class="col-sm-4">
+              <mat-label> Buy Date / Date of Acquisition </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  formControlName="purchaseDate"
+                  name="purchaseDate"
+                  [matDatepicker]="purchaseDate"
+                  placeholder="Buy Date / Date of Acquisition"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="purchaseDate"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #purchaseDate></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <!-- cost-of-new-asset  -->
+            <div class="col-sm-4">
+              <mat-label>Cost of New Asset</mat-label>
+              <mat-form-field class="input-field-width" appearance="outline">
+                <input
+                  matInput
+                  digitsOnly
+                  formControlName="costOfNewAsset"
+                  placeholder="Cost Of New Asset"
+                  name="costOfNewAsset"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                />
+                <!-- <mat-error
                   *ngIf="
                     assetDetailsForm.controls['sellValue'].hasError('pattern')
                   "
                   >Enter valid amount.</mat-error
                 > -->
-                    </mat-form-field>
-                  </div>
-                  <!-- CGAS Deposit  -->
-                  <div class="col-sm-4 spsTp">
-                    <mat-label
-                      >Amount deposited in CGAS before due date</mat-label
-                    >
-                    <mat-form-field
-                      class="input-field-width"
-                      appearance="outline"
-                    >
-                      <input
-                        matInput
-                        digitsOnly
-                        formControlName="CGASAmount"
-                        placeholder="Amount deposited in CGAS before due date"
-                        name="CGASAmount"
-                        class="input-field"
-                        maxlength="14"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      />
-                      <!-- <mat-error
+              </mat-form-field>
+            </div>
+            <!-- CGAS Deposit  -->
+            <div class="col-sm-4 spsTp">
+              <mat-label>Amount deposited in CGAS before due date</mat-label>
+              <mat-form-field class="input-field-width" appearance="outline">
+                <input
+                  matInput
+                  digitsOnly
+                  formControlName="CGASAmount"
+                  placeholder="Amount deposited in CGAS before due date"
+                  name="CGASAmount"
+                  class="input-field"
+                  maxlength="14"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                />
+                <!-- <mat-error
                   *ngIf="
                     assetDetailsForm.controls['sellExpense'].hasError('pattern')
                   "
                   >Enter valid amount.</mat-error
                 > -->
-                    </mat-form-field>
-                  </div>
-                  <!-- deduction claimed  -->
-                  <div class="col-sm-4 spsTp">
-                    <mat-label>Amount of Deduction Claimed</mat-label>
-                    <mat-form-field
-                      class="input-field-width"
-                      appearance="outline"
-                    >
-                      <input
-                        matInput
-                        digitsOnly
-                        formControlName="deductionClaimed"
-                        placeholder="Amount of Deduction Claimed"
-                        name="deductionClaimed"
-                        class="input-field"
-                        maxlength="14"
-                        readonly
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        (click)="calculateDeduction(i)"
-                      />
-                    </mat-form-field>
-                  </div>
-
-                  <div class="col-sm-4 spsTp">
-                    <button
-                      type="button"
-                      class="edit-donation"
-                      (click)="editDeduction(i)"
-                    >
-                      <mat-icon> edit_square </mat-icon>Edit
-                    </button>
-                  </div>
-
-                </div><!-- Row Ends -->
-              </div>
-
-              <!-- edit Other Assets deduction -->
-
+              </mat-form-field>
+            </div>
+            <!-- deduction claimed  -->
+            <div class="col-sm-4 spsTp">
+              <mat-label>Amount of Deduction Claimed</mat-label>
+              <mat-form-field class="input-field-width" appearance="outline">
+                <input
+                  matInput
+                  digitsOnly
+                  formControlName="deductionClaimed"
+                  placeholder="Amount of Deduction Claimed"
+                  name="deductionClaimed"
+                  class="input-field"
+                  maxlength="14"
+                  readonly
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  (click)="calculateDeduction(i)"
+                />
+              </mat-form-field>
             </div>
 
-      </form>
+            <div class="col-sm-4 spsTp">
+              <button
+                type="button"
+                class="edit-donation"
+                (click)="editDeduction(i)"
+              >
+                <mat-icon> edit_square </mat-icon>Edit
+              </button>
+            </div>
+          </div>
+          <!-- Row Ends -->
+        </div>
 
+        <!-- edit Other Assets deduction -->
+      </div>
+    </form>
 
     <!-- footer  -->
     <div class="row spsTp bdrTp">
       <div class="col-sm-9">
-        <button type="submit" class="delete-btn" (click)="deleteDeduction(index)">
+        <button
+          type="submit"
+          class="delete-btn"
+          (click)="deleteDeduction(index)"
+        >
           <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
         </button>
       </div>
@@ -239,17 +226,13 @@
     </div>
   </div>
 
-
   <!-- page-navigation-buttons  -->
   <div class="flex justify-between p-[30px] back-foot">
+    <button class="lgtBtn" (click)="goBack()">
+      Back to Capital Gain Topics
+    </button>
 
-      <button class="lgtBtn" (click)="goBack()">
-        Back to Capital Gain Topics
-      </button>
-
-
-      <button class="saveBtnIn">Save All</button>
-
+    <button class="saveBtnIn">Save All</button>
   </div>
 </div>
 
