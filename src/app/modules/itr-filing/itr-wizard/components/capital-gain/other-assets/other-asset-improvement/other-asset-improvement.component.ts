@@ -78,7 +78,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       currentPage: 1,
     };
 
-    let data = this.goldCg.assetDetails;
+    let data = this.goldCg?.assetDetails;
 
     // console.log(data);
 
@@ -133,7 +133,9 @@ export class OtherAssetImprovementComponent implements OnInit {
 
     return (
       otherAssetDetailsArray.controls.filter(
-        (item: FormGroup) => ((item as FormGroup).controls['otherAssetsArray'] as FormGroup).controls['hasEdit'].value === true
+        (item: FormGroup) =>
+          ((item as FormGroup).controls['otherAssetsArray'] as FormGroup)
+            .controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -150,8 +152,6 @@ export class OtherAssetImprovementComponent implements OnInit {
   isAddMoreOtherAssets() {
     // let assetDetails;
     // let data;
-
-
 
     const otherAssetDetailsArray = this.getOtherAssets;
     // condition for adding more other assets
@@ -299,18 +299,22 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
-      assessmentYear: '2022-2023',
+      assessmentYear: '2023-2024',
       assesseeType: 'INDIVIDUAL',
       residentialStatus: 'RESIDENT',
       assetType: 'GOLD',
       assetDetails: [cgObject],
       improvement: [],
-      deduction: this.goldCg.deduction,
+      deduction: [],
     };
 
     this.goldCg.assetDetails.forEach((asset) => {
       //find improvement
       let improvements = this.goldCg.improvement;
+      let srnObj = improvements.find((element) => element.srn === index);
+      if (!srnObj && improvements.length > 0) {
+        improvements[0].srn = index;
+      }
       if (!improvements || improvements.length == 0) {
         let improvement = {
           indexCostOfImprovement: 0,
@@ -324,6 +328,30 @@ export class OtherAssetImprovementComponent implements OnInit {
       } else {
         request.improvement = this.goldCg.improvement;
       }
+
+      let deduction = this.goldCg.deduction;
+      let srnDednObj = deduction.find((element) => element.srn === index);
+      if (!srnDednObj && deduction.length > 0) {
+        deduction[0].srn = index;
+      }
+      if (!deduction || deduction.length == 0) {
+        let deduction = {
+          costOfNewAssets: null,
+          costOfPlantMachinary: null,
+          investmentInCGAccount: null,
+          orgAssestTransferDate: null,
+          panOfEligibleCompany: null,
+          purchaseDate: null,
+          purchaseDatePlantMachine: null,
+          srn: asset.srn,
+          totalDeductionClaimed: null,
+          underSection: 'Deduction 54F',
+          usedDeduction: null,
+        };
+        request.deduction.push(deduction);
+      } else {
+        request.deduction = this.goldCg.deduction;
+      }
     });
 
     this.itrMsService.postMethod(param, request).subscribe(
@@ -335,14 +363,13 @@ export class OtherAssetImprovementComponent implements OnInit {
         this.goldCg.deduction = res.deduction;
         // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
         // this.calculateTotalCg();
+        console.log();
 
         (
           (this.getOtherAssets.controls[index] as FormGroup).controls[
             'otherAssetsArray'
           ] as FormGroup
-        ).controls['capitalGain']?.setValue(
-          res.assetDetails[index].capitalGain
-        );
+        ).controls['capitalGain']?.setValue(res.assetDetails[0].capitalGain);
 
         // (
         //   (this.OtherAsssetImprovementForm.controls['otherAssets'] as FormArray)
@@ -448,6 +475,23 @@ export class OtherAssetImprovementComponent implements OnInit {
     }
     this.ITR_JSON.capitalGain.push(this.goldCg);
 
+    const capitalGainArray = this.ITR_JSON.capitalGain;
+    // Filter the capitalGain array based on the assetType 'GOLD'
+    const filteredCapitalGain = capitalGainArray?.filter(
+      (item) => item.assetType === 'GOLD'
+    );
+
+    // Check if the filtered capitalGain array is not empty and assetDetails length is 0
+    if (
+      filteredCapitalGain?.length > 0 &&
+      filteredCapitalGain[0]?.assetDetails?.length === 0
+    ) {
+      const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
+
+      // Delete the entire element from the capitalGain array
+      capitalGainArray?.splice(index, 1);
+    }
+
     console.log('CG:', this.ITR_JSON.capitalGain);
     this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
       console.log(result);
@@ -472,14 +516,14 @@ export class OtherAssetImprovementComponent implements OnInit {
     console.log('Remove Index', index);
     const deleteOtherAsset = this.getOtherAssets;
 
-
-
-      deleteOtherAsset.controls.forEach((item, index) => {
-          if(((item as FormGroup).controls['otherAssetsArray'] as FormGroup).controls['hasEdit'].value){
-            deleteOtherAsset.removeAt(index);
-          }
-        }
-      );
+    deleteOtherAsset.controls.forEach((item, index) => {
+      if (
+        ((item as FormGroup).controls['otherAssetsArray'] as FormGroup)
+          .controls['hasEdit'].value
+      ) {
+        deleteOtherAsset.removeAt(index);
+      }
+    });
 
     // deleteOtherAsset.controls.forEach((element, index) => {
     //   if ((element as FormGroup).controls['hasEdit'].value) {

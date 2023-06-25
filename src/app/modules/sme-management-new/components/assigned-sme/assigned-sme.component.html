@@ -3,7 +3,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]=false>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -13,67 +13,124 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
-           </div>
-
-           <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-            <app-co-owner-list-drop-down (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-          </div>
-
-           <div class="col-sm-6 spsTp">
-            <label class="input__label" for="attr">Select attribute</label>
-            <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey [ngClass]="{'error': showError && (!key || !searchVal)}">
-              <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                {{drop.name}}</option>
-            </select>
-        </div>
-
-        <div class="col-sm-6 spsTp">
-            <label class="input__label" for="attr">Enter value</label>
-            <div class="input__select">
-              <input type="text" class="select__box ogp_select" style="background-image:none"
-                [(ngModel)]="searchVal" name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+            <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
+              </mat-slide-toggle>
             </div>
-        </div>
 
-        <div class="col-sm-12 spsTp bdrTp">
-          <button class="spsTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-            Clear form
-          </button>
-          <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
-            <i class="fa fa-search" aria-hidden="true"></i> Search
-          </button>
+            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
+                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+            </div>
 
+            <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
+              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme($event, true)"
+                (sendOwner)="fromSme($event, false)"></app-leader-list-dropdown>
+            </div>
+
+            <div class="col-sm-6 spsTp">
+              <label class="input__label" for="attr">Select attribute</label>
+              <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey
+                [ngClass]="{'error': showError && (!key || !searchVal)}">
+                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                  {{drop.name}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-6 spsTp">
+              <label class="input__label" for="attr">Enter value</label>
+              <div class="input__select">
+                <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
+                  name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+              </div>
+
+              <div class="col-sm-12 spsTp bdrTp">
+                <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+                  <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="spsTp clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+                  Clear form
+                </button>
+                <button class="srch-btn mvRth" [disabled]="loading" (click)="advanceSearch(advanceSearchKey.value)">
+                  <i class="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-</div>
-</div>
-
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 
 <!-- Table Below -->
 <div class="tableSpc">
   <div class="row">
-  <div class="col-sm-8">
-    <div class="txTit">
-      Assigned SME Details:
+    <div class="col-sm-9">
+      <div class="txTit">
+        Assigned SME Details:
+      </div>
+    </div>
+    <!-- <div class="col-sm-3">
+      <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
+    </div> -->
+  </div>
+  <div class="col-sm-12">
+    <div class="tpMain">
+      <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
+      <span class="numTxBg1">{{ this.config.totalItems }}</span>
+      <!-- Inside Row -->
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">{{ this.config.internalCount }}</span><br>
+              <span class="TxSm">Internal Count</span>
+            </div>
+            <div class="inBxR">
+              <span class="numTxSm OrgTx">{{ this.config.externalCount }}</span><br>
+              <span class="TxSm">External Count</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">{{ this.config.activeCount }}</span><br>
+              <span class="TxSm">Active Count</span>
+            </div>
+            <div class="inBxR">
+              <span class="numTxSm OrgTx">{{ this.config.inactiveCount }}</span><br>
+              <span class="TxSm">Inactive Count</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="radius2">
+            <div class="inBxL">
+              <span class="numTxSm grTx1">{{ this.config.assignmentOnCount }}</span><br>
+              <span class="TxSm">Assignment On</span>
+            </div>
+            <div class="inBxR">
+              <span class="numTxSm OrgTx">{{ this.config.assignmentOffCount }}</span><br>
+              <span class="TxSm">Assignment Off</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Inside Row Ends -->
     </div>
   </div>
-  <div class="col-sm-4">
-  <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
-  </div>
-  </div>
 
-      <table>
-        <tr *ngFor="let item of smeInfo | paginate : config"></tr>
-      </table>
-      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
-        (rowClicked)="onSmeRowClicked($event)" >
-      </ag-grid-angular>
-      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <table>
+    <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+  </table>
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
+    (rowClicked)="onSmeRowClicked($event)">
+  </ag-grid-angular>
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
- </div>
+</div>

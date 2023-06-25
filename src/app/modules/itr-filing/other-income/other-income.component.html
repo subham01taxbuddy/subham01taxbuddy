@@ -60,20 +60,21 @@
               </tbody>
             </table>
           </div>
-      
+
           <hr />
           <div style="padding-top: 20px" formGroupName="dividendIncomes">
             <div class="row">
-            <div class="col-sm-6">
-            <div class="subTitle">
-              Quartely Break-up of Dividend Income:           
+              <div class="col-sm-6">
+                <div class="subTitle">
+                  Quartely Break-up of Dividend Income:
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="count1">
+                  Total Count: <span class="txClr1">{{ getTotal() }}</span>
+                </div>
+              </div>
             </div>
-           </div>
-            <div class="col-sm-6">
-            <div class="count1"> Total Count: <span class="txClr1">{{ getTotal() }}</span>
-            </div>
-            </div>
-           </div>
 
             <div class="row spsTp bdrTp">
               <div class="col-sm-4">
@@ -130,14 +131,14 @@
               </div>
               <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel"
-                  >16 Dec 2022 - 15 March 2022</mat-label
+                  >16 Dec 2022 - 15 March 2023</mat-label
                 >
                 <mat-form-field appearance="outline">
                   <input
                     digitsOnly
                     trim
                     matInput
-                    placeholder="16 Dec 2022 - 15 March 2022"
+                    placeholder="16 Dec 2022 - 15 March 2023"
                     name="quarter4"
                     formControlName="quarter4"
                     class="input-field"
@@ -148,14 +149,14 @@
               </div>
               <div class="col-sm-4 spsTp">
                 <mat-label class="inputLabel"
-                  >16 March 2022 - 31 March 2022</mat-label
+                  >16 March 2023 - 31 March 2023</mat-label
                 >
                 <mat-form-field appearance="outline">
                   <input
                     digitsOnly
                     trim
                     matInput
-                    placeholder="16 March 2022 - 31 March 2022"
+                    placeholder="16 March 2023 - 31 March 2023"
                     name="quarter5"
                     formControlName="quarter5"
                     class="input-field"
@@ -168,73 +169,72 @@
           </div>
           <hr />
 
-            <div class="subTitle">
-              Family Pension:
-              <!-- <span style="float: right;">Total:{{getTotalExemptIncome()}}</span> -->
-            </div>
-            <div class="row">
-              <div class="col-sm-4 spsTp">
-                <mat-label class="inputLabel">Family pension</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    placeholder="Family pension"
-                    name="quarter1"
-                    formControlName="familyPension"
-                    class="input-field"
-                    maxlength="50"
-                    digitsOnly
-                    (blur)="calFamPension()"
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4 spsTp">
-                <mat-label class="inputLabel"
-                  >(-) Deduction u/s 57(iia)</mat-label
-                >
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    name="quarter2"
-                    class="input-field"
-                    formControlName="famPenDeduction"
-                    digitsOnly
-                    disabled
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4 spsTp">
-                <mat-label class="inputLabel">Total Family Pension</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    name="quarter3"
-                    class="input-field"
-                    formControlName="totalFamPenDeduction"
-                    digitsOnly
-                    disabled
-                  />
-                </mat-form-field>
-              </div>
-            </div>
-        
-        </div>
-      
-          <div class="col-sm-12 spsTp bdrTp">
-            <button class="tbd-btn save-btn mvRth"
-              [disabled]="otherIncomeFormGroup.invalid"
-              (click)="saveOtherIncome()"
-            >
-              Save
-            </button>
+          <div class="subTitle">
+            Family Pension:
+            <!-- <span style="float: right;">Total:{{getTotalExemptIncome()}}</span> -->
           </div>
-     
+          <div class="row">
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">Family pension</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  digitsOnly
+                  trim
+                  matInput
+                  placeholder="Family pension"
+                  name="quarter1"
+                  formControlName="familyPension"
+                  class="input-field"
+                  maxlength="50"
+                  digitsOnly
+                  (blur)="calFamPension()"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel"
+                >(-) Deduction u/s 57(iia)</mat-label
+              >
+              <mat-form-field appearance="outline">
+                <input
+                  digitsOnly
+                  trim
+                  matInput
+                  name="quarter2"
+                  class="input-field"
+                  formControlName="famPenDeduction"
+                  digitsOnly
+                  disabled
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">Total Family Pension</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  digitsOnly
+                  trim
+                  matInput
+                  name="quarter3"
+                  class="input-field"
+                  formControlName="totalFamPenDeduction"
+                  digitsOnly
+                  disabled
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12 spsTp bdrTp">
+          <button
+            class="tbd-btn save-btn mvRth"
+            [disabled]="otherIncomeFormGroup.invalid"
+            (click)="saveOtherIncome()"
+          >
+            Save
+          </button>
+        </div>
       </form>
     </div>
   </mat-expansion-panel>
@@ -256,7 +256,9 @@
     </mat-expansion-panel-header>
     <div class="card__col-xs-12 card__col-sm-12">
       <div class="sectionTitle" style="padding: 10px; font-size: 20px">
-        <div class="count1"> Total Count: <span class="txClr1">{{ getTotalExemptIncome() }}</span></div>        
+        <div class="count1">
+          Total Count: <span class="txClr1">{{ getTotalExemptIncome() }}</span>
+        </div>
       </div>
       <form [formGroup]="exemptIncomeFormGroup">
         <div>
@@ -303,13 +305,17 @@
           <br />
           Note: 2. Sec 10(26AAA) - Deduction is available only for certain
           Sikkimese assessees
-        </div>       
-          <div class="col-sm-12 spsTp bdrTp">
-            <button class="tbd-btn save-btn mvRth" [disabled]="exemptIncomeFormGroup.invalid" (click)="saveExemptIncomes()">
-              Save
-            </button>
-          </div>
-       </form>
+        </div>
+        <div class="col-sm-12 spsTp bdrTp">
+          <button
+            class="tbd-btn save-btn mvRth"
+            [disabled]="exemptIncomeFormGroup.invalid"
+            (click)="saveExemptIncomes()"
+          >
+            Save
+          </button>
+        </div>
+      </form>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

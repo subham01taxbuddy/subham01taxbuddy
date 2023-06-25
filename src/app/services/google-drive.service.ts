@@ -77,10 +77,12 @@ export class GoogleDriveService{
 
       const ext = fileName.split('.').pop();
       let mime = '';
+      let contentType = 'application/json';
       if(ext === 'xls' || ext === 'xlsx'){
         mime = 'application/vnd.google-apps.spreadsheet';
       } else if(ext === 'zip'){
-        mime = 'application/zip';
+        mime = 'application/octet-stream';
+        contentType = 'application/zip';
       }
       const fileMetadata = {
         name: fileName,
@@ -112,7 +114,7 @@ export class GoogleDriveService{
 
         var metadataOptions = new HttpHeaders();
         metadataOptions = metadataOptions.append('Authorization', 'Bearer ' + gapi.client.getToken());
-        metadataOptions = metadataOptions.append('Content-Type', 'application/json');
+        metadataOptions = metadataOptions.append('Content-Type', contentType);
         metadataOptions = metadataOptions.append('X-Upload-Content-Length', file.size.toString());
         metadataOptions = metadataOptions.append('X-Upload-Content-Type', 'application/octet-stream');
 

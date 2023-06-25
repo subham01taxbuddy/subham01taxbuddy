@@ -12,6 +12,8 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { environment } from 'src/environments/environment';
 
 
 export const MY_FORMATS = {
@@ -43,7 +45,7 @@ export class ItrFilingReportComponent implements OnInit {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  leaderView =new FormControl('');
+  leaderView = new FormControl('');
   ownerView = new FormControl('');
   minEndDate = new Date(2023, 3, 1);
   maxDate = new Date(2024, 2, 31);
@@ -61,12 +63,10 @@ export class ItrFilingReportComponent implements OnInit {
 
   constructor(
     public datePipe: DatePipe,
-    private userMsService: UserMsService,
+    private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private itrService: ItrMsService,
-    private jsonToCsvService: JsonToCsvService
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -95,7 +95,7 @@ export class ItrFilingReportComponent implements OnInit {
 
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports()
@@ -110,7 +110,7 @@ export class ItrFilingReportComponent implements OnInit {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.ownerId = event ? event.userId : null;
-      this.disableCheckboxes=true
+      this.disableCheckboxes = true
     } else {
       this.filerId = event ? event.userId : null;
 
@@ -125,10 +125,10 @@ export class ItrFilingReportComponent implements OnInit {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    if(this.ownerId || this.filerId){
-      this.disableCheckboxes=true;
-    }else{
-      this.disableCheckboxes=false;
+    if (this.ownerId || this.filerId) {
+      this.disableCheckboxes = true;
+    } else {
+      this.disableCheckboxes = false;
     }
 
   }
@@ -136,18 +136,18 @@ export class ItrFilingReportComponent implements OnInit {
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-     this.leaderId = event ? event.userId : null;
-   }
-   if (this.ownerId) {
-     this.agentId = this.ownerId;
-   }
+      this.leaderId = event ? event.userId : null;
+    }
+    if (this.ownerId) {
+      this.agentId = this.ownerId;
+    }
 
-   if(this.leaderId || this.ownerId){
-    this.disableCheckboxes=true;
-  }else{
-    this.disableCheckboxes=false;
+    if (this.leaderId || this.ownerId) {
+      this.disableCheckboxes = true;
+    } else {
+      this.disableCheckboxes = false;
+    }
   }
- }
 
   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/calling-report/itr-filing-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&leaderUserId=9523'
@@ -164,7 +164,7 @@ export class ItrFilingReportComponent implements OnInit {
       this.config.currentPage = 1
     }
 
-    if(this.ownerId && pageChange){
+    if (this.ownerId && pageChange) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
 
@@ -174,7 +174,7 @@ export class ItrFilingReportComponent implements OnInit {
       this.config.currentPage = 1;
     }
 
-    if(this.filerId && pageChange){
+    if (this.filerId && pageChange) {
       userFilter += `&ownerUserId=${this.filerId}`;
     }
 
@@ -189,10 +189,21 @@ export class ItrFilingReportComponent implements OnInit {
     }
 
     let viewFilter = '';
-    if(this.ownerView.value === true){
+    if (this.ownerView.value === true && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
       viewFilter += `&ownerView=${this.ownerView.value}`
     }
-    if(this.leaderView.value === true){
+    if (this.ownerView.value === true && pageChange) {
+      viewFilter += `&ownerView=${this.ownerView.value}`
+    }
+
+    if (this.leaderView.value === true && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
+      viewFilter += `&leaderView=${this.leaderView.value}`
+    }
+    if (this.leaderView.value === true && pageChange) {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
@@ -371,7 +382,7 @@ export class ItrFilingReportComponent implements OnInit {
         headerName: 'Leader Name',
         field: 'leaderName',
         sortable: true,
-        width: view === 'leader' ?  200 : 140,
+        width: view === 'leader' ? 200 : 140,
         pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -384,12 +395,8 @@ export class ItrFilingReportComponent implements OnInit {
     ]
   }
 
-  downloadReport() {
+  async downloadReport() {
     this.loading = true;
-    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    let loggedInId = this.utilsService.getLoggedInUserID();
-
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -400,31 +407,24 @@ export class ItrFilingReportComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    if(this.leaderId){
+    if (this.leaderId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
     let viewFilter = '';
-    if(this.ownerView.value === true){
+    if (this.ownerView.value === true) {
       viewFilter += `&ownerView=${this.ownerView.value}`
     }
-    if(this.leaderView.value === true){
+    if (this.leaderView.value === true) {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&page=0&pageSize=100000${userFilter}${viewFilter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        return this.jsonToCsvService.downloadFile(response?.data?.content);
-      } else {
-        this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", 'Failed to get daily-calling-report');
-    });
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${viewFilter}`;
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report');
+    this.loading = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -443,7 +443,7 @@ export class ItrFilingReportComponent implements OnInit {
     this?.leaderDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     this.showReports();
@@ -452,7 +452,7 @@ export class ItrFilingReportComponent implements OnInit {
   }
 
   pageChanged(event) {
-    let pageChange =event
+    let pageChange = event
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     this.showReports(pageChange);

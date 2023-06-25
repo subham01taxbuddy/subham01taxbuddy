@@ -23,7 +23,7 @@ export class RefundRequestComponent implements OnInit {
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
-    itemsPerPage: 10,
+    itemsPerPage: 20,
     currentPage: 1,
     totalItems: null,
   };
@@ -99,10 +99,10 @@ export class RefundRequestComponent implements OnInit {
       this.filerId = null;
       if (isOwner) {
         this.ownerId = event ? event.userId : null;
-        this.getRefundRequestList(0, 'ownerUserId', this.ownerId);
+        // this.getRefundRequestList(0, 'ownerUserId', this.ownerId);
       } else {
         this.filerId = event ? event.userId : null;
-        this.getRefundRequestList(0, 'filerUserId', this.filerId);
+        // this.getRefundRequestList(0, 'filerUserId', this.filerId);
       }
     }
   }

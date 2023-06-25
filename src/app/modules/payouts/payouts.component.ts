@@ -14,6 +14,7 @@ import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 import {environment} from "../../../environments/environment";
 import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
+import {capitalize} from "lodash";
 
 @Component({
   selector: 'app-payouts',
@@ -36,9 +37,18 @@ export class PayoutsComponent implements OnInit {
   statusList = [
     {value: '', name: 'All'},
     {value: 'APPROVED', name: 'Approved'},
-    {value: 'NOT_APPROVED', name: 'Yet To Approve'}
+    {value: 'NOT_APPROVED', name: 'Yet To Approve'},
+
+  ];
+  paymentStatusList =[
+    {value: '', name: 'All'},
+    {value: 'Paid',name:'Paid'},
+    {value: 'Unpaid',name:'Unpaid'},
+    {value: 'processing',name:'Processing'},
+    {value: 'initiated',name:'Initiated'}
   ];
   selectedStatus: any;
+  selectedPayoutStatus:any;
   searchVal: string = "";
   currentUserId: number = 0;
   user_data: any = [];
@@ -92,6 +102,7 @@ export class PayoutsComponent implements OnInit {
   ngOnInit() {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.selectedStatus = this.statusList[2].value;
+    this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.getSearchList('status', this.selectedStatus);
   }
 
@@ -158,15 +169,26 @@ export class PayoutsComponent implements OnInit {
     this.serviceCall(queryString);
   }
 
+  payOutStatusChanged(){
+    // this.selectedStatus=''
+    this.config.currentPage = 1;
+    let queryString = '';
+    if(this.utilsService.isNonEmpty(this.searchVal)){
+      queryString = `&${this.key}=${this.searchVal}`;
+    }
+    this.serviceCall(queryString);
+  }
+
   serviceCall(queryString){
     this.loading = true;
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+    let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
     if(this.filerId) {
-      queryString += this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
+      queryString += this.filerId ? `&filerUserId=${this.filerId}${statusFilter}${payOutStatusFilter}` : `${statusFilter}${payOutStatusFilter}`;
     } else if(this.ownerId){
-      queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
+      queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}${payOutStatusFilter}` : `${statusFilter}${payOutStatusFilter}`;
     } else{
-      queryString += statusFilter;
+      queryString += `${statusFilter}${payOutStatusFilter}`;
     }
     const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${queryString}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
@@ -202,6 +224,7 @@ export class PayoutsComponent implements OnInit {
       {
         headerName: 'Sr. No.',
         width: 50,
+        pinned:'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -217,6 +240,7 @@ export class PayoutsComponent implements OnInit {
         headerName: 'Filer Name',
         field: 'filerUserId',
         width: 150,
+        pinned:'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -275,6 +299,18 @@ export class PayoutsComponent implements OnInit {
         headerName: 'User Phone Number',
         field: 'userMobileNumber',
         width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Filing Source',
+        field: 'filingSource',
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -441,6 +477,9 @@ export class PayoutsComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          return data.value.charAt(0).toUpperCase() + data.value.slice(1).toLowerCase();
         }
       },
       {
@@ -665,6 +704,7 @@ export class PayoutsComponent implements OnInit {
     this.filerId = null;
     this.ownerId = null;
     this.selectedStatus = this.statusList[2].value;
+    this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;
     this?.smeDropDown?.resetDropdown();
     this.clearValue();

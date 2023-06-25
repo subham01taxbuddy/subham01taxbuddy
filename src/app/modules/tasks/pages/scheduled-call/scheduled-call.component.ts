@@ -45,7 +45,7 @@ export class ScheduledCallComponent implements OnInit {
   searchStatusId:any;
   searchParam: any = {
     page: 0,
-    size: 30,
+    size: 20,
     totalPages: null,
     mobileNumber: null,
     email: null,
@@ -87,7 +87,7 @@ export class ScheduledCallComponent implements OnInit {
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
       this.loggedUserId = userId;
     }
-    this.showScheduleCallList();
+    // this.showScheduleCallList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
@@ -106,6 +106,9 @@ export class ScheduledCallComponent implements OnInit {
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }
+      else{
+        this.search();
+    }
     })
   }
 
@@ -130,9 +133,9 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
-  showScheduleCallList() {
-    this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
-  }
+  // showScheduleCallList() {
+  //   this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
+  // }
 
   ownerId: number;
   filerId: number;
@@ -148,12 +151,12 @@ export class ScheduledCallComponent implements OnInit {
       this.agentId = this.filerId;
     } else if (this.ownerId) {
       this.agentId = this.ownerId;
-      this.search('agent');
+      // this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    this.search('agent');
+    // this.search('agent');
   }
 
   coOwnerId: number;
@@ -168,10 +171,10 @@ export class ScheduledCallComponent implements OnInit {
     }
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.search('agent');
+      // this.search('agent');
     } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.search('agent');
+      // this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -180,41 +183,41 @@ export class ScheduledCallComponent implements OnInit {
   }
 
 
-  getScheduledCallsInfo(id, page) {
-    this.loading = true;
-    var param2 = `/dashboard/schedule-call-details/${id}?&page=${this.config.currentPage - 1
-      }&size=${this.searchParam.size}`;
-    this.userMsService.getMethodNew(param2).subscribe(
-      (result: any) => {
-        if (result.success == false) {
-          this.toastMsgService.alert('error', result.message);
-          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
-        }
-        if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
-          this.scheduleCallsData = result.data.content;
-          this.config.totalItems = result.data.totalElements;
-          this.config.pageCount = result.data.totalPages;
-          this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content));
-        } else {
-          // this.scheduleCallsData = [];
-          this.loading = false;
-          this.toastMsgService.alert('error', 'No Data Found');
-          this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
-        }
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        console.log(error);
-        this.toastMsgService.alert(
-          'error',
-          this.utilsService.showErrorMsg(error.error.status)
-        );
-      }
-    );
-  }
+  // getScheduledCallsInfo(id, page) {
+  //   this.loading = true;
+  //   var param2 = `/dashboard/schedule-call-details/${id}?&page=${this.config.currentPage - 1
+  //     }&size=${this.searchParam.size}`;
+  //   this.userMsService.getMethodNew(param2).subscribe(
+  //     (result: any) => {
+  //       if (result.success == false) {
+  //         this.toastMsgService.alert('error', result.message);
+  //         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+  //         this.config.totalItems = 0;
+  //       }
+  //       if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
+  //         this.scheduleCallsData = result.data.content;
+  //         this.config.totalItems = result.data.totalElements;
+  //         this.config.pageCount = result.data.totalPages;
+  //         this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content));
+  //       } else {
+  //         // this.scheduleCallsData = [];
+  //         this.loading = false;
+  //         this.toastMsgService.alert('error', 'No Data Found');
+  //         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+  //         this.config.totalItems = 0;
+  //       }
+  //       this.loading = false;
+  //     },
+  //     (error) => {
+  //       this.loading = false;
+  //       console.log(error);
+  //       this.toastMsgService.alert(
+  //         'error',
+  //         this.utilsService.showErrorMsg(error.error.status)
+  //       );
+  //     }
+  //   );
+  // }
 
   createRowData(scheduleCalls) {
     // console.log('scheduleCalls -> ', scheduleCalls);
@@ -702,7 +705,8 @@ export class ScheduledCallComponent implements OnInit {
           'Call status update successfully.'
         );
         setTimeout(() => {
-          this.showScheduleCallList();
+          this.search()
+          // this.showScheduleCallList();
         }, 300);
       },
       (error) => {

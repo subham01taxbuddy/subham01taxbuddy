@@ -273,7 +273,6 @@
                       placeholder="Buy Price"
                       name="purchaseValuePerUnit"
                       maxlength="14"
-                      (change)="calculateTotalCG(securities)"
                       (blur)="getPurchaseValue(i)"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
@@ -375,7 +374,7 @@
                     >
                   </mat-form-field>
                 </div>
-                <div *ngIf="buyDateBefore31stJan && this.bondType === 'listed'">
+                <div *ngIf="checkBuyDateBefore31stJan(securities) && this.bondType === 'listed'">
                   <div class="col-sm-4 spsTp">
                     <mat-label>ISIN Code</mat-label>
                     <mat-form-field appearance="outline">
@@ -394,7 +393,7 @@
                     </mat-form-field>
                   </div>
                   <div class="col-sm-4 spsTp">
-                    <mat-label>FMV as on 31st Jan 2018</mat-label>
+                    <mat-label>FMV Per Unit as on 31st Jan 2018</mat-label>
                     <mat-form-field appearance="outline">
                       <input
                         matInput

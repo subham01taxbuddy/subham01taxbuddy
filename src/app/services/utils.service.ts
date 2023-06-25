@@ -18,8 +18,8 @@ import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Environment } from 'ag-grid-community';
 import { parse } from '@typescript-eslint/parser';
-import {AppSetting} from "../modules/shared/app.setting";
-import {StorageService} from "../modules/shared/services/storage.service";
+import { AppSetting } from '../modules/shared/app.setting';
+import { StorageService } from '../modules/shared/services/storage.service';
 
 @Injectable()
 export class UtilsService {
@@ -27,6 +27,7 @@ export class UtilsService {
   loading: boolean = false;
   private subject = new Subject<any>();
   uploadedJson: any;
+  jsonData: any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -1462,10 +1463,8 @@ export class UtilsService {
 
   getLoggedInUserID() {
     let smeInfoStr = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
-    if(smeInfoStr) {
-      const loggedInSmeInfo = JSON.parse(
-        smeInfoStr ?? ''
-      );
+    if (smeInfoStr) {
+      const loggedInSmeInfo = JSON.parse(smeInfoStr ?? '');
       if (
         this.isNonEmpty(loggedInSmeInfo) &&
         this.isNonEmpty(loggedInSmeInfo[0].userId)
@@ -1484,15 +1483,20 @@ export class UtilsService {
   fetchSmeInfo(userId) {
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
     // this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
-    this.userMsService.getMethodNew(param).subscribe((res: any) => {
-      if (res.success) {
-        sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+    this.userMsService.getMethodNew(param).subscribe(
+      (res: any) => {
+        if (res.success) {
+          sessionStorage.setItem(
+            AppConstants.LOGGED_IN_SME_INFO,
+            JSON.stringify(res.data)
+          );
+        }
+      },
+      (error) => {
+        console.log('error in fetching sme info', error);
       }
-    }, error => {
-      console.log('error in fetching sme info', error);
-    })
+    );
   }
-
 
   getIdToken() {
     let userData = JSON.parse(localStorage.getItem('UMD'));
@@ -1532,5 +1536,14 @@ export class UtilsService {
       // }
     });
     // sessionStorage.setItem("autosave", field.value);
+  }
+
+  setAddClientJsonData(data: any) {
+    this.jsonData = data;
+    console.log(this.jsonData, 'this.jsonData');
+  }
+
+  getAddClientJsonData() {
+    return this.jsonData;
   }
 }
