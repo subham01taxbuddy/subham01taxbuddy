@@ -191,7 +191,7 @@ export class PrefillIdComponent implements OnInit {
   }
 
   // setting correct format dates
-  parseAndFormatDate(date: string): string {
+  parseAndFormatDate(date: any): any {
     this.localDate = this.parseDate(date);
     this.utcDate = formatDate(
       this.localDate,
@@ -199,7 +199,7 @@ export class PrefillIdComponent implements OnInit {
       'en-US',
       '+0000'
     );
-    return this.utcDate;
+    return new Date(this.utcDate);
   }
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
