@@ -221,6 +221,7 @@ export class AppComponent {
       })
       .catch(err => {
         console.log(err);
+        this.router.navigate(['/login']);
       });
 
   }
