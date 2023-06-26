@@ -69,8 +69,18 @@ export class AddSubscriptionComponent implements OnInit {
       console.log('Get user  by mobile number responce: ', response);
       this.allSubscriptions=response.data
       console.log("All Sub",this.allSubscriptions)
-      this.service = this.allSubscriptions?.map((item: any) => item?.item?.service)
-      this.serviceDetails = this.allSubscriptions?.map((item:any) => item?.item?.serviceDetail)
+      let smeSelectedPlan = this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan);
+      let userSelectedPlan = this.allSubscriptions?.map((item: any) => item?.userSelectedPlan);
+      if(smeSelectedPlan ){
+        this.service = smeSelectedPlan[0]?.servicesType;
+        this.serviceDetails = smeSelectedPlan[0]?.name;
+      }else if(userSelectedPlan){
+        this.service = userSelectedPlan[0]?.servicesType;
+        this.serviceDetails = userSelectedPlan[0]?.name;
+      }else{
+        this.service = this.allSubscriptions?.map((item: any) => item?.item?.service);
+        this.serviceDetails = this.allSubscriptions?.map((item:any) => item?.item?.serviceDetail);
+      }
       console.log("services of user",this.service)
     })
   }

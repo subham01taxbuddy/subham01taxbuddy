@@ -308,7 +308,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
       this.JSONData = JSON.parse(jsonRes);
       if (this.JSONData) {
-        this.utilsService.showSnackBar('JSON uploaded scucessfully');
+        this.utilsService.showSnackBar(
+          'JSON uploaded scucessfully. You can now directly proceed ahead to update filing details without needing to parse and save summary. (You will have to save summary only in order to generate summary PDF)'
+        );
         this.utilsService.setAddClientJsonData(this.JSONData);
       }
     };
@@ -347,7 +349,26 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     //  if(itrData.hasOwnProperty('ITR1')){
     this.setTaxRegimeValue(itrData.FilingStatus);
     // this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
-    let panNo = itrData.PersonalInfo.PAN;
+    let panNo = '';
+    if (this.JSONData) {
+      let finalJson = this.JSONData.ITR;
+      let itrType = '';
+      if (finalJson.hasOwnProperty('ITR1')) {
+        itrType = 'ITR1';
+      } else if (finalJson.hasOwnProperty('ITR2')) {
+        itrType = 'ITR2';
+      } else if (finalJson.hasOwnProperty('ITR3')) {
+        itrType = 'ITR3';
+      } else if (finalJson.hasOwnProperty('ITR4')) {
+        itrType = 'ITR4';
+      }
+
+      if (itrType === 'ITR1' || itrType === 'ITR4') {
+        panNo = finalJson[itrType].PersonalInfo.PAN;
+      } else if (itrType === 'ITR2' || itrType === 'ITR3') {
+        panNo = finalJson[itrType].PartA_GEN1.PersonalInfo?.PAN;
+      }
+    }
     let dob = new Date(itrData.PersonalInfo.DOB);
     console.log('Personal Info: ', itrData.PersonalInfo);
     console.log(' this.userDetails: ', this.userDetails);

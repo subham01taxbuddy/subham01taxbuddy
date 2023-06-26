@@ -321,6 +321,13 @@
             <td>
               Promo Code :
               <div class="row">
+                <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
+                  <span>Note:
+                    <br>
+                    &bull; Removing of Promo code will apply if subscription is created — so create subscription and then remove
+                    <br>
+                    &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
+                </div>
                 <div class="col-sm-5">
                   <mat-label>Search & Select Promo Code</mat-label>
                   <mat-form-field appearance="outline" class="class1">
@@ -344,7 +351,7 @@
                   </button>
                   &nbsp;
                   <button [disabled]="!selectedPromoCode" class="btn" style="background: #00aeca; border-radius: 2px"
-                    (click)="removePromoCode()" type="reset">
+                    (click)="removePromoCode(smeSelectedPlanId)" type="reset">
                     Remove
                   </button>
                 </div>

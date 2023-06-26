@@ -149,7 +149,6 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
     DigitsOnlyDirective,
     AgTooltipComponent,
     NumbersOnlyDirective,
-    Schedules,
     ServiceDropDownComponent,
     CoOwnerListDropDownComponent,
     LeaderListDropdownComponent,

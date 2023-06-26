@@ -671,6 +671,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         let json = e.target.result;
         this.JSONData = '';
         this.inputJSON = JSON.parse(json);
+        if (this.inputJSON) {
+          this.utilsService.showSnackBar('JSON uploaded successfully');
+          this.utilsService.setAddClientJsonData(this.inputJSON);
+        }
       }
     };
     reader.readAsText(event.target.files[0]);
@@ -9589,8 +9593,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.loading = true;
       const param = '/itr/summary';
       let body = this.itr_2_Summary;
-      let tempAy = this.itrObject.assessmentYear;
-      let tempFy = this.itrObject.financialYear;
+      let tempAy = this.itrObject?.assessmentYear;
+      let tempFy = this.itrObject?.financialYear;
       Object.assign(this.itrObject, this.personalInfoForm.value);
       const ageCalculated = this.calAge(
         this.personalInfoForm.controls['dateOfBirth'].value
