@@ -957,6 +957,7 @@ export class TaxInvoiceComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.billTo,
+        clientMobileNumber: client.phone
       },
     });
 

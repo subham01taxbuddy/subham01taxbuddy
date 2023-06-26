@@ -107,9 +107,9 @@ export class ScheduledCallComponent implements OnInit {
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }
-      else{
+      else {
         this.search();
-    }
+      }
     })
   }
 
@@ -580,6 +580,7 @@ export class ScheduledCallComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.userName,
+        clientMobileNumber: client.userMobile
       },
     });
 
@@ -589,7 +590,6 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   async startCalling(user) {
-    debugger
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber);

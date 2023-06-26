@@ -473,7 +473,8 @@ export class SignUpExceptionsComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.name
+        clientName: client.name,
+        clientMobileNumber: '' //when enable this component please add mobileNo key from client object here
       }
     })
 

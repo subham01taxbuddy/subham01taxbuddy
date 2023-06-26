@@ -5,8 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
-import {GoogleDriveService} from "../../../services/google-drive.service";
-
+import { GoogleDriveService } from "../../../services/google-drive.service";
+declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-show-user-documnets',
   templateUrl: './show-user-documnets.component.html',
@@ -14,7 +14,7 @@ import {GoogleDriveService} from "../../../services/google-drive.service";
   providers: [DatePipe]
 })
 export class ShowUserDocumnetsComponent implements OnInit {
-  showSideBar:true
+  showSideBar: true
   loading: boolean = false;
   commonDocuments = []
   breadcrumbsPart: any = [];
@@ -22,34 +22,36 @@ export class ShowUserDocumnetsComponent implements OnInit {
   isFile: boolean = false;
   filePath: any = '';
   userId: any;
-  serviceType:any;
+  serviceType: any;
 
   isDownloadAllowed = false;
+  mobileNumber: any;
 
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
     private datePipe: DatePipe, private toastMessageService: ToastMessageService,
-              private gdriveService: GoogleDriveService) { }
+    private gdriveService: GoogleDriveService) { }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("params from more  :", params)
       // this.getCommonDocuments(params['userId']);
       this.userId = params['userId'];
-      this.serviceType=params['serviceType']
+      this.serviceType = params['serviceType']
+      this.mobileNumber = params['mobileNumber'];
       // For directly navigating to ITR folder docs
-      if(this.serviceType=='ITR'){
+      if (this.serviceType == 'ITR') {
         this.breadcrumbsPart = ["Home", "ITR", "2022-23", "Original", "ITR Filing Docs"];
       }
-      else if(this.serviceType=='TPA'){
+      else if (this.serviceType == 'TPA') {
         this.breadcrumbsPart = ["Home", "TPA", "2022-23"];
       }
-      else if(this.serviceType=='GST'){
+      else if (this.serviceType == 'GST') {
         this.breadcrumbsPart = ["Home", "GST", "2022-23",];
       }
-      else if(this.serviceType=='NOTICE'){
+      else if (this.serviceType == 'NOTICE') {
         this.breadcrumbsPart = ["Home", "NOTICE", "2022-23", "Original", "NOTICE Filing Docs"];
       }
-      else{
+      else {
         this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
       }
 
@@ -62,7 +64,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
   }
 
-  gotoDrive(document){
+  gotoDrive(document) {
     this.loading = true;
     const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
@@ -210,15 +212,22 @@ export class ShowUserDocumnetsComponent implements OnInit {
   }
 
   downloadFile(document) {
+    let fileUrl;
     console.log('filePath: ', this.filePath)
     console.log('Href path is: ', environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName)
     if (document.isPasswordProtected) {
       // location.href = document.passwordProtectedFileUrl;
       location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
+      fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
       return;
     } else {
       location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
+      fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
     }
+    we_track('Cloud Download', {
+      'User Number': this.mobileNumber,
+      'File URL': fileUrl,
+    });
   }
 
 
@@ -238,23 +247,22 @@ export class ShowUserDocumnetsComponent implements OnInit {
   supportedTypes = ['pdf', 'xls', 'doc', 'xlsx', 'docx'];
   supportedImageTypes = ['jpg', 'jpeg', 'png', 'svg'];
 
-  isDocTypeSupported(document){
+  isDocTypeSupported(document) {
     const ext = document.fileName.split('.').pop();
     return this.supportedTypes.includes(ext.toLowerCase()) || this.supportedImageTypes.includes(ext.toLowerCase());
   }
 
   getCommonDocsUrl(document) {
-
     console.log('document selected', document);
     this.loading = true;
     const ext = document.fileName.split('.').pop();
     console.log('this.viewer', this.viewer);
-    if(this.supportedTypes.includes(ext.toLowerCase())) {
+    if (this.supportedTypes.includes(ext.toLowerCase())) {
       this.viewer = 'DOC';
-    } else if(this.supportedImageTypes.includes(ext.toLowerCase())) {
+    } else if (this.supportedImageTypes.includes(ext.toLowerCase())) {
       this.viewer = 'IMG';
     }
-    this.docType = document.fileName.substr(document.fileName.lastIndexOf('.')+1);
+    this.docType = document.fileName.substr(document.fileName.lastIndexOf('.') + 1);
     if (document.isPasswordProtected) {
       this.docUrl = document.passwordProtectedFileUrl;
       this.loading = false;
@@ -264,9 +272,13 @@ export class ShowUserDocumnetsComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log(res);
-      if(res['signedUrl']){
+      if (res['signedUrl']) {
         this.docUrl = res['signedUrl'];
-      }else{
+        we_track('Cloud View', {
+          'User Number': this.mobileNumber,
+          'File URL': this.docUrl,
+        });
+      } else {
         this.utilsService.showSnackBar(res.response);
       }
 
@@ -278,7 +290,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     });
   }
 
-  preventDownload($event: MouseEvent){
+  preventDownload($event: MouseEvent) {
     event.preventDefault();
   }
 

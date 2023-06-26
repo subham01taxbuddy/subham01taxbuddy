@@ -495,6 +495,7 @@ export class OldInvoicesComponent implements OnInit {
         data: {
           userId: client.userId,
           clientName: client.billTo,
+          clientMobileNumber: client.phone
         },
       });
 

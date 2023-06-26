@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import {GridOptions, ICellRendererParams} from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -28,7 +28,7 @@ import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
-import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
+import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 
 declare function we_track(key: string, value: any);
 
@@ -302,7 +302,7 @@ export class AssignedNewUsersComponent implements OnInit {
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
       // this.search('agent');
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
       //  this.search('agent');
     } else {
@@ -868,7 +868,8 @@ export class AssignedNewUsersComponent implements OnInit {
       data: {
         userId: data.userId,
         clientName: data.name,
-        serviceType: data.serviceType
+        serviceType: data.serviceType,
+        userInfo: data
       }
     })
 
@@ -899,7 +900,10 @@ export class AssignedNewUsersComponent implements OnInit {
     this.rowData = data;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-
+    we_track('Start Filing', {
+      'User Name': data?.name,
+      'User Number': data?.mobileNumber
+    });
   }
 
   async getUserProfile(userId) {
@@ -1033,9 +1037,9 @@ export class AssignedNewUsersComponent implements OnInit {
       this._toastMessageService.alert('error', "You don't have calling role.");
       return;
     }
-    if (this.coOwnerToggle.value == true){
-       agent_number = agentNumber;
-    }else {
+    if (this.coOwnerToggle.value == true) {
+      agent_number = agentNumber;
+    } else {
       agent_number = agentNumber;
       // agent_number = data.callerAgentNumber;
     }
@@ -1099,7 +1103,8 @@ export class AssignedNewUsersComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: client.mobileNumber
       }
     })
 

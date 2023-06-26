@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
   }
 
   handleSmeInfo(res) {
-    debugger
     console.log(res);
     if (res.success) {
       sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))

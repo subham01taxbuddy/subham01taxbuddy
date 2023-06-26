@@ -53,7 +53,7 @@ export class UserListComponent implements OnInit {
       columnDefs: this.usersCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      paginateChildRows:true,
+      paginateChildRows: true,
       paginationPageSize: 15,
       onGridReady: params => {
       },
@@ -79,7 +79,7 @@ export class UserListComponent implements OnInit {
   advanceSearch(key: any) {
     this.user_data = [];
     if (this.searchVal !== "") {
-      if(key === 'emailAddress'){
+      if (key === 'emailAddress') {
         this.searchVal = this.searchVal.toLocaleLowerCase();
       }
       this.getUserSearchList(key, this.searchVal);
@@ -105,7 +105,7 @@ export class UserListComponent implements OnInit {
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
         this.user_data = [];
-        this.userInfo=[];
+        this.userInfo = [];
         return resolve(false)
       });
     });
@@ -197,7 +197,7 @@ export class UserListComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -567,7 +567,8 @@ export class UserListComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: client.mobileNumber
       }
     })
 

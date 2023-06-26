@@ -794,7 +794,8 @@ export class InvestmentsDeductionsComponent extends WizardNavigation implements 
         title: 'Add Notes',
         userId: this.ITR_JSON.userId,
         clientName: this.ITR_JSON.family[0].fName + " " + this.ITR_JSON.family[0].lName,
-        serviceType: 'ITR'
+        serviceType: 'ITR',
+        clientMobileNumber: this.ITR_JSON.contactNumber
       }
     })
 

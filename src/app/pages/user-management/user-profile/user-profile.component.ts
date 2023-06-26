@@ -14,6 +14,7 @@ import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Storage } from '@aws-amplify/storage';
 import * as $ from 'jquery';
+declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -338,13 +339,13 @@ export class UserProfileComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private userService: UserMsService,
     public utilsService: UtilsService,
-     private fb: FormBuilder,
+    private fb: FormBuilder,
     private gstService: GstMsService,
-     private _toastMessageService: ToastMessageService,
-      private thirdPartyService: ThirdPartyService,
+    private _toastMessageService: ToastMessageService,
+    private thirdPartyService: ThirdPartyService,
     private dialog: MatDialog,
-    private router:Router,
-     private titleCasePipe: TitleCasePipe) { }
+    private router: Router,
+    private titleCasePipe: TitleCasePipe) { }
 
   ngOnInit() {
     // this.getStateInfo().then(res => {
@@ -417,7 +418,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  getUserInfoByPan(pan:any) {
+  getUserInfoByPan(pan: any) {
     if (pan.valid) {
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
@@ -453,7 +454,7 @@ export class UserProfileComponent implements OnInit {
   //   }
   // }
 
-  updateAddressForm(obj:any) {
+  updateAddressForm(obj: any) {
     return this.fb.group({
       state: [obj.stateCode || ''],
       city: [obj.taluka || ''],
@@ -462,9 +463,9 @@ export class UserProfileComponent implements OnInit {
       premisesName: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['premisesName'].value) || ''],
       pinCode: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['pinCode'].value) || ''],
       addressType: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['addressType'].value) || ''],
-      flatNo: [(((this.userProfileForm.controls['address'] as FormArray) .controls[0] as FormGroup).controls['flatNo'].value) || ''],
+      flatNo: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['flatNo'].value) || ''],
       road: null,
-      area: [(((this.userProfileForm.controls['address'] as FormArray) .controls[0] as FormGroup).controls['area'].value) || '']
+      area: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['area'].value) || '']
     })
   }
 
@@ -487,7 +488,7 @@ export class UserProfileComponent implements OnInit {
   //   })
   // }
 
-  getUserInfo(userId:any) {
+  getUserInfo(userId: any) {
     this.loading = true;
     let param = '/profile/' + userId;
     this.userService.getMethod(param).subscribe((res: any) => {
@@ -578,15 +579,15 @@ export class UserProfileComponent implements OnInit {
     })
   }
 
-  getStateName(stateCode:any) {
+  getStateName(stateCode: any) {
     if (stateCode !== null && stateCode !== undefined && stateCode !== '') {
-      let stateName = this.state_list.filter((item:any) => item.stateCode === stateCode)[0].stateName;
+      let stateName = this.state_list.filter((item: any) => item.stateCode === stateCode)[0].stateName;
       return stateName;
     }
     return 'NA'
   }
 
-  deleteData(type:any, index:any) {
+  deleteData(type: any, index: any) {
     if (type === 'Bank') {
       this.bankData.splice(index, 1);
       this.userProfileForm.controls['bankDetails'].setValue(this.bankData);
@@ -597,11 +598,11 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  getPartyInfoByGSTIN(event:any) {
+  getPartyInfoByGSTIN(event: any) {
     ///gst/api/partiesByGstin
     let gstinNo = event.target.value;
     let param = '/partiesByGstin?gstin=' + gstinNo;
-    this.gstService.getMethod(param).subscribe((res:any) => {
+    this.gstService.getMethod(param).subscribe((res: any) => {
       if (res) {
         this.gstForm.patchValue(res);
         this.gstForm.controls['gstType'].setValue(this.getGstType(res['gstnType']));
@@ -616,11 +617,11 @@ export class UserProfileComponent implements OnInit {
       })
   }
 
-  getGstType(gstCode:any) {
-    this.gstType.find((item:any) => item.label === gstCode).label
+  getGstType(gstCode: any) {
+    this.gstType.find((item: any) => item.label === gstCode).label
   }
 
-  uploadBusinessLogo(files:any) {
+  uploadBusinessLogo(files: any) {
     console.log('Business logo file : ', files[0])
     if (files && files[0]) {
       this.loading = true;
@@ -646,14 +647,14 @@ export class UserProfileComponent implements OnInit {
             this._toastMessageService.alert("error", "Error While uploading business sig image");
           }
         })
-        .catch((err:any) => {
+        .catch((err: any) => {
           this.loading = false;
           this._toastMessageService.alert("error", "Error While uploading business sig image" + JSON.stringify(err));
         });
     }
   }
 
-  uploadBusinessSignature(files:any) {
+  uploadBusinessSignature(files: any) {
     if (files && files[0]) {
       this.loading = true;
       let extention = ".png";
@@ -710,7 +711,7 @@ export class UserProfileComponent implements OnInit {
             this._toastMessageService.alert("error", "Error While uploading business cert image");
           }
         })
-        .catch((err:any) => {
+        .catch((err: any) => {
           this.loading = false;
           this._toastMessageService.alert("error", "Error While uploading business cert image" + JSON.stringify(err));
         });
@@ -731,6 +732,9 @@ export class UserProfileComponent implements OnInit {
       this.userService.putMethod(param, this.userInfo).subscribe(res => {
         this._toastMessageService.alert("success", this.userInfo.fName + "'s profile updated successfully.");
         this.loading = false;
+        we_track('Profile', {
+          'Any Update': '',
+        });
       }, error => {
         let errorMessage = (error.error && error.error.message) ? error.error.message : "Internal server error.";
         this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
@@ -743,11 +747,11 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  getS3Image(imagePath:any) {
+  getS3Image(imagePath: any) {
     return new Promise((resolve, reject) => {
       if (imagePath) {
         Storage.get(imagePath)
-          .then((result:any) => {
+          .then((result: any) => {
             return resolve(result);
           })
           .catch((err: any) => {
@@ -759,7 +763,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  updateUserRole(userMobNo:any) {
+  updateUserRole(userMobNo: any) {
     console.log('userMobNo: ', userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
     let param = '/users?mobileNumber=' + parseInt(userMobNo);
     this.userService.getMethod(param).subscribe((userRole: any) => {
@@ -784,7 +788,7 @@ export class UserProfileComponent implements OnInit {
         "userId": parseInt(this.userId),
         "role": this.userRole.value
       }
-      this.userService.putMethod(param, reqBody).subscribe((res:any) => {
+      this.userService.putMethod(param, reqBody).subscribe((res: any) => {
         this.loading = false;
         console.log("Add user roles responce: ", res);
         if (this.utilsService.isNonEmpty(res['error'])) {
@@ -801,7 +805,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  onCancelClick(){
+  onCancelClick() {
     this.router.navigate(['/tasks/assigned-users-new']);
   }
 }

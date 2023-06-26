@@ -412,6 +412,7 @@ export class ItrWizardComponent implements OnInit {
         clientName:
           this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
         serviceType: 'ITR',
+        clientMobileNumber:this.ITR_JSON.contactNumber
       },
     });
 

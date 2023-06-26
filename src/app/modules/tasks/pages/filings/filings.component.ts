@@ -61,7 +61,7 @@ export class FilingsComponent implements OnInit {
     filerUserId: null,
   };
 
-  allFilerList:any;
+  allFilerList: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -75,7 +75,7 @@ export class FilingsComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
+    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.columnDef(this.allFilerList),
@@ -193,13 +193,13 @@ export class FilingsComponent implements OnInit {
   coFilerId: number;
   agentId: number;
 
-  fromCoOwner(event){
-  this.coOwnerId = event.userId;
-  // this.myItrsList(0, this.selectedFilingTeamMemberId);
+  fromCoOwner(event) {
+    this.coOwnerId = event.userId;
+    // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
-  fromCoFiler(event){
-  this.coFilerId = event.userId;
-  // this.myItrsList(0, this.selectedFilingTeamMemberId);
+  fromCoFiler(event) {
+    this.coFilerId = event.userId;
+    // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
   myItrsList(pageNo, filingTeamMemberId) {
@@ -479,9 +479,9 @@ export class FilingsComponent implements OnInit {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
-        valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.filingTeamMemberId)
-          let filer1= filerList;
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.filingTeamMemberId)
+          let filer1 = filerList;
           let filer = filer1.filter((item) => {
             return item.userId === createdUserId;
           }).map((item) => {
@@ -1033,7 +1033,6 @@ export class FilingsComponent implements OnInit {
           'User Name': user.fName + ' ' + user.lName,
           'User Phone number ': agentNumber,
         });
-        debugger
         this.toastMsgService.alert("success", result.message)
       }
     }, error => {
@@ -1071,6 +1070,7 @@ export class FilingsComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.fName + ' ' + client.lName,
+        clientMobileNumber: client.contactNumber
       },
     });
     disposable.afterClosed().subscribe((result) => {

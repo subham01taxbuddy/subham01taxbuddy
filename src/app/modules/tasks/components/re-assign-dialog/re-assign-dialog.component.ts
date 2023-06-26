@@ -2,7 +2,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-re-assign-dialog',
   templateUrl: './re-assign-dialog.component.html',
@@ -13,7 +13,9 @@ export class ReAssignDialogComponent implements OnInit {
   loading = false;
   ownerId: number;
   filerId: number;
-  serviceType:any;
+  serviceType: any;
+  reAssignedOwnerName: any;
+  reAssignedFilerName: any;
 
   constructor(public dialogRef: MatDialogRef<ReAssignDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -25,8 +27,8 @@ export class ReAssignDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('data from more opt',this.data)
-    console.log('Selected User Service ',this.data.serviceType)
+    console.log('data from more opt', this.data)
+    console.log('Selected User Service ', this.data.serviceType)
     // this.ownerId=this.data.ownerId;
     // this.filerId=this.data.filerId;
     // this.serviceType=this.data.serviceType;
@@ -36,22 +38,24 @@ export class ReAssignDialogComponent implements OnInit {
 
     console.log('sme-drop-down', event, isOwner);
 
-    if(isOwner){
-       this.ownerId = event? event.userId : null;
-      if(this?.data?.ownerName != event?.name){
-        if(this.data.serviceType == 'GST'){
-          this.serviceType='GST';
-        }else{
-          this.serviceType='ALL';
+    if (isOwner) {
+      this.ownerId = event ? event.userId : null;
+      this.reAssignedOwnerName = event ? event.name : '';
+      if (this?.data?.ownerName != event?.name) {
+        if (this.data.serviceType == 'GST') {
+          this.serviceType = 'GST';
+        } else {
+          this.serviceType = 'ALL';
         }
-      }else{
-        this.serviceType=this.data.serviceType;
+      } else {
+        this.serviceType = this.data.serviceType;
       }
-      console.log('ownerID=',this.ownerId )
+      console.log('ownerID=', this.ownerId)
 
     } else {
-      this.filerId = event? event.userId : null;
-      console.log('filerId=',this.filerId)
+      this.reAssignedFilerName = event ? event.name : '';
+      this.filerId = event ? event.userId : null;
+      console.log('filerId=', this.filerId)
     }
 
     //  if( !this.ownerId && this.filerId) {
@@ -63,15 +67,23 @@ export class ReAssignDialogComponent implements OnInit {
 
   reAssign() {
     // https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10363&serviceTypes=ITR&ownerUserId=7526&filerUserId=10341
-    if(this.ownerId && this.filerId){
+    if (this.ownerId && this.filerId) {
       this.loading = true;
       const param = `/user-reassignment-new?userId=${this.data.userId}&serviceTypes=${this.serviceType}&ownerUserId=${this.ownerId}&filerUserId=${this.filerId}`
       this.userMsService.getMethod(param).subscribe((res: any) => {
         console.log(res);
+        we_track('Re-assign', {
+          'User Name': this.data?.userInfo?.name,
+          'User Number': this.data?.userInfo?.mobileNumber,
+          'From filer ': this.data?.userInfo?.filerName,
+          'From Owner': this.data?.userInfo?.ownerName,
+          'To filer ': this.reAssignedFilerName,
+          'To Owner': this.reAssignedOwnerName
+        });
         this.utilsService.showSnackBar('User re assigned successfully.');
         this.loading = false;
         this.dialogRef.close({ event: 'close', data: 'success' });
-        if(res.success== false){
+        if (res.success == false) {
           this.utilsService.showSnackBar('Filer not found active, please try another')
           console.log(res.message)
         }
@@ -80,7 +92,7 @@ export class ReAssignDialogComponent implements OnInit {
         this.utilsService.showSnackBar('Filer not found active, please try another.');
         console.log(error);
       })
-    }else {
+    } else {
       this.utilsService.showSnackBar('Please select Both Owner And Filer Name');
     }
 
