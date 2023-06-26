@@ -43,7 +43,8 @@ export class OwnerDashboardComponent implements OnInit {
   roles:any;
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  minEndDate:string ='2023-04-01';
+  maxStartDate = new Date().toISOString().slice(0, 10);
+  minEndDate= new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
   searchFiler = new FormControl('');
@@ -222,7 +223,7 @@ export class OwnerDashboardComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-         this.invoiceData = response.data;
+         this.invoiceData = response?.data;
 
       }else{
         this.loading = false;
@@ -244,13 +245,13 @@ export class OwnerDashboardComponent implements OnInit {
     let param =`/dashboard/doc-uploaded-filing-not-started?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
+      this.loading = false;
       if (response.success) {
         // this.docUploadedData=null;
-        this.docUploadedData = response.data;
-        this.config.docUpload.totalItems = response.data.totalElements;
+        this.docUploadedData = response?.data;
+        this.config.docUpload.totalItems = response?.data?.totalElements;
 
      }else{
-       this.loading = false;
        this. _toastMessageService.alert("error",response.message);
      }
     },(error) => {
@@ -267,11 +268,11 @@ export class OwnerDashboardComponent implements OnInit {
   let param =`/dashboard/waiting-for-confirmation?filerUserId=${filerUserId}&${data}`
 
   this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    this.loading = false;
     if (response.success) {
-      this.summaryConfirmationData = response.data;
-      this.config.summaryConfirmation.totalItems = response.data.totalElements;
+      this.summaryConfirmationData = response?.data;
+      this.config.summaryConfirmation.totalItems = response?.data?.totalElements;
    }else{
-     this.loading = false;
      this. _toastMessageService.alert("error",response.message);
    }
   },(error) => {
@@ -294,11 +295,11 @@ export class OwnerDashboardComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
+        this.loading = false;
         if (response.success) {
-          this.eVerificationPendingData = response.data;
-          this.config.eVerificationPending.totalItems = response.data.totalElements;
+          this.eVerificationPendingData = response?.data;
+          this.config.eVerificationPending.totalItems = response?.data?.totalElements;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
       },
@@ -324,11 +325,10 @@ export class OwnerDashboardComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-         this.scheduleCallData = response.data;
-         this.config.scheduleCall.totalItems = response.data.totalElements;
+         this.scheduleCallData = response?.data;
+         this.config.scheduleCall.totalItems = response?.data?.totalElements;
 
       }else{
-        this.loading = false;
         this. _toastMessageService.alert("error",response.message);
       }
     },(error) => {
@@ -356,10 +356,10 @@ export class OwnerDashboardComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
+        this.loading = false;
         if (response.success) {
           this.commissionData = response?.data;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
         if(response.success == false){
@@ -386,10 +386,10 @@ export class OwnerDashboardComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
+        this.loading = false;
         if (response.success) {
           this.commissionData = response?.data;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
         if(response.success == false){
@@ -423,6 +423,7 @@ export class OwnerDashboardComponent implements OnInit {
   param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
 
   this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    this.loading = false;
     if (response.success) {
       this.itrOverview = response.data;
     }else{
@@ -458,11 +459,19 @@ export class OwnerDashboardComponent implements OnInit {
   }
 
   resetFilters(){
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.searchFiler.setValue(null);
     this.filerId=null
     this.filerUserId=this.loggedInSmeUserId;
+    this.searchParam.docUpload.page = 0;
+    this.config.docUpload.currentPage = 1;
+    this.searchParam.summaryConfirmation.page = 0;
+    this.config.summaryConfirmation.currentPage = 1;
+    this.searchParam.eVerificationPending.page = 0;
+    this.config.eVerificationPending.currentPage = 1;
+    this.searchParam.scheduleCall.page = 0;
+    this.config.scheduleCall.currentPage = 1;
     this.search('all');
   }
 

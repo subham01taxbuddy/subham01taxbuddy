@@ -43,7 +43,8 @@ export class MissedChatReportComponent implements OnInit {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date(2023, 3, 1);
+  minEndDate = new Date();
+  maxStartDate =new Date();
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   missedChatReport: any;
