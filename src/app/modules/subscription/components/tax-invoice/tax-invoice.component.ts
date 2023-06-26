@@ -167,7 +167,7 @@ export class TaxInvoiceComponent implements OnInit {
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerDetails = this.loggedInSme[0];
     }
-    this.getOwner();
+    // this.getOwner();
     //  this.getFilers();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
@@ -202,12 +202,12 @@ export class TaxInvoiceComponent implements OnInit {
       // this.filerUserId = this.filerId;
     } else if(this.ownerId) {
       this.agentId = this.ownerId;
-      this.getInvoice();
+      // this.getInvoice();
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    this.getInvoice();
+    // this.getInvoice();
   }
 
   setFiletedOptions2(){
@@ -272,10 +272,10 @@ export class TaxInvoiceComponent implements OnInit {
     }
     if(this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.getInvoice('','agentId');
+      // this.getInvoice('','agentId');
     } else if(this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getInvoice('','agentId');
+      // this.getInvoice('','agentId');
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -415,7 +415,14 @@ export class TaxInvoiceComponent implements OnInit {
 
     // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Paid&searchAsCoOwner=true&ownerUserId=7522'
     //https://uat-api.taxbuddy.com/report/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-30&page=0&pageSize=20&ownerUserId=7521&paymentStatus=Paid
-
+    this.loading=true;
+    let loggedInId = this.utilService.getLoggedInUserID();
+    if(this.roles?.includes('ROLE_OWNER')){
+      this.ownerId=loggedInId;
+    }
+    if(this.roles?.includes('ROLE_FILER')){
+      this.filerId=loggedInId;
+    }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     let data = this.utilService.createUrlParams(this.searchParam);
     let status = this.status.value;
@@ -477,16 +484,12 @@ export class TaxInvoiceComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
-      if(response.success == false){
-        this. _toastMessageService.alert("error",response.message);
-        this.gridApi?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
-      }
       if(response.success) {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
         // this.invoicesCreateColumnDef(this.smeList);
-        this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+        this.gridApi?.setRowData(this.createRowData(response?.data?.content));
+        this.invoiceListGridOptions.api?.setRowData(this.createRowData(response?.data?.content))
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
         if(this.invoiceData.length == 0){

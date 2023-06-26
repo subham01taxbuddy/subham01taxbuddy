@@ -7,7 +7,6 @@ table {
   border-spacing: 0;
   width: 100%;
   border: 1px solid #ddd;
-
 }
 
 th {
@@ -25,7 +24,7 @@ td {
 }
 
 tr:nth-child(even) {
-  background-color: #f2f2f2
+  background-color: #f2f2f2;
 }
 
 .heading {
@@ -46,19 +45,18 @@ tr:nth-child(even) {
   text-decoration: underline;
 }
 
-
 /* thead {
-  float: left;   
+  float: left;
 }
 
 
 thead th {
-  display: block;   
+  display: block;
   /* background: yellow; */
 /*}
 
 tbody {
-  float: right;   
+  float: right;
 } */
 .disableInput {
   height: 40px;
@@ -78,7 +76,6 @@ tbody {
   /* border: 1px solid #e0e0e0;
     border-radius: 5px; */
 }
-
 
 .verticle {
   overflow-y: scroll;

@@ -12,6 +12,7 @@ import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
+import {ReviseReturnDialogComponent} from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -216,48 +217,27 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   addClient() {
     this.dialogRef.close();
-    if (this.data.statusId !== 11) {
-      const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${this.data.userId}`;
-      this.userMsService.getMethod(reqParam).subscribe((res: any) => {
-        const addClientData = {
-          userId: this.data.userId,
-          panNumber: this.data.panNumber
-            ? this.data.panNumber
-            : res.data.panNumber,
-          eriClientValidUpto: this.data.eriClientValidUpto,
-          callerAgentUserId: this.data.callerAgentUserId,
-          assessmentYear: this.data.assessmentYear,
-          name: this.data.name,
-          dateOfBirth: res.data.dateOfBirth,
-          mobileNumber: this.data.mobileNumber,
-          itrId: this.data.itrId,
-          itrObjectStatus: this.data.itrObjectStatus,
-          openItrId: this.data.openItrId
-        };
-
-        // Store stateData in session storage
-        sessionStorage.setItem('addClientData', JSON.stringify(addClientData));
-
-        console.log('Result DOB:', res);
-
-        this.router.navigate(['/eri'], {
-          state: {
-            userId: this.data.userId,
-            panNumber: this.data.panNumber
-              ? this.data.panNumber
-              : res.data.panNumber,
-            eriClientValidUpto: this.data.eriClientValidUpto,
-            callerAgentUserId: this.data.callerAgentUserId,
-            assessmentYear: this.data.assessmentYear,
-            name: this.data.name,
-            dateOfBirth: res.data.dateOfBirth,
-            mobileNumber: this.data.mobileNumber,
-          },
-        });
-      });
+    if (this.data.itrObjectStatus !== 'ITR_FILED') {
+      this.navigateAddClientFlow();
     } else {
-      this.utilsService.showSnackBar('This user ITR is filed');
+      //show the dialog for revised return and on confirmation start flow for revised
+      this.openReviseReturnDialog(this.data);
     }
+  }
+
+  openReviseReturnDialog(data) {
+    console.log('Data for revise return ', data);
+    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: data
+    })
+    disposable.afterClosed().subscribe(result => {
+      if (result === 'reviseReturn') {
+        this.navigateAddClientFlow();
+      }
+      console.log('The dialog was closed', result);
+    });
   }
 
   getUserJourney() {
@@ -342,5 +322,46 @@ export class MoreOptionsDialogComponent implements OnInit {
           data.value ? moment(data.value).format('DD MMM YYYY') : null,
       },
     ];
+  }
+
+  private navigateAddClientFlow() {
+    const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${this.data.userId}`;
+    this.userMsService.getMethod(reqParam).subscribe((res: any) => {
+      const addClientData = {
+        userId: this.data.userId,
+        panNumber: this.data.panNumber
+          ? this.data.panNumber
+          : res.data.panNumber,
+        eriClientValidUpto: this.data.eriClientValidUpto,
+        callerAgentUserId: this.data.callerAgentUserId,
+        assessmentYear: this.data.assessmentYear,
+        name: this.data.name,
+        dateOfBirth: res.data.dateOfBirth,
+        mobileNumber: this.data.mobileNumber,
+        itrId: this.data.itrId,
+        itrObjectStatus: this.data.itrObjectStatus,
+        openItrId: this.data.openItrId
+      };
+
+      // Store stateData in session storage
+      sessionStorage.setItem('addClientData', JSON.stringify(addClientData));
+
+      console.log('Result DOB:', res);
+
+      this.router.navigate(['/eri'], {
+        state: {
+          userId: this.data.userId,
+          panNumber: this.data.panNumber
+            ? this.data.panNumber
+            : res.data.panNumber,
+          eriClientValidUpto: this.data.eriClientValidUpto,
+          callerAgentUserId: this.data.callerAgentUserId,
+          assessmentYear: this.data.assessmentYear,
+          name: this.data.name,
+          dateOfBirth: res.data.dateOfBirth,
+          mobileNumber: this.data.mobileNumber,
+        },
+      });
+    });
   }
 }

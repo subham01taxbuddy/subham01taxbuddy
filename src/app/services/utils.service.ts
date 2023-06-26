@@ -1401,7 +1401,7 @@ export class UtilsService {
    */
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
-    if(itrObject.itrSummaryJson) {
+    if (itrObject.itrSummaryJson) {
       itrObject.isItrSummaryJsonEdited = true;
       const param =
         '/itr/' +
@@ -1429,8 +1429,8 @@ export class UtilsService {
   }
 
   uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
-    if(itrObject.itrSummaryJson) {
-      itrObject.isItrSummaryJsonEdited = true;
+    if (itrObject.itrSummaryJson) {
+      itrObject.isItrSummaryJsonEdited = false;
       const param =
         '/itr/' +
         itrObject.userId +

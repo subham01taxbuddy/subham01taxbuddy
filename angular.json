@@ -63,7 +63,6 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
-              "node_modules/mammoth/mammoth.browser.min.js"
             ],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"

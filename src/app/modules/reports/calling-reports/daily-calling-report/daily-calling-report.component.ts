@@ -43,11 +43,11 @@ export const MY_FORMATS = {
 })
 export class DailyCallingReportComponent implements OnInit {
   loading = false;
-  
 fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date(2023, 3, 1);
+  minEndDate = new Date();
+  maxStartDate = new Date();
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   dailyCallingReport: any;

@@ -86,7 +86,10 @@ export class PauseInvoiceReminderComponent implements OnInit {
       console.log('Invoice ', result);
       if(result) {
         this.invoiceDetails = result.data?.content[0];
-        this.invoiceGridOptions.api?.setRowData(this.createRowData(this.invoiceDetails));
+        console.log('search pause invoice ',this.invoiceDetails)
+        this.existingReminders = this.createRowData(this.invoiceDetails);
+        this.invoiceGridOptions.api?.setRowData( this.existingReminders);
+        // this.invoiceGridOptions.api?.setRowData(this.createRowData(this.invoiceDetails));
         if(result?.data?.content.length == 0){
           this.toastMsgService.alert("error", "No Invoice Data Found.")
         }
@@ -183,8 +186,8 @@ export class PauseInvoiceReminderComponent implements OnInit {
     let invoices = [];
     let updateInvoice = Object.assign({}, userInvoice,
       {
-        userId: userInvoice.userId,
-        billTo: userInvoice.billTo,
+        userId: userInvoice?.userId,
+        billTo: userInvoice?.billTo,
         phone: userInvoice.phone,
         email: userInvoice.email,
         invoiceNo: userInvoice.invoiceNo,

@@ -186,12 +186,12 @@ export class PrefillIdComponent implements OnInit {
   }
 
   parseDate(dateStr: string) {
-    const parts = dateStr.split('-');
-    return new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    const parts = dateStr?.split('-');
+    return new Date(+parts?.[0], +parts[1] - 1, +parts[2]);
   }
 
   // setting correct format dates
-  parseAndFormatDate(date: string): string {
+  parseAndFormatDate(date: any): any {
     this.localDate = this.parseDate(date);
     this.utcDate = formatDate(
       this.localDate,
@@ -199,7 +199,7 @@ export class PrefillIdComponent implements OnInit {
       'en-US',
       '+0000'
     );
-    return this.utcDate;
+    return new Date(this.utcDate);
   }
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
@@ -240,13 +240,13 @@ export class PrefillIdComponent implements OnInit {
             if (ITR_Type === 'ITR2') {
               salaryAllowancesDetail = this.uploadedJson[
                 ITR_Type
-              ].ScheduleS.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+              ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
                 (salaryAllowances) => salaryAllowances.SalNatureDesc === type
               );
             } else {
               salaryAllowancesDetail = this.uploadedJson[ITR_Type][
                 this.ITR14_IncomeDeductions
-              ].AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+              ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
                 (salaryAllowances) => salaryAllowances.SalNatureDesc === type
               );
             }
@@ -305,7 +305,7 @@ export class PrefillIdComponent implements OnInit {
         ) {
           itrObjSalaryAnyOthAllowance.exemptAmount =
             this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
-              .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalAnyOtherAmount;
+              ?.AllwncExemptUs10?.TotalAllwncExemptUs10 - totalAnyOtherAmount;
         }
 
         if (
@@ -397,7 +397,7 @@ export class PrefillIdComponent implements OnInit {
       if (this.ITR_Type === 'ITR1') {
         const othExemptDiff1 =
           this.uploadedJson[ITR_Type][this.ITR14_IncomeDeductions]
-            .AllwncExemptUs10?.TotalAllwncExemptUs10 - totalOtherExemptAmount;
+            ?.AllwncExemptUs10?.TotalAllwncExemptUs10 - totalOtherExemptAmount;
         if (othExemptDiff1 > 0) {
           this.ITR_Obj.exemptIncomes.push({
             natureDesc: 'OTH',
@@ -1608,13 +1608,13 @@ export class PrefillIdComponent implements OnInit {
                       : salaryDetails?.DeductionUs16ia,
                   employerCategory: '',
                   exemptIncome:
-                    salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       0 ||
-                    salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       null ||
                     this.regime === 'NEW'
                       ? 0
-                      : salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10,
+                      : salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10,
                   taxRelief: null,
                   taxDeducted: null,
                   salary:
@@ -1629,9 +1629,9 @@ export class PrefillIdComponent implements OnInit {
                           },
                         ],
                   allowance:
-                    salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       0 ||
-                    salaryDetails.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       null ||
                     this.regime === 'NEW'
                       ? [
@@ -1746,7 +1746,7 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Obj.employers.push(keys);
 
                 this.updateSalaryAllowances(
-                  salaryDetails.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
+                  salaryDetails?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
                     (value) => value.SalNatureDesc
                   ),
                   this.ITR_Type

@@ -273,6 +273,78 @@ export class SummaryComponent implements OnInit {
       };
       businessIncomeTotal: Number;
     };
+    capitalGain: {
+      shortTerm: {
+        ShortTerm15Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTerm15PerTotal: Number;
+        ShortTerm30Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTerm30PerTotal: Number;
+        ShortTermAppSlabRate: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTermAppSlabRateTotal: Number;
+        ShortTermSplRateDTAA: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        ShortTermSplRateDTAATotal: Number;
+      };
+      totalShortTerm: Number;
+      longTerm: {
+        LongTerm10Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        LongTerm10PerTotal: Number;
+        LongTerm20Per: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        LongTerm20PerTotal: Number;
+        LongTermSplRateDTAA: [
+          {
+            nameOfAsset: String;
+            capitalGain: Number;
+            Deduction: Number;
+            netCapitalGain: Number;
+          }
+        ];
+        LongTermSplRateDTAATotal: Number;
+      };
+      totalLongTerm: Number;
+      totalCapitalGain: Number;
+    };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
       currentYearLossesSetOff: [
@@ -485,15 +557,25 @@ export class SummaryComponent implements OnInit {
           // console.log(this.finalSummary, 'this.finalSummary');
           this.finalCalculations = {
             personalInfo: {
-              name:
+              name: `${
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.FirstName +
-                ' ' +
+                  ?.AssesseeName?.FirstName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.FirstName + ' '
+                  : ''
+              }${
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.MiddleName +
-                ' ' +
+                  ?.AssesseeName?.MiddleName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.MiddleName + ' '
+                  : ''
+              }${
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.SurNameOrOrgName,
+                  ?.AssesseeName?.SurNameOrOrgName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName + ' '
+                  : ''
+              }`,
 
               aadhaarNumber:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
@@ -812,6 +894,79 @@ export class SummaryComponent implements OnInit {
                       ?.PersumptiveInc44AE?.IncChargeableUnderBus
                   : 0,
             },
+            capitalGain: {
+              shortTerm: {
+                ShortTerm15Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTerm15PerTotal: 0,
+                ShortTerm30Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTerm30PerTotal: 0,
+                ShortTermAppSlabRate: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTermAppSlabRateTotal: 0,
+                ShortTermSplRateDTAA: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                ShortTermSplRateDTAATotal: 0,
+              },
+              totalShortTerm: 0,
+              longTerm: {
+                LongTerm10Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                LongTerm10PerTotal: 0,
+                LongTerm20Per: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                LongTerm20PerTotal: 0,
+                LongTermSplRateDTAA: [
+                  {
+                    nameOfAsset: '',
+                    capitalGain: 0,
+                    Deduction: 0,
+                    netCapitalGain: 0,
+                  },
+                ],
+                LongTermSplRateDTAATotal: 0,
+              },
+              totalLongTerm: 0,
+              totalCapitalGain: 0,
+            },
+
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
@@ -1482,83 +1637,95 @@ export class SummaryComponent implements OnInit {
         } else if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
           this.finalCalculations = {
             personalInfo: {
-              name:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.FirstName +
-                ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.MiddleName +
-                ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.SurNameOrOrgName,
+              name: `${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.FirstName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.FirstName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.MiddleName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.MiddleName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName
+                      ?.SurNameOrOrgName + ' '
+                  : ''
+              }`,
 
               aadhaarNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AadhaarCardNo,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AadhaarCardNo,
 
               mobileNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.MobileNo,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.MobileNo,
 
-              resStatus: 'Resident',
+              resStatus:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ResidentialStatus === 'RES'
+                  ? 'Resident'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.ResidentialStatus === 'NRI'
+                  ? 'Non-Resident'
+                  : 'Non-Ordinary Resident',
 
               returnType:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
-                  ?.ReturnFileSec === 11
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ReturnFileSec === 11
                   ? 'Original'
                   : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.FilingStatus?.ReturnFileSec === 17
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 17
                   ? 'Revised'
                   : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.FilingStatus?.ReturnFileSec === 12
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 12
                   ? 'After Due Date'
                   : 'Other',
 
               Address:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.ResidenceNo +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.ResidenceName +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.ResidenceNo +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.ResidenceName +
                 ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.CityOrTownOrDistrict +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.CityOrTownOrDistrict +
                 ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.PinCode,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.PinCode,
 
-              dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+              dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                 ?.PersonalInfo?.DOB,
 
               panNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.PAN,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.PAN,
 
               email:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.EmailAddress,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.EmailAddress,
 
               itrType: this.itrType,
 
-              orgAckNumber:
-                this.itrType === 'ITR4'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.FilingStatus?.Form10IEAckNo
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.FilingStatus?.Form10IEAckNo
-                    : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.FilingStatus?.ReceiptNo
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.FilingStatus?.ReceiptNo
-                    : 'NA'
-                  : 'NA',
+              orgAckNumber: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PartA_GEN1?.FilingStatus?.ReceiptNo
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.FilingStatus?.ReceiptNo
+                : 'NA',
+
               bankAccountNumber: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
-              ]?.Refund?.BankAccountDtls?.AddtnlBankDetails.find(
+              ]?.PartB_TTI?.Refund?.BankAccountDtls?.AddtnlBankDetails?.find(
                 (item) => item.UseForRefund === 'true'
               )?.BankAccountNo,
               bankName: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
-              ]?.Refund?.BankAccountDtls?.AddtnlBankDetails.find(
+              ]?.PartB_TTI?.Refund?.BankAccountDtls?.AddtnlBankDetails?.find(
                 (item) => item.UseForRefund === 'true'
               )?.BankName,
             },
@@ -1839,6 +2006,147 @@ export class SummaryComponent implements OnInit {
                       'PartB-TI'
                     ]?.ProfBusGain?.TotProfBusGain
                   : 0,
+            },
+            capitalGain: {
+              shortTerm: {
+                ShortTerm15Per: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @15%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm15Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm15Per,
+                  },
+                ],
+                ShortTerm15PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTerm15Per,
+                ShortTerm30Per: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @30%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm30Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTerm30Per,
+                  },
+                ],
+                ShortTerm30PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTerm30Per,
+                ShortTermAppSlabRate: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @ slab rate',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                  },
+                ],
+                ShortTermAppSlabRateTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                ShortTermSplRateDTAA: [
+                  {
+                    nameOfAsset: 'Short Term Capital Gains @ special rate DTAA',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+                  },
+                ],
+                ShortTermSplRateDTAATotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+              },
+              totalShortTerm:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.ShortTerm?.TotalShortTerm,
+              longTerm: {
+                LongTerm10Per: [
+                  {
+                    nameOfAsset: 'long Term Capital Gains @10%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm10Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm10Per,
+                  },
+                ],
+                LongTerm10PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.LongTerm?.LongTerm10Per,
+                LongTerm20Per: [
+                  {
+                    nameOfAsset: 'long Term Capital Gains @20%',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                  },
+                ],
+                LongTerm20PerTotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.LongTerm?.LongTerm20Per,
+                LongTermSplRateDTAA: [
+                  {
+                    nameOfAsset: 'long Term Capital Gains @ special rate DTAA',
+                    capitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+                    Deduction: 0,
+                    netCapitalGain:
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                        'PartB-TI'
+                      ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+                  },
+                ],
+                LongTermSplRateDTAATotal:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
+                    'PartB-TI'
+                  ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+              },
+              totalLongTerm:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.LongTerm?.TotalLongTerm,
+              totalCapitalGain:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.TotalCapGains,
             },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -2468,54 +2776,14 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
           };
-          console.log(this.finalCalculations, 'finalCalculations');
+          console.log(
+            this.finalCalculations,
+            'finalCalculations',
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB_TI']
+              ?.CapGain?.ShortTerm?.ShortTerm15Per
+          );
 
           this.keys = {
-            // 1. SALARY INCOME
-            // IncomeFromSal:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.Salaries,
-            //   GrossSalary:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.GrossSalary,
-            // TotalAllwncExemptUs10:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     .AllwncExemptUs10?.TotalAllwncExemptUs10,
-            // ProfessionalTaxUs16iii:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.ProfessionalTaxUs16iii,
-            // EntertainmentAlw16ii:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.EntertainmentAlw16ii,
-            // DeductionUs16ia:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.DeductionUs16ia,
-
-            // 2. HOUSE PROPERTY
-            // TotalIncomeOfHP:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.IncomeFromHP,
-            // TypeOfHP:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.TypeOfHP,
-            // GrossRentReceived:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.GrossRentReceived,
-            // TaxPaidlocalAuth:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.TaxPaidlocalAuth,
-            // AnnualValue:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.AnnualValue,
-            // StandardDeduction:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.StandardDeduction,
-            // InterestPayable:
-            //   this.ITR_JSON.itrSummaryJson[this.itrType][this.ITR14IncomeDeductions]
-            //     ?.InterestPayable,
-
-            // 4. BUSINESS INCOME
-
             // 4. CAPITAL GAIN INCOME
             TotalCapGains:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -2536,232 +2804,6 @@ export class SummaryComponent implements OnInit {
             LongTerm20Per:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.CapGain.LongTerm?.LongTerm20Per,
-
-            // 5. OHER SOURCES
-            // IncomeOthSrc:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.IncFromOS.TotIncFromOS,
-
-            // SAV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
-            //   .IncOthThanOwnRaceHorse?.IntrstFrmSavingBank,
-            // IFD: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
-            //   .IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit,
-            // TAX: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
-            //   .IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund,
-            // FAP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
-            //   .IncOthThanOwnRaceHorse?.FamilyPension,
-            // DIV: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleOS
-            //   .IncOthThanOwnRaceHorse?.DividendGross,
-
-            // 6. TOTAL HEAD WISE INCOME
-            // GrossTotIncome:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.TotalTI,
-
-            // 7. LOSSES OF CURRENT YEAR
-            // CurrentYearLoss:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.CurrentYearLoss,
-
-            // 8. BALANCE AFTER CURRENT YEAR SET OFF
-            // BalanceAfterSetoffLosses:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.BalanceAfterSetoffLosses,
-
-            // 9. BROUGHT FORWARD LOSSES SETOFF
-            // BroughtFwdLossesSetoff:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.BroughtFwdLossesSetoff,
-
-            // 10. GROSS TOTAL INCOME
-            // GrossTotalIncome:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.GrossTotalIncome,
-
-            // 11. INCOME CHARGEABLE AT SPECIAL RATES
-            // IncChargeTaxSplRate111A112:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.IncChargeTaxSplRate111A112,
-
-            // 12. ====================DEDUCTIONS==================
-            // TotalChapVIADeductions:
-            //   this.itrType === 'ITR2'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //         ?.DeductionsUnderScheduleVIA
-            //     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //         ?.DeductionsUndSchVIADtl?.TotDeductUndSchVIA,
-
-            // Deductions: Object.entries(
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleVIA
-            //     ?.DeductUndChapVIA
-            // ).map(([key, item]) => ({ name: key, amount: item })),
-
-            // 13. TOTAL INCOME
-            // TotalIncome:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.TotalIncome,
-
-            // 14. INCOME CHARGEABLE AT SPECIAL RATES
-            // IncChargeableTaxSplRates:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.IncChargeableTaxSplRates,
-
-            // 15. NET AGRICULTURE INCOME
-            // NetAgricultureIncomeOrOtherIncomeForRate:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.NetAgricultureIncomeOrOtherIncomeForRate,
-
-            // 16. AGGREGATE INCOME
-            // AggregateIncome:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.AggregateIncome,
-
-            // 17. LOSSES TO BE CARRIED FORWARD
-            // LossesOfCurrentYearCarriedFwd:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-            //     ?.LossesOfCurrentYearCarriedFwd,
-
-            // 18. =====================TOTAL TAX=====================
-            // TaxPayableOnTotInc:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxPayableOnTotInc,
-            // TaxAtNormalRatesOnAggrInc:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxPayableOnTI
-            //     ?.TaxAtNormalRatesOnAggrInc,
-            // TaxAtSpecialRates:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TaxAtSpecialRates,
-            // RebateOnAgriInc:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxPayableOnTI?.RebateOnAgriInc,
-
-            // 19. REBATE 87A
-            // Rebate87A:
-            //   this.itrType === 'ITR2'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.Rebate87A
-            //     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TaxPayableOnTI?.Rebate87A,
-
-            // 20. TAX AFTER REBATE
-            // TaxPayableOnRebate:
-            //   this.itrType === 'ITR2'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TaxPayableOnRebate
-            //     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TaxPayableOnTI
-            //         ?.TaxPayableOnRebate,
-
-            // 21 TOTAL SURCHARGE
-            // TotalSurcharge:
-            //   this.itrType === 'ITR2'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TotalSurcharge
-            //     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TaxPayableOnTI?.TotalSurcharge,
-
-            // 22. HEALTH AND EDUCATION CESS
-            // EducationCess:
-            //   this.itrType === 'ITR2'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.EducationCess
-            //     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TaxPayableOnTI?.EducationCess,
-
-            // 23. GROSS TAX LIABILITY
-            // GrossTaxLiability:
-            //   this.itrType === 'ITR2'
-            //     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.GrossTaxLiability
-            //     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //         ?.ComputationOfTaxLiability?.TaxPayableOnTI
-            //         ?.GrossTaxLiability,
-
-            // 24. TAX RELIEF
-            // TotTaxRelief:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxRelief?.TotTaxRelief,
-            // Section89:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxRelief?.Section89,
-            // Section90:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxRelief?.Section90,
-            // Section91:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.TaxRelief?.Section91,
-
-            // 25. NET TAX LIABILITY
-            // NetTaxLiability:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.NetTaxLiability,
-
-            // 26. INTEREST AND FEE
-            // TotalIntrstPay:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.IntrstPay?.TotalIntrstPay,
-            // IntrstPayUs234A:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234A,
-            // IntrstPayUs234B:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234B,
-            // IntrstPayUs234C:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.IntrstPay?.IntrstPayUs234C,
-            // LateFilingFee234F:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.IntrstPay?.LateFilingFee234F,
-
-            // // 26. AGGREGATE LIABILITY
-            // AggregateTaxInterestLiability:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     ?.ComputationOfTaxLiability?.AggregateTaxInterestLiability,
-
-            // // 27. =====================TAX PAID======================
-            // TotalTaxesPaid:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     .TaxPaid.TaxesPaid?.TotalTaxesPaid,
-
-            // TDSonSalary:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS1
-            //     .TDSonSalary,
-            // TotalTDSonSalaries:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS1
-            //     .TotalTDSonSalaries,
-
-            // TDSonOthThanSal:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS2
-            //     .TDSOthThanSalaryDtls,
-            // TotalTDSonOthThanSals:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS2
-            //     ?.TotalTDSonOthThanSals,
-
-            // TDS3Details:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3
-            //     .TDS3onOthThanSalDtls,
-            // TotalTDS3Details:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTDS3
-            //     ?.TotalTDS3OnOthThanSal,
-
-            // TCS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
-            //   ?.TCS,
-            // TotalSchTCS:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
-            //     ?.TotalSchTCS,
-
-            // TaxPayment:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
-            //     ?.TaxPayment,
-            // TotalTaxPayments:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleIT
-            //     ?.TotalTaxPayments,
-
-            // // 29. AMOUNT PAYABLE / REFUND
-            // BalTaxPayable:
-            //   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
-            //     .TaxPaid?.BalTaxPayable,
 
             // 30. EXEMPT INCOME
             ExemptIncAgriOthUs10Total:
@@ -2832,10 +2874,13 @@ export class SummaryComponent implements OnInit {
 
                 this.finalCalculations = {
                   personalInfo: {
-                    name:
-                      this.ITR_JSON?.family[0]?.fName +
-                      this.ITR_JSON?.family[0]?.mName +
-                      this.ITR_JSON?.family[0]?.lName,
+                    name: this.ITR_JSON?.family[0]?.fName
+                      ? this.ITR_JSON?.family[0]?.fName
+                      : '' + this.ITR_JSON?.family[0]?.mName
+                      ? this.ITR_JSON?.family[0]?.mName
+                      : '' + this.ITR_JSON?.family[0]?.lName
+                      ? this.ITR_JSON?.family[0]?.lName
+                      : '',
 
                     aadhaarNumber: this.ITR_JSON?.aadharNumber,
 
@@ -2844,7 +2889,11 @@ export class SummaryComponent implements OnInit {
                     resStatus: this.ITR_JSON?.residentialStatus,
 
                     returnType:
-                      this.ITR_JSON?.isRevised === 'Y' ? 'Revised' : 'Original',
+                      this.ITR_JSON.isDefective === 'Y'
+                        ? 'Defective'
+                        : this.ITR_JSON?.isRevised === 'Y'
+                        ? 'Revised'
+                        : 'Original',
 
                     Address:
                       this.ITR_JSON.address?.flatNo +
@@ -3084,6 +3133,162 @@ export class SummaryComponent implements OnInit {
                     businessIncomeTotal:
                       this.finalSummary?.assessment?.taxSummary
                         ?.presumptiveIncome,
+                  },
+                  capitalGain: {
+                    shortTerm: {
+                      ShortTerm15Per:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 15)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      ShortTerm15PerTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 15)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
+
+                      ShortTerm30Per: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      ShortTerm30PerTotal: 0,
+                      ShortTermAppSlabRate:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === -1)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      ShortTermAppSlabRateTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === -1)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
+                      ShortTermSplRateDTAA: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      ShortTermSplRateDTAATotal: 0,
+                    },
+                    totalShortTerm:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) =>
+                            item?.taxRate === -1 || item?.taxRate === 15
+                        )
+                        .reduce((total, element) => {
+                          const incomeAfterInternalSetOff =
+                            element.incomeAfterInternalSetOff;
+                          console.log(element, 'element');
+                          console.log(
+                            incomeAfterInternalSetOff,
+                            'incomeAfterInternalSetOff'
+                          );
+
+                          return total + incomeAfterInternalSetOff;
+                        }, 0),
+                    longTerm: {
+                      LongTerm10Per:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 10)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      LongTerm10PerTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 10)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
+                      LongTerm20Per:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 20)
+                          .map((element) => ({
+                            nameOfAsset: element?.assetType,
+                            capitalGain: element.cgIncome,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.cgIncome,
+                          })),
+                      LongTerm20PerTotal:
+                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item: any) => item?.taxRate === 20)
+                          .reduce((total, element) => {
+                            const cgIncome = element.cgIncome;
+
+                            return total + cgIncome;
+                          }, 0),
+                      LongTermSplRateDTAA: [
+                        {
+                          nameOfAsset: '',
+                          capitalGain: 0,
+                          Deduction: 0,
+                          netCapitalGain: 0,
+                        },
+                      ],
+                      LongTermSplRateDTAATotal: 0,
+                    },
+                    totalLongTerm:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) =>
+                            item?.taxRate === 10 || item?.taxRate === 20
+                        )
+                        .reduce((total, element) => {
+                          const incomeAfterInternalSetOff =
+                            element.incomeAfterInternalSetOff;
+                          console.log(element, 'element');
+                          console.log(
+                            incomeAfterInternalSetOff,
+                            'incomeAfterInternalSetOff'
+                          );
+
+                          return total + incomeAfterInternalSetOff;
+                        }, 0),
+                    totalCapitalGain:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter(
+                          (item: any) =>
+                            item?.taxRate === -1 ||
+                            item?.taxRate === 15 ||
+                            item?.taxRate === 10 ||
+                            item?.taxRate === 20
+                        )
+                        .reduce((total, element) => {
+                          const incomeAfterInternalSetOff =
+                            element.incomeAfterInternalSetOff;
+                          console.log(element, 'element');
+                          console.log(
+                            incomeAfterInternalSetOff,
+                            'incomeAfterInternalSetOff'
+                          );
+
+                          return total + incomeAfterInternalSetOff;
+                        }, 0),
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -3795,10 +4000,13 @@ export class SummaryComponent implements OnInit {
 
               this.finalCalculations = {
                 personalInfo: {
-                  name:
-                    this.ITR_JSON?.family[0]?.fName +
-                    this.ITR_JSON?.family[0]?.mName +
-                    this.ITR_JSON?.family[0]?.lName,
+                  name: this.ITR_JSON?.family[0]?.fName
+                    ? this.ITR_JSON?.family[0]?.fName
+                    : '' + this.ITR_JSON?.family[0]?.mName
+                    ? this.ITR_JSON?.family[0]?.mName
+                    : '' + this.ITR_JSON?.family[0]?.lName
+                    ? this.ITR_JSON?.family[0]?.lName
+                    : '',
 
                   aadhaarNumber: this.ITR_JSON?.aadharNumber,
 
@@ -3807,7 +4015,11 @@ export class SummaryComponent implements OnInit {
                   resStatus: this.ITR_JSON?.residentialStatus,
 
                   returnType:
-                    this.ITR_JSON?.isRevised === 'Y' ? 'Revised' : 'Original',
+                    this.ITR_JSON.isDefective === 'Y'
+                      ? 'Defective'
+                      : this.ITR_JSON?.isRevised === 'Y'
+                      ? 'Revised'
+                      : 'Original',
 
                   Address:
                     this.ITR_JSON.address?.flatNo +
@@ -4046,6 +4258,162 @@ export class SummaryComponent implements OnInit {
                   businessIncomeTotal:
                     this.finalSummary?.assessment?.taxSummary
                       ?.presumptiveIncome,
+                },
+                capitalGain: {
+                  shortTerm: {
+                    ShortTerm15Per:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 15)
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
+                    ShortTerm15PerTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 15)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
+
+                    ShortTerm30Per: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    ShortTerm30PerTotal: 0,
+                    ShortTermAppSlabRate:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === -1)
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
+                    ShortTermAppSlabRateTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === -1)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
+                    ShortTermSplRateDTAA: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    ShortTermSplRateDTAATotal: 0,
+                  },
+                  totalShortTerm:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter(
+                        (item: any) =>
+                          item?.taxRate === -1 || item?.taxRate === 15
+                      )
+                      .reduce((total, element) => {
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
+                        console.log(element, 'element');
+                        console.log(
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
+                        );
+
+                        return total + incomeAfterInternalSetOff;
+                      }, 0),
+                  longTerm: {
+                    LongTerm10Per:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 10)
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
+                    LongTerm10PerTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 10)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
+                    LongTerm20Per:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 20)
+                        .map((element) => ({
+                          nameOfAsset: element?.assetType,
+                          capitalGain: element.cgIncome,
+                          Deduction: element.deductionAmount,
+                          netCapitalGain: element.cgIncome,
+                        })),
+                    LongTerm20PerTotal:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        ?.filter((item: any) => item?.taxRate === 20)
+                        .reduce((total, element) => {
+                          const cgIncome = element.cgIncome;
+
+                          return total + cgIncome;
+                        }, 0),
+                    LongTermSplRateDTAA: [
+                      {
+                        nameOfAsset: '',
+                        capitalGain: 0,
+                        Deduction: 0,
+                        netCapitalGain: 0,
+                      },
+                    ],
+                    LongTermSplRateDTAATotal: 0,
+                  },
+                  totalLongTerm:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter(
+                        (item: any) =>
+                          item?.taxRate === 10 || item?.taxRate === 20
+                      )
+                      .reduce((total, element) => {
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
+                        console.log(element, 'element');
+                        console.log(
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
+                        );
+
+                        return total + incomeAfterInternalSetOff;
+                      }, 0),
+                  totalCapitalGain:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter(
+                        (item: any) =>
+                          item?.taxRate === -1 ||
+                          item?.taxRate === 15 ||
+                          item?.taxRate === 10 ||
+                          item?.taxRate === 20
+                      )
+                      .reduce((total, element) => {
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
+                        console.log(element, 'element');
+                        console.log(
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
+                        );
+
+                        return total + incomeAfterInternalSetOff;
+                      }, 0),
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -4669,7 +5037,13 @@ export class SummaryComponent implements OnInit {
                 amountRefund:
                   this.finalSummary?.assessment?.taxSummary?.taxRefund,
               };
-              console.log(this.finalCalculations, 'finalCalculations');
+              console.log(
+                this.finalCalculations,
+                'finalCalculations',
+                this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
+                  (item: any) => item?.taxRate === 15
+                )
+              );
             } else {
               this.loading = false;
               this.errorMessage =
@@ -5204,10 +5578,6 @@ export class SummaryComponent implements OnInit {
           }
         }
       });
-  }
-
-  isDownloadAllowed() {
-    return true;
   }
 
   validateITR() {

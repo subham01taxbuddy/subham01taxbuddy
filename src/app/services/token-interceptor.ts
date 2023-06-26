@@ -75,6 +75,14 @@ export class TokenInterceptor implements HttpInterceptor {
           environment: environment.lifecycleEnv
         },
       });
+    } else if ((request.url.startsWith(environment.check_upload)) || (request.url.startsWith(environment.upload_file))
+     || (request.url.startsWith(environment.download_file))){
+      request = request.clone({
+        setHeaders: {
+           Authorization: `Bearer ` + TOKEN,
+          // environment: environment.lifecycleEnv
+        },
+      });
     }
 
     /**

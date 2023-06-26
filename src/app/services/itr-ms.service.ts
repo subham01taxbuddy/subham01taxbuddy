@@ -33,6 +33,39 @@ export class ItrMsService {
     // .map(response => response.json())
   }
 
+  getLambda<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    return this.httpClient.get<T>(
+      environment.check_upload + param[0],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
+  downloadLambda<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+
+    return this.httpClient.post<T>(
+      environment.download_file + param[0],param[1],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
+  postLambda<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+
+    return this.httpClient.post<T>(
+      environment.upload_file + param[0],param[1],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
   postMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

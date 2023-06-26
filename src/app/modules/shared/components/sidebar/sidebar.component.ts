@@ -140,10 +140,13 @@ export class SidebarComponent{
     {
       name: 'Payouts',
       // iconClass: 'fa fa-code',
-      active: true,
-      url: '/payouts',
+      active: false,
+      url: null,
       roles: [],
-      submenu: []
+      submenu: [
+        {name:'Payouts',url:'/payouts',roles:[]},
+        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN', 'ROLE_LEADER']}
+      ]
     },
     {
       name: 'All Users',
@@ -189,6 +192,7 @@ export class SidebarComponent{
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
         { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
+        { name: 'Payout Report', url: '/reports/revenue-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     }
   ];

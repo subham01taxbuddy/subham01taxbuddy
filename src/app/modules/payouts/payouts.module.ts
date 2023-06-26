@@ -9,11 +9,13 @@ import {AgGridModule} from "ag-grid-angular";
 import {MaterialModule} from "../shared/material.module";
 import {PagesModule} from "../../pages/pages.module";
 import {SharedModule} from "../shared/shared.module";
+import { PayProcessingComponent } from './pay-processing/pay-processing.component';
 
 
 @NgModule({
   declarations: [
-    PayoutsComponent
+    PayoutsComponent,
+    PayProcessingComponent
   ],
   imports: [
     CommonModule,
