@@ -44,6 +44,17 @@ export class ItrMsService {
     // .map(response => response.json())
   }
 
+  downloadLambda<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+
+    return this.httpClient.post<T>(
+      environment.download_file + param[0],param[1],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
   postLambda<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

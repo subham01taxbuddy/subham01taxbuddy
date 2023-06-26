@@ -21,6 +21,7 @@ export class PayProcessingComponent implements OnInit {
     page: 0,
     pageSize: 20,
   };
+  downloadURL:any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -45,7 +46,7 @@ export class PayProcessingComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.isUploadAllowed();
+     this.isUploadAllowed();
      this.getListOfPayOuts();
   }
 
@@ -56,12 +57,21 @@ export class PayProcessingComponent implements OnInit {
       if (response.success) {
         this.loading = false;
         console.log('response', response['data']);
-        this.isUploadTrue = true;
+        if(response?.allowUpload){
+          this.isUploadTrue = true;
+        }else{
+          this.isUploadTrue = false;;
+        }
+
       } else {
         this.loading = false;
         this.isUploadTrue = false;
         this.utilsService.showSnackBar(response.message);
       }
+    },
+    (error) => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Error in check upload');
     });
   }
 
@@ -207,6 +217,7 @@ export class PayProcessingComponent implements OnInit {
       this.itrMsService.postLambda(param, formData).subscribe((res: any) => {
         this.loading = false;
         if (res.success) {
+          this.loading = false;
           this.utilsService.showSnackBar('File uploaded successfully');
 
         }else {
@@ -221,6 +232,31 @@ export class PayProcessingComponent implements OnInit {
   }
 
   download() {
+    // https://avamuzavbieadujrkme44yfetq0cxiou.lambda-url.ap-south-1.on.aws/'
+    this.loading = true;
+    let userId = this.utilsService.getLoggedInUserID();
+    const request = {
+      userId: userId
+    };
+    let param = '';
+    this.itrMsService.downloadLambda(param,request).subscribe((response: any) => {
+      if (response.success) {
+        this.loading = false;
+        console.log('response', response['data']);
+        this.utilsService.showSnackBar(response.message);
+        this.downloadURL = response?.downloadUrl
+        window.open(this.downloadURL, '_blank');
+        this.isUploadAllowed();
+      } else {
+        this.loading = false;
+        this.isUploadTrue = false;
+        this.utilsService.showSnackBar(response.message);
+      }
+    },
+    (error) => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Error in check download');
+    });
 
   }
 
