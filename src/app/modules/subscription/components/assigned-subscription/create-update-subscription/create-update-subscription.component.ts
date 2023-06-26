@@ -402,6 +402,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     );
   }
 
+  isPromoRemoved = false;
   applyPromo(selectedPlan) {
     console.log('selectedPromoCode:', this.selectedPromoCode);
     this.smeSelectedPlanId = selectedPlan;
@@ -413,6 +414,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
+      removePromoCode: false
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       console.log('apply promo res', res);
@@ -422,6 +424,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar(res['Error']);
         return;
       }
+      this.isPromoRemoved = false;
       this.userSubscription = res;
       this.setFinalPricing();
       console.log('PROMO code applied', res);
@@ -431,25 +434,40 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     });
   }
 
-  removePromoCode() {
+  removePromoCode(selectedPlan) {
     if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
-      const param = `/subscription/remove-promocode?subscriptionId=${this.userSubscription.subscriptionId}`;
-      this.itrService.deleteMethod(param).subscribe((res: any) => {
+      console.log('selectedPromoCode:', this.selectedPromoCode);
+      this.smeSelectedPlanId = selectedPlan;
+      const param = `/subscription/recalculate`;
+      const request = {
+        userId: this.userSubscription.userId,
+        planId: selectedPlan,
+        selectedBy: 'SME',
+        smeUserId: this?.loggedInSme[0]?.userId,
+        subscriptionId: this.userSubscription.subscriptionId,
+        promoCode: this.selectedPromoCode,
+        removePromoCode: true
+      };
+      this.itrService.postMethod(param, request).subscribe((res: any) => {
+        console.log('remove promo res', res);
+        this.appliedPromo = res.promoCode;
+        console.log('removed promo', this.appliedPromo);
+        if (res['Error']) {
+          this.utilsService.showSnackBar(res['Error']);
+          return;
+        }
         this.utilsService.showSnackBar(
           `Promo Code ${this.selectedPromoCode} removed successfully!`
         );
-        this.applySmeSelectedPlan(this.userSubscription?.smeSelectedPlan?.planId);
-        console.log('PROMO code removed', res);
-        this.searchedPromoCode.reset();
-        // this.userSubscription = res;
-        // this.setFinalPricing();
-        // this.promoCodeInfo = null;
+        this.isPromoRemoved = true;
+        this.userSubscription = res;
+        this.setFinalPricing();
       });
-    } else {
+    } /*else {
       this.selectedPromoCode = '';
       this.searchedPromoCode.reset();
       this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
-    }
+    }*/
   }
 
   getExactPromoDiscount() {
@@ -1002,7 +1020,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-
+        removePromoCode: this.isPromoRemoved
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));
