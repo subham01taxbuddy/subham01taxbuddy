@@ -32,7 +32,7 @@ export class BankDialogComponent implements OnInit {
     }
   }
 
-  async getBankInfoFromIfsc(ifscCode: FormControl) {
+  async getBankInfoFromIfsc(ifscCode) {
     console.log("ifscCode: ", ifscCode)
     if (ifscCode.valid) {
       await this.utilsService.getBankByIfsc(ifscCode.value).then((res: any) => {

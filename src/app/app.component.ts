@@ -47,6 +47,7 @@ export class AppComponent {
           event.url === event.urlAfterRedirects
         ) {
           this.timedOut = sessionStorage.getItem('timedOut') === '1';
+          console.log('in app router subscribe:', event.url);
           if(this.timedOut){
             this.logout();
             this.smeLogout();
