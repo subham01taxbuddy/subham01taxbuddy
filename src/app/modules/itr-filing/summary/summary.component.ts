@@ -557,20 +557,25 @@ export class SummaryComponent implements OnInit {
           // console.log(this.finalSummary, 'this.finalSummary');
           this.finalCalculations = {
             personalInfo: {
-              name: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                ?.PersonalInfo?.AssesseeName?.FirstName
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.PersonalInfo?.AssesseeName?.FirstName
-                : '' +
-                  ' ' +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.PersonalInfo?.AssesseeName?.MiddleName
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.PersonalInfo?.AssesseeName?.MiddleName
-                : '' +
-                  ' ' +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName,
+              name: `${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AssesseeName?.FirstName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.FirstName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AssesseeName?.MiddleName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.MiddleName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AssesseeName?.SurNameOrOrgName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName + ' '
+                  : ''
+              }`,
 
               aadhaarNumber:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
@@ -1632,20 +1637,26 @@ export class SummaryComponent implements OnInit {
         } else if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
           this.finalCalculations = {
             personalInfo: {
-              name: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.FirstName
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
-                    ?.PersonalInfo?.AssesseeName?.FirstName
-                : '' +
-                  ' ' +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
-                    ?.PersonalInfo?.AssesseeName?.MiddleName
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
-                    ?.PersonalInfo?.AssesseeName?.MiddleName
-                : '' +
-                  ' ' +
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
-                    ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName,
+              name: `${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.FirstName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.FirstName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.MiddleName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.MiddleName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName
+                      ?.SurNameOrOrgName + ' '
+                  : ''
+              }`,
 
               aadhaarNumber:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
@@ -2878,7 +2889,11 @@ export class SummaryComponent implements OnInit {
                     resStatus: this.ITR_JSON?.residentialStatus,
 
                     returnType:
-                      this.ITR_JSON?.isRevised === 'Y' ? 'Revised' : 'Original',
+                      this.ITR_JSON.isDefective === 'Y'
+                        ? 'Defective'
+                        : this.ITR_JSON?.isRevised === 'Y'
+                        ? 'Revised'
+                        : 'Original',
 
                     Address:
                       this.ITR_JSON.address?.flatNo +
@@ -4000,7 +4015,11 @@ export class SummaryComponent implements OnInit {
                   resStatus: this.ITR_JSON?.residentialStatus,
 
                   returnType:
-                    this.ITR_JSON?.isRevised === 'Y' ? 'Revised' : 'Original',
+                    this.ITR_JSON.isDefective === 'Y'
+                      ? 'Defective'
+                      : this.ITR_JSON?.isRevised === 'Y'
+                      ? 'Revised'
+                      : 'Original',
 
                   Address:
                     this.ITR_JSON.address?.flatNo +

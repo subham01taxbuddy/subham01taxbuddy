@@ -18,101 +18,103 @@
           <!-- Name -->
           <div class="txBt">
             <span class="txLf">Name:</span>
-            <span class="txMuLf">{{ getUserName("personal") }}</span>
+            <span class="txMuLf">{{
+              finalCalculations?.personalInfo?.name
+            }}</span>
           </div>
           <div
             class="txBt"
             *ngIf="
-              ITR_JSON.aadharNumber !== '' &&
-              ITR_JSON.aadharNumber !== null &&
-              ITR_JSON.aadharNumber !== undefined
+              finalCalculations?.personalInfo?.aadhaarNumber !== '' &&
+              finalCalculations?.personalInfo?.aadhaarNumber !== null &&
+              finalCalculations?.personalInfo?.aadhaarNumber !== undefined
             "
           >
             <div>
               <span class="txLf">Aadhar Number:</span
-              ><span class="txMuLf">{{ ITR_JSON.aadharNumber }}</span>
+              ><span class="txMuLf">{{
+                finalCalculations?.personalInfo?.aadhaarNumber
+              }}</span>
             </div>
           </div>
           <!-- Mobile -->
           <div class="txBt">
             <div>
               <span class="txLf">Mobile Number:</span
-              ><span class="txMuLf">{{ ITR_JSON.contactNumber }}</span>
+              ><span class="txMuLf">{{
+                finalCalculations?.personalInfo?.mobileNumber
+              }}</span>
             </div>
           </div>
           <!--Residential Status  -->
           <div class="txBt">
-            <span class="txLf">Residential Status:</span
+            <span class="txLf">Residential Status: </span
             ><span class="txMuLf">{{
-              ITR_JSON.residentialStatus === "RESIDENT"
-                ? "Resident"
-                : "Non Resident"
+              finalCalculations?.personalInfo?.resStatus
             }}</span>
           </div>
           <div class="txBt">
             <span class="txLf">Return Type:</span
             ><span class="txMuLf">{{
-              ITR_JSON.isDefective === "Y"
-                ? "Defective"
-                : ITR_JSON.isRevised === "N"
-                ? "Original"
-                : "Revised"
+              finalCalculations?.personalInfo?.returnType
             }}</span>
           </div>
           <!-- Address -->
           <div class="txBt" style="border-bottom: none">
             <span class="txLf">Address:</span
-            ><span class="txMuLf"
-              >{{
-                ITR_JSON.address?.flatNo +
-                  ",
-                            " +
-                  ITR_JSON.address?.area
-              }}
-              <br />
-              {{ ITR_JSON.address?.city }}, PIN:
-              {{ ITR_JSON.address?.pinCode }}</span
-            >
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.Address
+            }}</span>
           </div>
         </div>
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
           <!-- DOB -->
           <div class="txBt">
             <span class="txLf">Date of Birth:</span
-            ><span class="txMuLf">{{ selfObj.dateOfBirth | date }}</span>
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.dob | date
+            }}</span>
           </div>
           <!-- PAN -->
           <div class="txBt">
             <span class="txLf">PAN Card:</span
-            ><span class="txMuLf">{{ ITR_JSON.panNumber }}</span>
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.panNumber
+            }}</span>
           </div>
 
           <!-- Email Id  -->
           <div class="txBt">
             <span class="txLf">Email ID:</span
-            ><span class="txMuLf">{{ ITR_JSON.email }}</span>
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.email
+            }}</span>
           </div>
           <!-- ITR Form -->
           <div class="txBt">
             <span class="txLf">ITR Form:</span>
             <span class="txMuLf">{{
-              ITR_JSON.itrSummaryJson ? getItrTypeInSummary() : ITR_JSON.itrType
+              finalCalculations?.personalInfo?.itrType
             }}</span>
           </div>
 
           <div class="txBt">
             <span class="txLf">Original Ack No:</span>
             <span class="txMuLf">{{
-              ITR_JSON.orgITRAckNum ? ITR_JSON.orgITRAckNum : "NA"
+              finalCalculations?.personalInfo?.orgAckNumber
             }}</span>
           </div>
 
           <!-- Bank  -->
           <div class="txBt" style="border-bottom: none">
             <span class="txLf">Bank Name:</span
-            ><span class="txMuLf">{{ bankArray?.name }}</span>
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.bankName
+            }}</span>
             <span class="txLf">Account Number:</span
-            ><span class="txMuLf">{{ bankArray?.accountNumber }}</span>
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.bankAccountNumber
+            }}</span>
           </div>
         </div>
 
