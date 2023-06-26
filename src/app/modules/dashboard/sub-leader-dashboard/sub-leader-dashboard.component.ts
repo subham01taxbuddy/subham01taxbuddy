@@ -43,7 +43,8 @@ export class SubLeaderDashboardComponent implements OnInit {
   roles: any;
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  minEndDate:string ='2023-04-01';
+  maxStartDate = new Date().toISOString().slice(0, 10);
+  minEndDate= new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
   searchFiler = new FormControl('');
@@ -55,6 +56,11 @@ export class SubLeaderDashboardComponent implements OnInit {
   invoiceData:any;
   today: Date;
   commissionData:any;
+  docUploadedData: any;
+  summaryConfirmationData: any;
+  eVerificationPendingData: any;
+  scheduleCallData: any;
+  showTables =false;
 
   constructor(
     private userMsService: UserMsService,
@@ -74,6 +80,52 @@ export class SubLeaderDashboardComponent implements OnInit {
     this.roles = this.utilsService.getUserRoles();
     this.search();
   }
+
+  config = {
+    docUpload: {
+      id: "pagination1",
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    },
+    summaryConfirmation: {
+      id: "pagination2",
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    },
+    eVerificationPending: {
+      id: "pagination3",
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    },
+    scheduleCall: {
+      id: "pagination4",
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    }
+  };
+  searchParam: any = {
+    docUpload: {
+      page: 0,
+      size: 5,
+    },
+    summaryConfirmation: {
+      page: 0,
+      size: 5,
+    },
+    eVerificationPending: {
+      page: 0,
+      size: 5,
+    },
+    scheduleCall: {
+      page: 0,
+      size: 5
+    }
+
+  };
 
 
   ownerId: number;
@@ -101,9 +153,37 @@ export class SubLeaderDashboardComponent implements OnInit {
   }
 
   search(){
-    this.getItrUserOverview();
-    this.getInvoiceReports();
-    this.getPartnerCommission();
+    if(this.filerId){
+      this.search1('all');
+      this.showTables =true;
+      return;
+    }else{
+      this.getItrUserOverview();
+      this.getInvoiceReports();
+      this.getPartnerCommission();
+      this.showTables =false;
+    }
+
+  }
+
+  search1(searchType: any,){
+    if (searchType == 'docUpload') {
+      this.getDocUploadedList(searchType);
+    } else if (searchType == 'summaryConfirmation') {
+      this.getSummaryConfirmationList(searchType);
+    } else if (searchType == 'eVerificationPending') {
+      this.getItrFilledEVerificationPendingList(searchType);
+    } else if (searchType == 'scheduleCall') {
+      this.getScheduleCallDetails(searchType);
+    } else {
+      this.getInvoiceReports();
+      this.getPartnerCommission();
+      this.getDocUploadedList('docUpload');
+      this.getSummaryConfirmationList('summaryConfirmation');
+      this.getItrFilledEVerificationPendingList('eVerificationPending');
+      this.getScheduleCallDetails('scheduleCall');
+      this.getItrUserOverview();
+    }
   }
 
   getItrUserOverview(){
@@ -222,11 +302,145 @@ export class SubLeaderDashboardComponent implements OnInit {
     );
   }
 
+  getDocUploadedList(configType) {
+    // 'https://uat-api.taxbuddy.com/itr/dashboard/doc-uploaded-filing-not-started?filerUserId=9618&fromDate=2020-04-08&toDate=2023-05-09&page=0&size=30'
+    // https://uat-api.taxbuddy.com/itr/dashboard/doc-uploaded-filing-not-started?filerUserId=234&page=0&size=30
+    this.loading = true;
+    let data = this.utilsService.createUrlParams(this.searchParam[configType]);
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let filerUserId = this.filerId;
+    let param = `/dashboard/doc-uploaded-filing-not-started?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`
+
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+      if (response.success) {
+        // this.docUploadedData=null;
+        this.docUploadedData = response?.data;
+        this.config.docUpload.totalItems = response?.data?.totalElements;
+
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Error");
+    })
+  }
+
+  getSummaryConfirmationList(configType) {
+    // https://uat-api.taxbuddy.com/itr/dashboard/waiting-for-confirmation?filerUserId=234&page=0&size=30
+    this.loading = true;
+    let data = this.utilsService.createUrlParams(this.searchParam[configType]);
+    let filerUserId = this.filerId;
+    let param = `/dashboard/waiting-for-confirmation?filerUserId=${filerUserId}&${data}`
+
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+      if (response.success) {
+        this.summaryConfirmationData = response?.data;
+        this.config.summaryConfirmation.totalItems = response?.data?.totalElements;
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Error");
+    })
+
+  }
+
+  getItrFilledEVerificationPendingList(configType) {
+    // https://uat-api.taxbuddy.com/itr/dashboard/itr-filed-everification-pending?filerUserId=234
+    // &fromDate=2023-05-05&toDate=2023-05-05&page=0&size=30
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    this.loading = true;
+    let data = this.utilsService.createUrlParams(this.searchParam[configType]);
+    let filerUserId = this.filerId;
+
+    let param = `/dashboard/itr-filed-everification-pending?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&${data}`;
+
+    this.userMsService.getMethodNew(param).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.eVerificationPendingData = response?.data;
+          this.config.eVerificationPending.totalItems = response?.data?.totalElements;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      }
+    );
+
+  }
+
+  getScheduleCallDetails(configType) {
+    // https://uat-api.taxbuddy.com/user/schedule-call-details/{filerUserId}?fromDate=2023-05-05&toDate=2023-05-05&statusId=17&page=0&size=20
+    // https://uat-api.taxbuddy.com/user/schedule-call-details/{filerUserId}?fromDate=2023-05-05&toDate=2023-05-05&statusId=17,19&page=0&size=20
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    this.loading = true;
+    let data = this.utilsService.createUrlParams(this.searchParam[configType]);
+    let filerUserId = this.filerId;
+
+    let param = `/dashboard/schedule-call-details/${filerUserId}?fromDate=${fromDate}&toDate=${toDate}&statusId=17&${data}`
+
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.scheduleCallData = response?.data;
+        this.config.scheduleCall.totalItems = response?.data?.totalElements;
+
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Error");
+    })
+  }
+
+  goTo(form?) {
+    if (form == 'myUsers') {
+      this.router.navigate(['/tasks/assigned-users-new'], { queryParams: { statusId: '2' } });
+    }
+    if (form == 'myItr') {
+      this.router.navigate(['/tasks/filings'], { queryParams: { statusId: 'WIP' } });
+    }
+    if (form == 'myItr1') {
+      this.router.navigate(['/tasks/filings'], { queryParams: { statusId: 'ITR_FILED' } });
+    }
+    if (form == 'scheduleCall') {
+      this.router.navigate(['/tasks/schedule-call'], { queryParams: { statusId: '17' } });
+    }
+  }
+
+  pageChanged(event: any, configType?) {
+    this.config[configType].currentPage = event;
+    this.searchParam[configType].page = event - 1;
+    this.search1(configType);
+
+  }
+
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters(){
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this?.smeDropDown?.resetDropdown();
+    this.searchParam.docUpload.page = 0;
+    this.config.docUpload.currentPage = 1;
+    this.searchParam.summaryConfirmation.page = 0;
+    this.config.summaryConfirmation.currentPage = 1;
+    this.searchParam.eVerificationPending.page = 0;
+    this.config.eVerificationPending.currentPage = 1;
+    this.searchParam.scheduleCall.page = 0;
+    this.config.scheduleCall.currentPage = 1;
     this.search();
   }
 

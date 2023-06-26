@@ -56,13 +56,13 @@
             <div>
               <label for="start-date">Start Date:</label>
               <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
-                [min]="minDate" [max]="maxDate">
+                [min]="minDate" [max]="maxStartDate">
             </div>
           </div>
           <div class="col-sm-2">
             <div>
               <label for="end-date">End Date:</label>
-              <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minDate"
+              <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
                 [max]="maxDate">
             </div>
           </div>
