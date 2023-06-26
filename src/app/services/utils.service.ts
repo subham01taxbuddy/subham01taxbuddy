@@ -1429,7 +1429,7 @@ export class UtilsService {
   }
 
   uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
-    if (itrObject.itrSummaryJson) {
+    if(itrObject.itrSummaryJson) {
       itrObject.isItrSummaryJsonEdited = false;
       const param =
         '/itr/' +
