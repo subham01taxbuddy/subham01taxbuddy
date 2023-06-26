@@ -477,16 +477,7 @@
                   </mat-expansion-panel>
 
                   <!-- *******************Income from House Property ************************** -->
-                  <mat-expansion-panel
-                    class="color-panel accordion-border"
-                    [disabled]="[
-                      finalCalculations?.houseProperties?.hpTotalIncome &&
-                      finalCalculations?.houseProperties?.hpTotalIncome === 0
-                        ? true
-                        : false
-                    ]"
-                    #HP
-                  >
+                  <mat-expansion-panel class="color-panel accordion-border" #HP>
                     <mat-expansion-panel-header>
                       <div
                         class="font80"
@@ -639,12 +630,6 @@
                   <!-- ************************** Income from Business ****************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="[
-                      finalCalculations?.businessIncome?.businessIncomeTotal ===
-                      0
-                        ? true
-                        : false
-                    ]"
                     #business
                   >
                     <mat-expansion-panel-header>
@@ -1272,17 +1257,7 @@
                   <!-- </mat-expansion-panel> -->
 
                   <!-- ************************** Income from Capital Gain ****************************** -->
-                  <mat-expansion-panel
-                    class="color-panel accordion-border"
-                    [disabled]="
-                      finalCalculations.capitalGain.totalCapitalGain === 0 &&
-                      this.utilsService.isNonEmpty(
-                        this.ITR_JSON.itrSummaryJson
-                      ) &&
-                      this.ITR_JSON.isItrSummaryJsonEdited === false
-                    "
-                    #CG
-                  >
+                  <mat-expansion-panel class="color-panel accordion-border" #CG>
                     <mat-expansion-panel-header class="newclass">
                       <div
                         class="font80"
