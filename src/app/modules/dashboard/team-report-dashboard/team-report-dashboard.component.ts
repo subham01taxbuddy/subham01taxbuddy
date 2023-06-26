@@ -43,7 +43,8 @@ export class TeamReportDashboardComponent implements OnInit {
   // minDate = new Date(2023, 3, 1);
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  minEndDate:string ='2023-04-01';
+  maxStartDate = new Date().toISOString().slice(0, 10);
+  minEndDate= new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
   invoiceData:any;

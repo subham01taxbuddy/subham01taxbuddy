@@ -48,6 +48,10 @@ export class AppComponent {
         ) {
           this.timedOut = sessionStorage.getItem('timedOut') === '1';
           console.log('in app router subscribe:', event.url);
+          if(event.url === '/'){
+            this.router.navigate(['/login']);
+            return;
+          }
           if(this.timedOut){
             this.logout();
             this.smeLogout();
