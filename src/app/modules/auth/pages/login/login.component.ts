@@ -157,16 +157,21 @@ export class LoginComponent implements OnInit {
     this.speedTest();
   }
   internetSpeed:any = -1;
+  speedIterations = 2;
   speedTest(){
     this.speedTestService.getMbps(
       {
-        iterations: 5,
-        // retryDelay: 1500,
+        iterations: 1,
+        retryDelay: 1500,
       }
     ).subscribe(
       (speed) => {
         console.log('Your speed is ' + Number(speed));
         this.internetSpeed = Number(speed).toFixed(2);
+        if(this.speedIterations > 0) {
+          this.speedIterations--;
+          this.speedTest();
+        }
       }
     );
   }
