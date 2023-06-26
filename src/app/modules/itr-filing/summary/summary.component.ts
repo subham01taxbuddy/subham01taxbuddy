@@ -557,15 +557,20 @@ export class SummaryComponent implements OnInit {
           // console.log(this.finalSummary, 'this.finalSummary');
           this.finalCalculations = {
             personalInfo: {
-              name:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.FirstName +
-                ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.MiddleName +
-                ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.SurNameOrOrgName,
+              name: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PersonalInfo?.AssesseeName?.FirstName
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.PersonalInfo?.AssesseeName?.FirstName
+                : '' +
+                  ' ' +
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.PersonalInfo?.AssesseeName?.MiddleName
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.PersonalInfo?.AssesseeName?.MiddleName
+                : '' +
+                  ' ' +
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName,
 
               aadhaarNumber:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
@@ -1602,7 +1607,7 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund
                 ?.RefundDue,
           };
-          // console.log(this.finalCalculations, 'finalCalculations');
+          console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
             // EXEMPT INCOME
@@ -1627,83 +1632,89 @@ export class SummaryComponent implements OnInit {
         } else if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
           this.finalCalculations = {
             personalInfo: {
-              name:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.FirstName +
-                ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.MiddleName +
-                ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AssesseeName?.SurNameOrOrgName,
+              name: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.FirstName
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.PersonalInfo?.AssesseeName?.FirstName
+                : '' +
+                  ' ' +
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.PersonalInfo?.AssesseeName?.MiddleName
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.PersonalInfo?.AssesseeName?.MiddleName
+                : '' +
+                  ' ' +
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName,
 
               aadhaarNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.AadhaarCardNo,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AadhaarCardNo,
 
               mobileNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.MobileNo,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.MobileNo,
 
-              resStatus: 'Resident',
+              resStatus:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ResidentialStatus === 'RES'
+                  ? 'Resident'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.ResidentialStatus === 'NRI'
+                  ? 'Non-Resident'
+                  : 'Non-Ordinary Resident',
 
               returnType:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
-                  ?.ReturnFileSec === 11
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ReturnFileSec === 11
                   ? 'Original'
                   : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.FilingStatus?.ReturnFileSec === 17
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 17
                   ? 'Revised'
                   : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.FilingStatus?.ReturnFileSec === 12
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 12
                   ? 'After Due Date'
                   : 'Other',
 
               Address:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.ResidenceNo +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.ResidenceName +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.ResidenceNo +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.ResidenceName +
                 ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.CityOrTownOrDistrict +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.CityOrTownOrDistrict +
                 ' ' +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.PinCode,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.PinCode,
 
-              dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+              dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                 ?.PersonalInfo?.DOB,
 
               panNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.PAN,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.PAN,
 
               email:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.EmailAddress,
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.EmailAddress,
 
               itrType: this.itrType,
 
-              orgAckNumber:
-                this.itrType === 'ITR4'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.FilingStatus?.Form10IEAckNo
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.FilingStatus?.Form10IEAckNo
-                    : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.FilingStatus?.ReceiptNo
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.FilingStatus?.ReceiptNo
-                    : 'NA'
-                  : 'NA',
+              orgAckNumber: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PartA_GEN1?.FilingStatus?.ReceiptNo
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.FilingStatus?.ReceiptNo
+                : 'NA',
+
               bankAccountNumber: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
-              ]?.Refund?.BankAccountDtls?.AddtnlBankDetails.find(
+              ]?.PartB_TTI?.Refund?.BankAccountDtls?.AddtnlBankDetails?.find(
                 (item) => item.UseForRefund === 'true'
               )?.BankAccountNo,
               bankName: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
-              ]?.Refund?.BankAccountDtls?.AddtnlBankDetails.find(
+              ]?.PartB_TTI?.Refund?.BankAccountDtls?.AddtnlBankDetails?.find(
                 (item) => item.UseForRefund === 'true'
               )?.BankName,
             },
@@ -2852,10 +2863,13 @@ export class SummaryComponent implements OnInit {
 
                 this.finalCalculations = {
                   personalInfo: {
-                    name:
-                      this.ITR_JSON?.family[0]?.fName +
-                      this.ITR_JSON?.family[0]?.mName +
-                      this.ITR_JSON?.family[0]?.lName,
+                    name: this.ITR_JSON?.family[0]?.fName
+                      ? this.ITR_JSON?.family[0]?.fName
+                      : '' + this.ITR_JSON?.family[0]?.mName
+                      ? this.ITR_JSON?.family[0]?.mName
+                      : '' + this.ITR_JSON?.family[0]?.lName
+                      ? this.ITR_JSON?.family[0]?.lName
+                      : '',
 
                     aadhaarNumber: this.ITR_JSON?.aadharNumber,
 
@@ -3971,10 +3985,13 @@ export class SummaryComponent implements OnInit {
 
               this.finalCalculations = {
                 personalInfo: {
-                  name:
-                    this.ITR_JSON?.family[0]?.fName +
-                    this.ITR_JSON?.family[0]?.mName +
-                    this.ITR_JSON?.family[0]?.lName,
+                  name: this.ITR_JSON?.family[0]?.fName
+                    ? this.ITR_JSON?.family[0]?.fName
+                    : '' + this.ITR_JSON?.family[0]?.mName
+                    ? this.ITR_JSON?.family[0]?.mName
+                    : '' + this.ITR_JSON?.family[0]?.lName
+                    ? this.ITR_JSON?.family[0]?.lName
+                    : '',
 
                   aadhaarNumber: this.ITR_JSON?.aadharNumber,
 
