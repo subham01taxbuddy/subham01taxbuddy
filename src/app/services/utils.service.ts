@@ -1401,11 +1401,23 @@ export class UtilsService {
    */
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
-    itrObject.isItrSummaryJsonEdited = true;
-    const param = `/itr/itr-type`;
-    return this.itrMsService
-      .postMethod(param, itrObject)
-      .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+    if(itrObject.itrSummaryJson) {
+      itrObject.isItrSummaryJsonEdited = true;
+      const param =
+        '/itr/' +
+        itrObject.userId +
+        '/' +
+        itrObject.itrId +
+        '/' +
+        itrObject.assessmentYear;
+      return this.itrMsService.putMethod(param, itrObject);
+    } else {
+      itrObject.isItrSummaryJsonEdited = false;
+      const param = `/itr/itr-type`;
+      return this.itrMsService
+        .postMethod(param, itrObject)
+        .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+    }
   }
 
   saveFinalItrObject(itrObject: ITR_JSON): Observable<any> {
@@ -1417,11 +1429,23 @@ export class UtilsService {
   }
 
   uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
-    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
-    const param = `/itr/itr-type`;
-    return this.itrMsService
-      .postMethod(param, itrObject)
-      .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+    if(itrObject.itrSummaryJson) {
+      itrObject.isItrSummaryJsonEdited = true;
+      const param =
+        '/itr/' +
+        itrObject.userId +
+        '/' +
+        itrObject.itrId +
+        '/' +
+        itrObject.assessmentYear;
+      return this.itrMsService.putMethod(param, itrObject);
+    } else {
+      itrObject.isItrSummaryJsonEdited = false;
+      const param = `/itr/itr-type`;
+      return this.itrMsService
+        .postMethod(param, itrObject)
+        .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+    }
   }
 
   getDueDateDetails() {
