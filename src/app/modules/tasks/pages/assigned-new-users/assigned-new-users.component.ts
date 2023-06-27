@@ -1273,6 +1273,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }

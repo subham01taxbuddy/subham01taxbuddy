@@ -695,6 +695,15 @@ export class ScheduledCallComponent implements OnInit {
           'success',
           'Call status update successfully.'
         );
+        if (statusId === 19) {
+          we_track('Call Status - Follow Up', {
+            'User Number': callInfo.userMobile,
+          });
+        } else if (statusId === 18) {
+          we_track('Call Status - Done', {
+            'User Number': callInfo.userMobile,
+          });
+        }
         setTimeout(() => {
           this.search()
           // this.showScheduleCallList();
@@ -816,6 +825,7 @@ export class ScheduledCallComponent implements OnInit {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }

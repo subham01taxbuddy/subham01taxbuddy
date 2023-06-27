@@ -14,7 +14,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SmeListDropDownComponent } from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
-
+declare function we_track(key: string, value: any);
 export interface User {
   name: string;
   userId: Number;
@@ -625,7 +625,6 @@ export class AssignedSubscriptionComponent implements OnInit {
       data: {
         userId: this.userId,
         mobileNo: this.mobileNumber.value,
-
       },
 
     })
@@ -727,6 +726,7 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }

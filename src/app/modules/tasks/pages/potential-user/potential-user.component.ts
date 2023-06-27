@@ -660,6 +660,9 @@ export class PotentialUserComponent implements OnInit {
       console.log('res after active ', result)
       this.loading = false;
       if (result.success == true) {
+        we_track('Active', {
+          'User number ': data.mobileNumber,
+        });
         this.utilsService.showSnackBar('user activated successfully.');
       } else {
         this.utilsService.showSnackBar('Error while Activate User, Please try again.');
@@ -684,6 +687,7 @@ export class PotentialUserComponent implements OnInit {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }

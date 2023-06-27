@@ -16,7 +16,7 @@ import {AppConstants} from "../../../shared/constants";
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import {ActivatedRoute} from "@angular/router";
-
+declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -997,6 +997,7 @@ export class TaxInvoiceComponent implements OnInit {
 
   getToggleValue(){
     console.log('co-owner toggle',this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
     this.coOwnerCheck = true;}
     else {

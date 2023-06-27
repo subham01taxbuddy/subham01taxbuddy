@@ -6,30 +6,29 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmModel } from '../assigned-subscription.component';
-
+declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-add-subscription',
   templateUrl: './add-subscription.component.html',
   styleUrls: ['./add-subscription.component.scss']
 })
 export class AddSubscriptionComponent implements OnInit {
-  allSubscriptions:any;
-  service:any;
-  serviceDetails:any;
+  allSubscriptions: any;
+  service: any;
+  serviceDetails: any;
   loading!: boolean;
-  loggedInSme:any;
+  loggedInSme: any;
   allPlans: any = [];
   filteredPlans: any = [];
   selectedBtn: any = '';
-  servicesType: any = [{ value: 'ITR' },{ value: 'ITR-U' }, { value: 'NOTICE' }, { value: 'GST' }, { value: 'TPA' }, { value: 'ALL' }];
+  servicesType: any = [{ value: 'ITR' }, { value: 'ITR-U' }, { value: 'NOTICE' }, { value: 'GST' }, { value: 'TPA' }, { value: 'ALL' }];
   subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
   constructor(public dialogRef: MatDialogRef<AddSubscriptionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService)
-    {
-      this.getAllPlanInfo();
-     }
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService) {
+    this.getAllPlanInfo();
+  }
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -60,28 +59,28 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   getUserInfoByMobileNum(number) {
-    console.log('number',number)
-    const loggedInSmeUserId=this?.loggedInSme[0]?.userId
+    console.log('number', number)
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
     this.loading = true;
     let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       console.log('Get user  by mobile number responce: ', response);
-      this.allSubscriptions=response.data
-      console.log("All Sub",this.allSubscriptions)
+      this.allSubscriptions = response.data
+      console.log("All Sub", this.allSubscriptions)
       let smeSelectedPlan = this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan);
       let userSelectedPlan = this.allSubscriptions?.map((item: any) => item?.userSelectedPlan);
-      if(smeSelectedPlan ){
+      if (smeSelectedPlan) {
         this.service = smeSelectedPlan[0]?.servicesType;
         this.serviceDetails = smeSelectedPlan[0]?.name;
-      }else if(userSelectedPlan){
+      } else if (userSelectedPlan) {
         this.service = userSelectedPlan[0]?.servicesType;
         this.serviceDetails = userSelectedPlan[0]?.name;
-      }else{
+      } else {
         this.service = this.allSubscriptions?.map((item: any) => item?.item?.service);
-        this.serviceDetails = this.allSubscriptions?.map((item:any) => item?.item?.serviceDetail);
+        this.serviceDetails = this.allSubscriptions?.map((item: any) => item?.item?.serviceDetail);
       }
-      console.log("services of user",this.service)
+      console.log("services of user", this.service)
     })
   }
 
@@ -93,7 +92,7 @@ export class AddSubscriptionComponent implements OnInit {
   // }
 
   createSubscription() {
-    this.loading=true
+    this.loading = true
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
       console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
       let param = '/subscription/recalculate';
@@ -106,20 +105,24 @@ export class AddSubscriptionComponent implements OnInit {
       }
       console.log('Req Body: ', reqBody)
       this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
-        this.loading=false
+        this.loading = false
+        we_track('Create Subscription', {
+          'User Number': this.data.mobileNo,
+          'Service': this.selectedPlanInfo?.servicesType + ' : ' + this.selectedPlanInfo?.name,
+        });
         console.log('After subscription plan added res:', res);
         this.dialogRef.close({ event: 'close', data: res });
         this.toastMessage.alert("success", "Subscription created successfully.")
         let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
         console.log('subInfo: ', subInfo)
       }, error => {
-        this.loading=false
+        this.loading = false
         console.log('error -> ', error);
         this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
       })
     }
     else {
-      this.loading=false
+      this.loading = false
       this.toastMessage.alert("error", "Select Plan.")
     }
   }

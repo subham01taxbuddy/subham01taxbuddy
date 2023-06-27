@@ -620,7 +620,7 @@ export class FilingsComponent implements OnInit {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
             <i class="fa fa-check-circle" title="Click to check the latest E-verification status"
-            aria-hidden="true" data-action-type="ackDetails"></i>
+            aria-hidden="true" data-action-type="eriAckDetails"></i>
            </button>`;
           }
         },
@@ -747,6 +747,10 @@ export class FilingsComponent implements OnInit {
           this.getAcknowledgeDetail(params.data);
           break;
         }
+        case 'eriAckDetails': {
+          this.getEriAcknowledgeDetail(params.data);
+          break;
+        }
         case 'lifeCycle': {
           this.eriITRLifeCycleStatus(params.data);
           break;
@@ -813,6 +817,9 @@ export class FilingsComponent implements OnInit {
         name: data?.fName + ' ' + data?.lName,
       },
     });
+    we_track('Actions', {
+      'User Number': data.contactNumber,
+    });
     // if (data.statusId !== 11) {
     //   this.router.navigate(['/eri'], {
     //     state:
@@ -842,6 +849,9 @@ export class FilingsComponent implements OnInit {
   }
   openReviseReturnDialog(data) {
     console.log('Data for revise return ', data);
+    we_track('Actions', {
+      'User Number': data.contactNumber,
+    });
     let disposable = this.dialog.open(ReviseReturnDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -863,6 +873,42 @@ export class FilingsComponent implements OnInit {
   }
 
   getAcknowledgeDetail(data) {
+    we_track('Actions', {
+      'User Number': data.contactNumber,
+    });
+    console.log(data);
+    let disposable = this.dialog.open(EVerificationDialogComponent, {
+      data: {
+        pan: data.panNumber,
+        ay: data.assessmentYear.substring(0, 4),
+        ackNum: data.ackNumber,
+        formCode: data.itrType,
+        name: data.fName + ' ' + data.lName,
+        userId: data.userId,
+        assessmentYear: data.assessmentYear,
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('New Bank Dialog', result);
+      if (result?.data === 'ONLINE') {
+        this.utilsService.showSnackBar(
+          'E-Verification status updated successfully'
+        );
+        this.myItrsList(
+          // this.selectedFyYear,
+          this.selectedPageNo,
+          this.selectedFilingTeamMemberId
+        );
+      } else if (result?.data === 'MANUAL') {
+        this.markAsEverified(data);
+      }
+    });
+  }
+
+  getEriAcknowledgeDetail(data) {
+    we_track('E-verify ', {
+      'User Number': data.contactNumber,
+    });
     console.log(data);
     let disposable = this.dialog.open(EVerificationDialogComponent, {
       data: {
@@ -1119,6 +1165,9 @@ export class FilingsComponent implements OnInit {
   }
 
   eriITRLifeCycleStatus(data) {
+    we_track('E-verify ', {
+      'User Number': data.contactNumber,
+    });
     console.log(data);
     const param = `/eri/v1/api`;
     let headerObj = {
@@ -1169,6 +1218,7 @@ export class FilingsComponent implements OnInit {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }
