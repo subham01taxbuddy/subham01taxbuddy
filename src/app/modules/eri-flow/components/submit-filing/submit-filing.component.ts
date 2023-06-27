@@ -1,4 +1,3 @@
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UpdateManualFilingDialogComponent } from '../../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
