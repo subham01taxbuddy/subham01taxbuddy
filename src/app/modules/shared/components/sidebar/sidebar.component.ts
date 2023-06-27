@@ -145,7 +145,7 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         {name:'Payouts',url:'/payouts',roles:[]},
-        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN', 'ROLE_LEADER']}
+        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN']}
       ]
     },
     {
@@ -192,7 +192,7 @@ export class SidebarComponent{
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
         { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
-        { name: 'Payout Report', url: '/reports/revenue-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        // { name: 'Payout Report', url: '/reports/revenue-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     }
   ];
