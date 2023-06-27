@@ -326,7 +326,7 @@ export class PerformaInvoiceComponent implements OnInit {
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
       // this.getInvoice('','agentId');
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
       // this.getInvoice('','agentId');
     } else {
@@ -468,13 +468,13 @@ export class PerformaInvoiceComponent implements OnInit {
     // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed&searchAsCoOwner=true&ownerUserId=7522
     //https://uat-api.taxbuddy.com/report/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-30&page=0&pageSize=20&ownerUserId=7521&paymentStatus=Unpaid,Failed
 
-    this.loading=true;
+    this.loading = true;
     let loggedInId = this.utilService.getLoggedInUserID();
-    if(this.roles?.includes('ROLE_OWNER')){
-      this.ownerId=loggedInId;
+    if (this.roles?.includes('ROLE_OWNER')) {
+      this.ownerId = loggedInId;
     }
-    if(this.roles?.includes('ROLE_FILER')){
-      this.filerId=loggedInId;
+    if (this.roles?.includes('ROLE_FILER')) {
+      this.filerId = loggedInId;
     }
     let data = this.utilService.createUrlParams(this.searchParam);
     let status = this.status.value;
@@ -1070,6 +1070,9 @@ export class PerformaInvoiceComponent implements OnInit {
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
+        we_track('Send Reminder', {
+          'User number ': data.phone,
+        });
         console.log('Email sent response: ', result);
         this._toastMessageService.alert(
           'success',
@@ -1088,6 +1091,9 @@ export class PerformaInvoiceComponent implements OnInit {
 
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
+    we_track('Proforma Invoice Download', {
+      'User number': data.phone,
+    });
     location.href =
       environment.url +
       `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
