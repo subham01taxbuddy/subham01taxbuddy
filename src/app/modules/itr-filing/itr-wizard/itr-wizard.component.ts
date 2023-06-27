@@ -23,6 +23,7 @@ import { UserNotesComponent } from '../../shared/components/user-notes/user-note
 import { MatDialog } from '@angular/material/dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
+import {ReviewService} from "../../review/services/review.service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -47,6 +48,7 @@ export class ItrWizardComponent implements OnInit {
   customerName = '';
 
   constructor(
+    private reviewService:ReviewService,
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
@@ -426,13 +428,13 @@ export class ItrWizardComponent implements OnInit {
     }
     this.loading = true;
     let customerNumber = this.ITR_JSON.contactNumber;
-    const param = `/prod/call-support/call`;
+    const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
       customer_number: customerNumber,
     };
     console.log('reqBody:', reqBody);
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
+    this.reviewService.postMethod(param, reqBody).subscribe(
       (result: any) => {
         console.log('Call Result: ', result);
         this.loading = false;
