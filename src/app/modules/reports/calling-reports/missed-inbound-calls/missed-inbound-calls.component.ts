@@ -44,8 +44,9 @@ export class MissedInboundCallsComponent implements OnInit {
   startDate = new FormControl('');
   endDate = new FormControl('');
   status = new FormControl('');
-  minEndDate = new Date(2023, 3, 1);
-  maxDate = new Date(2024, 2, 31);
+  minEndDate = new Date();
+  maxStartDate = new Date();
+  maxDate = new Date(2024,2,31);
   minDate = new Date(2023, 3, 1);
   missedInboundCallingReport: any;
   config: any;

@@ -42,7 +42,8 @@ export class DashboardComponent implements OnInit {
   // minDate = new Date(2023, 3, 1);
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  minEndDate:string ='2023-04-01'
+  maxStartDate = new Date().toISOString().slice(0, 10);
+  minEndDate= new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
   invoiceData: any;
@@ -192,8 +193,8 @@ export class DashboardComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         // this.docUploadedData=null;
-        this.docUploadedData = response.data;
-        this.config.docUpload.totalItems = response.data.totalElements;
+        this.docUploadedData = response?.data;
+        this.config.docUpload.totalItems = response?.data?.totalElements;
 
       } else {
         this.loading = false;
@@ -214,8 +215,8 @@ export class DashboardComponent implements OnInit {
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
-        this.summaryConfirmationData = response.data;
-        this.config.summaryConfirmation.totalItems = response.data.totalElements;
+        this.summaryConfirmationData = response?.data;
+        this.config.summaryConfirmation.totalItems = response?.data?.totalElements;
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
@@ -241,8 +242,8 @@ export class DashboardComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         if (response.success) {
-          this.eVerificationPendingData = response.data;
-          this.config.eVerificationPending.totalItems = response.data.totalElements;
+          this.eVerificationPendingData = response?.data;
+          this.config.eVerificationPending.totalItems = response?.data?.totalElements;
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
@@ -270,8 +271,8 @@ export class DashboardComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.scheduleCallData = response.data;
-        this.config.scheduleCall.totalItems = response.data.totalElements;
+        this.scheduleCallData = response?.data;
+        this.config.scheduleCall.totalItems = response?.data?.totalElements;
 
       } else {
         this.loading = false;
@@ -325,7 +326,7 @@ export class DashboardComponent implements OnInit {
         this._toastMessageService.alert("error", response.message);
       }
       if (response.success) {
-        this.itrOverview = response.data;
+        this.itrOverview = response?.data;
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);

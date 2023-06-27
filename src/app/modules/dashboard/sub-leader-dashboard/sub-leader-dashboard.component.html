@@ -28,7 +28,7 @@
           <div>
             <label for="start-date">Start Date:</label>
             <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
-              [min]="minDate" [max]="maxDate" (change)="setEndDateValidate(this.startDate)">
+              [min]="minDate" [max]="maxStartDate" (change)="setEndDateValidate(this.startDate)">
           </div>
         </div>
         <div class="col-sm-2">
@@ -249,280 +249,358 @@
         </div>
     </div>
 
-    <!-- Tables Start
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="radiusTab">
-                <div class="tx">Document Uploaded but filing not yet started</div>
-                <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User Name</th>
-                            <th scope="col">Contact Number</th>
-                            <th scope="col">Doc Upload Date</th>
-                            <th scope="col">Payment Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Revati Laghate</td>
-                            <td>9869550196</td>
-                            <td>13/03/2022</td>
-                            <td class="unpaid">Unpaid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Talwinder Singh</td>
-                            <td>9781519460</td>
-                            <td>03/12/2022</td>
-                            <td>Paid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Sumit Kumar</td>
-                            <td>9717362887</td>
-                            <td>13/03/2022</td>
-                            <td class="unpaid">Unpaid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Prakash Chim</td>
-                            <td>8956917455</td>
-                            <td>13/03/2022</td>
-                            <td>Paid</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Anupama Ps</td>
-                            <td>8113002109</td>
-                            <td>03/03/2022</td>
-                            <td class="unpaid">Unpaid</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <nav aria-label="..." class="float-right">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+     <!-- Tables Start -->
+     <div class="row" *ngIf="showTables">
+      <div class="col-sm-6">
+      <div class="radiusTab">
+          <div class="tx">Document Uploaded but filing not yet started</div>
+          <button class="proceed" [disabled]="loading" (click)="goTo('myUsers')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+        <table class="table table-bordered">
+          <thead>
+            <!-- <tr>
+              <th scope="col">#</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Contact Number</th>
+              <th scope="col">Doc Upload Date</th>
+              <th scope="col">Payment Status</th>
+            </tr> -->
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Contact Number</th>
+              <th scope="col">Doc Upload Date</th>
+              <th scope="col">Payment Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of docUploadedData?.content | paginate:config.docUpload; let i = index">
+              <td>{{ i+1 }}</td>
+              <td>{{ item.userName }}</td>
+              <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
+              <td>{{ item.docUploadDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+              <td [ngClass]="{'text-danger': item.paymentStatus === 'Unpaid'}">{{ item.paymentStatus }}</td>
+            </tr>
+            <tr *ngIf="docUploadedData?.content?.length === 0">
+              <td colspan="5" class="text-center">
+                No Records Found
+              </td>
+            </tr>
+            <!-- <tr>
+              <th scope="row">1</th>
+              <td>Revati Laghate</td>
+              <td>9869550196</td>
+              <td>13/03/2022</td>
+              <td class="unpaid">Unpaid</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Talwinder Singh</td>
+              <td>9781519460</td>
+              <td>03/12/2022</td>
+              <td>Paid</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Sumit Kumar</td>
+              <td>9717362887</td>
+              <td>13/03/2022</td>
+              <td class="unpaid">Unpaid</td>
+            </tr>
+            <tr>
+              <th scope="row">4</th>
+              <td>Prakash Chim</td>
+              <td>8956917455</td>
+              <td>13/03/2022</td>
+              <td>Paid</td>
+            </tr>
+            <tr>
+              <th scope="row">5</th>
+              <td>Anupama Ps</td>
+              <td>8113002109</td>
+              <td>03/03/2022</td>
+              <td class="unpaid">Unpaid</td>
+            </tr> -->
+          </tbody>
+        </table>
+        <pagination-controls *ngIf="docUploadedData?.content?.length > 0" id="pagination1" class="pagination" (pageChange)="pageChanged($event,'docUpload')"></pagination-controls>
+        <!-- <nav aria-label="..." class="float-right">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav> -->
 
-            </div>
+      </div>
+      </div>
+      <div class="col-sm-6">
+      <div class="radiusTab">
+          <div class="tx">Waiting for Confirmation - As On ({{ today | date:'dd MMMM yyyy' }})</div>
+          <button class="proceed" [disabled]="loading" (click)="goTo('myItr')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+        <table class="table table-bordered">
+          <thead>
+            <!-- <tr>
+              <th scope="col">#</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Contact Number</th>
+              <th scope="col">Summary Sent Date</th>
+              <th scope="col">Confirmation & Status</th>
+            </tr> -->
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Contact Number</th>
+              <th scope="col">Summary Sent Date</th>
+              <th scope="col">Confirmation & Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of summaryConfirmationData?.content | paginate:config.summaryConfirmation; let i = index">
+              <td>{{ i+1 }}</td>
+              <td>{{ item.userName }}</td>
+              <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
+              <td>{{ item.summarySentDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+              <td>{{ item.userConfirmationStatus }}</td>
+            </tr>
+            <tr *ngIf="summaryConfirmationData?.content?.length === 0">
+              <td colspan="5" class="text-center">
+                No Records Found
+              </td>
+            </tr>
+            <!-- <tr>
+              <th scope="row">1</th>
+              <td>Revati Laghate</td>
+              <td>9869550196</td>
+              <td>13/03/2022</td>
+              <td>CNF, Filing Pending</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Talwinder Singh</td>
+              <td>9781519460</td>
+              <td>03/12/2022</td>
+              <td>Awaiting CNF</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Sumit Kumar</td>
+              <td>9717362887</td>
+              <td>13/03/2022</td>
+              <td>CNF, Filing Pending</td>
+            </tr>
+            <tr>
+              <th scope="row">4</th>
+              <td>Prakash Chim</td>
+              <td>8956917455</td>
+              <td>13/03/2022</td>
+              <td>Awaiting CNF</td>
+            </tr>
+            <tr>
+              <th scope="row">5</th>
+              <td>Anupama Ps</td>
+              <td>8113002109</td>
+              <td>03/03/2022</td>
+              <td>Awaiting CNF</td>
+            </tr> -->
+          </tbody>
+        </table>
+        <pagination-controls *ngIf="summaryConfirmationData?.content?.length > 0" id="pagination2" class="pagination" (pageChange)="pageChanged($event,'summaryConfirmation')"></pagination-controls>
+        <!-- <nav aria-label="..." class="float-right">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav> -->
+
+      </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="radiusTab">
+            <div class="tx">ITR Filed E- verification Pending</div>
+            <button class="proceed" [disabled]="loading" (click)="goTo('myItr1')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+          <table class="table table-bordered">
+            <thead>
+              <!-- <tr>
+                <th scope="col">#</th>
+                <th scope="col">User Name</th>
+                <th scope="col">Contact Number</th>
+                <th scope="col">ITR Filed date</th>
+               </tr> -->
+               <tr>
+                <th scope="col">#</th>
+                <th scope="col">User Name</th>
+                <th scope="col">Contact Number</th>
+                <th scope="col">ITR Filed date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of eVerificationPendingData?.content | paginate:config.eVerificationPending; let i = index">
+                <td>{{ i+1 }}</td>
+                <td>{{ item.userName }}</td>
+                <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{ item.contactNumber }}</a></td>
+                <td>{{ item.itrFiledDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+              </tr>
+              <tr *ngIf="eVerificationPendingData?.content?.length === 0">
+                <td colspan="4" class="text-center">
+                  No Records Found
+                </td>
+              </tr>
+              <!-- <tr>
+                <th scope="row">1</th>
+                <td>Revati Laghate</td>
+                <td>9869550196</td>
+                <td>03/12/2022</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Talwinder Singh</td>
+                <td>9781519460</td>
+                <td>03/12/2022</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Sumit Kumar</td>
+                <td>9717362887</td>
+                <td>13/03/2022</td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Prakash Chim</td>
+                <td>8956917455</td>
+                <td>13/03/2022</td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Anupama Ps</td>
+                <td>8113002109</td>
+                <td>03/03/2022</td>
+              </tr> -->
+            </tbody>
+          </table>
+          <pagination-controls *ngIf="eVerificationPendingData?.content?.length > 0" id="pagination3" class="pagination" (pageChange)="pageChanged($event,'eVerificationPending')"></pagination-controls>
+          <!-- <nav aria-label="..." class="float-right">
+            <ul class="pagination">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav> -->
+
+        </div>
         </div>
         <div class="col-sm-6">
-            <div class="radiusTab">
-                <div class="tx">Waiting for Confirmation</div>
-                <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User Name</th>
-                            <th scope="col">Contact Number</th>
-                            <th scope="col">Summary Sent Date</th>
-                            <th scope="col">Confirmation & Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Revati Laghate</td>
-                            <td>9869550196</td>
-                            <td>13/03/2022</td>
-                            <td>CNF, Filing Pending</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Talwinder Singh</td>
-                            <td>9781519460</td>
-                            <td>03/12/2022</td>
-                            <td>Awaiting CNF</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Sumit Kumar</td>
-                            <td>9717362887</td>
-                            <td>13/03/2022</td>
-                            <td>CNF, Filing Pending</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Prakash Chim</td>
-                            <td>8956917455</td>
-                            <td>13/03/2022</td>
-                            <td>Awaiting CNF</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Anupama Ps</td>
-                            <td>8113002109</td>
-                            <td>03/03/2022</td>
-                            <td>Awaiting CNF</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <nav aria-label="..." class="float-right">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+          <div class="radiusTab">
+              <div class="tx">Scheduled Calls</div>
+              <button class="proceed" [disabled]="loading" (click)="goTo('scheduleCall')">Proceed <i class="fa fa-long-arrow-right"></i></button>
+            <table class="table table-bordered">
+              <thead>
+                <!-- <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">User Name</th>
+                  <th scope="col">Contact Number</th>
+                  <th scope="col">Schedule Call Date</th>
+                  <th scope="col">Time</th>
+                 </tr> -->
+                 <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">User Name</th>
+                  <th scope="col">Contact Number</th>
+                  <th scope="col">Schedule Call Date Time</th>
+                  <!-- <th scope="col">Time</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of scheduleCallData?.content | paginate:config.scheduleCall; let i = index;">
+                  <td>{{ i+1 }}</td>
+                  <td>{{ item.userName }}</td>
+                  <td><a [routerLink]="['/tasks/schedule-call']" [queryParams]="{mobileNumber: item.userMobile}">{{ item.userMobile }}</a></td>
+                  <!-- <td>{{ item.userMobile }}</td> -->
+                  <td>{{ item.scheduleCallTime | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+                </tr>
+                <tr *ngIf="scheduleCallData?.content?.length === 0">
+                  <td colspan="4" class="text-center">
+                    No Records Found
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <th scope="row">1</th>
+                  <td>Revati Laghate</td>
+                  <td>9869550196</td>
+                  <td>03/12/2022</td>
+                  <td>Null</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Talwinder Singh</td>
+                  <td>9781519460</td>
+                  <td>03/12/2022</td>
+                  <td>Null</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Sumit Kumar</td>
+                  <td>9717362887</td>
+                  <td>13/03/2022</td>
+                  <td>Null</td>
+                </tr>
+                <tr>
+                  <th scope="row">4</th>
+                  <td>Prakash Chim</td>
+                  <td>8956917455</td>
+                  <td>13/03/2022</td>
+                  <td>Null</td>
+                </tr>
+                <tr>
+                  <th scope="row">5</th>
+                  <td>Anupama Ps</td>
+                  <td>8113002109</td>
+                  <td>03/03/2022</td>
+                  <td>Null</td>
+                </tr> -->
+              </tbody>
+            </table>
+            <pagination-controls *ngIf="scheduleCallData?.content?.length > 0" id="pagination4" class="pagination" (pageChange)="pageChanged($event,'scheduleCall')"></pagination-controls>
+            <!-- <nav aria-label="..." class="float-right">
+              <ul class="pagination">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav> -->
 
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="radiusTab">
-                <div class="tx">ITR Filed E- verification Pending</div>
-                <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User Name</th>
-                            <th scope="col">Contact Number</th>
-                            <th scope="col">ITR Filed date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Revati Laghate</td>
-                            <td>9869550196</td>
-                            <td>03/12/2022</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Talwinder Singh</td>
-                            <td>9781519460</td>
-                            <td>03/12/2022</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Sumit Kumar</td>
-                            <td>9717362887</td>
-                            <td>13/03/2022</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Prakash Chim</td>
-                            <td>8956917455</td>
-                            <td>13/03/2022</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Anupama Ps</td>
-                            <td>8113002109</td>
-                            <td>03/03/2022</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <nav aria-label="..." class="float-right">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+          </div>
+          </div>
 
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="radiusTab">
-                <div class="tx">Scheduled Calls</div>
-                <button class="proceed">Proceed <i class="fa fa-long-arrow-right"></i></button>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User Name</th>
-                            <th scope="col">Contact Number</th>
-                            <th scope="col">Schedule Call Date</th>
-                            <th scope="col">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Revati Laghate</td>
-                            <td>9869550196</td>
-                            <td>03/12/2022</td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Talwinder Singh</td>
-                            <td>9781519460</td>
-                            <td>03/12/2022</td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Sumit Kumar</td>
-                            <td>9717362887</td>
-                            <td>13/03/2022</td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Prakash Chim</td>
-                            <td>8956917455</td>
-                            <td>13/03/2022</td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Anupama Ps</td>
-                            <td>8113002109</td>
-                            <td>03/03/2022</td>
-                            <td>Null</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <nav aria-label="..." class="float-right">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-
-            </div>
-        </div>
-
-    </div> -->
+    </div>
     <!-- Tables Ends -->
 
 
