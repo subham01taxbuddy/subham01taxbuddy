@@ -28,10 +28,8 @@ import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
-import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-tooltip.component";
-
+import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 declare function we_track(key: string, value: any);
-
 @Component({
   selector: 'app-assigned-new-users',
   templateUrl: './assigned-new-users.component.html',
@@ -240,6 +238,37 @@ export class AssignedNewUsersComponent implements OnInit {
         break;
       }
     }
+  }
+
+  checkSubscription(data: any){
+    let itrSubscriptionFound = false;
+    const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    this.loading = true;
+    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + data?.mobileNumber;
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.data instanceof Array && response.data.length > 0) {
+        console.log(response);
+        response.data.forEach((item: any) => {
+          let smeSelectedPlan = item?.smeSelectedPlan;
+          let userSelectedPlan = item?.userSelectedPlan;
+          if(smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR'){
+             itrSubscriptionFound = true;
+             return;
+          }else if(userSelectedPlan && userSelectedPlan.servicesType === 'ITR'){
+            itrSubscriptionFound = true;
+            return;
+          }
+        });
+        if(itrSubscriptionFound){
+          this.startFiling(data);
+        } else {
+          this.utilsService.showSnackBar('Please make sure the subscription is created for user before start filing.');
+        }
+      } else {
+        this.utilsService.showSnackBar('Please make sure the subscription is created for user before start filing.');
+      }
+    });
   }
 
   async getMasterStatusList() {
@@ -846,7 +875,7 @@ export class AssignedNewUsersComponent implements OnInit {
           break;
         }
         case 'startFiling': {
-          this.startFiling(params.data);
+          this.checkSubscription(params.data);
           break;
         }
         case 'startRevise': {

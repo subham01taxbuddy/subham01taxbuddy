@@ -38,7 +38,7 @@ export class PayoutsComponent implements OnInit {
     {value: '', name: 'All'},
     {value: 'APPROVED', name: 'Approved'},
     {value: 'NOT_APPROVED', name: 'Yet To Approve'},
-
+    {value: 'DISAPPROVED', name: 'Disapproved'}
   ];
   paymentStatusList =[
     {value: '', name: 'All'},
@@ -469,7 +469,7 @@ export class PayoutsComponent implements OnInit {
       {
         headerName: 'Payout Status',
         field: 'commissionPaymentStatus',
-        width: 120,
+        width: 100,
         suppressMovable: true,
         pinned: 'right',
         cellStyle: { textAlign: 'center' },
@@ -537,7 +537,7 @@ export class PayoutsComponent implements OnInit {
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 85,
+        width: 75,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -582,7 +582,33 @@ export class PayoutsComponent implements OnInit {
             <i class="fa-regular fa-receipt" style="color: #ff9500;" data-action-type="invoice"></i>
            </button>`;
         },
-        width: 85,
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Disapprove Payout',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if (params.data.commissionPaymentStatus == 'Unpaid' && params.data.commissionPaymentApprovalStatus == 'APPROVED'){
+            return `<button type="button" class="action_icon add_button" title="disapprove payout " style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fas fa-thumbs-down" style="color: #00ff00;" data-action-type="disapprove"></i>
+           </button>`;
+          }else{
+            return '-';
+          }
+        },
+        width: 95,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -631,6 +657,10 @@ export class PayoutsComponent implements OnInit {
         }
         case 'open-chat': {
           this.openChat(params.data);
+          break;
+        }
+        case 'disapprove': {
+          this.disApprovePayOut(params.data);
           break;
         }
       }
@@ -699,6 +729,33 @@ export class PayoutsComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  disApprovePayOut(data){
+    // http://localhost:9050/itr/dashboard/status?invoiceNumber=SSBA%2F2023%2F4364&status=DISAPPROVED'
+    this.loading = true;
+    if (data.invoiceNo) {
+      let param = `/dashboard/status?invoiceNumber=${data.invoiceNo}&status=DISAPPROVED`;
+
+      this.itrMsService.putMethod(param).subscribe(
+        (result: any) => {
+          this.loading = false;
+          if (result.success) {
+            this.utilsService.showSnackBar('status changed to disapproved');
+            this.serviceCall('');
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Error in disapproved request. Please try after some time.'
+          );
+        }
+      );
+    } else {
+      this.loading = false;
+      this.utilsService.showSnackBar('invoice Number not available');
+    }
   }
 
   resetFilters(){
