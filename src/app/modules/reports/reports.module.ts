@@ -14,6 +14,7 @@ import { JsonToCsvService } from '../shared/services/json-to-csv.service';
 import { ItrFilingReportComponent } from './itr-filing-report/itr-filing-report.component';
 import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
 import { RevenueReportComponent } from './revenue-report/revenue-report.component';
+import { PayoutReportComponent } from './payout-report/payout-report.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { RevenueReportComponent } from './revenue-report/revenue-report.componen
     ScheduleCallReportComponent,
     ItrFilingReportComponent,
     MissedChatReportComponent,
-    RevenueReportComponent
+    RevenueReportComponent,
+    PayoutReportComponent,
   ],
   entryComponents: [
     ReportsComponent,
