@@ -1,3 +1,6 @@
+import {Injectable} from "@angular/core";
+
+@Injectable()
 export class Schedules {
   public PERSONAL_INFO = 'personalInfo';
   public OTHER_SOURCES = 'otherSources';

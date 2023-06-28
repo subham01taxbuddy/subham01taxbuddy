@@ -47,7 +47,8 @@ export class ItrFilingReportComponent implements OnInit {
   endDate = new FormControl('');
   leaderView = new FormControl('');
   ownerView = new FormControl('');
-  minEndDate = new Date(2023, 3, 1);
+  minEndDate = new Date();
+  maxStartDate =new Date();
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   itrFillingReport: any;

@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { SmeListComponent } from './sme-list.component';
+import { PayoutReportComponent } from './payout-report.component';
 
-describe('SmeListComponent', () => {
-  let component: SmeListComponent;
-  let fixture: ComponentFixture<SmeListComponent>;
+describe('PayoutReportComponent', () => {
+  let component: PayoutReportComponent;
+  let fixture: ComponentFixture<PayoutReportComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SmeListComponent ]
+      declarations: [ PayoutReportComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SmeListComponent);
+    fixture = TestBed.createComponent(PayoutReportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

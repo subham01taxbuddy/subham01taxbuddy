@@ -167,6 +167,21 @@ export class SummaryComponent implements OnInit {
   finalSummary: any;
 
   finalCalculations: {
+    personalInfo: {
+      name: any;
+      aadhaarNumber: any;
+      mobileNumber: any;
+      resStatus: any;
+      returnType: any;
+      Address: any;
+      dob: any;
+      panNumber: any;
+      email: any;
+      itrType: any;
+      orgAckNumber: any;
+      bankAccountNumber: any;
+      bankName: any;
+    };
     salary: {
       employers: [
         {
@@ -541,6 +556,97 @@ export class SummaryComponent implements OnInit {
         if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
           // console.log(this.finalSummary, 'this.finalSummary');
           this.finalCalculations = {
+            personalInfo: {
+              name: `${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AssesseeName?.FirstName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.FirstName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AssesseeName?.MiddleName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.MiddleName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AssesseeName?.SurNameOrOrgName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName + ' '
+                  : ''
+              }`,
+
+              aadhaarNumber:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AadhaarCardNo,
+
+              mobileNumber:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Address?.MobileNo,
+
+              resStatus: 'Resident',
+
+              returnType:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                  ?.ReturnFileSec === 11
+                  ? 'Original'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.FilingStatus?.ReturnFileSec === 17
+                  ? 'Revised'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.FilingStatus?.ReturnFileSec === 12
+                  ? 'After Due Date'
+                  : 'Other',
+
+              Address:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Address?.ResidenceNo +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Address?.ResidenceName +
+                ' ' +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Address?.CityOrTownOrDistrict +
+                ' ' +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Address?.PinCode,
+
+              dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PersonalInfo?.DOB,
+
+              panNumber:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.PAN,
+
+              email:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Address?.EmailAddress,
+
+              itrType: this.itrType,
+
+              orgAckNumber:
+                this.itrType === 'ITR4'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.FilingStatus?.Form10IEAckNo
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.FilingStatus?.Form10IEAckNo
+                    : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.FilingStatus?.ReceiptNo
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.FilingStatus?.ReceiptNo
+                    : 'NA'
+                  : 'NA',
+              bankAccountNumber: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.Refund?.BankAccountDtls?.AddtnlBankDetails.find(
+                (item) => item.UseForRefund === 'true'
+              )?.BankAccountNo,
+              bankName: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.Refund?.BankAccountDtls?.AddtnlBankDetails.find(
+                (item) => item.UseForRefund === 'true'
+              )?.BankName,
+            },
             salary: {
               employers: [
                 {
@@ -1506,7 +1612,7 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund
                 ?.RefundDue,
           };
-          // console.log(this.finalCalculations, 'finalCalculations');
+          console.log(this.finalCalculations, 'finalCalculations');
 
           this.keys = {
             // EXEMPT INCOME
@@ -1530,6 +1636,99 @@ export class SummaryComponent implements OnInit {
           this.loading = false;
         } else if (this.itrType === 'ITR2' || this.itrType === 'ITR3') {
           this.finalCalculations = {
+            personalInfo: {
+              name: `${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.FirstName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.FirstName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.MiddleName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName?.MiddleName + ' '
+                  : ''
+              }${
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AssesseeName?.SurNameOrOrgName
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.PersonalInfo?.AssesseeName
+                      ?.SurNameOrOrgName + ' '
+                  : ''
+              }`,
+
+              aadhaarNumber:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AadhaarCardNo,
+
+              mobileNumber:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.MobileNo,
+
+              resStatus:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ResidentialStatus === 'RES'
+                  ? 'Resident'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.ResidentialStatus === 'NRI'
+                  ? 'Non-Resident'
+                  : 'Non-Ordinary Resident',
+
+              returnType:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ReturnFileSec === 11
+                  ? 'Original'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 17
+                  ? 'Revised'
+                  : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 12
+                  ? 'After Due Date'
+                  : 'Other',
+
+              Address:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.ResidenceNo +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.ResidenceName +
+                ' ' +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.CityOrTownOrDistrict +
+                ' ' +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.PinCode,
+
+              dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                ?.PersonalInfo?.DOB,
+
+              panNumber:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.PAN,
+
+              email:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Address?.EmailAddress,
+
+              itrType: this.itrType,
+
+              orgAckNumber: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PartA_GEN1?.FilingStatus?.ReceiptNo
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                    ?.FilingStatus?.ReceiptNo
+                : 'NA',
+
+              bankAccountNumber: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.PartB_TTI?.Refund?.BankAccountDtls?.AddtnlBankDetails?.find(
+                (item) => item.UseForRefund === 'true'
+              )?.BankAccountNo,
+              bankName: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.PartB_TTI?.Refund?.BankAccountDtls?.AddtnlBankDetails?.find(
+                (item) => item.UseForRefund === 'true'
+              )?.BankName,
+            },
             salary: {
               employers: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
@@ -2674,6 +2873,57 @@ export class SummaryComponent implements OnInit {
                 });
 
                 this.finalCalculations = {
+                  personalInfo: {
+                    name: this.ITR_JSON?.family[0]?.fName
+                      ? this.ITR_JSON?.family[0]?.fName
+                      : '' + this.ITR_JSON?.family[0]?.mName
+                      ? this.ITR_JSON?.family[0]?.mName
+                      : '' + this.ITR_JSON?.family[0]?.lName
+                      ? this.ITR_JSON?.family[0]?.lName
+                      : '',
+
+                    aadhaarNumber: this.ITR_JSON?.aadharNumber,
+
+                    mobileNumber: this.ITR_JSON?.contactNumber,
+
+                    resStatus: this.ITR_JSON?.residentialStatus,
+
+                    returnType:
+                      this.ITR_JSON.isDefective === 'Y'
+                        ? 'Defective'
+                        : this.ITR_JSON?.isRevised === 'Y'
+                        ? 'Revised'
+                        : 'Original',
+
+                    Address:
+                      this.ITR_JSON.address?.flatNo +
+                      this.ITR_JSON.address?.premisesName +
+                      this.ITR_JSON.address?.area +
+                      this.ITR_JSON.address?.city +
+                      '' +
+                      this.ITR_JSON.address?.pinCode,
+
+                    dob: this.ITR_JSON?.family[0]?.dateOfBirth,
+
+                    panNumber: this.ITR_JSON?.panNumber,
+
+                    email: this.ITR_JSON?.email,
+
+                    itrType: this.ITR_JSON?.itrType,
+
+                    orgAckNumber: this.utilsService.isNonEmpty(
+                      this.ITR_JSON?.ackNumber
+                    )
+                      ? this.ITR_JSON?.ackNumber
+                      : 'NA',
+
+                    bankAccountNumber: this.ITR_JSON.bankDetails.find(
+                      (item) => item.hasRefund === true
+                    )?.accountNumber,
+                    bankName: this.ITR_JSON.bankDetails.find(
+                      (item) => item.hasRefund === true
+                    )?.name,
+                  },
                   salary: {
                     employers:
                       this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
@@ -3749,6 +3999,57 @@ export class SummaryComponent implements OnInit {
               this.loading = false;
 
               this.finalCalculations = {
+                personalInfo: {
+                  name: this.ITR_JSON?.family[0]?.fName
+                    ? this.ITR_JSON?.family[0]?.fName
+                    : '' + this.ITR_JSON?.family[0]?.mName
+                    ? this.ITR_JSON?.family[0]?.mName
+                    : '' + this.ITR_JSON?.family[0]?.lName
+                    ? this.ITR_JSON?.family[0]?.lName
+                    : '',
+
+                  aadhaarNumber: this.ITR_JSON?.aadharNumber,
+
+                  mobileNumber: this.ITR_JSON?.contactNumber,
+
+                  resStatus: this.ITR_JSON?.residentialStatus,
+
+                  returnType:
+                    this.ITR_JSON.isDefective === 'Y'
+                      ? 'Defective'
+                      : this.ITR_JSON?.isRevised === 'Y'
+                      ? 'Revised'
+                      : 'Original',
+
+                  Address:
+                    this.ITR_JSON.address?.flatNo +
+                    this.ITR_JSON.address?.premisesName +
+                    this.ITR_JSON.address?.area +
+                    this.ITR_JSON.address?.city +
+                    '' +
+                    this.ITR_JSON.address?.pinCode,
+
+                  dob: this.ITR_JSON?.family[0]?.dateOfBirth,
+
+                  panNumber: this.ITR_JSON?.panNumber,
+
+                  email: this.ITR_JSON?.email,
+
+                  itrType: this.ITR_JSON?.itrType,
+
+                  orgAckNumber: this.utilsService.isNonEmpty(
+                    this.ITR_JSON?.ackNumber
+                  )
+                    ? this.ITR_JSON?.ackNumber
+                    : 'NA',
+
+                  bankAccountNumber: this.ITR_JSON.bankDetails.find(
+                    (item) => item.hasRefund === true
+                  )?.accountNumber,
+                  bankName: this.ITR_JSON.bankDetails.find(
+                    (item) => item.hasRefund === true
+                  )?.name,
+                },
                 salary: {
                   employers:
                     this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(

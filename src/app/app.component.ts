@@ -47,6 +47,11 @@ export class AppComponent {
           event.url === event.urlAfterRedirects
         ) {
           this.timedOut = sessionStorage.getItem('timedOut') === '1';
+          console.log('in app router subscribe:', event.url);
+          if(event.url === '/'){
+            this.router.navigate(['/login']);
+            return;
+          }
           if(this.timedOut){
             this.logout();
             this.smeLogout();
@@ -220,6 +225,7 @@ export class AppComponent {
       })
       .catch(err => {
         console.log(err);
+        this.router.navigate(['/login']);
       });
 
   }
