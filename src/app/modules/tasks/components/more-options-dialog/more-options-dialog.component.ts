@@ -215,6 +215,37 @@ export class MoreOptionsDialogComponent implements OnInit {
     );
   }
 
+  checkSubscription(){
+    let itrSubscriptionFound = false;
+    const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    this.loading = true;
+    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + this.data?.mobileNumber;
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.data instanceof Array && response.data.length > 0) {
+        console.log(response);
+        response.data.forEach((item: any) => {
+          let smeSelectedPlan = item?.smeSelectedPlan;
+          let userSelectedPlan = item?.userSelectedPlan;
+          if(smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR'){
+            itrSubscriptionFound = true;
+            return;
+          }else if(userSelectedPlan && userSelectedPlan.servicesType === 'ITR'){
+            itrSubscriptionFound = true;
+            return;
+          }
+        });
+        if(itrSubscriptionFound){
+          this.addClient();
+        } else {
+          this.utilsService.showSnackBar('Please make sure the subscription is created for user before adding client.');
+        }
+      } else {
+        this.utilsService.showSnackBar('Please make sure the subscription is created for user before adding client.');
+      }
+    });
+  }
+
   addClient() {
     this.dialogRef.close();
     if (this.data.itrObjectStatus !== 'ITR_FILED') {
