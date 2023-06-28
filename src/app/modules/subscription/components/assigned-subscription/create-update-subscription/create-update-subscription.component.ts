@@ -471,7 +471,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   getExactPromoDiscount() {
-    return this.userSubscription.promoApplied.discountedAmount;
+    return this.userSubscription?.promoApplied?.discountedAmount;
   }
 
   getConcessionsApplied() {
