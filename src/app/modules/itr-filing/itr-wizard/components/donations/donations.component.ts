@@ -690,7 +690,7 @@ export class DonationsComponent implements OnInit {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : ''],
-      donationType: [item ? item.donationType : 'OTHER'],
+      donationType: 'OTHER',
       amountInCash: [
         item ? item.amountInCash : null,
         [Validators.required, Validators.max(2000)],
