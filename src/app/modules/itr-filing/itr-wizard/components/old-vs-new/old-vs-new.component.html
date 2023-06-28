@@ -290,7 +290,7 @@
               <div
                 class="card__row"
                 *ngIf="
-                  regimeSelectionForm.controls['everOptedOutOfNewRegime']
+                  (regimeSelectionForm.controls['everOptedOutOfNewRegime'])
                     .controls['everOptedOutOfNewRegime'].value === true
                 "
               >

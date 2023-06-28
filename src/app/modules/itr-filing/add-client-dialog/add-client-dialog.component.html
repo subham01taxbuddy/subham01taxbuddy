@@ -2,8 +2,8 @@
 <b class="headline">Add Client</b><br><br><br>
 <div class="card">
   <form [formGroup]="addClientForm">
-    <p *ngIf="this.addClientData?.eriClientValidUpto !== null">Client is already added under ERI and valid upto
-      <b>{{this.addClientData?.eriClientValidUpto |date :'MMMM d, y'}}</b>
+    <p *ngIf="this.data?.eriClientValidUpto !== null">Client is already added under ERI and valid upto
+      <b>{{this.data?.eriClientValidUpto |date :'MMMM d, y'}}</b>
     </p>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-4">
@@ -45,7 +45,7 @@
 
     </div>
     <div class="card__row">
-      <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls.panNumber.valid && otpSend">
+      <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls['panNumber'].valid && otpSend">
         <mat-form-field appearance="outline">
           <mat-label>Verify OTP</mat-label>
           <input matTooltip="Verify OTP" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask

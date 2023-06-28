@@ -1,12 +1,12 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <mat-tab-group>
     <mat-tab label="Presumptive Income">
-        <app-presumptive-income (saveAndNext)="saveAndNext($event)"></app-presumptive-income>
+        <app-presumptive-income></app-presumptive-income>
     </mat-tab>
     <mat-tab label="Profit & Loss A/C">
-        <app-profit-loss-ac (saveAndNext)="saveAndNext($event)"></app-profit-loss-ac>
+        <app-profit-loss-ac></app-profit-loss-ac>
     </mat-tab>
     <mat-tab label="Balance Sheet">
-        <app-balance-sheet (saveAndNext)="saveAndNext($event)"></app-balance-sheet>
+        <app-balance-sheet></app-balance-sheet>
     </mat-tab>
 </mat-tab-group>

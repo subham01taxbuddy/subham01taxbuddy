@@ -44,7 +44,7 @@
 
     </div>
     <div class="card__row">
-      <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls.panNumber.valid && otpSend">
+      <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls['panNumber'].valid && otpSend">
         <mat-form-field appearance="outline">
           <mat-label>Verify OTP</mat-label>
           <input matTooltip="Verify OTP" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask

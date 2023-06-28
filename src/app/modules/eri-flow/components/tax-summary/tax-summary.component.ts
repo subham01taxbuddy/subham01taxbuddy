@@ -5064,8 +5064,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   initializeMainForm() {
     this.itrSummaryForm = this.fb.group({
-      _id: null,
-      summaryId: 0,
+      _id: [null],
+      summaryId: [0],
       itrId: [this.itrObject?.itrId],
       userId: [this.itrObject?.userId],
       returnType: ['ORIGINAL', [Validators.required]],
