@@ -92,6 +92,7 @@ export class AssignedSmeComponent implements OnInit {
     this.roles = this.loggedInSme[0]?.roles
     console.log('roles', this.roles)
     this.getSmeList();
+    this.getCount();
   }
   clearValue() {
     this.searchVal = "";
@@ -103,7 +104,8 @@ export class AssignedSmeComponent implements OnInit {
 
   advanceSearch(key: any) {
     if(this.leaderId || this.ownerId || this.coFilerId || this.coOwnerId){
-      this.getSmeList()
+      this.getSmeList();
+      this.getCount();
       return;
     }
     if (!this.key || !this.searchVal) {
@@ -113,6 +115,7 @@ export class AssignedSmeComponent implements OnInit {
     }else{
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
+      this.getCount('search',key, this.searchVal,true)
      }
   }
 
@@ -128,9 +131,22 @@ export class AssignedSmeComponent implements OnInit {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
+    if (this.coOwnerToggle.value == false) {
+      this.agentId = loggedInSmeUserId;
+    }
+
+    this.searchParam.page = 0;
+    this.config.currentPage = 1;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
+    let param = `/sme-details-new/${this.agentId}?${data}&${key}=${searchValue}`
+
+    if (this.coOwnerToggle.value == true ) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.loading = false;
@@ -255,12 +271,12 @@ export class AssignedSmeComponent implements OnInit {
           this.loading = false;
           this.smeInfo = result?.data?.content;
           this.config.totalItems = result?.data?.totalElements;
-          this.config.internalCount = result?.data?.internalCount;
-          this.config.externalCount = result?.data?.externalCount;
-          this.config.activeCount = result?.data?.activeCount;
-          this.config.inactiveCount = result?.data?.inactiveCount;
-          this.config.assignmentOnCount = result?.data?.assignmentOnCount;
-          this.config.assignmentOffCount = result?.data?.assignmentOffCount;
+          // this.config.internalCount = result?.data?.internalCount;
+          // this.config.externalCount = result?.data?.externalCount;
+          // this.config.activeCount = result?.data?.activeCount;
+          // this.config.inactiveCount = result?.data?.inactiveCount;
+          // this.config.assignmentOnCount = result?.data?.assignmentOnCount;
+          // this.config.assignmentOffCount = result?.data?.assignmentOffCount;
 
           console.log('smelist length no ', this.smeListLength);
           this.smeListGridOptions.api?.setRowData(
@@ -297,6 +313,92 @@ export class AssignedSmeComponent implements OnInit {
     );
   }
 
+  getCount(from?,kay?,searchValue?,isAgent?){
+    //https://uat-api.taxbuddy.com/report/sme-details-new/3000?page=0&size=30&assigned=true&onlyCount=true'
+    this.loading=true;
+    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    let param='';
+    let countFilter='&onlyCount=true';
+    this.searchParam.page = 0;
+    this.searchParam.size = 15;
+
+    if (this.coOwnerToggle.value == false) {
+      this.agentId = loggedInSmeUserId;
+    }
+
+    if(from){
+      if (this.searchParam.emailId) {
+        this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+      }
+      if (searchValue) {
+        searchValue = searchValue.toLocaleLowerCase();
+      }
+
+      let data = this.utilsService.createUrlParams(this.searchParam);
+      param = `/sme-details-new/${this.agentId}?${data}&${kay}=${searchValue}${countFilter}`
+
+    }else{
+
+
+      let userFilter = '';
+      if (this.leaderId) {
+        userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
+      }
+
+      if (this.ownerId) {
+        userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
+      }
+
+      let data = this.utilsService.createUrlParams(this.searchParam);
+      param = `/sme-details-new/${this.agentId}?${data}${userFilter}${countFilter}`;
+
+    }
+
+    if (this.coOwnerToggle.value == true && isAgent) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    else {
+      param;
+    }
+
+    this.userMsService.getMethodNew(param).subscribe(
+      (result: any) => {
+        if(result.success){
+          this.loading = false;
+          this.config.totalItems = result?.data?.totalElements;
+          this.config.internalCount = result?.data?.internalCount;
+          this.config.externalCount = result?.data?.externalCount;
+          this.config.activeCount = result?.data?.activeCount;
+          this.config.inactiveCount = result?.data?.inactiveCount;
+          this.config.assignmentOnCount = result?.data?.assignmentOnCount;
+          this.config.assignmentOffCount = result?.data?.assignmentOffCount;
+        }else{
+          this.loading = false;
+          this.config.totalItems = 0
+          this.loading = false;
+          this.config.totalItems =0;
+          this.config.internalCount = 0;
+          this.config.externalCount = 0;
+          this.config.activeCount = 0;
+          this.config.inactiveCount = 0;
+          this.config.assignmentOnCount = 0;
+          this.config.assignmentOffCount = 0;
+          this._toastMessageService.alert(
+            'error','Failed to get count.'
+          );
+        }
+
+      },(error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error','Failed to get count.'
+        );
+        console.log('Error during getting count data. -> ', error);
+      })
+
+
+  }
+
   async downloadReport() {
     this.loading = true;
     const loggedInSmeUserId = this.loggedInSme[0].userId
@@ -313,8 +415,12 @@ export class AssignedSmeComponent implements OnInit {
       userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
     }
 
-
-    let param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+    let param =''
+    if(this.key && this.searchVal){
+       param = `/sme-details-new/${this.agentId}?assigned=true&${this.key}=${this.searchVal}`
+    }else{
+      param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+    }
 
     if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
       param = param + '&searchAsCoOwner=true';
@@ -643,8 +749,10 @@ export class AssignedSmeComponent implements OnInit {
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
       this.getSmeList(true);
+      this.getCount();
     }else{
       this.getSmeList('',pageChange);
+      this.getCount();
     }
     ;
   }
@@ -658,6 +766,7 @@ export class AssignedSmeComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.getSmeList(true);
+    this.getCount('','','',true);
   }
 
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
@@ -676,8 +785,10 @@ export class AssignedSmeComponent implements OnInit {
     if(this.coOwnerDropDown){
       this.coOwnerDropDown.resetDropdown();
       this.getSmeList(true);
+      this.getCount('','','',true);
     }else{
       this.getSmeList();
+      this.getCount();
     }
   }
 
