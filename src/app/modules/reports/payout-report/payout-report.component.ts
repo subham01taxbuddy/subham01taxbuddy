@@ -336,10 +336,10 @@ export class PayoutReportComponent implements OnInit {
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+      userFilter += `ownerUserId=${this.ownerId}`;
     }
     if (this.filerId) {
-      userFilter += `&filerUserId=${this.filerId}`;
+      userFilter += `filerUserId=${this.filerId}`;
     }
     param = `/payout/report?${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'payout-report');
