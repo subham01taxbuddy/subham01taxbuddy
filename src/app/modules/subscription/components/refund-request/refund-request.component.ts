@@ -230,7 +230,7 @@ export class RefundRequestComponent implements OnInit {
       {
         field: 'selection',
         headerName: '',
-        headerCheckboxSelection: true,
+        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
 
@@ -457,6 +457,8 @@ export class RefundRequestComponent implements OnInit {
       },
     ];
   }
+   public rowSelection: 'single';
+  rowMultiSelectWithClick: false;
 
   createRowData(subscriptionData) {
     const newData = [];

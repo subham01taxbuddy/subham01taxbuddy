@@ -55,5 +55,7 @@ export interface ConfirmModel {
   serviceType: any;
   mode: any;
   userInfo: any;
+  approve: string;
+  reject: string;
 }
 
