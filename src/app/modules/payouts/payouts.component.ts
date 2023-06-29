@@ -15,6 +15,7 @@ import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/
 import {environment} from "../../../environments/environment";
 import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
 import {capitalize} from "lodash";
+import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-payouts',
@@ -45,7 +46,8 @@ export class PayoutsComponent implements OnInit {
     {value: 'Paid',name:'Paid'},
     {value: 'Unpaid',name:'Unpaid'},
     {value: 'processing',name:'Processing'},
-    {value: 'initiated',name:'Initiated'}
+    {value: 'initiated',name:'Initiated'},
+    {value: 'Failed',name: 'Failed'}
   ];
   selectedStatus: any;
   selectedPayoutStatus:any;
@@ -55,6 +57,7 @@ export class PayoutsComponent implements OnInit {
   key: any;
   allFilerList: any;
   allLeaderList: any;
+  dialogRef: any;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -733,29 +736,40 @@ export class PayoutsComponent implements OnInit {
 
   disApprovePayOut(data){
     // http://localhost:9050/itr/dashboard/status?invoiceNumber=SSBA%2F2023%2F4364&status=DISAPPROVED'
-    this.loading = true;
-    if (data.invoiceNo) {
-      let param = `/dashboard/status?invoiceNumber=${data.invoiceNo}&status=DISAPPROVED`;
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Disapprove Payout Request!',
+        message: 'Are you sure you want to Disapprove Payout Request?',
+      },
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        if (data.invoiceNo) {
+          let param = `/dashboard/status?invoiceNumber=${data.invoiceNo}&status=DISAPPROVED`;
 
-      this.itrMsService.putMethod(param).subscribe(
-        (result: any) => {
-          this.loading = false;
-          if (result.success) {
-            this.utilsService.showSnackBar('status changed to disapproved');
-            this.serviceCall('');
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Error in disapproved request. Please try after some time.'
+          this.itrMsService.putMethod(param).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success) {
+                this.utilsService.showSnackBar('status changed to disapproved');
+                this.serviceCall('');
+              }
+            },
+            (error) => {
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Error in disapproved request. Please try after some time.'
+              );
+            }
           );
+        } else {
+          this.loading = false;
+          this.utilsService.showSnackBar('invoice Number not available');
         }
-      );
-    } else {
-      this.loading = false;
-      this.utilsService.showSnackBar('invoice Number not available');
-    }
+      }
+    })
+
   }
 
   resetFilters(){
