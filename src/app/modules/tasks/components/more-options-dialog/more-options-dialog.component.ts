@@ -13,6 +13,12 @@ import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
 import {ReviseReturnDialogComponent} from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
+import {
+  UpdateManualFilingDialogComponent
+} from "../../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component";
+import {
+  UpdateNoJsonFilingDialogComponent
+} from "../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -215,7 +221,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     );
   }
 
-  checkSubscription(){
+  checkSubscription(action:string){
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
@@ -236,12 +242,19 @@ export class MoreOptionsDialogComponent implements OnInit {
           }
         });
         if(itrSubscriptionFound){
-          this.addClient();
+          switch(action){
+            case 'add-client':
+              this.addClient();
+              break;
+            case 'update-filing':
+              this.updateFilingNoJson();
+              break;
+          }
         } else {
-          this.utilsService.showSnackBar('Please make sure the subscription is created for user before adding client.');
+          this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
         }
       } else {
-        this.utilsService.showSnackBar('Please make sure the subscription is created for user before adding client.');
+        this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
       }
     });
   }
@@ -393,6 +406,18 @@ export class MoreOptionsDialogComponent implements OnInit {
           mobileNumber: this.data.mobileNumber,
         },
       });
+    });
+  }
+
+  updateFilingNoJson() {
+    let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: this.data,
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
     });
   }
 }

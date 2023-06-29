@@ -56,6 +56,9 @@ import { RequestManager } from "./services/request-manager";
 import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
 import {AddAffiliateIdComponent} from "./components/add-affiliate-id/add-affiliate-id.component";
 import { ViewDocumentsDialogComponent } from './components/view-documents-dialog/view-documents-dialog.component';
+import {
+  UpdateNoJsonFilingDialogComponent
+} from "./components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -94,6 +97,7 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
     AddAffiliateIdComponent,
     TwoDigitDecimaNumberDirective,
     ViewDocumentsDialogComponent,
+    UpdateNoJsonFilingDialogComponent,
   ],
   imports: [
     CommonModule,
