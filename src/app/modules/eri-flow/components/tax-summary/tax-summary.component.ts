@@ -4950,6 +4950,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
   }
 
+  get assesseForm(){
+    return this.itrSummaryForm.controls['assesse'] as FormGroup;
+  }
+
+  get taxSummaryForm(){
+    return this.itrSummaryForm.controls['taxSummary'] as FormGroup;
+  }
+
   businessObject = {
     natureOfBusiness44AD: '',
     natureOfBusiness44ADA: '',

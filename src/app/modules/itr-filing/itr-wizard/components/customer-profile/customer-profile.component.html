@@ -37,7 +37,7 @@
                         email</mat-error>
                 </mat-form-field>
             </div>
-       
+
         <div class="col-sm-4 spsTp">
                 <mat-label>First name</mat-label>
                 <mat-form-field appearance="outline">
@@ -81,7 +81,7 @@
                 <mat-label>Father Name</mat-label>
                 <mat-form-field appearance="outline">
                     <input type="text" matInput placeholder="Father's name" name="mobile"
-                        [formControl]="customerProfileForm.controls['fatherName']" [pattern]="charRegex"
+                        formControlName="fatherName" [pattern]="charRegex"
                         class="input-field" maxlength="125" capitalizeFirst required>
                     <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
                         Enter character only</mat-error>
@@ -94,7 +94,7 @@
                 <mat-form-field appearance="outline">
                     <mat-select placeholder="Residential status" name="residentialStatus"
                         (selectionChange)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
-                        [formControl]="customerProfileForm.controls['residentialStatus']" required>
+                        formControlName="residentialStatus" required>
                         <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
                             {{ res.label }}
                         </mat-option>
@@ -112,7 +112,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-  
+
             <div class="col-sm-4 spsTp">
                 <mat-label>Return Type</mat-label>
                 <mat-form-field appearance="outline">
@@ -148,7 +148,7 @@
                     <mat-datepicker #revisedPicker></mat-datepicker>
                 </mat-form-field>
             </div>
-      
+
         <div class="col-sm-4 spsTp">
                 <mat-label>Aadhaar Number</mat-label>
                 <mat-form-field appearance="outline">
@@ -172,7 +172,7 @@
                     <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
                         matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
                         class="input-field" placeholder="Date of birth" name="dateOfBirth"
-                        [formControl]="customerProfileForm.controls['dateOfBirth']" required>
+                        formControlName="dateOfBirth" required>
                     <mat-hint>Format: DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -189,7 +189,7 @@
                     </mat-radio-button>
                 </mat-radio-group>
             </div>
-     
+
             <div class="col-sm-12 spsTp bdrTp">
                 <button class="tbd-btn save-btn mvRth" [disabled]="!isEditCustomer && customerProfileForm.invalid" (click)="saveProfile('CONTINUE')">Save </button>
             </div>

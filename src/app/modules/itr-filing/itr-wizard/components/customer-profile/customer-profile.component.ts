@@ -221,6 +221,7 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
+  charRegex = AppConstants.charRegex;
   createCustomerProfileForm() {
     return this.fb.group({
       firstName: [
