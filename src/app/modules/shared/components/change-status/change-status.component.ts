@@ -163,7 +163,7 @@ export class ChangeStatusComponent implements OnInit {
             );
             let fromStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.data?.userInfo?.statusId)
             let toStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.changeStatus.controls['selectStatus'].value)
-            we_track('Update status ', {
+            we_track('Update status', {
               'User Name': this.data?.userInfo?.name,
               'User Number': this.data?.userInfo?.mobileNumber,
               'From status': fromStatusObj.length ? fromStatusObj[0].statusName : '',
