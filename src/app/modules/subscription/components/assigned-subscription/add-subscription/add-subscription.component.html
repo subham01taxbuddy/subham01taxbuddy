@@ -15,7 +15,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-6 space">
-          <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]=" service && service.includes('ITR')"
+          <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]=" service && service === 'ITR'"
           (click)="showSelectedServicePlans('ITR')">ITR</a>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6 space">
