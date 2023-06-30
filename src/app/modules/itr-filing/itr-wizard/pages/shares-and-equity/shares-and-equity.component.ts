@@ -696,8 +696,9 @@ export class SharesAndEquityComponent
         }
       );
     } else if (
-      this.securitiesForm.valid &&
-      ((this.deduction && this.deductionForm.valid) || !this.deduction)
+      (this.securitiesForm.valid &&
+      this.deduction &&
+      this.deductionForm.valid) || (this.securitiesForm.valid && !this.deduction)
     ) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {

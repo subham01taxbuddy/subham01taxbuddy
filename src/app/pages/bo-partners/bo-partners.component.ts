@@ -467,7 +467,7 @@ export class BoPartnersComponent implements OnInit {
         noOfEmployees: data[i].noOfEmployees,
         areaOfExpertise: data[i].areaOfExpertise,
         status: data[i].status,
-        currentstatus: data[i].currentstatus.status,
+        currentstatus: data[i].currentstatus?.status,
         aadhaarUrl: data[i].aadhaarUrl,
         panUrl: data[i].panUrl,
         signedNDAUrl: data[i].signedNDAUrl,
