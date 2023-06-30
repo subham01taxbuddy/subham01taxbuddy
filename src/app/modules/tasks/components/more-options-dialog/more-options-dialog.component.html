@@ -22,7 +22,7 @@
     </button>
   </span>
 
-  <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'])">
+  <span *ngIf="data.serviceType === 'ITR'">
     <button type="button" class="tbd-btn-small" title="Add Client" (click)="checkSubscription('add-client')">
       Add Client <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
     </button>
