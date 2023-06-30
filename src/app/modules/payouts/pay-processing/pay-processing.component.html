@@ -10,13 +10,13 @@
               <input class="inptfile" type="file" id="input-file-id" #fileInput>
             </div>
             <div class="col-sm-6">
-              <button class="tbd-btn spRt aprv" (click)="upload()"> Upload File </button>
+              <button class="tbd-btn spRt aprv" [disabled]="loading" (click)="upload()"> Upload File </button>
               <span class="txblw1"> Upload RazorpayX Output File.</span>
             </div>
           </div>
         </div>
         <div class="col-sm-4" *ngIf="!isUploadTrue" >
-          <button class="tbd-btn spRt aprv" (click)="download()"> Generate CSV File </button>
+          <button class="tbd-btn spRt aprv" [disabled]="loading" (click)="download()"> Generate CSV File </button>
           <span class="txblw1">Generate CSV file.</span>
         </div>
       </div>
