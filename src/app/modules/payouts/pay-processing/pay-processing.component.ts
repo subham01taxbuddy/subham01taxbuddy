@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, ElementRef, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -26,7 +27,8 @@ export class PayProcessingComponent implements OnInit {
   constructor(
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     this.payProcessingGridOptions = <GridOptions>{
       rowData: [],
@@ -56,7 +58,7 @@ export class PayProcessingComponent implements OnInit {
     this.itrMsService.getLambda(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
-        console.log('response', response['data']);
+        console.log('response', response);
         if(response?.allowUpload){
           this.isUploadTrue = true;
         }else{
@@ -139,7 +141,7 @@ export class PayProcessingComponent implements OnInit {
       {
         headerName: 'Input CSV Date',
         field: 'inputCsvDate',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -147,6 +149,9 @@ export class PayProcessingComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: (data: any) => {
+          return data.value ? formatDate(data.value, 'dd/MM/yyyy  HH:mm:ss', this.locale) : '-';
+        }
       },
       {
         headerName: 'Input CSV User Name',
@@ -163,7 +168,7 @@ export class PayProcessingComponent implements OnInit {
       {
         headerName: 'Output CSV File Name',
         field: 'outputCsv',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -174,7 +179,7 @@ export class PayProcessingComponent implements OnInit {
       },
       {
         headerName: 'Output CSV Date',
-        field: 'inputCsvDate',
+        field: 'outputCsvDate',
         width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -183,10 +188,13 @@ export class PayProcessingComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: (data: any) => {
+          return data.value ? formatDate(data.value, 'dd/MM/yyyy HH:mm:ss', this.locale) : '-';
+        }
       },
       {
         headerName: 'Output CSV User Name',
-        field: 'inputCsvUploadedBy',
+        field: 'outputCsvUplaodedBy',
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -219,6 +227,7 @@ export class PayProcessingComponent implements OnInit {
         if (res.success) {
           this.loading = false;
           this.utilsService.showSnackBar('File uploaded successfully');
+          this.isUploadTrue=false;
 
         }else {
           this.loading=false;
@@ -246,10 +255,11 @@ export class PayProcessingComponent implements OnInit {
         this.utilsService.showSnackBar(response.message);
         this.downloadURL = response?.downloadUrl
         window.open(this.downloadURL, '_blank');
-        this.isUploadAllowed();
+        this.isUploadTrue=true;
+        // this.isUploadAllowed();
       } else {
         this.loading = false;
-        this.isUploadTrue = false;
+        // this.isUploadTrue = false;
         this.utilsService.showSnackBar(response.message);
       }
     },
