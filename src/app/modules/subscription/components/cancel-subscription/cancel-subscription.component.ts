@@ -120,8 +120,8 @@ export class CancelSubscriptionComponent implements OnInit {
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
 
-    this.filerId=null;
-    this.ownerId=null;
+    this.filerId = null;
+    this.ownerId = null;
     if (this.isOwner) {
       this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
@@ -195,8 +195,8 @@ export class CancelSubscriptionComponent implements OnInit {
           } else {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
-            if (response.message !==null) {this._toastMessageService.alert('error', response.message);}
-            else{this._toastMessageService.alert('error', 'No Data Found'); }
+            if (response.message !== null) { this._toastMessageService.alert('error', response.message); }
+            else { this._toastMessageService.alert('error', 'No Data Found'); }
           }
         } else {
           this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
@@ -206,7 +206,7 @@ export class CancelSubscriptionComponent implements OnInit {
       (error) => {
         this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
-        this._toastMessageService.alert("error","Error while fetching subscription cancellation requests: Not_found: data not found");
+        this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
       }
     );
   }
@@ -511,7 +511,8 @@ export class CancelSubscriptionComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: (client?.mobileNumber) ? (client?.mobileNumber) : ''
       }
     })
 

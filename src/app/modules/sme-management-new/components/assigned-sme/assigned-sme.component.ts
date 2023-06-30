@@ -13,7 +13,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
-
+declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-sme',
   templateUrl: './assigned-sme.component.html',
@@ -759,6 +759,7 @@ export class AssignedSmeComponent implements OnInit {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }

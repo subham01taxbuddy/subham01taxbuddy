@@ -50,6 +50,11 @@
               </button>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-12 note1">
+              Note :  Please select required filters Above and click on Show Reports to get information
+            </div>
+          </div>
 </div>
 </div>
 
@@ -76,6 +81,7 @@
 
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="dailyCallingReportGridOptions">
   </ag-grid-angular>
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
+  <div *ngIf="config.totalItems > 1" >
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 </div>

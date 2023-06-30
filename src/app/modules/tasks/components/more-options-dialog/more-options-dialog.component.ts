@@ -12,6 +12,7 @@ import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
+declare function we_track(key: string, value: any);
 import {ReviseReturnDialogComponent} from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
 import {
   UpdateManualFilingDialogComponent
@@ -52,7 +53,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       columnDefs: this.columnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
       sortable: true,
       filter: true,
       floatingFilter: true,
@@ -99,6 +100,9 @@ export class MoreOptionsDialogComponent implements OnInit {
           this.utilsService.showSnackBar(`User deleted successfully!`);
           // this.isDisable = true;
           this.dialogRef.close(true);
+          we_track('Delete User', {
+            'User Number': this.data?.mobileNumber,
+          });
         } else {
           this.utilsService.showSnackBar(res.message);
           // this.isDisable = false;
@@ -137,6 +141,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         queryParams: {
           userId: this.data.userId,
           serviceType: this.data.serviceType,
+          mobileNumber: this.data.mobileNumber
         },
       })
       .toString();
@@ -188,6 +193,11 @@ export class MoreOptionsDialogComponent implements OnInit {
             this.utilsService.showSnackBar(
               'Successfully opted the service type ' + this.selectedService
             );
+            we_track('Other Service', {
+              'User Name': this.data?.name,
+              'User Number': this.data?.mobileNumber,
+              'Opt for which service ': this.selectedService,
+            });
           } else {
             this.utilsService.showSnackBar(res.message);
           }
@@ -296,8 +306,11 @@ export class MoreOptionsDialogComponent implements OnInit {
           this.createRowData(res.data.statusList)
         );
         console.log(this.initialData);
+        we_track('ITR Status Journey', {
+          'User Number': this.data?.mobileNumber,
+        });
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -311,6 +324,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         serviceType: this.data.serviceType,
         ownerName: this.data.ownerName,
         filerName: this.data.filerName,
+        userInfo: this.data
       },
     });
     disposable.afterClosed().subscribe((result) => {

@@ -68,14 +68,17 @@
            <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
              Clear form
          </button>
+         <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+          <i class="fa fa-download" aria-hidden="true"></i> Download File
+        </button>
            <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
- 
- 
+
+
          </div>
             </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

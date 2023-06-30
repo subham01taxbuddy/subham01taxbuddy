@@ -29,6 +29,7 @@ import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-
 import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-filings',
@@ -45,11 +46,11 @@ export class FilingsComponent implements OnInit {
   selectedPageNo = 0;
   itrStatus: any = [];
   roles: any;
-  loggedInSme:any;
+  loggedInSme: any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  searchVal:any;
-  searchStatusId:any;
+  searchVal: any;
+  searchStatusId: any;
   searchParams = {
     mobileNumber: null,
     email: null,
@@ -60,10 +61,10 @@ export class FilingsComponent implements OnInit {
     filerUserId: null,
   };
 
-  allFilerList:any;
+  allFilerList: any;
 
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private userMsService: UserMsService,
@@ -74,7 +75,7 @@ export class FilingsComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.allFilerList=JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
+    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.columnDef(this.allFilerList),
@@ -114,12 +115,12 @@ export class FilingsComponent implements OnInit {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
 
-      if(this.searchVal) {
+      if (this.searchVal) {
         console.log('q param', this.searchVal)
         this.searchParams.mobileNumber = this.searchVal;
         this.myItrsList(0, '');
       }
-      else if(this.searchStatusId){
+      else if (this.searchStatusId) {
         this.searchParams.selectedStatusId = this.searchStatusId;
         this.myItrsList(0, '');
       }
@@ -192,13 +193,13 @@ export class FilingsComponent implements OnInit {
   coFilerId: number;
   agentId: number;
 
-  fromCoOwner(event){
-  this.coOwnerId = event.userId;
-  // this.myItrsList(0, this.selectedFilingTeamMemberId);
+  fromCoOwner(event) {
+    this.coOwnerId = event.userId;
+    // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
-  fromCoFiler(event){
-  this.coFilerId = event.userId;
-  // this.myItrsList(0, this.selectedFilingTeamMemberId);
+  fromCoFiler(event) {
+    this.coFilerId = event.userId;
+    // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
   myItrsList(pageNo, filingTeamMemberId) {
@@ -210,13 +211,13 @@ export class FilingsComponent implements OnInit {
       let loggedInId = this.utilsService.getLoggedInUserID();
       let loggedInUserRoles = this.utilsService.getUserRoles();
 
-        if(loggedInUserRoles.includes('ROLE_FILER')){
-          this.searchParams.filerUserId = loggedInId;
-          }
+      if (loggedInUserRoles.includes('ROLE_FILER')) {
+        this.searchParams.filerUserId = loggedInId;
+      }
 
-        if(loggedInUserRoles.includes('ROLE_OWNER')){
-          this.searchParams.ownerUserId = loggedInId;
-          }
+      if (loggedInUserRoles.includes('ROLE_OWNER')) {
+        this.searchParams.ownerUserId = loggedInId;
+      }
 
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
@@ -255,11 +256,11 @@ export class FilingsComponent implements OnInit {
       }
 
       if (this.coOwnerToggle.value == true && filingTeamMemberId) {
-       if(this.coOwnerId || this.coFilerId){
-        param
-       }else{
-        param = param + '&searchAsCoOwner=true';
-       }
+        if (this.coOwnerId || this.coFilerId) {
+          param
+        } else {
+          param = param + '&searchAsCoOwner=true';
+        }
       }
       else {
         param;
@@ -268,10 +269,10 @@ export class FilingsComponent implements OnInit {
       console.log('My Params:', param);
       this.userMsService.getMethodNew(param).subscribe(
         (res: any) => {
-          if(res.success == false){
-            this.toastMsgService.alert("error",res.message);
+          if (res.success == false) {
+            this.toastMsgService.alert("error", res.message);
             this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
-              this.config.totalItems = 0;
+            this.config.totalItems = 0;
           }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
@@ -285,8 +286,8 @@ export class FilingsComponent implements OnInit {
             this.itrDataList = [];
             this.config.totalItems = 0;
             this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
-            if (res.message) {this.toastMsgService.alert('error', res.message);}
-            else{this.toastMsgService.alert('error', 'No Data Found'); }
+            if (res.message) { this.toastMsgService.alert('error', res.message); }
+            else { this.toastMsgService.alert('error', 'No Data Found'); }
           }
           this.loading = false;
           return resolve(true);
@@ -294,19 +295,20 @@ export class FilingsComponent implements OnInit {
         (error) => {
           this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
           this.config.totalItems = 0;
-          this.toastMsgService.alert("error",'No Data Found ');
+          this.toastMsgService.alert("error", 'No Data Found ');
           this.loading = false;
           return resolve(false);
         }
       );
     });
   }
+
   fromFy(event) {
     this.searchParams.selectedFyYear = event;
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
-    this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId);
+    // this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId);
   }
 
   createOnSalaryRowData(data) {
@@ -318,14 +320,14 @@ export class FilingsComponent implements OnInit {
         userId: data[i].userId,
         fName:
           this.utilsService.isNonEmpty(data[i].family) &&
-          data[i].family instanceof Array &&
-          data[i].family.length > 0
+            data[i].family instanceof Array &&
+            data[i].family.length > 0
             ? data[i].family[0].fName
             : '',
         lName:
           this.utilsService.isNonEmpty(data[i].family) &&
-          data[i].family instanceof Array &&
-          data[i].family.length > 0
+            data[i].family instanceof Array &&
+            data[i].family.length > 0
             ? data[i].family[0].lName
             : '',
         panNumber: data[i].panNumber,
@@ -453,7 +455,7 @@ export class FilingsComponent implements OnInit {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -478,9 +480,9 @@ export class FilingsComponent implements OnInit {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
-        valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.filingTeamMemberId)
-          let filer1= filerList;
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.filingTeamMemberId)
+          let filer1 = filerList;
           let filer = filer1.filter((item) => {
             return item.userId === createdUserId;
           }).map((item) => {
@@ -619,7 +621,7 @@ export class FilingsComponent implements OnInit {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
             <i class="fa fa-check-circle" title="Click to check the latest E-verification status"
-            aria-hidden="true" data-action-type="ackDetails"></i>
+            aria-hidden="true" data-action-type="eriAckDetails"></i>
            </button>`;
           }
         },
@@ -746,6 +748,10 @@ export class FilingsComponent implements OnInit {
           this.getAcknowledgeDetail(params.data);
           break;
         }
+        case 'eriAckDetails': {
+          this.getEriAcknowledgeDetail(params.data);
+          break;
+        }
         case 'lifeCycle': {
           this.eriITRLifeCycleStatus(params.data);
           break;
@@ -812,6 +818,9 @@ export class FilingsComponent implements OnInit {
         name: data?.fName + ' ' + data?.lName,
       },
     });
+    we_track('Actions', {
+      'User Number': data.contactNumber,
+    });
     // if (data.statusId !== 11) {
     //   this.router.navigate(['/eri'], {
     //     state:
@@ -841,6 +850,9 @@ export class FilingsComponent implements OnInit {
   }
   openReviseReturnDialog(data) {
     console.log('Data for revise return ', data);
+    we_track('Actions', {
+      'User Number': data.contactNumber,
+    });
     let disposable = this.dialog.open(ReviseReturnDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -862,6 +874,42 @@ export class FilingsComponent implements OnInit {
   }
 
   getAcknowledgeDetail(data) {
+    we_track('Actions', {
+      'User Number': data.contactNumber,
+    });
+    console.log(data);
+    let disposable = this.dialog.open(EVerificationDialogComponent, {
+      data: {
+        pan: data.panNumber,
+        ay: data.assessmentYear.substring(0, 4),
+        ackNum: data.ackNumber,
+        formCode: data.itrType,
+        name: data.fName + ' ' + data.lName,
+        userId: data.userId,
+        assessmentYear: data.assessmentYear,
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('New Bank Dialog', result);
+      if (result?.data === 'ONLINE') {
+        this.utilsService.showSnackBar(
+          'E-Verification status updated successfully'
+        );
+        this.myItrsList(
+          // this.selectedFyYear,
+          this.selectedPageNo,
+          this.selectedFilingTeamMemberId
+        );
+      } else if (result?.data === 'MANUAL') {
+        this.markAsEverified(data);
+      }
+    });
+  }
+
+  getEriAcknowledgeDetail(data) {
+    we_track('E-verify ', {
+      'User Number': data.contactNumber,
+    });
     console.log(data);
     let disposable = this.dialog.open(EVerificationDialogComponent, {
       data: {
@@ -902,7 +950,7 @@ export class FilingsComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
   markAsEverified(data) {
     this.loading = true;
@@ -1024,16 +1072,19 @@ export class FilingsComponent implements OnInit {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
-        this.loading = false;
+      if (result.success == false) {
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-      if (result.success == true) {
-            this.toastMsgService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+      if (result.success) {
+        we_track('Call', {
+          'User Name': user.fName + ' ' + user.lName,
+          'User Phone number ': agentNumber,
+        });
+        this.toastMsgService.alert("success", result.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
   }
 
@@ -1066,6 +1117,7 @@ export class FilingsComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.fName + ' ' + client.lName,
+        clientMobileNumber: client.contactNumber
       },
     });
     disposable.afterClosed().subscribe((result) => {
@@ -1076,9 +1128,9 @@ export class FilingsComponent implements OnInit {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
     if (this.coOwnerToggle.value == true) {
-      this.myItrsList(event - 1,true);
-    }else{
-      this.myItrsList(event - 1,'');
+      this.myItrsList(event - 1, true);
+    } else {
+      this.myItrsList(event - 1, '');
     }
     // this.myItrsList(
     //   // this.selectedFyYear,
@@ -1096,24 +1148,27 @@ export class FilingsComponent implements OnInit {
     this.config.itemsPerPage = 10;
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
-    this.searchParams.panNumber=null;
+    this.searchParams.panNumber = null;
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-    if(this.coOwnerDropDown){
+    if (this.coOwnerDropDown) {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.coOwnerDropDown.resetDropdown();
-      this.coFilerId=null;
-      this.coOwnerId=null;
-      this.searchParams.ownerUserId=loggedInId;
-      this.searchParams.filerUserId=null;
+      this.coFilerId = null;
+      this.coOwnerId = null;
+      this.searchParams.ownerUserId = loggedInId;
+      this.searchParams.filerUserId = null;
       this.myItrsList(0, true)
-    }else{
+    } else {
       this.search();
     }
   }
 
   eriITRLifeCycleStatus(data) {
+    we_track('E-verify ', {
+      'User Number': data.contactNumber,
+    });
     console.log(data);
     const param = `/eri/v1/api`;
     let headerObj = {
@@ -1162,10 +1217,12 @@ export class FilingsComponent implements OnInit {
     });
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }

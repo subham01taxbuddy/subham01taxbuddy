@@ -12,7 +12,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
-
+declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -123,12 +123,12 @@ export class OldInvoicesComponent implements OnInit {
     return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
-  getInvoices(){
-    this.loading=true;
-    if(this.invoiceFormGroup.valid){
+  getInvoices() {
+    this.loading = true;
+    if (this.invoiceFormGroup.valid) {
       let data = this.utilService.createUrlParams(this.searchParam);
       let status = this.status.value;
-      let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+      let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
       let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
       let param = '';
       if (this.utilService.isNonEmpty(status)) {
@@ -137,21 +137,21 @@ export class OldInvoicesComponent implements OnInit {
         param = `/invoice/report?fromDate=${fromData}&toDate=${toData}&${data}`;
       }
 
-    this.itrService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.invoiceData = res.content;
-      this.totalInvoice = res?.totalElements;
-      console.log('this.invoiceData ', this.invoiceData);
-      this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-      this.config.totalItems = res?.totalElements;
+      this.itrService.getMethod(param).subscribe((res: any) => {
+        this.loading = false;
+        this.invoiceData = res.content;
+        this.totalInvoice = res?.totalElements;
+        console.log('this.invoiceData ', this.invoiceData);
+        this.gridApi?.setRowData(this.createRowData(this.invoiceData));
+        this.config.totalItems = res?.totalElements;
 
-    },error => {
+      }, error => {
+        this.loading = false;
+        this.gridApi?.setRowData(this.createRowData([]));
+      })
+    } else {
       this.loading = false;
-      this.gridApi?.setRowData(this.createRowData([]));
-    })
-    }else{
-      this.loading = false;
-        this._toastMessageService.alert("error", "Please select Financial Year, Start and End Date and Status.");
+      this._toastMessageService.alert("error", "Please select Financial Year, Start and End Date and Status.");
     }
 
 
@@ -257,7 +257,7 @@ export class OldInvoicesComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -352,14 +352,14 @@ export class OldInvoicesComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          console.log('params',params)
-          if(params?.data?.invoiceNo == null){
+          console.log('params', params)
+          if (params?.data?.invoiceNo == null) {
             return `<button type="button" class="action_icon add_button" disabled title="Download Invoice" style="border: none;
               background: transparent; font-size: 16px; cursor:not-allowed"">
               <i class="fa fa-download" aria-hidden="true"></i>
               </button>`;
 
-          }else{
+          } else {
             return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
               background: transparent; font-size: 16px; cursor:pointer">
               <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
@@ -383,19 +383,19 @@ export class OldInvoicesComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if(params.data.paymentStatus === 'Paid') {
+          if (params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
             style="border: none;
             background: transparent; font-size: 16px; cursor:not-allowed">
             <i class="fa fa-bell" aria-hidden="true"></i>
            </button>`;
-          }else if(params.data.invoiceNo == null) {
+          } else if (params.data.invoiceNo == null) {
             return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
             style="border: none;
             background: transparent; font-size: 16px; cursor:not-allowed">
             <i class="fa fa-bell" aria-hidden="true"></i>
            </button>`;
-          }else{
+          } else {
             return `<button type="button" class="action_icon add_button" title="Mail reminder"
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -449,75 +449,79 @@ export class OldInvoicesComponent implements OnInit {
         },
       },
     ]
-    }
+  }
 
-    public onInvoiceRowClicked(params) {
-      if (params.event.target !== undefined) {
-        const actionType = params.event.target.getAttribute('data-action-type');
-        switch (actionType) {
-          case 'mail-reminder': {
-            this.sendMailReminder(params.data);
-            break;
-          }
-          case 'download-invoice': {
-            this.downloadInvoice(params.data);
-            break;
-          }
-          case 'addNotes': {
-            this.showNotes(params.data);
-            break;
-          }
+  public onInvoiceRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'mail-reminder': {
+          this.sendMailReminder(params.data);
+          break;
+        }
+        case 'download-invoice': {
+          this.downloadInvoice(params.data);
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data);
+          break;
         }
       }
     }
+  }
 
-    downloadInvoice(data) {
-      location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
-    }
-    sendMailReminder(data) {
-      this.loading=true
-      console.log('invoice info',data)
-       const param = '/invoice/reminder?invoiceNo='+ data.invoiceNo;
-       this.itrService.getMethod(param).subscribe((result: any) => {
-         this.loading = false;
-        console.log('Email sent response: ', result);
-        this._toastMessageService.alert("success", "Reminder sent successfully.");
-      }, error => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "Failed to send Mail Reminder.");
+  downloadInvoice(data) {
+    location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+  }
+  sendMailReminder(data) {
+    this.loading = true
+    console.log('invoice info', data)
+    const param = '/invoice/reminder?invoiceNo=' + data.invoiceNo;
+    this.itrService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('Email sent response: ', result);
+      this._toastMessageService.alert("success", "Reminder sent successfully.");
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Failed to send Mail Reminder.");
+    });
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.billTo,
+        clientMobileNumber: client.phone
+      },
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  downloadInvoicesSummary() {
+    if (this.invoiceFormGroup.valid) {
+      console.log(this.invoiceFormGroup.value)
+      let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
+      let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+      we_track('Old Invoice Download', {
+        'CSV from date': fromData,
+        'CSV  to date': toData
       });
-    }
-
-    showNotes(client) {
-      let disposable = this.dialog.open(UserNotesComponent, {
-        width: '50%',
-        height: 'auto',
-        data: {
-          userId: client.userId,
-          clientName: client.billTo,
-        },
-      });
-
-      disposable.afterClosed().subscribe((result) => {
-        console.log('The dialog was closed');
-      });
-    }
-
-    downloadInvoicesSummary() {
-
-      if (this.invoiceFormGroup.valid) {
-        console.log(this.invoiceFormGroup.value)
-        let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
-        let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
-        if (this.utilService.isNonEmpty(this.status.value)) {
-          location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.status.value;
-        }
-        else {
-          location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
-        }
-
+      if (this.utilService.isNonEmpty(this.status.value)) {
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.status.value;
       }
+      else {
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
+      }
+
     }
+  }
 
   setDates() {
     let data = this.fyDropDown.filter(

@@ -6,7 +6,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-
+import { AppConstants } from '../../shared/constants';
+import * as moment from 'moment';
+declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -40,6 +42,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   promoCodeInfo: any;
   today: Date;
   endDate: Date;
+  previousStatus: string;
 
   constructor(
     public dialogRef: MatDialogRef<AddEditPromoCodeComponent>,
@@ -54,7 +57,6 @@ export class AddEditPromoCodeComponent implements OnInit {
 
   ngOnInit() {
     console.log('data from edit button', this.promoCodeInfo)
-
     this.promoCodeForm = this.fb.group({
       code: ['', Validators.required],
       title: ['', Validators.required],
@@ -214,6 +216,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   editPromoCode() {
     // http://localhost:9050/itr/promocodes/buddyday25
     if (this.promoCodeForm.valid) {
+      this.previousStatus = (this.data?.data.active) ? 'Active' : 'InActive';
       let code = this.promoCodeInfo?.code;
       this.loading = true;
       let param = `/promocodes/${code}`;
@@ -228,6 +231,12 @@ export class AddEditPromoCodeComponent implements OnInit {
         console.log('Coupon added responce: ', res);
         this.loading = false;
         if (res.success) {
+          we_track('Edit Promo code', {
+            'Previous Title': this.data?.data.title,
+            'Previous Date ': moment(this.data?.data.endDate).format("DD-MM-YYYY"),
+            'Previous Description': this.data?.data.description,
+            'Previous Status': this.previousStatus,
+          });
           this._toastMessageService.alert("success", "Promo-Code Updated successfully.")
         } else {
           this._toastMessageService.alert("error", res.message)
@@ -248,6 +257,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   }
 
   addPromoCode() {
+    const userObj = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
     if (this.promoCodeForm.valid) {
       this.loading = true;
       let param = '/promocodes';
@@ -280,6 +290,9 @@ export class AddEditPromoCodeComponent implements OnInit {
         console.log('Coupon added responce: ', res);
         this.loading = false;
         if (res.success) {
+          we_track('Add Promo Code', {
+            'Who created : Name & User Number': (userObj ? userObj[0].name : '') + ' & ' + (userObj ? userObj[0].mobileNumber : ''),
+          });
           this._toastMessageService.alert("success", "Promo Code Added Successfully")
         } else {
           this._toastMessageService.alert("error", res.message)

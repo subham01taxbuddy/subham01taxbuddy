@@ -7,7 +7,7 @@
 
 <div class="mrgArdTog2" >
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]=true>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -31,6 +31,11 @@
               <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
                 <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
               </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 note1">
+              Note :  Please select required filters Above and click on Show Reports to get information
             </div>
           </div>
 </div>
@@ -65,6 +70,8 @@
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="payoutReportGridOptions">
   </ag-grid-angular>
 
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <div *ngIf="config.totalItems > 1" >
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 
 </div>

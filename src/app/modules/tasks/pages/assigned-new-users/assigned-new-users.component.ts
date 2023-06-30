@@ -1,11 +1,11 @@
 import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import {GridOptions, ICellRendererParams} from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -24,13 +24,12 @@ import { SmeListDropDownComponent } from '../../../shared/components/sme-list-dr
 import { FormControl } from '@angular/forms';
 import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
-import {RequestManager} from "../../../shared/services/request-manager";
-import {Subscription} from "rxjs";
+import { RequestManager } from "../../../shared/services/request-manager";
+import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
 import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
-import {forEach} from "lodash";
-
+declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
   templateUrl: './assigned-new-users.component.html',
@@ -42,13 +41,13 @@ export class AssignedNewUsersComponent implements OnInit {
   config: any;
   userInfo: any = [];
   itrStatus: any = [];
-  filerUserId:any;
-  roles:any;
+  filerUserId: any;
+  roles: any;
   ogStatusList: any = [];
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  searchVal:any;
-  searchStatusId:any;
+  searchVal: any;
+  searchStatusId: any;
   searchParam: any = {
     serviceType: null,
     statusId: null,
@@ -60,7 +59,7 @@ export class AssignedNewUsersComponent implements OnInit {
   agents = [];
   agentId = null;
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -97,7 +96,7 @@ export class AssignedNewUsersComponent implements OnInit {
     };
 
     this.requestManager.init();
-    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
+    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value: any) => {
       this.requestCompleted(value);
     });
   }
@@ -120,12 +119,12 @@ export class AssignedNewUsersComponent implements OnInit {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
 
-      if(this.searchVal){
+      if (this.searchVal) {
         // console.log('q param',this.searchVal)
         this.searchParam.mobileNumber = this.searchVal;
         this.search('mobile');
       }
-      else if(this.searchStatusId){
+      else if (this.searchStatusId) {
         // console.log('q param',this.searchStatus)
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
@@ -147,12 +146,12 @@ export class AssignedNewUsersComponent implements OnInit {
     console.log(res);
     this.loading = false;
     switch (res.api) {
-      case this.LIFECYCLE:  {
+      case this.LIFECYCLE: {
         const loggedInId = this.utilsService.getLoggedInUserID();
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-        if(this.rowData.itrObjectStatus === 'CREATE') {
+        if (this.rowData.itrObjectStatus === 'CREATE') {
           //no ITR object found, create a new ITR object
           this.loading = true;
           let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
@@ -179,12 +178,13 @@ export class AssignedNewUsersComponent implements OnInit {
             this.loading = false;
             objITR = result;
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-            this.router.navigate(['/itr-filing/itr'],{
+            this.router.navigate(['/itr-filing/itr'], {
               state: {
                 userId: this.rowData.userId,
                 panNumber: this.rowData.panNumber,
                 eriClientValidUpto: this.rowData.eriClientValidUpto,
-                name: this.rowData.name }
+                name: this.rowData.name
+              }
             });
           }, error => {
             this.loading = false;
@@ -197,10 +197,10 @@ export class AssignedNewUsersComponent implements OnInit {
           const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
-            if(result == null || result.length == 0) {
+            if (result == null || result.length == 0) {
               //no ITR found, error case
               this.utilsService.showErrorMsg('Something went wrong. Please try again');
-            } else if(result.length == 1) {
+            } else if (result.length == 1) {
               //update status to WIP
               //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
               let workingItr = result[0];
@@ -216,7 +216,7 @@ export class AssignedNewUsersComponent implements OnInit {
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
               sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-              this.router.navigate(['/itr-filing/itr'],{
+              this.router.navigate(['/itr-filing/itr'], {
                 state: {
                   userId: this.rowData.userId,
                   panNumber: this.rowData.panNumber,
@@ -227,9 +227,9 @@ export class AssignedNewUsersComponent implements OnInit {
             } else {
               //multiple ITRs found, navigate to ITR tab with the results
               this.router.navigateByUrl('/tasks/filings',
-                {state: {'mobileNumber': this.rowData.mobileNumber}});
+                { state: { 'mobileNumber': this.rowData.mobileNumber } });
             }
-          }, async (error:any) => {
+          }, async (error: any) => {
             console.log('Error:', error);
             this.utilsService.showErrorMsg('Something went wrong. Please try again');
           });
@@ -280,17 +280,17 @@ export class AssignedNewUsersComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1;
     if (this.coOwnerToggle.value == true) {
-      this.search(event - 1,true);
-    }else{
+      this.search(event - 1, true);
+    } else {
       this.search(event - 1);
     }
   }
 
-  fromServiceType(event){
+  fromServiceType(event) {
     this.searchParam.serviceType = event;
-    this.search('serviceType','isAgent');
+    this.search('serviceType', 'isAgent');
 
-    if(this.searchParam.serviceType) {
+    if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
       }, 100);
@@ -301,14 +301,14 @@ export class AssignedNewUsersComponent implements OnInit {
   filerId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.ownerId = event? event.userId : null;
+    if (isOwner) {
+      this.ownerId = event ? event.userId : null;
     } else {
-      this.filerId = event? event.userId : null;
+      this.filerId = event ? event.userId : null;
     }
-    if(this.filerId) {
+    if (this.filerId) {
       this.agentId = this.filerId;
-    } else if(this.ownerId) {
+    } else if (this.ownerId) {
       this.agentId = this.ownerId;
       // this.search('agent');
     } else {
@@ -323,15 +323,15 @@ export class AssignedNewUsersComponent implements OnInit {
 
   fromSme1(event, isOwner) {
     console.log('co-owner-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
-    if(this.coFilerId) {
+    if (this.coFilerId) {
       this.agentId = this.coFilerId;
       // this.search('agent');
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
       //  this.search('agent');
     } else {
@@ -398,7 +398,7 @@ export class AssignedNewUsersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -444,13 +444,14 @@ export class AssignedNewUsersComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        valueGetter: function nameFromCode(params) {{
-          if(params.data.conversationWithFiler === true){
-            return params.data.filerName;
-          } else {
-            return params.data.ownerName;
+        valueGetter: function nameFromCode(params) {
+          {
+            if (params.data.conversationWithFiler === true) {
+              return params.data.filerName;
+            } else {
+              return params.data.ownerName;
+            }
           }
-        }
         }
       },
       {
@@ -541,7 +542,7 @@ export class AssignedNewUsersComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          if(data.value) {
+          if (data.value) {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale);
           } else {
             return '-';
@@ -602,12 +603,12 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if(params.data.serviceType === 'ITR') {
+          if (params.data.serviceType === 'ITR') {
             return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
             <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
              </button>`;
-          }else{
+          } else {
             return '-'
           }
         },
@@ -671,7 +672,7 @@ export class AssignedNewUsersComponent implements OnInit {
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width:160,
+        width: 160,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -734,7 +735,7 @@ export class AssignedNewUsersComponent implements OnInit {
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
-          if(params.data.serviceType === 'ITR') {
+          if (params.data.serviceType === 'ITR') {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
@@ -889,14 +890,15 @@ export class AssignedNewUsersComponent implements OnInit {
     }
   }
 
-  getItrStatus(data){
+  getItrStatus(data) {
     let disposable = this.dialog.open(ItrStatusDialogComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: data.userId,
         clientName: data.name,
-        serviceType: data.serviceType
+        serviceType: data.serviceType,
+        userInfo: data
       }
     })
 
@@ -927,7 +929,10 @@ export class AssignedNewUsersComponent implements OnInit {
     this.rowData = data;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-
+    we_track('Start Filing', {
+      'User Name': data?.name,
+      'User Number': data?.mobileNumber
+    });
   }
 
   async getUserProfile(userId) {
@@ -937,13 +942,13 @@ export class AssignedNewUsersComponent implements OnInit {
 
   updateITRtoWIP(data, itr, assessmentYear) {
     console.log('data', itr);
-    if(data.statusId) {
+    if (data.statusId) {
       const param = '/itr'
       const request = {
-        'userId':data.userId,
-        'assessmentYear':assessmentYear,
+        'userId': data.userId,
+        'assessmentYear': assessmentYear,
         'isRevised': itr.isRevised,
-        'status':'PREPARING_ITR'
+        'status': 'PREPARING_ITR'
       };
 
       this.loading = true;
@@ -989,13 +994,14 @@ export class AssignedNewUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/itr-filing/itr'],{
+        this.router.navigate(['/itr-filing/itr'], {
           state: {
             userId: data.userId,
             panNumber: data.panNumber,
             eriClientValidUpto: data.eriClientValidUpto,
-            name: data.name }
-          });
+            name: data.name
+          }
+        });
       }
       console.log('The dialog was closed', result);
     });
@@ -1060,9 +1066,9 @@ export class AssignedNewUsersComponent implements OnInit {
       this._toastMessageService.alert('error', "You don't have calling role.");
       return;
     }
-    if (this.coOwnerToggle.value == true){
-       agent_number = agentNumber;
-    }else {
+    if (this.coOwnerToggle.value == true) {
+      agent_number = agentNumber;
+    } else {
       agent_number = agentNumber;
       // agent_number = data.callerAgentNumber;
     }
@@ -1082,15 +1088,18 @@ export class AssignedNewUsersComponent implements OnInit {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success) {
+        we_track('Call', {
+          'User Name': data?.name,
+          'User Phone number ': agent_number,
+        });
+        this._toastMessageService.alert("success", result.message)
+      } else {
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-      if (result.success == true) {
-            this._toastMessageService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
   }
 
@@ -1123,7 +1132,8 @@ export class AssignedNewUsersComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: client.mobileNumber
       }
     })
 
@@ -1149,23 +1159,23 @@ export class AssignedNewUsersComponent implements OnInit {
 
 
   moreOptions(client) {
-    console.log('client',client)
+    console.log('client', client)
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',
       data: client
     })
-      disposable.afterClosed().subscribe(result => {
-        console.log('result after more option closed',result)
-       if (result.data === 'success') {
-         this.search();
-       }
+    disposable.afterClosed().subscribe(result => {
+      console.log('result after more option closed', result)
+      if (result.data === 'success') {
+        this.search();
+      }
     });
   }
 
-  openBulkReAssignment(){
-    let disposable = this.dialog.open(BulkReAssignDialogComponent,{
-      width:'100%',
+  openBulkReAssignment() {
+    let disposable = this.dialog.open(BulkReAssignDialogComponent, {
+      width: '100%',
       height: 'auto',
     })
   }
@@ -1177,7 +1187,7 @@ export class AssignedNewUsersComponent implements OnInit {
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
-  resetFilters(){
+  resetFilters() {
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
@@ -1187,10 +1197,10 @@ export class AssignedNewUsersComponent implements OnInit {
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-    if(this.coOwnerDropDown){
+    if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
-      this.search('',true);
-    }else{
+      this.search('', true);
+    } else {
       this.search();
     }
 
@@ -1226,7 +1236,7 @@ export class AssignedNewUsersComponent implements OnInit {
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
-    if(this.searchParam.emailId){
+    if (this.searchParam.emailId) {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
     this.loading = true;
@@ -1246,7 +1256,7 @@ export class AssignedNewUsersComponent implements OnInit {
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
+    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
       param = `/${this.agentId}/user-list-new?${data}`;
     }
     else {
@@ -1263,11 +1273,11 @@ export class AssignedNewUsersComponent implements OnInit {
         }
       } */
       (result: any) => {
-        if(result.success == false){
-          this._toastMessageService.alert("error",result.message);
+        if (result.success == false) {
+          this._toastMessageService.alert("error", result.message);
           // this.utilsService.showSnackBar(result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
+          this.config.totalItems = 0;
         }
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
@@ -1290,14 +1300,16 @@ export class AssignedNewUsersComponent implements OnInit {
       })
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }
-    this.search('',true);
+    this.search('', true);
   }
 
 

@@ -1048,7 +1048,8 @@ export class AssignedUsersComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: client.mobileNumber
       }
     })
 

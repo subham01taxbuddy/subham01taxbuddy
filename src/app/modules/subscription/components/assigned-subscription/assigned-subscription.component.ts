@@ -14,7 +14,9 @@ import { map, Observable, startWith } from 'rxjs';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SmeListDropDownComponent } from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
-
+import { environment } from 'src/environments/environment';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+declare function we_track(key: string, value: any);
 export interface User {
   name: string;
   userId: Number;
@@ -66,7 +68,8 @@ export class AssignedSubscriptionComponent implements OnInit {
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private genericCsvService: GenericCsvService,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -625,7 +628,6 @@ export class AssignedSubscriptionComponent implements OnInit {
       data: {
         userId: this.userId,
         mobileNo: this.mobileNumber.value,
-
       },
 
     })
@@ -725,8 +727,19 @@ export class AssignedSubscriptionComponent implements OnInit {
     // this.getAssignedSubscription(0);
   }
 
+  async downloadReport() {
+    this.loading=true;
+    console.log('this.queryParam:', this.queryParam);
+
+    var param = `/subscription-dashboard-new/${this.agentId}`;
+
+    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'assigned-subscription-report');
+    this.loading = false;
+  }
+
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     }
