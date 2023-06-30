@@ -305,9 +305,12 @@
                             <mat-label>Address</mat-label>
                             <input matInput formControlName="premisesName" maxlength="200" placeholder="Address"
                                 required autocomplete="off">
-                            <mat-error
+                            <!-- <mat-error
                                 *ngIf="assesseForm.controls['address'].controls['premisesName'].hasError('required')">
                                 Enter address
+                            </mat-error> -->
+                            <mat-error *ngIf="assesseForm?.get('address')?.get('premisesName')?.hasError('required')">
+                              Enter pin
                             </mat-error>
                         </mat-form-field>
                     </div>
@@ -320,16 +323,22 @@
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
                                 placeholder="PIN Code" autocomplete="off" type="number"
-                                (blur)="getCityData(assesseForm.controls['address'].controls['pinCode'], 'profile')"
+                                (blur)="getCityData(assesseForm?.get('address')?.get('pinCode'), 'profile')"
                                 required>
-                            <mat-error
+                             <!-- <mat-error
                                 *ngIf="assesseForm.controls['address'].controls['pinCode'].hasError('required')">
                                 Enter pin
+                            </mat-error>  -->
+                            <mat-error *ngIf="assesseForm?.get('address')?.get('pinCode')?.hasError('required')">
+                              Enter pin
                             </mat-error>
-                            <mat-error
+                            <!-- <mat-error
                                 *ngIf="assesseForm.controls['address'].controls['pinCode'].hasError('pattern')">
                                 Enter valid
                                 pin
+                            </mat-error> -->
+                            <mat-error *ngIf="assesseForm?.get('address')?.get('pinCode')?.hasError('pattern')">
+                              Enter pin
                             </mat-error>
                         </mat-form-field>
                     </div>
