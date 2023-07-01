@@ -42,7 +42,6 @@ export class AssignedNewUsersComponent implements OnInit {
   userInfo: any = [];
   itrStatus: any = [];
   filerUserId: any;
-  roles: any;
   ogStatusList: any = [];
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
@@ -58,6 +57,7 @@ export class AssignedNewUsersComponent implements OnInit {
   };
   agents = [];
   agentId = null;
+  loggedInUserRoles: any;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -71,6 +71,7 @@ export class AssignedNewUsersComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     @Inject(LOCALE_ID) private locale: string) {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -108,9 +109,9 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   requestManagerSubscription: Subscription;
+  dataOnLoad = true;
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
-    this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
     // this.search();
@@ -130,7 +131,13 @@ export class AssignedNewUsersComponent implements OnInit {
         this.search('status');
       }
       else {
-        this.search();
+        //check user roles here and do not load all data for admin/leaders
+        if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+          this.search();
+        } else{
+          this.dataOnLoad = false;
+        }
+
       }
 
     })
@@ -342,9 +349,8 @@ export class AssignedNewUsersComponent implements OnInit {
   }
 
   getAgentList() {
-    let loggedInUserRoles = this.utilsService.getUserRoles();
     let loggedInUserId = this.utilsService.getLoggedInUserID();
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
       const param = `/sme/${loggedInUserId}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -358,8 +364,8 @@ export class AssignedNewUsersComponent implements OnInit {
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     var statusSequence = 0;
-    let loggedInUserRoles = this.utilsService.getUserRoles();
-    let filtered = loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+
+    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
@@ -1201,7 +1207,13 @@ export class AssignedNewUsersComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
     } else {
-      this.search();
+      if(this.dataOnLoad) {
+        this.search();
+      } else {
+        //clear grid for loaded data
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
 
   }
