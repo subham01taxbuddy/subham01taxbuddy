@@ -374,7 +374,7 @@ export class AssignedNewUsersComponent implements OnInit {
         width: 110,
         pinned: 'left',
         checkboxSelection: (params) => {
-          return params.data.statusId === 18
+          return params.data.statusId === 18 && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
         },
         cellStyle: function (params: any) {
           return {
