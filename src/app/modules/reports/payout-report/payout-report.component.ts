@@ -50,7 +50,7 @@ export class PayoutReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.showReports();
+    // this.showReports();
   }
 
   ownerId: number;

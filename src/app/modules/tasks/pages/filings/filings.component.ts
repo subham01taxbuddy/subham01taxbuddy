@@ -302,12 +302,13 @@ export class FilingsComponent implements OnInit {
       );
     });
   }
+
   fromFy(event) {
     this.searchParams.selectedFyYear = event;
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
-    this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId);
+    // this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId);
   }
 
   createOnSalaryRowData(data) {

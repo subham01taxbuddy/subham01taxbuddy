@@ -101,7 +101,7 @@ export class MissedInboundCallsComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showMissedInboundCall();
+    // this.showMissedInboundCall();
   }
 
   ownerId: number;
