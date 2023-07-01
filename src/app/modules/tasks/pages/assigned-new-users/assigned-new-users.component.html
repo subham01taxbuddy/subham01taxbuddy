@@ -68,43 +68,47 @@
 <!--            </div>-->
               </span>
 
-          </div>
+            </div>
 
-  </div>
-</div>
-</div>
+          </div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 
 
 
 <div class="main clearfix">
-<!-- Container -->
-      <!-- Top card Ends -->
-      <!-- Below Table Starts -->
-      <div class="tableSpc">
-        <div class="row">
-        <div class="col-sm-8">
-          <div class="txTit">
-            User Details:
-          </div>
+  <!-- Container -->
+  <!-- Top card Ends -->
+  <!-- Below Table Starts -->
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-9 row">
+        <div class="txTit col-sm-4">
+          User Details:
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-5">
+          <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length" (click)="actionWithReassignment()">
+            Action with Re-assignment </button>
+        </div>
+      </div>
+      <div class="col-sm-3">
         <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
-        </div>
-        </div>
-        <table>
-          <tr *ngFor="let item of userInfo | paginate:config"></tr>
-        </table>
-
-        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
-          (rowClicked)="onUsersRowClicked($event)">
-          <!--    paginationPageSize=15 pagination=true-->
-        </ag-grid-angular>
-
-        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
+      </div>
     </div>
+    <table>
+      <tr *ngFor="let item of userInfo | paginate:config"></tr>
+    </table>
+
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
+      (rowClicked)="onUsersRowClicked($event)">
+      <!--    paginationPageSize=15 pagination=true-->
+    </ag-grid-angular>
+
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+  </div>
