@@ -828,7 +828,7 @@ export class AssignedNewUsersComponent implements OnInit {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries to approve');
+      this.utilsService.showSnackBar('Please select entries to Re-assign');
       return;
     }
     let invoices = selectedRows.flatMap(item => item.invoiceNo);
