@@ -28,7 +28,8 @@ import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
-import {AgTooltipComponent} from "../../../shared/components/ag-tooltip/ag-tooltip.component";
+import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-tooltip.component";
+import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
@@ -58,6 +59,8 @@ export class AssignedNewUsersComponent implements OnInit {
   };
   agents = [];
   agentId = null;
+  loggedInUserRoles: any;
+  showReassignmentBtn: any;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -71,11 +74,14 @@ export class AssignedNewUsersComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     @Inject(LOCALE_ID) private locale: string) {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
+      rowSelection: 'multiple',
       onGridReady: params => {
       },
 
@@ -240,7 +246,7 @@ export class AssignedNewUsersComponent implements OnInit {
     }
   }
 
-  checkSubscription(data: any){
+  checkSubscription(data: any) {
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
@@ -252,15 +258,15 @@ export class AssignedNewUsersComponent implements OnInit {
         response.data.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if(smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR'){
-             itrSubscriptionFound = true;
-             return;
-          }else if(userSelectedPlan && userSelectedPlan.servicesType === 'ITR'){
+          if (smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR') {
+            itrSubscriptionFound = true;
+            return;
+          } else if (userSelectedPlan && userSelectedPlan.servicesType === 'ITR') {
             itrSubscriptionFound = true;
             return;
           }
         });
-        if(itrSubscriptionFound){
+        if (itrSubscriptionFound) {
           this.startFiling(data);
         } else {
           this.utilsService.showSnackBar('Please make sure the subscription is created for user before start filing.');
@@ -362,6 +368,23 @@ export class AssignedNewUsersComponent implements OnInit {
     let filtered = loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
+      {
+        field: 'Re Assign',
+        headerCheckboxSelection: true,
+        width: 110,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return params.data.statusId === 18
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -795,6 +818,29 @@ export class AssignedNewUsersComponent implements OnInit {
         },
       },
     ];
+  }
+
+  actionWithReassignment() {
+    let selectedRows = this.usersGridOptions.api.getSelectedRows();
+    console.log(selectedRows);
+    if (selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries to approve');
+      return;
+    }
+    let invoices = selectedRows.flatMap(item => item.invoiceNo);
+    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        data: selectedRows
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('result of reassign user ', result);
+      if (result?.data === 'success') {
+        this.search();
+      }
+    });
   }
 
   createRowData(userData: any) {
