@@ -372,6 +372,7 @@ export class AssignedNewUsersComponent implements OnInit {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
+        hide:!this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
           return params.data.statusId === 18 && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
