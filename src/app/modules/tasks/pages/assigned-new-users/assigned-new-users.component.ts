@@ -82,6 +82,9 @@ export class AssignedNewUsersComponent implements OnInit {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       rowSelection: 'multiple',
+      isRowSelectable: (rowNode) => {
+        return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId === 18 : false;
+      },
       onGridReady: params => {
       },
 
@@ -372,7 +375,7 @@ export class AssignedNewUsersComponent implements OnInit {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
-        hide:!this.showReassignmentBtn.length,
+        hide: !this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
           return params.data.statusId === 18 && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
