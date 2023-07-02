@@ -117,6 +117,8 @@ export class PerformaInvoiceComponent implements OnInit {
       endDate: new Date('2021-03-31'),
     },
   ];
+
+  dataOnLoad = true;
   constructor(
     private reviewService: ReviewService,
     private fb: FormBuilder,
@@ -224,7 +226,12 @@ export class PerformaInvoiceComponent implements OnInit {
       }
     });
 
-    this.getInvoice();
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.getInvoice();
+    } else{
+      this.dataOnLoad = false;
+    }
+    // this.getInvoice();
   }
 
   ownerId: number;
@@ -455,7 +462,13 @@ export class PerformaInvoiceComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.getInvoice('true');
     } else {
-      this.getInvoice();
+      if(this.dataOnLoad) {
+        this.getInvoice();
+      } else {
+        //clear grid for loaded data
+        this.gridApi?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
 
   }

@@ -61,6 +61,7 @@ export class ItrFilingReportComponent implements OnInit {
   loggedInSme: any;
   roles: any;
   disableCheckboxes = false;
+  dataOnLoad = true;
 
   constructor(
     public datePipe: DatePipe,
@@ -98,6 +99,12 @@ export class ItrFilingReportComponent implements OnInit {
       this.ownerId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
+    }
+
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showReports();
+    } else{
+      this.dataOnLoad = false;
     }
     // this.showReports()
   }
@@ -447,9 +454,19 @@ export class ItrFilingReportComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
-    this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-    this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+    if(this.dataOnLoad) {
+      this.showReports();
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+    } else {
+      //clear grid for loaded data
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+      this.config.totalItems = 0;
+    }
+
+    // this.showReports();
+
   }
 
   pageChanged(event) {

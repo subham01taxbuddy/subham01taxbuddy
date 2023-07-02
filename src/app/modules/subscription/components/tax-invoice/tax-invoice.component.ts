@@ -102,6 +102,7 @@ export class TaxInvoiceComponent implements OnInit {
     },
   ];
 
+  dataOnLoad = true;
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
@@ -183,7 +184,13 @@ export class TaxInvoiceComponent implements OnInit {
       }
     });
 
-    this.getInvoice();
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.getInvoice();
+    } else{
+      this.dataOnLoad = false;
+    }
+
+    // this.getInvoice();
   }
 
   ownerId: number;
@@ -403,7 +410,13 @@ export class TaxInvoiceComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.getInvoice(true);
     } else {
-      this.getInvoice();
+     if(this.dataOnLoad) {
+        this.getInvoice();
+      } else {
+        //clear grid for loaded data
+        this.gridApi?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
   }
 

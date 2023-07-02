@@ -56,6 +56,7 @@ export class MissedChatReportComponent implements OnInit {
   missedChatReportGridOptions: GridOptions;
   loggedInSme: any;
   roles: any;
+  dataOnLoad = true;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -94,6 +95,11 @@ export class MissedChatReportComponent implements OnInit {
       this.ownerId = this.loggedInSme[0].userId;
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
+    }
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showReports();
+    } else{
+      this.dataOnLoad = false;
     }
     // this.showReports()
   }
@@ -230,6 +236,14 @@ export class MissedChatReportComponent implements OnInit {
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
+    if(this.dataOnLoad) {
+      this.showReports();
+    } else {
+      //clear grid for loaded data
+      this.missedChatReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    }
+
     this.showReports();
   }
 

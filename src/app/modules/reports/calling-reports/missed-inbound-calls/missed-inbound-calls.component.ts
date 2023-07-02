@@ -59,6 +59,7 @@ export class MissedInboundCallsComponent implements OnInit {
   statusList: any = [{ label: 'All', value: 'All' }, { label: 'Pending', value: 'Pending' }, { label: 'Completed', value: 'Completed' }]
   loggedInSme: any;
   roles: any;
+  dataOnLoad = true;
 
   constructor(
     public datePipe: DatePipe,
@@ -100,6 +101,12 @@ export class MissedInboundCallsComponent implements OnInit {
       this.ownerId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
+    }
+
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showMissedInboundCall();
+    } else{
+      this.dataOnLoad = false;
     }
     // this.showMissedInboundCall();
   }
@@ -361,7 +368,14 @@ export class MissedInboundCallsComponent implements OnInit {
     this.endDate.setValue(new Date());
     this.status.setValue('All')
     this?.smeDropDown?.resetDropdown();
-    this.showMissedInboundCall();
+    if(this.dataOnLoad) {
+      this.showMissedInboundCall();
+    } else {
+      //clear grid for loaded data
+      this.missedInboundCallGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    }
+    // this.showMissedInboundCall();
   }
 
   pageChanged(event) {

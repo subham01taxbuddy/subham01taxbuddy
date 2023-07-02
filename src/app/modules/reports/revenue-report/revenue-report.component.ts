@@ -29,6 +29,7 @@ export class RevenueReportComponent implements OnInit {
   };
   revenueReportGridOptions: GridOptions;
   disableCheckboxes = false;
+  dataOnLoad = true;
 
   constructor(
     private reportService: ReportService,
@@ -62,6 +63,11 @@ export class RevenueReportComponent implements OnInit {
       this.ownerId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
+    }
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showReports();
+    } else{
+      this.dataOnLoad = false;
     }
     // this.showReports()
   }
@@ -517,9 +523,19 @@ export class RevenueReportComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
-    this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
-    this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+
+    if(this.dataOnLoad) {
+      this.showReports();
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
+      this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+    } else {
+      //clear grid for loaded data
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+      this.config.totalItems = 0;
+    }
+    // this.showReports();
+
   }
 
   handleLeaderViewChange(): void {

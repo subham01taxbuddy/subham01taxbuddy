@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -135,6 +135,11 @@
             </button>
          </div>
             </div>
+            <span class="note1">
+              <!--<div class="col-sm-12 note1">-->
+              Note : Please select required filters above and click on search to get information
+              <!--</div>-->
+            </span>
 </div>
 </div>
 

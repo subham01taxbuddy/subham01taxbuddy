@@ -23,6 +23,7 @@ export class PayoutReportComponent implements OnInit {
   payoutReportGridOptions: GridOptions;
   // totalCommissionEarned =0;
   // totalPartnersPaid=0;
+  dataOnLoad = true;
 
   constructor(
     private utilsService: UtilsService,
