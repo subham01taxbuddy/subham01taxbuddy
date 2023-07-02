@@ -345,6 +345,20 @@ export class SummaryComponent implements OnInit {
       totalLongTerm: Number;
       totalCapitalGain: Number;
     };
+    Crypto: {
+      cryptoDetails: [
+        {
+          srNo: any;
+          buyDate: any;
+          sellDate: any;
+          headOfIncome: String;
+          buyValue: Number;
+          SaleValue: Number;
+          income: Number;
+        }
+      ];
+      totalCryptoIncome: Number;
+    };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
       currentYearLossesSetOff: [
@@ -965,6 +979,20 @@ export class SummaryComponent implements OnInit {
               },
               totalLongTerm: 0,
               totalCapitalGain: 0,
+            },
+            Crypto: {
+              cryptoDetails: [
+                {
+                  srNo: null,
+                  buyDate: null,
+                  sellDate: null,
+                  headOfIncome: null,
+                  buyValue: null,
+                  SaleValue: null,
+                  income: 0,
+                },
+              ],
+              totalCryptoIncome: 0,
             },
 
             totalHeadWiseIncome:
@@ -2146,7 +2174,29 @@ export class SummaryComponent implements OnInit {
                   ?.CapGain?.LongTerm?.TotalLongTerm,
               totalCapitalGain:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.TotalCapGains,
+                  ?.CapGain?.TotalCapGains - this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.CapGains30Per115BBH,
+            },
+            Crypto: {
+              cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
+                return {
+                  srNo: index + 1,
+                  buyDate: element?.DateofAcquisition,
+                  sellDate: element?.DateofTransfer,
+                  headOfIncome: element?.HeadUndIncTaxed,
+                  buyValue: element?.AcquisitionCost,
+                  SaleValue: element?.ConsidReceived,
+                  income: element?.IncomeFromVDA,
+                };
+              }),
+              totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleVDA?.TotIncCapGain
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVDA
+                    ?.TotIncCapGain
+                : 0,
             },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -3290,6 +3340,20 @@ export class SummaryComponent implements OnInit {
                           return total + incomeAfterInternalSetOff;
                         }, 0),
                   },
+                  Crypto: {
+                    cryptoDetails: [
+                      {
+                        srNo: null,
+                        buyDate: null,
+                        sellDate: null,
+                        headOfIncome: null,
+                        buyValue: null,
+                        SaleValue: null,
+                        income: 0,
+                      },
+                    ],
+                    totalCryptoIncome: 0,
+                  },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
@@ -4414,6 +4478,20 @@ export class SummaryComponent implements OnInit {
 
                         return total + incomeAfterInternalSetOff;
                       }, 0),
+                },
+                Crypto: {
+                  cryptoDetails: [
+                    {
+                      srNo: null,
+                      buyDate: null,
+                      sellDate: null,
+                      headOfIncome: null,
+                      buyValue: null,
+                      SaleValue: null,
+                      income: 0,
+                    },
+                  ],
+                  totalCryptoIncome: 0,
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
