@@ -134,7 +134,7 @@ export class SidebarComponent{
         { name: 'Refund Request', url: '/subscription/refund-request', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
         { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        // { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
