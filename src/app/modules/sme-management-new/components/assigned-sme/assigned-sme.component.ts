@@ -51,7 +51,7 @@ export class AssignedSmeComponent implements OnInit {
   key: any;
   showError: boolean = false;
   fields = ["Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom"]
-
+  dataOnLoad = true;
 
   constructor(
     private userMsService: UserMsService,
@@ -91,8 +91,13 @@ export class AssignedSmeComponent implements OnInit {
     this.agentId = this.utilsService.getLoggedInUserID()
     this.roles = this.loggedInSme[0]?.roles
     console.log('roles', this.roles)
-    this.getSmeList();
+    // this.getSmeList();
     this.getCount();
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.getSmeList();
+    } else{
+      this.dataOnLoad = false;
+    }
   }
   clearValue() {
     this.searchVal = "";
@@ -109,9 +114,14 @@ export class AssignedSmeComponent implements OnInit {
       return;
     }
     if (!this.key || !this.searchVal) {
-      this.showError = true;
-      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
-      return;
+      if(this.agentId===this.loggedInSme[0]?.userId){
+        this.getSmeList();
+      }else{
+        this.showError = true;
+        this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+        return;
+      }
+
     }else{
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
@@ -270,6 +280,7 @@ export class AssignedSmeComponent implements OnInit {
         ) {
           this.loading = false;
           this.smeInfo = result?.data?.content;
+          this.smeListLength = this?.smeInfo?.length;
           this.config.totalItems = result?.data?.totalElements;
           // this.config.internalCount = result?.data?.internalCount;
           // this.config.externalCount = result?.data?.externalCount;
@@ -283,9 +294,8 @@ export class AssignedSmeComponent implements OnInit {
             this.createRowData(this.smeInfo)
           );
         } else {
-          this.config.totalItems = 0
           this.loading = false;
-          this.config.totalItems =0;
+          this.config.totalItems = 0;
           this.config.internalCount = 0;
           this.config.externalCount = 0;
           this.config.activeCount = 0;
@@ -373,8 +383,6 @@ export class AssignedSmeComponent implements OnInit {
           this.config.assignmentOnCount = result?.data?.assignmentOnCount;
           this.config.assignmentOffCount = result?.data?.assignmentOffCount;
         }else{
-          this.loading = false;
-          this.config.totalItems = 0
           this.loading = false;
           this.config.totalItems =0;
           this.config.internalCount = 0;
@@ -788,7 +796,13 @@ export class AssignedSmeComponent implements OnInit {
       this.getSmeList(true);
       this.getCount('','','',true);
     }else{
-      this.getSmeList();
+      if(this.dataOnLoad) {
+        this.getSmeList();
+      } else {
+        //clear grid for loaded data
+        this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+        this.smeListLength = 0;
+      }
       this.getCount();
     }
   }

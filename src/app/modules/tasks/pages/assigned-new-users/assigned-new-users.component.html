@@ -9,7 +9,7 @@
           Filter - My Users:
         </mat-panel-title>
         <div class="col-sm-3"
-          *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') || roles?.includes('ROLE_OWNER'))">
+          *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') || loggedInUserRoles?.includes('ROLE_OWNER'))">
           <button class="tbd-btn spRt" style="float:right"
             (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment</button>
         </div>

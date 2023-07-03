@@ -131,7 +131,6 @@
                 matTooltip="{{ dropdown.name }}"
                 matTooltipClass="tab-tooltip"
                 matTooltipPosition="above"
-                [disabled]="dropdown.disabled"
               >
                 {{ dropdown.name }}
               </mat-option>
@@ -216,38 +215,39 @@
       </div>
 
       <div class="edit-head">
-        <button type="button" class="edit-donation" (click)="editSalaryForm(fieldGlobalIndex(i))">
+        <button
+          type="button"
+          class="edit-donation"
+          (click)="editSalaryForm(fieldGlobalIndex(i))"
+        >
           <mat-icon> edit_square </mat-icon>Edit
         </button>
       </div>
     </div>
     <div class="row spsTp bdrTp">
-   
-        <div class="col-sm-3">
-          <button
-            type="submit"
-            class="tbd-btn-secondary delBtn"
-            (click)="deleteSalaryArray()"
-          >
-            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-          </button>
-        </div>
-        <div class="col-sm-6">
-          <table>
-            <tr
-              *ngFor="let item of getSalaryArray.controls | paginate : config"
-            ></tr>
-          </table>
-          <pagination-controls
-            id="{{ showHeadOfIncome }}"
-            (pageChange)="pageChanged($event)"
-          ></pagination-controls>
-        </div>
-        <div class="col-sm-3">
-          <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
-        </div>
-   
+      <div class="col-sm-3">
+        <button
+          type="submit"
+          class="tbd-btn-secondary delBtn"
+          (click)="deleteSalaryArray()"
+        >
+          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+        </button>
+      </div>
+      <div class="col-sm-6">
+        <table>
+          <tr
+            *ngFor="let item of getSalaryArray.controls | paginate : config"
+          ></tr>
+        </table>
+        <pagination-controls
+          id="{{ showHeadOfIncome }}"
+          (pageChange)="pageChanged($event)"
+        ></pagination-controls>
+      </div>
+      <div class="col-sm-3">
+        <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
+      </div>
     </div>
-
   </div>
 </form>

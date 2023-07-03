@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div class="row" >
+<div class="row">
   <div class="col-sm-6">
     <h4>Revenue Report:</h4>
   </div>
@@ -36,7 +36,8 @@
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-12 spsTp bdrTp">
-              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()"
+                *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
                 <i class="fa fa-download" aria-hidden="true"></i> Download File
               </button>
               <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
@@ -50,7 +51,7 @@
           <div class="row">
             <div class="col-sm-12 ">
               <span class="note1">
-                Note :  Please select required filters Above and click on Show Reports to get information
+                Note : Please select required filters Above and click on Show Reports to get information
               </span>
             </div>
           </div>
@@ -61,7 +62,7 @@
   </mat-accordion>
 </div>
 
-<div class="tableSpc" >
+<div class="tableSpc">
   <div class="row">
     <div class="col-sm-8">
       <div class="txTit">
@@ -80,7 +81,7 @@
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="revenueReportGridOptions">
   </ag-grid-angular>
 
-  <div *ngIf="config.totalItems > 1" >
+  <div *ngIf="config.totalItems > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 
