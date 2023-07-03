@@ -38,7 +38,7 @@
 
           <div class="col-sm-3 dtTp">
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="class1">
               <mat-label>From Date</mat-label>
               <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate" autocomplete="off"
                 (dateChange)="setToDateValidation(startDate.value)" />
@@ -49,9 +49,9 @@
           </div>
 
           <div class="col-sm-3 dtTp">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="class1">
               <mat-label>To Date</mat-label>
-              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" autocomplete="off" />
+              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxDate" autocomplete="off" />
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>

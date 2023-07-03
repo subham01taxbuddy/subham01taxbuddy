@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { DatePipe, formatDate } from '@angular/common';
@@ -345,8 +345,8 @@ export class PerformaInvoiceComponent implements OnInit {
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
     status: new FormControl(''),
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
