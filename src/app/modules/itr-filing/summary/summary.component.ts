@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
+import { UpdateManualFilingDialogComponent } from '../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -2174,7 +2175,8 @@ export class SummaryComponent implements OnInit {
                   ?.CapGain?.LongTerm?.TotalLongTerm,
               totalCapitalGain:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.TotalCapGains - this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.TotalCapGains -
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
                   ?.CapGain?.CapGains30Per115BBH,
             },
             Crypto: {
@@ -5763,5 +5765,25 @@ export class SummaryComponent implements OnInit {
     return this.exemptIncomesDropdown.filter(
       (item) => item.value === exempt.natureDesc
     )[0].label;
+  }
+
+  updateManually() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    console.log('UPDATE MANUALLY', this.ITR_JSON);
+    let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: this.ITR_JSON,
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    console.log('UPDATE MANUALLY', this.ITR_JSON);
   }
 }

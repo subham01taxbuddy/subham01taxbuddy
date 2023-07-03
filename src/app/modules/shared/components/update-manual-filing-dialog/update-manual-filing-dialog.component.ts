@@ -2,13 +2,18 @@ import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { Router } from '@angular/router';
 
 export const MY_FORMATS = {
   parse: {
@@ -26,11 +31,22 @@ export const MY_FORMATS = {
   selector: 'app-update-manual-filing-dialog',
   templateUrl: './update-manual-filing-dialog.component.html',
   styleUrls: ['./update-manual-filing-dialog.component.css'],
-  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class UpdateManualFilingDialogComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(15), Validators.minLength(15)]);
+  ackNumber = new FormControl('', [
+    Validators.required,
+    Validators.pattern(AppConstants.numericRegex),
+    Validators.maxLength(15),
+    Validators.minLength(15),
+  ]);
   eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
@@ -40,12 +56,14 @@ export class UpdateManualFilingDialogComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     public location: Location,
-    public utilsService: UtilsService) {
-  }
+    public utilsService: UtilsService,
+    private router: Router,
+    private dialogRef: MatDialogRef<UpdateManualFilingDialogComponent>
+  ) {}
 
   ngOnInit() {
-    console.log(this.data);
-    this.itrobj =JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    console.log(this.data, 'MANUAL DATA');
+    this.itrobj = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   updateManualDetails() {
@@ -54,20 +72,34 @@ export class UpdateManualFilingDialogComponent implements OnInit {
       this.data.eFillingDate = this.eFillingDate.value;
       this.data.ackNumber = this.ackNumber.value;
       this.data.eFillingCompleted = true;
-      console.log('Updated Data:', this.data)
-      const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-      this.itrMsService.putMethod(param, this.data).subscribe((res: any) => {
-        console.log(res);
-        this.updateStatus();
-        this.loading = false;
-        this.utilsService.showSnackBar('Manual Filing Details updated successfully')
-        this.location.back();
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.itrobj));
-
-      }, error => {
-        this.utilsService.showSnackBar('Failed to update Manual Filing Details')
-        this.loading = false;
-      })
+      console.log('Updated Data:', this.data);
+      const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
+      this.itrMsService.putMethod(param, this.data).subscribe(
+        (res: any) => {
+          console.log(res);
+          this.updateStatus();
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Manual Filing Details updated successfully'
+          );
+          this.loading = true;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.data)
+          );
+          console.log('Updated Manual Data', this.data);
+          this.dialogRef.close();
+          this.router.navigate(['/tasks/filings']);
+          this.loading = false;
+        },
+        (error) => {
+          this.utilsService.showSnackBar(
+            'Failed to update Manual Filing Details'
+          );
+          this.dialogRef.close();
+          this.loading = false;
+        }
+      );
     }
   }
 
@@ -78,25 +110,28 @@ export class UpdateManualFilingDialogComponent implements OnInit {
       // this.utilsService.showSnackBar('There is no any active filing year available')
       return;
     }
-    const param = '/itr-status'
+    const param = '/itr-status';
     const request = {
-      "statusId": 11, // ITR FILED
-      "userId": this.data.userId,
-      "assessmentYear": currentFyDetails[0].assessmentYear,
-      "completed": true,
-      "serviceType": "ITR"
-    }
+      statusId: 11, // ITR FILED
+      userId: this.data.userId,
+      assessmentYear: this.data.assessmentYear,
+      completed: true,
+      serviceType: 'ITR',
+    };
 
     // this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe(result => {
-      console.log('##########################', result['statusId']);
-      // this.utilsService.showSnackBar('Filing status updated successfully.')
-      // this.sendValue.emit(result['statusId']);
-      // this.loading = false;
-    }, err => {
-      // this.loading = false;
-      // this.utilsService.showSnackBar('Failed to update Filing status.')
-    })
+    this.userMsService.postMethod(param, request).subscribe(
+      (result) => {
+        console.log('##########################', result['statusId']);
+        // this.utilsService.showSnackBar('Filing status updated successfully.')
+        // this.sendValue.emit(result['statusId']);
+        // this.loading = false;
+      },
+      (err) => {
+        // this.loading = false;
+        // this.utilsService.showSnackBar('Failed to update Filing status.')
+      }
+    );
   }
 
   setFilingDate() {
@@ -106,8 +141,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
     var month = lastSix.slice(2, 4);
     var year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
-    console.log(dateString, year, month, day)
+    console.log(dateString, year, month, day);
     this.eFillingDate.setValue(dateString);
   }
 }
-
