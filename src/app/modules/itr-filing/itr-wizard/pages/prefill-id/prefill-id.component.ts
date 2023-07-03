@@ -1298,10 +1298,18 @@ export class PrefillIdComponent implements OnInit {
                 ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
               this.ITR_Obj.family[0].fatherName =
                 ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
-              this.ITR_Obj.isRevised =
-                ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 11
-                  ? 'N'
-                  : 'Y';
+
+              if (this.ITR_Obj.isRevised === 'N') {
+                this.ITR_Obj.isRevised =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
+                    ? 'Y'
+                    : 'N';
+              } else if ((this.ITR_Obj.isRevised = 'Y')) {
+                this.ITR_Obj.isRevised = 'Y';
+                this.utilsService.showSnackBar(
+                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                );
+              }
 
               ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
@@ -2510,11 +2518,18 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.family[0].fatherName =
                 ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
 
-              this.ITR_Obj.isRevised =
-                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                  ?.ReturnFileSec === 11
-                  ? 'N'
-                  : 'Y';
+              if (this.ITR_Obj.isRevised === 'N') {
+                this.ITR_Obj.isRevised =
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec === 17
+                    ? 'Y'
+                    : 'N';
+              } else if ((this.ITR_Obj.isRevised = 'Y')) {
+                this.ITR_Obj.isRevised = 'Y';
+                this.utilsService.showSnackBar(
+                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                );
+              }
 
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
@@ -5347,6 +5362,7 @@ export class PrefillIdComponent implements OnInit {
         },
       });
 
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
         if (result === 'YES') {
@@ -5356,7 +5372,8 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_JSON.financialYear,
             this.ITR_JSON.itrId,
             this.ITR_JSON.filingTeamMemberId,
-            this.ITR_JSON.id
+            this.ITR_JSON.id,
+            this.ITR_JSON
           );
 
           sessionStorage.setItem(
@@ -5516,6 +5533,8 @@ export class PrefillIdComponent implements OnInit {
       },
     });
 
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
       if (result === 'YES') {
@@ -5527,7 +5546,8 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_JSON.financialYear,
           this.ITR_JSON.itrId,
           this.ITR_JSON.filingTeamMemberId,
-          this.ITR_JSON.id
+          this.ITR_JSON.id,
+          this.ITR_JSON
         );
         this.utilsService.showSnackBar(
           'The uploaded JSON has been deleted. You can now proceed ahead.'

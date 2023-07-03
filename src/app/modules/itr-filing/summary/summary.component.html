@@ -243,7 +243,7 @@
         class="btn kommBut"
         (click)="sendPdf('kommunicate')"
       >
-        Send PDF to Kommunicate chat
+        Send PDF to Kommunicate
       </button>
 
       <button
@@ -268,6 +268,14 @@
         style="background-color: orange"
       >
         Validate ITR
+      </button>
+      <button
+        type="button"
+        (click)="updateManually()"
+        class="btn grBut"
+        style="background-color: #39670b"
+      >
+        Manual Update
       </button>
     </div>
 
@@ -1843,7 +1851,10 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  finalCalculations?.Crypto?.totalCryptoIncome ? finalCalculations?.Crypto?.totalCryptoIncome : 0
+                                  finalCalculations?.Crypto?.totalCryptoIncome
+                                    ? finalCalculations?.Crypto
+                                        ?.totalCryptoIncome
+                                    : 0
                                 )
                               }}</label
                             >
