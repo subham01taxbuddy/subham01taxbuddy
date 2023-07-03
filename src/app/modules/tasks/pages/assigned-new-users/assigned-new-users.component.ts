@@ -60,7 +60,6 @@ export class AssignedNewUsersComponent implements OnInit {
   agentId = null;
   loggedInUserRoles: any;
   showReassignmentBtn: any;
-  roles: any;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -120,7 +119,6 @@ export class AssignedNewUsersComponent implements OnInit {
   dataOnLoad = true;
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
-    this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getMasterStatusList();
     // this.search();
