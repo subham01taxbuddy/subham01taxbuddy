@@ -3,21 +3,26 @@ import { Injectable } from '@angular/core';
 import { JsonToCsvService } from '../modules/shared/services/json-to-csv.service';
 import { Observable, Subject } from 'rxjs';
 import { ToastMessageService } from './toast-message.service';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GenericCsvService {
   headers: any;
-  pageSize = 30;
-  size = 30;
+  pageSize = 100;
+  size = 100;
   data = [];
   count: number;
+  roles: any;
   constructor(
     private httpClient: HttpClient,
     private jsonToCsvService: JsonToCsvService,
     private _toastMessageService: ToastMessageService,
-  ) { }
+    private utilsService: UtilsService
+  ) {
+    this.roles = this.utilsService.getUserRoles();
+  }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any) {
     // var subject = new Subject<boolean>();
@@ -59,8 +64,8 @@ export class GenericCsvService {
         .then((result: any) => {
           if (result.success) {
             // if (result?.data?.content.length) {
-              this.data = [...this.data, ...result?.data?.content];
-              resolve(result?.data.totalPages);
+            this.data = [...this.data, ...result?.data?.content];
+            resolve(result?.data.totalPages);
             // } else {
             //   resolve(0);
             // }

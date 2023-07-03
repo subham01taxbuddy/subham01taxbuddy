@@ -21,14 +21,18 @@
             <div class="col-sm-12">
               <section class="example-section checkbox-right">
                 <div class="checkbox-group ">
-                  <mat-checkbox  [formControl]="leaderView" [disabled]="disableCheckboxes" *ngIf="roles.includes('ROLE_ADMIN')"  (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
-                  <mat-checkbox  [formControl]="ownerView" [disabled]="disableCheckboxes" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')" (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
+                  <mat-checkbox [formControl]="leaderView" [disabled]="disableCheckboxes"
+                    *ngIf="roles.includes('ROLE_ADMIN')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
+                  <mat-checkbox [formControl]="ownerView" [disabled]="disableCheckboxes"
+                    *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')"
+                    (change)="handleOwnerViewChange()">Owner View</mat-checkbox>
                 </div>
               </section>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-4 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}" *ngIf="roles.includes('ROLE_ADMIN')">
+            <div class="col-sm-4 bckClr" [ngClass]="{'disabled': leaderView.value || ownerView.value}"
+              *ngIf="roles.includes('ROLE_ADMIN')">
               <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)" [showOwnerList]=true>
               </app-leader-list-dropdown>
             </div>
@@ -59,7 +63,8 @@
               </mat-form-field>
             </div>
             <div class="col-sm-12 spsTp bdrTp">
-              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()"
+                *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
                 <i class="fa fa-download" aria-hidden="true"></i> Download File
               </button>
               <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
@@ -71,15 +76,17 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12 note1">
-              Note :  Please select required filters Above and click on Show Reports to get information
+            <div class="col-sm-12 ">
+              <span class="note1">
+                Note : Please select required filters Above and click on Show Reports to get information
+              </span>
             </div>
           </div>
-</div>
-</div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 <!-- Table Below -->
@@ -102,7 +109,7 @@
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="itrFillingReportGridOptions">
   </ag-grid-angular>
 
-  <div *ngIf="config.totalItems > 1" >
+  <div *ngIf="config.totalItems > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 
