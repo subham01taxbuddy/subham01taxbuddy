@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -102,6 +102,7 @@ export class TaxInvoiceComponent implements OnInit {
     },
   ];
 
+  dataOnLoad = true;
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
@@ -183,7 +184,13 @@ export class TaxInvoiceComponent implements OnInit {
       }
     });
 
-    this.getInvoice();
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.getInvoice();
+    } else{
+      this.dataOnLoad = false;
+    }
+
+    // this.getInvoice();
   }
 
   ownerId: number;
@@ -285,8 +292,8 @@ export class TaxInvoiceComponent implements OnInit {
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
     status: new FormControl('Paid'),
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
@@ -403,7 +410,13 @@ export class TaxInvoiceComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.getInvoice(true);
     } else {
-      this.getInvoice();
+     if(this.dataOnLoad) {
+        this.getInvoice();
+      } else {
+        //clear grid for loaded data
+        this.gridApi?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
   }
 

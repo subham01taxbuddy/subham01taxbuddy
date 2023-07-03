@@ -50,6 +50,7 @@ export class ScheduleCallReportComponent implements OnInit {
   loggedInSme: any;
   roles: any;
   scheduleCallingReportGridOptions: GridOptions;
+  dataOnLoad = true;
 
   constructor(
     public datePipe: DatePipe,
@@ -84,6 +85,12 @@ export class ScheduleCallReportComponent implements OnInit {
       this.ownerId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
+    }
+
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showReports();
+    } else{
+      this.dataOnLoad = false;
     }
     // this.showReports();
   }
@@ -294,7 +301,14 @@ export class ScheduleCallReportComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
+    if(this.dataOnLoad) {
+      this.showReports();
+    } else {
+      //clear grid for loaded data
+      this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    }
+    // this.showReports();
   }
 
   pageChanged(event) {

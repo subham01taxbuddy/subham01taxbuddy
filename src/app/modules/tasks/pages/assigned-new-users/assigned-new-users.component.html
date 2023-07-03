@@ -8,22 +8,27 @@
           <mat-icon> arrow_forward_ios </mat-icon>
           Filter - My Users:
         </mat-panel-title>
-        <div class="col-sm-3" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') || loggedInUserRoles?.includes('ROLE_OWNER'))">
-          <button class="tbd-btn spRt" style="float:right" (click)="$event.stopPropagation(); openBulkReAssignment()" >Bulk Re-Assignment</button>
+        <div class="col-sm-3"
+          *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') || loggedInUserRoles?.includes('ROLE_OWNER'))">
+          <button class="tbd-btn spRt" style="float:right"
+            (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment</button>
         </div>
       </mat-expansion-panel-header>
       <div class="rowClr">
         <div class="surround">
-       <div class="row">
-        <div class="col-sm-12" *ngIf="loggedInUserRoles?.includes('ROLE_OWNER')">
-          <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
-        </div>
-        <div class="col-sm-12 bckClr"  *ngIf="!coOwnerCheck">
-            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-        </div>
-        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-        </div>
+          <div class="row">
+            <div class="col-sm-12" *ngIf="loggedInUserRoles?.includes('ROLE_OWNER')">
+              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
+              </mat-slide-toggle>
+            </div>
+            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
+                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+            </div>
 
             <div class="col-sm-2 spsTp">
               <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"

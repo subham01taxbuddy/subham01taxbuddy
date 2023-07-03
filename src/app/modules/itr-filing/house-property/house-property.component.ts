@@ -1066,8 +1066,8 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
       // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
       this.annualValue =
-        this.housePropertyForm.controls['annualRentReceived'].value -
-        Number(this.housePropertyForm.controls['propertyTax'].value);
+        (this.housePropertyForm.controls['annualRentReceived'].value -
+        Number(this.housePropertyForm.controls['propertyTax'].value)) * ownerPercentage/100;
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
       // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }

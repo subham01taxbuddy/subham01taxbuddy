@@ -243,7 +243,7 @@
         class="btn kommBut"
         (click)="sendPdf('kommunicate')"
       >
-        Send PDF to Kommunicate chat
+        Send PDF to Kommunicate
       </button>
 
       <button
@@ -268,6 +268,14 @@
         style="background-color: orange"
       >
         Validate ITR
+      </button>
+      <button
+        type="button"
+        (click)="updateManually()"
+        class="btn grBut"
+        style="background-color: #39670b"
+      >
+        Manual Update
       </button>
     </div>
 
@@ -1806,6 +1814,109 @@
                                 slabRate?.netCapitalGain
                               )
                             }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-expansion-panel>
+
+                  <!-- ************************** Income from Crypto ****************************** -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    [disabled]="[
+                      finalCalculations?.Crypto?.totalCryptoIncome === 0
+                        ? true
+                        : false
+                    ]"
+                    #crypto
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            4. Income from Crypto
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr1">
+                              <mat-icon *ngIf="!crypto.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="crypto.expanded"
+                                >keyboard_arrow_up</mat-icon
+                              >
+                            </div>
+                            <label class="rtNumb1">
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.Crypto?.totalCryptoIncome
+                                    ? finalCalculations?.Crypto
+                                        ?.totalCryptoIncome
+                                    : 0
+                                )
+                              }}</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <!-- crypto details  -->
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.Crypto?.cryptoDetails?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">Buy Date</th>
+                          <th style="font-weight: bold">Sale Date</th>
+                          <th style="font-weight: bold">Head of Income</th>
+                          <th style="font-weight: bold">Buy Value</th>
+                          <th style="font-weight: bold">Sale Value</th>
+                          <th style="font-weight: bold">Capital Gain</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let crypto of finalCalculations?.Crypto
+                              ?.cryptoDetails;
+                            let i = index
+                          "
+                        >
+                          <td>{{ crypto?.srNo }}</td>
+                          <td>
+                            {{ crypto?.buyDate | date : "dd MMM yyyy" }}
+                          </td>
+                          <td>
+                            {{ crypto?.sellDate | date : "dd MMM yyyy" }}
+                          </td>
+                          <td>
+                            {{ crypto?.headOfIncome }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(crypto?.buyValue)
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(crypto?.SaleValue)
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ utilsService.currencyFormatter(crypto?.income) }}
                           </td>
                         </tr>
                       </tbody>

@@ -59,6 +59,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     mobileNumber: null,
     emailId: null,
   };
+  dataOnLoad = true;
 
   constructor(
     private fb: FormBuilder,
@@ -107,7 +108,12 @@ export class AssignedSubscriptionComponent implements OnInit {
         this.advanceSearch();
         // console.log('this.queryParam --> ',this.queryParam)
       } else {
-        this.getAssignedSubscription(0);
+        if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          this.getAssignedSubscription(0);
+        } else{
+          this.dataOnLoad = false;
+        }
+        // this.getAssignedSubscription(0);
       }
     });
 
@@ -241,7 +247,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log('this.searchVal -> ', this.searchVal)
     this.mobileNumber.setValue('')
     if (this.utilsService.isNonEmpty(this.searchVal)) {
-      if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 10) {
+      if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 50) {
         this.mobileNumber.setValue(this.searchVal);
         this.getUserByMobileNum(this.searchVal)
       } else {
@@ -346,7 +352,15 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.getAssignedSubscription(0, true);
     } else {
-      this.getAssignedSubscription(0);
+      if(this.dataOnLoad) {
+        this.getAssignedSubscription();
+      } else {
+        //clear grid for loaded data
+        this.subscriptionListGridOptions.api?.setRowData(
+          this.createRowData([])
+        );
+        this.config.totalItems = 0;
+      }
     }
     this.isAllowed = false;
   }
@@ -693,10 +707,10 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-      this.getAssignedSubscription(0);
+      // this.getAssignedSubscription(0);
     } else if (this.ownerId) {
       this.agentId = this.ownerId;
-      this.getAssignedSubscription(0);
+      // this.getAssignedSubscription(0);
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -716,10 +730,10 @@ export class AssignedSubscriptionComponent implements OnInit {
     }
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
-      this.getAssignedSubscription(0);
+      // this.getAssignedSubscription(0);
     } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      this.getAssignedSubscription(0);
+      // this.getAssignedSubscription(0);
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;

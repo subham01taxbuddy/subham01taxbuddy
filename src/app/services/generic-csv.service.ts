@@ -14,15 +14,15 @@ export class GenericCsvService {
   size = 100;
   data = [];
   count: number;
-  roles: any;
+  roles:any;
   constructor(
     private httpClient: HttpClient,
     private jsonToCsvService: JsonToCsvService,
     private _toastMessageService: ToastMessageService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
   ) {
     this.roles = this.utilsService.getUserRoles();
-  }
+   }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any) {
     // var subject = new Subject<boolean>();

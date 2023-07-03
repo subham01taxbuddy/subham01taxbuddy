@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
+import { UpdateManualFilingDialogComponent } from '../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -344,6 +345,20 @@ export class SummaryComponent implements OnInit {
       };
       totalLongTerm: Number;
       totalCapitalGain: Number;
+    };
+    Crypto: {
+      cryptoDetails: [
+        {
+          srNo: any;
+          buyDate: any;
+          sellDate: any;
+          headOfIncome: String;
+          buyValue: Number;
+          SaleValue: Number;
+          income: Number;
+        }
+      ];
+      totalCryptoIncome: Number;
     };
     totalHeadWiseIncome: Number;
     currentYearLosses: {
@@ -965,6 +980,20 @@ export class SummaryComponent implements OnInit {
               },
               totalLongTerm: 0,
               totalCapitalGain: 0,
+            },
+            Crypto: {
+              cryptoDetails: [
+                {
+                  srNo: null,
+                  buyDate: null,
+                  sellDate: null,
+                  headOfIncome: null,
+                  buyValue: null,
+                  SaleValue: null,
+                  income: 0,
+                },
+              ],
+              totalCryptoIncome: 0,
             },
 
             totalHeadWiseIncome:
@@ -2146,7 +2175,30 @@ export class SummaryComponent implements OnInit {
                   ?.CapGain?.LongTerm?.TotalLongTerm,
               totalCapitalGain:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.TotalCapGains,
+                  ?.CapGain?.TotalCapGains -
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.CapGains30Per115BBH,
+            },
+            Crypto: {
+              cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
+                return {
+                  srNo: index + 1,
+                  buyDate: element?.DateofAcquisition,
+                  sellDate: element?.DateofTransfer,
+                  headOfIncome: element?.HeadUndIncTaxed,
+                  buyValue: element?.AcquisitionCost,
+                  SaleValue: element?.ConsidReceived,
+                  income: element?.IncomeFromVDA,
+                };
+              }),
+              totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleVDA?.TotIncCapGain
+                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVDA
+                    ?.TotIncCapGain
+                : 0,
             },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -3290,6 +3342,20 @@ export class SummaryComponent implements OnInit {
                           return total + incomeAfterInternalSetOff;
                         }, 0),
                   },
+                  Crypto: {
+                    cryptoDetails: [
+                      {
+                        srNo: null,
+                        buyDate: null,
+                        sellDate: null,
+                        headOfIncome: null,
+                        buyValue: null,
+                        SaleValue: null,
+                        income: 0,
+                      },
+                    ],
+                    totalCryptoIncome: 0,
+                  },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
 
@@ -4414,6 +4480,20 @@ export class SummaryComponent implements OnInit {
 
                         return total + incomeAfterInternalSetOff;
                       }, 0),
+                },
+                Crypto: {
+                  cryptoDetails: [
+                    {
+                      srNo: null,
+                      buyDate: null,
+                      sellDate: null,
+                      headOfIncome: null,
+                      buyValue: null,
+                      SaleValue: null,
+                      income: 0,
+                    },
+                  ],
+                  totalCryptoIncome: 0,
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -5685,5 +5765,25 @@ export class SummaryComponent implements OnInit {
     return this.exemptIncomesDropdown.filter(
       (item) => item.value === exempt.natureDesc
     )[0].label;
+  }
+
+  updateManually() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    console.log('UPDATE MANUALLY', this.ITR_JSON);
+    let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: this.ITR_JSON,
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    console.log('UPDATE MANUALLY', this.ITR_JSON);
   }
 }

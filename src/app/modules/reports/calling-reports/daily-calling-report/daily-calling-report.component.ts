@@ -57,6 +57,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     pageSize: 20,
   };
   dailyCallingReportGridOptions: GridOptions;
+  dataOnLoad = true;
 
   loggedInSme: any;
   roles: any;
@@ -97,6 +98,12 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
       this.ownerId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
+    }
+
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showReports();
+    } else{
+      this.dataOnLoad = false;
     }
     // this.showReports();
   }
@@ -348,7 +355,14 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
+    if(this.dataOnLoad) {
+      this.showReports();
+    } else {
+      //clear grid for loaded data
+      this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    }
+    // this.showReports();
   }
 
   pageChanged(event) {

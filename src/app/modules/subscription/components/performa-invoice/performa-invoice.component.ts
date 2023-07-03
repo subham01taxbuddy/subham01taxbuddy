@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { DatePipe, formatDate } from '@angular/common';
@@ -117,6 +117,8 @@ export class PerformaInvoiceComponent implements OnInit {
       endDate: new Date('2021-03-31'),
     },
   ];
+
+  dataOnLoad = true;
   constructor(
     private reviewService: ReviewService,
     private fb: FormBuilder,
@@ -224,7 +226,12 @@ export class PerformaInvoiceComponent implements OnInit {
       }
     });
 
-    this.getInvoice();
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.getInvoice();
+    } else{
+      this.dataOnLoad = false;
+    }
+    // this.getInvoice();
   }
 
   ownerId: number;
@@ -338,8 +345,8 @@ export class PerformaInvoiceComponent implements OnInit {
 
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
     status: new FormControl(''),
     searchFiler: new FormControl(''),
     searchOwner: new FormControl(''),
@@ -455,7 +462,13 @@ export class PerformaInvoiceComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.getInvoice('true');
     } else {
-      this.getInvoice();
+      if(this.dataOnLoad) {
+        this.getInvoice();
+      } else {
+        //clear grid for loaded data
+        this.gridApi?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
 
   }
