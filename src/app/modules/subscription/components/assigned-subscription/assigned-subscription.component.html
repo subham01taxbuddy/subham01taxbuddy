@@ -3,7 +3,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -71,10 +71,19 @@
          <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
           <i class="fa fa-download" aria-hidden="true"></i> Download File
         </button>
+        <button *ngIf="!mobileNumber.value" class="srch-btn mvRth" [disabled]="loading" (click)="this.getAssignedSubscription(0)"><i
+          class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
            <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
 
 
          </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 ">
+                <span class="note1">
+                  Note :  Please select required filters above and click on search to get information
+                </span>
+              </div>
             </div>
 </div>
 </div>
