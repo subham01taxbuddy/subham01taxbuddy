@@ -106,8 +106,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
-        this.allDetails = response.data;
-        this.data = response.data;
+        this.allDetails = response?.data?.content[0];
+        this.data = response?.data?.content[0];
 
       }else{
         this.data=null;
