@@ -138,6 +138,8 @@ export class ForgotPasswordComponent implements OnInit {
           this.isError = true;
           this.errorMessage = res.message;
         }
+      }, error => {
+        this.utilService.showSnackBar(error.error.message);
       });
     } else {
       $('input.ng-invalid').first().focus();

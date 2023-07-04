@@ -51,6 +51,7 @@ export class ScheduledCallComponent implements OnInit {
     mobileNumber: null,
     email: null,
   };
+  dataOnLoad = true;
 
   constructor(
     private reviewService: ReviewService,
@@ -108,7 +109,11 @@ export class ScheduledCallComponent implements OnInit {
         this.search('status');
       }
       else {
-        this.search();
+        if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          this.search();
+        } else{
+          this.dataOnLoad = false;
+        }
       }
     })
   }
@@ -747,7 +752,13 @@ export class ScheduledCallComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
     } else {
-      this.search();
+      if(this.dataOnLoad) {
+        this.search();
+      } else {
+        //clear grid for loaded data
+        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
   }
 

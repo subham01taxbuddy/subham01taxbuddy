@@ -12,6 +12,9 @@
       <li [ngClass]="view === 'owner'?'tab__item active':'tab__item'" routerLinkActive="tab__item_active">
         <a class="tab__link" (click)="view='owner'">Activities</a>
       </li>
+      <li [ngClass]="view === 'status'?'tab__item active':'tab__item'" routerLinkActive="tab__item_active">
+        <a class="tab__link" (click)="view='status'">Status Wise Report </a>
+      </li>
     </ul>
   </div>
   <div *ngIf="view === 'owner'">
@@ -19,6 +22,9 @@
   </div>
   <div *ngIf="view === 'attendance'">
     <app-attendance-report></app-attendance-report>
+  </div>
+  <div *ngIf="view === 'status'">
+    <app-leader-statuswise-report [hideFilters]=true ></app-leader-statuswise-report>
   </div>
 
 </div>

@@ -1,0 +1,149 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading> -->
+<div class="main clearfix">
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- <h4>Owner Dashboard:</h4> -->
+      <h5 class="bdrbl">​Status Wise Record</h5>
+    </div>
+    <!-- <div class="col-sm-6">
+    <div class="float-right">
+      <span class="TxBg">Documents Uploaded</span>
+        <span class="numTxBg">91</span>
+      </div>
+  </div> -->
+  </div>
+  <div class="radiusMain">
+    <div class="row">
+      <div class="col-sm-4" *ngIf="!hideFilters">
+        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
+          (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown>
+      </div>
+      <div class="col-sm-2">
+        <div>
+          <label for="start-date">Start Date:</label>
+          <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
+            [min]="minDate" [max]="maxStartDate" (change)="setEndDateValidate(this.startDate)">
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div>
+          <label for="end-date">End Date:</label>
+          <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
+            [max]="maxDate">
+        </div>
+      </div>
+
+       <div class="col-sm-4">
+        <button class="srch-btn"[disabled]="loading"  (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+
+        <button class="clrLnk1" [disabled]="loading" (click)="this.resetFilters()">
+           Clear form
+        </button>
+        <button class="dwldBtn11" [disabled]="loading" (click)="downloadReport()">
+        <i class="fa fa-download" aria-hidden="true"></i> Download File
+      </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row rowClr">
+
+    <!-- Partners Search Area -->
+    <!-- <div class="col-sm-12">
+      <div class="txtH">Check Partners/Filer Record:</div>
+
+    </div> -->
+    <!-- Partners Search Area Ends -->
+    <!-- Table Starts-->
+    <div class="col-sm-12">
+      <div class="radiusTab1">
+        <div class="table-container">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">{{ getColumnName() }}</th>
+              <th scope="col">Total assigned users</th>
+              <th scope="col">Open</th>
+              <th scope="col">Interested</th>
+              <th scope="col">Follow Up</th>
+              <th scope="col">Auto Follow Up</th>
+              <th scope="col">Converted</th>
+              <th scope="col">Documents Uploaded</th>
+              <th scope="col">Preparing ITR</th>
+              <th scope="col">Waiting for Confirmation</th>
+              <th scope="col">ITR Confirmation received</th>
+              <th scope="col">ITR filed status wise</th>
+              <th scope="col">Invoice Sent</th>
+              <th scope="col">Payment Received</th>
+              <th scope="col">Not Interested</th>
+              <th scope="col">Backout</th>
+              <th scope="col">ITR Filed as per ITR's tab</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data?.statusWiseData; let i = index">
+              <td>{{ i+1 }}</td>
+              <td>{{ getCellValue(item) }}</td>
+              <td>{{ item.assignedUsers }}</td>
+              <td>{{ item.open }}</td>
+              <td>{{ item.interested }}</td>
+              <td>{{ item.followup }}</td>
+              <td>{{ item.autoFollowup }}</td>
+              <td>{{ item.converted }}</td>
+              <td>{{ item.documentsUploaded }}</td>
+              <td>{{ item.preparingItr }}</td>
+              <td>{{ item.waitingForConfirmation }}</td>
+              <td>{{ item.itrConfirmationReceived }}</td>
+              <td>{{ item.itrFiledStatusWise }}</td>
+              <td>{{ item.invoiceSent }}</td>
+              <td>{{ item.paymentReceived }}</td>
+              <td>{{ item.notInterested }}</td>
+              <td>{{ item.backout }}</td>
+              <td>{{ item.itrFiledAsPerITRTab }}</td>
+            </tr>
+            <tr>
+
+            </tr>
+            <tr>
+              <td colspan="1"></td>
+              <td class="text-bold">Grand Total</td>
+              <td>{{ data?.total?.totalAssignedUsers }}</td>
+              <td>{{ data?.total?.totalOpen }}</td>
+              <td>{{ data?.total?.totalInterested }}</td>
+              <td>{{ data?.total?.totalFollowup }}</td>
+              <td>{{ data?.total?.totalAutoFollowup }}</td>
+              <td>{{ data?.total?.totalConverted }}</td>
+              <td>{{ data?.total?.totalDocumentsUploaded }}</td>
+              <td>{{ data?.total?.totalPreparingItr }}</td>
+              <td>{{ data?.total?.totalWaitingForConfirmation }}</td>
+              <td>{{ data?.total?.totalItrConfirmationReceived }}</td>
+              <td>{{ data?.total?.totalItrFiledStatusWise }}</td>
+              <td>{{ data?.total?.totalInvoiceSent }}</td>
+              <td>{{ data?.total?.totalPaymentReceived }}</td>
+              <td>{{ data?.total?.totalNotInterested }}</td>
+              <td>{{ data?.total?.totalBackout }}</td>
+              <td>{{ data?.total?.totalItrFiledAsPerITRTab }}</td>
+            </tr>
+            <tr *ngIf="!data?.statusWiseData || data?.statusWiseData.length === 0">
+              <td colspan="19" class="text-center">No Records Found</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Ends -->
+  </div>
+
+
+
+
+
+
+
+
+</div>

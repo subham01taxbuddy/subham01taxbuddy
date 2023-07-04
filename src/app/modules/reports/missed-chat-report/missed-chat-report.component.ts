@@ -59,6 +59,7 @@ export class MissedChatReportComponent implements OnInit {
   loggedInSme: any;
   roles: any;
   dataOnLoad = true;
+  showCsvMessage: boolean;
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -166,6 +167,7 @@ export class MissedChatReportComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -181,6 +183,7 @@ export class MissedChatReportComponent implements OnInit {
     param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', '');
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   createRowData(missedChatData) {
