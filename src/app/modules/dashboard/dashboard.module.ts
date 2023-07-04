@@ -19,6 +19,7 @@ import { LeaderDashboardComponent } from './leader-dashboard/leader-dashboard.co
 import { SubLeaderDashboardComponent } from './sub-leader-dashboard/sub-leader-dashboard.component';
 import { TeamReportDashboardComponent } from './team-report-dashboard/team-report-dashboard.component';
 import { LeaderAttendanceDashboardComponent } from './leader-attendance-dashboard/leader-attendance-dashboard.component';
+import { LeaderStatuswiseReportComponent } from './leader-statuswise-report/leader-statuswise-report.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { LeaderAttendanceDashboardComponent } from './leader-attendance-dashboar
     LeaderDashboardComponent,
     SubLeaderDashboardComponent,
     TeamReportDashboardComponent,
-    LeaderAttendanceDashboardComponent
+    LeaderAttendanceDashboardComponent,
+    LeaderStatuswiseReportComponent
   ],
   imports: [
     CommonModule,
