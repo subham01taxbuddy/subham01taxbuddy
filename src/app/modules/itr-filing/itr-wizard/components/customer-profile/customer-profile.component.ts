@@ -38,7 +38,7 @@ import { AddClientDialogComponent } from '../../../add-client-dialog/add-client-
 import { PrefillDataComponent } from '../../pages/prefill-id/components/prefill-data/prefill-data.component';
 import * as moment from 'moment';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
-import {RequestManager} from "../../../../shared/services/request-manager";
+import { RequestManager } from '../../../../shared/services/request-manager';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -169,10 +169,11 @@ export class CustomerProfileComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('subscribing');
-    this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value:any)=>{
-      this.requestManager.init();
-      this.requestCompleted(value);
-    });
+    this.requestManagerSubscription =
+      this.requestManager.requestCompleted.subscribe((value: any) => {
+        this.requestManager.init();
+        this.requestCompleted(value);
+      });
   }
 
   ngOnInit() {
@@ -213,7 +214,7 @@ export class CustomerProfileComponent implements OnInit {
 
   resetPan() {
     console.log(this.customerProfileForm.controls['panNumber'].value);
-    if(this.customerProfileForm.controls['panNumber'].value.length < 10) {
+    if (this.customerProfileForm.controls['panNumber'].value.length < 10) {
       this.customerProfileForm.controls['firstName'].setValue(null);
       this.customerProfileForm.controls['middleName'].setValue(null);
       this.customerProfileForm.controls['lastName'].setValue(null);
@@ -247,7 +248,6 @@ export class CustomerProfileComponent implements OnInit {
       contactNumber: [
         '',
         Validators.compose([
-          Validators.pattern(AppConstants.mobileNumberRegex),
           Validators.minLength(10),
           Validators.maxLength(10),
           Validators.required,
@@ -360,12 +360,13 @@ export class CustomerProfileComponent implements OnInit {
           this.customerProfileForm.controls['panNumber']
         )
       ) {
-        this.requestManager.addRequest(this.PAN_INFO,
-        this.httpClient
-          .get(
+        this.requestManager.addRequest(
+          this.PAN_INFO,
+          this.httpClient.get(
             `${environment.url}/itr/api/getPanDetail?panNumber=${pan}`,
             httpOptions
-          ));
+          )
+        );
       }
     }
   }
@@ -447,7 +448,7 @@ export class CustomerProfileComponent implements OnInit {
             JSON.stringify(this.ITR_JSON)
           );
           this.loading = false;
-          if(ref) {
+          if (ref) {
             this.utilsService.showSnackBar(
               'Customer profile updated successfully.'
             );
@@ -456,8 +457,8 @@ export class CustomerProfileComponent implements OnInit {
           // if (this.customerProfileForm.controls['itrType'].value === '1'
           // || this.customerProfileForm.controls['itrType'].value === '4')
           // this.router.navigate(['/itr-filing/itr']);
-          if(!ref){
-            this.saveAndNext.emit({subTab: true, tabName: 'PERSONAL'});
+          if (!ref) {
+            this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
           }
           // else
           //   this.router.navigate(['/pages/itr-filing/direct-upload']);
@@ -479,15 +480,15 @@ export class CustomerProfileComponent implements OnInit {
     return timeDiff > 60 ? Math.ceil(timeDiff) : Math.floor(timeDiff);
   }
 
-  requestCompleted(res: any){
+  requestCompleted(res: any) {
     console.log(res);
     this.loading = false;
-    switch (res.api){
+    switch (res.api) {
       case this.GET_DOCUMENTS: {
         this.documents = res.result;
         break;
       }
-      case this.PAN_INFO:{
+      case this.PAN_INFO: {
         let result = res.result;
         console.log('user data by PAN = ', result);
         this.customerProfileForm.controls['firstName'].setValue(
@@ -499,9 +500,7 @@ export class CustomerProfileComponent implements OnInit {
         );
         this.customerProfileForm.controls['lastName'].setValue(
           this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.lastName)
-              ? result.lastName
-              : ''
+            this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
           )
         );
         this.customerProfileForm.controls['middleName'].setValue(
@@ -569,7 +568,10 @@ export class CustomerProfileComponent implements OnInit {
     //   this.documents = result;
     // });
 
-    this.requestManager.addRequest(this.GET_DOCUMENTS, this.itrMsService.getMethod(param));
+    this.requestManager.addRequest(
+      this.GET_DOCUMENTS,
+      this.itrMsService.getMethod(param)
+    );
   }
 
   getSignedUrl(document) {
@@ -806,7 +808,6 @@ export class CustomerProfileComponent implements OnInit {
   onSelectResidential(status) {
     if (status === 'RESIDENT') {
       this.customerProfileForm.controls['contactNumber'].setValidators([
-        Validators.pattern(AppConstants.mobileNumberRegex),
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.required,
