@@ -270,6 +270,10 @@
         Validate ITR
       </button>
       <button
+        *ngIf="
+          ITR_JSON.itrSummaryJson &&
+          this.utilsService.isNonEmpty(ITR_JSON.itrSummaryJson)
+        "
         type="button"
         (click)="updateManually()"
         class="btn grBut"

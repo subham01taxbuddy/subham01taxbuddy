@@ -1286,6 +1286,18 @@ export class PrefillIdComponent implements OnInit {
           {
             // CUSTOMER PROFILE
             {
+              if (this.ITR_Obj.isRevised === 'N') {
+                this.ITR_Obj.isRevised =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
+                    ? 'Y'
+                    : 'N';
+              } else if ((this.ITR_Obj.isRevised = 'Y')) {
+                this.ITR_Obj.isRevised = 'Y';
+                this.utilsService.showSnackBar(
+                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                );
+                return;
+              }
               this.ITR_Obj.email =
                 ItrJSON[this.ITR_Type].PersonalInfo.Address?.EmailAddress;
               this.ITR_Obj.family[0].fName =
@@ -1298,18 +1310,6 @@ export class PrefillIdComponent implements OnInit {
                 ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
               this.ITR_Obj.family[0].fatherName =
                 ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
-
-              if (this.ITR_Obj.isRevised === 'N') {
-                this.ITR_Obj.isRevised =
-                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
-                    ? 'Y'
-                    : 'N';
-              } else if ((this.ITR_Obj.isRevised = 'Y')) {
-                this.ITR_Obj.isRevised = 'Y';
-                this.utilsService.showSnackBar(
-                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
-                );
-              }
 
               ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
@@ -2495,6 +2495,20 @@ export class PrefillIdComponent implements OnInit {
           {
             // CUSTOMER PROFILE
             {
+              if (this.ITR_Obj.isRevised === 'N') {
+                this.ITR_Obj.isRevised =
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec === 17
+                    ? 'Y'
+                    : 'N';
+              } else if ((this.ITR_Obj.isRevised = 'Y')) {
+                this.ITR_Obj.isRevised = 'Y';
+                this.utilsService.showSnackBar(
+                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                );
+                return;
+              }
+
               this.ITR_Obj.email =
                 ItrJSON[
                   this.ITR_Type
@@ -2517,19 +2531,6 @@ export class PrefillIdComponent implements OnInit {
 
               this.ITR_Obj.family[0].fatherName =
                 ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
-
-              if (this.ITR_Obj.isRevised === 'N') {
-                this.ITR_Obj.isRevised =
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    ?.ReturnFileSec === 17
-                    ? 'Y'
-                    : 'N';
-              } else if ((this.ITR_Obj.isRevised = 'Y')) {
-                this.ITR_Obj.isRevised = 'Y';
-                this.utilsService.showSnackBar(
-                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
-                );
-              }
 
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
@@ -5532,7 +5533,6 @@ export class PrefillIdComponent implements OnInit {
           'Once you delete the JSON, you will have to enter all the details manually again',
       },
     });
-
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     dialogRef.afterClosed().subscribe((result) => {
