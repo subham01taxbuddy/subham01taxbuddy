@@ -26,6 +26,7 @@ export class PayoutReportComponent implements OnInit {
   dataOnLoad = true;
   roles: any;
   loggedInSme: any;
+  showCsvMessage: boolean;
 
   constructor(
     private utilsService: UtilsService,
@@ -337,6 +338,7 @@ export class PayoutReportComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
@@ -349,6 +351,7 @@ export class PayoutReportComponent implements OnInit {
     param = `/payout/report?${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report');
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;

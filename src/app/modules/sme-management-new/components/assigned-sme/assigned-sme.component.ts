@@ -52,6 +52,7 @@ export class AssignedSmeComponent implements OnInit {
   showError: boolean = false;
   fields = ["Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom"]
   dataOnLoad = true;
+  showCsvMessage: boolean;
 
   constructor(
     private userMsService: UserMsService,
@@ -409,6 +410,7 @@ export class AssignedSmeComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     const loggedInSmeUserId = this.loggedInSme[0].userId
 
     if (this.coOwnerToggle.value == false) {
@@ -438,6 +440,7 @@ export class AssignedSmeComponent implements OnInit {
     }
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', this.fields);
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   smeCreateColumnDef() {

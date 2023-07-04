@@ -30,6 +30,7 @@ export class RevenueReportComponent implements OnInit {
   revenueReportGridOptions: GridOptions;
   disableCheckboxes = false;
   dataOnLoad = true;
+  showCsvMessage: boolean;
 
   constructor(
     private reportService: ReportService,
@@ -64,9 +65,9 @@ export class RevenueReportComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.showReports();
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
     // this.showReports()
@@ -480,6 +481,7 @@ export class RevenueReportComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
@@ -504,8 +506,9 @@ export class RevenueReportComponent implements OnInit {
 
     param = `/calling-report/revenue-report?${userFilter}${viewFilter}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'revenue-report');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'revenue-report');
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -524,7 +527,7 @@ export class RevenueReportComponent implements OnInit {
       this.filerId = this.loggedInSme[0].userId;
     }
 
-    if(this.dataOnLoad) {
+    if (this.dataOnLoad) {
       this.showReports();
       this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
       this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
