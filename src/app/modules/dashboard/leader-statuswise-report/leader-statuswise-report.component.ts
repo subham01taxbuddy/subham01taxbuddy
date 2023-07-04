@@ -46,6 +46,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   maxDate: string = '2024-03-31';
   maxStartDate = new Date().toISOString().slice(0, 10);
   minEndDate= new Date().toISOString().slice(0, 10);
+  maxEndDate=new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
   allDetails:any;
@@ -76,7 +77,14 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   }
 
   search(){
-    this.getStatusWiseReport();
+    if(this.leaderId || this.ownerId){
+      this.getStatusWiseReport();
+    }
+    else{
+      this. _toastMessageService.alert("error","Please Select Leader / Owner to see the records");
+      return;
+    }
+
   }
 
   getStatusWiseReport(){
