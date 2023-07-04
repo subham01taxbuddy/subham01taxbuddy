@@ -131,9 +131,9 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   }
 
   getColumnName(): string {
-    if (this?.allDetails?.statusWiseData[0].hasOwnProperty('ownerName')) {
+    if (this?.allDetails?.statusWiseData?.length > 0 && this?.allDetails?.statusWiseData[0].hasOwnProperty('ownerName')) {
       return 'Owner And His Team';
-    } else if (this?.allDetails?.statusWiseData[0].hasOwnProperty('filerName')) {
+    } else if (this?.allDetails?.statusWiseData?.length > 0 && this?.allDetails?.statusWiseData[0].hasOwnProperty('filerName')) {
       return 'Partner/Filer';
     }else{
       return 'Owners / Partner Name';
