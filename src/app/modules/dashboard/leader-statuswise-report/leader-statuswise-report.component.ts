@@ -101,21 +101,21 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     //   userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
     // }
 
-    param =`/dashboard/status-wise-report?from=${fromDate}&to=${toDate}${userFilter}`
+    param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
         this.allDetails = response.data;
         this.data = response.data;
-        // this.config.docUpload.totalItems = response.data.totalElements;
+
       }else{
-        this.allDetails=null;
+        this.data=null;
          this.loading = false;
          this. _toastMessageService.alert("error",response.message);
        }
     },(error) => {
-      this.allDetails=null;
+      this.data=null;
       this.loading = false;
       this. _toastMessageService.alert("error","Error");
     });
@@ -123,12 +123,14 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   }
 
   getColumnName(): string {
-    if (this?.allDetails?.statusWiseData.hasOwnProperty('ownerName')) {
+    if (this?.allDetails?.statusWiseData[0].hasOwnProperty('ownerName')) {
       return 'Owner And His Team';
-    } else if (this?.allDetails?.statusWiseData.hasOwnProperty('filerName')) {
+    } else if (this?.allDetails?.statusWiseData[0].hasOwnProperty('filerName')) {
       return 'Partner/Filer';
+    }else{
+      return 'Owners / Partner Name';
     }
-    return 'Owners / Partner Name'; // Return a default column name if needed
+     // Return a default column name if needed
   }
 
   getCellValue(item): string {
@@ -179,7 +181,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    param =`/dashboard/status-wise-report?from=${fromDate}&to=${toDate}${userFilter}`
+    param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', this.fields);
@@ -191,7 +193,13 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this?.leaderDropDown?.resetDropdown();
-     this.search();
+    if(this.roles.includes('ROLE_OWNER')){
+      this.search();
+    }
+    else{
+      this.data=null;
+    }
+
   }
 
   setEndDateValidate(startDateVal: any) {
