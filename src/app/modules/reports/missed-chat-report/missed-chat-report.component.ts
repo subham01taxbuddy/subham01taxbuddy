@@ -11,6 +11,8 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { environment } from 'src/environments/environment';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 
 
 export const MY_FORMATS = {
@@ -44,7 +46,7 @@ export class MissedChatReportComponent implements OnInit {
   startDate = new FormControl('');
   endDate = new FormControl('');
   minEndDate = new Date();
-  maxStartDate =new Date();
+  maxStartDate = new Date();
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
   missedChatReport: any;
@@ -59,12 +61,10 @@ export class MissedChatReportComponent implements OnInit {
   dataOnLoad = true;
   constructor(
     public datePipe: DatePipe,
-    private userMsService: UserMsService,
+    private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private itrService: ItrMsService,
-    private jsonToCsvService: JsonToCsvService
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -93,12 +93,12 @@ export class MissedChatReportComponent implements OnInit {
 
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.showReports();
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
     // this.showReports()
@@ -164,6 +164,25 @@ export class MissedChatReportComponent implements OnInit {
     });
   }
 
+  async downloadReport() {
+    this.loading = true;
+    let param = ''
+    let userFilter = '';
+    if (this.ownerId && !this.filerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+    }
+    if (this.filerId) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+    param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', '');
+    this.loading = false;
+  }
+
   createRowData(missedChatData) {
     console.log('missedRepoInfo -> ', missedChatData);
     var missedChatRepoInfoArray = [];
@@ -179,7 +198,7 @@ export class MissedChatReportComponent implements OnInit {
     return missedChatRepoInfoArray;
   }
 
-  reportsCodeColumnDef(){
+  reportsCodeColumnDef() {
     return [
       {
         headerName: 'No of missed chat',
@@ -233,10 +252,10 @@ export class MissedChatReportComponent implements OnInit {
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
       this.ownerId = this.loggedInSme[0].userId;
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    if(this.dataOnLoad) {
+    if (this.dataOnLoad) {
       this.showReports();
     } else {
       //clear grid for loaded data
