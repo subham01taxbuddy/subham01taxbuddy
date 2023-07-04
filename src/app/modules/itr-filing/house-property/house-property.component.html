@@ -423,6 +423,15 @@
                             >
                               Amount can not be 0.</mat-error
                             >
+                            <mat-error
+                              *ngIf="
+                                housePropertyForm.controls[
+                                  'annualRentReceived'
+                                ].hasError('required')
+                              "
+                            >
+                              Gross Rent is required in LOP & DLOP
+                            </mat-error>
                           </mat-form-field>
                         </td>
                       </tr>
