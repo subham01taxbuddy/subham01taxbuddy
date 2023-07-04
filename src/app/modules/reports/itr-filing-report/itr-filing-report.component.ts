@@ -62,6 +62,7 @@ export class ItrFilingReportComponent implements OnInit {
   roles: any;
   disableCheckboxes = false;
   dataOnLoad = true;
+  showCsvMessage: boolean;
 
   constructor(
     public datePipe: DatePipe,
@@ -405,6 +406,7 @@ export class ItrFilingReportComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -433,6 +435,7 @@ export class ItrFilingReportComponent implements OnInit {
     param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${viewFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report');
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;

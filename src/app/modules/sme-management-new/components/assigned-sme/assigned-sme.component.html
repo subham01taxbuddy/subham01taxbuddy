@@ -1,5 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
@@ -62,7 +64,7 @@
           <div class="row">
             <div class="col-sm-12 ">
               <span class="note1">
-                Note :  Please select required filters above and click on search to get information
+                Note : Please select required filters above and click on search to get information
               </span>
             </div>
           </div>
@@ -141,7 +143,7 @@
   </ag-grid-angular>
 
   <div *ngIf="smeListLength > 1">
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 
 </div>
