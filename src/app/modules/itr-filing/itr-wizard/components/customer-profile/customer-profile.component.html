@@ -1,198 +1,409 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 
-    <form [formGroup]="customerProfileForm">
-        <div class="row">
-            <div class="col-sm-4">
-                <mat-label>PAN Number</mat-label>
-                <mat-form-field appearance="outline">
-                    <input type="text" matInput placeholder="PAN" name="panNumber" formControlName="panNumber"
-                        class="input-field" maxlength="10" minlength="10" (ngModelChange)="resetPan()"
-                        (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)" required upperCase>
-                    <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">
-                        Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('required')">
-                        Enter PAN Number.</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4">
-                <mat-label>Mobile Number</mat-label>
-                <mat-form-field appearance="outline">
-                    <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" maxlength="10" minlength="10" matInput placeholder="Mobile"
-                        name="mobile" formControlName="contactNumber" class="input-field" digitsOnly required>
-                    <mat-error
-                        *ngIf="customerProfileForm.controls['contactNumber'].hasError('required') || customerProfileForm.controls['contactNumber'].hasError('pattern') || customerProfileForm.controls['contactNumber'].hasError('minlength') || customerProfileForm.controls['contactNumber'].hasError('maxlength')">
-                        Enter
-                        10 digit mobile number</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4">
-                <mat-label>Email Address</mat-label>
-                <mat-form-field appearance="outline">
-                    <input matInput placeholder="Email address" name="email" formControlName="email" class="input-field"
-                        maxlength="50" required>
-                    <mat-error *ngIf="customerProfileForm.controls['email'].hasError('pattern')">Enter
-                        valid email</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['email'].hasError('required')">Enter
-                        email</mat-error>
-                </mat-form-field>
-            </div>
-       
-        <div class="col-sm-4 spsTp">
-                <mat-label>First name</mat-label>
-                <mat-form-field appearance="outline">
-                    <input type="text" matTooltip="First name as per PAN" [pattern]="charRegex"
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
-                        placeholder="First name" name="FirstName" formControlName="firstName" class="input-field"
-                        maxlength="25" capitalizeFirst>
-                    <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">
-                        Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-                <mat-label>Middle name</mat-label>
-                <mat-form-field appearance="outline">
-                    <input type="text" matTooltip="Middle name as per PAN" [pattern]="charRegex"
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
-                        placeholder="Middle name" name="MiddleName" formControlName="middleName" class="input-field"
-                        maxlength="75" capitalizeFirst>
-                    <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">
-                        Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-                <mat-label>Last name</mat-label>
-                <mat-form-field appearance="outline">
-                    <input type="text" matTooltip="Last name as per PAN" [pattern]="charRegex"
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
-                        placeholder="Last name" name="LastName" formControlName="lastName" class="input-field"
-                        maxlength="75" capitalizeFirst required>
-                    <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">
-                        Enter
-                        character only</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('required')">
-                        Enter last name.</mat-error>
-                </mat-form-field>
-            </div>
+<form [formGroup]="customerProfileForm">
+  <div class="row">
+    <div class="col-sm-4">
+      <mat-label>PAN Number</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          type="text"
+          matInput
+          placeholder="PAN"
+          name="panNumber"
+          formControlName="panNumber"
+          class="input-field"
+          maxlength="10"
+          minlength="10"
+          (ngModelChange)="resetPan()"
+          (blur)="
+            getUserDataByPan(customerProfileForm.controls['panNumber'].value)
+          "
+          required
+          upperCase
+        />
+        <mat-error
+          *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')"
+        >
+          Enter valid PAN (e.g XXXXX1234X)</mat-error
+        >
+        <mat-error
+          *ngIf="customerProfileForm.controls['panNumber'].hasError('required')"
+        >
+          Enter PAN Number.</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4">
+      <mat-label>Mobile Number</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matTooltip="Mobile number should be of 10 digit."
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          maxlength="10"
+          minlength="10"
+          matInput
+          placeholder="Mobile"
+          name="mobile"
+          formControlName="contactNumber"
+          class="input-field"
+          digitsOnly
+          required
+        />
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['contactNumber'].hasError(
+              'required'
+            ) ||
+            customerProfileForm.controls['contactNumber'].hasError(
+              'minlength'
+            ) ||
+            customerProfileForm.controls['contactNumber'].hasError('maxlength')
+          "
+        >
+          Enter 10 digit mobile number</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4">
+      <mat-label>Email Address</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          placeholder="Email address"
+          name="email"
+          formControlName="email"
+          class="input-field"
+          maxlength="50"
+          required
+        />
+        <mat-error
+          *ngIf="customerProfileForm.controls['email'].hasError('pattern')"
+          >Enter valid email</mat-error
+        >
+        <mat-error
+          *ngIf="customerProfileForm.controls['email'].hasError('required')"
+          >Enter email</mat-error
+        >
+      </mat-form-field>
+    </div>
 
-            <div class="col-sm-4 spsTp">
-                <mat-label>Father Name</mat-label>
-                <mat-form-field appearance="outline">
-                    <input type="text" matInput placeholder="Father's name" name="mobile"
-                        [formControl]="customerProfileForm.controls['fatherName']" [pattern]="charRegex"
-                        class="input-field" maxlength="125" capitalizeFirst required>
-                    <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
-                        Enter character only</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('required')">
-                        Enter father name</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-                <mat-label>Residential status</mat-label>
-                <mat-form-field appearance="outline">
-                    <mat-select placeholder="Residential status" name="residentialStatus"
-                        (selectionChange)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
-                        [formControl]="customerProfileForm.controls['residentialStatus']" required>
-                        <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
-                            {{ res.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-                <mat-label>Employee Category</mat-label>
-                <mat-form-field appearance="outline">
-                    <mat-select placeholder="Employer Category" name="employerCategory"
-                        formControlName="employerCategory" required>
-                        <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
-                            {{ emp.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-  
-            <div class="col-sm-4 spsTp">
-                <mat-label>Return Type</mat-label>
-                <mat-form-field appearance="outline">
-                    <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
-                        (selectionChange)="changeReviseForm()" required>
-                        <mat-option *ngFor="let type of returnTypes" [value]="type.value">
-                            {{ type.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                <mat-label>Acknowledgement number</mat-label>
-                <mat-form-field appearance="outline">
-                    <input matTooltip="Acknowledgement number maximum of 15 digit" matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" matInput placeholder="Acknowledgement of Original ITR"
-                        name="orgITRAckNum" digitsOnly class="input-field" maxlength="15" minlength="15"
-                        formControlName="orgITRAckNum" (blur)="setFilingDate()"/>
-                    <mat-error *ngIf="customerProfileForm.controls['orgITRAckNum'].hasError('required')">
-                        Enter Acknowledgement number</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['orgITRAckNum'].hasError('minlength')">
-                        Enter
-                        15 digit Acknowledgement number</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                <mat-label>Date of filing</mat-label>
-                <mat-form-field appearance="outline">
-                    <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
-                        placeholder="Date of filing original return" name="orgITRDate" readonly
-                        formControlName="orgITRDate" />
-                    <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #revisedPicker></mat-datepicker>
-                </mat-form-field>
-            </div>
-      
-        <div class="col-sm-4 spsTp">
-                <mat-label>Aadhaar Number</mat-label>
-                <mat-form-field appearance="outline">
-                    <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
-                        placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber" class="input-field"
-                        maxlength="12" digitsOnly required>
-                    <mat-error *ngIf="customerProfileForm.controls['aadharNumber'].hasError('required')">
-                        Enter aadhar number</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['aadharNumber'].hasError('maxlength')">
-                        Enter
-                        12 digit aadhar number</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['aadharNumber'].hasError('minlength')">
-                        Enter
-                        12 digit aadhar number</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-                <mat-label>Date Of Birth</mat-label>
-                <mat-form-field appearance="outline">
-                    <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
-                        class="input-field" placeholder="Date of birth" name="dateOfBirth"
-                        [formControl]="customerProfileForm.controls['dateOfBirth']" required>
-                    <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">
-                        Select date of birth</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-                <mat-label>Gender</mat-label>
-                <mat-radio-group formControlName="gender" style="display: flex;">
-                    <mat-radio-button style="margin-left:0px;margin-right: 15px;" labelPosition='after'
-                        *ngFor="let gender of genderMaster" [value]="gender.value">
-                        {{ gender.label }}
-                    </mat-radio-button>
-                </mat-radio-group>
-            </div>
-     
-            <div class="col-sm-12 spsTp bdrTp">
-                <button class="tbd-btn save-btn mvRth" [disabled]="!isEditCustomer && customerProfileForm.invalid" (click)="saveProfile('CONTINUE')">Save </button>
-            </div>
-        </div>
-    </form>
+    <div class="col-sm-4 spsTp">
+      <mat-label>First name</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          type="text"
+          matTooltip="First name as per PAN"
+          [pattern]="charRegex"
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          currencyMask
+          placeholder="First name"
+          name="FirstName"
+          formControlName="firstName"
+          class="input-field"
+          maxlength="25"
+          capitalizeFirst
+        />
+        <mat-error
+          *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')"
+        >
+          Enter character only</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
+      <mat-label>Middle name</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          type="text"
+          matTooltip="Middle name as per PAN"
+          [pattern]="charRegex"
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          currencyMask
+          placeholder="Middle name"
+          name="MiddleName"
+          formControlName="middleName"
+          class="input-field"
+          maxlength="75"
+          capitalizeFirst
+        />
+        <mat-error
+          *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')"
+        >
+          Enter character only</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
+      <mat-label>Last name</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          type="text"
+          matTooltip="Last name as per PAN"
+          [pattern]="charRegex"
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          currencyMask
+          placeholder="Last name"
+          name="LastName"
+          formControlName="lastName"
+          class="input-field"
+          maxlength="75"
+          capitalizeFirst
+          required
+        />
+        <mat-error
+          *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')"
+        >
+          Enter character only</mat-error
+        >
+        <mat-error
+          *ngIf="customerProfileForm.controls['lastName'].hasError('required')"
+        >
+          Enter last name.</mat-error
+        >
+      </mat-form-field>
+    </div>
 
+    <div class="col-sm-4 spsTp">
+      <mat-label>Father Name</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          type="text"
+          matInput
+          placeholder="Father's name"
+          name="mobile"
+          [formControl]="customerProfileForm.controls['fatherName']"
+          [pattern]="charRegex"
+          class="input-field"
+          maxlength="125"
+          capitalizeFirst
+          required
+        />
+        <mat-error
+          *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')"
+        >
+          Enter character only</mat-error
+        >
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['fatherName'].hasError('required')
+          "
+        >
+          Enter father name</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
+      <mat-label>Residential status</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-select
+          placeholder="Residential status"
+          name="residentialStatus"
+          (selectionChange)="
+            onSelectResidential(
+              customerProfileForm.controls['residentialStatus'].value
+            )
+          "
+          [formControl]="customerProfileForm.controls['residentialStatus']"
+          required
+        >
+          <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
+            {{ res.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
+      <mat-label>Employee Category</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-select
+          placeholder="Employer Category"
+          name="employerCategory"
+          formControlName="employerCategory"
+          required
+        >
+          <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
+            {{ emp.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-4 spsTp">
+      <mat-label>Return Type</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-select
+          placeholder="Return Type"
+          name="isRevised"
+          formControlName="isRevised"
+          (selectionChange)="changeReviseForm()"
+          required
+        >
+          <mat-option *ngFor="let type of returnTypes" [value]="type.value">
+            {{ type.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div
+      class="col-sm-4 spsTp"
+      *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'"
+    >
+      <mat-label>Acknowledgement number</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matTooltip="Acknowledgement number maximum of 15 digit"
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          placeholder="Acknowledgement of Original ITR"
+          name="orgITRAckNum"
+          digitsOnly
+          class="input-field"
+          maxlength="15"
+          minlength="15"
+          formControlName="orgITRAckNum"
+          (blur)="setFilingDate()"
+        />
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['orgITRAckNum'].hasError('required')
+          "
+        >
+          Enter Acknowledgement number</mat-error
+        >
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['orgITRAckNum'].hasError('minlength')
+          "
+        >
+          Enter 15 digit Acknowledgement number</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div
+      class="col-sm-4 spsTp"
+      *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'"
+    >
+      <mat-label>Date of filing</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          [max]="maxDateRevise"
+          matInput
+          [matDatepicker]="revisedPicker"
+          placeholder="Date of filing original return"
+          name="orgITRDate"
+          readonly
+          formControlName="orgITRDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="revisedPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #revisedPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-4 spsTp">
+      <mat-label>Aadhaar Number</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          currencyMask
+          placeholder="Aadhaar"
+          name="aadharNumber"
+          formControlName="aadharNumber"
+          class="input-field"
+          maxlength="12"
+          digitsOnly
+          required
+        />
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['aadharNumber'].hasError('required')
+          "
+        >
+          Enter aadhar number</mat-error
+        >
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['aadharNumber'].hasError('maxlength')
+          "
+        >
+          Enter 12 digit aadhar number</mat-error
+        >
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['aadharNumber'].hasError('minlength')
+          "
+        >
+          Enter 12 digit aadhar number</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
+      <mat-label>Date Of Birth</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matTooltip="Date of birth as per PAN"
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          [min]="minDate"
+          [max]="maxDate"
+          [matDatepicker]="picker"
+          class="input-field"
+          placeholder="Date of birth"
+          name="dateOfBirth"
+          [formControl]="customerProfileForm.controls['dateOfBirth']"
+          required
+        />
+        <mat-hint>Format: DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['dateOfBirth'].hasError('required')
+          "
+        >
+          Select date of birth</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
+      <mat-label>Gender</mat-label>
+      <mat-radio-group formControlName="gender" style="display: flex">
+        <mat-radio-button
+          style="margin-left: 0px; margin-right: 15px"
+          labelPosition="after"
+          *ngFor="let gender of genderMaster"
+          [value]="gender.value"
+        >
+          {{ gender.label }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="col-sm-12 spsTp bdrTp">
+      <button
+        class="tbd-btn save-btn mvRth"
+        [disabled]="!isEditCustomer && customerProfileForm.invalid"
+        (click)="saveProfile('CONTINUE')"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</form>
