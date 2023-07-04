@@ -257,6 +257,14 @@ export class AssignedSubscriptionComponent implements OnInit {
 
   }
 
+  search(pageNo?,mobileNo?){
+    if(mobileNo){
+      this.getUserByMobileNum(mobileNo);
+    }else{
+      this.getAssignedSubscription(pageNo);
+    }
+  }
+
   getUserByMobileNum(number) {
     console.log('number', number)
     if (this.utilsService.isNonEmpty(number)) {
@@ -353,7 +361,7 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.getAssignedSubscription(0, true);
     } else {
       if(this.dataOnLoad) {
-        this.getAssignedSubscription();
+        this.getAssignedSubscription(0);
       } else {
         //clear grid for loaded data
         this.subscriptionListGridOptions.api?.setRowData(
