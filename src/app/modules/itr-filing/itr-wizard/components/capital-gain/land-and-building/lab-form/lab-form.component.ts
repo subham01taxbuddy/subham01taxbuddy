@@ -1551,9 +1551,11 @@ export class LabFormComponent implements OnInit {
           this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
         );
         console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-        this.improvementYears = this.improvementYears.splice(
-          this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
-        );
+        if(this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0){
+          this.improvementYears = this.improvementYears.splice(
+            this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+          );
+        }
 
         // sessionStorage.setItem('improvementYears', res.data)
       }

@@ -234,7 +234,11 @@ export class HousePropertyComponent implements OnInit {
         grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
           null,
-          [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
+          [
+            Validators.required,
+            Validators.pattern(AppConstants.numericRegex),
+            Validators.min(1),
+          ],
         ],
         rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
@@ -279,7 +283,11 @@ export class HousePropertyComponent implements OnInit {
         grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
           null,
-          [Validators.pattern(AppConstants.numericRegex), Validators.min(1)],
+          [
+            Validators.required,
+            Validators.pattern(AppConstants.numericRegex),
+            Validators.min(1),
+          ],
         ],
         rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
@@ -817,7 +825,22 @@ export class HousePropertyComponent implements OnInit {
       };
     }
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
-
+    let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
+    if (typeOfHp === 'SOP') {
+      this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
+      this.housePropertyForm.controls[
+        'annualRentReceived'
+      ].updateValueAndValidity();
+    } else {
+      this.housePropertyForm.controls['annualRentReceived'].setValidators([
+        Validators.required,
+        Validators.pattern(AppConstants.numericRegex),
+        Validators.min(1),
+      ]);
+      this.housePropertyForm.controls[
+        'annualRentReceived'
+      ].updateValueAndValidity();
+    }
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
@@ -1066,8 +1089,10 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
       // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
       this.annualValue =
-        (this.housePropertyForm.controls['annualRentReceived'].value -
-        Number(this.housePropertyForm.controls['propertyTax'].value)) * ownerPercentage/100;
+        ((this.housePropertyForm.controls['annualRentReceived'].value -
+          Number(this.housePropertyForm.controls['propertyTax'].value)) *
+          ownerPercentage) /
+        100;
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
       // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }

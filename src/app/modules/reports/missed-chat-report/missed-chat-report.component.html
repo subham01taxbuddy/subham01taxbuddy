@@ -39,9 +39,11 @@
               </mat-form-field>
             </div>
             <div class="col-sm-12 spsTp bdrTp">
-              <!-- <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+              <button class="dwldBtn" [disabled]="loading"
+                *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+                (click)="downloadReport()">
                 <i class="fa fa-download" aria-hidden="true"></i> Download File
-              </button> -->
+              </button>
               <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                 Clear form
               </button>
@@ -53,15 +55,15 @@
           <div class="row">
             <div class="col-sm-12 ">
               <span class="note1">
-                Note :  Please select required filters Above and click on Show Reports to get information
+                Note : Please select required filters Above and click on Show Reports to get information
               </span>
             </div>
           </div>
-</div>
-</div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 <!-- Table Below -->
@@ -84,7 +86,7 @@
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions">
   </ag-grid-angular>
 
-  <div *ngIf="config.totalItems > 1" >
+  <div *ngIf="config.totalItems > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 
