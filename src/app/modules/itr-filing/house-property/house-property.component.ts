@@ -69,6 +69,7 @@ export class HousePropertyComponent implements OnInit {
   activeTenant: number[];
   @Output() saveAndNext = new EventEmitter<any>();
   taxableIncomesHP: any = [];
+  previousHousePropertyForms: FormGroup[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -141,6 +142,7 @@ export class HousePropertyComponent implements OnInit {
     );
 
     this.updateHpTaxaxbleIncome();
+    this.EeEaValueChanges();
   }
 
   updateHpTaxaxbleIncome(save?) {
@@ -458,7 +460,15 @@ export class HousePropertyComponent implements OnInit {
     // this.housingView = 'FORM';
     this.mode = 'ADD';
     this.chekIsSOPAdded();
+
+    // Store the previous form
+    if (this.housePropertyForm) {
+      this.previousHousePropertyForms.push(this.housePropertyForm);
+    }
+    
     this.housePropertyForm = this.createHousePropertyForm();
+    this.previousHousePropertyForms.push(this.housePropertyForm);
+    console.log(this.previousHousePropertyForms, 'previousHousePropertyForms');
     this.housePropertyForm.controls['country'].setValue('91');
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
   }
@@ -1096,6 +1106,19 @@ export class HousePropertyComponent implements OnInit {
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
       // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }
+  }
+
+  EeEaValueChanges() {
+    console.log(this.housePropertyForm);
+    (
+      (this.housePropertyForm.controls['loans'] as FormGroup)
+        .controls[0] as FormGroup
+    ).controls['interestAmount'].valueChanges.subscribe((val) => {
+      if (val > 200000) {
+        let value = this.housePropertyForm.controls['isEligibleFor80EE'].value;
+        console.log(value, 'value');
+      }
+    });
   }
 
   setStep(index: number) {
