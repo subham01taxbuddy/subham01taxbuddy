@@ -1032,6 +1032,7 @@ export class HousePropertyComponent implements OnInit {
       if (result) {
         this.Copy_ITR_JSON.houseProperties.splice(index, 1);
         this.serviceCall('DELETE', this.Copy_ITR_JSON);
+        this.previousHousePropertyForms.splice(index, 1);
       }
     });
 
