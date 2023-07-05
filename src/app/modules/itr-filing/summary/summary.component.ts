@@ -597,8 +597,7 @@ export class SummaryComponent implements OnInit {
                   ?.AadhaarCardNo,
 
               mobileNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
-                  ?.Address?.MobileNo,
+                this.ITR_JSON.contactNumber,
 
               resStatus: 'Resident',
 
@@ -1692,8 +1691,7 @@ export class SummaryComponent implements OnInit {
                   ?.PersonalInfo?.AadhaarCardNo,
 
               mobileNumber:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
-                  ?.PersonalInfo?.Address?.MobileNo,
+                this.ITR_JSON.contactNumber,
 
               resStatus:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
