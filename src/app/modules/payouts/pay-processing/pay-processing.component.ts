@@ -23,6 +23,7 @@ export class PayProcessingComponent implements OnInit {
     pageSize: 20,
   };
   downloadURL:any;
+  hideDownload = false;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -62,18 +63,20 @@ export class PayProcessingComponent implements OnInit {
         if(response?.allowUpload){
           this.isUploadTrue = true;
         }else{
-          this.isUploadTrue = false;;
+          this.isUploadTrue = false;
+          this.hideDownload =true;
         }
 
       } else {
         this.loading = false;
         this.isUploadTrue = false;
+        this.hideDownload = false;
         this.utilsService.showSnackBar(response.message);
       }
     },
     (error) => {
       this.loading = false;
-      this.utilsService.showSnackBar('Error in check upload');
+      this.utilsService.showSnackBar('Error in API of check upload/download csv');
     });
   }
 
@@ -256,18 +259,29 @@ export class PayProcessingComponent implements OnInit {
         this.downloadURL = response?.downloadUrl
         window.open(this.downloadURL, '_blank');
         this.isUploadTrue=true;
+        this.hideDownload =true;
         // this.isUploadAllowed();
       } else {
         this.loading = false;
         // this.isUploadTrue = false;
+        this.hideDownload =false;
         this.utilsService.showSnackBar(response.message);
       }
     },
     (error) => {
       this.loading = false;
-      this.utilsService.showSnackBar('Error in check download');
+      this.utilsService.showSnackBar('Error in download/generatee CSV ');
     });
 
+  }
+
+  isSurroundDynamic(): boolean {
+    if(this.isUploadTrue || this.hideDownload){
+      return true;
+    }
+     else{
+      return false ;
+     }
   }
 
   pageChanged(event: any) {

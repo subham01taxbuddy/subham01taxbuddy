@@ -71,6 +71,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.roles = this.utilsService.getUserRoles();
 
     if(this.roles.includes('ROLE_OWNER')){
+      this.ownerId= this.loggedInSmeUserId;
        this.search();
     }
 
