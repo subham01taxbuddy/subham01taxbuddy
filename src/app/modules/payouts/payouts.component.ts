@@ -58,6 +58,8 @@ export class PayoutsComponent implements OnInit {
   allFilerList: any;
   allLeaderList: any;
   dialogRef: any;
+  roles:any;
+  dataOnLoad = true;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -106,7 +108,13 @@ export class PayoutsComponent implements OnInit {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
-    this.getSearchList('status', this.selectedStatus);
+    this.roles = this.utilsService.getUserRoles();
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.serviceCall('');
+    } else{
+      this.dataOnLoad = false;
+    }
+    // this.serviceCall('');
   }
 
   getLeaders() {
@@ -135,7 +143,7 @@ export class PayoutsComponent implements OnInit {
       console.log('fromowner:', event);
       //let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
       //let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
-      this.serviceCall('');
+      // this.serviceCall('');
     }
   }
   fromFiler(event) {
@@ -143,14 +151,23 @@ export class PayoutsComponent implements OnInit {
       this.filerId = event ? event.userId : null;
       // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
       // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
-      this.serviceCall('');
+      // this.serviceCall('');
     }
   }
 
   advanceSearch(key: any) {
     this.user_data = [];
-    if (this.searchVal !== "") {
+    if(this.ownerId || this.filerId){
+      this.serviceCall('');
+    }
+    else if (this.searchVal !== "") {
+      this.selectedStatus='';
+      this.selectedPayoutStatus='';
       this.getSearchList(key, this.searchVal);
+    }else if(this.selectedStatus || this.selectedPayoutStatus){
+      this.getSearchList(key, this.searchVal);
+    }else if(this.selectedStatus == '' || this.selectedPayoutStatus ==''){
+      this.serviceCall('');
     }
   }
 
@@ -169,7 +186,9 @@ export class PayoutsComponent implements OnInit {
     if(this.utilsService.isNonEmpty(this.searchVal)){
       queryString = `&${this.key}=${this.searchVal}`;
     }
-    this.serviceCall(queryString);
+    this.searchVal='';
+    this.key=''
+    // this.serviceCall(queryString);
   }
 
   payOutStatusChanged(){
@@ -179,7 +198,9 @@ export class PayoutsComponent implements OnInit {
     if(this.utilsService.isNonEmpty(this.searchVal)){
       queryString = `&${this.key}=${this.searchVal}`;
     }
-    this.serviceCall(queryString);
+    this.searchVal='';
+    this.key=''
+    // this.serviceCall(queryString);
   }
 
   serviceCall(queryString){
@@ -779,8 +800,19 @@ export class PayoutsComponent implements OnInit {
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;
     this?.smeDropDown?.resetDropdown();
+    this.config.currentPage =1;
     this.clearValue();
-    this.serviceCall('');
+    if(this.dataOnLoad) {
+      this.serviceCall('');
+    } else {
+      //clear grid for loaded data
+      this.usersGridOptions.api?.setRowData([]);
+      // this.subscriptionListGridOptions.api?.setRowData(
+      //   this.createRowData([]) );
+      this.config.totalItems = 0;
+      // this.config.currentPage =1;
+    }
+    // this.serviceCall('');
   }
 
 }
