@@ -69,56 +69,67 @@ export class UpdateManualFilingDialogComponent implements OnInit {
   updateManualDetails() {
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
-      this.data.eFillingDate = this.eFillingDate.value;
-      this.data.ackNumber = this.ackNumber.value;
-      this.data.eFillingCompleted = true;
-      console.log('Updated Data:', this.data);
-      let req = {
-        userId: this.data.userId,
-        itrId: this.data.itrId,
-        email: this.data.email,
-        contactNumber: this.data.contactNumber,
-        panNumber: this.data.panNumber,
-        aadharNumber: this.data.aadharNumber,
-        assesseeType: 'INDIVIDUAL',
-        assessmentYear: this.data.assessmentYear,
-        financialYear: '2022-2023',
-        isRevised: this.data.isRevised,
-        eFillingCompleted: true,
-        eFillingDate: this.eFillingDate.value,
-        ackNumber: this.ackNumber.value,
-        itrType: this.data.itrType,
-        itrTokenNumber: '',
-        filingTeamMemberId: this.data.filingTeamMemberId,
-        filingSource: 'MANUALLY',
-      };
-      const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
-      this.itrMsService.putMethod(param, req).subscribe(
-        (res: any) => {
-          console.log(res);
-          this.updateStatus();
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Manual Filing Details updated successfully'
+      const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+      this.itrMsService.getMethod(param1).subscribe((res: any) => {
+        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+          this.data.eFillingDate = this.eFillingDate.value;
+          this.data.ackNumber = this.ackNumber.value;
+          this.data.eFillingCompleted = true;
+          console.log('Updated Data:', this.data);
+          let req = {
+            userId: this.data.userId,
+            itrId: this.data.itrId,
+            email: this.data.email,
+            contactNumber: this.data.contactNumber,
+            panNumber: this.data.panNumber,
+            aadharNumber: this.data.aadharNumber,
+            assesseeType: 'INDIVIDUAL',
+            assessmentYear: this.data.assessmentYear,
+            financialYear: '2022-2023',
+            isRevised: this.data.isRevised,
+            eFillingCompleted: true,
+            eFillingDate: this.eFillingDate.value,
+            ackNumber: this.ackNumber.value,
+            itrType: this.data.itrType,
+            itrTokenNumber: '',
+            filingTeamMemberId: this.data.filingTeamMemberId,
+            filingSource: 'MANUALLY',
+          };
+          const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
+          this.itrMsService.putMethod(param, req).subscribe(
+            (res: any) => {
+              console.log(res);
+              this.updateStatus();
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Manual Filing Details updated successfully'
+              );
+              this.loading = true;
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.data)
+              );
+              console.log('Updated Manual Data', this.data);
+              this.dialogRef.close();
+              this.router.navigate(['/tasks/filings']);
+              this.loading = false;
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Failed to update Manual Filing Details'
+              );
+              this.dialogRef.close();
+              this.loading = false;
+            }
           );
-          this.loading = true;
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.data)
-          );
-          console.log('Updated Manual Data', this.data);
-          this.dialogRef.close();
-          this.router.navigate(['/tasks/filings']);
-          this.loading = false;
-        },
-        (error) => {
+        } else {
           this.utilsService.showSnackBar(
-            'Failed to update Manual Filing Details'
+            'Please make sure that the payment has been made by the user to proceed ahead'
           );
           this.dialogRef.close();
           this.loading = false;
         }
-      );
+      });
     }
   }
 
