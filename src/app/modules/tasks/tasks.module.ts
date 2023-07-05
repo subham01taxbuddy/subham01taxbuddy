@@ -53,8 +53,8 @@ import { ChatOptionsDialogComponent } from './components/chat-options/chat-optio
         PotentialUserComponent,
         BulkReAssignDialogComponent,
         ItrStatusDialogComponent,
-        ChatOptionsDialogComponent
-        ReAssignActionDialogComponent,
+        ChatOptionsDialogComponent,
+        ReAssignActionDialogComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,
