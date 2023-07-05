@@ -47,9 +47,9 @@
 
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
+                donation.get(
                   'deductorTAN'
-                ].hasError('pattern')
+                ).hasError('pattern')
               "
             >
               Enter valid TAN (e.g XXXX12345X)</mat-error
@@ -79,9 +79,9 @@
 
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
+                donation.get(
                   'deductorPAN'
-                ].hasError('pattern')
+                ).hasError('pattern')
               "
             >
               Enter valid PAN (e.g XXXXX1234X)</mat-error
@@ -152,9 +152,9 @@
             />
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
+                donation.get(
                   'deductorName'
-                ].hasError('pattern')
+                ).hasError('pattern')
               "
             >
               Name should be character only</mat-error
@@ -177,9 +177,9 @@
             />
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
+                donation.get(
                   'totalAmountCredited'
-                ].hasError('pattern')
+                ).hasError('pattern')
               "
             >
               Enter positive amount without decimal.</mat-error
@@ -202,9 +202,9 @@
             />
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
+                donation.get(
                   'totalTdsDeposited'
-                ].hasError('pattern')
+                ).hasError('pattern')
               "
             >
               Enter positive amount without decimal.</mat-error

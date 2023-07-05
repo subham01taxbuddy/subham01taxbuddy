@@ -71,7 +71,8 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     });
 
   }
-  selectJson(file: FileList) {
+  selectJson(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     console.log('File', file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);

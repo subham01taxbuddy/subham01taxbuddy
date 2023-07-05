@@ -28,7 +28,6 @@ import { InputQuantityComponent } from '../additional-components/input-quantity/
 import { InputTagsComponent } from '../additional-components/input-tags/input-tags.component';
 import { InputTagsViewComponent } from '../additional-components/input-tags-view/input-tags-view.component';
 import { ToggleComponent } from '../additional-components/toggle/toggle.component';
-import { AttributesFilterComponent } from '../additional-components/attributes-filter/attributes-filter.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { routes } from './pages.routing';
@@ -92,7 +91,6 @@ export const MY_FORMATS = {
     InputTagsComponent,
     InputTagsViewComponent,
     ToggleComponent,
-    AttributesFilterComponent,
     AgGridCheckboxComponent,
     ValidateOtpByWhatAppComponent,
     NeedHelpComponent,
@@ -127,7 +125,7 @@ export const MY_FORMATS = {
   ],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 
-  exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
+  exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, FormsModule,
     ReactiveFormsModule,
     HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, /*NgxExtendedPdfViewerModule,*/ NeedHelpComponent, FormControlTypePipe]
 })

@@ -39,7 +39,7 @@
               <mat-form-field class="input-field-width">
                 <input matInput class="input-field" name="jur[i]" formControlName="tin" required type="text">
                 <mat-error
-                  *ngIf="nriDetailsForm.controls['jurisdictions'].controls[i].controls['tin'].hasError('pattern')">
+                  *ngIf="jur.get('tin').hasError('pattern')">
                   Enter valid tin.</mat-error>
               </mat-form-field>
             </td>

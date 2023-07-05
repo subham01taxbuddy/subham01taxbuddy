@@ -2551,7 +2551,8 @@ export class DocumentUploadComponent implements OnInit {
     // this.selectedFileType = null;
   }
 
-  uploadFile(file: FileList) {
+  uploadFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     console.log("File", file);
     this.filePassword = '';
     if (file.length > 0) {

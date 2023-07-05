@@ -70,11 +70,11 @@
                 <label>Taxable Income</label>
                 <div *ngIf="!newTaxRegime">
                     <input type="number" placeholder="Taxable Income"
-                        formControlName="totalIncomeAfterDeductionIncludeSR" required disabled class="disableInput">
+                        formControlName="totalIncomeAfterDeductionIncludeSR" required [disabled]="true" class="disableInput">
                 </div>
                 <div *ngIf="newTaxRegime">
                     <input type="number" placeholder="Taxable Income"
-                        [value]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" required disabled
+                        [value]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" required [disabled]="true"
                         class="disableInput">
                 </div>
 
@@ -137,7 +137,7 @@
                                 <input matInput placeholder="First Name" formControlName="fName" maxlength="75"
                                     autocomplete="off" name="family[i]">
                                 <mat-error
-                                    *ngIf="assesseForm.controls['family'].controls[i].controls['fName'].hasError('required')">
+                                    *ngIf="family.get('fName').hasError('required')">
                                     Enter first
                                     name
                                 </mat-error>
@@ -158,7 +158,7 @@
                                 <input matInput placeholder="Last Name" formControlName="lName" maxlength="75"
                                     autocomplete="off" required name="family[i]">
                                 <mat-error
-                                    *ngIf="assesseForm.controls['family'].controls[i].controls['lName'].hasError('required')">
+                                    *ngIf="family.get('lName').hasError('required')">
                                     Enter last
                                     name
                                 </mat-error>
@@ -171,7 +171,7 @@
                                 <input matInput placeholder="Father Name" formControlName="fathersName" maxlength="75"
                                     autocomplete="off">
                                 <mat-error
-                                    *ngIf="assesseForm.controls['family'].controls[i].controls['fathersName'].hasError('required')">
+                                    *ngIf="family.get('fathersName').hasError('required')">
                                     Enter
                                     father name</mat-error>
                             </mat-form-field>
@@ -185,7 +185,7 @@
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                                 <mat-error
-                                    *ngIf="assesseForm.controls['family'].controls[i].controls['dateOfBirth'].hasError('required')">
+                                    *ngIf="family.get('dateOfBirth').hasError('required')">
                                     Select Date of
                                     Birth</mat-error>
                             </mat-form-field>
@@ -676,7 +676,7 @@
                         <input matInput placeholder="Interest from Saving Account"
                             [value]="sourcesOfIncome.interestFromSaving" id="savingAmount" name="savingAmount"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                            (blur)="setOtherSourceIncomeValue($event.target.value,'saving')" maxlength="8"
+                            (blur)="setOtherSourceIncomeValue($event,'saving')" maxlength="8"
                             autocomplete="off">
                     </mat-form-field>
                 </div>
@@ -687,7 +687,7 @@
                         <input matInput placeholder="Interest from Deposits((Bank/ Post-Office/ Co-operative Society)"
                             maxlength="8" [value]="sourcesOfIncome.interestFromBank" id="bankAmonut" name="bankAmonut"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                            (blur)="setOtherSourceIncomeValue($event.target.value,'bank')" autocomplete="off">
+                            (blur)="setOtherSourceIncomeValue($event,'bank')" autocomplete="off">
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -696,16 +696,16 @@
                         <input matInput placeholder="Interest from Income tax refund"
                             [value]="sourcesOfIncome.interestFromIncomeTax" maxlength="8" id="incomeTaxAmount"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57" name="incomeTaxAmount"
-                            (blur)="setOtherSourceIncomeValue($event.target.value,'it')" autocomplete="off">
+                            (blur)="setOtherSourceIncomeValue($event,'it')" autocomplete="off">
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Others</mat-label>
                         <input matInput placeholder="Others" maxlength="8" autocomplete="off"
-                            [value]="sourcesOfIncome.interestFromOther" id="otherAmount" name="otherAmount"
+                            value="sourcesOfIncome.interestFromOther" id="otherAmount" name="otherAmount"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                            (blur)="setOtherSourceIncomeValue($event.target.value,'other')">
+                            (blur)="setOtherSourceIncomeValue($event,'other')">
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3" *ngIf="newItrSumChanges">
@@ -714,7 +714,7 @@
                         <input matInput placeholder="Dividend" maxlength="8" autocomplete="off"
                             [value]="sourcesOfIncome.dividend" id="dividend" name="dividend"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                            (blur)="setOtherSourceIncomeValue($event.target.value,'dividend')">
+                            (blur)="setOtherSourceIncomeValue($event,'dividend')">
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3" *ngIf="newItrSumChanges">
@@ -723,7 +723,7 @@
                         <input matInput placeholder="Family Pension" maxlength="8" autocomplete="off"
                             [value]="sourcesOfIncome.familyPension" id="family_pension" name="family_pension"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                            (blur)="setOtherSourceIncomeValue($event.target.value,'family_pension')">
+                            (blur)="setOtherSourceIncomeValue($event,'family_pension')">
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -809,7 +809,7 @@
                             id="healthInsuarancePremiumSelf" name="healthInsurancePremiumSelf"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             autocomplete="off" [value]="sec80DobjVal.healthInsuarancePremiumSelf"
-                            (blur)="setDeduction80DVal($event.target.value, 'forSelf')">
+                            (blur)="setDeduction80DVal($event, 'forSelf')">
                         <!--helathInsuarancePremiumSelf-->
                     </mat-form-field>
                 </div>
@@ -820,7 +820,7 @@
                             id="healthInsuarancePremiumParents" name="healthInsuarancePremiumParents"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             autocomplete="off" [value]="sec80DobjVal.healthInsuarancePremiumParents"
-                            (blur)="setDeduction80DVal($event.target.value, 'forParent')">
+                            (blur)="setDeduction80DVal($event, 'forParent')">
                         <!--helathInsuarancePremiumParents-->
                     </mat-form-field>
                 </div>
@@ -831,7 +831,7 @@
                             id="preventiveHealthCheckupFamily" name="preventiveHealthCheckupFamily"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             maxlength="8" autocomplete="off" [value]="sec80DobjVal.preventiveHealthCheckupFamily"
-                            (blur)="setDeduction80DVal($event.target.value, 'forFamily')">
+                            (blur)="setDeduction80DVal($event, 'forFamily')">
                         <!--preventiveHealthCheckupFamily-->
                     </mat-form-field>
                 </div>
@@ -839,8 +839,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Parents Age</mat-label>
                         <mat-select matInput placeholder="Select Parents Age" id="parentAge" name="parentAge"
-                            [value]="sec80DobjVal.parentAge"
-                            (selectionChange)="setDeduction80DVal($event.value, 'parentAge')">
+                            [value]="sec80DobjVal.parentAge">
+<!--                            (selectionChange)="setDeduction80DVal(sec80DobjVal.healthInsuarancePremiumParents, 'parentAge')">-->
                             <!--formControlName="parentAge"-->
                             <mat-option *ngFor="let age of ageDropdown" [value]="age.value">
                                 {{age.label}}
@@ -856,7 +856,7 @@
                             name="medicalExpendature"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             maxlength="8" autocomplete="off" [value]="sec80DobjVal.medicalExpendature"
-                            (blur)="setDeduction80DVal($event.target.value, 'medicalExpendature')">
+                            (blur)="setDeduction80DVal($event, 'medicalExpendature')">
                     </mat-form-field>
                 </div>
                 <!-- </form> -->

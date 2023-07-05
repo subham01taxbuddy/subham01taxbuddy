@@ -181,7 +181,7 @@
           matInput
           placeholder="Father's name"
           name="mobile"
-          [formControl]="customerProfileForm.controls['fatherName']"
+          [formControl]="customerProfileForm.controls['fatherName'] | formControlType"
           [pattern]="charRegex"
           class="input-field"
           maxlength="125"
@@ -213,7 +213,7 @@
               customerProfileForm.controls['residentialStatus'].value
             )
           "
-          [formControl]="customerProfileForm.controls['residentialStatus']"
+          [formControl]="customerProfileForm.controls['residentialStatus'] | formControlType"
           required
         >
           <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
@@ -367,7 +367,7 @@
           class="input-field"
           placeholder="Date of birth"
           name="dateOfBirth"
-          [formControl]="customerProfileForm.controls['dateOfBirth']"
+          [formControl]="customerProfileForm.controls['dateOfBirth'] | formControlType"
           required
         />
         <mat-hint>Format: DD/MM/YYYY</mat-hint>

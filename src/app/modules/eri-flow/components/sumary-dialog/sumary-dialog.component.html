@@ -356,7 +356,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Type of Category </mat-label>
                     <mat-select matInput formControlName="category" placeholder="Select category" autocomplete="off"
-                        disabled>
+                        [disabled]="true">
                         <mat-option *ngFor="let donation of categoryData" [value]="donation.value">
                             {{ donation.label }}
                         </mat-option>
