@@ -22,8 +22,8 @@
     </button>
   </span>
 
-  <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'])">
-    <button type="button" class="tbd-btn-small" title="Add Client" (click)="checkSubscription()">
+  <span *ngIf="data.serviceType === 'ITR'">
+    <button type="button" class="tbd-btn-small" title="Add Client" (click)="checkSubscription('add-client')">
       Add Client <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
     </button>
   </span>
@@ -52,11 +52,11 @@
      Oth Service&nbsp;&nbsp; <i class="fa fa-server" aria-hidden="true"></i>
     </button>
   </span>
-<!--  <span *ngIf="this.data.serviceType === 'ITR'">-->
-<!--    <button type="button" class="mt-5 tbd-btn-small" title="Insurance" (click)="giveInsurance()">-->
-<!--      Insurance&nbsp;&nbsp; <i class="fa fa-ambulance" aria-hidden="true"></i>-->
-<!--    </button>-->
-<!--  </span>-->
+  <span *ngIf="this.data.serviceType === 'ITR' && this.data.itrObjectStatus === 'ITR_FILED' ">
+    <button type="button" class="mt-5 tbd-btn-small" title="Insurance" (click)="giveInsurance()">
+      Insurance&nbsp;&nbsp; <i class="fa fa-ambulance" aria-hidden="true"></i>
+    </button>
+  </span>
   <span>
     <button type="button" class="tbd-btn-small" title="User Journey" (click)="getUserJourney()">
       Journey&nbsp;&nbsp; <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
@@ -71,6 +71,11 @@
     <button type="button" title="Delete User" class="delete-user tbd-btn-small"
       *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])" (click)="deleteUser()">
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+    </button>
+  </span>
+  <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])">
+    <button type="button" class="tbd-btn-small" title="Update Filing w/out JSON" (click)="checkSubscription('update-filing')">
+      No JSON Filing
     </button>
   </span>
   &nbsp;&nbsp;

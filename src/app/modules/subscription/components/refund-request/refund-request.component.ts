@@ -36,6 +36,7 @@ export class RefundRequestComponent implements OnInit {
   userInfo: any = [];
   loggedInUserRoles: any;
   isOwner: boolean;
+  dataOnLoad = true;
 
   invoiceFormGroup: FormGroup = this.fb.group({
 
@@ -110,7 +111,12 @@ export class RefundRequestComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
-    this.resetFilters();
+    if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+      this.getRefundRequestList(0);
+    } else{
+      this.dataOnLoad = false;
+    }
+    // this.resetFilters();
   }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
@@ -129,7 +135,13 @@ export class RefundRequestComponent implements OnInit {
     if (this.isOwner) {
       this.getRefundRequestList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
-      this.getRefundRequestList(0);
+      if(this.dataOnLoad) {
+        this.getRefundRequestList(0);
+      } else {
+        //clear grid for loaded data
+        this.refundListGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
 
   }
@@ -532,7 +544,8 @@ export class RefundRequestComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: client.mobile
       }
     })
 

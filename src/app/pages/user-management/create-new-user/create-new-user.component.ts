@@ -5,7 +5,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
-
+declare function we_track(key: string, value: any);
 export interface Country {
   name: string;
   code: string;
@@ -23,23 +23,25 @@ export class CreateNewUserComponent implements OnInit {
   services = ['ITR', 'GST', 'TPA', 'NOTICE'];
   assignedToMe = false;
   disableAssignedToMe = false;
-  disableUserSignUp =false;
-  assessmentYear:string;
-  roles:any;
+  disableUserSignUp = false;
+  assessmentYear: string;
+  roles: any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  loggedInSme:any;
+  loggedInSme: any;
   countryList: Country[] = this.countryDropdown.map(country => ({
     name: country.countryName,
     code: country.countryCode,
   }));
-  countryCode:any;
-  options :Country[] = []
+  countryCode: any;
+  options: Country[] = []
   filteredOptions: Observable<any[]>;
-  maxNo=50;
-  minNo=1;
-  smeRecords:any;
-  smeServices:any;
+  maxNo = 50;
+  minNo = 1;
+  smeRecords: any;
+  smeServices: any;
+  ownerName: any;
+  filerName: any;
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
@@ -48,11 +50,11 @@ export class CreateNewUserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.options=this.countryList
+    this.options = this.countryList
     this.getFy();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
-    console.log('roles',this.roles)
+    console.log('roles', this.roles)
     const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm = this.fb.group({
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
@@ -73,15 +75,15 @@ export class CreateNewUserComponent implements OnInit {
       language: ['English'],
     });
 
-    this.filteredOptions =(this.signUpForm.controls['countryCode']).valueChanges.pipe(
+    this.filteredOptions = (this.signUpForm.controls['countryCode']).valueChanges.pipe(
       startWith(''),
-      map(value =>{
+      map(value => {
         const name = typeof value === 'string' ? value : value?.name;
         return name
           ? this._filter(name as string, this.options)
           : this.options.slice();
       }
-    ));
+      ));
   }
 
   private _filter(name: string, options): Country[] {
@@ -91,58 +93,60 @@ export class CreateNewUserComponent implements OnInit {
       option.name.toLowerCase().includes(filterValue)
     );;
   }
-  getCountry(option){
+  getCountry(option) {
     console.log(option)
-    this.countryCode=option.code
+    this.countryCode = option.code
     // this.signUpForm.controls['countryCode'].setValue(option.code)
-    if(this.countryCode == '91'){
-      this.maxNo=10;
-      this.minNo=10;
-    }else{
-      this.maxNo=50;
-      this.minNo=1
+    if (this.countryCode == '91') {
+      this.maxNo = 10;
+      this.minNo = 10;
+    } else {
+      this.maxNo = 50;
+      this.minNo = 1
     }
   }
 
-  async getFy(){
+  async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-    console.log('fylist',fyList)
+    console.log('fylist', fyList)
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    this.assessmentYear=currentFyDetails[0].assessmentYear
-    console.log("ay",this.assessmentYear)
+    this.assessmentYear = currentFyDetails[0].assessmentYear
+    console.log("ay", this.assessmentYear)
   }
 
   ownerId: number;
   filerId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.ownerId = event? event.userId : null;
+    if (isOwner) {
+      this.ownerName = event ? event.name : null;
+      this.ownerId = event ? event.userId : null;
     } else {
-      this.filerId = event? event.userId : null;
+      this.filerId = event ? event.userId : null;
+      this.filerName = event ? event.name : null;
     }
 
     // if(this.ownerId && this.filerId){
     //   this.signUpForm.controls['agentUserId'].setValue(this.filerId);
     // }
 
-    if(this.filerId) {
-      this.disableUserSignUp=false;
+    if (this.filerId) {
+      this.disableUserSignUp = false;
       this.signUpForm.controls['agentUserId'].setValue(this.filerId);
       this.getSmeRecords(this.filerId);
-    } else if(this.ownerId) {
-      this.disableUserSignUp=true;
-      if(this.roles.includes('ROLE_OWNER')){
-        this.disableUserSignUp=false;
+    } else if (this.ownerId) {
+      this.disableUserSignUp = true;
+      if (this.roles.includes('ROLE_OWNER')) {
+        this.disableUserSignUp = false;
       }
       this.signUpForm.controls['agentUserId'].setValue(this.ownerId);
       this.getSmeRecords(this.ownerId)
     } else {
-        if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
-        this.disableUserSignUp=true;
-        }else{
-          this.disableUserSignUp=false;
-        }
+      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+        this.disableUserSignUp = true;
+      } else {
+        this.disableUserSignUp = false;
+      }
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.signUpForm.controls['agentUserId'].setValue(loggedInId);
     }
@@ -155,33 +159,33 @@ export class CreateNewUserComponent implements OnInit {
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
 
     // if(this.coOwnerId && this.coFilerId){
     //   this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
     // }
 
-    if(this.coFilerId) {
-      this.disableUserSignUp=false;
+    if (this.coFilerId) {
+      this.disableUserSignUp = false;
       this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
       this.getSmeRecords(this.coFilerId);
-    } else if(this.coOwnerId) {
-      this.disableUserSignUp=true;
-      if(this.roles.includes('ROLE_OWNER')){
-        this.disableUserSignUp=false;
+    } else if (this.coOwnerId) {
+      this.disableUserSignUp = true;
+      if (this.roles.includes('ROLE_OWNER')) {
+        this.disableUserSignUp = false;
       }
       this.signUpForm.controls['agentUserId'].setValue(this.coOwnerId);
       this.getSmeRecords(this.coOwnerId);
 
     } else {
-      if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
-        this.disableUserSignUp=true;
-      }else{
-        this.disableUserSignUp=false;
+      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+        this.disableUserSignUp = true;
+      } else {
+        this.disableUserSignUp = false;
       }
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.signUpForm.controls['agentUserId'].setValue(loggedInId);
@@ -194,7 +198,7 @@ export class CreateNewUserComponent implements OnInit {
   //   this.signUpForm.controls['agentUserId'].setValue(event);
   // }
   isAssignedToMe() {
-    this.disableUserSignUp=false;
+    this.disableUserSignUp = false;
     if (!this.assignedToMe) {
       this.signUpForm.controls['agentUserId'].setValue(null);
       return;
@@ -205,23 +209,34 @@ export class CreateNewUserComponent implements OnInit {
   }
 
   userSignUp() {
-    if (this.signUpForm.valid ) {
-      let reqBody=this.signUpForm.getRawValue();
+    if (this.signUpForm.valid) {
+      let reqBody = this.signUpForm.getRawValue();
       let finalReq: any = {};
-      Object.assign(finalReq,reqBody );
+      Object.assign(finalReq, reqBody);
       //Ashwini: adding + in the country code since user facing app sends country code with +
-      finalReq.countryCode= '+' + this.countryCode;
+      finalReq.countryCode = '+' + this.countryCode;
       console.log("request body : ", finalReq);
       this.loading = true;
       let param = "/user_account";
       this.userService.postMethod(param, finalReq).subscribe((res: any) => {
+        we_track('Create User', {
+          'Country Code': '+' + this.countryCode,
+          'User number': this.signUpForm.controls['mobile'].value,
+          'First Name ': this.signUpForm.controls['firstName'].value,
+          'Last Name': this.signUpForm.controls['lastName'].value,
+          'PAN ': this.signUpForm.controls['panNumber'].value,
+          'Email Address': this.signUpForm.controls['email'].value,
+          'Service Type ': this.signUpForm.controls['serviceType'].value,
+          'Owner': this.ownerName,
+          'Filer': this.filerName,
+        });
         if (res.status === 406) {
           this.loading = false;
           this.utilSerive.showSnackBar(res.message);
           return;
         }
         this.assignUser(res.userId, this.signUpForm.controls['agentUserId'].value, this.signUpForm.controls['serviceType'].value);
-        console.log('sme user ID under user is going',this.signUpForm.controls['agentUserId'].value)
+        console.log('sme user ID under user is going', this.signUpForm.controls['agentUserId'].value)
       }, (error) => {
         this.loading = false;
         console.log("Error when creating user: ", error);
@@ -236,10 +251,10 @@ export class CreateNewUserComponent implements OnInit {
 
     const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
     this.userService.getMethod(param).subscribe((res: any) => {
-      if(res.success==true){
+      if (res.success == true) {
         this.loading = false;
         this.utilSerive.showSnackBar("User created succesfully.");
-      }else{
+      } else {
         this.loading = false;
         this.utilSerive.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
       }
@@ -266,26 +281,26 @@ export class CreateNewUserComponent implements OnInit {
     }
   }
 
-  getSmeRecords(agentUserId){
+  getSmeRecords(agentUserId) {
     const userId = agentUserId;
-    const loggedInSmeUserId=this.loggedInSme[0].userId
+    const loggedInSmeUserId = this.loggedInSme[0].userId
     const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
 
     this.userService.getMethodNew(param).subscribe((result: any) => {
       console.log('sme record by service  -> ', result);
-      this.smeRecords=result.data;
+      this.smeRecords = result.data;
       this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
-      this.smeServices =this.smeRecords.map((item) => {
-        return { serviceType: item.serviceType};
+      this.smeServices = this.smeRecords.map((item) => {
+        return { serviceType: item.serviceType };
       });
-      console.log("servicesList for selected sme ",this.smeServices)
+      console.log("servicesList for selected sme ", this.smeServices)
       this.changeServiceType();
     })
   }
 
   changeServiceType() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
-    if(this.signUpForm.controls['serviceType'].value === 'GST') {
+    if (this.signUpForm.controls['serviceType'].value === 'GST') {
       if (loggedInSmeInfo.serviceType !== this.signUpForm.controls['serviceType'].value) {
         this.assignedToMe = false;
         this.disableAssignedToMe = true;
@@ -296,28 +311,30 @@ export class CreateNewUserComponent implements OnInit {
       this.disableAssignedToMe = false;
     }
 
-    if(this.signUpForm.controls['serviceType'].value == ''){
+    if (this.signUpForm.controls['serviceType'].value == '') {
       return;
     }
 
     const selectedServiceType = this.signUpForm.controls['serviceType'].value;
-    if (this.smeServices.every(service => service.serviceType !== selectedServiceType)){
-      if(this.filerId || this.coFilerId){
+    if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
+      if (this.filerId || this.coFilerId) {
         this.utilSerive.showSnackBar("Selected filer doesn't have this service type ");
-      }else{
+      } else {
         this.utilSerive.showSnackBar("Selected owner doesn't have this service type ");
       }
       this.disableUserSignUp = true;
-    }else{
+    } else {
       this.disableUserSignUp = false;
     }
 
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }

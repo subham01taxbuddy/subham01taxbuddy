@@ -12,6 +12,7 @@ import { FormControl } from '@angular/forms';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-potential-user',
@@ -29,10 +30,10 @@ export class PotentialUserComponent implements OnInit {
   config: any;
   coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
-  roles:any;
+  roles: any;
   statuslist: any = [
     { statusName: 'ITR Filed', statusId: '18' },
-    { statusName: 'Interested',statusId: '16' },
+    { statusName: 'Interested', statusId: '16' },
   ];
   searchParam: any = {
     serviceType: null,
@@ -45,7 +46,7 @@ export class PotentialUserComponent implements OnInit {
 
 
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private utilsService: UtilsService,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private userMsService: UserMsService,
@@ -69,13 +70,13 @@ export class PotentialUserComponent implements OnInit {
       currentPage: 1,
       totalItems: null
     };
-   }
+  }
 
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
-    this.roles = this.utilsService.getUserRoles() ;
+    this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
-     this.search();
+    this.search();
     this.getAgentList();
     this.getMasterStatusList();
   }
@@ -86,11 +87,11 @@ export class PotentialUserComponent implements OnInit {
   }
 
 
-  fromServiceType(event){
+  fromServiceType(event) {
     this.searchParam.serviceType = event;
     this.search('serviceType');
 
-    if(this.searchParam.serviceType) {
+    if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
       }, 100);
@@ -103,14 +104,14 @@ export class PotentialUserComponent implements OnInit {
 
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.ownerId = event? event.userId : null;
+    if (isOwner) {
+      this.ownerId = event ? event.userId : null;
     } else {
-      this.filerId = event? event.userId : null;
+      this.filerId = event ? event.userId : null;
     }
-    if(this.filerId) {
+    if (this.filerId) {
       this.agentId = this.filerId;
-    } else if(this.ownerId) {
+    } else if (this.ownerId) {
       this.agentId = this.ownerId;
       //  this.search('agent');
     } else {
@@ -125,12 +126,12 @@ export class PotentialUserComponent implements OnInit {
 
   fromSme1(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
-    if(isOwner){
-      this.coOwnerId = event? event.userId : null;
+    if (isOwner) {
+      this.coOwnerId = event ? event.userId : null;
     } else {
-      this.coFilerId = event? event.userId : null;
+      this.coFilerId = event ? event.userId : null;
     }
-    if(this.coFilerId) {
+    if (this.coFilerId) {
       this.agentId = this.coFilerId;
       // this.search('agent');
     } else if(this.coOwnerId) {
@@ -191,7 +192,7 @@ export class PotentialUserComponent implements OnInit {
     }
     this.loading = true;
 
-    if(this.searchParam.email){
+    if (this.searchParam.email) {
       this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
     }
     let data = this.utilsService.createUrlParams(this.searchParam);
@@ -204,8 +205,8 @@ export class PotentialUserComponent implements OnInit {
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    if(this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId){
-       param = `/${this.agentId}/user-list-new?${data}&active=false`;
+    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
+      param = `/${this.agentId}/user-list-new?${data}&active=false`;
     }
     else {
       param;
@@ -214,10 +215,10 @@ export class PotentialUserComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe(
       (result: any) => {
         this.loading = false;
-        if(result.success == false){
-          this. _toastMessageService.alert("error",result.message);
+        if (result.success == false) {
+          this._toastMessageService.alert("error", result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
+          this.config.totalItems = 0;
         }
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
@@ -233,7 +234,7 @@ export class PotentialUserComponent implements OnInit {
         }
         this.loading = false;
       })
-}
+  }
 
   createRowData(userData: any) {
     var userArray = [];
@@ -259,12 +260,12 @@ export class PotentialUserComponent implements OnInit {
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
-        source:userData[i].source
+        source: userData[i].source
       })
       userArray.push(userInfo);
     }
     return userArray;
- }
+  }
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -308,7 +309,7 @@ export class PotentialUserComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -325,11 +326,11 @@ export class PotentialUserComponent implements OnInit {
           debounceMs: 0
         },
         valueGetter: function nameFromCode(params) {
-         if(params.data.source === 'Old Customer Migration Script'){
-          return 'ITR Filed'
-         }else if(params.data.source ==='Old Interested Customer Migration Script'){
-          return 'Interested'
-         }else 'NA'
+          if (params.data.source === 'Old Customer Migration Script') {
+            return 'ITR Filed'
+          } else if (params.data.source === 'Old Interested Customer Migration Script') {
+            return 'Interested'
+          } else 'NA'
         }
       },
 
@@ -394,9 +395,9 @@ export class PotentialUserComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          if(data.value != '-'){
+          if (data.value != '-') {
             return formatDate(data?.value, 'dd/MM/yyyy', this.locale);
-          }else{
+          } else {
             return '-'
           }
 
@@ -602,16 +603,20 @@ export class PotentialUserComponent implements OnInit {
     // })
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if(result.success == false){
+      if (result.success == false) {
         this.loading = false;
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
-      if (result.success == true) {
-            this._toastMessageService.alert("success", result.message)
-          }
-         }, error => {
-           this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
+      if (result.success) {
+        we_track('Call', {
+          'User Name': data?.name,
+          'User Phone number ': data.callerAgentNumber,
+        });
+        this._toastMessageService.alert("success", result.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
     })
   }
 
@@ -637,7 +642,8 @@ export class PotentialUserComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber:client.mobileNumber
       }
     })
 
@@ -645,17 +651,20 @@ export class PotentialUserComponent implements OnInit {
     });
   }
 
-  active(data){
+  active(data) {
     // https://uat-api.taxbuddy.com/user/agent-assignment-new?userId=737178&assessmentYear=2023-2024&serviceType=ITR
-    console.log('data to active user',data);
+    console.log('data to active user', data);
     this.loading = true;
     const param = `/agent-assignment-new?userId=${data.userId}&assessmentYear=${data.assessmentYear}&serviceType=${data.serviceType}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('res after active ',result)
+      console.log('res after active ', result)
       this.loading = false;
-      if (result.success==true) {
+      if (result.success == true) {
+        we_track('Active', {
+          'User number ': data.mobileNumber,
+        });
         this.utilsService.showSnackBar('user activated successfully.');
-      }else{
+      } else {
         this.utilsService.showSnackBar('Error while Activate User, Please try again.');
       }
     }, error => {
@@ -670,20 +679,22 @@ export class PotentialUserComponent implements OnInit {
     this.config.currentPage = event;
     this.searchParam.page = event - 1
     if (this.coOwnerToggle.value == true) {
-      this.search(event - 1,true);
-    }else{
+      this.search(event - 1, true);
+    } else {
       this.search(event - 1);
     }
   }
 
-  getToggleValue(){
-    console.log('co-owner toggle',this.coOwnerToggle.value)
+  getToggleValue() {
+    console.log('co-owner toggle', this.coOwnerToggle.value)
+    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
-    this.coOwnerCheck = true;}
+      this.coOwnerCheck = true;
+    }
     else {
       this.coOwnerCheck = false;
     }
-    this.search('',true);
+    this.search('', true);
   }
 
 
@@ -693,16 +704,16 @@ export class PotentialUserComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
-    this.searchParam.emailId=null;
+    this.searchParam.emailId = null;
     this.searchParam.statusId = null;
 
     this?.smeDropDown?.resetDropdown();
 
-    if(this.coOwnerDropDown){
+    if (this.coOwnerDropDown) {
 
       this.coOwnerDropDown.resetDropdown();
-      this.search('',true);
-    }else{
+      this.search('', true);
+    } else {
       this.search();
     }
   }

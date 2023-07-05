@@ -2,20 +2,27 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JsonToCsvService } from '../modules/shared/services/json-to-csv.service';
 import { Observable, Subject } from 'rxjs';
+import { ToastMessageService } from './toast-message.service';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GenericCsvService {
   headers: any;
-  pageSize = 30;
-  size = 30;
+  pageSize = 100;
+  size = 100;
   data = [];
   count: number;
+  roles:any;
   constructor(
     private httpClient: HttpClient,
-    private jsonToCsvService: JsonToCsvService
-  ) { }
+    private jsonToCsvService: JsonToCsvService,
+    private _toastMessageService: ToastMessageService,
+    private utilsService: UtilsService,
+  ) {
+    this.roles = this.utilsService.getUserRoles();
+   }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any) {
     // var subject = new Subject<boolean>();
@@ -39,7 +46,12 @@ export class GenericCsvService {
       paramUrl = `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
-    this.jsonToCsvService.downloadFile(this.data, name, fields);
+    if (this.data.length) {
+      this.jsonToCsvService.downloadFile(this.data, name, fields);
+    } else {
+      this._toastMessageService.alert('error', "There is no records found");
+      return
+    }
     // subject.next(true);
     // return subject.asObservable();
   }
@@ -51,8 +63,21 @@ export class GenericCsvService {
       this.httpClient.get(baseUrl + param, { headers: this.headers }).toPromise()
         .then((result: any) => {
           if (result.success) {
-            this.data = [...this.data, ...result?.data?.content];
-            resolve(result?.data.totalPages);
+            // if (result?.data?.content.length) {
+            if(param.includes('status-wise-report')){
+              if(result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData) {
+                this.data = [...result?.data?.content[0].statusWiseData];
+                resolve(result?.data.totalPages);
+              } else {
+                resolve(0);
+              }
+            } else {
+              this.data = [...this.data, ...result?.data?.content];
+              resolve(result?.data.totalPages);
+            }
+            // } else {
+            //   resolve(0);
+            // }
           }
         }, error => {
           resolve(0);

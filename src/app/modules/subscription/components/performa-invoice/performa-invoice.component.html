@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -38,7 +38,7 @@
 
           <div class="col-sm-3 dtTp">
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="class1">
               <mat-label>From Date</mat-label>
               <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate" autocomplete="off"
                 (dateChange)="setToDateValidation(startDate.value)" />
@@ -49,9 +49,9 @@
           </div>
 
           <div class="col-sm-3 dtTp">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="class1">
               <mat-label>To Date</mat-label>
-              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" autocomplete="off" />
+              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxDate" autocomplete="off" />
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
@@ -135,6 +135,11 @@
             </button>
          </div>
             </div>
+            <span class="note1">
+              <!--<div class="col-sm-12 note1">-->
+              Note : Please select required filters above and click on search to get information
+              <!--</div>-->
+            </span>
 </div>
 </div>
 

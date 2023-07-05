@@ -16,6 +16,9 @@
              <li [ngClass]="view === 'leader'?'tab__item active':'tab__item'" routerLinkActive="tab__item_active">
               <a class="tab__link" (click)="view='leader'">Activities</a>
             </li>
+            <li [ngClass]="view === 'status'?'tab__item active':'tab__item'" routerLinkActive="tab__item_active">
+              <a class="tab__link" (click)="view='status'">Status Wise Report</a>
+            </li>
         </ul>
     </div>
      <div *ngIf="view === 'leader'">
@@ -28,5 +31,9 @@
     <div *ngIf="view === 'team'">
         <app-team-report-dashboard></app-team-report-dashboard>
     </div>
+
+    <div *ngIf="view === 'status'">
+      <app-leader-statuswise-report></app-leader-statuswise-report>
+  </div>
 
 </div>

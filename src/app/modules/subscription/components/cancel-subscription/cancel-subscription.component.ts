@@ -49,7 +49,7 @@ export class CancelSubscriptionComponent implements OnInit {
   get email() {
     return this.invoiceFormGroup.controls['email'] as FormControl;
   }
-
+  dataOnLoad = true;
 
   constructor(
     private fb: FormBuilder,
@@ -93,10 +93,10 @@ export class CancelSubscriptionComponent implements OnInit {
       this.filerId = null;
       if (isOwner) {
         this.ownerId = event ? event.userId : null;
-        this.getCancelSubscriptionList(0, 'ownerUserId', this.ownerId);
+        // this.getCancelSubscriptionList(0, 'ownerUserId', this.ownerId);
       } else {
         this.filerId = event ? event.userId : null;
-        this.getCancelSubscriptionList(0, 'filerUserId', this.filerId);
+        // this.getCancelSubscriptionList(0, 'filerUserId', this.filerId);
       }
     }
   }
@@ -104,6 +104,12 @@ export class CancelSubscriptionComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUserRoles = this.utilService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
+
+    if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+      this.getCancelSubscriptionList(0);
+    } else{
+      this.dataOnLoad = false;
+    }
   }
 
   public rowSelection: 'single';
@@ -120,12 +126,18 @@ export class CancelSubscriptionComponent implements OnInit {
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
 
-    this.filerId=null;
-    this.ownerId=null;
+    this.filerId = null;
+    this.ownerId = null;
     if (this.isOwner) {
       this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
-      this.getCancelSubscriptionList(0);
+      if(this.dataOnLoad) {
+        this.getCancelSubscriptionList(0);
+      } else {
+        //clear grid for loaded data
+        this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
     }
 
   }
@@ -145,6 +157,14 @@ export class CancelSubscriptionComponent implements OnInit {
   }
 
   getCancelSubscriptionList(pageNo, isUserId?, id?) {
+    const userId = this.utilService.getLoggedInUserID();
+    if(this.loggedInUserRoles.includes('ROLE_OWNER')){
+      this.ownerId = userId;
+    }
+    if(this.loggedInUserRoles.includes('ROLE_FILER')){
+      this.filerId = userId;
+    }
+
     let mobileFilter = '';
     if (
       this.utilService.isNonEmpty(
@@ -195,8 +215,8 @@ export class CancelSubscriptionComponent implements OnInit {
           } else {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
-            if (response.message !==null) {this._toastMessageService.alert('error', response.message);}
-            else{this._toastMessageService.alert('error', 'No Data Found'); }
+            if (response.message !== null) { this._toastMessageService.alert('error', response.message); }
+            else { this._toastMessageService.alert('error', 'No Data Found'); }
           }
         } else {
           this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
@@ -206,7 +226,7 @@ export class CancelSubscriptionComponent implements OnInit {
       (error) => {
         this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
-        this._toastMessageService.alert("error","Error while fetching subscription cancellation requests: Not_found: data not found");
+        this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
       }
     );
   }
@@ -511,7 +531,8 @@ export class CancelSubscriptionComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        clientMobileNumber: (client?.mobileNumber) ? (client?.mobileNumber) : ''
       }
     })
 

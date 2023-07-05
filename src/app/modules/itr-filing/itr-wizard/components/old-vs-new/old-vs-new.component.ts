@@ -32,6 +32,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     { label: 'Income from House Property', old: 0, new: 0 },
     { label: 'Income from Business and Profession', old: 0, new: 0 },
     { label: 'Income from Capital Gains', old: 0, new: 0 },
+    { label: 'Income from Crypto', old: 0, new: 0 },
     { label: 'Income from Other Sources', old: 0, new: 0 },
     { label: 'Total Headwise Income', old: 0, new: 0 },
     { label: 'CYLA', old: 0, new: 0 },
@@ -608,6 +609,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               old: 0,
               new: 0,
             },
+            { label: 'Income from Crypto', old: 0, new: 0 },
             {
               label: 'Income from Other Sources',
               old:
@@ -950,7 +952,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.CapGain?.TotalCapGains
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
-                        ?.CapGain?.TotalCapGains
+                        ?.CapGain?.TotalCapGains -
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                        ?.CapGain?.CapGains30Per115BBH
                     : 0
                   : 0,
               new:
@@ -958,7 +962,28 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
                       ?.CapGain?.TotalCapGains
                     ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
-                        ?.CapGain?.TotalCapGains
+                        ?.CapGain?.TotalCapGains -
+                      this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-TI']
+                        ?.CapGain?.CapGains30Per115BBH
+                    : 0
+                  : 0,
+            },
+            {
+              label: 'Income from Crypto',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleVDA
+                      ?.TotIncCapGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleVDA
+                        ?.TotIncCapGain
+                    : 0
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleVDA
+                      ?.TotIncCapGain
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.ScheduleVDA
+                        ?.TotIncCapGain
                     : 0
                   : 0,
             },

@@ -10,7 +10,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatVerticalStepper } from '@angular/material/stepper';
 import * as moment from 'moment';
-
+declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-itr-status-dialog',
   templateUrl: './itr-status-dialog.component.html',
@@ -81,10 +81,13 @@ export class ItrStatusDialogComponent implements OnInit {
   ) {
     this.panNumber = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
     this.isInsuranceOpted = new FormControl('true')
-   }
+  }
 
   ngOnInit() {
-    this.loading=false;
+    we_track('ITR User Journey', {
+      'User Number': this.data?.userInfo?.mobileNumber,
+    });
+    this.loading = false;
     this.getAssessmentYear();
     this.getDueDateDetails();
   }
@@ -134,7 +137,7 @@ export class ItrStatusDialogComponent implements OnInit {
   }
 
   getDueDateDetails() {
-    let param ='/due-date';
+    let param = '/due-date';
     this.itrMsService.getMethod(param).subscribe((response: any) => {
       if (response.success) {
         this.itrFilingDueDate = moment(response.data.itrFilingDueDate).format('DD-MM-YYYY');
@@ -143,32 +146,32 @@ export class ItrStatusDialogComponent implements OnInit {
         this.noOFDueDays = itrFilingDueDate.diff(currentDate, 'days')
         sessionStorage.setItem('itrFilingDueDate', this.itrFilingDueDate);
       } else {
-        this.loading=false;
+        this.loading = false;
         this.utilsService.showSnackBar(response.message);
       }
     },
       error => {
         console.log('error ==> ', error)
-        this.loading=false;
+        this.loading = false;
         this.utilsService.showSnackBar('Failed to get ITR Due Date');
       });
   }
 
   getItrLifeCycleStatus() {
-    this.loading=true;
+    this.loading = true;
     let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear;
     this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
       if (response.success) {
-        this.loading=false
+        this.loading = false
         this.sortingLifeCycleObject(response);
       } else {
-        this.loading=false
+        this.loading = false
         this.utilsService.showSnackBar(response.message);
       }
     },
       error => {
         console.log('error ==> ', error)
-        this.loading=false
+        this.loading = false
         this.utilsService.showSnackBar('Failed to Save the ITR Details');
 
       });
@@ -279,7 +282,7 @@ export class ItrStatusDialogComponent implements OnInit {
     }
 
     // this.showSubmitButton();
-     this.getPlanDetails();
+    this.getPlanDetails();
   }
 
   fetchDraftSummary() {
@@ -310,8 +313,8 @@ export class ItrStatusDialogComponent implements OnInit {
         userSelectedIncomeSources.push(type.value);
       }
     });
-    this.loading=true;
-    let param ='/plans-master?serviceType=ITR&eligilities=' + userSelectedIncomeSources.toString() + '&userId=' + this.data.userId;
+    this.loading = true;
+    let param = '/plans-master?serviceType=ITR&eligilities=' + userSelectedIncomeSources.toString() + '&userId=' + this.data.userId;
     this.itrMsService.getMethod(param).subscribe((response: any) => {
       this.eligiblePlan = response;
       if (sessionStorage.getItem('DATALAYEROBJ')) {
@@ -330,10 +333,10 @@ export class ItrStatusDialogComponent implements OnInit {
         })
       }
       console.log('Datalayer: ', window['dataLayer']);
-      this.loading=false;
+      this.loading = false;
     },
       error => {
-        this.loading=false;
+        this.loading = false;
         this.utilsService.showSnackBar('Failed to get selected plan details');
       });
   }

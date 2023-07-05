@@ -23,6 +23,10 @@ export class PayoutReportComponent implements OnInit {
   payoutReportGridOptions: GridOptions;
   // totalCommissionEarned =0;
   // totalPartnersPaid=0;
+  dataOnLoad = true;
+  roles: any;
+  loggedInSme: any;
+  showCsvMessage: boolean;
 
   constructor(
     private utilsService: UtilsService,
@@ -30,6 +34,8 @@ export class PayoutReportComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private genericCsvService: GenericCsvService,
   ) {
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
     this.payoutReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
@@ -44,13 +50,13 @@ export class PayoutReportComponent implements OnInit {
       itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
-      totalCommissionEarned:null,
-      totalPartnersPaid:null,
+      totalCommissionEarned: null,
+      totalPartnersPaid: null,
     };
   }
 
   ngOnInit() {
-    this.showReports();
+    // this.showReports();
   }
 
   ownerId: number;
@@ -112,23 +118,23 @@ export class PayoutReportComponent implements OnInit {
       if (response.success) {
         this.payoutReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
-        this.config.totalCommissionEarned =response?.data?.totalCommisionEarned;
-        this.config.totalPartnersPaid =response?.data?.totalPartnerPaidOut;
+        this.config.totalCommissionEarned = response?.data?.totalCommisionEarned;
+        this.config.totalPartnersPaid = response?.data?.totalPartnerPaidOut;
         this.payoutReportGridOptions.api?.setRowData(this.createRowData(this.payoutReport));
 
 
       } else {
         this.loading = false;
         this.config.totalItems = 0;
-        this.config.totalCommissionEarned=0;
-        this.config.totalPartnersPaid=0;
+        this.config.totalCommissionEarned = 0;
+        this.config.totalPartnersPaid = 0;
         this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error", response.message);
       }
     }, (error) => {
       this.config.totalItems = 0;
-      this.config.totalCommissionEarned=0;
-        this.config.totalPartnersPaid=0;
+      this.config.totalCommissionEarned = 0;
+      this.config.totalPartnersPaid = 0;
       this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
@@ -142,15 +148,15 @@ export class PayoutReportComponent implements OnInit {
       let agentReportInfo = Object.assign({}, payoutRepoInfoArray[i], {
         filerName: payoutData[i].filerName,
         ownerName: payoutData[i].ownerName,
-        totalCommissionEarned:payoutData[i].totalCommissionEarned,
-        totalCommissionEarnedTds:payoutData[i].totalCommissionEarnedTds,
-        numberOfFiling:payoutData[i].numberOfFiling,
-        slabOneCount:payoutData[i].slabOneCount,
-        slabOneEarning:payoutData[i].slabOneEarning,
-        slabTwoCount:payoutData[i].slabTwoCount,
-        slabTwoEarning:payoutData[i].slabTwoEarning,
-        slabThreeCount:payoutData[i].slabThreeCount,
-        slabThreeEarning:payoutData[i].slabThreeCount,
+        totalCommissionEarned: payoutData[i].totalCommissionEarned,
+        totalCommissionEarnedTds: payoutData[i].totalCommissionEarnedTds,
+        numberOfFiling: payoutData[i].numberOfFiling,
+        slabOneCount: payoutData[i].slabOneCount,
+        slabOneEarning: payoutData[i].slabOneEarning,
+        slabTwoCount: payoutData[i].slabTwoCount,
+        slabTwoEarning: payoutData[i].slabTwoEarning,
+        slabThreeCount: payoutData[i].slabThreeCount,
+        slabThreeEarning: payoutData[i].slabThreeCount,
       })
       payoutRepoInfoArray.push(agentReportInfo);
     }
@@ -158,113 +164,113 @@ export class PayoutReportComponent implements OnInit {
     return payoutRepoInfoArray;
   }
 
-  reportsCodeColumnDef(){
-   return[
-    {
-      headerName: 'Sr. No.',
-      width: 40,
-      pinned:'left',
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      },
-      valueGetter: function(params) {
-        return params.node.rowIndex + 1;
-      }
-    },
-    {
-      headerName: 'Filer Name',
-      field: 'filerName',
-      width: 150,
-      pinned:'left',
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      },
-    },
-    {
-      headerName: 'Owner Name',
-      field: 'ownerName',
-      width: 150,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      },
-    },
-    {
-      headerName: 'Total Number of filings',
-      field: 'numberOfFiling',
-      width: 180,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      },
-    },
-    {
-      headerName: 'Total Commission Earned',
-      field: 'totalCommissionEarned',
-      width: 200,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      },
-    },
-    {
-      headerName: 'Total Commission Earned-Post TDS',
-      field: 'totalCommissionEarnedTds',
-      width: 260,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      },
-    },
-    {
-      headerName: '',
-      headerClass: 'vertical-line',
-      width: 0,
-      suppressMovable: true,
-      cellStyle: {
-        borderRight: '3px solid #ccc',
-        backgroundColor: '#fff',
-      },
-    },
-    {
-      headerName: 'Slab 0-50 40:60',
-      headerClass: 'centered-header',
-      children: [
-        {
-          headerName: 'No Of filling',
-          field: 'slabOneCount',
-          width: 110,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+  reportsCodeColumnDef() {
+    return [
+      {
+        headerName: 'Sr. No.',
+        width: 40,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
-        {
-          headerName: 'Earning',
-          field: 'slabOneEarning',
-          width: 80,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        valueGetter: function (params) {
+          return params.node.rowIndex + 1;
+        }
+      },
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 150,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         },
-      ]
+      },
+      {
+        headerName: 'Owner Name',
+        field: 'ownerName',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Total Number of filings',
+        field: 'numberOfFiling',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Total Commission Earned',
+        field: 'totalCommissionEarned',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Total Commission Earned-Post TDS',
+        field: 'totalCommissionEarnedTds',
+        width: 260,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
+      },
+      {
+        headerName: 'Slab 0-50 40:60',
+        headerClass: 'centered-header',
+        children: [
+          {
+            headerName: 'No Of filling',
+            field: 'slabOneCount',
+            width: 110,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Earning',
+            field: 'slabOneEarning',
+            width: 80,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+        ]
       },
       {
         headerName: '',
@@ -295,43 +301,44 @@ export class PayoutReportComponent implements OnInit {
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
         ]
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
         },
-        {
-          headerName: '',
-          headerClass: 'vertical-line',
-          width: 0,
-          suppressMovable: true,
-          cellStyle: {
-            borderRight: '3px solid #ccc',
-            backgroundColor: '#fff',
+      },
+      {
+        headerName: 'Slab > 100',
+        headerClass: 'centered-header',
+        children: [
+          {
+            headerName: 'No Of filling',
+            field: 'slabThreeCount',
+            width: 110,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
-        },
-        {
-          headerName: 'Slab > 100',
-          headerClass: 'centered-header',
-          children: [
-            {
-              headerName: 'No Of filling',
-              field: 'slabThreeCount',
-              width: 110,
-              suppressMovable: true,
-              cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-            },
-            {
-              headerName: 'Earning',
-              field: 'slabThreeEarning',
-              width: 80,
-              suppressMovable: true,
-              cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-            },
-          ]
-          }
+          {
+            headerName: 'Earning',
+            field: 'slabThreeEarning',
+            width: 80,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+        ]
+      }
     ]
   }
 
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
@@ -342,25 +349,26 @@ export class PayoutReportComponent implements OnInit {
       userFilter += `filerUserId=${this.filerId}`;
     }
     param = `/payout/report?${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'payout-report');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report');
     this.loading = false;
-   }
+    this.showCsvMessage = false;
+  }
 
-   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-   resetFilters() {
-     this.searchParam.page = 0;
-     this.searchParam.pageSize = 20;
-     this.config.currentPage = 1
-     this?.smeDropDown?.resetDropdown();
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  resetFilters() {
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.config.currentPage = 1
+    this?.smeDropDown?.resetDropdown();
     //  if (this.roles?.includes('ROLE_OWNER')) {
     //    this.ownerId = this.loggedInSme[0].userId;
     //  } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
     //    this.filerId = this.loggedInSme[0].userId;
     //  }
-     this.showReports();
-   }
+    this.showReports();
+  }
 
-   pageChanged(event) {
+  pageChanged(event) {
     let pageChange = event
     this.config.currentPage = event;
     this.searchParam.page = event - 1;

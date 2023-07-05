@@ -29,6 +29,8 @@ export class RevenueReportComponent implements OnInit {
   };
   revenueReportGridOptions: GridOptions;
   disableCheckboxes = false;
+  dataOnLoad = true;
+  showCsvMessage: boolean;
 
   constructor(
     private reportService: ReportService,
@@ -63,7 +65,12 @@ export class RevenueReportComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports()
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.showReports();
+    } else {
+      this.dataOnLoad = false;
+    }
+    // this.showReports()
   }
 
   ownerId: number;
@@ -474,6 +481,7 @@ export class RevenueReportComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
@@ -498,8 +506,9 @@ export class RevenueReportComponent implements OnInit {
 
     param = `/calling-report/revenue-report?${userFilter}${viewFilter}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'revenue-report');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'revenue-report');
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -517,9 +526,19 @@ export class RevenueReportComponent implements OnInit {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
-    this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
-    this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+
+    if (this.dataOnLoad) {
+      this.showReports();
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
+      this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+    } else {
+      //clear grid for loaded data
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+      this.config.totalItems = 0;
+    }
+    // this.showReports();
+
   }
 
   handleLeaderViewChange(): void {

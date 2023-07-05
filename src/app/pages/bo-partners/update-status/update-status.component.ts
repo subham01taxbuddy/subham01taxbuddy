@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewDocumentsComponent } from '../view-documents/view-documents.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstDailyReportService } from 'src/app/services/gst-daily-report.service';
+declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-update-status',
@@ -25,7 +26,7 @@ export class UpdateStatusComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _toastMessageService: ToastMessageService,
     private gstreportService: GstDailyReportService
-  ) {}
+  ) { }
 
   ngOnInit() {
     console.log(this.data);
@@ -47,7 +48,12 @@ export class UpdateStatusComponent implements OnInit {
             'success',
             'Status update successfully.'
           );
-
+          we_track('Update status', {
+            'User Name': this.data?.partnerName,
+            'User Number': this.data?.mobileNumber,
+            'From status': this.data?.currentStatus,
+            'To status': this.selectedStatus,
+          });
           this.dialogRef.close({
             event: 'close',
             data: 'statusChanged',

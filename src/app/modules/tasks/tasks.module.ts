@@ -22,6 +22,7 @@ import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new
 import { PotentialUserComponent } from './pages/potential-user/potential-user.component';
 import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { ItrStatusDialogComponent } from './components/itr-status-dialog/itr-status-dialog.component';
+import { ReAssignActionDialogComponent } from './components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { ChatOptionsDialogComponent } from './components/chat-options/chat-options-dialog.component';
 
 @NgModule({
@@ -53,6 +54,7 @@ import { ChatOptionsDialogComponent } from './components/chat-options/chat-optio
         BulkReAssignDialogComponent,
         ItrStatusDialogComponent,
         ChatOptionsDialogComponent
+        ReAssignActionDialogComponent,
     ],
     entryComponents: [
         ReAssignDialogComponent,

@@ -1286,6 +1286,18 @@ export class PrefillIdComponent implements OnInit {
           {
             // CUSTOMER PROFILE
             {
+              if (this.ITR_Obj.isRevised === 'N') {
+                this.ITR_Obj.isRevised =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
+                    ? 'Y'
+                    : 'N';
+              } else if ((this.ITR_Obj.isRevised = 'Y')) {
+                this.ITR_Obj.isRevised = 'Y';
+                this.utilsService.showSnackBar(
+                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                );
+                return;
+              }
               this.ITR_Obj.email =
                 ItrJSON[this.ITR_Type].PersonalInfo.Address?.EmailAddress;
               this.ITR_Obj.family[0].fName =
@@ -1298,10 +1310,6 @@ export class PrefillIdComponent implements OnInit {
                 ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
               this.ITR_Obj.family[0].fatherName =
                 ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
-              this.ITR_Obj.isRevised =
-                ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 11
-                  ? 'N'
-                  : 'Y';
 
               ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
@@ -1376,29 +1384,29 @@ export class PrefillIdComponent implements OnInit {
 
                   // setting first question details
                   {
-                    ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
                       ?.AssessmentYear
                       ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
                           ItrJSON[
                             this.ITR_Type
-                          ].FilingStatus.NewTaxRegimeDtls?.AssessmentYear)
+                          ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
                       ?.Form10IEDtls?.Form10IEDate
                       ? (this.ITR_Obj.everOptedNewRegime.date =
                           this.parseAndFormatDate(
-                            ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-                              ?.Form10IEDtls?.Form10IEDate
+                            ItrJSON[this.ITR_Type].FilingStatus
+                              ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
                           ))
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
+                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
                       ?.Form10IEDtls?.Form10IEAckNo
                       ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
                           ItrJSON[
                             this.ITR_Type
-                          ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
+                          ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                       : null;
                   }
 
@@ -1413,7 +1421,7 @@ export class PrefillIdComponent implements OnInit {
                 {
                   //Setting 1st question as yes / no
                   if (
-                    ItrJSON[this.ITR_Type].FilingStatus
+                    ItrJSON[this.ITR_Type]?.FilingStatus
                       ?.OptedOutNewTaxRegime === 'Y'
                   ) {
                     this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
@@ -1425,30 +1433,30 @@ export class PrefillIdComponent implements OnInit {
 
                   // setting second question details
                   {
-                    ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                      ?.AssessmentYear
+                    ItrJSON[this.ITR_Type].FilingStatus
+                      ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
                           ItrJSON[
                             this.ITR_Type
-                          ].FilingStatus.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                          ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                      ?.Form10IEDtls?.Form10IEDate
+                    ItrJSON[this.ITR_Type].FilingStatus
+                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
                           this.parseAndFormatDate(
                             ItrJSON[this.ITR_Type].FilingStatus
-                              .OptedOutNewTaxRegimeDtls.Form10IEDtls
+                              ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
                               ?.Form10IEDate
                           ))
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-                      ?.Form10IEDtls?.Form10IEAckNo
+                    ItrJSON[this.ITR_Type].FilingStatus
+                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
                           ItrJSON[
                             this.ITR_Type
-                          ].FilingStatus.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                          ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                       : null;
                   }
 
@@ -2487,6 +2495,20 @@ export class PrefillIdComponent implements OnInit {
           {
             // CUSTOMER PROFILE
             {
+              if (this.ITR_Obj.isRevised === 'N') {
+                this.ITR_Obj.isRevised =
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec === 17
+                    ? 'Y'
+                    : 'N';
+              } else if ((this.ITR_Obj.isRevised = 'Y')) {
+                this.ITR_Obj.isRevised = 'Y';
+                this.utilsService.showSnackBar(
+                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                );
+                return;
+              }
+
               this.ITR_Obj.email =
                 ItrJSON[
                   this.ITR_Type
@@ -2509,12 +2531,6 @@ export class PrefillIdComponent implements OnInit {
 
               this.ITR_Obj.family[0].fatherName =
                 ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
-
-              this.ITR_Obj.isRevised =
-                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                  ?.ReturnFileSec === 11
-                  ? 'N'
-                  : 'Y';
 
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
@@ -2551,154 +2567,163 @@ export class PrefillIdComponent implements OnInit {
                 }
               }
 
-              // SETTING REGIME TYPE FOR ITR3 - Waiting for ITR3 latest case
-              // if (this.ITR_Type === 'ITR3') {
-              //   // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
-              //   // optionForCurrentAY
-              //   if (ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 1) {
-              //     this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-              //   } else if (
-              //     ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 2
-              //   ) {
-              //     this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-              //   } else if (
-              //     ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 3
-              //   ) {
-              //     this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-              //   } else if (
-              //     ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 4
-              //   ) {
-              //     this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-              //   } else if (
-              //     ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 5
-              //   ) {
-              //     this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-              //   } else if (
-              //     !ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime
-              //   ) {
-              //     this.utilsService.showSnackBar(
-              //       'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
-              //     );
-              //   }
-
-              //   // everOptedNewRegime
-              //   {
-              //     //Setting 1st question as yes / no
-              //     if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'Y') {
-              //       this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
-              //     } else {
-              //       this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
-              //     }
-
-              //     // setting first question details
-              //     {
-              //       ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-              //         ?.AssessmentYear
-              //         ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-              //             ItrJSON[
-              //               this.ITR_Type
-              //             ].FilingStatus.NewTaxRegimeDtls?.AssessmentYear)
-              //         : null;
-
-              //       ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-              //         ?.Form10IEDtls?.Form10IEDate
-              //         ? (this.ITR_Obj.everOptedNewRegime.date =
-              //             this.parseAndFormatDate(
-              //               ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-              //                 ?.Form10IEDtls?.Form10IEDate
-              //             ))
-              //         : null;
-
-              //       ItrJSON[this.ITR_Type].FilingStatus.NewTaxRegimeDtls
-              //         ?.Form10IEDtls?.Form10IEAckNo
-              //         ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-              //             ItrJSON[
-              //               this.ITR_Type
-              //             ].FilingStatus.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
-              //         : null;
-              //     }
-
-              //     // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              //     sessionStorage.setItem(
-              //       AppConstants.ITR_JSON,
-              //       JSON.stringify(this.ITR_Obj)
-              //     );
-              //   }
-
-              //   //  everOptedOutOfNewRegime
-              //   {
-              //     //Setting 1st question as yes / no
-              //     if (
-              //       ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegime ===
-              //       'Y'
-              //     ) {
-              //       this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-              //         true;
-              //     } else {
-              //       this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-              //         false;
-              //     }
-
-              //     // setting second question details
-              //     {
-              //       ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-              //         ?.AssessmentYear
-              //         ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-              //             ItrJSON[
-              //               this.ITR_Type
-              //             ].FilingStatus.OptedOutNewTaxRegimeDtls?.AssessmentYear)
-              //         : null;
-
-              //       ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-              //         ?.Form10IEDtls?.Form10IEDate
-              //         ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-              //             this.parseAndFormatDate(
-              //               ItrJSON[this.ITR_Type].FilingStatus
-              //                 .OptedOutNewTaxRegimeDtls.Form10IEDtls?.Form10IEDate
-              //             ))
-              //         : null;
-
-              //       ItrJSON[this.ITR_Type].FilingStatus.OptedOutNewTaxRegimeDtls
-              //         ?.Form10IEDtls?.Form10IEAckNo
-              //         ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-              //             ItrJSON[
-              //               this.ITR_Type
-              //             ].FilingStatus.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
-              //         : null;
-              //     }
-
-              //     // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              //     sessionStorage.setItem(
-              //       AppConstants.ITR_JSON,
-              //       JSON.stringify(this.ITR_Obj)
-              //     );
-              //   }
-
-              //   this.ITR_Obj.regime =
-              //     this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
-
-              //   this.regime = this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
-
-              //   ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
-              //     ? (this.ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(
-              //         ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
-              //       ))
-              //     : null;
-              //   ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo
-              //     ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-              //         ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
-              //     : null;
-
-              //   // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-              //   sessionStorage.setItem(
-              //     AppConstants.ITR_JSON,
-              //     JSON.stringify(this.ITR_Obj)
-              //   );
-              // }
-
               if (this.ITR_Type === 'ITR3') {
-                this.ITR_Obj.regime = 'OLD';
-                this.regime = 'OLD';
+                // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
+                // optionForCurrentAY
+                if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OptingNewTaxRegime === 1
+                ) {
+                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+                } else if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OptingNewTaxRegime === 2
+                ) {
+                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+                } else if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OptingNewTaxRegime === 3
+                ) {
+                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
+                } else if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OptingNewTaxRegime === 4
+                ) {
+                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+                } else if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OptingNewTaxRegime === 5
+                ) {
+                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+                } else if (
+                  !ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OptingNewTaxRegime
+                ) {
+                  this.utilsService.showSnackBar(
+                    'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
+                  );
+                }
+
+                // everOptedNewRegime
+                {
+                  //Setting 1st question as yes / no
+                  if (
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.NewTaxRegime === 'Y'
+                  ) {
+                    this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = true;
+                  } else {
+                    this.ITR_Obj.everOptedNewRegime.everOptedNewRegime = false;
+                  }
+
+                  // setting first question details
+                  {
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.NewTaxRegimeDtls?.AssessmentYear
+                      ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                          ItrJSON[
+                            this.ITR_Type
+                          ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                      : null;
+
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                      ? (this.ITR_Obj.everOptedNewRegime.date =
+                          this.parseAndFormatDate(
+                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                              ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                          ))
+                      : null;
+
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
+                      ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
+                          ItrJSON[
+                            this.ITR_Type
+                          ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
+                      : null;
+                  }
+
+                  // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
+                  sessionStorage.setItem(
+                    AppConstants.ITR_JSON,
+                    JSON.stringify(this.ITR_Obj)
+                  );
+                }
+
+                //  everOptedOutOfNewRegime
+                {
+                  //Setting 1st question as yes / no
+                  if (
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.OptedOutNewTaxRegime === 'Y'
+                  ) {
+                    this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                      true;
+                  } else {
+                    this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
+                      false;
+                  }
+
+                  // setting second question details
+                  {
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
+                      ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
+                          ItrJSON[
+                            this.ITR_Type
+                          ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                      : null;
+
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                      ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
+                          this.parseAndFormatDate(
+                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                              ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
+                              ?.Form10IEDate
+                          ))
+                      : null;
+
+                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
+                      ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                          ItrJSON[
+                            this.ITR_Type
+                          ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                      : null;
+                  }
+
+                  sessionStorage.setItem(
+                    AppConstants.ITR_JSON,
+                    JSON.stringify(this.ITR_Obj)
+                  );
+                }
+
+                this.ITR_Obj.regime =
+                  this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
+
+                this.regime =
+                  this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
+
+                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEDate
+                  ? (this.ITR_Obj.optionForCurrentAY.date =
+                      this.parseAndFormatDate(
+                        ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                          ?.Form10IEDate
+                      ))
+                  : null;
+                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAckNo
+                  ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
+                      ItrJSON[
+                        this.ITR_Type
+                      ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
+                  : null;
+
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_Obj)
+                );
               }
 
               // SETTING RESIDENTIAL STATUS
@@ -5338,6 +5363,7 @@ export class PrefillIdComponent implements OnInit {
         },
       });
 
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
         if (result === 'YES') {
@@ -5347,7 +5373,8 @@ export class PrefillIdComponent implements OnInit {
             this.ITR_JSON.financialYear,
             this.ITR_JSON.itrId,
             this.ITR_JSON.filingTeamMemberId,
-            this.ITR_JSON.id
+            this.ITR_JSON.id,
+            this.ITR_JSON
           );
 
           sessionStorage.setItem(
@@ -5507,6 +5534,7 @@ export class PrefillIdComponent implements OnInit {
       },
     });
 
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
       if (result === 'YES') {
@@ -5518,7 +5546,8 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_JSON.financialYear,
           this.ITR_JSON.itrId,
           this.ITR_JSON.filingTeamMemberId,
-          this.ITR_JSON.id
+          this.ITR_JSON.id,
+          this.ITR_JSON
         );
         this.utilsService.showSnackBar(
           'The uploaded JSON has been deleted. You can now proceed ahead.'

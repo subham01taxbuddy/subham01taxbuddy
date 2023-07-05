@@ -3,7 +3,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -52,10 +52,10 @@
          <div class="col-sm-6 spsTp">
            <mat-label> Search Mobile Number</mat-label>
            <mat-form-field appearance="outline" class="customBg">
-             <input type="text" matInput [formControl]="mobileNumber" maxlength="10" digitsOnly>
-             <button [disabled]="loading" (click)="getUserByMobileNum(mobileNumber.value)" mat-button matSuffix mat-icon-button>
+             <input type="text" matInput [formControl]="mobileNumber" digitsOnly>
+             <!-- <button [disabled]="loading" (click)="search(0,mobileNumber.value)" mat-button matSuffix mat-icon-button>
                <mat-icon style="color: #00AECA">search</mat-icon>
-             </button>
+             </button> -->
              <!-- <mat-icon matSuffix>search</mat-icon> -->
              <!-- <mat-autocomplete #auto="matAutocomplete">
              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
@@ -68,14 +68,26 @@
            <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
              Clear form
          </button>
+         <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+          <i class="fa fa-download" aria-hidden="true"></i> Download File
+        </button>
+        <button  class="srch-btn mvRth" [disabled]="loading" (click)="search(0,mobileNumber.value)"><i
+          class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
            <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
- 
- 
+
+
          </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 ">
+                <span class="note1">
+                  Note :  Please select required filters above and click on search to get information
+                </span>
+              </div>
             </div>
 </div>
 </div>
-     
+
     </mat-expansion-panel>
    </mat-accordion>
 </div>

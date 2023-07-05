@@ -8,5 +8,12 @@ if (environment.production) {
   enableProdMode();
 }
 
+// Scripts loaded on all environments
+const webengageScript = document.createElement('script');
+webengageScript.innerHTML = environment.externalScripts['webengage'];
+webengageScript.id = '_webengage_script_tag';
+webengageScript.type = 'text/javascript';
+document.head.appendChild(webengageScript);
+
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

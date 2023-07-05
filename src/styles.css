@@ -9947,3 +9947,19 @@ body[dir=rtl] .checkbox[checked=true] {
   right: 20px;
   top: 22px;
 }
+
+.loader-text {
+  z-index: 2000;
+  position: absolute;
+  background: white;
+  color: black;
+  left: 15%;
+  right: 15%;
+  text-align: center;
+  top: calc(50% + 40px);
+  width: 80%;
+  padding: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+}

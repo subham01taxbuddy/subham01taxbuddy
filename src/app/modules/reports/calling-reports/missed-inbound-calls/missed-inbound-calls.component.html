@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog2">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -63,6 +63,13 @@
               </button>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-12 ">
+              <span class="note1">
+                Note :  Please select required filters Above and click on Show Reports to get information
+              </span>
+            </div>
+          </div>
 </div>
 </div>
 
@@ -90,6 +97,8 @@
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallGridOptions"
   (rowClicked)="onRowClicked($event)">
   </ag-grid-angular>
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <div *ngIf="config.totalItems > 1" >
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 
 </div>

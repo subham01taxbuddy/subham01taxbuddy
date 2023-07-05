@@ -5,7 +5,8 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { ReviewService } from '../../services/review.service';
-import {UtilsService} from "../../../../services/utils.service";
+import { UtilsService } from "../../../../services/utils.service";
+declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-update-sme-notes',
@@ -100,6 +101,12 @@ export class UpdateSmeNotesComponent implements OnInit {
     this.reviewService.putMethod(param, requestBody).subscribe((res: any) => {
       this._toastMessageService.alert("success", 'Review Status Updated Successfully!!');
       this.loading = false;
+      we_track('Update status', {
+        'User Name': this.data?.leadData?.sourceUserName,
+        'User Number': this.data?.leadData?.sourceMobile,
+        'From status': this.data?.leadData?.status,
+        'To status': this.updateStatusForm.controls['status'].value,
+      });
       this.dialogRef.close(true);
     }, error => {
       this.loading = false;

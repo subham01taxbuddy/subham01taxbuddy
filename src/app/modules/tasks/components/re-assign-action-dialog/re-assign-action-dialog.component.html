@@ -1,0 +1,18 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">Action with Re-Assignment: </label><button style="float: right;" mat-dialog-close tabindex="-1"
+    class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
+<div class="row spsTp bdrTp">
+    <div class="col-sm-12 ">
+      <span class="note1" style="margin-left: 33%;;">
+        Note : Invoice created User wont be re-assigned* to different filer
+      </span>
+    </div>
+    <div class="col-sm-9">
+        <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+            (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+    </div>
+    <div class="col-sm-3">
+        <button class="tbd-btn save-btn spsTp2" (click)="reAssignment()" [disabled]="loading">Re-Assignment</button>
+    </div>
+</div>

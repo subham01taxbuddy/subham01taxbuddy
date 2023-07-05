@@ -57,9 +57,11 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     pageSize: 20,
   };
   dailyCallingReportGridOptions: GridOptions;
+  dataOnLoad = true;
 
   loggedInSme: any;
   roles: any;
+  showCsvMessage: boolean;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -98,7 +100,13 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
+
+    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.showReports();
+    } else{
+      this.dataOnLoad = false;
+    }
+    // this.showReports();
   }
 
   ownerId: number;
@@ -319,6 +327,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -333,6 +342,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'daily-calling-report', this.fields);
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
@@ -348,7 +358,14 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    this.showReports();
+    if(this.dataOnLoad) {
+      this.showReports();
+    } else {
+      //clear grid for loaded data
+      this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    }
+    // this.showReports();
   }
 
   pageChanged(event) {
