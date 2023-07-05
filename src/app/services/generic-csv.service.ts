@@ -64,8 +64,17 @@ export class GenericCsvService {
         .then((result: any) => {
           if (result.success) {
             // if (result?.data?.content.length) {
+            if(param.includes('status-wise-report')){
+              if(result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData) {
+                this.data = [...result?.data?.content[0].statusWiseData];
+                resolve(result?.data.totalPages);
+              } else {
+                resolve(0);
+              }
+            } else {
               this.data = [...this.data, ...result?.data?.content];
               resolve(result?.data.totalPages);
+            }
             // } else {
             //   resolve(0);
             // }

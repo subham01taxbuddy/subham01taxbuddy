@@ -61,6 +61,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
 
   loggedInSme: any;
   roles: any;
+  showCsvMessage: boolean;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -326,6 +327,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -340,6 +342,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'daily-calling-report', this.fields);
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
