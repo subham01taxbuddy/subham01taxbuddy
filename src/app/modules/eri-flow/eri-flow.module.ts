@@ -19,6 +19,7 @@ import { ItrThreeComponent } from "./components/new-itr-summary/itr-three/itr-th
 import { TaxSummaryComponent } from "./components/tax-summary/tax-summary.component";
 import { SuccessSubmitFilingComponent } from "./components/success-submit-filing/success-submit-filing.component";
 import { ItrSharedModule } from "../itr-shared/itr-shared.module";
+import {PagesModule} from "../../pages/pages.module";
 
 @NgModule({
     declarations: [
@@ -46,7 +47,8 @@ import { ItrSharedModule } from "../itr-shared/itr-shared.module";
         ReactiveFormsModule,
         EriFlowRoutingModule,
         NgxLoadingModule.forRoot({}),
-        ItrSharedModule
+        ItrSharedModule,
+        PagesModule
     ],
     entryComponents: [SuccessSubmitFilingComponent]
 })

@@ -45,6 +45,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 // import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NeedHelpComponent } from './need-help/need-help.component';
+import {FormControlTypePipe} from "../pipes/formcontroltype.pipe";
 
 
 Auth.configure(environment.AMPLIFY_CONFIG);
@@ -75,6 +76,7 @@ export const MY_FORMATS = {
     BacktipsDatePipe,
     CapitalizeFirstPipe,
     SafePipe,
+    FormControlTypePipe,
     ConfirmationModalComponent,
     InputCheckboxSelectComponent,
     InputCheckboxSelectObjectComponent,
@@ -119,6 +121,7 @@ export const MY_FORMATS = {
     BacktipsDatePipe,
     CapitalizeFirstPipe,
     SafePipe,
+    FormControlTypePipe,
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
@@ -126,6 +129,6 @@ export const MY_FORMATS = {
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, /*NgxExtendedPdfViewerModule,*/ NeedHelpComponent]
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, /*NgxExtendedPdfViewerModule,*/ NeedHelpComponent, FormControlTypePipe]
 })
 export class PagesModule { }

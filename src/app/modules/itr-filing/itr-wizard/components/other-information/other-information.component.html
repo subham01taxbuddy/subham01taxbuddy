@@ -2,7 +2,7 @@
 ></ngx-loading>
 
   <!-- first radio bar starts -->
-  
+
   <div class="gryBk">
     <div class="row">
 
@@ -67,7 +67,7 @@
                 </button>
               </div>
             </div>
-    
+
             <div class="row">
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
@@ -244,7 +244,7 @@
         </div>
       </form>
     </div>
-    
+
 
   </div>
   </div>
@@ -393,8 +393,8 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-               
-              
+
+
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
@@ -419,7 +419,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-      
+
                   <!-- Shares Aquired -->
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
@@ -449,9 +449,7 @@
                     <mat-form-field>
                       <input
                         matInput
-                        [min]="minPurchaseDate"
                         readonly
-                        [max]="maxPurchaseDate"
                         formControlName="purchaseDate"
                         name="purchaseDate"
                         [matDatepicker]="purchaseDate"
@@ -489,7 +487,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-              
+
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
@@ -503,7 +501,6 @@
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="event.charCode >= 48 && event.charCode <= 57"
                         required
-                        (blur)="setIssueOrPurchase('I')"
                       />
                       <mat-error
                         *ngIf="
@@ -528,7 +525,6 @@
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
                         required
-                        (blur)="setIssueOrPurchase('P')"
                       />
                       <mat-error
                         *ngIf="
@@ -540,7 +536,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-      
+
                   <!-- Shares Transferred -->
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
@@ -598,10 +594,10 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-              
+
                 <!-- Shares Transferred End -->
                 <!-- Closing -->
-                
+
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
@@ -650,7 +646,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                
+
                 <!-- Closing End -->
               </div>
             </div>
@@ -692,7 +688,7 @@
             </div>
           </div>
         </div>
-     
+
     </div>
     </div>
   <!-- Second radio bar ends -->

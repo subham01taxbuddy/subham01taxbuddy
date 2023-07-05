@@ -51,21 +51,21 @@
                       calMinImproveDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
                           .controls['purchaseDate'].value,
-                        this.immovableForm
+                        this.immovableForm, i
                       )
                     "
                     (dateInput)="
                       calMinImproveDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
                           .controls['purchaseDate'].value,
-                        this.immovableForm
+                        this.immovableForm, i
                       )
                     "
                     (blur)="
                       calMinImproveDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
                           .controls['purchaseDate'].value,
-                        this.immovableForm
+                        this.immovableForm, i
                       )
                     "
                     required
@@ -107,21 +107,21 @@
                       calMaxPurchaseDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
                           .controls['sellDate'].value,
-                        this.immovableForm
+                        this.immovableForm, i
                       )
                     "
                     (dateInput)="
                       calMaxPurchaseDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
                           .controls['sellDate'].value,
-                        this.immovableForm
+                        this.immovableForm, i
                       )
                     "
                     (blur)="
                       calMaxPurchaseDate(
                         this.immovableForm.controls['assetDetails'].controls[i]
                           .controls['sellDate'].value,
-                        this.immovableForm
+                        this.immovableForm, i
                       )
                     "
                     required
@@ -249,7 +249,7 @@
             </div>
           </div>
         </div>
-        
+
         <hr />
           <div>
             <div style="padding-top: 25px">
@@ -613,7 +613,7 @@
               <div class="col-sm-3">
               <button
                 mat-button
-                class="addLandBtn mvRth"              
+                class="addLandBtn mvRth"
                 (click)="addMoreBuyersDetails()"
               >
                 + Add Buyer
@@ -622,7 +622,7 @@
             </div>
 
               <div formArrayName="buyersDetails">
-                <div               
+                <div
                   class="card cardYes spcBox"
                   *ngFor="
                     let buyer of getBuyersDetailsArrayForImmovable.controls;
@@ -822,7 +822,7 @@
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
-                        </div>                   
+                        </div>
 
                     <div class="col-sm-12">
                       <mat-label>Address</mat-label>
@@ -851,10 +851,10 @@
                   </div>
                 </div>
 
-             
-         
 
-       
+
+
+
           <!--  <div class="row dialog-button">
                 <div class="sub_btn top-space">
                     <button type="submit" class="btn save" (click)="saveImmovableCG(this.immovableForm)"

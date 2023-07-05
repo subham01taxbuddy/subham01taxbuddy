@@ -85,13 +85,13 @@
                     *ngIf="taxSummaryForm.
                                         controls['taxpayable'].value >= 0 && taxSummaryForm.controls['taxRefund'].value === 0">
                     <label>Tax Payable</label>
-                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable" disabled
+                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable" [disabled]="true"
                         class="disableInput">
                 </div>
                 <div class="card__col-lg-3" formGroupName="taxSummary"
                     *ngIf="taxSummaryForm.controls['taxRefund'].value > 0 || taxSummaryForm.controls['taxRefund'].value < 0">
                     <label>Tax Refund</label>
-                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund" disabled
+                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund" [disabled]="true"
                         class="disableInput">
                 </div>
             </div>
@@ -101,13 +101,13 @@
                     *ngIf="taxSummaryForm.controls['taxpayable'].value >= 0 && taxSummaryForm.controls['taxRefund'].value === 0">
                     <label>Tax Payable</label>
                     <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxpayable"
-                        disabled class="disableInput">
+                        [disabled]="true" class="disableInput">
                 </div>
                 <div class="card__col-lg-3" formGroupName="taxSummary"
                     *ngIf="taxSummaryForm.controls['taxRefund'].value > 0 || taxSummaryForm.controls['taxRefund'].value < 0">
                     <label>Tax Refund</label>
                     <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
-                        disabled class="disableInput">
+                        [disabled]="true" class="disableInput">
                 </div>
             </div>
         </div>
@@ -348,7 +348,7 @@
                     <div formGroupName="address">
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
-                            <input matInput formControlName="country" placeholder="Country" disabled autocomplete="off"
+                            <input matInput formControlName="country" placeholder="Country" [disabled]="true" autocomplete="off"
                                 required>
                         </mat-form-field>
                     </div>
@@ -358,7 +358,7 @@
                     <div formGroupName="address">
                         <mat-form-field appearance="outline">
                             <mat-label>State</mat-label>
-                            <input matInput formControlName="state" disabled placeholder="State" autocomplete="off"
+                            <input matInput formControlName="state" [disabled]="true" placeholder="State" autocomplete="off"
                                 required>
                         </mat-form-field>
                     </div>
@@ -370,7 +370,7 @@
                     <div formGroupName="address">
                         <mat-form-field appearance="outline">
                             <mat-label>City</mat-label>
-                            <input matInput formControlName="city" disabled placeholder="City" autocomplete="off"
+                            <input matInput formControlName="city" [disabled]="true" placeholder="City" autocomplete="off"
                                 required>
                         </mat-form-field>
                     </div>
@@ -418,7 +418,7 @@
                         <mat-label>Acknowledgement Number</mat-label>
                         <input matInput formControlName="ackNumber" maxlength="15" minlength="15"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            disabled placeholder="Acknowledgement Number"
+                            [disabled]="true" placeholder="Acknowledgement Number"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
                         <!--minlength="15"-->
                         <mat-error
@@ -1369,7 +1369,7 @@
                 <tr *ngIf="itrType.itrFour">
                     <td></td>
                     <td>Gross Receipts/ Turnover </td>
-                    <td><input type="number" [value]="this.businessObject.received44ADtaotal" disabled maxlength="8">
+                    <td><input type="number" [value]="this.businessObject.received44ADtaotal" [disabled]="true" maxlength="8">
                     </td>
                     <td></td>
 
@@ -1378,7 +1378,7 @@
                 <tr *ngIf="itrType.itrFour">
                     <td></td>
                     <td>Presumptive Income </td>
-                    <td><input type="number" [value]="this.businessObject.presumptive44ADtotal" disabled maxlength="8">
+                    <td><input type="number" [value]="this.businessObject.presumptive44ADtotal" [disabled]="true" maxlength="8">
                     </td>
                     <td></td>
 
@@ -1397,13 +1397,13 @@
                 <tr *ngIf="itrType.itrFour">
                     <td></td>
                     <td>Gross Receipts/ Turnover </td>
-                    <td><input type="number" [value]="this.businessObject.grossReciept" disabled maxlength="8"></td>
+                    <td><input type="number" [value]="this.businessObject.grossReciept" [disabled]="true" maxlength="8"></td>
                     <!-- <td > <input type="number" maxlength="8"></td> -->
                 </tr>
                 <tr *ngIf="itrType.itrFour">
                     <td></td>
                     <td>Presumptive Income </td>
-                    <td><input type="number" [value]="this.businessObject.presumptiveIncome" disabled maxlength="8">
+                    <td><input type="number" [value]="this.businessObject.presumptiveIncome" [disabled]="true" maxlength="8">
                     </td>
 
                     <td></td>
@@ -1417,7 +1417,7 @@
                     <!-- <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
                                         maxlength="8"></td> -->
                     <td formGroupName="taxSummary">
-                        <input type="number" disabled formControlName="presumptiveIncome">
+                        <input type="number" [disabled]="true" formControlName="presumptiveIncome">
                     </td>
 
                     <!-- <td > <input type="number" maxlength="8"></td> -->
@@ -1439,7 +1439,7 @@
                     <td>{{itrType.itrFour ? 5 : 4}}</td>
                     <td><b>Gross Total Income {{itrType.itrFour ? '(1+2+3+4)' : '(1+2+3)'}}</b> </td>
                     <td></td>
-                    <td formGroupName="taxSummary"><b><input type="number" disabled formControlName="grossTotalIncome"
+                    <td formGroupName="taxSummary"><b><input type="number" [disabled]="true" formControlName="grossTotalIncome"
                                 maxlength="8"></b></td>
 
                     <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number"
@@ -1464,7 +1464,7 @@
                     <td><b>Total Income {{itrType.itrFour ? '(5-6)' : '(4-5)'}} </b></td>
                     <td></td>
                     <td formGroupName="taxSummary"><b><input type="number"
-                                formControlName="totalIncomeAfterDeductionIncludeSR" required disabled
+                                formControlName="totalIncomeAfterDeductionIncludeSR" required [disabled]="true"
                                 maxlength="8"></b>
                         <!--totalIncome-->
                     </td>
@@ -1504,7 +1504,7 @@
                     <td>{{itrType.itrFour ? 10 : 9}}</td>
                     <td>Tax after rebate</td>
                     <td></td>
-                    <td formGroupName="taxSummary"><input type="number" formControlName="taxAfterRebate" disabled
+                    <td formGroupName="taxSummary"><input type="number" formControlName="taxAfterRebate" [disabled]="true"
                             required maxlength="8"></td>
 
                     <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number"
@@ -1515,7 +1515,7 @@
                     <td>{{itrType.itrFour ? 11 : 10}}</td>
                     <td>Health and Education cess @4% on {{itrType.itrFour ? '(10)' : '(9)'}}</td>
                     <td></td>
-                    <td formGroupName="taxSummary"><input type="number" formControlName="cessAmount" disabled required
+                    <td formGroupName="taxSummary"><input type="number" formControlName="cessAmount" [disabled]="true" required
                             maxlength="8"></td>
                     <!--healthAndEducationCess-->
 
@@ -1527,7 +1527,7 @@
                     <td>{{itrType.itrFour ? 12 : 11}}</td>
                     <td> Total Tax and cess {{itrType.itrFour ? '(10 + 11)' : '(9 + 10)'}}</td>
                     <td></td>
-                    <td formGroupName="taxSummary"><input type="number" disabled required formControlName="totalTax"
+                    <td formGroupName="taxSummary"><input type="number" [disabled]="true" required formControlName="totalTax"
                             maxlength="8"></td>
                     <!--formControlName="totalTaxAndCess"-->
 
@@ -1555,7 +1555,7 @@
                     <td>Balance Tax after relief {{itrType.itrFour ? '(12-13)' : '(11-12)'}}</td>
                     <td></td>
                     <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxRelief" required
-                            disabled maxlength="8">
+                            [disabled]="true" maxlength="8">
                         <!--balanceTaxAfterRelief-->
                     </td>
 
@@ -1571,7 +1571,7 @@
 
                     <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number"
                             [(ngModel)]="newRegimeTaxSummary.interestAndFeesPayable"
-                            [ngModelOptions]="{standalone: true}" disabled maxlength="8"></td>
+                            [ngModelOptions]="{standalone: true}" [disabled]="true" maxlength="8"></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -1622,7 +1622,7 @@
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57"></td>
 
                     <td formGroupName="taxSummary"><input type="number" formControlName="interestAndFeesPayable"
-                            disabled maxlength="8"></td>
+                            [disabled]="true" maxlength="8"></td>
                     <!--interestAndFees-->
                     <!--[value]="totalInterest"-->
 
@@ -1634,7 +1634,7 @@
                     <td>{{itrType.itrFour ? 16 : 15}}</td>
                     <td>Total Tax, fee and Interest {{itrType.itrFour ? '(14 + 15)' : '(13 + 14)'}}</td>
                     <td></td>
-                    <td formGroupName="taxSummary"><input type="number" formControlName="agrigateLiability" disabled
+                    <td formGroupName="taxSummary"><input type="number" formControlName="agrigateLiability" [disabled]="true"
                             required maxlength="8"></td>
                     <!--totalTaxFeeAndInterest-->
 
@@ -1648,16 +1648,16 @@
                     <td></td>
                     <td></td>
 
-                    <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" disabled
+                    <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [disabled]="true"
                             [(ngModel)]="newRegimeTaxSummary.totalTaxesPaid" [ngModelOptions]="{standalone: true}"
-                            disabled maxlength="8"></td>
+                            maxlength="8"></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>TDS on Salary </td>
                     <td><input type="number"
                             [value]="newItrSumChanges ? (newTaxRegime ? 0 : taxesPaid.tdsOnSalary) : taxesPaid.tdsOnSalary"
-                            disabled maxlength="8"></td>
+                            [disabled]="true" maxlength="8"></td>
                     <!--formControlName="totalTdsOnSalary"-->
                     <td></td>
 
@@ -1668,7 +1668,7 @@
                 <tr>
                     <td></td>
                     <td>TDS other than Salary</td>
-                    <td><input type="number" disabled
+                    <td><input type="number" [disabled]="true"
                             [value]="newItrSumChanges ? (newTaxRegime ? 0 : taxesPaid.tdsOtherThanSalary) : taxesPaid.tdsOtherThanSalary"
                             maxlength="8">
                     </td>
@@ -1682,7 +1682,7 @@
                 <tr>
                     <td></td>
                     <td>TDS on Sale of Property 26QB </td>
-                    <td><input type="number" disabled
+                    <td><input type="number" [disabled]="true"
                             [value]="newItrSumChanges ? (newTaxRegime ? 0 : taxesPaid.tdsOnSal26QB) : taxesPaid.tdsOnSal26QB"
                             maxlength="8"></td>
                     <!--formControlName="totalTdsSaleOfProperty26QB"-->
@@ -1695,7 +1695,7 @@
                 <tr>
                     <td></td>
                     <td>TCS </td>
-                    <td formGroupName="taxSummary"><input type="number" disabled
+                    <td formGroupName="taxSummary"><input type="number" [disabled]="true"
                             [value]="newRegimeTaxesPaid ? (newTaxRegime ? 0 : taxesPaid.tcs) : taxesPaid.tcs"
                             maxlength="8"></td>
                     <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
@@ -1708,12 +1708,12 @@
                 <tr>
                     <td></td>
                     <td>Advance/ Self-Assessment Tax </td>
-                    <td><input type="number" disabled
+                    <td><input type="number" [disabled]="true"
                             [value]="newRegimeTaxesPaid ? (newTaxRegime ? 0 : taxesPaid.advanceSelfAssTax) : taxesPaid.advanceSelfAssTax"
                             maxlength="8">
                     </td>
                     <!--totalAdvanceTax-->
-                    <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxesPaid" disabled
+                    <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxesPaid" [disabled]="true"
                             maxlength="8"></td>
                     <!--totalTaxPaid     formControlName="advanceTaxSelfAssessmentTax"-->
                     <!--[value]="totalTDS"-->
@@ -1728,7 +1728,7 @@
                     <td>{{itrType.itrFour ? 18 : 17}}</td>
                     <td><b>Net Tax Payable</b></td>
                     <td></td>
-                    <td formGroupName="taxSummary"><b><input type="number" formControlName="taxpayable" disabled
+                    <td formGroupName="taxSummary"><b><input type="number" formControlName="taxpayable" [disabled]="true"
                                 maxlength="8"></b>
                         <!--formControlName="netTaxPayable"-->
                     </td>
@@ -1742,7 +1742,7 @@
                     <td>{{itrType.itrFour ? 18 : 17}}</td>
                     <td><b>Net Tax Refund</b></td>
                     <td></td>
-                    <td formGroupName="taxSummary"><b><input type="number" formControlName="taxRefund" disabled
+                    <td formGroupName="taxSummary"><b><input type="number" formControlName="taxRefund" [disabled]="true"
                                 maxlength="8"></b>
                         <!--formControlName="netTaxPayable"-->
                     </td>

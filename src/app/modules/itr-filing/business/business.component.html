@@ -77,7 +77,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Partner’s/Member’s capital or own capital</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['partnerOwnCapital']"
+                                        <input type="number" [formControl]="commonForm.get('partnerOwnCapital') | formControlType"
                                             matInput placeholder="Partner’s/Member’s capital or own capital"
                                             name="partnerOwnCapital" class="input-field" maxlength="14"
                                             (blur)="calculateTotal1()">
@@ -88,7 +88,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Fixed assets</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['fixedAssets']" matInput
+                                        <input type="number" [formControl]="commonForm.get('fixedAssets') | formControlType" matInput
                                             placeholder="Fixed assets" name="fixedAssets" class="input-field"
                                             maxlength="14" (blur)="calculateTotal2()">
                                         <mat-error *ngIf="commonForm.controls['fixedAssets'].hasError('pattern')">
@@ -100,7 +100,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Secured loan</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['securedLoan']" matInput
+                                        <input type="number" [formControl]="commonForm.get('securedLoan') | formControlType" matInput
                                             placeholder="Secured loan" name="securedLoan" class="input-field"
                                             maxlength="14" (blur)="calculateTotal1()">
                                         <mat-error *ngIf="commonForm.controls['securedLoan'].hasError('pattern')">
@@ -110,7 +110,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Inventories</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['inventories']" matInput
+                                        <input type="number" [formControl]="commonForm.get('inventories') | formControlType" matInput
                                             placeholder="Inventories" name="Inventories" class="input-field"
                                             maxlength="14" (blur)="calculateTotal2()" required>
                                         <mat-error *ngIf="commonForm.controls['inventories'].hasError('pattern')">
@@ -122,7 +122,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Unsecured loan</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['unsecuredLoan']"
+                                        <input type="number" [formControl]="commonForm.get('unsecuredLoan') | formControlType"
                                             matInput placeholder="Unsecured loan" name="unsecuredLoan"
                                             class="input-field" maxlength="14" (blur)="calculateTotal1()">
                                         <mat-error *ngIf="commonForm.controls['unsecuredLoan'].hasError('pattern')">
@@ -132,7 +132,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Sundry debtors</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['sundryDeptors']"
+                                        <input type="number" [formControl]="commonForm.get('sundryDeptors') | formControlType"
                                             matInput placeholder="Sundry debtors" name="sundryDeptors"
                                             class="input-field" maxlength="14" (blur)="calculateTotal2()" required>
                                         <mat-error *ngIf="commonForm.controls['sundryDeptors'].hasError('pattern')">
@@ -144,7 +144,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Advances</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['advances']" matInput
+                                        <input type="number" [formControl]="commonForm.get('advances') | formControlType" matInput
                                             placeholder="Advances" name="Advances" class="input-field" maxlength="14"
                                             (blur)="calculateTotal1()">
                                         <mat-error *ngIf="commonForm.controls['advances'].hasError('pattern')">Enter
@@ -154,7 +154,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Balance with bank</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['balanceWithBank']"
+                                        <input type="number" [formControl]="commonForm.get('balanceWithBank') | formControlType"
                                             matInput placeholder="Balance with bank" name="balanceWithBank"
                                             class="input-field" maxlength="14" (blur)="calculateTotal2()">
                                         <mat-error *ngIf="commonForm.controls['balanceWithBank'].hasError('pattern')">
@@ -166,7 +166,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Sundry creditors</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['sundryCreditors']"
+                                        <input type="number" [formControl]="commonForm.get('sundryCreditors') | formControlType"
                                             matInput placeholder="Sundry creditors" name="sundryCreditors"
                                             class="input-field" maxlength="14" (blur)="calculateTotal1()" required>
                                         <mat-error *ngIf="commonForm.controls['sundryCreditors'].hasError('pattern')">
@@ -176,7 +176,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Cash in hand</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['cashInHand']" matInput
+                                        <input type="number" [formControl]="commonForm.get('cashInHand') | formControlType" matInput
                                             placeholder="Cash in hand" name="cashInHand" class="input-field"
                                             maxlength="14" (blur)="calculateTotal2()" required>
                                         <mat-error *ngIf="commonForm.controls['cashInHand'].hasError('pattern')">
@@ -188,7 +188,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Other liabilities</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['otherLiabilities']"
+                                        <input type="number" [formControl]="commonForm.get('otherLiabilities') | formControlType"
                                             matInput placeholder="Other liabilities" name="otherLiabilities"
                                             class="input-field" maxlength="14" (blur)="calculateTotal1()">
                                         <mat-error *ngIf="commonForm.controls['otherLiabilities'].hasError('pattern')">
@@ -198,7 +198,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Loans and advance</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['loanandAdvance']"
+                                        <input type="number" [formControl]="commonForm.get('loanandAdvance') | formControlType"
                                             matInput placeholder="Loans and advance" name="loanandAdvance"
                                             class="input-field" maxlength="14" (blur)="calculateTotal2()">
                                         <mat-error *ngIf="commonForm.controls['loanandAdvance'].hasError('pattern')">
@@ -211,7 +211,7 @@
                                 <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Other assets</mat-label>
-                                        <input type="number" [formControl]="commonForm.controls['otherAsset']" matInput
+                                        <input type="number" [formControl]="commonForm.get('otherAsset') | formControlType" matInput
                                             placeholder="Other assets" name="otherAsset" class="input-field"
                                             maxlength="14" (blur)="calculateTotal2()">
                                         <mat-error *ngIf="commonForm.controls['otherAsset'].hasError('pattern')">
@@ -242,7 +242,7 @@
                                         matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
                                         matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase
                                         placeholder="GST Number" name="gstrNumber"
-                                        [formControl]="commonForm.controls['gstrNumber']" class="input-field">
+                                        [formControl]="commonForm.get('gstrNumber') | formControlType" class="input-field">
                                     <mat-error *ngIf="commonForm.controls['gstrNumber'].hasError('pattern')">Enter
                                         valid GST Number</mat-error>
                                 </mat-form-field>
@@ -251,7 +251,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Turnover amount</mat-label>
                                     <input matInput placeholder="Turnover amount" name="TurnOver"
-                                        [formControl]="commonForm.controls['turnOverAsPerGST']" class="input-field"
+                                        [formControl]="commonForm.get('turnOverAsPerGST') | formControlType" class="input-field"
                                         maxlength="14">
                                     <mat-error *ngIf="commonForm.controls['turnOverAsPerGST'].hasError('pattern')">
                                         Enter positive number without decimal.</mat-error>
@@ -349,7 +349,7 @@
                                             matTooltip="Total collection from client received in bank (including cheque)"
                                             matTooltipClass="tab-tooltip" matTooltipPosition="above"
                                             placeholder="Receipt received in bank" name="ReceiptReceivedInBank"
-                                            [formControl]="businessIncomeBankForm.controls['recieptRecievedInBank']"
+                                            [formControl]="businessIncomeBankForm.get('recieptRecievedInBank') | formControlType"
                                             class="input-field" maxlength="8" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"
@@ -367,7 +367,7 @@
                                             name="presumptiveIncomeRecieveBank"
                                             matTooltip="Minimum income as per section 44AD (6%)"
                                             matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                                            [formControl]="businessIncomeBankForm.controls['presumptiveIncomeRecieveBank']"
+                                            [formControl]="businessIncomeBankForm.get('presumptiveIncomeRecieveBank') | formControlType"
                                             class="input-field" maxlength="14" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
@@ -397,7 +397,7 @@
                                             matTooltip="Total collection from client received in any other mode (example cash)"
                                             matTooltipClass="tab-tooltip" matTooltipPosition="above"
                                             placeholder="Received in any other mode" name="ReceivedInCash"
-                                            [formControl]="businessIncomeCashForm.controls['recievedinCash']"
+                                            [formControl]="businessIncomeCashForm.get('recievedinCash') | formControlType"
                                             class="input-field" maxlength="8" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"
@@ -414,7 +414,7 @@
                                         <input matInput matTooltip="Minimum income as per section 44AD (8%)"
                                             matTooltipClass="tab-tooltip" matTooltipPosition="above"
                                             placeholder="Presumptive income at 8%" name="presumptiveIncomeRecievedCash"
-                                            [formControl]="businessIncomeCashForm.controls['presumptiveIncomeRecievedCash']"
+                                            [formControl]="businessIncomeCashForm.get('presumptiveIncomeRecievedCash') | formControlType"
                                             class="input-field" maxlength="14" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
@@ -442,7 +442,7 @@
                                     <mat-form-field appearance="outline">
                                         <mat-label>Gross receipts</mat-label>
                                         <input matInput placeholder="Gross receipts" name="grossReciept"
-                                            [formControl]="professionIncomeForm.controls['grossReciept']"
+                                            [formControl]="professionIncomeForm.controls['grossReciept'] | formControlType"
                                             class="input-field" maxlength="7" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"
@@ -458,7 +458,7 @@
                                         <mat-label>Presumptive income min 50%</mat-label>
                                         <input matInput currencyMask placeholder="Presumptive income min 50%"
                                             name="presumptiveIncome44ADA"
-                                            [formControl]="professionIncomeForm.controls['presumptiveIncome']"
+                                            [formControl]="professionIncomeForm.get('presumptiveIncome') | formControlType"
                                             class="input-field" maxlength="14">
                                         <mat-error
                                             *ngIf="professionIncomeForm.controls['presumptiveIncome'].hasError('pattern')">

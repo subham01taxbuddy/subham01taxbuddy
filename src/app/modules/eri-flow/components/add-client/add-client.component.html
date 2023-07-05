@@ -30,7 +30,7 @@
           <mat-label>Date Of Birth</mat-label>
           <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
             [min]="minDate" [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-            name="dateOfBirth" [formControl]="addClientForm.controls['dateOfBirth']">
+            name="dateOfBirth" [formControl]="addClientForm.get('dateOfBirth') | formControlType">
           <mat-hint>Format: DD/MM/YYYY</mat-hint>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

@@ -50,8 +50,8 @@
                       getGainType(bonds);
                       calculateTotalCG(bonds);
                       calMaxPurchaseDate(
-                        this.bondsForm.controls['bondsArray'].controls[i]
-                          .controls['sellDate'].value,
+                        bonds
+                          .get('sellDate').value,
                         this.bondsForm,
                         i
                       )
@@ -70,9 +70,9 @@
                   <mat-datepicker #sellDate></mat-datepicker>
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'sellDate'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                     >Please select date</mat-error
                   >
@@ -99,9 +99,9 @@
                   />
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'valueInConsideration'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                   >Please sale value</mat-error
                   >
@@ -124,9 +124,9 @@
                   />
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'costOfImprovement'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                     >Please enter cost of improvement</mat-error
                   >
@@ -154,9 +154,9 @@
                   <mat-datepicker #purchaseDate></mat-datepicker>
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'purchaseDate'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                     >Please select date</mat-error
                   >
@@ -181,9 +181,9 @@
                   />
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'purchaseCost'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                   >Please enter cost of acquisition</mat-error
                   >
@@ -204,9 +204,9 @@
                   />
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'sellExpense'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                     >Please enter expenses</mat-error
                   >
@@ -245,9 +245,9 @@
                   />
                   <mat-error
                     *ngIf="
-                      bondsForm.controls['bondsArray'].controls[i].controls[
+                      bonds.get(
                         'capitalGain'
-                      ].hasError('required')
+                      ).hasError('required')
                     "
                     >Total capital Gain is mandatory</mat-error
                   >

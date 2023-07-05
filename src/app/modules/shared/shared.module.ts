@@ -20,7 +20,6 @@ import { AgGridMaterialSelectEditorComponent } from './dropdown.component';
 import { CommonModule } from '@angular/common';
 import { MatInputComponent } from './mat-input.component';
 import { UserNotesComponent } from './components/user-notes/user-notes.component';
-import { AddCallLogComponent } from './components/add-call-log/add-call-log.component';
 import { ItrActionsComponent } from './components/itr-actions/itr-actions.component';
 import { DocumentViewerComponent } from './components/document-viewer/document-viewer.component';
 import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.component';
@@ -70,7 +69,6 @@ import {
     AgGridMaterialSelectEditorComponent,
     WhatsAppDialogComponent,
     UserNotesComponent,
-    AddCallLogComponent,
     FilingStatusDialogComponent,
     UpdateStatusComponent,
     KommunicateDialogComponent,
@@ -134,7 +132,6 @@ import {
     AgGridMaterialSelectEditorComponent,
     WhatsAppDialogComponent,
     UserNotesComponent,
-    AddCallLogComponent,
     FilingStatusDialogComponent,
     UpdateStatusComponent,
     KommunicateDialogComponent,
@@ -163,7 +160,6 @@ import {
   entryComponents: [
     WhatsAppDialogComponent,
     UserNotesComponent,
-    AddCallLogComponent,
     FilingStatusDialogComponent,
     KommunicateDialogComponent,
     ItrActionsComponent,
