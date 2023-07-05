@@ -1293,13 +1293,27 @@ export class PrefillIdComponent implements OnInit {
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
                     ? 'Y'
                     : 'N';
-              } else if ((this.ITR_Obj.isRevised = 'Y')) {
-                this.ITR_Obj.isRevised = 'Y';
-                this.utilsService.showSnackBar(
-                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
-                );
-                return;
+              } else if (this.ITR_Obj.isRevised === 'Y') {
+                if (
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
+                ) {
+                  this.ITR_Obj.isRevised === 'Y';
+                } else if (
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 17 &&
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 11
+                ) {
+                  this.ITR_Obj.isRevised = 'N';
+                } else if (
+                  this.ITR_Obj.isRevised === 'Y' &&
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 11
+                ) {
+                  this.utilsService.showSnackBar(
+                    'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                  );
+                  return;
+                }
               }
+
               this.ITR_Obj.email =
                 ItrJSON[this.ITR_Type].PersonalInfo.Address?.EmailAddress;
               this.ITR_Obj.family[0].fName =
@@ -2503,12 +2517,29 @@ export class PrefillIdComponent implements OnInit {
                     ?.ReturnFileSec === 17
                     ? 'Y'
                     : 'N';
-              } else if ((this.ITR_Obj.isRevised = 'Y')) {
-                this.ITR_Obj.isRevised = 'Y';
-                this.utilsService.showSnackBar(
-                  'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
-                );
-                return;
+              } else if (this.ITR_Obj.isRevised === 'Y') {
+                if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec === 17
+                ) {
+                  this.ITR_Obj.isRevised === 'Y';
+                } else if (
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec !== 17 &&
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec !== 11
+                ) {
+                  this.ITR_Obj.isRevised = 'N';
+                } else if (
+                  this.ITR_Obj.isRevised === 'Y' &&
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.ReturnFileSec === 11
+                ) {
+                  this.utilsService.showSnackBar(
+                    'Looks like you are trying to update an orignal return but a revise return for the user has already been filed. You cannot file an original return once a revise return is already filed.'
+                  );
+                  return;
+                }
               }
 
               this.ITR_Obj.email =
