@@ -121,10 +121,19 @@ export class GenericCsvService {
     }
 
     if (data.length > 0) {
-      totalRow.filerName = data[0].filerName ? 'Grand Total' : '';
-      totalRow.ownerName = data[0].ownerName ? 'Grand Total' : '';
+      if(data[0].filerName){
+        delete totalRow['ownerName'];
+        totalRow.filerName = data[0].filerName ? 'Grand Total' : '';
+      }
+      else{
+        delete totalRow['filerName'];
+        totalRow.ownerName = data[0].ownerName ? 'Grand Total' : '';
+      }
+    }
+
+
 
     return totalRow;
   }
 }
-}
+
