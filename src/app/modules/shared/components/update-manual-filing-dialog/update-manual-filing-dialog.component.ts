@@ -74,23 +74,23 @@ export class UpdateManualFilingDialogComponent implements OnInit {
       this.data.eFillingCompleted = true;
       console.log('Updated Data:', this.data);
       let req = {
-        userId:this.data.userId,
-        itrId:this.data.itrId,
-        email:this.data.email,
-        contactNumber:this.data.contactNumber,
+        userId: this.data.userId,
+        itrId: this.data.itrId,
+        email: this.data.email,
+        contactNumber: this.data.contactNumber,
         panNumber: this.data.panNumber,
-        "aadharNumber": this.data.aadharNumber,
-        "assesseeType":"INDIVIDUAL",
+        aadharNumber: this.data.aadharNumber,
+        assesseeType: 'INDIVIDUAL',
         assessmentYear: this.data.assessmentYear,
-        financialYear:"2022-2023",
+        financialYear: '2022-2023',
         isRevised: this.data.isRevised,
-        "eFillingCompleted":true,
-        eFillingDate:this.eFillingDate.value,
-        ackNumber:this.ackNumber.value,
-        itrType:`ITR${this.data.itrType}`,
-        itrTokenNumber:'',
-        "filingTeamMemberId":this.data.filingTeamMemberId,
-        filingSource:"MANUALLY"
+        eFillingCompleted: true,
+        eFillingDate: this.eFillingDate.value,
+        ackNumber: this.ackNumber.value,
+        itrType: this.data.itrType,
+        itrTokenNumber: '',
+        filingTeamMemberId: this.data.filingTeamMemberId,
+        filingSource: 'MANUALLY',
       };
       const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
       this.itrMsService.putMethod(param, req).subscribe(
