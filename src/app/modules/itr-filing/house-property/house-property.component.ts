@@ -69,7 +69,8 @@ export class HousePropertyComponent implements OnInit {
   activeTenant: number[];
   @Output() saveAndNext = new EventEmitter<any>();
   taxableIncomesHP: any = [];
-  previousHousePropertyForms: FormGroup[] = [];
+  EEStatus: boolean;
+  EAStatus: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -119,6 +120,7 @@ export class HousePropertyComponent implements OnInit {
   ngOnInit() {
     // this.getItrDocuments();
     // this.getHpDocsUrl(0);
+
     this.housePropertyForm = this.createHousePropertyForm();
     if (
       this.utilsService.isNonEmpty(this.ITR_JSON) &&
@@ -142,7 +144,6 @@ export class HousePropertyComponent implements OnInit {
     );
 
     this.updateHpTaxaxbleIncome();
-    this.EeEaValueChanges();
   }
 
   updateHpTaxaxbleIncome(save?) {
@@ -461,14 +462,7 @@ export class HousePropertyComponent implements OnInit {
     this.mode = 'ADD';
     this.chekIsSOPAdded();
 
-    // Store the previous form
-    if (this.housePropertyForm) {
-      this.previousHousePropertyForms.push(this.housePropertyForm);
-    }
-    
     this.housePropertyForm = this.createHousePropertyForm();
-    this.previousHousePropertyForms.push(this.housePropertyForm);
-    console.log(this.previousHousePropertyForms, 'previousHousePropertyForms');
     this.housePropertyForm.controls['country'].setValue('91');
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
   }
@@ -851,6 +845,7 @@ export class HousePropertyComponent implements OnInit {
         'annualRentReceived'
       ].updateValueAndValidity();
     }
+
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
@@ -877,6 +872,7 @@ export class HousePropertyComponent implements OnInit {
       //   });
       // }
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
+
       if (
         this.housePropertyForm.controls['isEligibleFor80EE'].value === '80EE'
       ) {
@@ -1032,7 +1028,6 @@ export class HousePropertyComponent implements OnInit {
       if (result) {
         this.Copy_ITR_JSON.houseProperties.splice(index, 1);
         this.serviceCall('DELETE', this.Copy_ITR_JSON);
-        this.previousHousePropertyForms.splice(index, 1);
       }
     });
 
@@ -1109,17 +1104,36 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  EeEaValueChanges() {
+  EeEaValueChanges(i) {
     console.log(this.housePropertyForm);
-    (
-      (this.housePropertyForm.controls['loans'] as FormGroup)
+
+    let interestValue = (
+      (this.housePropertyForm.controls['loans'] as FormArray)
         .controls[0] as FormGroup
-    ).controls['interestAmount'].valueChanges.subscribe((val) => {
-      if (val > 200000) {
-        let value = this.housePropertyForm.controls['isEligibleFor80EE'].value;
-        console.log(value, 'value');
-      }
-    });
+    ).controls['interestAmount'].value;
+    console.log('interestAmountValue', interestValue);
+
+    if (interestValue > 200000 && this.ITR_JSON.houseProperties.length > 0) {
+      this.ITR_JSON.houseProperties?.forEach((element) => {
+        this.EEStatus = this.ITR_JSON.houseProperties?.some((element) =>
+          element?.isEligibleFor80EE === true ? true : false
+        );
+        this.EAStatus = this.ITR_JSON.houseProperties?.some((element) =>
+          element?.isEligibleFor80EEA === true ? true : false
+        );
+      });
+    } else {
+      this.EEStatus = false;
+      this.EAStatus = false;
+    }
+
+    console.log(
+      'interestAmount',
+      (
+        (this.housePropertyForm.controls['loans'] as FormArray)
+          .controls[0] as FormGroup
+      ).controls['interestAmount'].value
+    );
   }
 
   setStep(index: number) {
