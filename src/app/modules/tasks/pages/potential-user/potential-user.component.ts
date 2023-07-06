@@ -12,6 +12,8 @@ import { FormControl } from '@angular/forms';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { environment } from 'src/environments/environment';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -43,6 +45,7 @@ export class PotentialUserComponent implements OnInit {
     mobileNumber: null,
     emailId: null
   }
+  showCsvMessage: boolean;
 
 
   constructor(
@@ -52,6 +55,7 @@ export class PotentialUserComponent implements OnInit {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
+    private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.usersGridOptions = <GridOptions>{
@@ -134,7 +138,7 @@ export class PotentialUserComponent implements OnInit {
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
       // this.search('agent');
-    } else if(this.coOwnerId) {
+    } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
       //  this.search('agent');
     } else {
@@ -234,6 +238,35 @@ export class PotentialUserComponent implements OnInit {
         }
         this.loading = false;
       })
+  }
+
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    let param = `/${this.agentId}/user-list-new?active=false`;
+
+    if (this.coOwnerToggle.value == true) {
+      param = param + '&searchAsCoOwner=true';
+    }
+    if (this.coOwnerToggle.value == true && loggedInId !== this.agentId) {
+      param = `/${this.agentId}/user-list-new?active=false`;
+    }
+    if (this.searchParam.emailId) {
+      param = param + '&emailId=' + this.searchParam.emailId.toLocaleLowerCase();
+    }
+    if (this.searchParam.mobileNumber) {
+      param = param + '&mobileNumber=' + this.searchParam.mobileNumber;
+    }
+    if (this.searchParam.statusId) {
+      param = param + '&statusId=' + this.searchParam.statusId;
+    }
+    else {
+      param;
+    }
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', '');
+    this.loading = false;
+    this.showCsvMessage = false;
   }
 
   createRowData(userData: any) {
@@ -643,7 +676,7 @@ export class PotentialUserComponent implements OnInit {
         userId: client.userId,
         clientName: client.name,
         serviceType: client.serviceType,
-        clientMobileNumber:client.mobileNumber
+        clientMobileNumber: client.mobileNumber
       }
     })
 
