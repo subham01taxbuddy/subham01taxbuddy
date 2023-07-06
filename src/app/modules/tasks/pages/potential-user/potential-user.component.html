@@ -5,7 +5,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -66,6 +66,13 @@
                   class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-12 ">
+              <span class="note1">
+                Note : Please select required filters above and click on search to get information
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -95,8 +102,8 @@
       (rowClicked)="onUsersRowClicked($event)">
       <!--    paginationPageSize=15 pagination=true-->
     </ag-grid-angular>
-
-    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
+    <div *ngIf="userInfoLength > 0">
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
   </div>
 </div>

@@ -43,7 +43,6 @@ export const MY_FORMATS = {
 })
 export class DailyCallingReportComponent implements OnInit {
   loading = false;
-fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
   startDate = new FormControl('');
   endDate = new FormControl('');
   minEndDate = new Date();
@@ -101,9 +100,9 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
       this.filerId = this.loggedInSme[0].userId;
     }
 
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.showReports();
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
     // this.showReports();
@@ -340,7 +339,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'daily-calling-report', this.fields);
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', '');
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -358,7 +357,7 @@ fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    if(this.dataOnLoad) {
+    if (this.dataOnLoad) {
       this.showReports();
     } else {
       //clear grid for loaded data
