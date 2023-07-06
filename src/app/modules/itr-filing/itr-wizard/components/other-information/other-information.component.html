@@ -2,7 +2,7 @@
 ></ngx-loading>
 
   <!-- first radio bar starts -->
-  
+
   <div class="gryBk">
     <div class="row">
 
@@ -51,9 +51,7 @@
                   class="ml30"
                 >
                   {{
-                    directorForm.controls["directorsArray"].controls[i].controls[
-                      "companyName"
-                    ].value
+                    director.get("companyName").value
                   }}
                 </mat-checkbox>
               </div>
@@ -67,7 +65,7 @@
                 </button>
               </div>
             </div>
-    
+
             <div class="row">
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
@@ -84,9 +82,7 @@
                   />
                   <mat-error
                     *ngIf="
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['companyName'].hasError('required')
+                      director.get('companyName').hasError('required')
                     "
                     >Enter the Name of company.
                   </mat-error>
@@ -109,9 +105,7 @@
                   </mat-select>
                   <mat-error
                     *ngIf="
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['typeOfCompany'].hasError('required')
+                      director.get('typeOfCompany').hasError('required')
                     "
                     >Enter the type of company.
                   </mat-error>
@@ -130,15 +124,13 @@
                     class="input-field"
                     maxlength="10"
                     [required]="
-                      directorForm.controls['directorsArray'].controls[i]
-                        .controls['typeOfCompany'].value === 'D'
+                      director
+                        .get('typeOfCompany').value === 'D'
                     "
                   />
                   <mat-error
                     *ngIf="
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['companyPAN'].hasError('pattern')
+                      director.get('companyPAN').hasError('pattern')
                     "
                     >Enter valid PAN number.
                   </mat-error>
@@ -161,9 +153,7 @@
                   </mat-select>
                   <mat-error
                     *ngIf="
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['sharesType'].hasError('required')
+                      director.get('sharesType').hasError('required')
                     "
                     >Select the shares type.
                   </mat-error>
@@ -183,21 +173,14 @@
                     minlength="8"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     [required]="
-                      directorForm.controls['directorsArray'].controls[i]
-                        .controls['typeOfCompany'].value === 'D'
+                      director.get('typeOfCompany').value === 'D'
                     "
                   />
                   <mat-error
                     *ngIf="
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['din'].hasError('pattern') ||
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['din'].hasError('minLength') ||
-                      directorForm.controls['directorsArray'].controls[
-                        i
-                      ].controls['din'].hasError('maxLength')
+                      director.get('din').hasError('pattern') ||
+                      director.get('din').hasError('minLength') ||
+                      director.get('din').hasError('maxLength')
                     "
                   >
                     Enter 8 digit DIN.</mat-error
@@ -244,7 +227,7 @@
         </div>
       </form>
     </div>
-    
+
 
   </div>
   </div>
@@ -292,9 +275,7 @@
                   <div class="col-sm-10">
                     <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
                       {{
-                        sharesForm.controls["sharesArray"].controls[i].controls[
-                          "companyName"
-                        ].value
+                        share.get("companyName").value
                       }}
                     </mat-checkbox>
                   </div>
@@ -310,7 +291,7 @@
                       <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
                         name="companyName" class="input-field" maxlength="125" required/>
                       <mat-error
-                        *ngIf="sharesForm.controls['sharesArray'].controls[i].controls['companyName'].hasError('required')">Enter the name of company.
+                        *ngIf="share.get('companyName').hasError('required')">Enter the name of company.
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -326,9 +307,7 @@
                       </mat-select>
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'typeOfCompany'
-                          ].hasError('required')
+                          share.get('typeOfCompany').hasError('required')
                         "
                         >Select the type of company.
                       </mat-error>
@@ -346,24 +325,18 @@
                         class="input-field"
                         maxlength="10"
                         [required]="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'typeOfCompany'
-                          ].value === 'D'
+                          share.get('typeOfCompany').value === 'D'
                         "
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'companyPAN'
-                          ].hasError('pattern')
+                          share.get('companyPAN').hasError('pattern')
                         "
                         >Enter valid PAN number.</mat-error
                       >
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'companyPAN'
-                          ].hasError('required')
+                          share.get('companyPAN').hasError('required')
                         "
                         >Enter PAN of the company.
                       </mat-error>
@@ -385,16 +358,14 @@
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'openingShares'
-                          ].hasError('required')
+                          share.get('openingShares').hasError('required')
                         "
                         >Enter no of opening shares.
                       </mat-error>
                     </mat-form-field>
                   </div>
-               
-              
+
+
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
@@ -411,15 +382,13 @@
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'openingCOA'
-                          ].hasError('required')
+                          share.get('openingCOA').hasError('required')
                         "
                         >Enter cost of acquisition.
                       </mat-error>
                     </mat-form-field>
                   </div>
-      
+
                   <!-- Shares Aquired -->
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
@@ -437,9 +406,7 @@
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'acquiredShares'
-                          ].hasError('required')
+                          share.get('acquiredShares').hasError('required')
                         "
                         >Enter No. of shares acquired.
                       </mat-error>
@@ -449,9 +416,7 @@
                     <mat-form-field>
                       <input
                         matInput
-                        [min]="minPurchaseDate"
                         readonly
-                        [max]="maxPurchaseDate"
                         formControlName="purchaseDate"
                         name="purchaseDate"
                         [matDatepicker]="purchaseDate"
@@ -481,15 +446,13 @@
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'faceValuePerShare'
-                          ].hasError('required')
+                          share.get('faceValuePerShare').hasError('required')
                         "
                         >Enter face value per share.
                       </mat-error>
                     </mat-form-field>
                   </div>
-              
+
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
@@ -503,13 +466,10 @@
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="event.charCode >= 48 && event.charCode <= 57"
                         required
-                        (blur)="setIssueOrPurchase('I')"
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'issuePricePerShare'
-                          ].hasError('required')
+                          share.get('issuePricePerShare').hasError('required')
                         "
                         >Enter issue price per share.
                       </mat-error>
@@ -528,19 +488,16 @@
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
                         required
-                        (blur)="setIssueOrPurchase('P')"
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'purchasePricePerShare'
-                          ].hasError('required')
+                          share.get('purchasePricePerShare').hasError('required')
                         "
                         >Enter Purchase price per share.
                       </mat-error>
                     </mat-form-field>
                   </div>
-      
+
                   <!-- Shares Transferred -->
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
@@ -555,16 +512,12 @@
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="event.charCode >= 48 && event.charCode <= 57"
                         [required]="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'saleConsideration'
-                          ].value
+                          share.get('saleConsideration').value
                         "
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'transferredShares'
-                          ].hasError('required')
+                          share.get('transferredShares').hasError('required')
                         "
                         >Enter No. of shares transferred.
                       </mat-error>
@@ -583,25 +536,21 @@
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
                         [required]="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'transferredShares'
-                          ].value
+                          share.get('transferredShares').value
                         "
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'saleConsideration'
-                          ].hasError('required')
+                          share.get('saleConsideration').hasError('required')
                         "
                         >Enter sale consideration.
                       </mat-error>
                     </mat-form-field>
                   </div>
-              
+
                 <!-- Shares Transferred End -->
                 <!-- Closing -->
-                
+
                   <div class="col-sm-3 spsTp">
                     <mat-form-field class="input-field-width">
                       <input
@@ -618,9 +567,7 @@
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'closingShares'
-                          ].hasError('required')
+                          share.get('closingShares').hasError('required')
                         "
                         >Enter closing no. of shares.
                       </mat-error>
@@ -642,15 +589,13 @@
                       />
                       <mat-error
                         *ngIf="
-                          sharesForm.controls['sharesArray'].controls[i].controls[
-                            'closingCOA'
-                          ].hasError('required')
+                          share.get('closingCOA').hasError('required')
                         "
                         >Enter Closing cost of acquisition.
                       </mat-error>
                     </mat-form-field>
                   </div>
-                
+
                 <!-- Closing End -->
               </div>
             </div>
@@ -692,7 +637,7 @@
             </div>
           </div>
         </div>
-     
+
     </div>
     </div>
   <!-- Second radio bar ends -->

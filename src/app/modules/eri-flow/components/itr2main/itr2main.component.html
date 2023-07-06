@@ -64,7 +64,7 @@
               type="number"
               placeholder="Taxable Income"
               required
-              disabled
+              [disabled]="true"
               [value]="
                 this.computationOfIncomeForm.controls[
                   'totalIncomeAfterDeductionIncludeSR'
@@ -79,7 +79,7 @@
               type="number"
               placeholder="Taxable Income"
               required
-              disabled
+              [disabled]="true"
               [value]="
                 this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR
               "
@@ -104,7 +104,7 @@
               [value]="
                 this.computationOfIncomeForm.controls['taxpayable'].value
               "
-              disabled
+              [disabled]="true"
               class="disableInput"
             />
           </div>
@@ -121,7 +121,7 @@
               type="number"
               placeholder="Tax Payable/ Refund"
               [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
-              disabled
+              [disabled]="true"
               class="disableInput"
             />
           </div>
@@ -134,7 +134,7 @@
               type="number"
               placeholder="Tax Payable/ Refund"
               [value]="this.newRegimeTaxSummary.taxpayable"
-              disabled
+              [disabled]="true"
               class="disableInput"
             />
           </div>
@@ -144,7 +144,7 @@
               type="number"
               placeholder="Tax Payable/ Refund"
               [value]="this.newRegimeTaxSummary.taxRefund"
-              disabled
+              [disabled]="true"
               class="disableInput"
             />
           </div>
@@ -564,7 +564,7 @@
                 type="text"
                 placeholder="Country"
                 formControlName="country"
-                disabled
+                [disabled]="true"
                 autocomplete="off"
                 capitalizeFirst
                 required
@@ -579,8 +579,7 @@
               <mat-label>State</mat-label>
               <input
                 matInput
-                f
-                disabled
+                [disabled]="true"
                 placeholder="State"
                 formControlName="state"
                 autocomplete="off"
@@ -597,7 +596,7 @@
               <mat-label>City</mat-label>
               <input
                 matInput
-                disabled
+                [disabled]="true"
                 placeholder="City"
                 formControlName="city"
                 autocomplete="off"
@@ -682,7 +681,7 @@
               maxlength="15"
               minlength="15"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              disabled
+              [disabled]="true"
               placeholder="Acknowledgement Number"
               formControlName="ackNumber"
               onkeypress=" event.charCode >= 48 && event.charCode <= 57"
@@ -3301,7 +3300,7 @@
             <input
               type="number"
               formControlName="capitalGain"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -3478,7 +3477,7 @@
             <input
               type="number"
               formControlName="presumptiveIncome"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -3531,7 +3530,7 @@
               ><input
                 type="number"
                 formControlName="totalHeadWiseIncome"
-                disabled
+                [disabled]="true"
                 maxlength="8"
             /></b>
           </td>
@@ -3602,7 +3601,7 @@
             <b
               ><input
                 type="number"
-                disabled
+                [disabled]="true"
                 formControlName="grossTotalIncome"
                 maxlength="8"
             /></b>
@@ -3667,7 +3666,7 @@
                 type="number"
                 formControlName="totalIncomeAfterDeductionIncludeSR"
                 required
-                disabled
+                [disabled]="true"
                 maxlength="8"
             /></b>
           </td>
@@ -3842,7 +3841,7 @@
               type="number"
               formControlName="taxOnTotalIncome"
               required
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -3890,7 +3889,7 @@
             <input
               type="number"
               formControlName="taxAfterRebate"
-              disabled
+              [disabled]="true"
               required
               maxlength="8"
             />
@@ -3961,7 +3960,7 @@
               type="number"
               formControlName="grossTaxLiability"
               required
-              disabled
+              [disabled]="true"
             />
           </td>
           <td *ngIf="newItrSumChanges">
@@ -4049,7 +4048,7 @@
             <input
               type="number"
               [value]="totalOfLessRelief"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4190,7 +4189,7 @@
             <input
               type="number"
               formControlName="interestAndFeesPayable"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4250,7 +4249,7 @@
             <input
               type="number"
               [value]="taxesPaid.tdsOnSalary"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4271,7 +4270,7 @@
             <input
               type="number"
               [value]="taxesPaid.tdsOtherThanSalary"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4292,7 +4291,7 @@
             <input
               type="number"
               [value]="taxesPaid.tdsOnSal26QB"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4313,7 +4312,7 @@
             <input
               type="number"
               [value]="taxesPaid.tcs"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4334,7 +4333,7 @@
             <input
               type="number"
               [value]="taxesPaid.advanceSelfAssTax"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4343,7 +4342,7 @@
             <input
               type="number"
               formControlName="totalTaxesPaid"
-              disabled
+              [disabled]="true"
               maxlength="8"
             />
           </td>
@@ -4366,7 +4365,7 @@
               ><input
                 type="number"
                 formControlName="taxpayable"
-                disabled
+                [disabled]="true"
                 maxlength="8"
             /></b>
           </td>
@@ -4388,7 +4387,7 @@
               ><input
                 type="number"
                 formControlName="taxRefund"
-                disabled
+                [disabled]="true"
                 maxlength="8"
             /></b>
           </td>

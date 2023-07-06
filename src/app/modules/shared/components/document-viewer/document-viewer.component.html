@@ -1,13 +1,11 @@
 <!--<lib-ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="2"-->
 <!--    [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">-->
 <!--</lib-ngx-image-zoom>-->
-<div class="row">  
+<div class="row">
 <div class="col-sm-12"
   *ngIf="viewer !== 'DOC'"
   class="modal-photo-details__photo"
   [ngStyle]="{width: zoomContainerWidth+'px', height: zoomContainerHeight+'px'}"
-  (click)="isZoomActive = true"
-  (mouseleave)="isZoomActive = false"
   @fadeIn
 >
   <lib-ngx-image-zoom

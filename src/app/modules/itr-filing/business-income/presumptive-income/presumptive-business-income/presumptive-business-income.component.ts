@@ -20,6 +20,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   loading: boolean;
   natureOfBusinessList: [];
   businessArray = [];
+  businessData: any;
 
   constructor(
     public matDialog: MatDialog,

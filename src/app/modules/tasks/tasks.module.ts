@@ -23,6 +23,7 @@ import { PotentialUserComponent } from './pages/potential-user/potential-user.co
 import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { ItrStatusDialogComponent } from './components/itr-status-dialog/itr-status-dialog.component';
 import { ReAssignActionDialogComponent } from './components/re-assign-action-dialog/re-assign-action-dialog.component';
+import { ChatOptionsDialogComponent } from './components/chat-options/chat-options-dialog.component';
 
 @NgModule({
     imports: [
@@ -52,7 +53,8 @@ import { ReAssignActionDialogComponent } from './components/re-assign-action-dia
         PotentialUserComponent,
         BulkReAssignDialogComponent,
         ItrStatusDialogComponent,
-        ReAssignActionDialogComponent,
+        ChatOptionsDialogComponent,
+        ReAssignActionDialogComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,

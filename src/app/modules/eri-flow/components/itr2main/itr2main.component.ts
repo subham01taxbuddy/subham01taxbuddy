@@ -50,7 +50,7 @@ export const MY_FORMATS = {
   ],
 })
 export class Itr2mainComponent implements OnInit, OnChanges {
-  @Input() changes: string;
+  @Input() changes: boolean;
   @Input() itrObject!: any;
   @Input() userDetails!: any;
 

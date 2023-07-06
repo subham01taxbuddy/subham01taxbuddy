@@ -9,6 +9,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import * as moment from 'moment';
 import { data } from 'jquery';
+import {Location} from "@angular/common";
 
 
 @Component({
@@ -30,6 +31,7 @@ export class MoreInfoComponent implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     private itrMsService: ItrMsService,
+    public location: Location
   ) {
     this.rowHeight = 50;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));

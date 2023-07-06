@@ -40,18 +40,14 @@
             />
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
-                  'bsrCode'
-                ].hasError('required')
+                donation.get('bsrCode').hasError('required')
               "
             >
               Enter positive amount without decimal.</mat-error
             >
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
-                  'bsrCode'
-                ].hasError('minlength')
+                donation.get('bsrCode').hasError('minlength')
               "
             >
               Please enter 7 digit BSR code.</mat-error
@@ -84,9 +80,7 @@
             <mat-datepicker #picker></mat-datepicker>
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
-                  'dateOfDeposit'
-                ].hasError('required')
+                donation.get('dateOfDeposit').hasError('required')
               "
             >
               Select date of Deposit</mat-error
@@ -109,9 +103,7 @@
             />
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
-                  'challanNumber'
-                ].hasError('required')
+                donation.get('challanNumber').hasError('required')
               "
             >
               Enter positive amount without decimal.</mat-error
@@ -134,9 +126,7 @@
             />
             <mat-error
               *ngIf="
-                salaryForm.controls['salaryArray'].controls[i].controls[
-                  'totalTax'
-                ].hasError('required')
+                donation.get('totalTax').hasError('required')
               "
             >
               Enter positive amount without decimal.</mat-error

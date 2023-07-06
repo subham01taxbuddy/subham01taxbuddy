@@ -147,7 +147,8 @@ export class PrefillIdComponent implements OnInit {
   }
 
   // PREFILL PAN VALIDATION
-  uploadJsonFile(file: FileList) {
+  uploadJsonFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     console.log('File in prefill', file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
@@ -1141,7 +1142,8 @@ export class PrefillIdComponent implements OnInit {
 
   ITR_Obj: ITR_JSON;
   // Uploading Utility JSON
-  uploadUtilityItrJson(file: FileList) {
+  uploadUtilityItrJson(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
 

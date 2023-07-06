@@ -51,11 +51,11 @@ export const environment = {
     region: 'ap-south-1',
   },
   /* aws_cred: {
-    identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
-    region: 'ap-south-1',
-    userPoolId: 'ap-south-1_s42HgYzaY',
-    userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
-  }, */
+		identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
+		region: 'ap-south-1',
+		userPoolId: 'ap-south-1_s42HgYzaY',
+		userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
+	}, */
   AMPLIFY_CONFIG: {
     aws_project_region: 'ap-south-1',
     aws_cognito_identity_pool_id:

@@ -71,7 +71,7 @@
         <div class="col-sm-4">
           <mat-label> Language </mat-label>
           <mat-form-field appearance="outline">
-            <mat-select [formControl]="languages" multiple disabled>
+            <mat-select [formControl]="languages" multiple [disabled]="true">
               <mat-select-trigger>
                 {{ languages.value ? languages.value : "" }}
               </mat-select-trigger>
@@ -103,7 +103,7 @@
         <div class="col-sm-4">
           <mat-label> Income Tax Expertise </mat-label>
           <mat-form-field appearance="outline">
-            <mat-select [formControl]="itrTypes" multiple disabled>
+            <mat-select [formControl]="itrTypes" multiple [disabled]="true">
               <mat-select-trigger>
                 {{ itrTypes.value ? itrTypes.value : "" }}
               </mat-select-trigger>
@@ -149,7 +149,7 @@
           <mat-label> State </mat-label>
           <mat-form-field appearance="outline">
             <mat-select
-              disabled
+              [disabled]="true"
               placeholder="Select state"
               name="state"
               [formControl]="state"
@@ -197,31 +197,31 @@
           <b style="font-size: 18px">Roles: </b>
           <section class="example-section" [formGroup]="roles">
             <p>
-              <mat-checkbox disabled [formControl]="admin" readonly
+              <mat-checkbox [disabled]="true" [formControl]="admin" readonly
                 >Admin</mat-checkbox
               >
             </p>
             <hr />
             <p>
-              <mat-checkbox disabled [formControl]="leader" readonly
+              <mat-checkbox [disabled]="true" [formControl]="leader" readonly
                 >Leader</mat-checkbox
               >
             </p>
             <hr />
             <p>
-              <mat-checkbox disabled [formControl]="owner" readonly
+              <mat-checkbox [disabled]="true" [formControl]="owner" readonly
                 >Owner</mat-checkbox
               >
             </p>
             <hr />
             <p>
-              <mat-checkbox disabled [formControl]="filer" readonly
+              <mat-checkbox [disabled]="true" [formControl]="filer" readonly
                 >Partner/Filer</mat-checkbox
               >
             </p>
             <hr />
             <p>
-              <mat-checkbox disabled [formControl]="leadEngagement" readonly
+              <mat-checkbox [disabled]="true" [formControl]="leadEngagement" readonly
                 >Lead Engagement</mat-checkbox
               >
             </p>
@@ -237,12 +237,12 @@
               <section class="example-section" [formGroup]="services">
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="itr"
                     (change)="serviceUpdated('ITR', itr, itrToggle)"
                     >ITR</mat-checkbox
                   ><mat-slide-toggle
-                  disabled
+                  [disabled]="true"
                     *ngIf="itr.value"
                     [formControl]="itrToggle"
                     style="float: right; margin-right: 10px"
@@ -267,13 +267,13 @@
 
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="tpa"
                     (change)="serviceUpdated('TPA', tpa, tpaToggle)"
                     >Tax Planing (TPA)/NPS
                   </mat-checkbox>
                   <mat-slide-toggle
-                    readonly disabled
+                    readonly [disabled]="true"
                     *ngIf="tpa.value"
                     [formControl]="tpaToggle"
                     style="float: right; margin-right: 10px"
@@ -284,13 +284,13 @@
 
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="notice"
                     (change)="serviceUpdated('NOTICE', notice, noticeToggle)"
                     >Notice</mat-checkbox
                   >
                   <mat-slide-toggle
-                    readonly disabled
+                    readonly [disabled]="true"
                     *ngIf="notice.value"
                     [formControl]="noticeToggle"
                     style="float: right; margin-right: 10px"
@@ -304,13 +304,13 @@
               <section class="example-section" [formGroup]="services">
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="gst"
                     (change)="serviceUpdated('GST', gst, gstToggle)"
                     >GST</mat-checkbox
                   >
                   <mat-slide-toggle
-                    disabled
+                    [disabled]="true"
                     *ngIf="gst.value"
                     [formControl]="gstToggle"
                     style="float: right; margin-right: 10px"
@@ -321,13 +321,13 @@
 
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="wb"
                     (change)="serviceUpdated('WB', wb, wbToggle)"
                     >Wealth Builder(WB)</mat-checkbox
                   >
                   <mat-slide-toggle
-                    disabled
+                    [disabled]="true"
                     *ngIf="wb.value"
                     [formControl]="wbToggle"
                     style="float: right; margin-right: 10px"
@@ -338,13 +338,13 @@
 
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="pd"
                     (change)="serviceUpdated('PD', pd, pdToggle)"
                     >Portfolio Doctor(PD)</mat-checkbox
                   >
                   <mat-slide-toggle
-                    disabled
+                    [disabled]="true"
                     *ngIf="pd.value"
                     [formControl]="pdToggle"
                     style="float: right; margin-right: 10px"
@@ -355,13 +355,13 @@
 
                 <p>
                   <mat-checkbox
-                    disabled
+                    [disabled]="true"
                     [formControl]="mf"
                     (change)="serviceUpdated('MF', mf, mfToggle)"
                     >Mutual Fund (MF) Advisor</mat-checkbox
                   >
                   <mat-slide-toggle
-                    disabled
+                    [disabled]="true"
                     *ngIf="mf.value"
                     [formControl]="mfToggle"
                     style="float: right; margin-right: 10px"
@@ -518,7 +518,7 @@
               matSuffix
               [for]="picker1"
             ></mat-datepicker-toggle>
-            <mat-datepicker #picker1 disabled></mat-datepicker>
+            <mat-datepicker #picker1 [disabled]="true"></mat-datepicker>
             <!-- <mat-error
                 *ngIf="leaveStartDate?.hasError('required') ">
                 This field is required</mat-error> -->
@@ -549,7 +549,7 @@
               matSuffix
               [for]="picker2"
             ></mat-datepicker-toggle>
-            <mat-datepicker #picker2 disabled></mat-datepicker>
+            <mat-datepicker #picker2 [disabled]="true"></mat-datepicker>
             <!-- <mat-error
                 *ngIf="leaveEndDate?.hasError('required') ">
                 This field is required</mat-error> -->
@@ -583,7 +583,7 @@
               matSuffix
               [for]="picker3"
             ></mat-datepicker-toggle>
-            <mat-datepicker #picker3 disabled></mat-datepicker>
+            <mat-datepicker #picker3 [disabled]="true"></mat-datepicker>
             <!-- <mat-error
                   *ngIf="officialEmail?.hasError('required') ">
                   This field is required</mat-error> -->

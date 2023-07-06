@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=true>
+    <mat-expansion-panel [expanded]=false>
       <mat-expansion-panel-header>
         <mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
@@ -57,10 +57,10 @@
         </table>
 
         <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
-          (rowClicked)="onUsersRowClicked($event)" paginationPageSize=20 pagination=true>
+          (rowClicked)="onUsersRowClicked($event)" [paginationPageSize]=20 [pagination]=true>
 
         </ag-grid-angular>
-
+        <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
       </div>
 
 

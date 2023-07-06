@@ -39,4 +39,5 @@ export class KommunicateDialogComponent implements OnInit {
 export interface ConfirmModel {
   chatData: any;
   kommunicateGroupId: any;
+  title:any;
 }

@@ -30,7 +30,7 @@
           <mat-label>Date Of Birth</mat-label>
           <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
             [min]="minDate" [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-            name="dateOfBirth" [formControl]="addClientForm.controls['dateOfBirth']">
+            name="dateOfBirth" [formControl]="addClientForm.get('dateOfBirth') | formControlType">
           <mat-hint>Format: DD/MM/YYYY</mat-hint>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
@@ -44,7 +44,7 @@
 
     </div>
     <div class="card__row">
-      <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls.panNumber.valid && otpSend">
+      <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls['panNumber'].valid && otpSend">
         <mat-form-field appearance="outline">
           <mat-label>Verify OTP</mat-label>
           <input matTooltip="Verify OTP" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
