@@ -99,8 +99,8 @@
             </tr>
             <tr>
                 <td>Total</td>
-                <td><input type="number" disabled formControlName="received44ADtaotal" maxlength="8"></td>
-                <td><input type="number" disabled formControlName="presumptive44ADtotal" maxlength="8"></td>
+                <td><input type="number" [disabled]="true" formControlName="received44ADtaotal" maxlength="8"></td>
+                <td><input type="number" [disabled]="true" formControlName="presumptive44ADtotal" maxlength="8"></td>
             </tr>
         </table>
 
@@ -130,7 +130,7 @@
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
-                    <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA"
+                    <input matInput placeholder="Trade Name" [disabled]="true" formControlName="tradeName44ADA"
                         (blur)="getCodeFromLabelOnBlur44ADA()" maxlength="75" autocomplete="off">
                     <!-- <mat-error *ngIf="natureOfBusinessForm.controls['tradeName44ADA.hasError('pattern')">
                         Name should contain character only
@@ -323,7 +323,7 @@
                     <input matInput placeholder="Total Assets" readonly formControlName="totalAssets" autocomplete="off">
                 </mat-form-field>
             </div>
-            
+
         </div><br><br> -->
 
 

@@ -11,7 +11,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 @Component({
   selector: 'app-depreciation-dialog',
   templateUrl: './depreciation-dialog.component.html',
-  styleUrls: ['./depreciation-dialog.component.scss'] 
+  styleUrls: ['./depreciation-dialog.component.scss']
 })
 export class DepreciationDialogComponent implements OnInit {
   @Output() onSave = new EventEmitter();
@@ -79,9 +79,9 @@ export class DepreciationDialogComponent implements OnInit {
     }
     // this.depreciationForm.disable();
   }
-    
 
-  
+
+
 
   initDepreciationForm() {
     return this.fb.group({
@@ -90,8 +90,8 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
   createForm(obj?: FixedAssetsDetails): FormGroup {
-    return  this.fb.group({ 
-      hasEdit: [], 
+    return  this.fb.group({
+      hasEdit: [],
       id: [obj?.id || null],
       assetType: [obj?.assetType || null, Validators.required],
       description: [obj?.description || null, Validators.required],
@@ -101,8 +101,8 @@ export class DepreciationDialogComponent implements OnInit {
       fixedAssetClosingAmount: [obj?.fixedAssetClosingAmount || null],
     })
   }
- 
-  saveDepreciationDetails(formGroup :FormGroup) {
+
+  saveDepreciationDetails(formGroup :any) {
     console.log(formGroup)
     if(formGroup.valid){
     this.loading = true;
@@ -159,20 +159,20 @@ export class DepreciationDialogComponent implements OnInit {
     // (this.depreciationForm.controls['depreciationArray'] as FormGroup).disable()
     for (const iterator of this.getDepreciationArray.controls) {
       console.log(iterator)
-      
+
       iterator['controls']['description'].disable()
       iterator['controls']['assetType'].disable()
       iterator['controls']['bookValue'].disable()
       iterator['controls']['depreciationRate'].disable()
       iterator['controls']['depreciationAmount'].disable()
       iterator['controls']['fixedAssetClosingAmount'].disable()
-      
-     
+
+
     }
     // ((this.depreciationForm.controls['depreciationArray'] as FormGroup).controls[i] as FormGroup).enable();
   }
 
-  edit(i,formGroup :FormGroup) {
+  edit(i,formGroup :any) {
     formGroup['controls']['description'].enable()
       formGroup['controls']['assetType'].enable()
       formGroup['controls']['bookValue'].enable()

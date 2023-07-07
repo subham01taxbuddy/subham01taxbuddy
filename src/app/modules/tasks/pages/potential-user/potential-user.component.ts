@@ -46,6 +46,8 @@ export class PotentialUserComponent implements OnInit {
     emailId: null
   }
   showCsvMessage: boolean;
+  dataOnLoad = true;
+  userInfoLength: any;
 
 
   constructor(
@@ -72,7 +74,7 @@ export class PotentialUserComponent implements OnInit {
     this.config = {
       itemsPerPage: 20,
       currentPage: 1,
-      totalItems: null
+      totalItems: 0
     };
   }
 
@@ -80,7 +82,11 @@ export class PotentialUserComponent implements OnInit {
     const userId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
-    this.search();
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.search();
+    } else {
+      this.dataOnLoad = false;
+    }
     this.getAgentList();
     this.getMasterStatusList();
   }
@@ -229,6 +235,7 @@ export class PotentialUserComponent implements OnInit {
             this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
             this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
             this.userInfo = result.data['content'];
+            this.userInfoLength = this.userInfo?.length;
             this.config.totalItems = result.data.totalElements;
           } else {
             this.usersGridOptions.api?.setRowData(this.createRowData([]));
@@ -747,7 +754,13 @@ export class PotentialUserComponent implements OnInit {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
     } else {
-      this.search();
+      if (this.dataOnLoad) {
+        this.search();
+      } else {
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.userInfoLength = 0;
+        this.config.totalItems = 0;
+      }
     }
   }
 

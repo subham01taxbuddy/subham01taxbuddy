@@ -49,7 +49,7 @@ export const MY_FORMATS = {
   ],
 })
 export class TaxSummaryComponent implements OnInit, OnChanges {
-  @Input() changes!: string;
+  @Input() changes!: boolean;
   @Input() itrObject!: any;
   @Input() userDetails!: any;
 
@@ -3755,7 +3755,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     toatlIncome: 0,
     familyPension: 0,
   };
-  setOtherSourceIncomeValue(incomeVal: any, type: any) {
+  setOtherSourceIncomeValue(event: Event, type: any) {
+    let incomeVal = (event.target as HTMLInputElement).value as any;
     if (Number(incomeVal) !== 0 && this.utilsService.isNonEmpty(incomeVal)) {
       if (type === 'saving') {
         this.sourcesOfIncome.interestFromSaving = Number(incomeVal);
@@ -3949,7 +3950,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     parentAge: '',
     medicalExpendature: 0,
   };
-  setDeduction80DVal(insuranceVal: any, type: any) {
+  setDeduction80DVal(event: Event, type: any) {
+    let insuranceVal = (event.target as HTMLInputElement).value as any;
     //  alert(insuranceVal)
     if (insuranceVal !== 0 || this.utilsService.isNonEmpty(insuranceVal)) {
       if (type === 'forSelf') {
@@ -4950,6 +4952,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
   }
 
+  get assesseForm(){
+    return this.itrSummaryForm.controls['assesse'] as FormGroup;
+  }
+
+  get taxSummaryForm(){
+    return this.itrSummaryForm.controls['taxSummary'] as FormGroup;
+  }
+
   businessObject = {
     natureOfBusiness44AD: '',
     natureOfBusiness44ADA: '',
@@ -5064,8 +5074,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   initializeMainForm() {
     this.itrSummaryForm = this.fb.group({
-      _id: null,
-      summaryId: 0,
+      _id: [null],
+      summaryId: [0],
       itrId: [this.itrObject?.itrId],
       userId: [this.itrObject?.userId],
       returnType: ['ORIGINAL', [Validators.required]],

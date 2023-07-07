@@ -2188,6 +2188,8 @@ export class PersonalInformationComponent implements OnInit {
     this.setCustomerProfileValues();
   }
 
+  charRegex = AppConstants.charRegex;
+
   createCustomerProfileForm(): FormGroup {
     let itrFilingDueDate = sessionStorage.getItem('itrFilingDueDate');
     if (Date() > itrFilingDueDate) {
@@ -2263,6 +2265,9 @@ export class PersonalInformationComponent implements OnInit {
     });
   }
 
+  get addressForm(){
+    return this.customerProfileForm.controls['address'] as FormGroup;
+  }
   createBankDetailsForm(
     obj: {
       ifsCode?: string;

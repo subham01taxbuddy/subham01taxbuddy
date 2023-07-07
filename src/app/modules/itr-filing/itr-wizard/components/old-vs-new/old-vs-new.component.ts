@@ -77,10 +77,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   initForm() {
     this.regimeSelectionForm = this.fb.group({
       everOptedNewRegime: this.fb.group({
-        everOptedNewRegime: [],
-        assessmentYear: [],
-        date: [],
-        acknowledgementNumber: [],
+        everOptedNewRegime: [''],
+        assessmentYear: [''],
+        date: [''],
+        acknowledgementNumber: [''],
       }),
       everOptedOutOfNewRegime: this.fb.group({
         everOptedOutOfNewRegime: [],

@@ -86,7 +86,7 @@
                       class="input-field"
                       placeholder="Date of birth"
                       name="dateOfBirth"
-                      [formControl]="addClientForm.controls['dateOfBirth']"
+                      [formControl]="addClientForm.controls['dateOfBirth'] | formControlType"
                     />
                     <mat-hint>Format: DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle
@@ -105,7 +105,7 @@
                 matStepperNext
                 class="lgtBtn"
                 style="margin: 0px"
-                *ngIf="addClientForm.controls.panNumber.valid"
+                *ngIf="addClientForm.controls['panNumber'].valid"
                 (click)="verifyPan()"
               >
                 <span class="font-semibold">Verify PAN </span>

@@ -172,7 +172,7 @@
                 <td>{{ item.scheduleCallAssigned}}</td>
                 <td [ngClass]="{ 'text-success': item.totalItrFiled }">{{ item.totalItrFiled }}</td>
                 <td>{{ item.totalPaidRevenue }}</td>
-                <td>{{ item.totalCommissionEarned }}</td>
+                <td>{{ item.totalCommissionEarned | number:'1.2-2' }}</td>
                 <!-- <td>{{'NA'}}</td> -->
               </tr>
               <tr *ngIf="!searchQuery">

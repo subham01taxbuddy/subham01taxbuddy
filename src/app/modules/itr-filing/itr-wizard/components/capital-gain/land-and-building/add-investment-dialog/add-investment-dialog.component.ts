@@ -60,7 +60,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   // currentCapitalGainObj: CapitalGain;
 
-  maxForDedcution = 0;
+  maxForDeduction = 0;
 
   // public investmentOfAssetGridOptions: GridOptions;
 
@@ -171,7 +171,7 @@ export class AddInvestmentDialogComponent implements OnInit {
       } else {
         this.investmentForm.controls['totalDeductionClaimed'].setValue(0);
       }
-    }, error => { 
+    }, error => {
       this.utilsService.showSnackBar('Failed to get deductions.');
     });
   }

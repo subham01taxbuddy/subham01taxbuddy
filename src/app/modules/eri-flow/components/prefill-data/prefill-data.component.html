@@ -19,7 +19,7 @@
           <mat-label>Mobile OTP</mat-label>
           <input matTooltip="Enter Mobile OTP" formControlName="mobile" matTooltipClass="tab-tooltip"
             matTooltipPosition="above" matInput placeholder="Enter Mobile OTP" name="otp" class="input-field"
-            maxlength="6" [(ngModel)]="mobileOtp" required>
+            maxlength="6" required>
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-4">
@@ -27,7 +27,7 @@
           <mat-label>Email OTP</mat-label>
           <input matTooltip="Enter Email OTP" formControlName="email" matTooltipClass="tab-tooltip"
             matTooltipPosition="above" matInput placeholder="Enter Email OTP" name="otp" class="input-field"
-            maxlength="6" [(ngModel)]="emailOtp" [required]="selectedOtpOption === 'E'">
+            maxlength="6" [required]="selectedOtpOption === 'E'">
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-4">

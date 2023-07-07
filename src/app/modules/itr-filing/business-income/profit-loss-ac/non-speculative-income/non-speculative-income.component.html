@@ -17,15 +17,15 @@
                   <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
                   </mat-checkbox>
 
-                  <mat-form-field appearance="none">
-                    <input formControlName="brokerName" matInput disabled
+                  <mat-form-field appearance="outline">
+                    <input formControlName="brokerName" matInput [disabled]="true"
                            name="brokerName[i]" class="input-field">
                   </mat-form-field>
                 </div>
                 <div class="col-sm-2">
                   <mat-label>Turnover</mat-label>
                   <mat-form-field appearance="outline">
-                    <input formControlName="turnOver" matInput disabled
+                    <input formControlName="turnOver" matInput [disabled]="true"
                            name="turnOver[i]" required class="input-field" digitsOnly>
                   </mat-form-field>
                 </div>
@@ -83,7 +83,7 @@
                 <div class="col-sm-4 spsTp">
                   <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
                   <mat-form-field appearance="outline">
-                    <input disabled formControlName="cogc" name="cogc[i]"
+                    <input [disabled]="true" formControlName="cogc" name="cogc[i]"
                       matInput  class="input-field"
                       required type="number" trim>
                   </mat-form-field>
@@ -91,7 +91,7 @@
                 <div class="col-sm-4 spsTp">
                   <mat-label>Gross Profit (Turnover - COGC)</mat-label>
                   <mat-form-field appearance="outline">
-                    <input disabled formControlName="grossProfit" name="grossProfit[i]"
+                    <input [disabled]="true" formControlName="grossProfit" name="grossProfit[i]"
                       matInput class="input-field"
                       required type="number" trim>
 
@@ -100,7 +100,7 @@
                 <div class="col-sm-4 spsTp">
                   <mat-label>Net Profit (Gross Profit - Expenses)</mat-label>
                   <mat-form-field appearance="outline">
-                    <input disabled formControlName="netIncome" name="netIncome[i]"
+                    <input [disabled]="true" formControlName="netIncome" name="netIncome[i]"
                       matInput class="input-field"
                       required type="number" trim>
                   </mat-form-field>
@@ -163,12 +163,12 @@
                                     <!-- <mat-error *ngIf="expense.controls[i]['expenseAmount'].hasError('required')">Please
                                         enter amount</mat-error> -->
                                 </mat-form-field>
-                              <div *ngIf="expense.controls['expenseType'].value !=='OTHER_EXPENSES'"> &nbsp;</div>
-                              <div *ngIf="expense.controls['expenseType'].value ==='OTHER_EXPENSES'">
+                              <div *ngIf="expense.get('expenseType').value !=='OTHER_EXPENSES'"> &nbsp;</div>
+                              <div *ngIf="expense.get('expenseType').value ==='OTHER_EXPENSES'">
                                 <mat-form-field class="input-field-width">
                                   <input matInput class="input-field" placeholder="description"
                                          formControlName="description" maxlength="14"
-                                         [required]="expense.controls['expenseType'].value ==='OTHER_EXPENSES'">
+                                         [required]="expense.get('expenseType').value ==='OTHER_EXPENSES'">
                                 </mat-form-field>
                               </div>
                             </div>

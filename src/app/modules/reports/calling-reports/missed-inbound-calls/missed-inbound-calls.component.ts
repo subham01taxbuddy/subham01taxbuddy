@@ -364,7 +364,7 @@ export class MissedInboundCallsComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this.status.setValue('All')
     this?.smeDropDown?.resetDropdown();

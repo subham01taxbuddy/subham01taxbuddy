@@ -104,7 +104,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     private userService: UserMsService,
     private toastMessage: ToastMessageService,
     private schedules: Schedules,
-    private location: Location,
+    public location: Location,
     private dialog: MatDialog,
   ) { }
 

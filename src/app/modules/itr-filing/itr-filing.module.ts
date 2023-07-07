@@ -2,7 +2,6 @@ import { AddClientDialogComponent } from './add-client-dialog/add-client-dialog.
 import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
 import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
 import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.component';
-// import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
@@ -10,8 +9,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
 import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
-import { NgxLoadingModule } from 'ngx-loading';
-// import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
@@ -20,18 +17,13 @@ import { SalaryComponent } from './salary/salary.component';
 import { HousePropertyComponent } from './house-property/house-property.component';
 import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
-// import { AddDonationDialogComponent } from './itr-wizard/pages/investments-deductions/add-donation-dialog/add-donation-dialog.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
-// import { UpdateStatusComponent } from './update-status/update-status.component';
 import { DirectUploadComponent } from './direct-upload/direct-upload.component';
 import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
 import { BusinessComponent } from './business/business.component';
-// import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.component';
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
-// import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
-// import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
@@ -40,7 +32,6 @@ import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { AddClientComponent } from './add-client/add-client.component';
 import { PrefillDataComponent } from './itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component';
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
@@ -109,8 +100,6 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
     ReactiveFormsModule,
     ItrFilingRoutingModule,
     NgxImageZoomModule,
-    // NgxLoadingModule.forRoot({}),
-    // NgxImageZoomModule.forRoot(),
     PdfViewerModule,
     SharedModule,
     PagesModule,
@@ -155,7 +144,6 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
     FilingTasksComponent,
     ShowUserDocumnetsComponent,
     UpdateManualFilingComponent,
-    AddClientComponent,
     AddClientDialogComponent,
     PrefillDataComponent,
     // InputUploadComponent

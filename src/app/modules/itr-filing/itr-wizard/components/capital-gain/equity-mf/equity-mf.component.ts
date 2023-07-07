@@ -284,7 +284,7 @@ export class EquityMfComponent implements OnInit {
   }
 
 
-  addEquityAndMf(mode, type, rowIndex, assetDetails?) {
+  addEquityAndMf(mode, type, rowIndex?, assetDetails?) {
     const dialogRef = this.matDialog.open(ListedUnlistedDialogComponent, {
       data: { mode: mode, assetType: type, rowIndex:rowIndex, assetDetails: assetDetails },
       closeOnNavigation: true,
@@ -880,7 +880,7 @@ export class EquityMfComponent implements OnInit {
   }
 
 
-  addListedDeduction(mode, rowIndex, investment?) {
+  addListedDeduction(mode, rowIndex?, investment?) {
     if (this.listedCg.assetDetails.length > 0) {
 
       let assets = this.listedCg.assetDetails;
@@ -918,7 +918,7 @@ export class EquityMfComponent implements OnInit {
       this.utilsService.showSnackBar('Please add asset details first against this deduction')
     }
   }
-  addUnListedDeduction(mode, rowIndex, investment?) {
+  addUnListedDeduction(mode, rowIndex?, investment?) {
     if (this.unlistedCg.assetDetails.length > 0) {
 
       let assets = this.unlistedCg.assetDetails;

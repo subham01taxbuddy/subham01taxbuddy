@@ -128,19 +128,19 @@
         <div class="col-sm-6">
             <div class="radius">
                 <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission Earned</span>&nbsp;
-                <span class="numTxBg">₹ {{commissionData?.totalCommissionEarned || 'NA'}}</span>
+                <span class="numTxBg">₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span>
 
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="radius1 grBk">
-                            <span class="numTxSm grTx">₹ {{commissionData?.receivedAmount || 'NA'}}</span><br>
+                            <span class="numTxSm grTx">₹ {{(commissionData?.receivedAmount | number:'1.2-2') || 'NA'}}</span><br>
                             <span class="TxSm">Received</span><br>
                             <span class="grytx">Amount Approved</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="radius1 OrgBk">
-                            <span class="numTxSm OrgTx">₹ {{commissionData?.receivableAmount || 'NA'}}</span><br>
+                            <span class="numTxSm OrgTx">₹ {{(commissionData?.receivableAmount | number:'1.2-2') || 'NA'}}</span><br>
                             <span class="TxSm">Receivable</span><br>
                             <span class="grytx">Approval in Progress</span>
                         </div>

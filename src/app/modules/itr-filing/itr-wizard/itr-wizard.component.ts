@@ -55,7 +55,7 @@ export class ItrWizardComponent implements OnInit {
     private router: Router,
     private location: Location,
     private cdRef: ChangeDetectorRef,
-    private schedules: Schedules,
+    public schedules: Schedules,
     private matDialog: MatDialog
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
