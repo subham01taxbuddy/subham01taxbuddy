@@ -447,7 +447,7 @@ export class SumaryDialogComponent implements OnInit {
   }
 
 
-  async getBankInfoFromIfsc(ifscCode: FormControl) {
+  async getBankInfoFromIfsc(ifscCode: any) {
     console.log("ifscCode: ", ifscCode)
     if (ifscCode.valid) {
       // let param = '/' + ifscCode.value;
@@ -1014,7 +1014,7 @@ export class SumaryDialogComponent implements OnInit {
     this.calTotalDeduction()
   }
 
-  calTotalDeduction() {   //this.summaryDialogForm.controls['standardDeduction']  
+  calTotalDeduction() {   //this.summaryDialogForm.controls['standardDeduction']
     this.salObjectVal.totalDedction = Number((this.summaryDialogForm.controls['employers'] as FormGroup).controls['standardDeduction'].value) + Number(this.summaryDialogForm.controls['entertainAllow'].value) + Number(this.summaryDialogForm.controls['professionalTax'].value)
     this.summaryDialogForm.controls['totalSalaryDeduction'].setValue(this.salObjectVal.totalDedction);
     //this.calNetSalary()

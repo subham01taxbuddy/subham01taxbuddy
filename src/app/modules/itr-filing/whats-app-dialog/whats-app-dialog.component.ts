@@ -525,7 +525,8 @@ export class WhatsAppDialogComponent implements OnInit {
   }
 
   uploadedFile: any;
-  uploadMideaFile(file: FileList) {
+  uploadMideaFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     console.log("File", file);
     if (file.length > 0) {
       this.whatsAppForm.controls["selectTemplate"].disable();

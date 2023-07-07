@@ -259,9 +259,7 @@
                               />
                               <mat-error
                                 *ngIf="
-                                  housePropertyForm.controls['loans'].controls[
-                                    i
-                                  ].controls['principalAmount'].hasError(
+                                  coOwn.get('principalAmount').hasError(
                                     'pattern'
                                   )
                                 "
@@ -281,15 +279,13 @@
                             <!-- 80ee&80eea  -->
                             <div
                               *ngIf="
-                                housePropertyForm.controls['loans'].controls[0]
-                                  .controls['interestAmount'].value > 200000
+                                coOwn
+                                  .get('interestAmount').value > 200000
                               "
                               style="padding-top: 20px"
                             >
                               <mat-radio-group
-                                [formControl]="
-                                  housePropertyForm.controls.isEligibleFor80EE
-                                "
+                                formControlName="isEligibleFor80EE"
                               >
                                 <div class="customradiobtn bdr_btm">
                                   <mat-radio-button
@@ -342,9 +338,7 @@
                               />
                               <mat-error
                                 *ngIf="
-                                  housePropertyForm.controls['loans'].controls[
-                                    i
-                                  ].controls['interestAmount'].hasError(
+                                  coOwn.get('interestAmount').hasError(
                                     'pattern'
                                   )
                                 "
@@ -353,9 +347,7 @@
                               </mat-error>
                               <mat-error
                                 *ngIf="
-                                  housePropertyForm.controls['loans'].controls[
-                                    i
-                                  ].controls['interestAmount'].hasError('min')
+                                  coOwn.get('interestAmount').hasError('min')
                                 "
                               >
                                 Interest amount should be 1
@@ -1072,9 +1064,7 @@
                             />
                             <mat-error
                               *ngIf="
-                                housePropertyForm.controls['coOwners'].controls[
-                                  i
-                                ].controls['name'].hasError('pattern')
+                                coOwn.get('name').hasError('pattern')
                               "
                             >
                               Enter valid name.</mat-error
@@ -1111,9 +1101,7 @@
                             />
                             <mat-error
                               *ngIf="
-                                housePropertyForm.controls['coOwners'].controls[
-                                  i
-                                ].controls['panNumber'].hasError('pattern')
+                                coOwn.get('panNumber').hasError('pattern')
                               "
                             >
                               Enter valid PAN.</mat-error
@@ -1139,9 +1127,7 @@
                             />
                             <mat-error
                               *ngIf="
-                                housePropertyForm.controls['coOwners'].controls[
-                                  i
-                                ].controls['percentage'].hasError('pattern')
+                                coOwn.get('percentage').hasError('pattern')
                               "
                             >
                               Enter positive number without decimal.</mat-error
@@ -1395,9 +1381,7 @@
                         />
                         <mat-error
                           *ngIf="
-                            housePropertyForm.controls['tenant'].controls[
-                              i
-                            ].controls['name'].hasError('required')
+                            ten.get('name').hasError('required')
                           "
                         >
                           Enter tenant name.</mat-error
@@ -1433,9 +1417,7 @@
                         />
                         <mat-error
                           *ngIf="
-                            housePropertyForm.controls['tenant'].controls[
-                              i
-                            ].controls['panNumber'].hasError('pattern')
+                            ten.get('panNumber').hasError('pattern')
                           "
                         >
                           Enter valid PAN.</mat-error

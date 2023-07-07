@@ -9,7 +9,7 @@ import { ViewChildren, ViewContainerRef, QueryList, Component, AfterViewInit } f
             <mat-form-field class="example-full-width">
                 <input matInput [(ngModel)]="receipts" placeholder="Amount/ month" pattern="[0-9]*"
                        [ngModelOptions]="{standalone: true}" maxlength="14" name="receiptsAmount" #receiptsAmount="ngModel">
-                       <mat-error *ngIf="receiptsAmount.errors">{{name}} Please enter numbers only</mat-error>
+                       <mat-error *ngIf="receiptsAmount.errors"> Please enter numbers only</mat-error>
             </mat-form-field>
         </form>
         </mat-card>

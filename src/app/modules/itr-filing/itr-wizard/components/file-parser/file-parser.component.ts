@@ -110,7 +110,8 @@ export class FileParserComponent implements OnInit {
     window.open('./assets/files/TaxBuddy Cg Template.xlsx');
   }
 
-  uploadFile(file: FileList) {
+  uploadFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     console.log('File', file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);

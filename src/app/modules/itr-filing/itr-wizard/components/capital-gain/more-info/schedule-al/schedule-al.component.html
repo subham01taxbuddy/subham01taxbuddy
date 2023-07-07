@@ -45,17 +45,17 @@
                     class="input-field" maxlength="6" minlength="6" trim digitsOnly
                     (blur)="updateDataByPincode(immovableAssets)" required>
                     <mat-error
-                      *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['pinCode'].hasError('pattern')">
+                      *ngIf="immovableAssets.get('pinCode').hasError('pattern')">
                       Enter
                       6 digit PIN code.
                     </mat-error>
                     <mat-error
-                      *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['pinCode'].hasError('minLength') ">
+                      *ngIf="immovableAssets.get('pinCode').hasError('minLength') ">
                       Enter
                       6 digit PIN code.
                     </mat-error>
                     <mat-error
-                      *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['pinCode'].hasError('maxLength')">
+                      *ngIf="immovableAssets.get('pinCode').hasError('maxLength')">
                       Enter
                       6 digit PIN code.
                     </mat-error>
@@ -96,7 +96,7 @@
                   <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
                     formControlName="city" class="input-field" maxlength="50" required>
                   <mat-error
-                    *ngIf="immovableAssetForm.controls['immovableAssetArray'].controls[i].controls['city'].hasError('pattern')">
+                    *ngIf="immovableAssets.get('city').hasError('pattern')">
                     Enter valid
                     city name.</mat-error>
                 </mat-form-field>

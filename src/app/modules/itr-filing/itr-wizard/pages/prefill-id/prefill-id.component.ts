@@ -147,7 +147,8 @@ export class PrefillIdComponent implements OnInit {
   }
 
   // PREFILL PAN VALIDATION
-  uploadJsonFile(file: FileList) {
+  uploadJsonFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     console.log('File in prefill', file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
@@ -1141,7 +1142,8 @@ export class PrefillIdComponent implements OnInit {
 
   ITR_Obj: ITR_JSON;
   // Uploading Utility JSON
-  uploadUtilityItrJson(file: FileList) {
+  uploadUtilityItrJson(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
 
@@ -1905,10 +1907,7 @@ export class PrefillIdComponent implements OnInit {
                 }
               } else {
                 console.log(
-                  'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
-                  `ItrJSON[this.ITR_Type]${[
-                    this.ITR14_IncomeDeductions,
-                  ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+                  'ITRJSON => EXEMPT INCOME DETAILS => ITR1, this.uploadedJson[this.ITR_Type]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls'
                 );
               }
             }
@@ -1936,10 +1935,7 @@ export class PrefillIdComponent implements OnInit {
                 }
               } else {
                 console.log(
-                  'ITRJSON => Exempt Incomes => ITR4 =>',
-                  `ItrJSON[this.ITR_Type]${[
-                    this.ITR14_IncomeDeductions,
-                  ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+                  'ITRJSON => Exempt Incomes => ITR4 =>, this.uploadedJson[this.ITR_Type]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls);'
                 );
               }
             }
@@ -3664,10 +3660,7 @@ export class PrefillIdComponent implements OnInit {
               }
             } else {
               console.log(
-                'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
-                `ItrJSON[this.ITR_Type]${[
-                  this.ITR14_IncomeDeductions,
-                ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+                'ITRJSON => EXEMPT INCOME DETAILS => ITR2/3, this.uploadedJson[this.ITR_Type]?.ScheduleEI?.OthersInc?.OthersIncDtls'
               );
             }
 

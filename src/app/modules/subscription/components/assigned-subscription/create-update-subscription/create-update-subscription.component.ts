@@ -104,7 +104,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     private userService: UserMsService,
     private toastMessage: ToastMessageService,
     private schedules: Schedules,
-    private location: Location,
+    public location: Location,
     private dialog: MatDialog,
   ) { }
 
@@ -656,6 +656,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
             this.utilsService.isNonEmpty(this.selectedUserInfo) &&
             this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)
           ) {
+            this.personalInfoForm.controls['gstNo'].setValue(this.selectedUserInfo.gstDetails.gstinNumber);
             this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType);
             if (
               this.utilsService.isNonEmpty(
@@ -926,6 +927,37 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateUserDetails() {
     let param = `/profile/${this.userSubscription.userId}`;
+    if(this.personalInfoForm.controls['gstNo'].value){
+      if(!this.selectedUserInfo.gstDetails){
+        this.selectedUserInfo.gstDetails = {
+          bankInformation : null,
+          businessAddress : null,
+          businessLogo : null,
+          businessSignature : null,
+          compositeDealerQuarter : null,
+          compositeDealerYear : null,
+          gstCertificate : null,
+          gstPortalPassword : "",
+          gstPortalUserName : "",
+          gstType : null,
+          gstinNumber : null,
+          gstinRegisteredMobileNumber : "",
+          gstr1Type : "",
+          legalName : "",
+          natureOfBusiness : null,
+          openingPurchaseValue : null,
+          openingSalesValue : null,
+          registrationDate : null,
+          regularDealerMonth : null,
+          regularDealerYear : null,
+          returnType : null,
+          salesInvoicePrefix : "",
+          termsAndConditions : null,
+          tradeName : ""
+        };
+      }
+      this.selectedUserInfo.gstDetails.gstinNumber = this.personalInfoForm.controls['gstNo'].value;
+    }
     let reqBody = {
       createdDate: this.selectedUserInfo.createdDate,
       id: this.selectedUserInfo.id,

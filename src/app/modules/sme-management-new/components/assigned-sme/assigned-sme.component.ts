@@ -50,7 +50,6 @@ export class AssignedSmeComponent implements OnInit {
   searchVal: string = "";
   key: any;
   showError: boolean = false;
-  fields = ["Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom", "Sacjom"]
   dataOnLoad = true;
   showCsvMessage: boolean;
 
@@ -438,7 +437,7 @@ export class AssignedSmeComponent implements OnInit {
     else {
       param;
     }
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', this.fields);
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report','');
     this.loading = false;
     this.showCsvMessage = false;
   }

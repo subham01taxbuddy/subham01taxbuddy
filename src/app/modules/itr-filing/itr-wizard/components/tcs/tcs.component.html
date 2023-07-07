@@ -18,7 +18,7 @@
                             maxlength="10" minlength="10" required type="text" trim upperCase>
 
                         <mat-error
-                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['collectorTAN'].hasError('pattern')">
+                            *ngIf="donation.get('collectorTAN').hasError('pattern')">
                             Enter
                             valid TAN (e.g XXXX12345X)</mat-error>
                     </mat-form-field>
@@ -30,7 +30,7 @@
                         <input formControlName="collectorName" matInput placeholder="Collector Name"
                             name="collectorName[i]" class="input-field" maxlength="125" required type="text" trim>
                         <mat-error
-                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['collectorName'].hasError('pattern')">
+                            *ngIf="donation.get('collectorName').hasError('pattern')">
                             Name should be character only</mat-error>
                     </mat-form-field>
                 </div>
@@ -41,7 +41,7 @@
                         <input formControlName="totalAmountPaid" matInput placeholder="Amount" name="totalAmountPaid[i]"
                             required class="input-field" maxlength="14" digitsOnly>
                         <mat-error
-                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalAmountPaid'].hasError('pattern')">
+                            *ngIf="donation.get('totalAmountPaid').hasError('pattern')">
                             Enter
                             positive amount without decimal.</mat-error>
                     </mat-form-field>
@@ -53,7 +53,7 @@
                         <input formControlName="totalTcsDeposited" matInput placeholder="Total TCS Deposited"
                             name="totalTcsDeposited[i]" required class="input-field" maxlength="14" digitsOnly>
                         <mat-error
-                            *ngIf="salaryForm.controls['salaryArray'].controls[i].controls['totalTcsDeposited'].hasError('pattern')">
+                            *ngIf="donation.get('totalTcsDeposited').hasError('pattern')">
                             Enter
                             positive amount without decimal.</mat-error>
                     </mat-form-field>
@@ -67,7 +67,7 @@
                     </mat-icon>Edit </button>
             </div>
         </div>
-        <div class="row spsTp bdrTp">           
+        <div class="row spsTp bdrTp">
                 <div class="col-sm-3">
                     <button type="submit" class="tbd-btn-secondary delBtn" (click)="deleteSalaryArray()"><i class="fa fa-trash"
                             aria-hidden="true">&nbsp;</i>Delete</button>
@@ -81,7 +81,7 @@
                 <div class="col-sm-3">
                     <button type="submit" class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
                 </div>
-          
+
         </div>
     </div>
 

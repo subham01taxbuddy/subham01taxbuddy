@@ -125,7 +125,6 @@ const routes: Routes = [
       // { path: 'delay', canActivate: [RoleBaseAuthGuardService], component: DelayComponent },
       // { path: 'tasks', component: FilingTasksComponent },
       // { path: 'user-docs/:userId', component: ShowUserDocumnetsComponent },
-      // { path: 'add-client', component: AddClientComponent },
       { path: '', redirectTo: '/itr-filing/itr', pathMatch: 'full' },
     ],
   },

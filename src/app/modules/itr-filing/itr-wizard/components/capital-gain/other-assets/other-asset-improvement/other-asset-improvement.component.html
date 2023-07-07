@@ -40,10 +40,9 @@
                 (dateChange)="
                   calculateGainType(i);
                   calMaxPurchaseDate(
-                    this.OtherAsssetImprovementForm.controls['otherAssets']
-                      .controls[i].controls['otherAssetsArray'].controls[
+                    getOtherAssetsArray.get(
                       'sellDate'
-                    ]?.value,
+                    )?.value,
                     this.OtherAsssetImprovementForm,
                     i
                   )
@@ -98,9 +97,7 @@
 
               <mat-error
                 *ngIf="
-                  this.getOtherAssets.controls[i].controls[
-                    'otherAssetsArray'
-                  ].controls['purchaseCost'].hasError('pattern')
+                  getOtherAssetsArray.controls['purchaseCost'].hasError('pattern')
                 "
                 >Enter valid amount.</mat-error
               >
@@ -124,9 +121,7 @@
 
               <mat-error
                 *ngIf="
-                  this.getOtherAssets.controls[i].controls[
-                    'otherAssetsArray'
-                  ].controls['sellValue'].hasError('pattern')
+                  getOtherAssetsArray.controls['sellValue'].hasError('pattern')
                 "
                 >Enter valid amount.</mat-error
               >
@@ -149,9 +144,7 @@
               />
               <mat-error
                 *ngIf="
-                  this.getOtherAssets.controls[i].controls[
-                    'otherAssetsArray'
-                  ].controls['sellExpense'].hasError('pattern')
+                  getOtherAssetsArray.controls['sellExpense'].hasError('pattern')
                 "
                 >Enter valid amount.</mat-error
               >

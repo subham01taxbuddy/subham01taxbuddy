@@ -78,7 +78,7 @@
                     *ngIf="
                       regimeSelectionForm.controls[
                         'optionForCurrentAY'
-                      ].controls['currentYearRegime'].hasError('required') &&
+                      ].get('currentYearRegime').hasError('required') &&
                       submitted
                     "
                   >
@@ -122,7 +122,7 @@
                     *ngIf="
                       regimeSelectionForm.controls[
                         'everOptedNewRegime'
-                      ].controls['everOptedNewRegime'].hasError('required') &&
+                      ].get('everOptedNewRegime').hasError('required') &&
                       (this.ITR_JSON.itrType === '3' ||
                         this.ITR_JSON.itrType === '4') &&
                       submitted
@@ -135,9 +135,9 @@
               <div
                 class="card__row"
                 *ngIf="
-                  regimeSelectionForm.controls['everOptedNewRegime'].controls[
+                  regimeSelectionForm.controls['everOptedNewRegime'].get(
                     'everOptedNewRegime'
-                  ].value === true
+                  ).value === true
                 "
               >
                 <div class="card__col-xs-4">
@@ -162,7 +162,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedNewRegime'
-                        ].controls['assessmentYear'].hasError('required') ||
+                        ].get('assessmentYear').hasError('required') ||
                         submitted
                       "
                     >
@@ -193,7 +193,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedNewRegime'
-                        ].controls['acknowledgementNumber'].hasError(
+                        ].get('acknowledgementNumber').hasError(
                           'required'
                         ) || submitted
                       "
@@ -229,7 +229,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedNewRegime'
-                        ].controls['date'].hasError('required') || submitted
+                        ].get('date').hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -278,7 +278,7 @@
                     *ngIf="
                       regimeSelectionForm.controls[
                         'everOptedOutOfNewRegime'
-                      ].controls['everOptedOutOfNewRegime'].hasError(
+                      ].get('everOptedOutOfNewRegime').hasError(
                         'required'
                       ) && submitted
                     "
@@ -290,8 +290,8 @@
               <div
                 class="card__row"
                 *ngIf="
-                  regimeSelectionForm.controls['everOptedOutOfNewRegime']
-                    .controls['everOptedOutOfNewRegime'].value === true
+                  (regimeSelectionForm.controls['everOptedOutOfNewRegime'])
+                    .get('everOptedOutOfNewRegime').value === true
                 "
               >
                 <div class="card__col-xs-4">
@@ -317,7 +317,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedOutOfNewRegime'
-                        ].controls['assessmentYear'].hasError('required') ||
+                        ].get('assessmentYear').hasError('required') ||
                         submitted
                       "
                     >
@@ -349,7 +349,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedOutOfNewRegime'
-                        ].controls['acknowledgementNumber'].hasError(
+                        ].get('acknowledgementNumber').hasError(
                           'required'
                         ) || submitted
                       "
@@ -386,7 +386,7 @@
                       *ngIf="
                         regimeSelectionForm.controls[
                           'everOptedOutOfNewRegime'
-                        ].controls['date'].hasError('required') || submitted
+                        ].get('date').hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -433,7 +433,7 @@
                     *ngIf="
                       regimeSelectionForm.controls[
                         'optionForCurrentAY'
-                      ].controls['currentYearRegime'].hasError('required') &&
+                      ].get('currentYearRegime').hasError('required') &&
                       submitted
                     "
                   >

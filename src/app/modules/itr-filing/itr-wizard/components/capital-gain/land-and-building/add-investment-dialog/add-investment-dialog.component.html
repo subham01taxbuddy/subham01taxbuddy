@@ -1,4 +1,3 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <h1 mat-dialog-title> Investment details for "{{this.data.assetClassName}}"</h1>
 
 <mat-dialog-content>
@@ -90,8 +89,8 @@
 
     <div class="row dialog-button" *ngIf="investmentForm.controls['underSection'].valid">
       <div class="sub_btn top-space">
-        <button type="submit" class="tbd-btn" (click)="saveInvestments()">{{investMode === 'EDIT' ? 'Update' :
-          'Save'}}</button>
+        <button type="submit" class="tbd-btn" (click)="saveInvestments()">
+          Save</button>
         <button class="tbd-btn-secondary" (click)="cancelInvestments()" mat-dialog-close>Cancel</button>
       </div>
     </div>

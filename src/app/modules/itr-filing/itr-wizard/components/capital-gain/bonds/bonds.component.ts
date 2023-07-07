@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { BondsDebentureComponent } from '../bonds-debenture/bonds-debenture.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-bonds',
@@ -69,7 +70,8 @@ export class BondsComponent implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    public location: Location
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));

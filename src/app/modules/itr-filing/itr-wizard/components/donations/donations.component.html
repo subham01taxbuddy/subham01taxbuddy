@@ -62,13 +62,11 @@
             />
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['amountInCash'].hasError('pattern') &&
-                (generalDonationForm.controls['donationArray'].controls[i]
-                  .controls['amountInCash'].touched ||
-                  generalDonationForm.controls['donationArray'].controls[i]
-                    .controls['amountInCash'].dirty)
+                donation.get('amountInCash').hasError('pattern') &&
+                (donation
+                  .get('amountInCash').touched ||
+                  donation
+                    .get('amountInCash').dirty)
               "
             >
               Enter positive amount without decimal.</mat-error
@@ -91,9 +89,7 @@
             />
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['amountOtherThanCash'].hasError('pattern')
+                donation.get('amountOtherThanCash').hasError('pattern')
               "
             >
               Enter positive amount without decimal.</mat-error
@@ -116,9 +112,7 @@
             />
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['name'].hasError('pattern')
+                donation.get('name').hasError('pattern')
               "
             >
               Name should be character only</mat-error
@@ -149,18 +143,14 @@
             />
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['panNumber'].hasError('pattern')
+                donation.get('panNumber').hasError('pattern')
               "
             >
               Enter valid PAN (e.g XXXXX1234X)</mat-error
             >
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['panNumber'].hasError('incorrect')
+                donation.get('panNumber').hasError('incorrect')
               "
             >
               Donee PAN can't be same as user PAN.</mat-error
@@ -187,22 +177,16 @@
               (blur)="
                 getData(
                   fieldGlobalIndex(i),
-                  generalDonationForm.controls['donationArray'].controls[i]
-                    .controls['pinCode'].value
+                  donation
+                    .get('pinCode').value
                 )
               "
             />
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['pinCode'].hasError('pattern') ||
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['pinCode'].hasError('minlength') ||
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['pinCode'].hasError('maxlength')
+                donation.get('pinCode').hasError('pattern') ||
+                donation.get('pinCode').hasError('minlength') ||
+                donation.get('pinCode').hasError('maxlength')
               "
             >
               PIN should have 6 digits.</mat-error
@@ -225,9 +209,7 @@
             />
             <mat-error
               *ngIf="
-                generalDonationForm.controls['donationArray'].controls[
-                  i
-                ].controls['city'].hasError('pattern')
+                donation.get('city').hasError('pattern')
               "
             >
               Enter valid city name.</mat-error

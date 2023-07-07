@@ -1,6 +1,6 @@
 <button (click)="geUserChatDetail(data.mobileNum)">Refresh Chat</button>
 <button mat-dialog-close tabindex="-1" style="float: right;"><i class="fa fa-times" aria-hidden="true"></i></button>
-<mat-accordion *ngIf="this.userchatData"> 
+<mat-accordion *ngIf="this.userchatData">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -217,7 +217,7 @@
         </div>
 
         <div class="card__col-lg-3 card__col-sm-4">
-          <input type="file" hidden id="input-file-id" #file (change)="uploadMideaFile($event.target.files)"
+          <input type="file" hidden id="input-file-id" #file (change)="uploadMideaFile($event)"
             accept=".pdf, .jpg, .jpeg, .png">
           <button class="sendBtn" (click)="upload()" [ngClass]="timeExpired ? 'btnDisable' : 'sendBtn'"
             [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value || timeExpired) ? true : false) ">

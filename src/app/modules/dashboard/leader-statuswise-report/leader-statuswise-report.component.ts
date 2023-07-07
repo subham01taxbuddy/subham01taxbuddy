@@ -52,7 +52,6 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   allDetails:any;
   today: Date;
   data:any;
-  fields=["Sacjom","Sacjom","Sacjom","Sacjom","Sacjom","Sacjom"]
 
   constructor(
     private userMsService: UserMsService,
@@ -193,7 +192,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', this.fields);
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', '');
     this.loading = false;
   }
 

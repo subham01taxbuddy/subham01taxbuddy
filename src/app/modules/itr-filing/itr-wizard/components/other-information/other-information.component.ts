@@ -181,6 +181,15 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
+  addPanValidator() {
+    if (this.sharesForm.controls['typeOfCompany'].value === 'D') {
+      this.sharesForm.controls['companyPAN'].setValidators([Validators.required, Validators.pattern(AppConstants.panNumberRegex)]);
+      this.sharesForm.controls['companyPAN'].updateValueAndValidity();
+    } else {
+      this.sharesForm.controls['companyPAN'].setValidators([Validators.pattern(AppConstants.panNumberRegex)]);
+      this.sharesForm.controls['companyPAN'].updateValueAndValidity();
+    }
+  }
 
   tabChanged() {
     //re-intialise the ITR objects

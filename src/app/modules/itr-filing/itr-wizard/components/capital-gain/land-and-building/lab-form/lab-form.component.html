@@ -49,23 +49,23 @@
                     (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMinImproveDate(
-                        this.immovableForm.controls['assetDetails'].controls[i]
-                          .controls['purchaseDate'].value,
-                        this.immovableForm
+                        asset
+                          .get('purchaseDate').value,
+                        this.immovableForm, i
                       )
                     "
                     (dateInput)="
                       calMinImproveDate(
-                        this.immovableForm.controls['assetDetails'].controls[i]
-                          .controls['purchaseDate'].value,
-                        this.immovableForm
+                        asset
+                          .get('purchaseDate').value,
+                        this.immovableForm, i
                       )
                     "
                     (blur)="
                       calMinImproveDate(
-                        this.immovableForm.controls['assetDetails'].controls[i]
-                          .controls['purchaseDate'].value,
-                        this.immovableForm
+                        asset
+                          .get('purchaseDate').value,
+                        this.immovableForm, i
                       )
                     "
                     required
@@ -77,12 +77,8 @@
                   <mat-datepicker #purchaseDate></mat-datepicker>
                   <mat-error
                     *ngIf="
-                      immovableForm.controls['assetDetails'].controls[
-                        i
-                      ].controls['purchaseDate'].hasError('matDatepickerMax') ||
-                      immovableForm.controls['assetDetails'].controls[
-                        i
-                      ].controls['purchaseDate'].hasError('matDatepickerMin')
+                      asset.get('purchaseDate').hasError('matDatepickerMax') ||
+                      asset.get('purchaseDate').hasError('matDatepickerMin')
                     "
                   >
                     Invalid Date of Purchase
@@ -105,23 +101,23 @@
                     (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMaxPurchaseDate(
-                        this.immovableForm.controls['assetDetails'].controls[i]
-                          .controls['sellDate'].value,
-                        this.immovableForm
+                        asset
+                          .get('sellDate').value,
+                        this.immovableForm, i
                       )
                     "
                     (dateInput)="
                       calMaxPurchaseDate(
-                        this.immovableForm.controls['assetDetails'].controls[i]
-                          .controls['sellDate'].value,
-                        this.immovableForm
+                        asset
+                          .get('sellDate').value,
+                        this.immovableForm, i
                       )
                     "
                     (blur)="
                       calMaxPurchaseDate(
-                        this.immovableForm.controls['assetDetails'].controls[i]
-                          .controls['sellDate'].value,
-                        this.immovableForm
+                        asset
+                          .get('sellDate').value,
+                        this.immovableForm, i
                       )
                     "
                     required
@@ -133,12 +129,8 @@
                   <mat-datepicker #sellDate></mat-datepicker>
                   <mat-error
                     *ngIf="
-                      immovableForm.controls['assetDetails'].controls[
-                        i
-                      ].controls['sellDate'].hasError('matDatepickerMax') ||
-                      immovableForm.controls['assetDetails'].controls[
-                        i
-                      ].controls['sellDate'].hasError('matDatepickerMin')
+                      asset.get('sellDate').hasError('matDatepickerMax') ||
+                      asset.get('sellDate').hasError('matDatepickerMin')
                     "
                   >
                     Invalid Date of Sale
@@ -188,9 +180,7 @@
                   />
                   <mat-error
                     *ngIf="
-                      immovableForm.controls['assetDetails'].controls[
-                        i
-                      ].controls['purchaseCost'].hasError('pattern')
+                      asset.get('purchaseCost').hasError('pattern')
                     "
                   >
                     Enter valid amount upto 2 decimal in case of shares.
@@ -236,9 +226,7 @@
                   />
                   <mat-error
                     *ngIf="
-                      immovableForm.controls['assetDetails'].controls[
-                        i
-                      ].controls['sellExpense'].hasError('pattern')
+                      asset.get('sellExpense').hasError('pattern')
                     "
                   >
                     Enter valid amount upto 2 decimal in case of shares.
@@ -249,7 +237,7 @@
             </div>
           </div>
         </div>
-        
+
         <hr />
           <div>
             <div style="padding-top: 25px">
@@ -347,9 +335,7 @@
                     />
                     <mat-error
                       *ngIf="
-                        immovableForm.controls['improvement'].controls[
-                          i
-                        ].controls['costOfImprovement'].hasError('pattern')
+                        improve.get('costOfImprovement').hasError('pattern')
                       "
                     >
                       Enter valid amount.
@@ -510,9 +496,7 @@
                         <mat-datepicker #purchaseDate></mat-datepicker>
                         <mat-error
                           *ngIf="
-                            immovableForm.controls['deductions'].controls[
-                              i
-                            ].controls['purchaseDate'].hasError('pattern')
+                            deduction.get('purchaseDate').hasError('pattern')
                           "
                         >
                           Enter valid date.
@@ -540,10 +524,10 @@
                     <div
                       class="card__col-xs-12 card__col-sm-4"
                       *ngIf="
-                        immovableForm.controls['deductions'].controls[i]
-                          .controls['underSection'].value !== '54EC' &&
-                        immovableForm.controls['deductions'].controls[i]
-                          .controls['underSection'].value !== '54EE'
+                        deduction
+                          .get('underSection').value !== '54EC' &&
+                        deduction
+                          .get('underSection').value !== '54EE'
                       "
                     >
                       <mat-label>CGAS Amount</mat-label>
@@ -561,9 +545,7 @@
                         />
                         <mat-error
                           *ngIf="
-                            immovableForm.controls['deductions'].controls[
-                              i
-                            ].controls['investmentInCGAccount'].hasError(
+                            deduction.get('investmentInCGAccount').hasError(
                               'pattern'
                             )
                           "
@@ -613,7 +595,7 @@
               <div class="col-sm-3">
               <button
                 mat-button
-                class="addLandBtn mvRth"              
+                class="addLandBtn mvRth"
                 (click)="addMoreBuyersDetails()"
               >
                 + Add Buyer
@@ -622,7 +604,7 @@
             </div>
 
               <div formArrayName="buyersDetails">
-                <div               
+                <div
                   class="card cardYes spcBox"
                   *ngFor="
                     let buyer of getBuyersDetailsArrayForImmovable.controls;
@@ -653,17 +635,13 @@
                           trim
                           (keyup)="
                             makePanUppercase(
-                              immovableForm.controls['buyersDetails'].controls[
-                                i
-                              ].controls['pan']
+                              buyer.get('pan')
                             )
                           "
                         />
                         <mat-error
                           *ngIf="
-                            immovableForm.controls['buyersDetails'].controls[
-                              i
-                            ].controls['pan'].hasError('pattern')
+                            buyer.get('pan').hasError('pattern')
                           "
                         >
                           Enter valid PAN.
@@ -685,9 +663,7 @@
                         />
                         <mat-error
                           *ngIf="
-                            immovableForm.controls['buyersDetails'].controls[
-                              i
-                            ].controls['name'].hasError('pattern')
+                            buyer.get('name').hasError('pattern')
                           "
                         >
                           Enter valid name.
@@ -728,15 +704,9 @@
                         />
                         <mat-error
                           *ngIf="
-                            immovableForm.controls['buyersDetails'].controls[
-                              i
-                            ].controls['share'].hasError('pattern') ||
-                            immovableForm.controls['buyersDetails'].controls[
-                              i
-                            ].controls['share'].hasError('max') ||
-                            immovableForm.controls['buyersDetails'].controls[
-                              i
-                            ].controls['share'].hasError('min')
+                            buyer.get('share').hasError('pattern') ||
+                            buyer.get('share').hasError('max') ||
+                            buyer.get('share').hasError('min')
                           "
                         >
                           Shares cannot exceed 100%.
@@ -758,9 +728,7 @@
                             />
                             <mat-error
                               *ngIf="
-                                immovableForm.controls[
-                                  'buyersDetails'
-                                ].controls[i].controls['amount'].hasError(
+                                buyer.get('amount').hasError(
                                   'pattern'
                                 )
                               "
@@ -783,9 +751,7 @@
                             />
                             <mat-error
                               *ngIf="
-                                immovableForm.controls[
-                                  'buyersDetails'
-                                ].controls[i].controls['pin'].hasError(
+                                buyer.get('pin').hasError(
                                   'pattern'
                                 )
                               "
@@ -822,7 +788,7 @@
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
-                        </div>                   
+                        </div>
 
                     <div class="col-sm-12">
                       <mat-label>Address</mat-label>
@@ -851,10 +817,10 @@
                   </div>
                 </div>
 
-             
-         
 
-       
+
+
+
           <!--  <div class="row dialog-button">
                 <div class="sub_btn top-space">
                     <button type="submit" class="btn save" (click)="saveImmovableCG(this.immovableForm)"
