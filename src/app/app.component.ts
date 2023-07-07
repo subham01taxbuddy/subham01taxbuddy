@@ -106,15 +106,27 @@ export class AppComponent {
       console.log('got it');
       this.token$ = from(
         navigator.serviceWorker.register('firebase-messaging-sw.js', { type: 'module', scope: '__' }).
-        then(serviceWorkerRegistration =>
-          getToken(messaging, {
-            serviceWorkerRegistration,
-            // vapidKey: environment.vapidKey,
-          }).then((value)=>{
-            console.log('recvd token as=> ', value);
-            sessionStorage.setItem('webToken', value);
+        then(serviceWorkerRegistration => {
+          Notification.requestPermission().then(permission => {
+            if (permission == "granted") {
+              getToken(messaging, {
+                serviceWorkerRegistration,
+                // vapidKey: environment.vapidKey,
+              }).then((value) => {
+                console.log('recvd token as=> ', value);
+                sessionStorage.setItem('webToken', value);
+              }).catch(error => {
+                console.log("error", error.code);
+                if (error.code === 'messaging/permission-blocked') {
+                  alert("Yay!!!");
+                }
+              })
+            } else {
+              alert("Click the icon to the left of address bar and enable notifications.")
+            }
           })
-        )).pipe(
+        })
+      ).pipe(
         tap(token => console.log('FCM', {token})),
         share()
       );
