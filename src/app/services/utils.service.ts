@@ -270,6 +270,23 @@ export class UtilsService {
         }
       }
 
+      if (
+        key === 'movableAsset' &&
+        Array.isArray(obj[key]) &&
+        obj[key]?.length > 0
+      ) {
+        obj[key] = obj[key]?.map((item) => {
+          // Filter out null or undefined keys from each object
+          return Object.entries(item).reduce((acc, [k, v]) => {
+            if (v !== null && v !== undefined && v !== 0) {
+              acc[k] = v;
+            }
+            return acc;
+          }, {});
+        });
+        console.log(obj[key]);
+      }
+      
       //for All Others
       if (obj[key] === null) {
         delete obj[key];
