@@ -1358,7 +1358,7 @@ export class UtilsService {
             data = {
               country: 'INDIA',
               countryCode: '91',
-              city: result.taluka,
+              city: result.districtName,
               stateCode: result.stateCode,
             };
             resolve(data);

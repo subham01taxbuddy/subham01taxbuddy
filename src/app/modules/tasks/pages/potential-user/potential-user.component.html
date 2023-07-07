@@ -1,8 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -12,22 +15,26 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
-           </div>
-           <div class="col-sm-12 bckClr"  *ngIf="!coOwnerCheck">
-            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-           </div>
-          <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)" (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-          </div>
-             <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
+            <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
+              </mat-slide-toggle>
+            </div>
+            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
+              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
+                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+            </div>
+            <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
               <app-service-drop-down (sendService)="fromServiceType($event)" [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
             </div> -->
             <div class="col-sm-3 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>Select Status</mat-label>
-                <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId" (selectionChange)="this.search('status','isAgent')">
+                <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId"
+                  (selectionChange)="this.search('status','isAgent')">
                   <mat-option *ngFor="let status of statuslist" [value]="status.statusId">
                     {{ status.statusName }}
                   </mat-option>
@@ -37,7 +44,8 @@
             <div class="col-sm-3 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>Mobile Number: </mat-label>
-                <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber" digitsOnly type="text"
+                <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber" digitsOnly
+                  type="text"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
               </mat-form-field>
@@ -49,42 +57,53 @@
               </mat-form-field>
             </div>
             <div class="col-sm-12 spsTp bdrTp">
+              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()"
+                *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+              </button>
               <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">Clear Form</button>
-              <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i class="fa fa-search"
-                  aria-hidden="true"></i>&nbsp;Search</button>
+              <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i
+                  class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 ">
+              <span class="note1">
+                Note : Please select required filters above and click on search to get information
+              </span>
             </div>
-</div>
-</div>
+          </div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 <div class="main clearfix">
-        <!-- Table -->
-        <div class="tableSpc">
-          <div class="row">
-          <div class="col-sm-8">
-            <div class="txTit">
-              Potential Users Details:
-            </div>
-          </div>
-          <div class="col-sm-4">
-          <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
-          </div>
-          </div>
+  <!-- Table -->
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="txTit">
+          Potential Users Details:
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+      </div>
+    </div>
 
-          <table>
-            <tr *ngFor="let item of userInfo | paginate:config"></tr>
-          </table>
+    <table>
+      <tr *ngFor="let item of userInfo | paginate:config"></tr>
+    </table>
 
-          <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
-            (rowClicked)="onUsersRowClicked($event)">
-            <!--    paginationPageSize=15 pagination=true-->
-          </ag-grid-angular>
-
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
-         </div>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
+      (rowClicked)="onUsersRowClicked($event)">
+      <!--    paginationPageSize=15 pagination=true-->
+    </ag-grid-angular>
+    <div *ngIf="userInfoLength > 0">
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
 </div>
