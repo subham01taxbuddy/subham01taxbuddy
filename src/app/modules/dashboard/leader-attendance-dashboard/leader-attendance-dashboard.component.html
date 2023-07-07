@@ -181,7 +181,7 @@
               <td>{{ item.scheduleCallAssigned}}</td>
               <td [ngClass]="{ 'text-success': item.totalItrFiled }">{{ item.totalItrFiled }}</td>
               <td>{{ item.totalPaidRevenue }}</td>
-              <td>{{ item.totalCommissionEarned }}</td>
+              <td>{{ item.totalCommissionEarned | number:'1.2-2' }}</td>
               <!-- <td>{{'NA'}}</td> -->
             </tr>
             <tr>
@@ -189,7 +189,7 @@
               <td class="text-bold">Grand Total</td>
               <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
               <td class="text-success">{{ grandTotal?.totalPaidRevenue }}</td>
-              <td class="text-success">{{ grandTotal?.totalCommissionEarned }}</td>
+              <td class="text-success">{{ grandTotal?.totalCommissionEarned | number:'1.2-2' }}</td>
               <!-- <td>{{ 'NA' }}</td> -->
             </tr>
             <tr *ngIf="allDetails?.length === 0 || !allDetails" >
