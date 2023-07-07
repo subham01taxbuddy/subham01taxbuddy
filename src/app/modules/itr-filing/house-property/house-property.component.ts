@@ -573,11 +573,7 @@ export class HousePropertyComponent implements OnInit {
       ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
       : false;
 
-    if (this.EEStatus) {
-      this.EAStatus = false;
-    } else if (this.EAStatus) {
-      this.EEStatus = false;
-    }
+    this.EeEaValueChanges();
   }
 
   haveCoOwners() {
@@ -1135,7 +1131,8 @@ export class HousePropertyComponent implements OnInit {
       this.storedValue = 'onInit';
     }
 
-    if (this.storedValue === 'add' || this.storedValue === 'onInit') {
+    if (this.storedValue === 'add' || this.storedValue === 'onInit' || this.storedValue === 'edit') {
+
       // current value of interest amount
       const currentInterestValue = Number(
         (
@@ -1148,128 +1145,14 @@ export class HousePropertyComponent implements OnInit {
         currentInterestValue > 200000 &&
         this.ITR_JSON.houseProperties.length > 0
       ) {
-        let filteredArray = this.ITR_JSON.houseProperties?.filter(
-          (element) => this.storedIndex
-        );
 
-        if (filteredArray && filteredArray.length > 0) {
-          filteredArray?.forEach((element) => {
-            this.EEStatus = filteredArray?.some(
-              (element) => element?.isEligibleFor80EE === true
-            );
-            this.EAStatus = filteredArray?.some(
-              (element) => element?.isEligibleFor80EEA === true
-            );
-
-            if (this.EEStatus) {
-              this.EAStatus = false;
-            } else if (this.EAStatus) {
-              this.EEStatus = false;
+          this.ITR_JSON.houseProperties?.forEach((element, i) => {
+            if(i != this.storedIndex) {
+              this.EEStatus = !this.EEStatus ? element?.isEligibleFor80EE === true : true;
+              this.EAStatus = !this.EAStatus ? element?.isEligibleFor80EEA === true : true;
             }
           });
-        } else {
-          this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-            .isEligibleFor80EE
-            ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
-            : false;
-          this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-            ?.isEligibleFor80EEA
-            ? this.ITR_JSON.houseProperties[this.storedIndex]
-                ?.isEligibleFor80EEA
-            : false;
 
-          if (this.EEStatus) {
-            this.EAStatus = false;
-          } else if (this.EAStatus) {
-            this.EEStatus = false;
-          }
-        }
-      } else {
-        this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-          ?.isEligibleFor80EE
-          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
-          : false;
-        this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-          ?.isEligibleFor80EEA
-          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
-          : false;
-
-        if (this.EEStatus) {
-          this.EAStatus = false;
-        } else if (this.EAStatus) {
-          this.EEStatus = false;
-        }
-      }
-    } else if (this.storedValue === 'edit') {
-      // value in json
-      const interestValueJson =
-        this.ITR_JSON.houseProperties[this.storedIndex].loans[0].interestAmount;
-      // current value of interest amount
-      const currentInterestValue = Number(
-        (
-          (this.housePropertyForm.controls['loans'] as FormArray)
-            .controls[0] as FormGroup
-        ).controls['interestAmount'].value
-      );
-
-      if (interestValueJson !== currentInterestValue) {
-        if (
-          currentInterestValue > 200000 &&
-          this.ITR_JSON.houseProperties.length > 0
-        ) {
-          let filteredArray = this.ITR_JSON.houseProperties?.filter(
-            (element) => this.storedIndex
-          );
-
-          if (filteredArray && filteredArray.length > 0) {
-            filteredArray?.forEach((element) => {
-              this.EEStatus = filteredArray?.some(
-                (element) => element?.isEligibleFor80EE === true
-              );
-              this.EAStatus = filteredArray?.some(
-                (element) => element?.isEligibleFor80EEA === true
-              );
-
-              if (this.EEStatus) {
-                this.EAStatus = false;
-              } else if (this.EAStatus) {
-                this.EEStatus = false;
-              }
-            });
-          } else {
-            this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-              .isEligibleFor80EE
-              ? this.ITR_JSON.houseProperties[this.storedIndex]
-                  .isEligibleFor80EE
-              : false;
-            this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-              .isEligibleFor80EEA
-              ? this.ITR_JSON.houseProperties[this.storedIndex]
-                  .isEligibleFor80EEA
-              : false;
-
-            if (this.EEStatus) {
-              this.EAStatus = false;
-            } else if (this.EAStatus) {
-              this.EEStatus = false;
-            }
-          }
-        } else {
-          this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-            .isEligibleFor80EE
-            ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
-            : false;
-          this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-            .isEligibleFor80EEA
-            ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
-            : false;
-
-          if (this.EEStatus) {
-            this.EAStatus = false;
-          } else if (this.EAStatus) {
-            this.EEStatus = false;
-          }
-        }
       } else {
         this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
           .isEligibleFor80EE
@@ -1286,6 +1169,7 @@ export class HousePropertyComponent implements OnInit {
           this.EEStatus = false;
         }
       }
+
     } else {
       this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
         .isEligibleFor80EE

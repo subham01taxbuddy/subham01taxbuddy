@@ -296,20 +296,18 @@
                                     style="margin: 0"
                                     value=""
                                     class="right-mrgn"
-                                  *ngIf="EEStatus === false"
-
-                                    >Select</mat-radio-button
+                                    >None</mat-radio-button
                                   >
                                 </div>
                                 <br />
                                 <div
                                   class="customradiobtn bdr_btm"
-                                  *ngIf="EEStatus === false"
                                 >
                                   <mat-radio-button
                                     style="margin: 0"
                                     value="80EE"
                                     class="right-mrgn"
+                                    [disabled]="EEStatus"
                                     >Interest on loan taken for residential
                                     house property (80EE)</mat-radio-button
                                   >
@@ -320,7 +318,7 @@
                                     style="margin: 0"
                                     value="80EEA"
                                     class="right-mrgn"
-                                    *ngIf="EAStatus === false"
+                                    [disabled]="EAStatus"
                                     >Deduction in respect of interest on loan
                                     taken for certain house property
                                     (80EEA)</mat-radio-button
@@ -339,7 +337,7 @@
                                 name="Total interest amount"
                                 maxlength="14"
                                 (blur)="checkEligibility()"
-                                (change)="EeEaValueChanges(i)"
+                                (change)="EeEaValueChanges()"
                                 digitsOnly
                               />
                               <mat-error
