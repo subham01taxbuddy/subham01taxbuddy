@@ -224,9 +224,9 @@ export class AssignedNewUsersComponent implements OnInit {
               //     delete workingItr[key[0]];
               //   }
               // });
+              workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
               let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
-              workingItr.filingTeamMemberId = loggedInId;
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
               sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
