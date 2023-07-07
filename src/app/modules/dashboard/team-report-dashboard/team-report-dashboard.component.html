@@ -227,19 +227,19 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="radius1 grBk">
-          <span class="numTxSm grTx"> ₹ {{commissionData?.totalCommissionEarned || 'NA'}}</span><br>
+          <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span><br>
           <span class="TxSm">Total Commission Earned</span><br>
         </div>
         </div>
         <div class="col-sm-6">
           <div class="radius1 grBk">
-          <span class="numTxSm grTx">₹ {{commissionData?.receivedAmount || 'NA'}}</span><br>
+          <span class="numTxSm grTx">₹ {{(commissionData?.receivedAmount | number:'1.2-2') || 'NA'}}</span><br>
           <span class="TxSm">Paid</span><br>
         </div>
         </div>
         <div class="col-sm-6">
           <div class="radius1 OrgBk">
-          <span class="numTxSm OrgTx">₹ {{commissionData?.receivableAmount || 'NA'}}</span><br>
+          <span class="numTxSm OrgTx">₹ {{(commissionData?.receivableAmount | number:'1.2-2') || 'NA'}}</span><br>
           <span class="TxSm">Payable </span><br>
         </div>
         </div>
