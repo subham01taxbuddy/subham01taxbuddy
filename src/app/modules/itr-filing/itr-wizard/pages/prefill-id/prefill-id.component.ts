@@ -1907,10 +1907,7 @@ export class PrefillIdComponent implements OnInit {
                 }
               } else {
                 console.log(
-                  'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
-                  `ItrJSON[this.ITR_Type]${[
-                    this.ITR14_IncomeDeductions,
-                  ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+                  'ITRJSON => EXEMPT INCOME DETAILS => ITR1, this.uploadedJson[this.ITR_Type]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls'
                 );
               }
             }
@@ -1938,10 +1935,7 @@ export class PrefillIdComponent implements OnInit {
                 }
               } else {
                 console.log(
-                  'ITRJSON => Exempt Incomes => ITR4 =>',
-                  `ItrJSON[this.ITR_Type]${[
-                    this.ITR14_IncomeDeductions,
-                  ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+                  'ITRJSON => Exempt Incomes => ITR4 =>, this.uploadedJson[this.ITR_Type]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls);'
                 );
               }
             }
@@ -3666,10 +3660,7 @@ export class PrefillIdComponent implements OnInit {
               }
             } else {
               console.log(
-                'ITRJSON => EXEMPT INCOME DETAILS => ITR1',
-                `ItrJSON[this.ITR_Type]${[
-                  this.ITR14_IncomeDeductions,
-                ]}.ExemptIncAgriOthUs10.ExemptIncAgriOthUs10Dtls does not exist in JSON`
+                'ITRJSON => EXEMPT INCOME DETAILS => ITR2/3, this.uploadedJson[this.ITR_Type]?.ScheduleEI?.OthersInc?.OthersIncDtls'
               );
             }
 
