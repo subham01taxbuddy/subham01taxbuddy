@@ -1,0 +1,161 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="mrgArdTog">
+  <div class="rowClr">
+    <div class="surround">
+      <div class="row">
+        <div class="col-sm-8">
+          <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+            (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+        </div>
+        <div class="col-sm-4" style="margin-top: 12px;">
+          <button class="srch-btn" [disabled]="loading" (click)="search()"><i class="fa fa-search"
+              aria-hidden="true"></i>&nbsp;Search Partner</button>
+          <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+            Clear form
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main clearfix">
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-6">
+        <span class="txTit">Partner Name : {{adjustmentDetails?.name || ''}}</span>
+      </div>
+      <div class="col-sm-6">
+        <span class="txTit">Partner Mobile Number : {{adjustmentDetails?.mobileNumber || ''}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="radius1 grBk">
+          <span class="numTxSm grTx"> ₹ {{adjustmentDetails?.amtTobeAdjusted || 'NA'}}</span><br>
+          <span class="TxSm">Total Amount To Be Adjusted</span><br>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="radius1 OrgBk">
+          <span class="numTxSm OrgTx">₹ {{adjustmentDetails?.amtPending || 'NA'}}</span><br>
+          <span class="TxSm">Total Amount Pending</span><br>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 15px;">
+      <div class="align-items-center row">
+        <div class="col-sm-9">
+          <span class="txTit">Payout Adjustment Details: </span>
+        </div>
+      </div>
+    </div>
+    <!-- table -->
+
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="radiusTab1">
+          <div class="table-container">
+            <table class="table table-bordered">
+              <thead>
+                <tr style="text-align: center;">
+                  <th scope="col" style="width: 50px;">#</th>
+                  <th scope="col" style="width: 100px;">Amount</th>
+                  <th scope="col" style="width: 160px;">Date Time</th>
+                  <th scope="col">Reason</th>
+                </tr>
+              </thead>
+              <tbody style="text-align: center;">
+                <tr *ngFor="let item of adjustmentDetails?.adjustmentAdditions; let i = index">
+                  <td style="width: 50px;">{{ i+1 }}</td>
+                  <td style="width: 100px;">{{ item.adjustmentadditionAmount }}</td>
+                  <td style="width: 160px;">{{ item.adjustmentAdditionDateTime | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+                  <td>{{ item.additionReason }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <hr />
+    <div class="row" style="margin-top: 15px;">
+      <div class="align-items-center row">
+        <div class="col-sm-9">
+          <span class="txTit"> Adjustment History Details: </span>
+        </div>
+        <div class="col-sm-3">
+          <button class="tbd-btn  aprv" [disabled]="!showAdd" (click)="addAdjustment(template)"> Add Adjustment</button>
+          <!-- <span class="txblw">click to add new Adjustment Entry</span> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="radiusTab1">
+          <div class="table-container">
+            <table class="table table-bordered">
+              <thead>
+                <tr style="text-align: center;">
+                  <th scope="col" style="width: 50px;">#</th>
+                  <th scope="col" style="width: 90px;">Commission Adjusted</th>
+                  <th scope="col" style="width: 150px;">Date Time</th>
+                  <th scope="col" style="width: 150px;">Invoice Number</th>
+                  <th scope="col" style="width: 150px;">Invoice Date Time</th>
+                  <th scope="col">Adjustment Reason</th>
+                </tr>
+              </thead>
+              <tbody style="text-align: center;">
+                <tr *ngFor="let item of adjustmentDetails?.adjustmentHistory; let i = index">
+                  <td style="width: 50px;">{{ i+1 }}</td>
+                  <td style="width: 90px;">{{ item.commisionAdjusted }}</td>
+                  <td style="width: 150px;">{{ item.dateAdjusted | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+                  <td style="width: 150px;">{{ item.invoiceNo }}</td>
+                  <td style="width: 150px;">{{ item.invoiceDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
+                  <td>{{ item.adjustmentReason }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="row">
+    <h4 matDialogTitle > Adjust Commission for : {{ name }} &nbsp;
+
+      <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1">
+        <i class="fa fa-close"></i>
+      </button>
+
+    </h4>
+
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <mat-label> Amount Pending </mat-label>
+      <mat-form-field appearance="outline">
+        <input type="number" matInput placeholder="Enter Amount" [formControl]="amtPending" class="input-field" />
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-label> Reason </mat-label>
+      <mat-form-field appearance="outline">
+        <input type="text" matInput placeholder="Enter Reason" [formControl]="reason" class="input-field" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div style="text-align: center;  margin-top: 10px;">
+    <button class="tbd-btn" [disabled]="loading" (click)="saveAdjustment(amtPending.value,reason.value)">Save </button>
+  </div>
+</ng-template>
