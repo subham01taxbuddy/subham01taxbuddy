@@ -86,7 +86,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     } else {
       this.addMoreAssetsData();
     }
-    if (this.Copy_ITR_JSON.movableAsset && this.Copy_ITR_JSON.movableAsset.length > 0) {
+    if (
+      this.Copy_ITR_JSON.movableAsset &&
+      this.Copy_ITR_JSON.movableAsset.length > 0
+    ) {
       this.Copy_ITR_JSON.movableAsset.forEach((obj) => {
         this.createMovableAssetsForm(obj);
       });
@@ -132,15 +135,15 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
   createMovableAssetsForm(item?) {
     this.movableAssetsForm = this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      jwelleryAmount: [item ? item?.jwelleryAmount : null],
-      artWorkAmount: [item ? item.artWorkAmount : null],
-      vehicleAmount: [item ? item.vehicleAmount : null],
-      bankAmount: [item ? item.bankAmount : null],
-      shareAmount: [item ? item.shareAmount : null],
-      insuranceAmount: [item ? item.insuranceAmount : null],
-      loanAmount: [item ? item.loanAmount : null],
-      cashInHand: [item ? item.cashInHand : null],
-      assetLiability: [item ? item.assetLiability : null],
+      jwelleryAmount: [item ? item?.jwelleryAmount : 0],
+      artWorkAmount: [item ? item.artWorkAmount : 0],
+      vehicleAmount: [item ? item.vehicleAmount : 0],
+      bankAmount: [item ? item.bankAmount : 0],
+      shareAmount: [item ? item.shareAmount : 0],
+      insuranceAmount: [item ? item.insuranceAmount : 0],
+      loanAmount: [item ? item.loanAmount : 0],
+      cashInHand: [item ? item.cashInHand : 0],
+      assetLiability: [item ? item.assetLiability : 0],
     });
   }
 
@@ -254,7 +257,9 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
       this.Copy_ITR_JSON.movableAsset = [];
-      this.Copy_ITR_JSON.movableAsset.push(this.movableAssetsForm.getRawValue());
+      this.Copy_ITR_JSON.movableAsset.push(
+        this.movableAssetsForm.getRawValue()
+      );
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
