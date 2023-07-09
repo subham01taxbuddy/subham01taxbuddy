@@ -40,9 +40,7 @@
                 (dateChange)="
                   calculateGainType(i);
                   calMaxPurchaseDate(
-                    getOtherAssetsArray.get(
-                      'sellDate'
-                    )?.value,
+                    getOtherAssetsArray.get('sellDate')?.value,
                     this.OtherAsssetImprovementForm,
                     i
                   )
@@ -95,12 +93,14 @@
                 (blur)="calculateCg(fieldGlobalIndex(i))"
               />
 
-              <mat-error
+              <!-- <mat-error
                 *ngIf="
-                  getOtherAssetsArray.controls['purchaseCost'].hasError('pattern')
+                  getOtherAssetsArray.controls['purchaseCost'].hasError(
+                    'pattern'
+                  )
                 "
                 >Enter valid amount.</mat-error
-              >
+              > -->
             </mat-form-field>
           </div>
           <!-- sale-value  -->
@@ -119,12 +119,16 @@
                 (blur)="calculateCg(fieldGlobalIndex(i))"
               />
 
-              <mat-error
+              <!-- <mat-error
                 *ngIf="
-                  getOtherAssetsArray.controls['sellValue'].hasError('pattern')
+                  OtherAsssetImprovementForm.controls['otherAssets'].controls[
+                    i
+                  ].controls['otherAssetsArray'].controls['sellValue'].hasError(
+                    'pattern'
+                  )
                 "
                 >Enter valid amount.</mat-error
-              >
+              > -->
             </mat-form-field>
           </div>
           <!-- expenses  -->
@@ -142,12 +146,14 @@
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 (blur)="calculateCg(fieldGlobalIndex(i))"
               />
-              <mat-error
+              <!-- <mat-error
                 *ngIf="
-                  getOtherAssetsArray.controls['sellExpense'].hasError('pattern')
+                  getOtherAssetsArray.controls['sellExpense'].hasError(
+                    'pattern'
+                  )
                 "
                 >Enter valid amount.</mat-error
-              >
+              > -->
             </mat-form-field>
           </div>
           <!-- type-of-gain  -->
