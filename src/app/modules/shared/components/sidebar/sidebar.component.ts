@@ -145,7 +145,8 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         {name:'Payouts',url:'/payouts',roles:[]},
-        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN', 'ROLE_LEADER']}
+        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN', 'ROLE_LEADER']},
+        {name:'Payout Adjustment',url:'/payouts/payouts-adjustments',roles:['ROLE_ADMIN', 'ROLE_LEADER']},
       ]
     },
     {
