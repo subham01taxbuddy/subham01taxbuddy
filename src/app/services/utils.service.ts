@@ -62,6 +62,24 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      //movableAsset
+      if (
+        key === 'movableAsset' &&
+        Array.isArray(obj[key]) &&
+        obj[key]?.length > 0
+      ) {
+        obj[key] = obj[key]?.map((item) => {
+          // Filter out null or undefined keys from each object
+          return Object.entries(item).reduce((acc, [k, v]) => {
+            if (v !== null && v !== undefined) {
+              acc[k] = v;
+            }
+            return acc;
+          }, {});
+        });
+        obj[key] = Object.keys(obj[key][0]).length === 0 ? [] : obj[key];
+        console.log(obj[key]);
+      }
       //profitLossAC
       if (
         key === 'profitLossACIncomes' &&
@@ -270,23 +288,6 @@ export class UtilsService {
         }
       }
 
-      if (
-        key === 'movableAsset' &&
-        Array.isArray(obj[key]) &&
-        obj[key]?.length > 0
-      ) {
-        obj[key] = obj[key]?.map((item) => {
-          // Filter out null or undefined keys from each object
-          return Object.entries(item).reduce((acc, [k, v]) => {
-            if (v !== null && v !== undefined && v !== 0) {
-              acc[k] = v;
-            }
-            return acc;
-          }, {});
-        });
-        console.log(obj[key]);
-      }
-      
       //for All Others
       if (obj[key] === null) {
         delete obj[key];

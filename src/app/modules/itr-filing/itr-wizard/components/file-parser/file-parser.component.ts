@@ -1,7 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {
-  ITR_JSON,
-} from '../../../../shared/interfaces/itr-input.interface';
+import { ITR_JSON } from '../../../../shared/interfaces/itr-input.interface';
 import { AppConstants } from '../../../../shared/constants';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
 import { UtilsService } from '../../../../../services/utils.service';
@@ -21,7 +19,7 @@ export class FileParserComponent implements OnInit {
   uploadDoc: any;
   loading = false;
   brokerData;
-  selectedFileId:any;
+  selectedFileId: any;
 
   constructor(
     private itrService: ItrMsService,
@@ -42,72 +40,87 @@ export class FileParserComponent implements OnInit {
         label: '5 Paisa',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download 5 Paisa.pdf',
       },
       {
         name: 'IIFL',
         label: 'IIFL',
         loading: false,
         filesUploaded: [],
+        steps: '',
       },
       {
         name: 'Angel',
         label: 'Angel One',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download Angel One.pdf',
       },
       {
         name: 'Paytm',
         label: 'PayTm',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download PayTM.pdf',
       },
       {
         name: 'Axis',
         label: 'Axis Broker',
         loading: false,
         filesUploaded: [],
+        steps: '',
       },
       {
         name: 'Upstox',
         label: 'Upstox',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download upstox statement.pdf',
       },
       {
         name: 'Groww',
         label: 'Groww',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download Groww statement.pdf',
       },
       {
         name: 'Zerodha',
         label: 'Zerodha',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download Zerodha statement.pdf',
       },
       {
         name: 'ICICI',
         label: 'ICICI Bank',
         loading: false,
         filesUploaded: [],
+        steps: './assets/files/Steps to download ICICI Statement.pdf',
       },
       {
         name: 'Jainam',
         label: 'Jainam',
         loading: false,
         filesUploaded: [],
+        steps: '',
       },
       {
         name: 'Taxbuddy',
         label: 'TaxBuddy',
         loading: false,
         filesUploaded: [],
+        steps: '',
       },
     ];
   }
 
-  downloadTemplate(){
+  downloadTemplate() {
     window.open('./assets/files/TaxBuddy Cg Template.xlsx');
+  }
+
+  steps(file) {
+    window.open(file);
   }
 
   uploadFile(event: Event) {
@@ -119,7 +132,7 @@ export class FileParserComponent implements OnInit {
     }
   }
 
-  cloudUpload(brokerName){
+  cloudUpload(brokerName) {
     this.brokerName = brokerName;
     this.openDialog();
   }
@@ -129,15 +142,17 @@ export class FileParserComponent implements OnInit {
     let data = this.ITR_JSON.capitalGain.filter(
       (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
     );
-    if(data && data.length > 0) {
-      this.utilService.showSnackBar('Uploading a new statement will erase the updates made to saved shares data.');
+    if (data && data.length > 0) {
+      this.utilService.showSnackBar(
+        'Uploading a new statement will erase the updates made to saved shares data.'
+      );
     }
 
     this.brokerName = brokerName;
     document.getElementById('input-file-id').click();
   }
 
-  openDialog(){
+  openDialog() {
     const dialogRef = this.dialog.open(ViewDocumentsDialogComponent, {
       data: {
         userId: this.ITR_JSON.userId.toString(),
@@ -149,12 +164,12 @@ export class FileParserComponent implements OnInit {
     dialogRef.afterClosed().subscribe((selectedFileId: any) => {
       if (selectedFileId) {
         console.log(selectedFileId);
-        this.uploadDocument('',selectedFileId)
+        this.uploadDocument('', selectedFileId);
       }
     });
   }
 
-  uploadDocument(document,id?) {
+  uploadDocument(document, id?) {
     // 'https://uat-api.taxbuddy.com/itr/upload-excel'
     this.loading = true;
     let brokerIndex = (this.brokerData as []).findIndex(
@@ -162,10 +177,10 @@ export class FileParserComponent implements OnInit {
     );
     this.brokerData[brokerIndex].loading = true;
     const formData = new FormData();
-    if(document){
+    if (document) {
       formData.append('file', document);
-    }else{
-      formData.append('cloudFileId',id)
+    } else {
+      formData.append('cloudFileId', id);
     }
 
     let annualYear = this.ITR_JSON.assessmentYear;
@@ -188,9 +203,9 @@ export class FileParserComponent implements OnInit {
             let selectedBroker = this.brokerData.filter(
               (broker) => broker.name === this.brokerName
             )[0];
-            if(this.uploadDoc){
+            if (this.uploadDoc) {
               selectedBroker.filesUploaded.push(this.uploadDoc.name);
-            }else{
+            } else {
               selectedBroker.filesUploaded.push(res.data.documentName);
             }
 

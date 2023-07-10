@@ -66,6 +66,36 @@ export class ItrMsService {
     // .map(response => response.json())
   }
 
+  getAdjustmentDetails<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    return this.httpClient.get<T>(environment.get_adjustment + param[0],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
+  postAdjustmentDetails<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+
+    return this.httpClient.post<T>(
+      environment.add_adjustment + param[0],param[1],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
+  putLambdaForUpdateId<T>(...param): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    return this.httpClient.put<T>(
+      environment.update_id + param[0],param[1],{ headers: this.headers });
+    // .map(response => response.json())
+  }
+
   postMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
