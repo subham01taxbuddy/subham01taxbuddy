@@ -260,7 +260,7 @@ export class FileParserComponent implements OnInit {
           } else {
             this.brokerData[brokerIndex].loading = false;
             this.utilService.showSnackBar(
-              'Response is null, try after some time.'
+              res.message
             );
           }
         }
