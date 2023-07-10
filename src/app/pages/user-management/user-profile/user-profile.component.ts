@@ -427,6 +427,7 @@ export class UserProfileComponent implements OnInit {
         this.userProfileForm.controls['mName'].setValue(result.middleName ? result.middleName : '');
         this.userProfileForm.controls['lName'].setValue(result.lastName ? result.lastName : '');
         this.userProfileForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
+        this.userProfileForm.controls['dateOfBirth'].setValue(result.dateOfBirth ?result.dateOfBirth: '')
       },
         error => {
           console.log('Error during fetching data using PAN number: ', error)
