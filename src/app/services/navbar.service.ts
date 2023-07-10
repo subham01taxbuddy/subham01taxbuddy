@@ -113,7 +113,7 @@ export class NavbarService {
 	}
 
 	getUserSearchList(key:string, searchValue:any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/report/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
 	}
 
 	getDeleteUserList(dynamicUrl) {

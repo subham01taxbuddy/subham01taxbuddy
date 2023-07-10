@@ -1478,7 +1478,7 @@ export class UtilsService {
   getUserDetailsByMobile(loggedInSmeId, mobile) {
     //https://uat-api.taxbuddy.com/user/search/userprofile/query?mobileNumber=3210000078
     const param = `/search/userprofile/query?mobileNumber=${mobile}`;
-    return this.userMsService.getMethod(param);
+    return this.userMsService.getMethodNew(param);
   }
 
   getCgSummary(userId, assessmentYear) {

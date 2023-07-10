@@ -642,7 +642,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
-    this.userService.getMethod(param).subscribe(
+    this.userService.getMethodNew(param).subscribe(
       (res: any) => {
         console.log('Get user info by userId: ', res);
         if (res && res.records instanceof Array) {
