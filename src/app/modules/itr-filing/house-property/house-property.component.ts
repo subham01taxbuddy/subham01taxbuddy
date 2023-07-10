@@ -247,7 +247,7 @@ export class HousePropertyComponent implements OnInit {
         ],
         rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-        isEligibleFor80EE: [''],
+        isEligibleFor80EE: [null],
         // isEligibleFor80EEA: [false],
         loans: this.fb.array([
           this.fb.group({

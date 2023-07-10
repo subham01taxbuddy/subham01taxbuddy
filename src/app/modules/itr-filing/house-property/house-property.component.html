@@ -285,12 +285,13 @@
                               style="padding-top: 20px"
                             >
                               <mat-radio-group
-                                formControlName="isEligibleFor80EE"
+                                [formControl]="housePropertyForm.get('isEligibleFor80EE') | formControlType"
+                                (change)="EeEaValueChanges()"
                               >
                                 <div class="customradiobtn bdr_btm">
                                   <mat-radio-button
                                     style="margin: 0"
-                                    value=""
+                                    [value]="''"
                                     class="right-mrgn"
                                     >None</mat-radio-button
                                   >
@@ -301,7 +302,7 @@
                                 >
                                   <mat-radio-button
                                     style="margin: 0"
-                                    value="80EE"
+                                    [value]="'80EE'"
                                     class="right-mrgn"
                                     [disabled]="EEStatus"
                                     >Interest on loan taken for residential
@@ -312,7 +313,7 @@
                                 <div class="customradiobtn">
                                   <mat-radio-button
                                     style="margin: 0"
-                                    value="80EEA"
+                                    [value]="'80EEA'"
                                     class="right-mrgn"
                                     [disabled]="EAStatus"
                                     >Deduction in respect of interest on loan
