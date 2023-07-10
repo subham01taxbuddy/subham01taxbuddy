@@ -23,7 +23,7 @@
   <div class="tableSpc">
     <div class="row">
       <div class="col-sm-6">
-        <span class="txTit">Partner Name : {{adjustmentDetails?.name || ''}}</span>
+        <span class="txTit">Partner Name : {{adjustmentDetails?.name || partnerName || ''}}</span>
       </div>
       <div class="col-sm-6">
         <span class="txTit">Partner Mobile Number : {{adjustmentDetails?.mobileNumber || ''}}</span>
@@ -47,6 +47,10 @@
       <div class="align-items-center row">
         <div class="col-sm-9">
           <span class="txTit">Payout Adjustment Details: </span>
+        </div>
+        <div class="col-sm-3">
+          <button class="tbd-btn  aprv"  (click)="addAdjustment(template)"> Add Adjustment</button>
+          <!-- <span class="txblw">click to add new Adjustment Entry</span> -->
         </div>
       </div>
     </div>
@@ -73,6 +77,10 @@
                   <td style="width: 160px;">{{ item.adjustmentAdditionDateTime | date:'d/M/yy,  h:mm a':'UTC' }}</td>
                   <td>{{ item.additionReason }}</td>
                 </tr>
+                <tr *ngIf="adjustmentDetails?.adjustmentAdditions" style="text-align: center; font-weight: bold;">
+                  <td colspan="1" >Total:</td>
+                  <td>{{ calculateAdditionTotal() }}</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -87,10 +95,7 @@
         <div class="col-sm-9">
           <span class="txTit"> Adjustment History Details: </span>
         </div>
-        <div class="col-sm-3">
-          <button class="tbd-btn  aprv" [disabled]="!showAdd" (click)="addAdjustment(template)"> Add Adjustment</button>
-          <!-- <span class="txblw">click to add new Adjustment Entry</span> -->
-        </div>
+
       </div>
     </div>
 
@@ -101,12 +106,12 @@
             <table class="table table-bordered">
               <thead>
                 <tr style="text-align: center;">
-                  <th scope="col" style="width: 50px;">#</th>
-                  <th scope="col" style="width: 90px;">Commission Adjusted</th>
-                  <th scope="col" style="width: 150px;">Date Time</th>
-                  <th scope="col" style="width: 150px;">Invoice Number</th>
-                  <th scope="col" style="width: 150px;">Invoice Date Time</th>
-                  <th scope="col">Adjustment Reason</th>
+                  <th scope="col" >#</th>
+                  <th scope="col" >Amount Adjusted</th>
+                  <th scope="col" >Date Time</th>
+                  <th scope="col" >Invoice Number</th>
+                  <th scope="col" >Invoice Date Time</th>
+                  <!-- <th scope="col">Adjustment Reason</th> -->
                 </tr>
               </thead>
               <tbody style="text-align: center;">
@@ -116,7 +121,11 @@
                   <td style="width: 150px;">{{ item.dateAdjusted | date:'d/M/yy,  h:mm a':'UTC' }}</td>
                   <td style="width: 150px;">{{ item.invoiceNo }}</td>
                   <td style="width: 150px;">{{ item.invoiceDate | date:'d/M/yy,  h:mm a':'UTC' }}</td>
-                  <td>{{ item.adjustmentReason }}</td>
+                  <!-- <td>{{ item.adjustmentReason }}</td> -->
+                </tr>
+                <tr *ngIf="adjustmentDetails?.adjustmentHistory" style="text-align: center; font-weight: bold;">
+                  <td colspan="1" >Total:</td>
+                  <td>{{ calculateTotal() }}</td>
                 </tr>
               </tbody>
             </table>
@@ -132,7 +141,7 @@
 
 <ng-template #template>
   <div class="row">
-    <h4 matDialogTitle > Adjust Commission for : {{ name }} &nbsp;
+    <h4 matDialogTitle > Adjust Commission for : {{ partnerName}} &nbsp;
 
       <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1">
         <i class="fa fa-close"></i>
