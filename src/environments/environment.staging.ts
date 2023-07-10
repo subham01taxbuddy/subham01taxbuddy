@@ -15,7 +15,7 @@ export const environment = {
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "qa",
-	idleTimeMins: 5,
+	idleTimeMins: 30,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
 	upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
 	check_upload: 'https://rskq6saw7ymmdgm3cloc4dcenm0ywqix.lambda-url.ap-south-1.on.aws/',
