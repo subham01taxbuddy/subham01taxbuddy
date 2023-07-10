@@ -177,7 +177,7 @@ export class UpdateStatusComponent implements OnInit, AfterContentChecked {
   ]
 
   constructor(private userMsService: UserMsService,
-     public utilsService: UtilsService, 
+     public utilsService: UtilsService,
      private route: Router, private dialog: MatDialog,
     private _toastMessageService: ToastMessageService,
      private router: Router) {
@@ -303,7 +303,7 @@ export class UpdateStatusComponent implements OnInit, AfterContentChecked {
   userName: any;
   getUserName(){
     let param = `/search/userprofile/query?userId=${this.userId}`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('User data: ', result);
       if (Array.isArray(result.records)) {
         var userInfo = result.records;
