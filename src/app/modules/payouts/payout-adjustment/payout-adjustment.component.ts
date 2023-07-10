@@ -101,6 +101,8 @@ export class PayoutAdjustmentComponent implements OnInit {
       this.dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           if (result.data === 'added') {
+            this.reason.setValue(null);
+            this.amtPending.setValue(null);
             this.search();
           }
         }
