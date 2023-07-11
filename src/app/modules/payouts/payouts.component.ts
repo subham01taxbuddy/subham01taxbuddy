@@ -16,6 +16,7 @@ import {environment} from "../../../environments/environment";
 import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
 import {capitalize} from "lodash";
 import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 
 @Component({
   selector: 'app-payouts',
@@ -60,6 +61,7 @@ export class PayoutsComponent implements OnInit {
   dialogRef: any;
   roles:any;
   dataOnLoad = true;
+  showCsvMessage: boolean;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -69,6 +71,7 @@ export class PayoutsComponent implements OnInit {
               private dialog: MatDialog,
               private itrMsService: ItrMsService,
               private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+              private genericCsvService: GenericCsvService,
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
@@ -791,6 +794,30 @@ export class PayoutsComponent implements OnInit {
       }
     })
 
+  }
+
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+
+    let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+    let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+
+    let userFilter = ''
+    if (this.filerId) {
+      userFilter = `&filerUserId=${this.filerId}`;
+    }
+    if (this.ownerId) {
+      userFilter = `&ownerUserId=${this.ownerId}`;
+    }
+
+
+
+    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11${statusFilter}${payOutStatusFilter}${userFilter}`;
+
+    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'payout-report','');
+    this.loading = false;
+    this.showCsvMessage = false;
   }
 
   resetFilters(){
