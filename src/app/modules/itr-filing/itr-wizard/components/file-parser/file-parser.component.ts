@@ -128,8 +128,9 @@ export class FileParserComponent implements OnInit {
     console.log('File', file);
     if (file.length > 0) {
       // this.uploadDoc = file.item(0);
-      let allowedFormats = ['.xls', '.xlsx'];
+      let allowedFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
       let selectedFormat = file.item(0)?.type;
+      console.log('file extension after selectedFormat',selectedFormat)
       if (allowedFormats.includes(selectedFormat)) {
         this.uploadDoc = file.item(0);
         this.uploadDocument(this.uploadDoc);
@@ -169,27 +170,13 @@ export class FileParserComponent implements OnInit {
       width: '95%',
     });
 
-    dialogRef.afterClosed().subscribe((data) => {
-      let fileName = data?.fileName;
-      let allowedFormats = ['.xls', '.xlsx'];
-      let fileExtension = fileName.split('.').pop();
-
-      if (allowedFormats.includes(fileExtension)) {
-        if (data?.selectedFileId) {
-          console.log(data?.selectedFileId);
-          this.uploadDocument('', data?.selectedFileId);
-        }else{
-          this.utilService.showSnackBar('Invalid file, No File Id found');
-        }
-      } else {
-        this.utilService.showSnackBar(
-          'Invalid file format. Only XLS and XLSX files are allowed.'
-        );
+    dialogRef.afterClosed().subscribe((selectedFileId: any) => {
+      if (selectedFileId) {
+        console.log('File Id for upload',selectedFileId);
+        this.uploadDocument('', selectedFileId);
+      }else{
+        this.utilService.showSnackBar('Invalid file, No File Id found');
       }
-      // if (data.selectedFileId) {
-      //   console.log(data.selectedFileId);
-      //   this.uploadDocument('', data.selectedFileId);
-      // }
     });
   }
 

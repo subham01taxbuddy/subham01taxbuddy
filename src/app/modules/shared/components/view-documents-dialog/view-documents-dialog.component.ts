@@ -216,7 +216,17 @@ export class ViewDocumentsDialogComponent implements OnInit {
   selectFile(file: any) {
     this.selectedFile = file;
     console.log('selected file',this.selectedFile)
-    this.dialogRef.close(this.selectedFile);
+    let fileName = this.selectedFile?.fileName;
+    let allowedFormats = ['xls', 'xlsx'];
+    let fileExtension = fileName.split('.').pop();
+    console.log('file extension after select ',fileExtension)
+    if (allowedFormats.includes(fileExtension)) {
+      this.dialogRef.close(this.selectedFile?.cloudFileId);
+      } else {
+        this.utilsService.showSnackBar(
+          'Invalid file format. Only XLS and XLSX files are allowed.'
+        );
+      }
   }
 
   isFileSelected(file: any) {
