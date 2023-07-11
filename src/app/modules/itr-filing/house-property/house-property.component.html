@@ -354,6 +354,16 @@
                                 Interest amount should be 1
                               </mat-error>
                             </mat-form-field>
+                            <mat-label
+                              *ngIf="
+                                coOwn
+                                  .get('interestAmount')
+                                  .hasError('maxValueExceeded')
+                              "
+                            >
+                              &nbsp;&nbsp;&nbsp; Interest cannot be more than
+                              Rs. 2,00,000 for category self-occupied.
+                            </mat-label>
                           </td>
                         </tr>
                       </ng-container>
