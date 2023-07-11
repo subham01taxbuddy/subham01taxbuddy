@@ -804,14 +804,12 @@ export class PayoutsComponent implements OnInit {
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
 
     let userFilter = ''
+    if (this.ownerId && !this.filerId) {
+      userFilter = `&ownerUserId=${this.ownerId}`;
+    }
     if (this.filerId) {
       userFilter = `&filerUserId=${this.filerId}`;
     }
-    if (this.ownerId) {
-      userFilter = `&ownerUserId=${this.ownerId}`;
-    }
-
-
 
     const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11${statusFilter}${payOutStatusFilter}${userFilter}`;
 
