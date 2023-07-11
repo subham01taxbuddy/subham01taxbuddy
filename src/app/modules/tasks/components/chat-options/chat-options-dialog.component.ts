@@ -49,7 +49,8 @@ export class ChatOptionsDialogComponent implements OnInit {
       (response: any) => {
         this.loading = false;
         if (response.success) {
-          this.kommChatLink = response.data.chatLink;
+          this.kommChatLink = response.data?.chatLink;
+          this.waChatLink= response.data?.whatsAppChatLink
         } else {
           // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
         }
