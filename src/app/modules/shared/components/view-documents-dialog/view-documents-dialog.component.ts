@@ -216,7 +216,7 @@ export class ViewDocumentsDialogComponent implements OnInit {
   selectFile(file: any) {
     this.selectedFile = file;
     console.log('selected file',this.selectedFile)
-    this.dialogRef.close(this.selectedFile?.cloudFileId);
+    this.dialogRef.close(this.selectedFile);
   }
 
   isFileSelected(file: any) {

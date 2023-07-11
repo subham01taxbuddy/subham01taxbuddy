@@ -169,11 +169,27 @@ export class FileParserComponent implements OnInit {
       width: '95%',
     });
 
-    dialogRef.afterClosed().subscribe((selectedFileId: any) => {
-      if (selectedFileId) {
-        console.log(selectedFileId);
-        this.uploadDocument('', selectedFileId);
+    dialogRef.afterClosed().subscribe((data) => {
+      let fileName = data?.fileName;
+      let allowedFormats = ['.xls', '.xlsx'];
+      let fileExtension = fileName.split('.').pop();
+
+      if (allowedFormats.includes(fileExtension)) {
+        if (data?.selectedFileId) {
+          console.log(data?.selectedFileId);
+          this.uploadDocument('', data?.selectedFileId);
+        }else{
+          this.utilService.showSnackBar('Invalid file, No File Id found');
+        }
+      } else {
+        this.utilService.showSnackBar(
+          'Invalid file format. Only XLS and XLSX files are allowed.'
+        );
       }
+      // if (data.selectedFileId) {
+      //   console.log(data.selectedFileId);
+      //   this.uploadDocument('', data.selectedFileId);
+      // }
     });
   }
 
