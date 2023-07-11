@@ -118,11 +118,11 @@ export class AppComponent {
               }).catch(error => {
                 console.log("error", error.code);
                 if (error.code === 'messaging/permission-blocked') {
-                  alert("Yay!!!");
+                  // alert("Yay!!!");
                 }
               })
             } else {
-              alert("Click the icon to the left of address bar and enable notifications.")
+              // alert("Click the icon to the left of address bar and enable notifications.")
             }
           })
         })
