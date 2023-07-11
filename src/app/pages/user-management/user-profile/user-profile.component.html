@@ -282,7 +282,7 @@
                                     <td>{{add.area}}</td>
                                     <td>{{add.pinCode}}</td>
                                     <td>{{add.country === "91" ? 'INDIA' : add.country}}</td>
-                                    <td>{{this.getStateName(add.state)}}</td>
+                                    <td>{{this.getStateName(add?.state) || add?.state }}</td>
                                     <td>{{add.city}}</td>
                                     <td>
                                         <button

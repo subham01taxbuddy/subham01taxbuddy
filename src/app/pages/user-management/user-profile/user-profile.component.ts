@@ -519,7 +519,7 @@ export class UserProfileComponent implements OnInit {
 
       console.log('this.userProfileForm -> ', this.userProfileForm.value)
       if (this.userProfileForm.value.address.length !== 0) {
-        this.addressData = this.userProfileForm.value.address;
+        this.addressData = this.userProfileForm.value?.address;
       }
       else {
         this.addressData = [];
@@ -582,7 +582,7 @@ export class UserProfileComponent implements OnInit {
 
   getStateName(stateCode: any) {
     if (stateCode !== null && stateCode !== undefined && stateCode !== '') {
-      let stateName = this.state_list.filter((item: any) => item.stateCode === stateCode)[0].stateName;
+      let stateName = this.state_list.filter((item: any) => item.stateCode === stateCode)[0]?.stateName;
       return stateName;
     }
     return 'NA'
