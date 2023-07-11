@@ -375,6 +375,29 @@ export class BoPartnersComponent implements OnInit {
         },
       },
       {
+        headerName: 'Update',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 100,
+        pinned: 'right',
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+        style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+        <i class="fa fa-info-circle" data-action-type="updateInfo"></i>
+         </button>`;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
         headerName: 'Action',
         editable: false,
         suppressMenu: true,
@@ -497,6 +520,10 @@ export class BoPartnersComponent implements OnInit {
         }
         case 'sendEmail': {
           this.sendEmail(params.data);
+          break;
+        }
+        case 'updateInfo': {
+          this.updateInfo(params.data);
           break;
         }
       }
@@ -627,6 +654,29 @@ export class BoPartnersComponent implements OnInit {
           this.getBoPartners();
         }
       }
+    });
+  }
+
+  updateInfo(partnerData){
+    let disposable = this.dialog.open(UpdateStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        id: partnerData.id,
+        partnerName: partnerData.name,
+        emailAddress: partnerData.emailAddress,
+        mobileNumber: partnerData.mobileNumber,
+        mode: 'Update Information',
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('updateInfo data:', result);
+      // if (result) {
+      //   if (result.data === 'statusChanged') {
+      //     // this.getBoPartners();
+      //     this.getBoPartners();
+      //   }
+      // }
     });
   }
 
