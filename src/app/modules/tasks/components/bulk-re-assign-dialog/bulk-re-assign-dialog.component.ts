@@ -61,7 +61,7 @@ export class BulkReAssignDialogComponent implements OnInit {
   fromSme1(event, isOwner) {
     if(isOwner){
       this.ownerId1 = event? event.userId : null;
-     console.log('ownerID1=',this.ownerId1 )
+      console.log('ownerID1=',this.ownerId1 )
 
    } else {
      this.filerId1 = event? event.userId : null;
@@ -79,6 +79,7 @@ export class BulkReAssignDialogComponent implements OnInit {
     console.log('sme-drop-down 222', event, isOwner);
     if(isOwner){
       this.ownerId2 = event? event.userId : null;
+      this.filerId2 = event? event.userId : null;
       if(this.ownerId1 != this.ownerId2){
         // this.serviceType.setValue('ALL');
         this.isServiceType=false;

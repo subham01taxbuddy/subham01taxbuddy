@@ -48,7 +48,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <div class="col-sm-6" *ngIf="!checkboxSelection">
+    <div class="col-sm-6" *ngIf="!checkboxSelection && showFilerList">
       <mat-label> Search By Filer </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input
@@ -68,7 +68,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <div class="col-sm-6" *ngIf="checkboxSelection">
+    <div class="col-sm-6" *ngIf="checkboxSelection && showFilerList">
       <mat-label> Search By Filter </mat-label>
       <mat-form-field appearance="outline">
         <mat-select [formControl]="searchFiler" multiple>
