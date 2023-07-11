@@ -127,8 +127,16 @@ export class FileParserComponent implements OnInit {
     let file = (event.target as HTMLInputElement).files;
     console.log('File', file);
     if (file.length > 0) {
-      this.uploadDoc = file.item(0);
-      this.uploadDocument(this.uploadDoc);
+      // this.uploadDoc = file.item(0);
+      let allowedFormats = ['.xls', '.xlsx'];
+      let selectedFormat = file.item(0)?.type;
+      if (allowedFormats.includes(selectedFormat)) {
+        this.uploadDoc = file.item(0);
+        this.uploadDocument(this.uploadDoc);
+      }else{
+        this.utilService.showSnackBar('Invalid file format. Only XLS and XLSX files are allowed.');
+      }
+      // this.uploadDocument(this.uploadDoc);
     }
   }
 
