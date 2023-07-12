@@ -259,9 +259,9 @@
                               />
                               <mat-error
                                 *ngIf="
-                                  coOwn.get('principalAmount').hasError(
-                                    'pattern'
-                                  )
+                                  coOwn
+                                    .get('principalAmount')
+                                    .hasError('pattern')
                                 "
                               >
                                 Enter positive number without
@@ -278,14 +278,14 @@
 
                             <!-- 80ee&80eea  -->
                             <div
-                              *ngIf="
-                                coOwn
-                                  .get('interestAmount').value > 200000
-                              "
+                              *ngIf="coOwn.get('interestAmount').value > 200000"
                               style="padding-top: 20px"
                             >
                               <mat-radio-group
-                                [formControl]="housePropertyForm.get('isEligibleFor80EE') | formControlType"
+                                [formControl]="
+                                  housePropertyForm.get('isEligibleFor80EE')
+                                    | formControlType
+                                "
                                 (change)="EeEaValueChanges()"
                               >
                                 <div class="customradiobtn bdr_btm">
@@ -297,9 +297,7 @@
                                   >
                                 </div>
                                 <br />
-                                <div
-                                  class="customradiobtn bdr_btm"
-                                >
+                                <div class="customradiobtn bdr_btm">
                                   <mat-radio-button
                                     style="margin: 0"
                                     [value]="'80EE'"
@@ -339,9 +337,9 @@
                               />
                               <mat-error
                                 *ngIf="
-                                  coOwn.get('interestAmount').hasError(
-                                    'pattern'
-                                  )
+                                  coOwn
+                                    .get('interestAmount')
+                                    .hasError('pattern')
                                 "
                               >
                                 Enter positive number without decimal.
@@ -362,7 +360,7 @@
                               "
                             >
                               &nbsp;&nbsp;&nbsp; Interest cannot be more than
-                              Rs. 2,00,000 for category self-occupied.
+                              Rs. 2,00,000 for category two self-occupied.
                             </mat-label>
                           </td>
                         </tr>
@@ -1074,9 +1072,7 @@
                               trim
                             />
                             <mat-error
-                              *ngIf="
-                                coOwn.get('name').hasError('pattern')
-                              "
+                              *ngIf="coOwn.get('name').hasError('pattern')"
                             >
                               Enter valid name.</mat-error
                             >
@@ -1111,9 +1107,7 @@
                               matTooltipClass="error-tooltip"
                             />
                             <mat-error
-                              *ngIf="
-                                coOwn.get('panNumber').hasError('pattern')
-                              "
+                              *ngIf="coOwn.get('panNumber').hasError('pattern')"
                             >
                               Enter valid PAN.</mat-error
                             >
@@ -1390,11 +1384,7 @@
                           type="text"
                           trim
                         />
-                        <mat-error
-                          *ngIf="
-                            ten.get('name').hasError('required')
-                          "
-                        >
+                        <mat-error *ngIf="ten.get('name').hasError('required')">
                           Enter tenant name.</mat-error
                         >
                       </mat-form-field>
@@ -1427,9 +1417,7 @@
                           matTooltipClass="error-tooltip"
                         />
                         <mat-error
-                          *ngIf="
-                            ten.get('panNumber').hasError('pattern')
-                          "
+                          *ngIf="ten.get('panNumber').hasError('pattern')"
                         >
                           Enter valid PAN.</mat-error
                         >

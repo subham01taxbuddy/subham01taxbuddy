@@ -1,4 +1,4 @@
-import { result } from 'lodash';
+import { filter, result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -1144,6 +1144,7 @@ export class HousePropertyComponent implements OnInit {
         ).controls['interestAmount'].value
       );
 
+      // interest form control
       const interestAmountControl = (
         (this.housePropertyForm.controls['loans'] as FormArray)
           .controls[0] as FormGroup
@@ -1155,45 +1156,32 @@ export class HousePropertyComponent implements OnInit {
         (element) => element.propertyType === 'SOP'
       );
 
-      filteredSop.forEach((element, i) => {
-        interestTotal += element.loans[0]?.interestAmount;
-        console.log(interestTotal);
-        if (i !== this.storedIndex) {
-          if (
-            this.ITR_JSON.houseProperties.length > 0 &&
-            interestTotal + currentInterestValue > 200000
-          ) {
-            interestAmountControl.setValidators(Validators.max(200000));
-            interestAmountControl.updateValueAndValidity();
-            interestAmountControl.setErrors({ maxValueExceeded: true });
-          }
+      let filteredArray = filteredSop?.filter(
+        (element, i) => i !== this.storedIndex && element.propertyType === 'SOP'
+      );
+      
+      if (filteredSop && filteredSop.length > 0) {
+        if (filteredArray && filteredArray.length > 0) {
+          filteredArray?.forEach((element) => {
+            interestTotal += element.loans[0]?.interestAmount;
+            console.log(interestTotal);
+          });
         } else {
-          let filteredArray = this.ITR_JSON.houseProperties.filter(
-            (element, i) =>
-              i !== this.storedIndex && element.propertyType === 'SOP'
-          );
-
-          if (filteredArray && filteredArray.length > 0) {
-            filteredArray?.forEach((element) => {
-              interestTotal += element.loans[0]?.interestAmount;
-              console.log(interestTotal);
-            });
-          } else {
-            interestTotal = 0;
-          }
-
-          if (
-            this.ITR_JSON.houseProperties.length > 0 &&
-            interestTotal + currentInterestValue > 200000 &&
-            filteredArray &&
-            filteredArray.length > 0
-          ) {
-            interestAmountControl.setValidators(Validators.max(200000));
-            interestAmountControl.updateValueAndValidity();
-            interestAmountControl.setErrors({ maxValueExceeded: true });
-          }
+          interestTotal = 0;
         }
-      });
+
+        if (
+          this.ITR_JSON.houseProperties.length > 0 &&
+          interestTotal + currentInterestValue > 200000 &&
+          filteredArray &&
+          filteredArray.length > 0 &&
+          this.housePropertyForm.controls['propertyType'].value === 'SOP'
+        ) {
+          interestAmountControl.setValidators(Validators.max(200000));
+          interestAmountControl.updateValueAndValidity();
+          interestAmountControl.setErrors({ maxValueExceeded: true });
+        }
+      }
 
       if (
         currentInterestValue > 200000 &&
@@ -1242,7 +1230,7 @@ export class HousePropertyComponent implements OnInit {
       }
     }
   }
-  
+
   setStep(index: number) {
     this.step = index;
   }
