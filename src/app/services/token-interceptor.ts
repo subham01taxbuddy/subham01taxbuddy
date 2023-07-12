@@ -29,10 +29,16 @@ export class TokenInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     this.userData = JSON.parse(localStorage.getItem('UMD'));
+    this.userData.id_token
     Auth.currentSession()
       .then((data) => {
-        this.userData.id_token = data.getAccessToken().getJwtToken();
-        localStorage.setItem('UMD', JSON.stringify(this.userData));
+        if(data.isValid()) {
+          this.userData.id_token = data.getAccessToken().getJwtToken();
+          localStorage.setItem('UMD', JSON.stringify(this.userData));
+        } else {
+          alert('Got expired session!!');
+          // data.getRefreshToken().getToken().
+        }
       })
       .catch((err) => console.log('Auth.currentSession err:', err));
     const TOKEN = this.userData ? this.userData.id_token : null;
