@@ -46,7 +46,7 @@ export class PayoutsComponent implements OnInit {
     {value: '', name: 'All'},
     {value: 'Paid',name:'Paid'},
     {value: 'Unpaid',name:'Unpaid'},
-    {value: 'adjusted',name:'Adjusted'},
+    {value: 'Adjusted',name:'Adjusted'},
     {value: 'initiated',name:'Initiated'},
     {value: 'Failed',name: 'Failed'}
   ];
