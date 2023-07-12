@@ -12,19 +12,19 @@ const app = initializeApp({
   measurementId: 'G-CBRYER9PJR'
 });
 
+self.addEventListener('notificationclick', function(event) {
+  // event.notification.close();
+  console.log('notification click');
+});
+self.addEventListener('push', function(event) {
+  console.log('notification click');
+});
 isSupported().then(isSupported => {
 
   if (isSupported) {
 
     const messaging = getMessaging(app);
 
-    self.addEventListener('notificationclick', function(event) {
-      event.notification.close();
-      console.log('notification click');
-    });
-    self.addEventListener('push', function(event) {
-      console.log('notification click');
-    });
     // self.addEventListener('notificationclick', function(event) {
     //   event.notification.close();
     //   console.log('notification click');
@@ -42,6 +42,7 @@ isSupported().then(isSupported => {
       self.registration.showNotification(notificationTitle, notificationOptions);
     });*/
     onBackgroundMessage(messaging, ({ notification: { title, body, image } }) => {
+      console.log(title, body);
       self.registration.showNotification(title, { body, icon: image || '/assets/img/logo-img.svg' });
     });
 
