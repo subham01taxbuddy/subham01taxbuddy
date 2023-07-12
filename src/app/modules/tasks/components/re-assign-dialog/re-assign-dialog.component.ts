@@ -32,7 +32,10 @@ export class ReAssignDialogComponent implements OnInit {
     // this.ownerId=this.data.ownerId;
     // this.filerId=this.data.filerId;
     // this.serviceType=this.data.serviceType;
-    this.checkPermission();
+    let roles = this.utilsService.getUserRoles();
+    if(roles.includes('ROLE_LEADER')) {
+      this.checkPermission();
+    }
   }
 
   checkPermission(){
