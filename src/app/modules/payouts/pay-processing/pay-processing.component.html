@@ -1,4 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showMessage">{{showMessage}}</span>
 <div class="mrgArdTog">
   <div class="rowClr">
     <div [class.surround]="isSurroundDynamic()">
@@ -15,7 +16,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-4" *ngIf="!isUploadTrue && hideDownload" >
+        <div class="col-sm-4" >
           <button class="tbd-btn spRt aprv" [disabled]="loading" (click)="getTds()"> Generate CSV File </button>
           <span class="txblw1">Generate CSV file.</span>
         </div>
