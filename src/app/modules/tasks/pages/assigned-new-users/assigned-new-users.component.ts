@@ -875,7 +875,8 @@ export class AssignedNewUsersComponent implements OnInit {
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
-        conversationWithFiler: userData[i].conversationWithFiler
+        conversationWithFiler: userData[i].conversationWithFiler,
+        ownerUserId: userData[i].ownerUserId
       })
       userArray.push(userInfo);
     }
