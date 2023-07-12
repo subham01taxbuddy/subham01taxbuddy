@@ -7,7 +7,7 @@ font-weight: bold;"> Bulk Re-Assign </label><button style="float: right;" mat-di
      <!-- <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label> -->
     <div class="col-sm-6">
       <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label>
-      <app-sme-list-drop-down (sendOwner)="fromSme1($event, true)" (sendFiler)="fromSme1($event, false)" listType="ALL">
+      <app-sme-list-drop-down (sendOwner)="fromSme1($event, true)" (sendFiler)="fromSme1($event, false)" listType="{{ownerDropDownType}}">
       </app-sme-list-drop-down>
     </div>
     <div class="col-sm-6">
