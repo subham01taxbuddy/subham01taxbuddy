@@ -860,6 +860,8 @@ export class HousePropertyComponent implements OnInit {
       ].updateValueAndValidity();
     }
 
+    this.EeEaValueChanges();
+
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
@@ -1141,7 +1143,7 @@ export class HousePropertyComponent implements OnInit {
         (
           (this.housePropertyForm.controls['loans'] as FormArray)
             .controls[0] as FormGroup
-        ).controls['interestAmount'].value
+        ).controls['interestAmount']?.value
       );
 
       // interest form control
@@ -1159,11 +1161,11 @@ export class HousePropertyComponent implements OnInit {
       let filteredArray = filteredSop?.filter(
         (element, i) => i !== this.storedIndex && element.propertyType === 'SOP'
       );
-      
+
       if (filteredSop && filteredSop.length > 0) {
         if (filteredArray && filteredArray.length > 0) {
           filteredArray?.forEach((element) => {
-            interestTotal += element.loans[0]?.interestAmount;
+            interestTotal += element?.loans[0]?.interestAmount;
             console.log(interestTotal);
           });
         } else {
@@ -1175,17 +1177,17 @@ export class HousePropertyComponent implements OnInit {
           interestTotal + currentInterestValue > 200000 &&
           filteredArray &&
           filteredArray.length > 0 &&
-          this.housePropertyForm.controls['propertyType'].value === 'SOP'
+          this.housePropertyForm.controls['propertyType']?.value === 'SOP'
         ) {
-          interestAmountControl.setValidators(Validators.max(200000));
-          interestAmountControl.updateValueAndValidity();
-          interestAmountControl.setErrors({ maxValueExceeded: true });
+          interestAmountControl?.setValidators(Validators.max(200000));
+          interestAmountControl?.updateValueAndValidity();
+          interestAmountControl?.setErrors({ maxValueExceeded: true });
         }
       }
 
       if (
         currentInterestValue > 200000 &&
-        this.ITR_JSON.houseProperties.length > 0
+        this.ITR_JSON.houseProperties?.length > 0
       ) {
         this.ITR_JSON.houseProperties?.forEach((element, i) => {
           if (i != this.storedIndex) {
@@ -1199,12 +1201,12 @@ export class HousePropertyComponent implements OnInit {
         });
       } else {
         this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-          .isEligibleFor80EE
-          ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
+          ?.isEligibleFor80EE
+          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
           : false;
         this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-          .isEligibleFor80EEA
-          ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
+          ?.isEligibleFor80EEA
+          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
           : false;
 
         if (this.EEStatus) {
@@ -1215,12 +1217,12 @@ export class HousePropertyComponent implements OnInit {
       }
     } else {
       this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-        .isEligibleFor80EE
-        ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
+        ?.isEligibleFor80EE
+        ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
         : false;
       this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-        .isEligibleFor80EEA
-        ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
+        ?.isEligibleFor80EEA
+        ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
         : false;
 
       if (this.EEStatus) {
