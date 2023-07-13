@@ -42,6 +42,7 @@ export class BoPartnersComponent implements OnInit {
   maxDate: any = new Date();
   minToDate: any;
   searchMobileNumber = new FormControl('');
+  searchEmail = new FormControl('');
   fromDateValue =new FormControl('2022-09-01', Validators.required);
   toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
@@ -428,6 +429,45 @@ export class BoPartnersComponent implements OnInit {
     ];
   }
 
+  clearValue(){
+  this.searchMobileNumber.setValue(null);
+  }
+  clearValue1(){
+    this.searchEmail.setValue(null);
+    }
+
+  advanceSearch(mobile?){
+    if(this.searchEmail.value){
+    //curl --location 'http://localhost:9055/report/partner-details?emailAddress=dinesh1%40gmail.com'
+    this.loading = true;
+    let param = `/partner-details?emailAddress=${this.searchEmail.value}`
+
+    this.userMsService.getMethodNew(param).subscribe(
+      (response: any) => {
+      this.loading = false;
+      if (response) {
+        this.loading = false;
+        this.boPartnersInfo = response;
+        this.config.totalItems = response.totalElements;
+        this.partnersGridOptions.api?.setRowData(
+          this.createRowData(this.boPartnersInfo)
+        );
+      } else {
+        this.loading = false;
+        this.config.totalItems = 0;
+        this.partnersGridOptions.api?.setRowData(this.createRowData([]));
+        this._toastMessageService.alert("error",'No Data Found');
+      }
+      },(error) => {
+        this.loading = false;
+      }
+      )
+
+    }else(
+      this.getBoPartners(mobile)
+    )
+  }
+
   getBoPartners(mobile?) {
     // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
@@ -443,7 +483,7 @@ export class BoPartnersComponent implements OnInit {
       let param
 
       if (mobile && this.searchMobileNumber.value) {
-        param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
+        param = `/partner-detail?page=0&size=10&mobileNumber=${this.searchMobileNumber.value}`
       } else {
         param = `/partner-details?page=${this.config.currentPage - 1}&size=20&from=${fromDate}&to=${toDate}`;
       }
@@ -682,6 +722,7 @@ export class BoPartnersComponent implements OnInit {
 
   resetFilters() {
     this.searchMobileNumber.setValue(null);
+    this.searchEmail.setValue(null);
     this.fromDateValue.setValue('2022-09-01');
     this.toDateValue.setValue(new Date());
     this.getBoPartners();
