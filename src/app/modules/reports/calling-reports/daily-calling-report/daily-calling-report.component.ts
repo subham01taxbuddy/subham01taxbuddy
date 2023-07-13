@@ -14,6 +14,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from "../../../shared/constants";
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { Observable } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -67,7 +69,8 @@ export class DailyCallingReportComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private genericCsvService: GenericCsvService
+    private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -157,6 +160,7 @@ export class DailyCallingReportComponent implements OnInit {
         this.dailyCallingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(this.dailyCallingReport));
+        this.cacheManager.initializeCache(this.createRowData(this.dailyCallingReport));
 
       } else {
         this.loading = false;
@@ -368,9 +372,53 @@ export class DailyCallingReportComponent implements OnInit {
   }
 
   pageChanged(event) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports();
+    const pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+
+    } else {
+      this.fetchDataFromServer(event).subscribe((data: any[]) => {
+        this.cacheManager.cachePageContent(event, data);
+        this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(data));
+      });
+    }
+  }
+
+    fetchDataFromServer(pageNumber: number): Observable<any[]> {
+    return new Observable<any[]>(observer => {
+      this.loading = true;
+      this.searchParam.page = pageNumber - 1;
+      this.config.currentPage = pageNumber;
+      let data = this.utilsService.createUrlParams(this.searchParam);
+      let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+      let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+      let param = ''
+      let userFilter = '';
+      if (this.ownerId && !this.filerId) {
+        userFilter += `&ownerUserId=${this.ownerId}`;
+      }
+      if (this.filerId) {
+        userFilter += `&filerUserId=${this.filerId}`;
+      }
+
+      param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+      this.reportService.getMethod(param).subscribe((response: any) => {
+        this.loading = false;
+        if (response.success) {
+          observer.next(response?.data?.content);
+          observer.complete();
+        } else {
+          this._toastMessageService.alert("error", response.message);
+          observer.error();
+        }
+      }, (error) => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "Error");
+        observer.error();
+      });
+    });
   }
 
   setToDateValidation(FromDate) {
