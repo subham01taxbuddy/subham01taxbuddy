@@ -14,6 +14,8 @@ export class ReAssignActionDialogComponent implements OnInit {
   loading: boolean;
   ownerId: number;
   filerId: number;
+  ownerDropDownType = 'ASSIGNED';
+  loggedInUserRoles:any;
   constructor(
     public dialogRef: MatDialogRef<ReAssignActionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -22,6 +24,32 @@ export class ReAssignActionDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('data from selected rows',this.data)
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+
+     if(this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      this.checkPermission();
+    }
+  }
+
+  checkPermission(){
+    let loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/sme-details-new/${loggedInSmeUserId}?ownersByLeader=true`;
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      let ownerList = result.data;
+      let ownerIdList = [];
+      this.data.data.forEach(item => {
+        ownerIdList.push(item.ownerUserId);
+      });
+      let filteredList = ownerList.filter((item) => ownerIdList.includes(item.userId));
+      // let filteredList = ownerList.filter((item) => item.userId === this.data?.data?.ownerUserId);
+      if(!filteredList || filteredList.length <= 0){
+        this.utilsService.showSnackBar('You do not have permission to reassign this user.');
+        this.dialogRef.close({ event: 'close', data: 'error' });
+      }
+    });
+
   }
 
   fromSme(event, isOwner) {
@@ -37,6 +65,14 @@ export class ReAssignActionDialogComponent implements OnInit {
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
+    }
+  }
+
+  reAssign(){
+    if(this.filerId){
+      this.reAssignment();
+    }else{
+      this.leaderLevelReassignment();
     }
   }
 
@@ -62,6 +98,35 @@ export class ReAssignActionDialogComponent implements OnInit {
       });
     } else {
       this.utilsService.showSnackBar('Please select Filer Name');
+    }
+  }
+
+  leaderLevelReassignment(){
+    // this.utilsService.showSnackBar("into leader assig");
+    //https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10604&serviceTypes=ALL&ownerUserId=7522&filerUserId=7522'
+    if(this.ownerId){
+      let userIdList = [];
+      this.data.data.forEach(item => {
+        userIdList.push(item.userId);
+      });
+      userIdList.forEach(userId => {
+        let param = `/user-reassignment-new?userId=${userId}&serviceTypes=ALL&ownerUserId=${this.ownerId}&filerUserId=${this.ownerId}`
+        this.userMsService.getMethod(param).subscribe((result: any) => {
+          this.loading = false;
+          if (result.success) {
+            this.utilsService.showSnackBar('User re assigned successfully.');
+            this.dialogRef.close({ event: 'close', data: 'success' });
+          } else {
+            this.utilsService.showSnackBar(result.message);
+          }
+        },
+        error => {
+          this.loading = false;
+          this.utilsService.showSnackBar(error.error.error);
+        });
+      })
+    }else {
+      this.utilsService.showSnackBar('Please select Owner Name');
     }
   }
 }
