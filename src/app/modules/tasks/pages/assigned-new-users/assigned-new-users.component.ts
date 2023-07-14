@@ -74,7 +74,7 @@ export class AssignedNewUsersComponent implements OnInit {
     private requestManager: RequestManager,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER'));
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -82,7 +82,12 @@ export class AssignedNewUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId === 18 : false;
+       if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && (rowNode.data.statusId === 2 || rowNode.data.statusId === 18)) : false;
+        }
+        else{
+          return  rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' :false;
+        }
       },
       onGridReady: params => {
       },
@@ -382,7 +387,11 @@ export class AssignedNewUsersComponent implements OnInit {
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
-          return params.data.statusId === 18 && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
+          if(this.loggedInUserRoles.includes('ROLE_OWNER')){
+            return (params.data.statusId === 2 || params.data.statusId === 18) && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length;
+          }else{
+            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
+          }
         },
         cellStyle: function (params: any) {
           return {

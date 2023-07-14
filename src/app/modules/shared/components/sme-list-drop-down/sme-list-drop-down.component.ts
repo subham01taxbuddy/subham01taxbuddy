@@ -19,6 +19,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() checkboxSelection = false;
   @Output() sendFilerList = new EventEmitter<any>();
   @Input() showOwnerList =false;
+  @Input() showOnlyOwnerList =false;
   @Input() listType = 'ALL';
 
   smeList: any[] = [];
