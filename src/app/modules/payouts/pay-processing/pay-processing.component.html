@@ -1,4 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showMessage">{{showMessage}}</span>
 <div class="mrgArdTog">
   <div class="rowClr">
     <div [class.surround]="isSurroundDynamic()">

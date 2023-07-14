@@ -2,7 +2,7 @@
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]=true>
       <mat-expansion-panel-header>
         <mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
@@ -36,15 +36,23 @@
               </mat-form-field>
             </div>
             <div class="col-sm-3">
-              <mat-label>Mobile Number: </mat-label>
+              <mat-label>Search By Mobile Number: </mat-label>
               <mat-form-field appearance="outline">
-                <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text" digitsOnly
+                <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text" (change)="clearValue1()" digitsOnly
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
               </mat-form-field>
             </div>
+            <div class="col-sm-3">
+              <mat-label>Search By Email: </mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Enter Email" [formControl]="searchEmail" type="text" (change)="clearValue()">
+              </mat-form-field>
+            </div>
 
-            <div class="col-sm-3 spsTp">
+            </div>
+            <div class="row">
+            <div class="col-sm-12 spsTp text-end">
               <!-- <button
                 class="btn"
                 style="border: none; cursor: pointer"
@@ -53,7 +61,7 @@
               >
                 Search
               </button> -->
-              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getBoPartners('mobile')">
+              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="advanceSearch('mobile')">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
               </button>
               <button class="clrLnk movLf" [disabled]="loading" (click)="resetFilters()">

@@ -1,4 +1,4 @@
-import { result } from 'lodash';
+import { filter, result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -860,6 +860,8 @@ export class HousePropertyComponent implements OnInit {
       ].updateValueAndValidity();
     }
 
+    this.EeEaValueChanges();
+
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
@@ -1131,36 +1133,80 @@ export class HousePropertyComponent implements OnInit {
       this.storedValue = 'onInit';
     }
 
-    if (this.storedValue === 'add' || this.storedValue === 'onInit' || this.storedValue === 'edit') {
-
+    if (
+      this.storedValue === 'add' ||
+      this.storedValue === 'onInit' ||
+      this.storedValue === 'edit'
+    ) {
       // current value of interest amount
       const currentInterestValue = Number(
         (
           (this.housePropertyForm.controls['loans'] as FormArray)
             .controls[0] as FormGroup
-        ).controls['interestAmount'].value
+        ).controls['interestAmount']?.value
       );
+
+      // interest form control
+      const interestAmountControl = (
+        (this.housePropertyForm.controls['loans'] as FormArray)
+          .controls[0] as FormGroup
+      ).controls['interestAmount'];
+
+      let interestTotal = 0;
+
+      let filteredSop = this.ITR_JSON.houseProperties.filter(
+        (element) => element.propertyType === 'SOP'
+      );
+
+      let filteredArray = filteredSop?.filter(
+        (element, i) => i !== this.storedIndex && element.propertyType === 'SOP'
+      );
+
+      if (filteredSop && filteredSop.length > 0) {
+        if (filteredArray && filteredArray.length > 0) {
+          filteredArray?.forEach((element) => {
+            interestTotal += element?.loans[0]?.interestAmount;
+            console.log(interestTotal);
+          });
+        } else {
+          interestTotal = 0;
+        }
+
+        if (
+          this.ITR_JSON.houseProperties.length > 0 &&
+          interestTotal + currentInterestValue > 200000 &&
+          filteredArray &&
+          filteredArray.length > 0 &&
+          this.housePropertyForm.controls['propertyType']?.value === 'SOP'
+        ) {
+          interestAmountControl?.setValidators(Validators.max(200000));
+          interestAmountControl?.updateValueAndValidity();
+          interestAmountControl?.setErrors({ maxValueExceeded: true });
+        }
+      }
 
       if (
         currentInterestValue > 200000 &&
-        this.ITR_JSON.houseProperties.length > 0
+        this.ITR_JSON.houseProperties?.length > 0
       ) {
-
-          this.ITR_JSON.houseProperties?.forEach((element, i) => {
-            if(i != this.storedIndex) {
-              this.EEStatus = !this.EEStatus ? element?.isEligibleFor80EE === true : true;
-              this.EAStatus = !this.EAStatus ? element?.isEligibleFor80EEA === true : true;
-            }
-          });
-
+        this.ITR_JSON.houseProperties?.forEach((element, i) => {
+          if (i != this.storedIndex) {
+            this.EEStatus = !this.EEStatus
+              ? element?.isEligibleFor80EE === true
+              : true;
+            this.EAStatus = !this.EAStatus
+              ? element?.isEligibleFor80EEA === true
+              : true;
+          }
+        });
       } else {
         this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-          .isEligibleFor80EE
-          ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
+          ?.isEligibleFor80EE
+          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
           : false;
         this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-          .isEligibleFor80EEA
-          ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
+          ?.isEligibleFor80EEA
+          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
           : false;
 
         if (this.EEStatus) {
@@ -1169,15 +1215,14 @@ export class HousePropertyComponent implements OnInit {
           this.EEStatus = false;
         }
       }
-
     } else {
       this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-        .isEligibleFor80EE
-        ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
+        ?.isEligibleFor80EE
+        ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
         : false;
       this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-        .isEligibleFor80EEA
-        ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
+        ?.isEligibleFor80EEA
+        ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
         : false;
 
       if (this.EEStatus) {

@@ -150,6 +150,7 @@ export class PayoutReportComponent implements OnInit {
         ownerName: payoutData[i].ownerName,
         totalCommissionEarned: payoutData[i].totalCommissionEarned,
         totalCommissionEarnedTds: payoutData[i].totalCommissionEarnedTds,
+        totalTDS : payoutData[i].totalTDS,
         numberOfFiling: payoutData[i].numberOfFiling,
         slabOneCount: payoutData[i].slabOneCount,
         slabOneEarning: payoutData[i].slabOneEarning,
@@ -234,6 +235,18 @@ export class PayoutReportComponent implements OnInit {
         headerName: 'Total Commission Earned-Post TDS',
         field: 'totalCommissionEarnedTds',
         width: 260,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Total TDS',
+        field: 'totalTDS',
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",

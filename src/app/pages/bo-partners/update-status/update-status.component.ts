@@ -53,7 +53,7 @@ export class UpdateStatusComponent implements OnInit {
   // https://api.taxbuddy.com/user/partner-details?mobileNumber=9023056993
   this.loading=true;
   let param =`/partner-details?mobileNumber=${this.data.mobileNumber}`
-  this.userMsService.getMethod(param).subscribe(
+  this.userMsService.getMethodNew(param).subscribe(
     (response: any) => {
       this.loading = false;
       if (response){
