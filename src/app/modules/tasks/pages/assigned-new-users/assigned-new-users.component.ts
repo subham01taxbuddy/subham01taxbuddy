@@ -307,7 +307,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    this.search('serviceType', 'isAgent');
+    // this.search('serviceType', 'isAgent');
 
     if (this.searchParam.serviceType) {
       setTimeout(() => {
