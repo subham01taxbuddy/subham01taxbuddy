@@ -76,6 +76,16 @@ export class ItrMsService {
     // .map(response => response.json())
   }
 
+  addAdjustment<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    return this.httpClient.get<T>(environment.adjustment + param[0],
+      { headers: this.headers }
+    );
+    // .map(response => response.json())
+  }
+
   getTdsDetails<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
