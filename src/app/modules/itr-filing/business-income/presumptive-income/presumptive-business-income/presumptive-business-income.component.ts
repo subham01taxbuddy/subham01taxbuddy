@@ -41,8 +41,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
+    if (this.Copy_ITR_JSON.business?.presumptiveIncomes) {
+      let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter((item: any) => item.businessType === "BUSINESS");
       console.log("data from session storage",data);
       this.businessArray = data;
     } else {

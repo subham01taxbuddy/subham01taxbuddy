@@ -8,7 +8,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
 
-const professionalData: professionalIncome [] = [{
+const professionalData: professionalIncome[] = [{
   natureOfBusiness: null,
   tradeName: null,
   receipts: null,
@@ -50,9 +50,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.Copy_ITR_JSON.business.presumptiveIncomes) {
+    if (this.Copy_ITR_JSON.business?.presumptiveIncomes) {
       let incomeDetails;
-      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
+      let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter((item: any) => item.businessType === "PROFESSIONAL");
       if (data.length > 0) {
         let businessArray = [];
         data.forEach((obj: any) => {
@@ -82,12 +82,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     }
   }
 
-  getBusinessName(data){
+  getBusinessName(data) {
     let business = this.natureOfBusinessList?.filter((item: any) => item.code === data.natureOfBusiness);
     return business && business[0] ? (business[0] as any).label : null;
   }
 
-  displayedColumns: string[] = ['select','natureOfBusiness', 'tradeName', 'receipts','presumptiveIncome'];
+  displayedColumns: string[] = ['select', 'natureOfBusiness', 'tradeName', 'receipts', 'presumptiveIncome'];
   dataSource = new MatTableDataSource<professionalIncome>();
   selection = new SelectionModel<professionalIncome>(true, []);
 
@@ -99,19 +99,19 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
   removeSelectedRows() {
     this.selection.selected.forEach(item => {
-     let index: number = this.dataSource.data.findIndex(d => d === item);
-     console.log(this.dataSource.data.findIndex(d => d === item));
-     this.dataSource.data.splice(index,1);
+      let index: number = this.dataSource.data.findIndex(d => d === item);
+      console.log(this.dataSource.data.findIndex(d => d === item));
+      this.dataSource.data.splice(index, 1);
 
-     this.dataSource = new MatTableDataSource<professionalIncome>(this.dataSource.data);
-   });
-   this.selection = new SelectionModel<professionalIncome>(true, []);
- }
+      this.dataSource = new MatTableDataSource<professionalIncome>(this.dataSource.data);
+    });
+    this.selection = new SelectionModel<professionalIncome>(true, []);
+  }
 
   getMastersData() {
     this.loading = true;
@@ -254,7 +254,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       disableClose: false,
       width: '700px'
     });
-      dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
@@ -284,8 +284,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'EDIT') {
-          let itemIndex = this.dataSource.data.findIndex(item=> item.tradeName == this.selection.selected[0].tradeName )
-          this.dataSource.data[itemIndex]=result;
+          let itemIndex = this.dataSource.data.findIndex(item => item.tradeName == this.selection.selected[0].tradeName)
+          this.dataSource.data[itemIndex] = result;
           this.dataSource = new MatTableDataSource(this.dataSource.data)
           this.selection.clear();
           // this.professionalGridOptions.rowData[index] = result;
@@ -348,7 +348,16 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       };
     });
     console.log("presBusinessIncome", presBusinessIncome)
-    if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+    if (!this.Copy_ITR_JSON.business) {
+      this.Copy_ITR_JSON.business = {
+        presumptiveIncomes: [],
+        profitLossACIncomes: [],
+        financialParticulars: null,
+        fixedAssetsDetails: [],
+        businessDescription: []
+      };
+      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
+    } else if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
       this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
     } else {
       let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "PROFESSIONAL");
