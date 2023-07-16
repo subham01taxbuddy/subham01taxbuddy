@@ -82,9 +82,10 @@ export class AssignedNewUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        if(this.loggedInUserRoles.includes('ROLE_OWNER')){
-          return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId === 18 : false;
-        }else{
+       if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && (rowNode.data.statusId === 2 || rowNode.data.statusId === 18)) : false;
+        }
+        else{
           return  rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' :false;
         }
       },
@@ -306,7 +307,7 @@ export class AssignedNewUsersComponent implements OnInit {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    this.search('serviceType', 'isAgent');
+    // this.search('serviceType', 'isAgent');
 
     if (this.searchParam.serviceType) {
       setTimeout(() => {
@@ -387,7 +388,7 @@ export class AssignedNewUsersComponent implements OnInit {
         pinned: 'left',
         checkboxSelection: (params) => {
           if(this.loggedInUserRoles.includes('ROLE_OWNER')){
-            return params.data.statusId === 18 && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
+            return (params.data.statusId === 2 || params.data.statusId === 18) && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length;
           }else{
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
           }

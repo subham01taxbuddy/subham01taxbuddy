@@ -255,8 +255,8 @@ export class PayProcessingComponent implements OnInit {
         // this.loading = false;
         console.log('response', response);
         // this.utilsService.showSnackBar('CSV Generation Started - Please Do Not Close the Screen or Move out');
-        this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
-        this.download();
+        this.showMessage ='Adjustment Started Please Do Not Close the Screen or Move out'
+        this.addAdjustment();
       } else {
         this.loading = false;
         this.showMessage =''
@@ -269,6 +269,29 @@ export class PayProcessingComponent implements OnInit {
       this.utilsService.showSnackBar('Error in API of TDS Computation');
     });
 
+  }
+
+  addAdjustment(){
+    this.loading =true;
+    let param = '';
+    this.itrMsService.addAdjustment(param).subscribe((response: any) => {
+      if (response.success) {
+        // this.loading = false;
+        console.log('response', response);
+        // this.utilsService.showSnackBar('CSV Generation Started - Please Do Not Close the Screen or Move out');
+        this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
+        this.download();
+      } else {
+        this.loading = false;
+        this.showMessage =''
+        this.utilsService.showSnackBar(response.message);
+      }
+    },
+    (error) => {
+      this.loading = false;
+      this.showMessage =''
+      this.utilsService.showSnackBar('Error in API of Adjustment Computation');
+    });
   }
 
   download() {
