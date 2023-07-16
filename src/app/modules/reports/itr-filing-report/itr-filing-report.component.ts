@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -14,6 +14,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
+import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 
 
 export const MY_FORMATS = {
@@ -41,7 +42,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ItrFilingReportComponent implements OnInit {
+export class ItrFilingReportComponent implements OnInit,OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -70,6 +71,7 @@ export class ItrFilingReportComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
+    private cacheManager: CacheManager,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -160,6 +162,10 @@ export class ItrFilingReportComponent implements OnInit {
 
   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/calling-report/itr-filing-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&leaderUserId=9523'
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -184,7 +190,7 @@ export class ItrFilingReportComponent implements OnInit {
     }
 
     if (this.filerId && pageChange) {
-      userFilter += `&ownerUserId=${this.filerId}`;
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
     if (this.leaderId && !pageChange) {
@@ -226,7 +232,11 @@ export class ItrFilingReportComponent implements OnInit {
         this.itrFillingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+        this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
 
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.itrFillingReport));
+        this.config.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -441,6 +451,7 @@ export class ItrFilingReportComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -472,11 +483,22 @@ export class ItrFilingReportComponent implements OnInit {
 
   }
 
+  // pageChanged(event) {
+  //   let pageChange = event
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.showReports(pageChange);
+  // }
   pageChanged(event) {
-    let pageChange = event
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports(pageChange);
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showReports(event);
+    }
   }
 
   setToDateValidation(FromDate) {
@@ -522,4 +544,7 @@ export class ItrFilingReportComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
+  }
 }
