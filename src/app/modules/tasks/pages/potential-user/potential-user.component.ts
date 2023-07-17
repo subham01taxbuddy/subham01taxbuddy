@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
@@ -14,6 +14,7 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -21,7 +22,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './potential-user.component.html',
   styleUrls: ['./potential-user.component.scss']
 })
-export class PotentialUserComponent implements OnInit {
+export class PotentialUserComponent implements OnInit,OnDestroy {
   loading = false;
   agents = [];
   agentId = null;
@@ -58,6 +59,7 @@ export class PotentialUserComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
     private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.usersGridOptions = <GridOptions>{
@@ -168,7 +170,11 @@ export class PotentialUserComponent implements OnInit {
     }
   }
 
-  search(form?, isAgent?) {
+  search(form?, isAgent?,pageChange?) {
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
@@ -237,6 +243,12 @@ export class PotentialUserComponent implements OnInit {
             this.userInfo = result.data['content'];
             this.userInfoLength = this.userInfo?.length;
             this.config.totalItems = result.data.totalElements;
+            this.cacheManager.initializeCache(this.createRowData(result.data['content']));
+
+            const currentPageNumber = pageChange || this.searchParam.page + 1;
+            this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(result.data['content']));
+            this.config.currentPage = currentPageNumber;
+
           } else {
             this.usersGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
@@ -715,13 +727,29 @@ export class PotentialUserComponent implements OnInit {
 
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1
-    if (this.coOwnerToggle.value == true) {
-      this.search(event - 1, true);
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.search(event - 1, true);
+  //   } else {
+  //     this.search(event - 1);
+  //   }
+  // }
+
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.usersGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
     } else {
-      this.search(event - 1);
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      if (this.coOwnerToggle.value == true) {
+        this.search( '', true,event);
+      } else {
+        this.search('','',event );
+      }
     }
   }
 
@@ -764,4 +792,7 @@ export class PotentialUserComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
+  }
 }

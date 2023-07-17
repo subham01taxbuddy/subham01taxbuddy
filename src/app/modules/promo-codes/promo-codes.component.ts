@@ -1,4 +1,4 @@
-import { Component,Inject,LOCALE_ID,OnInit, ViewChild } from '@angular/core';
+import { Component,Inject,LOCALE_ID,OnDestroy,OnInit, ViewChild } from '@angular/core';
 import { GridOptions} from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-code.component';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
+import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 
 export const MY_FORMATS = {
   parse: {
@@ -40,7 +41,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PromoCodesComponent implements OnInit {
+export class PromoCodesComponent implements OnInit,OnDestroy{
   config: any;
   loading!: boolean;
   serviceType = new FormControl('');
@@ -63,6 +64,7 @@ export class PromoCodesComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private itrService: ItrMsService,
     private router: Router,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.promoCodeGridOptions = <GridOptions>{
@@ -86,8 +88,13 @@ export class PromoCodesComponent implements OnInit {
     this.getPromoCodeList();
   }
 
-  getPromoCodeList(){
+  getPromoCodeList(pageChange?){
     //'http://uat-api.taxbuddy.com/itr/promocodes?page=0&pageSize=30&code=earlybird30&serviceType=ITR'
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
+
     this.loading = true;
     let data = this.utileService.createUrlParams(this.searchParam);
 
@@ -114,6 +121,14 @@ export class PromoCodesComponent implements OnInit {
       this.totalCount = result?.totalElements;
       this.config.totalItems = result?.totalElements;
       this.promoCodeGridOptions.api?.setRowData(this.createRowData(result.content));
+      this.cacheManager.initializeCache(result.content);
+
+      const currentPageNumber = pageChange || this.searchParam.page + 1;
+      this.cacheManager.cachePageContent(
+        currentPageNumber,
+        result.content
+      );
+      this.config.currentPage = currentPageNumber;
       if(result?.content.length == 0){
         this.promoCodeGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error",'No Data Found');
@@ -389,20 +404,36 @@ export class PromoCodesComponent implements OnInit {
     })
   }
 
-  pageChanged(event){
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.getPromoCodeList();
+  // pageChanged(event){
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.getPromoCodeList();
 
+  // }
+
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.promoCodeGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.getPromoCodeList(event);
+    }
   }
 
  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters(){
+    this.cacheManager.clearCache();
     // this.searchParam.page = 0;
     this?.serviceDropDown?.resetService();
     this?.serviceType?.setValue(null);
     this?.searchValue.setValue(null);
     this.pageChanged(1);
     // this.getPromoCodeList();
+  }
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }

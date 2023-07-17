@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
@@ -9,13 +9,14 @@ import { AddUpdateReviewComponent } from '../../components/add-update-review/add
 import { UpdateSmeNotesComponent } from '../../components/update-sme-notes/update-sme-notes.component';
 import { ViewReviewComponent } from '../../components/view-review/view-review.component';
 import { ReviewService } from '../../services/review.service';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-review-list',
   templateUrl: './review-list.component.html',
   styleUrls: ['./review-list.component.scss'],
 })
-export class ReviewListComponent implements OnInit {
+export class ReviewListComponent implements OnInit,OnDestroy {
   config: any;
   loading!: boolean;
   reviewGridOptions: GridOptions;
@@ -31,7 +32,8 @@ export class ReviewListComponent implements OnInit {
   constructor(
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private cacheManager: CacheManager,
   ) {
     this.reviewGridOptions = <GridOptions>{
       rowData: [],
@@ -377,12 +379,29 @@ export class ReviewListComponent implements OnInit {
     });
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.getReview(event - 1);
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.getReview(event - 1);
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.reviewGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      // this.selectedPageNo = event - 1;
+      this.getReview(event - 1,event);
+    }
   }
 
-  getReview(pageNo) {
+  getReview(pageNo,pageChange?) {
+
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
+    this.loading=true;
     let pagination = `page=${pageNo}&pageSize=20`;
     let platform =
       this.selectPlatform && this.selectPlatform != 'All'
@@ -401,9 +420,9 @@ export class ReviewListComponent implements OnInit {
     } else {
       var param = `review?${pagination}`;
     }
-    this.loading = false;
     this.reviewService.getMethod(param).subscribe(
       (response: any) => {
+        this.loading=false;
         if (
           response.body.content instanceof Array &&
           response.body.content.length > 0
@@ -414,6 +433,14 @@ export class ReviewListComponent implements OnInit {
             this.createRowData(response.body.content)
           );
           this.config.totalItems = response.body.totalElements;
+          this.cacheManager.initializeCache(response.body.content);
+
+          const currentPageNumber = pageChange || this.config.currentPage;
+          this.cacheManager.cachePageContent(
+            currentPageNumber,
+            response.body.content
+          );
+          this.config.currentPage = currentPageNumber;
         } else {
           this.loading = false;
           this.config.totalItems = 0;
@@ -474,5 +501,9 @@ export class ReviewListComponent implements OnInit {
           break;
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }
