@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -19,7 +20,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './assigned-sme.component.html',
   styleUrls: ['./assigned-sme.component.scss'],
 })
-export class AssignedSmeComponent implements OnInit {
+export class AssignedSmeComponent implements OnInit,OnDestroy {
   smeListGridOptions: GridOptions;
   loading = false;
   smeListLength: any;
@@ -62,6 +63,7 @@ export class AssignedSmeComponent implements OnInit {
     private matDialog: MatDialog,
     private reviewService: ReviewService,
     private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -230,6 +232,11 @@ export class AssignedSmeComponent implements OnInit {
     //https://uat-api.taxbuddy.com/user/sme-details-new/7522?page=0&pageSize=30&assigned=true&searchAsCoOwner=true
     //for new leader wise and owner wise filter
     //https://uat-api.taxbuddy.com/report/sme-details-new/1064?page=0&size=30&assigned=true&leaderView=true&smeUserId=1064
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
+
     this.loading=true;
     const loggedInSmeUserId=this.loggedInSme[0].userId
 
@@ -282,12 +289,12 @@ export class AssignedSmeComponent implements OnInit {
           this.smeInfo = result?.data?.content;
           this.smeListLength = this?.smeInfo?.length;
           this.config.totalItems = result?.data?.totalElements;
-          // this.config.internalCount = result?.data?.internalCount;
-          // this.config.externalCount = result?.data?.externalCount;
-          // this.config.activeCount = result?.data?.activeCount;
-          // this.config.inactiveCount = result?.data?.inactiveCount;
-          // this.config.assignmentOnCount = result?.data?.assignmentOnCount;
-          // this.config.assignmentOffCount = result?.data?.assignmentOffCount;
+
+          this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.smeInfo));
+          this.config.currentPage = currentPageNumber;
 
           console.log('smelist length no ', this.smeListLength);
           this.smeListGridOptions.api?.setRowData(
@@ -753,18 +760,36 @@ export class AssignedSmeComponent implements OnInit {
     })
   }
 
-  pageChanged(event: any) {
-    let pageChange =event
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    if (this.coOwnerToggle.value == true) {
-      this.getSmeList(true);
-      this.getCount();
-    }else{
-      this.getSmeList('',pageChange);
-      this.getCount();
+  // pageChanged(event: any) {
+  //   let pageChange =event
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.getSmeList(true);
+  //     this.getCount();
+  //   }else{
+  //     this.getSmeList('',pageChange);
+  //     this.getCount();
+  //   }
+  //   ;
+  // }
+
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.smeListGridOptions.api?.setRowData( this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      if (this.coOwnerToggle.value == true) {
+        this.getSmeList(true);
+        this.getCount();
+      } else {
+        this.getSmeList('',event);
+        this.getCount();
+      }
     }
-    ;
   }
 
   getToggleValue() {
@@ -783,6 +808,7 @@ export class AssignedSmeComponent implements OnInit {
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     const loggedInSmeUserId=this.loggedInSme[0].userId
     this.searchParam.page = 0;
     this.searchParam.size = 15;
@@ -807,6 +833,10 @@ export class AssignedSmeComponent implements OnInit {
       }
       this.getCount();
     }
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 
 }

@@ -1,8 +1,9 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -12,7 +13,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './resigned-sme.component.html',
   styleUrls: ['./resigned-sme.component.scss'],
 })
-export class ResignedSmeComponent implements OnInit {
+export class ResignedSmeComponent implements OnInit,OnDestroy {
   smeListGridOptions: GridOptions;
   loading = false;
   smeList: any = [];
@@ -37,6 +38,7 @@ export class ResignedSmeComponent implements OnInit {
     private utilsService: UtilsService,
     private router: Router,
     private dialog: MatDialog,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -60,7 +62,11 @@ export class ResignedSmeComponent implements OnInit {
     this.getSmeList();
   }
 
-  getSmeList() {
+  getSmeList(pageChange?) {
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     const loggedInSmeUserId = this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
@@ -77,6 +83,11 @@ export class ResignedSmeComponent implements OnInit {
           this.smeListGridOptions.api?.setRowData(
             this.createRowData(this.smeInfo)
           );
+          this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.smeInfo));
+          this.config.currentPage = currentPageNumber;
         } else {
           this.loading = false;
           this.smeListGridOptions.api?.setRowData(
@@ -327,9 +338,23 @@ export class ResignedSmeComponent implements OnInit {
     });
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.getSmeList();
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.getSmeList();
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.smeListGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.getSmeList(event);
+    }
+  }
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }

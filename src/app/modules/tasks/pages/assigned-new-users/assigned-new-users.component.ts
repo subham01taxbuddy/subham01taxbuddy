@@ -1381,10 +1381,10 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
             this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
             this.userInfo = result.data['content'];
             this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(this.createRowData(result.data['content']));
+            this.cacheManager.initializeCache(result.data['content']);
 
             const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(result.data['content']));
+            this.cacheManager.cachePageContent(currentPageNumber,result.data['content']);
             this.config.currentPage = currentPageNumber;
 
           } else {
