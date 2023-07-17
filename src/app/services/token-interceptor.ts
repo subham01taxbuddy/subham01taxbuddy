@@ -46,8 +46,15 @@ export class TokenInterceptor implements HttpInterceptor {
     const TOKEN = this.userData ? this.userData.id_token : null;
     if (TOKEN && this.tokenExpired(TOKEN)) {
       // token expired, logout the user
-      this.smeLogout();
-      this.logout();
+      // this.smeLogout();
+      // this.logout();
+      Auth.signOut()
+        .then((data) => {
+          console.log('sign out data:', data);
+          this.router.navigate(['/login']);
+          return;
+        })
+        .catch((error) => console.log('sign out err:', error));
       return;
     }
     if (
