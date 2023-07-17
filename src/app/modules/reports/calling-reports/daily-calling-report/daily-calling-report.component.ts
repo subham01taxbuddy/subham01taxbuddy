@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -14,6 +14,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from "../../../shared/constants";
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { Observable } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -41,7 +43,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class DailyCallingReportComponent implements OnInit {
+export class DailyCallingReportComponent implements OnInit ,OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -67,7 +69,8 @@ export class DailyCallingReportComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private genericCsvService: GenericCsvService
+    private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -132,24 +135,44 @@ export class DailyCallingReportComponent implements OnInit {
 
   }
 
-  showReports() {
+  showReports(pageNumber?) {
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?fromDate=2023-04-01&toDate=2023-05-16
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?filerUserId=11029&page=0&pageSize=10&fromDate=2023-05-01&toDate=2023-05-24&ownerUserId=7521
+    if(!pageNumber){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
-    let data = this.utilsService.createUrlParams(this.searchParam);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     // let leaderUserId = this.loggedInSmeUserId;
 
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
+    if (this.ownerId && !this.filerId && !pageNumber) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&ownerUserId=${this.ownerId}`;
+
+    }
+
+    if (this.ownerId && pageNumber) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerId) {
+
+    if (this.filerId  && !pageNumber) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&filerUserId=${this.filerId}`;
+
+    }
+
+    if (this.filerId && pageNumber) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    // this.searchParam.page = pageNumber ? pageNumber - 1 : 0;
+    let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -157,6 +180,12 @@ export class DailyCallingReportComponent implements OnInit {
         this.dailyCallingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(this.dailyCallingReport));
+        this.cacheManager.initializeCache(this.createRowData(this.dailyCallingReport));
+        // this.cacheManager.cachePageContent(0, this.createRowData(this.dailyCallingReport));
+
+        const currentPageNumber = pageNumber || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.dailyCallingReport));
+        this.config.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -346,6 +375,7 @@ export class DailyCallingReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -368,14 +398,25 @@ export class DailyCallingReportComponent implements OnInit {
   }
 
   pageChanged(event) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports();
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showReports(event);
+    }
   }
+
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
     this.minEndDate = FromDate;
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 
 }

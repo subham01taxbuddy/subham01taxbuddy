@@ -1,5 +1,5 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -8,6 +8,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -39,7 +40,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class MissedInboundCallsComponent implements OnInit {
+export class MissedInboundCallsComponent implements OnInit,OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -70,6 +71,7 @@ export class MissedInboundCallsComponent implements OnInit {
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     private dialog: MatDialog,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.startDate.setValue(new Date());
@@ -135,40 +137,64 @@ export class MissedInboundCallsComponent implements OnInit {
 
   }
 
-  showMissedInboundCall() {
+  showMissedInboundCall(pageChange?) {
     // https://uat-api.taxbuddy.com/report/calling-report/missed-inbound-calls
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
-
-    let data = this.utilsService.createUrlParams(this.searchParam);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let status = this.status.value || 'ALL'
 
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
+    if (this.ownerId && !this.filerId && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&ownerUserId=${this.ownerId}`;
+
+    }
+    if (this.ownerId && pageChange) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerId) {
+
+    if (this.filerId && !pageChange) {
+      userFilter += `&filerUserId=${this.filerId}`;
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+    }
+
+    if (this.filerId && pageChange) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
     let statusFilter = '';
-    if (status) {
+    if (status && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
       statusFilter = `&status=${status}`;
     }
+    if (status && pageChange ) {
+      statusFilter = `&status=${status}`;
+    }
+
+
+    let data = this.utilsService.createUrlParams(this.searchParam);
 
     param = `/calling-report/missed-inbound-calls?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${statusFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.success == false) {
-        this._toastMessageService.alert("error", response.message);
-
-      }
       if (response.success) {
         this.missedInboundCallingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.missedInboundCallGridOptions.api?.setRowData(this.createRowData(this.missedInboundCallingReport));
+        this.cacheManager.initializeCache(this.createRowData(this.missedInboundCallingReport));
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.missedInboundCallingReport));
+        this.config.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -361,6 +387,7 @@ export class MissedInboundCallsComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -378,14 +405,29 @@ export class MissedInboundCallsComponent implements OnInit {
     // this.showMissedInboundCall();
   }
 
-  pageChanged(event) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showMissedInboundCall();
-  }
+  // pageChanged(event) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.showMissedInboundCall();
+  // }
 
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.missedInboundCallGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showMissedInboundCall(event);
+    }
+  }
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
     this.minEndDate = FromDate;
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }
