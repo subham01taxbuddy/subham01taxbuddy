@@ -1,7 +1,7 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { filter } from 'rxjs/operators';
 import { data } from 'jquery';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SmeListDropDownComponent } from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
 export interface User {
   name: string;
@@ -26,7 +27,7 @@ export interface User {
   templateUrl: './assigned-subscription.component.html',
   styleUrls: ['./assigned-subscription.component.scss'],
 })
-export class AssignedSubscriptionComponent implements OnInit {
+export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
   // @Input() queryParam: any;
   @Input() from: any;
   @Input() tabName: any;
@@ -71,6 +72,7 @@ export class AssignedSubscriptionComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -157,9 +159,12 @@ export class AssignedSubscriptionComponent implements OnInit {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, isAgent?) {
+  getAssignedSubscription(pageNo?, isAgent?,fromPageChange?) {
     // https://uat-api.taxbuddy.com/itr/subscription-dashboard-new/7522?page=0&pageSize=500&searchAsCoOwner=true
-
+    if(!fromPageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
     console.log('this.queryParam:', this.queryParam);
@@ -198,6 +203,11 @@ export class AssignedSubscriptionComponent implements OnInit {
             this.createRowData(response.data.content)
           );
           this.config.totalItems = response.data.totalElements;
+          this.cacheManager.initializeCache(response.data.content);
+
+          const currentPageNumber = pageNo + 1;
+          this.cacheManager.cachePageContent(currentPageNumber,response.data.content);
+          this.config.currentPage = currentPageNumber;
         } else {
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData([])
@@ -346,7 +356,7 @@ export class AssignedSubscriptionComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
-
+    this.cacheManager.clearCache();
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
@@ -693,14 +703,29 @@ export class AssignedSubscriptionComponent implements OnInit {
     console.log(option);
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    if (this.coOwnerToggle.value == true) {
-      this.getAssignedSubscription(event - 1, true);
-    } else {
-      this.getAssignedSubscription(event - 1);
-    }
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.getAssignedSubscription(event - 1, true);
+  //   } else {
+  //     this.getAssignedSubscription(event - 1);
+  //   }
 
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.subscriptionListGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      // this.selectedPageNo = event - 1;
+        if (this.coOwnerToggle.value == true) {
+          this.getAssignedSubscription(event - 1, true,'fromPageChange');
+        } else {
+          this.getAssignedSubscription(event - 1, '','fromPageChange');
+        }
+    }
   }
 
   ownerId: number;
@@ -769,6 +794,10 @@ export class AssignedSubscriptionComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.getAssignedSubscription(0, true);
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 
 }

@@ -1,5 +1,5 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridApi, GridOptions } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -39,7 +40,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class OldInvoicesComponent implements OnInit {
+export class OldInvoicesComponent implements OnInit,OnDestroy {
 
   loggedInSme: any;
   invoiceInfo: any = [];
@@ -77,6 +78,7 @@ export class OldInvoicesComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private itrService: ItrMsService,
     private dialog: MatDialog,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.config = {
@@ -123,7 +125,11 @@ export class OldInvoicesComponent implements OnInit {
     return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
-  getInvoices() {
+  getInvoices(pageChange?) {
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
     if (this.invoiceFormGroup.valid) {
       let data = this.utilService.createUrlParams(this.searchParam);
@@ -144,6 +150,11 @@ export class OldInvoicesComponent implements OnInit {
         console.log('this.invoiceData ', this.invoiceData);
         this.gridApi?.setRowData(this.createRowData(this.invoiceData));
         this.config.totalItems = res?.totalElements;
+        this.cacheManager.initializeCache(this.invoiceData);
+
+        const currentPageNumber = pageChange || this.searchParam.pageNumber + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.invoiceData);
+        this.config.currentPage = currentPageNumber;
 
       }, error => {
         this.loading = false;
@@ -538,9 +549,24 @@ export class OldInvoicesComponent implements OnInit {
     console.log('FromDate: ', FromDate);
     this.toDateMin = FromDate;
   }
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.searchParam.pageNumber = event - 1;
-    this.getInvoices();
-  }
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.pageNumber = event - 1;
+  //   this.getInvoices();
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.gridApi?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.pageNumber = event - 1;
+      this.getInvoices(event);
+      }
+    }
+
+    ngOnDestroy() {
+      this.cacheManager.clearCache();
+    }
 }

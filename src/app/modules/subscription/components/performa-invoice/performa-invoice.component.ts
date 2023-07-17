@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -25,6 +25,7 @@ import { SmeListDropDownComponent } from '../../../shared/components/sme-list-dr
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ActivatedRoute } from "@angular/router";
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
@@ -58,7 +59,7 @@ export interface User {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PerformaInvoiceComponent implements OnInit {
+export class PerformaInvoiceComponent implements OnInit,OnDestroy{
   loading!: boolean;
   invoiceData = [];
   invoiceInfo: any = [];
@@ -131,6 +132,7 @@ export class PerformaInvoiceComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private toastMsgService: ToastMessageService,
     private activatedRoute: ActivatedRoute,
+    private cacheManager: CacheManager,
   ) {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
@@ -442,6 +444,7 @@ export class PerformaInvoiceComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
@@ -473,14 +476,17 @@ export class PerformaInvoiceComponent implements OnInit {
 
   }
 
-  getInvoice(isCoOwner?, agentId?) {
+  getInvoice(isCoOwner?, agentId?,pageChange?) {
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
     ///////////////////////////////////////////////////////////////////////////
 
     // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed&searchAsCoOwner=true&ownerUserId=7522
     //https://uat-api.taxbuddy.com/report/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-30&page=0&pageSize=20&ownerUserId=7521&paymentStatus=Unpaid,Failed
-
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
     let loggedInId = this.utilService.getLoggedInUserID();
     if (this.roles?.includes('ROLE_OWNER')) {
@@ -572,6 +578,12 @@ export class PerformaInvoiceComponent implements OnInit {
         this.invoiceListGridOptions.api?.setRowData(this.createRowData(response?.data?.content))
         this.config.totalItems = response?.data?.totalElements;
         this.config.currentPage = response.data?.pageable?.pageNumber + 1;
+        this.cacheManager.initializeCache(this.invoiceData);
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.invoiceData);
+        this.config.currentPage = currentPageNumber;
+
         if (this.invoiceData.length == 0) {
           this.gridApi?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
@@ -1194,15 +1206,30 @@ export class PerformaInvoiceComponent implements OnInit {
     this.toDateMin = FromDate;
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    if (this.coOwnerToggle.value == true) {
-      this.getInvoice(true);
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.getInvoice(true);
+  //   } else {
+  //     this.getInvoice();
+  //   }
+  //   // this.getInvoice();
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.invoiceListGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
     } else {
-      this.getInvoice();
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+        if (this.coOwnerToggle.value == true) {
+          this.getInvoice(true,'',event);
+        } else {
+          this.getInvoice('', '',event);
+        }
     }
-    // this.getInvoice();
   }
 
   getToggleValue() {
@@ -1215,5 +1242,8 @@ export class PerformaInvoiceComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.getInvoice('true');
+  }
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }
