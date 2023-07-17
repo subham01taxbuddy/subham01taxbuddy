@@ -42,7 +42,7 @@ isSupported().then(isSupported => {
       self.registration.showNotification(notificationTitle, notificationOptions);
     });*/
     onBackgroundMessage(messaging, ({ notification: { title, body, image } }) => {
-      self.registration.showNotification(title, { body, icon: image || '/assets/img/logo-img.svg' });
+      self.registration.showNotification(title, { body, icon: image || '/assets/img/logo-img.png' });
     });
 
   } else {

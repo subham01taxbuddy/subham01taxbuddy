@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -16,6 +16,7 @@ import { SmeListDropDownComponent } from '../../../shared/components/sme-list-dr
 import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -23,7 +24,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './scheduled-call.component.html',
   styleUrls: ['./scheduled-call.component.css'],
 })
-export class ScheduledCallComponent implements OnInit {
+export class ScheduledCallComponent implements OnInit,OnDestroy {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
@@ -63,6 +64,7 @@ export class ScheduledCallComponent implements OnInit {
     private dialog: MatDialog,
     private route: Router,
     private activatedRoute: ActivatedRoute,
+    private cacheManager: CacheManager,
   ) {
     this.config = {
       itemsPerPage: this.searchParam.size,
@@ -724,21 +726,38 @@ export class ScheduledCallComponent implements OnInit {
     );
   }
 
+  // pageChanged(event) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.search(event - 1, true);
+  //   } else {
+  //     this.search(event - 1);
+  //   }
+  //   // this.showScheduleCallList();
+  //   // this.search();
+  // }
+
   pageChanged(event) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    if (this.coOwnerToggle.value == true) {
-      this.search(event - 1, true);
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
     } else {
-      this.search(event - 1);
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      if (this.coOwnerToggle.value == true) {
+        this.search( '', true,event);
+      } else {
+        this.search('','',event );
+      }
     }
-    // this.showScheduleCallList();
-    // this.search();
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
@@ -762,7 +781,12 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
-  search(form?, isAgent?) {
+  search(form?, isAgent?,pageChange?) {
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
+
     let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
@@ -823,6 +847,12 @@ export class ScheduledCallComponent implements OnInit {
           this.createRowData(result.data.content));
         this.config.totalItems = result.data.totalElements;
         this.config.pageCount = result.data.totalPages;
+        this.cacheManager.initializeCache(this.createRowData(this.scheduleCallsData));
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.scheduleCallsData));
+        this.config.currentPage = currentPageNumber;
+
       } else {
         this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
@@ -844,5 +874,9 @@ export class ScheduledCallComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.search('', true);
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }
